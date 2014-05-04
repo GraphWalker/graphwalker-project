@@ -1,4 +1,4 @@
-package org.graphwalker.core.model;
+package org.graphwalker.core.model.tree;
 
 /*
  * #%L
@@ -26,18 +26,34 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.graphwalker.core.model.Builder;
+import org.graphwalker.core.model.NamedElement;
+
 /**
  * @author Nils Olsson
  */
-public abstract class NamedElement implements Element {
+public final class Classification extends NamedElement {
 
-    private final String name;
-
-    protected NamedElement(String name) {
-        this.name = name;
+    private Classification(ClassificationBuilder builder) {
+        super(builder.getName());
     }
 
-    public String getName() {
-        return name;
+    public static class ClassificationBuilder implements Builder<Classification> {
+
+        private String name;
+
+        public ClassificationBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public Classification build() {
+            return new Classification(this);
+        }
     }
 }

@@ -31,6 +31,8 @@ import org.graphwalker.core.model.efsm.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.graphwalker.core.model.ClassificationTree.ClassificationTreeBuilder;
+import static org.graphwalker.core.model.EFSM.EFSMBuilder;
 import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
 import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 import static org.hamcrest.core.Is.is;
@@ -47,8 +49,6 @@ public class ModelBuilderTest {
         Vertex vertex = new VertexBuilder().setName("test").build();
         Assert.assertThat(vertex, notNullValue());
         Assert.assertThat(vertex.getName(), is("test"));
-        Assert.assertTrue(vertex instanceof NamedElement);
-        Assert.assertTrue(vertex instanceof Element);
 
     }
 
@@ -63,21 +63,18 @@ public class ModelBuilderTest {
         Assert.assertThat(edge.getSourceVertex().getName(), is("vertex1"));
         Assert.assertThat(edge.getTargetVertex().getName(), is("vertex2"));
         Assert.assertThat(edge.getName(), is("edge1"));
-        Assert.assertTrue(edge instanceof NamedElement);
-        Assert.assertTrue(edge instanceof Element);
     }
 
     @Test
     public void buildEFSM() {
         VertexBuilder vertex1 = new VertexBuilder();
         VertexBuilder vertex2 = new VertexBuilder();
-        EFSM efsm = new EFSM.Builder()
+        EFSM efsm = new EFSMBuilder()
                 .add(new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2))
                 .build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(1));
         Assert.assertThat(efsm.getVertices().size(), is(2));
-        Assert.assertTrue(efsm instanceof Model);
     }
 
 
@@ -86,7 +83,7 @@ public class ModelBuilderTest {
         VertexBuilder vertex1 = new VertexBuilder();
         VertexBuilder vertex2 = new VertexBuilder();
         EdgeBuilder edge1 = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2);
-        EFSM.Builder efsm = new EFSM.Builder().add(edge1);
+        EFSMBuilder efsm = new EFSMBuilder().add(edge1);
         Assert.assertThat(efsm.build(), notNullValue());
         Assert.assertThat(efsm.build().getEdges().size(), is(1));
         Assert.assertThat(efsm.build().getVertices().size(), is(2));
@@ -99,10 +96,16 @@ public class ModelBuilderTest {
 
     @Test
     public void singleVertex() {
-        EFSM efsm = new EFSM.Builder().add(new VertexBuilder().setName("test")).build();
+        EFSM efsm = new EFSMBuilder().add(new VertexBuilder().setName("test")).build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(0));
         Assert.assertThat(efsm.getVertices().size(), is(1));
         Assert.assertThat(efsm.getVertices().get(0).getName(), is("test"));
+    }
+
+    @Test
+    public void buildClassificationTree() {
+        ClassificationTree classificationTree = new ClassificationTreeBuilder().build();
+        Assert.assertThat(classificationTree, notNullValue());
     }
 }

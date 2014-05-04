@@ -29,15 +29,16 @@ package org.graphwalker.core.model;
 /**
  * @author Nils Olsson
  */
-public abstract class NamedElement implements Element {
+public final class ClassificationTree implements Model {
 
-    private final String name;
-
-    protected NamedElement(String name) {
-        this.name = name;
+    private ClassificationTree(ClassificationTreeBuilder builder) {
     }
 
-    public String getName() {
-        return name;
+    public static class ClassificationTreeBuilder implements Builder<ClassificationTree> {
+
+        @Override
+        public ClassificationTree build() {
+            return new ClassificationTree(this);
+        }
     }
 }
