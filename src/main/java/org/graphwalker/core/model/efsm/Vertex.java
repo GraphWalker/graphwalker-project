@@ -32,32 +32,32 @@ import org.graphwalker.core.model.NamedElement;
 /**
  * @author Nils Olsson
  */
-public final class Vertex extends NamedElement {
+public final class Vertex implements Builder<Vertex.ImmutableVertex> {
 
-    private Vertex(VertexBuilder builder) {
-        super(builder.getName());
+    private ImmutableVertex vertex = null;
+    private String name;
+
+    public Vertex setName(String name) {
+        this.name = name;
+        return this;
     }
 
-    public static class VertexBuilder implements Builder<Vertex> {
+    public String getName() {
+        return name;
+    }
 
-        private Vertex vertex = null;
-        private String name;
-
-        public String getName() {
-            return name;
+    @Override
+    public ImmutableVertex build() {
+        if (null == vertex) {
+            vertex = new ImmutableVertex(this);
         }
+        return vertex;
+    }
 
-        public VertexBuilder setName(String name) {
-            this.name = name;
-            return this;
-        }
+    public static final class ImmutableVertex extends NamedElement {
 
-        @Override
-        public Vertex build() {
-            if (null == vertex) {
-                vertex = new Vertex(this);
-            }
-            return vertex;
+        private ImmutableVertex(Vertex vertex) {
+            super(vertex.getName());
         }
     }
 }

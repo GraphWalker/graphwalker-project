@@ -28,7 +28,6 @@ package org.graphwalker.core.model.tree;
 
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.BuilderSet;
-import org.graphwalker.core.model.EmptyBuilder;
 import org.graphwalker.core.model.NamedElement;
 
 import java.util.List;
@@ -36,63 +35,66 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class Classification extends NamedElement {
+public final class Classification implements Builder<Classification.ImmutableClassification> {
 
-    private final Classification parent;
-    private final List<Classification> classifications;
+    private ImmutableClassification classification = null;
+    private final BuilderSet<Builder<ImmutableClassification>, ImmutableClassification> classifications = new BuilderSet<>();
+    private Classification parent = null;
+    private String name;
 
-    private Classification(ClassificationBuilder builder) {
-        super(builder.getName());
-        this.parent = builder.getParent().build();
-        this.classifications = builder.getClassifications().build();
+    public Classification setParent(Classification parent) {
+        this.parent = parent;
+        return this;
     }
 
     public Classification getParent() {
         return parent;
     }
 
-    public List<Classification> getClassifications() {
+    public Classification addClassification(Classification classification) {
+        this.classifications.add(classification);
+        classification.setParent(this);
+        return this;
+    }
+
+    public BuilderSet<Builder<ImmutableClassification>, ImmutableClassification> getClassifications() {
         return classifications;
     }
 
-    public static class ClassificationBuilder implements Builder<Classification> {
+    public Classification setName(String name) {
+        this.name = name;
+        return this;
+    }
 
-        public static final Builder<Classification> EMPTY = new EmptyBuilder<>();
+    public String getName() {
+        return name;
+    }
 
-        private final BuilderSet<Builder<Classification>, Classification> classifications = new BuilderSet<>();
-        private ClassificationBuilder parent;
-        private String name;
+    @Override
+    public ImmutableClassification build() {
+        if (null == classification) {
+            classification = new ImmutableClassification(this);
+        }
+        return classification;
+    }
 
-        public ClassificationBuilder setParent(ClassificationBuilder parent) {
-            this.parent = parent;
-            return this;
+    public static final class ImmutableClassification extends NamedElement {
+
+        private final ImmutableClassification parent = null;
+        private final List<ImmutableClassification> classifications;
+
+        private ImmutableClassification(Classification classification) {
+            super(classification.getName());
+            this.classifications = classification.getClassifications().build();
+            //this.parent = classification.getParent().build();
         }
 
-        public ClassificationBuilder getParent() {
+        public ImmutableClassification getParent() {
             return parent;
         }
 
-        public ClassificationBuilder addClassification(ClassificationBuilder classification) {
-            this.classifications.add(classification);
-            return this;
-        }
-
-        public BuilderSet<Builder<Classification>, Classification> getClassifications() {
+        public List<ImmutableClassification> getClassifications() {
             return classifications;
-        }
-
-        public ClassificationBuilder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public Classification build() {
-            return new Classification(this);
         }
     }
 }

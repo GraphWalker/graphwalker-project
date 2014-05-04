@@ -29,64 +29,66 @@ package org.graphwalker.core.model.efsm;
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.NamedElement;
 
+import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
+
 /**
  * @author Nils Olsson
  */
-public final class Edge extends NamedElement {
+public final class Edge implements Builder<Edge.ImmutableEdge> {
 
-    private final Vertex sourceVertex;
-    private final Vertex targetVertex;
+    private String name;
+    private Vertex sourceVertex;
+    private Vertex targetVertex;
 
-    private Edge(EdgeBuilder builder) {
-        super(builder.getName());
-        this.sourceVertex = builder.getSourceVertex().build();
-        this.targetVertex = builder.getTargetVertex().build();
+    public Edge setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Edge setSourceVertex(Vertex vertex) {
+        this.sourceVertex = vertex;
+        return this;
     }
 
     public Vertex getSourceVertex() {
         return sourceVertex;
     }
 
+    public Edge setTargetVertex(Vertex vertex) {
+        this.targetVertex = vertex;
+        return this;
+    }
+
     public Vertex getTargetVertex() {
         return targetVertex;
     }
 
-    public static class EdgeBuilder implements Builder<Edge> {
+    @Override
+    public ImmutableEdge build() {
+        return new ImmutableEdge(this);
+    }
 
-        private String name;
-        private Builder<Vertex> sourceVertex;
-        private Builder<Vertex> targetVertex;
+    public static final class ImmutableEdge extends NamedElement {
 
-        public EdgeBuilder setName(String name) {
-            this.name = name;
-            return this;
+        private final ImmutableVertex sourceVertex;
+        private final ImmutableVertex targetVertex;
+
+        private ImmutableEdge(Edge edge) {
+            super(edge.getName());
+            this.sourceVertex = edge.getSourceVertex().build();
+            this.targetVertex = edge.getTargetVertex().build();
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public EdgeBuilder setSourceVertex(Builder<Vertex> vertex) {
-            this.sourceVertex = vertex;
-            return this;
-        }
-
-        public Builder<Vertex> getSourceVertex() {
+        public ImmutableVertex getSourceVertex() {
             return sourceVertex;
         }
 
-        public EdgeBuilder setTargetVertex(Builder<Vertex> vertex) {
-            this.targetVertex = vertex;
-            return this;
-        }
-
-        public Builder<Vertex> getTargetVertex() {
+        public ImmutableVertex getTargetVertex() {
             return targetVertex;
-        }
-
-        @Override
-        public Edge build() {
-            return new Edge(this);
         }
     }
 }

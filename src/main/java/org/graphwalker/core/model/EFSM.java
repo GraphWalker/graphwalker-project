@@ -32,57 +32,58 @@ import org.graphwalker.core.model.efsm.Vertex;
 import java.util.Collections;
 import java.util.List;
 
-import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
+import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
+import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
 
 /**
  * @author Nils Olsson
  */
-public final class EFSM implements Model {
+public final class EFSM implements org.graphwalker.core.model.Builder<EFSM.ImmutableEFSM> {
 
-    private final List<Vertex> vertices;
-    private final List<Edge> edges;
+    private final BuilderSet<Builder<ImmutableVertex>, ImmutableVertex> vertices = new BuilderSet<>();
+    private final BuilderSet<Builder<ImmutableEdge>, ImmutableEdge> edges = new BuilderSet<>();
 
-    private EFSM(EFSMBuilder builder) {
-        this.vertices = Collections.unmodifiableList(builder.getVertices().build());
-        this.edges = Collections.unmodifiableList(builder.getEdges().build());
+    public EFSM addVertex(Vertex vertex) {
+        vertices.add(vertex);
+        return this;
     }
 
-    public List<Vertex> getVertices() {
+    public EFSM addEdge(Edge edge) {
+        edges.add(edge);
+        vertices.add(edge.getSourceVertex());
+        vertices.add(edge.getTargetVertex());
+        return this;
+    }
+
+    public BuilderSet<Builder<ImmutableVertex>, ImmutableVertex> getVertices() {
         return vertices;
     }
 
-    public List<Edge> getEdges() {
+    public BuilderSet<Builder<ImmutableEdge>, ImmutableEdge> getEdges() {
         return edges;
     }
 
-    public static class EFSMBuilder implements org.graphwalker.core.model.Builder<EFSM> {
+    @Override
+    public ImmutableEFSM build() {
+        return new ImmutableEFSM(this);
+    }
 
-        private final BuilderSet<Builder<Vertex>, Vertex> vertices = new BuilderSet<>();
-        private final BuilderSet<Builder<Edge>, Edge> edges = new BuilderSet<>();
+    public static class ImmutableEFSM implements Model {
 
-        public EFSMBuilder addVertex(Builder<Vertex> vertex) {
-            vertices.add(vertex);
-            return this;
+        private final List<ImmutableVertex> vertices;
+        private final List<ImmutableEdge> edges;
+
+        private ImmutableEFSM(EFSM efsm) {
+            this.vertices = Collections.unmodifiableList(efsm.getVertices().build());
+            this.edges = Collections.unmodifiableList(efsm.getEdges().build());
         }
 
-        public EFSMBuilder addEdge(EdgeBuilder edge) {
-            edges.add(edge);
-            vertices.add(edge.getSourceVertex());
-            vertices.add(edge.getTargetVertex());
-            return this;
-        }
-
-        public BuilderSet<Builder<Vertex>, Vertex> getVertices() {
+        public List<ImmutableVertex> getVertices() {
             return vertices;
         }
 
-        public BuilderSet<Builder<Edge>, Edge> getEdges() {
+        public List<ImmutableEdge> getEdges() {
             return edges;
-        }
-
-        @Override
-        public EFSM build() {
-            return new EFSM(this);
         }
     }
 }
