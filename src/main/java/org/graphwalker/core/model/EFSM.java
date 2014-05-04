@@ -43,7 +43,7 @@ public final class EFSM implements Model {
     private final List<Vertex> vertices;
     private final List<Edge> edges;
 
-    private EFSM(Builder builder) {
+    private EFSM(EFSMBuilder builder) {
         this.vertices = Collections.unmodifiableList(builder.getVertices().build());
         this.edges = Collections.unmodifiableList(builder.getEdges().build());
     }
@@ -56,17 +56,17 @@ public final class EFSM implements Model {
         return edges;
     }
 
-    public static class Builder implements org.graphwalker.core.model.Builder<EFSM> {
+    public static class EFSMBuilder implements org.graphwalker.core.model.Builder<EFSM> {
 
         private final BuilderSet<VertexBuilder, Vertex> vertices = new BuilderSet<>();
         private final BuilderSet<EdgeBuilder, Edge> edges = new BuilderSet<>();
 
-        public Builder add(VertexBuilder vertex) {
+        public EFSMBuilder add(VertexBuilder vertex) {
             vertices.add(vertex);
             return this;
         }
 
-        public Builder add(EdgeBuilder edge) {
+        public EFSMBuilder add(EdgeBuilder edge) {
             edges.add(edge);
             vertices.add(edge.getSourceVertex());
             vertices.add(edge.getTargetVertex());
