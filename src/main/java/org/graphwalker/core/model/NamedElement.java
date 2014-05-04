@@ -1,4 +1,4 @@
-package org.graphwalker.core.model.efsm;
+package org.graphwalker.core.model;
 
 /*
  * #%L
@@ -26,38 +26,18 @@ package org.graphwalker.core.model.efsm;
  * #L%
  */
 
-import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.NamedElement;
-
 /**
  * @author Nils Olsson
  */
-public final class Vertex extends NamedElement {
+public abstract class NamedElement implements Element {
 
-    private Vertex(VertexBuilder builder) {
-        super(builder.getName());
+    private final String name;
+
+    public NamedElement(String name) {
+        this.name = name;
     }
 
-    public static class VertexBuilder implements Builder<Vertex> {
-
-        private Vertex vertex = null;
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public VertexBuilder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        @Override
-        public Vertex build() {
-            if (null == vertex) {
-                vertex = new Vertex(this);
-            }
-            return vertex;
-        }
+    public String getName() {
+        return name;
     }
 }

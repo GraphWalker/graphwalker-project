@@ -28,11 +28,12 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
-import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
-import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
 
 import java.util.Collections;
 import java.util.List;
+
+import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
+import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 
 /**
  * @author Nils Olsson
