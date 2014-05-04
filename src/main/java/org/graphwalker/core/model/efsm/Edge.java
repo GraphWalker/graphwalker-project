@@ -27,17 +27,19 @@ package org.graphwalker.core.model.efsm;
  */
 
 import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.NamedElement;
+
 import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 /**
  * @author Nils Olsson
  */
-public final class Edge implements Element {
+public final class Edge extends NamedElement {
 
     private final Vertex sourceVertex;
     private final Vertex targetVertex;
 
     private Edge(EdgeBuilder builder) {
+        super(builder.getName());
         this.sourceVertex = builder.getSourceVertex().build();
         this.targetVertex = builder.getTargetVertex().build();
     }
@@ -52,21 +54,31 @@ public final class Edge implements Element {
 
     public static class EdgeBuilder implements Builder<Edge> {
 
+        private String name;
         private VertexBuilder sourceVertex;
         private VertexBuilder targetVertex;
+
+        public EdgeBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public String getName() {
+            return name;
+        }
 
         public EdgeBuilder setSourceVertex(VertexBuilder vertex) {
             this.sourceVertex = vertex;
             return this;
         }
 
+        public VertexBuilder getSourceVertex() {
+            return sourceVertex;
+        }
+
         public EdgeBuilder setTargetVertex(VertexBuilder vertex) {
             this.targetVertex = vertex;
             return this;
-        }
-
-        public VertexBuilder getSourceVertex() {
-            return sourceVertex;
         }
 
         public VertexBuilder getTargetVertex() {

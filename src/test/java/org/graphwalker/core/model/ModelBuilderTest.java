@@ -28,11 +28,11 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
-import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
-import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
+import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -44,18 +44,27 @@ public class ModelBuilderTest {
 
     @Test
     public void buildVertex() {
-        Vertex vertex = new VertexBuilder().build();
+        Vertex vertex = new VertexBuilder().setName("test").build();
         Assert.assertThat(vertex, notNullValue());
+        Assert.assertThat(vertex.getName(), is("test"));
+        Assert.assertTrue(vertex instanceof NamedElement);
+        Assert.assertTrue(vertex instanceof Element);
+
     }
 
     @Test
     public void buildEdge() {
-        VertexBuilder vertex1 = new VertexBuilder();
-        VertexBuilder vertex2 = new VertexBuilder();
-        Edge edge = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2).build();
+        VertexBuilder vertex1 = new VertexBuilder().setName("vertex1");
+        VertexBuilder vertex2 = new VertexBuilder().setName("vertex2");
+        Edge edge = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2).setName("edge1").build();
         Assert.assertThat(edge, notNullValue());
         Assert.assertThat(edge.getSourceVertex(), notNullValue());
         Assert.assertThat(edge.getTargetVertex(), notNullValue());
+        Assert.assertThat(edge.getSourceVertex().getName(), is("vertex1"));
+        Assert.assertThat(edge.getTargetVertex().getName(), is("vertex2"));
+        Assert.assertThat(edge.getName(), is("edge1"));
+        Assert.assertTrue(edge instanceof NamedElement);
+        Assert.assertTrue(edge instanceof Element);
     }
 
     @Test
@@ -68,6 +77,7 @@ public class ModelBuilderTest {
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(1));
         Assert.assertThat(efsm.getVertices().size(), is(2));
+        Assert.assertTrue(efsm instanceof Model);
     }
 
 
