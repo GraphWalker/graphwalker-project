@@ -28,13 +28,16 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
+import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
+import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public final class EFSM {
+public final class EFSM implements Model {
 
     private final List<Vertex> vertices;
     private final List<Edge> edges;
@@ -52,28 +55,28 @@ public final class EFSM {
         return edges;
     }
 
-    public static class Builder implements ModelBuilder<EFSM> {
+    public static class Builder implements org.graphwalker.core.model.Builder<EFSM> {
 
-        private final ModelBuilderSet<Vertex.Builder, Vertex> vertices = new ModelBuilderSet<>();
-        private final ModelBuilderSet<Edge.Builder, Edge> edges = new ModelBuilderSet<>();
+        private final BuilderSet<VertexBuilder, Vertex> vertices = new BuilderSet<>();
+        private final BuilderSet<EdgeBuilder, Edge> edges = new BuilderSet<>();
 
-        public Builder add(Vertex.Builder vertex) {
+        public Builder add(VertexBuilder vertex) {
             vertices.add(vertex);
             return this;
         }
 
-        public Builder add(Edge.Builder edge) {
+        public Builder add(EdgeBuilder edge) {
             edges.add(edge);
-            vertices.add(edge.getSource());
-            vertices.add(edge.getTarget());
+            vertices.add(edge.getSourceVertex());
+            vertices.add(edge.getTargetVertex());
             return this;
         }
 
-        public ModelBuilderSet<Vertex.Builder, Vertex> getVertices() {
+        public BuilderSet<VertexBuilder, Vertex> getVertices() {
             return vertices;
         }
 
-        public ModelBuilderSet<Edge.Builder, Edge> getEdges() {
+        public BuilderSet<EdgeBuilder, Edge> getEdges() {
             return edges;
         }
 

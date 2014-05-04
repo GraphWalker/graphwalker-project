@@ -26,50 +26,51 @@ package org.graphwalker.core.model.efsm;
  * #L%
  */
 
-import org.graphwalker.core.model.ModelBuilder;
-
+import org.graphwalker.core.model.Builder;
+import org.graphwalker.core.model.Element;
+import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 /**
  * @author Nils Olsson
  */
-public final class Edge {
+public final class Edge implements Element {
 
-    private final Vertex source;
-    private final Vertex target;
+    private final Vertex sourceVertex;
+    private final Vertex targetVertex;
 
-    private Edge(Builder builder) {
-        this.source = builder.getSource().build();
-        this.target = builder.getTarget().build();
+    private Edge(EdgeBuilder builder) {
+        this.sourceVertex = builder.getSourceVertex().build();
+        this.targetVertex = builder.getTargetVertex().build();
     }
 
-    public Vertex getSource() {
-        return source;
+    public Vertex getSourceVertex() {
+        return sourceVertex;
     }
 
-    public Vertex getTarget() {
-        return target;
+    public Vertex getTargetVertex() {
+        return targetVertex;
     }
 
-    public static class Builder implements ModelBuilder<Edge> {
+    public static class EdgeBuilder implements Builder<Edge> {
 
-        private Vertex.Builder source;
-        private Vertex.Builder target;
+        private VertexBuilder sourceVertex;
+        private VertexBuilder targetVertex;
 
-        public Builder setSource(Vertex.Builder vertex) {
-            this.source = vertex;
+        public EdgeBuilder setSourceVertex(VertexBuilder vertex) {
+            this.sourceVertex = vertex;
             return this;
         }
 
-        public Builder setTarget(Vertex.Builder vertex) {
-            this.target = vertex;
+        public EdgeBuilder setTargetVertex(VertexBuilder vertex) {
+            this.targetVertex = vertex;
             return this;
         }
 
-        public Vertex.Builder getSource() {
-            return source;
+        public VertexBuilder getSourceVertex() {
+            return sourceVertex;
         }
 
-        public Vertex.Builder getTarget() {
-            return target;
+        public VertexBuilder getTargetVertex() {
+            return targetVertex;
         }
 
         @Override

@@ -26,10 +26,21 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
-public interface ModelBuilder<T> {
-    T build();
-}
+public final class BuilderSet<T extends Builder<E>, E> extends HashSet<T> implements Builder<List<E>> {
 
+    @Override
+    public List<E> build() {
+        List<E> elements = new ArrayList<>();
+        for (T builder: this) {
+            elements.add(builder.build());
+        }
+        return elements;
+    }
+}
