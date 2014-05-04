@@ -89,9 +89,10 @@ public class ModelBuilderTest {
 
     @Test
     public void singleVertex() {
-        EFSM efsm = new EFSM.Builder().add(new VertexBuilder()).build();
+        EFSM efsm = new EFSM.Builder().add(new VertexBuilder().setName("test")).build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(0));
         Assert.assertThat(efsm.getVertices().size(), is(1));
+        Assert.assertThat(efsm.getVertices().get(0).getName(), is("test"));
     }
 }
