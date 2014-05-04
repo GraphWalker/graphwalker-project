@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
-import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 
 /**
  * @author Nils Olsson
@@ -58,26 +57,26 @@ public final class EFSM implements Model {
 
     public static class EFSMBuilder implements org.graphwalker.core.model.Builder<EFSM> {
 
-        private final BuilderSet<VertexBuilder, Vertex> vertices = new BuilderSet<>();
-        private final BuilderSet<EdgeBuilder, Edge> edges = new BuilderSet<>();
+        private final BuilderSet<Builder<Vertex>, Vertex> vertices = new BuilderSet<>();
+        private final BuilderSet<Builder<Edge>, Edge> edges = new BuilderSet<>();
 
-        public EFSMBuilder add(VertexBuilder vertex) {
+        public EFSMBuilder addVertex(Builder<Vertex> vertex) {
             vertices.add(vertex);
             return this;
         }
 
-        public EFSMBuilder add(EdgeBuilder edge) {
+        public EFSMBuilder addEdge(EdgeBuilder edge) {
             edges.add(edge);
             vertices.add(edge.getSourceVertex());
             vertices.add(edge.getTargetVertex());
             return this;
         }
 
-        public BuilderSet<VertexBuilder, Vertex> getVertices() {
+        public BuilderSet<Builder<Vertex>, Vertex> getVertices() {
             return vertices;
         }
 
-        public BuilderSet<EdgeBuilder, Edge> getEdges() {
+        public BuilderSet<Builder<Edge>, Edge> getEdges() {
             return edges;
         }
 

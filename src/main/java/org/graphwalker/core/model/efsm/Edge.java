@@ -29,7 +29,6 @@ package org.graphwalker.core.model.efsm;
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.NamedElement;
 
-import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
 /**
  * @author Nils Olsson
  */
@@ -55,8 +54,8 @@ public final class Edge extends NamedElement {
     public static class EdgeBuilder implements Builder<Edge> {
 
         private String name;
-        private VertexBuilder sourceVertex;
-        private VertexBuilder targetVertex;
+        private Builder<Vertex> sourceVertex;
+        private Builder<Vertex> targetVertex;
 
         public EdgeBuilder setName(String name) {
             this.name = name;
@@ -67,21 +66,21 @@ public final class Edge extends NamedElement {
             return name;
         }
 
-        public EdgeBuilder setSourceVertex(VertexBuilder vertex) {
+        public EdgeBuilder setSourceVertex(Builder<Vertex> vertex) {
             this.sourceVertex = vertex;
             return this;
         }
 
-        public VertexBuilder getSourceVertex() {
+        public Builder<Vertex> getSourceVertex() {
             return sourceVertex;
         }
 
-        public EdgeBuilder setTargetVertex(VertexBuilder vertex) {
+        public EdgeBuilder setTargetVertex(Builder<Vertex> vertex) {
             this.targetVertex = vertex;
             return this;
         }
 
-        public VertexBuilder getTargetVertex() {
+        public Builder<Vertex> getTargetVertex() {
             return targetVertex;
         }
 

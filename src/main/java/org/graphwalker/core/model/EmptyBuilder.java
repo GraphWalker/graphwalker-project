@@ -26,41 +26,13 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.model.tree.Classification;
-
-import static org.graphwalker.core.model.tree.Classification.ClassificationBuilder;
-
 /**
  * @author Nils Olsson
  */
-public final class ClassificationTree implements Model {
+public final class EmptyBuilder<T> implements Builder<T> {
 
-    private final Classification classification;
-
-    private ClassificationTree(ClassificationTreeBuilder builder) {
-        this.classification = builder.getClassification().build();
-    }
-
-    public Classification getClassification() {
-        return classification;
-    }
-
-    public static class ClassificationTreeBuilder implements Builder<ClassificationTree> {
-
-        private Builder<Classification> classification = ClassificationBuilder.EMPTY;
-
-        public ClassificationTreeBuilder setClassification(ClassificationBuilder classification) {
-            this.classification = classification;
-            return this;
-        }
-
-        public Builder<Classification> getClassification() {
-            return classification;
-        }
-
-        @Override
-        public ClassificationTree build() {
-            return new ClassificationTree(this);
-        }
+    @Override
+    public T build() {
+        return null;
     }
 }
