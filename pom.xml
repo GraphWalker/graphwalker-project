@@ -7,6 +7,20 @@
     <artifactId>gw-core</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <name>GraphWalker Core</name>
+    <inceptionYear>2011</inceptionYear>
+
+    <organization>
+        <name>GraphWalker</name>
+        <url>http://graphwalker.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>MIT-License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,6 +46,23 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <licenseName>mit</licenseName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>update-license</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
