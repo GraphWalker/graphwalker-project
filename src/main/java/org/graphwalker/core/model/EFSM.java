@@ -31,10 +31,15 @@ public final class EFSM {
         protected final ModelBuilderSet<Vertex.Builder, Vertex> vertices = new ModelBuilderSet<>();
         protected final ModelBuilderSet<Edge.Builder, Edge> edges = new ModelBuilderSet<>();
 
+        public Builder add(Vertex.Builder vertex) {
+            vertices.add(vertex);
+            return this;
+        }
+
         public Builder add(Edge.Builder edge) {
             edges.add(edge);
-            vertices.add(edge.source);
-            vertices.add(edge.target);
+            vertices.add(edge.getSource());
+            vertices.add(edge.getTarget());
             return this;
         }
 

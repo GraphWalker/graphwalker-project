@@ -11,8 +11,8 @@ public final class Edge {
     private final Vertex target;
 
     private Edge(Builder builder) {
-        this.source = builder.source.build();
-        this.target = builder.target.build();
+        this.source = builder.getSource().build();
+        this.target = builder.getTarget().build();
     }
 
     public Vertex getSource() {
@@ -25,17 +25,25 @@ public final class Edge {
 
     public static class Builder implements ModelBuilder<Edge> {
 
-        public Vertex.Builder source;
-        public Vertex.Builder target;
+        private Vertex.Builder source;
+        private Vertex.Builder target;
 
-        public Builder source(Vertex.Builder vertex) {
+        public Builder setSource(Vertex.Builder vertex) {
             this.source = vertex;
             return this;
         }
 
-        public Builder target(Vertex.Builder vertex) {
+        public Builder setTarget(Vertex.Builder vertex) {
             this.target = vertex;
             return this;
+        }
+
+        public Vertex.Builder getSource() {
+            return source;
+        }
+
+        public Vertex.Builder getTarget() {
+            return target;
         }
 
         @Override
