@@ -28,13 +28,16 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
+
+import static org.graphwalker.core.model.EFSM.ImmutableEFSM;
+import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
+import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
+
+import org.graphwalker.core.model.tree.Classification;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.graphwalker.core.model.ClassificationTree.ClassificationTreeBuilder;
-import static org.graphwalker.core.model.EFSM.EFSMBuilder;
-import static org.graphwalker.core.model.efsm.Edge.EdgeBuilder;
-import static org.graphwalker.core.model.efsm.Vertex.VertexBuilder;
+import static org.graphwalker.core.model.tree.Classification.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -46,7 +49,7 @@ public class ModelBuilderTest {
 
     @Test
     public void buildVertex() {
-        Vertex vertex = new VertexBuilder().setName("test").build();
+        ImmutableVertex vertex = new Vertex().setName("test").build();
         Assert.assertThat(vertex, notNullValue());
         Assert.assertThat(vertex.getName(), is("test"));
 
@@ -54,9 +57,9 @@ public class ModelBuilderTest {
 
     @Test
     public void buildEdge() {
-        VertexBuilder vertex1 = new VertexBuilder().setName("vertex1");
-        VertexBuilder vertex2 = new VertexBuilder().setName("vertex2");
-        Edge edge = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2).setName("edge1").build();
+        Vertex vertex1 = new Vertex().setName("vertex1");
+        Vertex vertex2 = new Vertex().setName("vertex2");
+        ImmutableEdge edge = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).setName("edge1").build();
         Assert.assertThat(edge, notNullValue());
         Assert.assertThat(edge.getSourceVertex(), notNullValue());
         Assert.assertThat(edge.getTargetVertex(), notNullValue());
@@ -67,10 +70,10 @@ public class ModelBuilderTest {
 
     @Test
     public void buildEFSM() {
-        VertexBuilder vertex1 = new VertexBuilder();
-        VertexBuilder vertex2 = new VertexBuilder();
-        EFSM efsm = new EFSMBuilder()
-                .addEdge(new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2))
+        Vertex vertex1 = new Vertex();
+        Vertex vertex2 = new Vertex();
+        ImmutableEFSM efsm = new EFSM()
+                .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
                 .build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(1));
@@ -80,14 +83,14 @@ public class ModelBuilderTest {
 
     @Test
     public void updateBuilder() {
-        VertexBuilder vertex1 = new VertexBuilder();
-        VertexBuilder vertex2 = new VertexBuilder();
-        EdgeBuilder edge1 = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2);
-        EFSMBuilder efsm = new EFSMBuilder().addEdge(edge1);
+        Vertex vertex1 = new Vertex();
+        Vertex vertex2 = new Vertex();
+        Edge edge1 = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2);
+        EFSM efsm = new EFSM().addEdge(edge1);
         Assert.assertThat(efsm.build(), notNullValue());
         Assert.assertThat(efsm.build().getEdges().size(), is(1));
         Assert.assertThat(efsm.build().getVertices().size(), is(2));
-        EdgeBuilder edge2 = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2);
+        Edge edge2 = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2);
         efsm.addEdge(edge2);
         Assert.assertThat(efsm.build(), notNullValue());
         Assert.assertThat(efsm.build().getEdges().size(), is(2));
@@ -96,7 +99,7 @@ public class ModelBuilderTest {
 
     @Test
     public void singleVertex() {
-        EFSM efsm = new EFSMBuilder().addVertex(new VertexBuilder().setName("test")).build();
+        ImmutableEFSM efsm = new EFSM().addVertex(new Vertex().setName("test")).build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(0));
         Assert.assertThat(efsm.getVertices().size(), is(1));
@@ -104,8 +107,70 @@ public class ModelBuilderTest {
     }
 
     @Test
+    public void buildClassification() {
+        ImmutableClassification classification = new Classification()
+                .setName("classification")
+                .build();
+        Assert.assertThat(classification, notNullValue());
+        Assert.assertThat(classification.getName(), is("classification"));
+    }
+/*
+    @Test
+    public void buildClassificationTree() {
+        Classification classification = new ClassificationBuilder()
+                .setName("classification")
+                .addClassification(new ClassificationBuilder().setName("leaf1"))
+                .addClassification(new ClassificationBuilder().setName("leaf2"))
+                .build();
+        Assert.assertThat(classification, notNullValue());
+        Assert.assertThat(classification.getName(), is("classification"));
+        Assert.assertThat(classification.getClassifications(), notNullValue());
+        Assert.assertThat(classification.getClassifications().size(), is(2));
+        Assert.assertThat(classification.getClassifications().get(0).getName(), is("leaf1"));
+        Assert.assertThat(classification.getClassifications().get(0).getParent(), is(classification));
+        Assert.assertThat(classification.getClassifications().get(1).getName(), is("leaf2"));
+        Assert.assertThat(classification.getClassifications().get(1).getParent(), is(classification));
+    }
+
+    @Test
+    public void buildLargeClassificationTree() {
+        Classification classification = createClassification(2).build();
+        int i = 0;
+    }
+
+    private ClassificationBuilder createClassification(int level) {
+        ClassificationBuilder builder = new ClassificationBuilder();
+        if (0 < level) {
+            for (int i = 0; i < level; i++) {
+                builder.addClassification(createClassification(level-1));
+            }
+        }
+        return builder;
+    }
+*/
+/*
+    @Test
     public void buildClassificationTree() {
         ClassificationTree classificationTree = new ClassificationTreeBuilder().build();
         Assert.assertThat(classificationTree, notNullValue());
     }
+*/
+    /*
+    @Test
+    public void buildLargerClassificationTree() {
+        ClassificationBuilder leaf1 = new ClassificationBuilder().setName("leaf1");
+        ClassificationBuilder leaf2 = new ClassificationBuilder().setName("leaf2");
+        ClassificationTree classificationTree = new ClassificationTreeBuilder()
+                .addClassification(leaf1)
+                .addClassification(leaf2)
+                .build();
+        Assert.assertThat(classificationTree, notNullValue());
+        Assert.assertThat(classificationTree.getClassifications(), notNullValue());
+        List<Classification> classifications = classificationTree.getClassifications();
+        Assert.assertThat(classifications.size(), is(2));
+        Assert.assertThat(classifications.get(0).getParent(), is(classificationTree.getRoot()));
+        Assert.assertThat(classifications.get(0).getName(), is("leaf1"));
+        Assert.assertThat(classifications.get(1).getName(), is("leaf2"));
+    }
+    */
 }

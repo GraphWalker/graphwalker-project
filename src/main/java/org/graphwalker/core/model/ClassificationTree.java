@@ -28,29 +28,35 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.tree.Classification;
 
-import static org.graphwalker.core.model.tree.Classification.ClassificationBuilder;
+import java.util.List;
+
 
 /**
  * @author Nils Olsson
  */
 public final class ClassificationTree implements Model {
-
+/*
     private final Classification classification;
 
     private ClassificationTree(ClassificationTreeBuilder builder) {
         this.classification = builder.getClassification().build();
     }
 
-    public Classification getClassification() {
+    public Classification getRoot() {
         return classification;
+    }
+
+    public List<Classification> getClassifications() {
+        return classification.getClassifications();
     }
 
     public static class ClassificationTreeBuilder implements Builder<ClassificationTree> {
 
-        private Builder<Classification> classification = ClassificationBuilder.EMPTY;
+        private ClassificationBuilder classification = new ClassificationBuilder();
 
-        public ClassificationTreeBuilder setClassification(ClassificationBuilder classification) {
-            this.classification = classification;
+        public ClassificationTreeBuilder addClassification(ClassificationBuilder classification) {
+            //this.classification.addClassification(classification);
+            //classification.setParent(this);
             return this;
         }
 
@@ -63,4 +69,5 @@ public final class ClassificationTree implements Model {
             return new ClassificationTree(this);
         }
     }
+    */
 }
