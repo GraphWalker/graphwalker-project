@@ -26,11 +26,6 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.model.tree.Classification;
-
-import java.util.List;
-
-
 /**
  * @author Nils Olsson
  */

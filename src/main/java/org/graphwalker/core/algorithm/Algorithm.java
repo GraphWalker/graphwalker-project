@@ -26,8 +26,6 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.model.Model;
-
 /**
  * @author Nils Olsson
  */

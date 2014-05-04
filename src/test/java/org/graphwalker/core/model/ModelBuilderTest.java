@@ -28,16 +28,14 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
-
-import static org.graphwalker.core.model.EFSM.ImmutableEFSM;
-import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
-import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
-
 import org.graphwalker.core.model.tree.Classification;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.graphwalker.core.model.tree.Classification.*;
+import static org.graphwalker.core.model.EFSM.ImmutableEFSM;
+import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
+import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
+import static org.graphwalker.core.model.tree.Classification.ImmutableClassification;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 

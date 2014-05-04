@@ -32,8 +32,8 @@ import org.graphwalker.core.model.efsm.Vertex;
 import java.util.Collections;
 import java.util.List;
 
-import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
 import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
+import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
 
 /**
  * @author Nils Olsson
