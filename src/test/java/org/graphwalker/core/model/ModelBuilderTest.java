@@ -70,7 +70,7 @@ public class ModelBuilderTest {
         VertexBuilder vertex1 = new VertexBuilder();
         VertexBuilder vertex2 = new VertexBuilder();
         EFSM efsm = new EFSMBuilder()
-                .add(new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2))
+                .addEdge(new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2))
                 .build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(1));
@@ -83,12 +83,12 @@ public class ModelBuilderTest {
         VertexBuilder vertex1 = new VertexBuilder();
         VertexBuilder vertex2 = new VertexBuilder();
         EdgeBuilder edge1 = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2);
-        EFSMBuilder efsm = new EFSMBuilder().add(edge1);
+        EFSMBuilder efsm = new EFSMBuilder().addEdge(edge1);
         Assert.assertThat(efsm.build(), notNullValue());
         Assert.assertThat(efsm.build().getEdges().size(), is(1));
         Assert.assertThat(efsm.build().getVertices().size(), is(2));
         EdgeBuilder edge2 = new EdgeBuilder().setSourceVertex(vertex1).setTargetVertex(vertex2);
-        efsm.add(edge2);
+        efsm.addEdge(edge2);
         Assert.assertThat(efsm.build(), notNullValue());
         Assert.assertThat(efsm.build().getEdges().size(), is(2));
         Assert.assertThat(efsm.build().getVertices().size(), is(2));
@@ -96,7 +96,7 @@ public class ModelBuilderTest {
 
     @Test
     public void singleVertex() {
-        EFSM efsm = new EFSMBuilder().add(new VertexBuilder().setName("test")).build();
+        EFSM efsm = new EFSMBuilder().addVertex(new VertexBuilder().setName("test")).build();
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(0));
         Assert.assertThat(efsm.getVertices().size(), is(1));

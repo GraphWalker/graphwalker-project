@@ -27,20 +27,59 @@ package org.graphwalker.core.model.tree;
  */
 
 import org.graphwalker.core.model.Builder;
+import org.graphwalker.core.model.BuilderSet;
+import org.graphwalker.core.model.EmptyBuilder;
 import org.graphwalker.core.model.NamedElement;
+
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
 public final class Classification extends NamedElement {
 
+    private final Classification parent;
+    private final List<Classification> classifications;
+
     private Classification(ClassificationBuilder builder) {
         super(builder.getName());
+        this.parent = builder.getParent().build();
+        this.classifications = builder.getClassifications().build();
+    }
+
+    public Classification getParent() {
+        return parent;
+    }
+
+    public List<Classification> getClassifications() {
+        return classifications;
     }
 
     public static class ClassificationBuilder implements Builder<Classification> {
 
+        public static final Builder<Classification> EMPTY = new EmptyBuilder<>();
+
+        private final BuilderSet<Builder<Classification>, Classification> classifications = new BuilderSet<>();
+        private ClassificationBuilder parent;
         private String name;
+
+        public ClassificationBuilder setParent(ClassificationBuilder parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public ClassificationBuilder getParent() {
+            return parent;
+        }
+
+        public ClassificationBuilder addClassification(ClassificationBuilder classification) {
+            this.classifications.add(classification);
+            return this;
+        }
+
+        public BuilderSet<Builder<Classification>, Classification> getClassifications() {
+            return classifications;
+        }
 
         public ClassificationBuilder setName(String name) {
             this.name = name;

@@ -1,4 +1,4 @@
-package org.graphwalker.core.model.tree;
+package org.graphwalker.core.algorithm;
 
 /*
  * #%L
@@ -26,34 +26,12 @@ package org.graphwalker.core.model.tree;
  * #L%
  */
 
-import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.NamedElement;
+import org.graphwalker.core.model.Model;
 
 /**
  * @author Nils Olsson
  */
-public final class Composition extends NamedElement {
+public interface Algorithm {
 
-    private Composition(CompositionBuilder builder) {
-        super(builder.getName());
-    }
-
-    public static class CompositionBuilder implements Builder<Composition> {
-
-        private String name;
-
-        public CompositionBuilder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public Composition build() {
-            return new Composition(this);
-        }
-    }
+    void compute(Model model);
 }
