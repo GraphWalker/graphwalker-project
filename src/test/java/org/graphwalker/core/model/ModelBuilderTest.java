@@ -114,24 +114,22 @@ public class ModelBuilderTest {
         Assert.assertThat(classification, notNullValue());
         Assert.assertThat(classification.getName(), is("classification"));
     }
-/*
+
     @Test
     public void buildClassificationTree() {
-        Classification classification = new ClassificationBuilder()
+        ImmutableClassification classification = new Classification()
                 .setName("classification")
-                .addClassification(new ClassificationBuilder().setName("leaf1"))
-                .addClassification(new ClassificationBuilder().setName("leaf2"))
+                .addClassification(new Classification().setName("leaf1"))
+                .addClassification(new Classification().setName("leaf2"))
                 .build();
         Assert.assertThat(classification, notNullValue());
         Assert.assertThat(classification.getName(), is("classification"));
         Assert.assertThat(classification.getClassifications(), notNullValue());
         Assert.assertThat(classification.getClassifications().size(), is(2));
         Assert.assertThat(classification.getClassifications().get(0).getName(), is("leaf1"));
-        Assert.assertThat(classification.getClassifications().get(0).getParent(), is(classification));
         Assert.assertThat(classification.getClassifications().get(1).getName(), is("leaf2"));
-        Assert.assertThat(classification.getClassifications().get(1).getParent(), is(classification));
     }
-
+/*
     @Test
     public void buildLargeClassificationTree() {
         Classification classification = createClassification(2).build();
