@@ -39,21 +39,10 @@ public final class Classification implements Builder<Classification.ImmutableCla
 
     private ImmutableClassification classification = null;
     private final BuilderSet<Builder<ImmutableClassification>, ImmutableClassification> classifications = new BuilderSet<>();
-    private Classification parent = null;
     private String name;
-
-    public Classification setParent(Classification parent) {
-        this.parent = parent;
-        return this;
-    }
-
-    public Classification getParent() {
-        return parent;
-    }
 
     public Classification addClassification(Classification classification) {
         this.classifications.add(classification);
-        classification.setParent(this);
         return this;
     }
 
@@ -80,17 +69,11 @@ public final class Classification implements Builder<Classification.ImmutableCla
 
     public static final class ImmutableClassification extends NamedElement {
 
-        private final ImmutableClassification parent = null;
         private final List<ImmutableClassification> classifications;
 
         private ImmutableClassification(Classification classification) {
             super(classification.getName());
             this.classifications = classification.getClassifications().build();
-            //this.parent = classification.getParent().build();
-        }
-
-        public ImmutableClassification getParent() {
-            return parent;
         }
 
         public List<ImmutableClassification> getClassifications() {
