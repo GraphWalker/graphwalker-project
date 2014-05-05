@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.machine;
 
 /*
  * #%L
@@ -26,13 +26,8 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 /**
  * @author Nils Olsson
  */
-public interface StopCondition<C extends Context> {
-
-    boolean isFulfilled(C context);
-    double getFulfilment(C context);
+public interface Context {
 }
