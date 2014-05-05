@@ -124,8 +124,6 @@ public class ModelBuilderTest {
         Assert.assertThat(classification.getName(), is("classification"));
         Assert.assertThat(classification.getClassifications(), notNullValue());
         Assert.assertThat(classification.getClassifications().size(), is(2));
-        Assert.assertThat(classification.getClassifications().get(0).getName(), is("leaf1"));
-        Assert.assertThat(classification.getClassifications().get(1).getName(), is("leaf2"));
     }
 /*
     @Test

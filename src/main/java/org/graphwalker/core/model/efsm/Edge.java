@@ -26,7 +26,7 @@ package org.graphwalker.core.model.efsm;
  * #L%
  */
 
-import org.graphwalker.core.model.Builder;
+import org.graphwalker.core.model.CachedBuilder;
 import org.graphwalker.core.model.NamedElement;
 
 import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
@@ -34,7 +34,7 @@ import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
 /**
  * @author Nils Olsson
  */
-public final class Edge implements Builder<Edge.ImmutableEdge> {
+public final class Edge extends CachedBuilder<Edge.ImmutableEdge> {
 
     private String name;
     private Vertex sourceVertex;
@@ -42,6 +42,7 @@ public final class Edge implements Builder<Edge.ImmutableEdge> {
 
     public Edge setName(String name) {
         this.name = name;
+        invalidateCache();
         return this;
     }
 
@@ -51,6 +52,7 @@ public final class Edge implements Builder<Edge.ImmutableEdge> {
 
     public Edge setSourceVertex(Vertex vertex) {
         this.sourceVertex = vertex;
+        invalidateCache();
         return this;
     }
 
@@ -60,6 +62,7 @@ public final class Edge implements Builder<Edge.ImmutableEdge> {
 
     public Edge setTargetVertex(Vertex vertex) {
         this.targetVertex = vertex;
+        invalidateCache();
         return this;
     }
 
@@ -68,7 +71,7 @@ public final class Edge implements Builder<Edge.ImmutableEdge> {
     }
 
     @Override
-    public ImmutableEdge build() {
+    protected ImmutableEdge createCache() {
         return new ImmutableEdge(this);
     }
 
