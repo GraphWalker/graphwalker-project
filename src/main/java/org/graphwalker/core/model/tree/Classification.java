@@ -28,6 +28,7 @@ package org.graphwalker.core.model.tree;
 
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.BuilderSet;
+import org.graphwalker.core.model.CachedBuilder;
 import org.graphwalker.core.model.NamedElement;
 
 import java.util.List;
@@ -35,14 +36,14 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class Classification implements Builder<Classification.ImmutableClassification> {
+public final class Classification extends CachedBuilder<Classification.ImmutableClassification> {
 
-    private ImmutableClassification classification = null;
     private final BuilderSet<Builder<ImmutableClassification>, ImmutableClassification> classifications = new BuilderSet<>();
     private String name;
 
     public Classification addClassification(Classification classification) {
         this.classifications.add(classification);
+        invalidateCache();
         return this;
     }
 
@@ -52,6 +53,7 @@ public final class Classification implements Builder<Classification.ImmutableCla
 
     public Classification setName(String name) {
         this.name = name;
+        invalidateCache();
         return this;
     }
 
@@ -60,11 +62,8 @@ public final class Classification implements Builder<Classification.ImmutableCla
     }
 
     @Override
-    public ImmutableClassification build() {
-        if (null == classification) {
-            classification = new ImmutableClassification(this);
-        }
-        return classification;
+    protected ImmutableClassification createCache() {
+        return new ImmutableClassification(this);
     }
 
     public static final class ImmutableClassification extends NamedElement {

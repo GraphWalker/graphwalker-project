@@ -1,4 +1,4 @@
-package org.graphwalker.core.model.efsm;
+package org.graphwalker.core.model;
 
 /*
  * #%L
@@ -26,35 +26,24 @@ package org.graphwalker.core.model.efsm;
  * #L%
  */
 
-import org.graphwalker.core.model.CachedBuilder;
-import org.graphwalker.core.model.NamedElement;
-
 /**
  * @author Nils Olsson
  */
-public final class Vertex extends CachedBuilder<Vertex.ImmutableVertex> {
+public abstract class CachedBuilder<T> implements Builder<T> {
 
-    private String name;
+    private T cache;
 
-    public Vertex setName(String name) {
-        this.name = name;
-        invalidateCache();
-        return this;
+    protected void invalidateCache() {
+        cache = null;
     }
 
-    public String getName() {
-        return name;
-    }
+    protected abstract T createCache();
 
     @Override
-    protected ImmutableVertex createCache() {
-        return new ImmutableVertex(this);
-    }
-
-    public static final class ImmutableVertex extends NamedElement {
-
-        private ImmutableVertex(Vertex vertex) {
-            super(vertex.getName());
+    public T build() {
+        if (null == cache) {
+            cache = createCache();
         }
+        return cache;
     }
 }
