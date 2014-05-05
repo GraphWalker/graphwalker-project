@@ -32,6 +32,9 @@ import org.graphwalker.core.model.tree.Classification;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.graphwalker.core.model.ClassificationTree.ImmutableClassificationTree;
 import static org.graphwalker.core.model.EFSM.ImmutableEFSM;
 import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
 import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
@@ -44,13 +47,11 @@ import static org.hamcrest.core.IsNull.notNullValue;
  */
 public class ModelBuilderTest {
 
-
     @Test
     public void buildVertex() {
         ImmutableVertex vertex = new Vertex().setName("test").build();
         Assert.assertThat(vertex, notNullValue());
         Assert.assertThat(vertex.getName(), is("test"));
-
     }
 
     @Test
@@ -114,7 +115,7 @@ public class ModelBuilderTest {
     }
 
     @Test
-    public void buildClassificationTree() {
+    public void buildClassificationWithLeafs() {
         ImmutableClassification classification = new Classification()
                 .setName("classification")
                 .addClassification(new Classification().setName("leaf1"))
@@ -125,46 +126,28 @@ public class ModelBuilderTest {
         Assert.assertThat(classification.getClassifications(), notNullValue());
         Assert.assertThat(classification.getClassifications().size(), is(2));
     }
-/*
-    @Test
-    public void buildLargeClassificationTree() {
-        Classification classification = createClassification(2).build();
-        int i = 0;
-    }
 
-    private ClassificationBuilder createClassification(int level) {
-        ClassificationBuilder builder = new ClassificationBuilder();
-        if (0 < level) {
-            for (int i = 0; i < level; i++) {
-                builder.addClassification(createClassification(level-1));
-            }
-        }
-        return builder;
-    }
-*/
-/*
     @Test
     public void buildClassificationTree() {
-        ClassificationTree classificationTree = new ClassificationTreeBuilder().build();
+        ImmutableClassificationTree classificationTree = new ClassificationTree().build();
         Assert.assertThat(classificationTree, notNullValue());
+        Assert.assertThat(classificationTree.getRoot(), notNullValue());
+        Assert.assertThat(classificationTree.getRoot().getClassifications(), notNullValue());
+        Assert.assertThat(classificationTree.getRoot().getClassifications().size(), is(0));
     }
-*/
-    /*
+
     @Test
     public void buildLargerClassificationTree() {
-        ClassificationBuilder leaf1 = new ClassificationBuilder().setName("leaf1");
-        ClassificationBuilder leaf2 = new ClassificationBuilder().setName("leaf2");
-        ClassificationTree classificationTree = new ClassificationTreeBuilder()
+        Classification leaf1 = new Classification().setName("leaf1");
+        Classification leaf2 = new Classification().setName("leaf2");
+        ImmutableClassificationTree classificationTree = new ClassificationTree()
                 .addClassification(leaf1)
                 .addClassification(leaf2)
                 .build();
         Assert.assertThat(classificationTree, notNullValue());
-        Assert.assertThat(classificationTree.getClassifications(), notNullValue());
-        List<Classification> classifications = classificationTree.getClassifications();
+        Assert.assertThat(classificationTree.getRoot(), notNullValue());
+        List<ImmutableClassification> classifications = classificationTree.getRoot().getClassifications();
         Assert.assertThat(classifications.size(), is(2));
-        Assert.assertThat(classifications.get(0).getParent(), is(classificationTree.getRoot()));
-        Assert.assertThat(classifications.get(0).getName(), is("leaf1"));
-        Assert.assertThat(classifications.get(1).getName(), is("leaf2"));
     }
-    */
+
 }

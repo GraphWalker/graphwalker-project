@@ -26,43 +26,41 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.graphwalker.core.model.tree.Classification;
+
+import static org.graphwalker.core.model.tree.Classification.ImmutableClassification;
+
 /**
  * @author Nils Olsson
  */
-public final class ClassificationTree implements Model {
-/*
-    private final Classification classification;
+public final class ClassificationTree implements Builder<ClassificationTree.ImmutableClassificationTree> {
 
-    private ClassificationTree(ClassificationTreeBuilder builder) {
-        this.classification = builder.getClassification().build();
+    private final Classification classification = new Classification();
+
+    public ClassificationTree addClassification(Classification classification) {
+        this.classification.addClassification(classification);
+        return this;
     }
 
     public Classification getRoot() {
         return classification;
     }
 
-    public List<Classification> getClassifications() {
-        return classification.getClassifications();
+    @Override
+    public ImmutableClassificationTree build() {
+        return new ImmutableClassificationTree(this);
     }
 
-    public static class ClassificationTreeBuilder implements Builder<ClassificationTree> {
+    public static class ImmutableClassificationTree implements Model {
 
-        private ClassificationBuilder classification = new ClassificationBuilder();
+        private final ImmutableClassification root;
 
-        public ClassificationTreeBuilder addClassification(ClassificationBuilder classification) {
-            //this.classification.addClassification(classification);
-            //classification.setParent(this);
-            return this;
+        private ImmutableClassificationTree(ClassificationTree classificationTree) {
+            this.root = classificationTree.getRoot().build();
         }
 
-        public Builder<Classification> getClassification() {
-            return classification;
-        }
-
-        @Override
-        public ClassificationTree build() {
-            return new ClassificationTree(this);
+        public ImmutableClassification getRoot() {
+            return root;
         }
     }
-    */
 }
