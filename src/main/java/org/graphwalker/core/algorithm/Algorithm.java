@@ -26,10 +26,12 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.model.Model;
+
 /**
  * @author Nils Olsson
  */
-public interface Algorithm<T> {
+public interface Algorithm<T extends Model> {
 
     void compute(T model);
 }

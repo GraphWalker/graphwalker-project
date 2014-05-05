@@ -38,7 +38,7 @@ import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
 /**
  * @author Nils Olsson
  */
-public final class EFSM implements org.graphwalker.core.model.Builder<EFSM.ImmutableEFSM> {
+public final class EFSM implements Builder<EFSM.ImmutableEFSM> {
 
     private final BuilderSet<Builder<ImmutableVertex>, ImmutableVertex> vertices = new BuilderSet<>();
     private final BuilderSet<Builder<ImmutableEdge>, ImmutableEdge> edges = new BuilderSet<>();
