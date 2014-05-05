@@ -1,4 +1,4 @@
-package org.graphwalker.core.machine;
+package org.graphwalker.core.algorithm;
 
 /*
  * #%L
@@ -29,5 +29,5 @@ package org.graphwalker.core.machine;
 /**
  * @author Nils Olsson
  */
-public interface ExecutionContext {
+public class AlgorithmTest {
 }

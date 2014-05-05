@@ -32,13 +32,6 @@ import org.graphwalker.core.model.tree.Classification;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.graphwalker.core.model.ClassificationTree.ImmutableClassificationTree;
-import static org.graphwalker.core.model.EFSM.ImmutableEFSM;
-import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
-import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
-import static org.graphwalker.core.model.tree.Classification.ImmutableClassification;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
