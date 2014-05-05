@@ -31,7 +31,7 @@ import org.graphwalker.core.model.Model;
 /**
  * @author Nils Olsson
  */
-public interface Algorithm<T extends Model> {
+public interface Algorithm<M extends Model> {
 
-    void compute(T model);
+    void compute(M model);
 }
