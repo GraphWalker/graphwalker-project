@@ -32,7 +32,7 @@ import org.graphwalker.core.model.Element;
 /**
  * @author Nils Olsson
  */
-public interface PathGenerator {
-    Element getNextStep(ExecutionContext context);
-    Boolean hasNextStep(ExecutionContext context);
+public interface PathGenerator<E extends Element, C extends ExecutionContext> {
+
+    E getNextStep(C context);
 }

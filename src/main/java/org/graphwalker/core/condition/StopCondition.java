@@ -31,7 +31,8 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+public interface StopCondition<C extends ExecutionContext> {
+
+    boolean isFulfilled(C context);
+    double getFulfilment(C context);
 }
