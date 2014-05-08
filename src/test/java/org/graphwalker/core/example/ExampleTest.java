@@ -27,7 +27,6 @@ package org.graphwalker.core.example;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
@@ -53,7 +52,7 @@ public class ExampleTest extends ExecutionContext {
                 .setTargetVertex(new Vertex()
                         .setName("vertex2")))
                 , new RandomPath(new VertexCoverage()));
-        setStartElement(start);
+        setNextElement(start);
     }
 
     public void vertex1() {

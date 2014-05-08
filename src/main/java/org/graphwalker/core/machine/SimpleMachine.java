@@ -42,6 +42,8 @@ public final class SimpleMachine implements Machine {
     private final List<ExecutionContext> contexts = new ArrayList<>();
     private final ScriptEngine scriptEngine;
 
+    private ExecutionContext currentContext;
+
     public SimpleMachine(ExecutionContext context) {
         this(Arrays.asList(context));
     }

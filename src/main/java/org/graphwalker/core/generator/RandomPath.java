@@ -58,7 +58,7 @@ public final class RandomPath implements PathGenerator {
     public ExecutionContext getNextStep(ExecutionContext context) {
         Element element = context.getCurrentElement();
         if (null == element) {
-            context.setCurrentElement(context.getStartElement());
+            context.setCurrentElement(context.getNextElement());
         } else if (element instanceof ImmutableVertex) {
             ImmutableVertex vertex = (ImmutableVertex)element;
             // TODO: ugly lookup, fix it

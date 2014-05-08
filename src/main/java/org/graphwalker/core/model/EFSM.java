@@ -50,8 +50,12 @@ public final class EFSM implements Builder<EFSM.ImmutableEFSM> {
 
     public EFSM addEdge(Edge edge) {
         edges.add(edge);
-        vertices.add(edge.getSourceVertex());
-        vertices.add(edge.getTargetVertex());
+        if (null != edge.getSourceVertex()) {
+            vertices.add(edge.getSourceVertex());
+        }
+        if (null != edge.getTargetVertex()) {
+            vertices.add(edge.getTargetVertex());
+        }
         return this;
     }
 
