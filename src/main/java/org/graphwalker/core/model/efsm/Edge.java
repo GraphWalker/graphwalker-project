@@ -82,8 +82,16 @@ public final class Edge extends CachedBuilder<Edge.ImmutableEdge> {
 
         private ImmutableEdge(Edge edge) {
             super(edge.getName());
-            this.sourceVertex = edge.getSourceVertex().build();
-            this.targetVertex = edge.getTargetVertex().build();
+            if (null != edge.getSourceVertex()) {
+                this.sourceVertex = edge.getSourceVertex().build();
+            } else {
+                this.sourceVertex = null;
+            }
+            if (null != edge.getTargetVertex()) {
+                this.targetVertex = edge.getTargetVertex().build();
+            } else {
+                this.targetVertex = null;
+            }
         }
 
         public ImmutableVertex getSourceVertex() {

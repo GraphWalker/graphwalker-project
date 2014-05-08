@@ -43,11 +43,22 @@ public class MachineTest {
         Vertex vertex = new Vertex();
         EFSM model = new EFSM().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
         ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
-        context.setStartElement(vertex);
+        context.setNextElement(vertex);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
     }
 
+    @Test
+    public void noStartVertex() {
+        Edge edge = new Edge().setTargetVertex(new Vertex());
+        EFSM model = new EFSM().addEdge(edge);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
+        context.setNextElement(edge);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+    }
 }

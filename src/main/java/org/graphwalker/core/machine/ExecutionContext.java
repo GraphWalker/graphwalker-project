@@ -28,17 +28,11 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.EFSM;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.efsm.Edge;
-import org.graphwalker.core.model.efsm.Vertex;
 import org.graphwalker.core.statistics.Profile;
 
 import javax.script.SimpleScriptContext;
-import java.lang.annotation.ElementType;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Nils Olsson
@@ -51,7 +45,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
 
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
     private Element currentElement;
-    private Element startElement;
+    private Element nextElement;
 
     public ExecutionContext(Builder<? extends Model> model, PathGenerator pathGenerator) {
         this.model = model.build();
@@ -86,11 +80,12 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         this.currentElement = element;
     }
 
-    public Element getStartElement() {
-        return startElement;
+    public Element getNextElement() {
+        return nextElement;
     }
 
-    public void setStartElement(Builder<? extends Element> startElement) {
-        this.startElement = startElement.build();
+    public void setNextElement(Builder<? extends Element> nextElement) {
+        this.nextElement = nextElement.build();
+        this.currentElement = null;
     }
 }
