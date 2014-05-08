@@ -1,4 +1,4 @@
-package org.graphwalker.core.machine;
+package org.graphwalker.core.example;
 
 /*
  * #%L
@@ -27,7 +27,11 @@ package org.graphwalker.core.machine;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.EFSM;
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
@@ -36,18 +40,48 @@ import org.junit.Test;
 /**
  * @author Nils Olsson
  */
-public class MachineTest {
+public class ExampleTest extends ExecutionContext {
+
+    private static Vertex start = new Vertex();
+
+    public ExampleTest() {
+        super(new EFSM().addEdge(new Edge()
+                .setName("edge1")
+                //.setGuard()
+                .setSourceVertex(start
+                        .setName("vertex1"))
+                .setTargetVertex(new Vertex()
+                        .setName("vertex2")))
+                , new RandomPath(new VertexCoverage()));
+        setStartElement(start);
+    }
+
+    public void vertex1() {
+        System.out.println("vertex1");
+    }
+
+    public void edge1() {
+        System.out.println("edge1");
+    }
+
+    public void vertex2() {
+        System.out.println("vertex2");
+    }
 
     @Test
-    public void simpleMachine() {
-        Vertex vertex = new Vertex();
-        EFSM model = new EFSM().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
-        context.setStartElement(vertex);
-        Machine machine = new SimpleMachine(context);
+    public void success() {
+        Machine machine = new SimpleMachine(this);
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
     }
-
+/*
+    @Test(expected = NoPathFoundException.class)
+    public void failure() {
+        Machine machine = new SimpleMachine(this);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+    }
+*/
 }

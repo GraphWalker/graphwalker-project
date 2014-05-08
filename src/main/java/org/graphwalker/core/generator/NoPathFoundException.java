@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.generator;
 
 /*
  * #%L
@@ -26,13 +26,8 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
-
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+public class NoPathFoundException extends RuntimeException {
 }

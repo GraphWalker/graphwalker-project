@@ -27,12 +27,32 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.EFSM;
+import org.graphwalker.core.model.efsm.Vertex;
+
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
+public final class VertexCoverage implements StopCondition {
 
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+    private final double limit = 1.0;
+
+    @Override
+    public boolean isFulfilled(ExecutionContext context) {
+        return getFulfilment(context) >= 1.0;
+    }
+
+    @Override
+    public double getFulfilment(ExecutionContext context) {
+        List<Vertex.ImmutableVertex> vertices = ((EFSM.ImmutableEFSM)context.getModel()).getVertices();
+        double visitedVertexCount = 0.0;
+        for (Vertex.ImmutableVertex vertex: vertices) {
+            if (context.getProfile().containsKey(vertex)) {
+                visitedVertexCount++;
+            }
+        }
+        return (visitedVertexCount / vertices.size()) / limit;
+    }
 }

@@ -26,13 +26,15 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * @author Nils Olsson
  */
-public interface PathGenerator<E extends Element, C extends Context> {
+public interface PathGenerator {
 
-    E getNextStep(C context);
+    StopCondition getStopCondition();
+    ExecutionContext getNextStep(ExecutionContext context);
+    boolean hasNextStep(ExecutionContext context);
 }
