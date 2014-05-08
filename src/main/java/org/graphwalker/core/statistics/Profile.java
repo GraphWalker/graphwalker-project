@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.statistics;
 
 /*
  * #%L
@@ -26,13 +26,17 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Element;
+
+import java.util.HashMap;
 
 /**
  * @author Nils Olsson
  */
-public interface StopCondition {
-
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+public final class Profile extends HashMap<Element, ProfileUnit> {
+/* TODO: should contain information about an Element
+    1. cumulative execution count
+    2. cumulative execution time
+    3. start execution timestamp
+*/
 }

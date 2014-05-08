@@ -30,4 +30,6 @@ package org.graphwalker.core.machine;
  * @author Nils Olsson
  */
 public interface Machine {
+    Context getNextStep();
+    boolean hasNextStep();
 }

@@ -70,9 +70,7 @@ public class ModelBuilderTest {
 
     @Test
     public void buildEFSM() {
-        Vertex vertex1 = new Vertex();
-        Vertex vertex2 = new Vertex();
-        EFSM efsm = new EFSM().addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2));
+        EFSM efsm = new EFSM().addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(1));
         Assert.assertThat(efsm.getVertices().size(), is(2));
@@ -80,7 +78,6 @@ public class ModelBuilderTest {
         Assert.assertThat(efsm.build().getEdges().size(), is(1));
         Assert.assertThat(efsm.build().getVertices().size(), is(2));
     }
-
 
     @Test
     public void updateBuilder() {
@@ -163,5 +160,4 @@ public class ModelBuilderTest {
         Assert.assertThat(classificationTree.build().getRoot(), notNullValue());
         Assert.assertThat(classificationTree.build().getRoot().getClassifications().size(), is(2));
     }
-
 }
