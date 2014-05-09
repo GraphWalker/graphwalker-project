@@ -17,7 +17,7 @@ Letter
 
 fragment
 LetterOrDigit
-    :   [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
+    :   [a-zA-Z0-9$_]
     |   ~[\u0000-\u00FF\uD800-\uDBFF]
         {Character.isJavaIdentifierPart(_input.LA(-1))}?
     |   [\uD800-\uDBFF] [\uDC00-\uDFFF]
