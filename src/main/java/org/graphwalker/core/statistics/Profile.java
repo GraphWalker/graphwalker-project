@@ -38,5 +38,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
     1. cumulative execution count
     2. cumulative execution time
     3. start execution timestamp
+    4. vertex visit count
+    5. edge visit count
 */
 }
