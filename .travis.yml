@@ -9,8 +9,8 @@ env:
 
 before_install:
  - sudo apt-get update -qq
- - git clone https://github.com/GraphWalker/gw-core.git
- - cd gw-core;mvn -q clean install;cd ..
+ - git clone --depth=50 --branch=master git://github.com/GraphWalker/gw-core.git GraphWalker/gw-core
+ - pushd GraphWalker/gw-core;mvn -q clean install;popd
 
 install:
   mvn -q clean install
