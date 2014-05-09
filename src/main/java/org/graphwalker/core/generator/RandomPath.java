@@ -84,5 +84,4 @@ public final class RandomPath implements PathGenerator {
         return getStopCondition().isFulfilled(context);
     }
 
-
 }
