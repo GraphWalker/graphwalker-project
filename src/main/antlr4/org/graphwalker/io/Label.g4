@@ -1,6 +1,6 @@
 grammar Label;
-label:	name ;
-name : Identifier;
+label  : name ;
+name   : Identifier;
 
 Identifier
     :   Letter LetterOrDigit*
