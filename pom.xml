@@ -29,6 +29,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>gw-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
