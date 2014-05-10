@@ -2,6 +2,8 @@ grammar Label;
 
 parse
  : name? guard? actions? blocked? EOF
+ | blocked? name? guard? actions? EOF
+ | actions? guard? name? blocked? EOF
  ;
 
 actions
