@@ -26,16 +26,19 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.core.model.EFSM;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.efsm.Edge;
 import org.graphwalker.core.model.efsm.Vertex;
+import org.graphwalker.io.LabelLexer;
+import org.graphwalker.io.LabelParser;
 import org.graphwalker.io.common.ResourceUtils;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,10 +104,9 @@ public final class GraphMLModelFactory implements ModelFactory {
                 }
                 break;
                 case END_ELEMENT: {
-                    String text = builder.toString().trim().replaceAll("\n", " ");
-                    System.out.println("["+text+"]");
+                    LabelParser.ParseContext context = parseLabel(builder.toString());
                     Vertex vertex = new Vertex()
-                            .setName("");
+                            .setName(context.name().getText());
                     elements.put(id, vertex);
                     model.addVertex(vertex);
 
@@ -141,10 +143,9 @@ public final class GraphMLModelFactory implements ModelFactory {
                 }
                 break;
                 case END_ELEMENT: {
-                    String text = builder.toString().trim().replaceAll("\n", " ");
-                    System.out.println("["+text+"]");
+                    LabelParser.ParseContext context = parseLabel(builder.toString());
                     Edge edge = new Edge()
-                            .setName("")
+                            .setName(context.name().getText())
                             .setSourceVertex(elements.get(source))
                             .setTargetVertex(elements.get(target));
                     model.addEdge(edge);
@@ -152,5 +153,13 @@ public final class GraphMLModelFactory implements ModelFactory {
                 }
             }
         }
+    }
+
+    private LabelParser.ParseContext parseLabel(String label) {
+        ANTLRInputStream inputStream = new ANTLRInputStream(label);
+        LabelLexer lexer = new LabelLexer(inputStream);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        LabelParser parser = new LabelParser(tokens);
+        return parser.parse();
     }
 }

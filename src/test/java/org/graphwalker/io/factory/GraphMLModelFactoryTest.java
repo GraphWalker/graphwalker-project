@@ -27,10 +27,7 @@ package org.graphwalker.io.factory;
  */
 
 import org.graphwalker.core.model.Model;
-import org.junit.Assert;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -56,6 +53,7 @@ public class GraphMLModelFactoryTest {
     public void uc01() {
         GraphMLModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/UC01.graphml");
+        int i = 0;
         //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
         //Assert.assertThat("Number of edges", model.getEdges().size(), is(12));
     }
