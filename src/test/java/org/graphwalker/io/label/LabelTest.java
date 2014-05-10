@@ -1,4 +1,4 @@
-package antlr4;
+package org.graphwalker.io.label;
 
 /*
  * #%L
@@ -26,25 +26,50 @@ package antlr4;
  * #L%
  */
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.LabelParser;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
  */
 public class LabelTest {
 
+    private List<String> labels = Arrays.asList(
+            "",
+            "Start",
+            "v_BaseURL",
+            "e_AddBookToCart [num_of_books<=MAX_BOOKS] / num_of_books++; /* test */",
+            "e_init / num_of_books = 0; MAX_BOOKS = 5;"
+    );
+
     @Test
-    public void simple() { // e_AddBookToCart [num_of_books<=MAX_BOOKS] / num_of_books++; /* test */
-        ANTLRInputStream inputStream = new ANTLRInputStream("3e_AddBookToCart");
+    public void testLabels() {
+        for (String label: labels) {
+            ANTLRInputStream inputStream = new ANTLRInputStream(label);
+            LabelLexer lexer = new LabelLexer(inputStream);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            LabelParser parser = new LabelParser(tokens);
+            LabelParser.ParseContext context = parser.parse();
+            Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+        }
+    }
+
+    @Test(expected = AssertionError.class)
+    public void badLabel() {
+        ANTLRInputStream inputStream = new ANTLRInputStream("1name");
         LabelLexer lexer = new LabelLexer(inputStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         LabelParser parser = new LabelParser(tokens);
-        LabelParser.LabelContext context = parser.label();
-        int i = 0;
+        LabelParser.ParseContext context = parser.parse();
+        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
     }
-
-
 }
