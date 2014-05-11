@@ -29,7 +29,7 @@ package org.graphwalker.core.statistics;
 /**
  * @author Nils Olsson
  */
-public class ProfileUnit {
+public final class ProfileUnit {
 /* TODO: should contain information about an Element
     1. execution count
     2. min execution time

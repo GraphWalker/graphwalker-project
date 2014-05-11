@@ -26,8 +26,6 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import org.graphwalker.core.statistics.ProfileUnit;
-
 import javax.script.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,35 +49,36 @@ public final class SimpleMachine implements Machine {
     public SimpleMachine(List<ExecutionContext> contexts) {
         this.contexts.addAll(contexts);
         this.scriptEngine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+        this.currentContext = contexts.get(0);
     }
 
     @Override
     public Context getNextStep() {
-        if (null != contexts.get(0).getCurrentElement()) { // End
-            contexts.get(0).getProfile().put(contexts.get(0).getCurrentElement(), new ProfileUnit());
-        }
-        ExecutionContext context = contexts.get(0).getPathGenerator().getNextStep(contexts.get(0));
-        if (null != context.getCurrentElement() && !context.getProfile().containsKey(context.getCurrentElement())) {  // Start
-            contexts.get(0).getProfile().put(contexts.get(0).getCurrentElement(), new ProfileUnit());
-        }
-        String name = context.getCurrentElement().getName();
+        currentContext.getProfiler().stop();
+        currentContext.getPathGenerator().getNextStep(currentContext);
+        currentContext.getProfiler().start();
+
+        String name = currentContext.getCurrentElement().getName();
         if (null != name && !"".equals(name)) {
             try {
-                scriptEngine.setContext(context);
+                scriptEngine.setContext(currentContext);
                 Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-                bindings.put("impl", context);
+                bindings.put("impl", currentContext);
                 scriptEngine.eval( "impl." + name + "()");
             } catch (ScriptException e) {
                 e.printStackTrace();
             }
         }
-        return context;
+        return currentContext;
     }
 
     @Override
     public boolean hasNextStep() {
-        return !contexts.get(0).getPathGenerator().getStopCondition().isFulfilled(contexts.get(0));
+        if (!currentContext.getPathGenerator().getStopCondition().isFulfilled(currentContext)) {
+            return true;
+        }
+        // Find another context to execute!?
+        // ...
+        return false;
     }
-
-
 }
