@@ -28,10 +28,9 @@ package org.graphwalker.io.factory;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.core.model.EFSM;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.efsm.Edge;
-import org.graphwalker.core.model.efsm.Vertex;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.LabelParser;
 import org.graphwalker.io.common.ResourceUtils;
@@ -61,7 +60,7 @@ public final class GraphMLModelFactory implements ModelFactory {
     }
 
     private Model parse(String file) throws XMLStreamException {
-        EFSM model = new EFSM();
+        Model model = new Model();
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader reader = factory.createXMLStreamReader(ResourceUtils.getResourceAsStream(file));
         while (reader.hasNext()) {
@@ -74,10 +73,10 @@ public final class GraphMLModelFactory implements ModelFactory {
                 }
             }
         }
-        return model.build();
+        return model;
     }
 
-    private void parseVertex(XMLStreamReader reader, EFSM model) throws XMLStreamException {
+    private void parseVertex(XMLStreamReader reader, Model model) throws XMLStreamException {
         while (reader.hasNext()) {
             switch (reader.next()) {
                 case START_ELEMENT: {
@@ -95,7 +94,7 @@ public final class GraphMLModelFactory implements ModelFactory {
         }
     }
 
-    private void parseNodeLabel(XMLStreamReader reader, EFSM model, String id) throws XMLStreamException {
+    private void parseNodeLabel(XMLStreamReader reader, Model model, String id) throws XMLStreamException {
         StringBuilder builder = new StringBuilder();
         while (reader.hasNext()) {
             switch (reader.next()) {
@@ -116,7 +115,7 @@ public final class GraphMLModelFactory implements ModelFactory {
         }
     }
 
-    private void parseEdge(XMLStreamReader reader, EFSM model) throws XMLStreamException {
+    private void parseEdge(XMLStreamReader reader, Model model) throws XMLStreamException {
         while (reader.hasNext()) {
             switch (reader.next()) {
                 case START_ELEMENT: {
@@ -134,7 +133,7 @@ public final class GraphMLModelFactory implements ModelFactory {
         }
     }
 
-    private void parseEdgeLabel(XMLStreamReader reader, EFSM model, String id, String source, String target) throws XMLStreamException {
+    private void parseEdgeLabel(XMLStreamReader reader, Model model, String id, String source, String target) throws XMLStreamException {
         StringBuilder builder = new StringBuilder();
         while (reader.hasNext()) {
             switch (reader.next()) {
