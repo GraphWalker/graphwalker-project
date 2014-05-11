@@ -1,4 +1,4 @@
-package org.graphwalker.core.model.efsm;
+package org.graphwalker.core.model;
 
 /*
  * #%L
@@ -26,15 +26,12 @@ package org.graphwalker.core.model.efsm;
  * #L%
  */
 
-import org.graphwalker.core.model.CachedBuilder;
-import org.graphwalker.core.model.NamedElement;
-
-import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
  */
-public final class Edge extends CachedBuilder<Edge.ImmutableEdge> {
+public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     private String name;
     private Vertex sourceVertex;
@@ -71,16 +68,16 @@ public final class Edge extends CachedBuilder<Edge.ImmutableEdge> {
     }
 
     @Override
-    protected ImmutableEdge createCache() {
-        return new ImmutableEdge(this);
+    protected RuntimeEdge createCache() {
+        return new RuntimeEdge(this);
     }
 
-    public static final class ImmutableEdge extends NamedElement {
+    public static final class RuntimeEdge extends NamedElement {
 
-        private final ImmutableVertex sourceVertex;
-        private final ImmutableVertex targetVertex;
+        private final RuntimeVertex sourceVertex;
+        private final RuntimeVertex targetVertex;
 
-        private ImmutableEdge(Edge edge) {
+        private RuntimeEdge(Edge edge) {
             super(edge.getName());
             if (null != edge.getSourceVertex()) {
                 this.sourceVertex = edge.getSourceVertex().build();
@@ -94,11 +91,11 @@ public final class Edge extends CachedBuilder<Edge.ImmutableEdge> {
             }
         }
 
-        public ImmutableVertex getSourceVertex() {
+        public RuntimeVertex getSourceVertex() {
             return sourceVertex;
         }
 
-        public ImmutableVertex getTargetVertex() {
+        public RuntimeVertex getTargetVertex() {
             return targetVertex;
         }
     }

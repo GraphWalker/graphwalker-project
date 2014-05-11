@@ -34,12 +34,14 @@ import org.graphwalker.core.statistics.Profiler;
 
 import javax.script.SimpleScriptContext;
 
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
 /**
  * @author Nils Olsson
  */
 public class ExecutionContext extends SimpleScriptContext implements Context {
 
-    private final Model model;
+    private final RuntimeModel model;
     private final PathGenerator pathGenerator;
     private final Profiler profiler = new Profiler(this);
 
@@ -47,12 +49,12 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     private Element currentElement;
     private Element nextElement;
 
-    public ExecutionContext(Builder<? extends Model> model, PathGenerator pathGenerator) {
+    public ExecutionContext(Model model, PathGenerator pathGenerator) {
         this.model = model.build();
         this.pathGenerator = pathGenerator;
     }
 
-    public Model getModel() {
+    public RuntimeModel getModel() {
         return model;
     }
 

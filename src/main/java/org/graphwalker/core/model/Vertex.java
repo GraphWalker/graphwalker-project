@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.model;
 
 /*
  * #%L
@@ -26,32 +26,32 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Vertex;
-
-import java.util.List;
-
 /**
  * @author Nils Olsson
  */
-public final class VertexCoverage implements StopCondition {
+public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
-    private final double limit = 1.0;
+    private String name;
 
-    @Override
-    public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= 1.0;
+    public Vertex setName(String name) {
+        this.name = name;
+        invalidateCache();
+        return this;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
-    public double getFulfilment(ExecutionContext context) {
-        List<Vertex.RuntimeVertex> vertices = context.getModel().getVertices();
-        double visitedVertexCount = 0.0;
-        for (Vertex.RuntimeVertex vertex: vertices) {
-            if (context.getProfiler().isVisited(vertex)) {
-                visitedVertexCount++;
-            }
+    protected RuntimeVertex createCache() {
+        return new RuntimeVertex(this);
+    }
+
+    public static final class RuntimeVertex extends NamedElement {
+
+        private RuntimeVertex(Vertex vertex) {
+            super(vertex.getName());
         }
-        return (visitedVertexCount / vertices.size()) / limit;
     }
 }

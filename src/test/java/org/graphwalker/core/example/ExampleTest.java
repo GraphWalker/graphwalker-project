@@ -31,9 +31,9 @@ import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.EFSM;
-import org.graphwalker.core.model.efsm.Edge;
-import org.graphwalker.core.model.efsm.Vertex;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 /**
@@ -44,7 +44,7 @@ public class ExampleTest extends ExecutionContext {
     private static Vertex start = new Vertex();
 
     public ExampleTest() {
-        super(new EFSM().addEdge(new Edge()
+        super(new Model().addEdge(new Edge()
                 .setName("edge1")
                 //.setGuard()
                 .setSourceVertex(start

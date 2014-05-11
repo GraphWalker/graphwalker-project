@@ -26,9 +26,6 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.model.efsm.Edge;
-import org.graphwalker.core.model.efsm.Vertex;
-import org.graphwalker.core.model.tree.Classification;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -70,7 +67,7 @@ public class ModelBuilderTest {
 
     @Test
     public void buildEFSM() {
-        EFSM efsm = new EFSM().addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
+        Model efsm = new Model().addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(1));
         Assert.assertThat(efsm.getVertices().size(), is(2));
@@ -84,7 +81,7 @@ public class ModelBuilderTest {
         Vertex vertex1 = new Vertex();
         Vertex vertex2 = new Vertex();
         Edge edge1 = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2);
-        EFSM efsm = new EFSM().addEdge(edge1);
+        Model efsm = new Model().addEdge(edge1);
         Assert.assertThat(efsm.build(), notNullValue());
         Assert.assertThat(efsm.build().getEdges().size(), is(1));
         Assert.assertThat(efsm.build().getVertices().size(), is(2));
@@ -97,7 +94,7 @@ public class ModelBuilderTest {
 
     @Test
     public void singleVertex() {
-        EFSM efsm = new EFSM().addVertex(new Vertex().setName("test"));
+        Model efsm = new Model().addVertex(new Vertex().setName("test"));
         Assert.assertThat(efsm, notNullValue());
         Assert.assertThat(efsm.getEdges().size(), is(0));
         Assert.assertThat(efsm.getVertices().size(), is(1));
