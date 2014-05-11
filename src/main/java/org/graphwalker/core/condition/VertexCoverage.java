@@ -27,9 +27,10 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Vertex;
 
 import java.util.List;
+
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
@@ -45,9 +46,9 @@ public final class VertexCoverage implements StopCondition {
 
     @Override
     public double getFulfilment(ExecutionContext context) {
-        List<Vertex.RuntimeVertex> vertices = context.getModel().getVertices();
+        List<RuntimeVertex> vertices = context.getModel().getVertices();
         double visitedVertexCount = 0.0;
-        for (Vertex.RuntimeVertex vertex: vertices) {
+        for (RuntimeVertex vertex: vertices) {
             if (context.getProfiler().isVisited(vertex)) {
                 visitedVertexCount++;
             }
