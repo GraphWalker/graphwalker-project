@@ -79,16 +79,12 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         private RuntimeEdge(Edge edge) {
             super(edge.getName());
-            if (null != edge.getSourceVertex()) {
-                this.sourceVertex = edge.getSourceVertex().build();
-            } else {
-                this.sourceVertex = null;
-            }
-            if (null != edge.getTargetVertex()) {
-                this.targetVertex = edge.getTargetVertex().build();
-            } else {
-                this.targetVertex = null;
-            }
+            this.sourceVertex = build(edge.getSourceVertex());
+            this.targetVertex = build(edge.getTargetVertex());
+        }
+
+        private <T> T build(Builder<T> builder) {
+            return (null!=builder?builder.build():null);
         }
 
         public RuntimeVertex getSourceVertex() {
