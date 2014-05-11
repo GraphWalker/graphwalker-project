@@ -57,8 +57,21 @@ public final class SimpleMachine implements Machine {
         currentContext.getProfiler().stop();
         currentContext.getPathGenerator().getNextStep(currentContext);
         currentContext.getProfiler().start();
+        execute(currentContext.getCurrentElement().getName());
+        return currentContext;
+    }
 
-        String name = currentContext.getCurrentElement().getName();
+    @Override
+    public boolean hasNextStep() {
+        if (!currentContext.getPathGenerator().hasNextStep(currentContext)) {
+            return true;
+        }
+        // Find another context to execute!?
+        // ...
+        return false;
+    }
+
+    private void execute(String name) {
         if (null != name && !"".equals(name)) {
             try {
                 scriptEngine.setContext(currentContext);
@@ -66,19 +79,8 @@ public final class SimpleMachine implements Machine {
                 bindings.put("impl", currentContext);
                 scriptEngine.eval( "impl." + name + "()");
             } catch (ScriptException e) {
-                e.printStackTrace();
+                throw new MachineException(e);
             }
         }
-        return currentContext;
-    }
-
-    @Override
-    public boolean hasNextStep() {
-        if (!currentContext.getPathGenerator().getStopCondition().isFulfilled(currentContext)) {
-            return true;
-        }
-        // Find another context to execute!?
-        // ...
-        return false;
     }
 }
