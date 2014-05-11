@@ -1,4 +1,4 @@
-package org.graphwalker.core.model.efsm;
+package org.graphwalker.core.model;
 
 /*
  * #%L
@@ -26,17 +26,27 @@ package org.graphwalker.core.model.efsm;
  * #L%
  */
 
-import org.graphwalker.core.model.CachedBuilder;
-import org.graphwalker.core.model.NamedElement;
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public final class Vertex extends CachedBuilder<Vertex.ImmutableVertex> {
+public final class Classification extends CachedBuilder<Classification.RuntimeClassification> {
 
+    private final BuilderSet<Builder<RuntimeClassification>, RuntimeClassification> classifications = new BuilderSet<>();
     private String name;
 
-    public Vertex setName(String name) {
+    public Classification addClassification(Classification classification) {
+        this.classifications.add(classification);
+        invalidateCache();
+        return this;
+    }
+
+    public BuilderSet<Builder<RuntimeClassification>, RuntimeClassification> getClassifications() {
+        return classifications;
+    }
+
+    public Classification setName(String name) {
         this.name = name;
         invalidateCache();
         return this;
@@ -47,14 +57,21 @@ public final class Vertex extends CachedBuilder<Vertex.ImmutableVertex> {
     }
 
     @Override
-    protected ImmutableVertex createCache() {
-        return new ImmutableVertex(this);
+    protected RuntimeClassification createCache() {
+        return new RuntimeClassification(this);
     }
 
-    public static final class ImmutableVertex extends NamedElement {
+    public static final class RuntimeClassification extends NamedElement {
 
-        private ImmutableVertex(Vertex vertex) {
-            super(vertex.getName());
+        private final List<RuntimeClassification> classifications;
+
+        private RuntimeClassification(Classification classification) {
+            super(classification.getName());
+            this.classifications = classification.getClassifications().build();
+        }
+
+        public List<RuntimeClassification> getClassifications() {
+            return classifications;
         }
     }
 }

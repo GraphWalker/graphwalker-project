@@ -26,8 +26,62 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
-public interface Model {
+public final class Model implements Builder<Model.RuntimeModel> {
+
+    private final BuilderSet<Vertex, Vertex.RuntimeVertex> vertices = new BuilderSet<>();
+    private final BuilderSet<Edge, Edge.RuntimeEdge> edges = new BuilderSet<>();
+
+    public Model addVertex(Vertex vertex) {
+        vertices.add(vertex);
+        return this;
+    }
+
+    public Model addEdge(Edge edge) {
+        edges.add(edge);
+        if (null != edge.getSourceVertex()) {
+            vertices.add(edge.getSourceVertex());
+        }
+        if (null != edge.getTargetVertex()) {
+            vertices.add(edge.getTargetVertex());
+        }
+        return this;
+    }
+
+    public BuilderSet<Vertex, Vertex.RuntimeVertex> getVertices() {
+        return vertices;
+    }
+
+    public BuilderSet<Edge, Edge.RuntimeEdge> getEdges() {
+        return edges;
+    }
+
+    @Override
+    public RuntimeModel build() {
+        return new RuntimeModel(this);
+    }
+
+    public static class RuntimeModel {
+
+        private final List<Vertex.RuntimeVertex> vertices;
+        private final List<Edge.RuntimeEdge> edges;
+
+        private RuntimeModel(Model efsm) {
+            this.vertices = Collections.unmodifiableList(efsm.getVertices().build());
+            this.edges = Collections.unmodifiableList(efsm.getEdges().build());
+        }
+
+        public List<Vertex.RuntimeVertex> getVertices() {
+            return vertices;
+        }
+
+        public List<Edge.RuntimeEdge> getEdges() {
+            return edges;
+        }
+    }
 }

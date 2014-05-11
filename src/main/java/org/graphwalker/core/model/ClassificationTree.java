@@ -26,14 +26,10 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.model.tree.Classification;
-
-import static org.graphwalker.core.model.tree.Classification.ImmutableClassification;
-
 /**
  * @author Nils Olsson
  */
-public final class ClassificationTree implements Builder<ClassificationTree.ImmutableClassificationTree> {
+public final class ClassificationTree implements Builder<ClassificationTree.RuntimeClassificationTree> {
 
     private final Classification classification = new Classification();
 
@@ -47,19 +43,19 @@ public final class ClassificationTree implements Builder<ClassificationTree.Immu
     }
 
     @Override
-    public ImmutableClassificationTree build() {
-        return new ImmutableClassificationTree(this);
+    public RuntimeClassificationTree build() {
+        return new RuntimeClassificationTree(this);
     }
 
-    public static class ImmutableClassificationTree implements Model {
+    public static class RuntimeClassificationTree {
 
-        private final ImmutableClassification root;
+        private final Classification.RuntimeClassification root;
 
-        private ImmutableClassificationTree(ClassificationTree classificationTree) {
+        private RuntimeClassificationTree(ClassificationTree classificationTree) {
             this.root = classificationTree.getRoot().build();
         }
 
-        public ImmutableClassification getRoot() {
+        public Classification.RuntimeClassification getRoot() {
             return root;
         }
     }

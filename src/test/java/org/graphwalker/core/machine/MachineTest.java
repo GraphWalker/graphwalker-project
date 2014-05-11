@@ -28,9 +28,9 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.model.EFSM;
-import org.graphwalker.core.model.efsm.Edge;
-import org.graphwalker.core.model.efsm.Vertex;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 /**
@@ -41,7 +41,7 @@ public class MachineTest {
     @Test
     public void simpleMachine() {
         Vertex vertex = new Vertex();
-        EFSM model = new EFSM().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
         ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
         context.setNextElement(vertex);
         Machine machine = new SimpleMachine(context);
@@ -53,7 +53,7 @@ public class MachineTest {
     @Test
     public void noStartVertex() {
         Edge edge = new Edge().setTargetVertex(new Vertex());
-        EFSM model = new EFSM().addEdge(edge);
+        Model model = new Model().addEdge(edge);
         ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
         context.setNextElement(edge);
         Machine machine = new SimpleMachine(context);

@@ -28,15 +28,14 @@ package org.graphwalker.core.generator;
 
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.EFSM;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static org.graphwalker.core.model.efsm.Edge.ImmutableEdge;
-import static org.graphwalker.core.model.efsm.Vertex.ImmutableVertex;
 
 /**
  * @author Nils Olsson
@@ -59,11 +58,11 @@ public final class RandomPath implements PathGenerator {
         Element element = context.getCurrentElement();
         if (null == element) {
             context.setCurrentElement(context.getNextElement());
-        } else if (element instanceof ImmutableVertex) {
-            ImmutableVertex vertex = (ImmutableVertex)element;
+        } else if (element instanceof Vertex.RuntimeVertex) {
+            Vertex.RuntimeVertex vertex = (Vertex.RuntimeVertex)element;
             // TODO: ugly lookup, fix it
-            List<ImmutableEdge> edges = new ArrayList<>();
-            for (ImmutableEdge edge: ((EFSM.ImmutableEFSM)context.getModel()).getEdges()) {
+            List<Edge.RuntimeEdge> edges = new ArrayList<>();
+            for (Edge.RuntimeEdge edge: ((Model.RuntimeModel)context.getModel()).getEdges()) {
                 if (edge.getSourceVertex() == vertex) {
                     edges.add(edge);
                 }
@@ -72,8 +71,8 @@ public final class RandomPath implements PathGenerator {
                 throw new NoPathFoundException();
             }
             context.setCurrentElement(edges.get(random.nextInt(edges.size())));
-        } else if (element instanceof ImmutableEdge) {
-            ImmutableEdge edge = (ImmutableEdge)element;
+        } else if (element instanceof Edge.RuntimeEdge) {
+            Edge.RuntimeEdge edge = (Edge.RuntimeEdge)element;
             context.setCurrentElement(edge.getTargetVertex());
         }
         return context;
