@@ -61,10 +61,9 @@ public final class SimpleMachine implements Machine {
 
     @Override
     public Context getNextStep() {
+        MDC.put("trace", UUID.randomUUID().toString());
         currentContext.getProfiler().stop();
         currentContext.getPathGenerator().getNextStep(currentContext);
-MDC.put("trace", UUID.randomUUID().toString());
-logger.info("Execute {}", currentContext.getCurrentElement().getName());
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement().getName());
         return currentContext;
@@ -72,6 +71,7 @@ logger.info("Execute {}", currentContext.getCurrentElement().getName());
 
     @Override
     public boolean hasNextStep() {
+        MDC.put("trace", UUID.randomUUID().toString());
         if (!currentContext.getPathGenerator().hasNextStep(currentContext)) {
             return true;
         }
@@ -81,6 +81,7 @@ logger.info("Execute {}", currentContext.getCurrentElement().getName());
     }
 
     private void execute(String name) {
+        logger.info("Execute {}", currentContext.getCurrentElement().getName());
         if (null != name && !"".equals(name)) {
             try {
                 scriptEngine.setContext(currentContext);
