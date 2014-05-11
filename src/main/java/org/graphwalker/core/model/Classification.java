@@ -33,7 +33,7 @@ import java.util.List;
  */
 public final class Classification extends CachedBuilder<Classification.RuntimeClassification> {
 
-    private final BuilderSet<Builder<RuntimeClassification>, RuntimeClassification> classifications = new BuilderSet<>();
+    private final BuilderSet<RuntimeClassification> classifications = new BuilderSet<>();
     private String name;
 
     public Classification addClassification(Classification classification) {
@@ -42,7 +42,7 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
         return this;
     }
 
-    public BuilderSet<Builder<RuntimeClassification>, RuntimeClassification> getClassifications() {
+    public BuilderSet<RuntimeClassification> getClassifications() {
         return classifications;
     }
 
