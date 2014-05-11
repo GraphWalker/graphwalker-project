@@ -30,7 +30,7 @@ import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.statistics.Profile;
+import org.graphwalker.core.statistics.Profiler;
 
 import javax.script.SimpleScriptContext;
 
@@ -41,7 +41,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
 
     private final Model model;
     private final PathGenerator pathGenerator;
-    private final Profile profile = new Profile();
+    private final Profiler profiler = new Profiler(this);
 
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
     private Element currentElement;
@@ -56,8 +56,8 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return model;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public Profiler getProfiler() {
+        return profiler;
     }
 
     public PathGenerator getPathGenerator() {

@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.statistics;
 
 /*
  * #%L
@@ -27,32 +27,33 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.EFSM;
-import org.graphwalker.core.model.efsm.Vertex;
-
-import java.util.List;
+import org.graphwalker.core.model.Element;
 
 /**
  * @author Nils Olsson
  */
-public final class VertexCoverage implements StopCondition {
+public final class Profiler {
 
-    private final double limit = 1.0;
+    private final ExecutionContext context;
+    private final Profile profile = new Profile();
 
-    @Override
-    public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= 1.0;
+    public Profiler(ExecutionContext context) {
+        this.context = context;
     }
 
-    @Override
-    public double getFulfilment(ExecutionContext context) {
-        List<Vertex.ImmutableVertex> vertices = ((EFSM.ImmutableEFSM)context.getModel()).getVertices();
-        double visitedVertexCount = 0.0;
-        for (Vertex.ImmutableVertex vertex: vertices) {
-            if (context.getProfiler().isVisited(vertex)) {
-                visitedVertexCount++;
-            }
+    public void start() {
+        if (null != context.getCurrentElement() && !profile.containsKey(context.getCurrentElement())) {
+            profile.put(context.getCurrentElement(), new ProfileUnit());
         }
-        return (visitedVertexCount / vertices.size()) / limit;
+    }
+
+    public void stop() {
+        if (null != context.getCurrentElement()) {
+            profile.put(context.getCurrentElement(), new ProfileUnit());
+        }
+    }
+
+    public boolean isVisited(Element element) {
+        return profile.containsKey(element);
     }
 }
