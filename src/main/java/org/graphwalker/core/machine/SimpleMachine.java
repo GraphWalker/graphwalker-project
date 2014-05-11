@@ -26,15 +26,22 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
 import javax.script.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Nils Olsson
  */
 public final class SimpleMachine implements Machine {
+
+    private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
 
     private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
     private final List<ExecutionContext> contexts = new ArrayList<>();
@@ -56,6 +63,8 @@ public final class SimpleMachine implements Machine {
     public Context getNextStep() {
         currentContext.getProfiler().stop();
         currentContext.getPathGenerator().getNextStep(currentContext);
+MDC.put("trace", UUID.randomUUID().toString());
+logger.info("Execute {}", currentContext.getCurrentElement().getName());
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement().getName());
         return currentContext;
