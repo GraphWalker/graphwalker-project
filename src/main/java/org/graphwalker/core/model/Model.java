@@ -26,8 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
@@ -73,10 +72,12 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
+        private final Map<RuntimeVertex, List<RuntimeEdge>> vertexEdgeCache;
 
         private RuntimeModel(Model model) {
             this.vertices = Collections.unmodifiableList(model.getVertices().build());
             this.edges = Collections.unmodifiableList(model.getEdges().build());
+            this.vertexEdgeCache = createVertexEdgeCache();
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -85,6 +86,28 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         public List<RuntimeEdge> getEdges() {
             return edges;
+        }
+
+        public List<RuntimeEdge> getEdges(RuntimeVertex vertex) {
+            return vertexEdgeCache.get(vertex);
+        }
+
+        private Map<RuntimeVertex, List<RuntimeEdge>> createVertexEdgeCache() {
+            Map<RuntimeVertex, List<RuntimeEdge>> vertexEdgeCache = new HashMap<>();
+            for (RuntimeEdge edge: edges) {
+                RuntimeVertex vertex = edge.getSourceVertex();
+                if (null != vertex) {
+                    if (!vertexEdgeCache.containsKey(vertex)) {
+                        vertexEdgeCache.put(vertex, new ArrayList<RuntimeEdge>());
+                    }
+                    vertexEdgeCache.get(vertex).add(edge);
+                }
+            }
+            Map<RuntimeVertex, List<RuntimeEdge>> unmodifiableVertexEdgeCache = new HashMap<>();
+            for (RuntimeVertex vertex: vertexEdgeCache.keySet()) {
+                unmodifiableVertexEdgeCache.put(vertex, Collections.unmodifiableList(vertexEdgeCache.get(vertex)));
+            }
+            return Collections.unmodifiableMap(unmodifiableVertexEdgeCache);
         }
     }
 }
