@@ -33,12 +33,12 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class BuilderSet<T extends Builder<E>, E> extends HashSet<T> implements Builder<List<E>> {
+public final class BuilderSet<T> extends HashSet<Builder<T>> implements Builder<List<T>> {
 
     @Override
-    public List<E> build() {
-        List<E> elements = new ArrayList<>();
-        for (T builder: this) {
+    public List<T> build() {
+        List<T> elements = new ArrayList<>();
+        for (Builder<T> builder: this) {
             elements.add(builder.build());
         }
         return elements;

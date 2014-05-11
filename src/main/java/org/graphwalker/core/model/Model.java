@@ -29,13 +29,16 @@ package org.graphwalker.core.model;
 import java.util.Collections;
 import java.util.List;
 
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
 /**
  * @author Nils Olsson
  */
 public final class Model implements Builder<Model.RuntimeModel> {
 
-    private final BuilderSet<Vertex, Vertex.RuntimeVertex> vertices = new BuilderSet<>();
-    private final BuilderSet<Edge, Edge.RuntimeEdge> edges = new BuilderSet<>();
+    private final BuilderSet<RuntimeVertex> vertices = new BuilderSet<>();
+    private final BuilderSet<RuntimeEdge> edges = new BuilderSet<>();
 
     public Model addVertex(Vertex vertex) {
         vertices.add(vertex);
@@ -53,11 +56,11 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return this;
     }
 
-    public BuilderSet<Vertex, Vertex.RuntimeVertex> getVertices() {
+    public BuilderSet<RuntimeVertex> getVertices() {
         return vertices;
     }
 
-    public BuilderSet<Edge, Edge.RuntimeEdge> getEdges() {
+    public BuilderSet<RuntimeEdge> getEdges() {
         return edges;
     }
 
@@ -68,19 +71,19 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
     public static class RuntimeModel {
 
-        private final List<Vertex.RuntimeVertex> vertices;
-        private final List<Edge.RuntimeEdge> edges;
+        private final List<RuntimeVertex> vertices;
+        private final List<RuntimeEdge> edges;
 
-        private RuntimeModel(Model efsm) {
-            this.vertices = Collections.unmodifiableList(efsm.getVertices().build());
-            this.edges = Collections.unmodifiableList(efsm.getEdges().build());
+        private RuntimeModel(Model model) {
+            this.vertices = Collections.unmodifiableList(model.getVertices().build());
+            this.edges = Collections.unmodifiableList(model.getEdges().build());
         }
 
-        public List<Vertex.RuntimeVertex> getVertices() {
+        public List<RuntimeVertex> getVertices() {
             return vertices;
         }
 
-        public List<Edge.RuntimeEdge> getEdges() {
+        public List<RuntimeEdge> getEdges() {
             return edges;
         }
     }
