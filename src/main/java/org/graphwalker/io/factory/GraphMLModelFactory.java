@@ -28,9 +28,7 @@ package org.graphwalker.io.factory;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.LabelParser;
 import org.graphwalker.io.common.ResourceUtils;
@@ -38,10 +36,13 @@ import org.graphwalker.io.common.ResourceUtils;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static javax.xml.stream.XMLStreamConstants.*;
+import static org.graphwalker.io.LabelParser.ActionContext;
 
 /**
  * @author Nils Olsson
@@ -147,11 +148,28 @@ public final class GraphMLModelFactory implements ModelFactory {
                             .setName(context.name().getText())
                             .setSourceVertex(elements.get(source))
                             .setTargetVertex(elements.get(target));
+                    if (null != context.guard()) {
+                        edge.setGuard(new Guard(context.guard().getText()));
+                    }
+                    if (null != context.actions()) {
+                        edge.addActions(convert(context.actions().action()));
+                    }
+                    if (null != context.blocked()) {
+                        edge.setBlocked(true);
+                    }
                     model.addEdge(edge);
                     return;
                 }
             }
         }
+    }
+
+    private List<Action> convert(List<ActionContext> actionContexts) {
+        List<Action> actions = new ArrayList<>();
+        for (ActionContext actionContext: actionContexts) {
+            actions.add(new Action(actionContext.getText()));
+        }
+        return actions;
     }
 
     private LabelParser.ParseContext parseLabel(String label) {
