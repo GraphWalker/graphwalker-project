@@ -26,8 +26,27 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.graphwalker.core.model.ClassificationTree.RuntimeClassificationTree;
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class ClassificationTreeTest {
+
+    @Test
+    public void create() {
+        ClassificationTree tree = new ClassificationTree();
+        tree.addClassification(new Classification().setName("A"));
+        tree.addClassification(new Classification().setName("B"));
+        Assert.assertNotNull(tree.getRoot());
+        Assert.assertNull(tree.getRoot().getName());
+        Assert.assertThat(tree.getRoot().getClassifications().size(), is(2));
+        RuntimeClassificationTree runtimeTree = tree.build();
+        Assert.assertNotNull(runtimeTree);
+        Assert.assertThat(runtimeTree.getRoot().getClassifications().size(), is(2));
+    }
 }

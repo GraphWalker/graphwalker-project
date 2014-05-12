@@ -26,8 +26,28 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class BuilderSetTest {
+
+    @Test
+    public void create() {
+        BuilderSet<RuntimeVertex> builders = new BuilderSet<>();
+        builders.add(new Vertex());
+        builders.add(new Vertex());
+        Assert.assertNotNull(builders);
+        Assert.assertThat(builders.size(), is(2));
+        List<RuntimeVertex> runtimeVertices = builders.build();
+        Assert.assertNotNull(runtimeVertices);
+        Assert.assertThat(runtimeVertices.size(), is(2));
+    }
 }

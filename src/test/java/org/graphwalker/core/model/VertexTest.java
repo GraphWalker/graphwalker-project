@@ -26,8 +26,32 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class VertexTest {
+
+    @Test
+    public void create() {
+        Vertex vertex = new Vertex()
+            .setName("vertex")
+            .addRequirement(new Requirement("REQ1"))
+            .addRequirement(new Requirement("REQ2"));
+        Assert.assertNotNull(vertex);
+        Assert.assertNotNull(vertex.getName());
+        Assert.assertEquals(vertex.getName(), "vertex");
+        Assert.assertNotNull(vertex.getRequirements());
+        Assert.assertThat(vertex.getRequirements().size(), is(2));
+        Assert.assertNotNull(vertex.build());
+        Assert.assertNotEquals(vertex, vertex.build());
+        Assert.assertEquals(vertex.build(), vertex.build());
+        Assert.assertEquals(vertex.build().getName(), vertex.getName());
+        Assert.assertNotNull(vertex.build().getRequirements());
+        Assert.assertThat(vertex.build().getRequirements().size(), is(2));
+    }
 }

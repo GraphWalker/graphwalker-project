@@ -26,8 +26,19 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class EdgeTest {
+
+    @Test
+    public void create() {
+        Edge edge = new Edge().setBlocked(true);
+        Assert.assertNotNull(edge);
+        Assert.assertTrue(edge.isBlocked());
+        Assert.assertTrue(edge.build().isBlocked());
+    }
 }
