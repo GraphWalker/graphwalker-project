@@ -1,4 +1,4 @@
-package org.graphwalker.core.algorithm;
+package org.graphwalker.core.generator;
 
 /*
  * #%L
@@ -26,15 +26,32 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import static org.graphwalker.core.model.Model.RuntimeModel;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
  * @author Nils Olsson
  */
-public final class DepthFirstSearch implements Algorithm<RuntimeModel> {
+public final class AStarPath implements PathGenerator {
+
+    private final StopCondition stopCondition;
+
+    public AStarPath(StopCondition stopCondition) {
+        this.stopCondition = stopCondition;
+    }
 
     @Override
-    public void compute(RuntimeModel model) {
-        throw new AlgorithmException();
+    public StopCondition getStopCondition() {
+        return stopCondition;
+    }
+
+    @Override
+    public ExecutionContext getNextStep(ExecutionContext context) {
+        throw new NoPathFoundException();
+    }
+
+    @Override
+    public boolean hasNextStep(ExecutionContext context) {
+        return getStopCondition().isFulfilled(context);
     }
 }

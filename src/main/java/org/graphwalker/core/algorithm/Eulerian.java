@@ -31,7 +31,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public class Eulerian implements Algorithm<RuntimeModel> {
+public final class Eulerian implements Algorithm<RuntimeModel> {
 
     @Override
     public void compute(RuntimeModel model) {
