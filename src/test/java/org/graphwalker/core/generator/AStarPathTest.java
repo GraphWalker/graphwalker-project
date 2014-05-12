@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.generator;
 
 /*
  * #%L
@@ -26,8 +26,20 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
-public class StopConditionTest {
+public class AStarPathTest {
+
+    @Test
+    public void simpleTest() {
+
+    }
+
+    @Test//(expected = NoPathFoundException.class)
+    public void failTest() {
+
+    }
 }

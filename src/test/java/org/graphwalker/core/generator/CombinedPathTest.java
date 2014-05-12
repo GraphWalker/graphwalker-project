@@ -26,8 +26,20 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
-public class PathGeneratorTest {
+public class CombinedPathTest {
+
+    @Test
+    public void simpleTest() {
+
+    }
+
+    @Test//(expected = NoPathFoundException.class)
+    public void failTest() {
+
+    }
 }
