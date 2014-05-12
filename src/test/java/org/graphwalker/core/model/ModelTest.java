@@ -35,7 +35,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 /**
  * @author Nils Olsson
  */
-public class ModelBuilderTest {
+public class ModelTest {
 
     @Test
     public void buildVertex() {
