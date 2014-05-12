@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.generator;
 
 /*
  * #%L
@@ -26,31 +26,49 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public final class AlternativeCondition implements StopCondition {
+public final class CombinedPathGenerator implements PathGenerator {
 
-    private List<StopCondition> conditions = new ArrayList<>();
+    private final List<PathGenerator> generators = new ArrayList<>();
+    private int index = 0;
 
-    public void addStopCondition(StopCondition condition) {
-        this.conditions.add(condition);
+    public void addPathGenerator(PathGenerator pathGenerator) {
+        generators.add(pathGenerator);
     }
 
-    public List<StopCondition> getStopConditions() {
-        return conditions;
+    public List<PathGenerator> getPathGenerators() {
+        return generators;
+    }
+
+    private PathGenerator getActivePathGenerator() {
+        return generators.get(index);
     }
 
     @Override
-    public boolean isFulfilled(ExecutionContext context) {
-        for (StopCondition condition : conditions) {
-            if (condition.isFulfilled(context)) {
+    public StopCondition getStopCondition() {
+        return getActivePathGenerator().getStopCondition();
+    }
+
+    @Override
+    public ExecutionContext getNextStep(ExecutionContext context) {
+        if (hasNextStep(context)) {
+            return getActivePathGenerator().getNextStep(context);
+        }
+        throw new NoPathFoundException();
+    }
+
+    @Override
+    public boolean hasNextStep(ExecutionContext context) {
+        for (; index < generators.size(); index++) {
+            if (getActivePathGenerator().hasNextStep(context)) {
                 return true;
             }
         }
@@ -58,27 +76,12 @@ public final class AlternativeCondition implements StopCondition {
     }
 
     @Override
-    public double getFulfilment(ExecutionContext context) {
-        double fulfilment = 0;
-        for (StopCondition condition : conditions) {
-            double newFulfilment = condition.getFulfilment(context);
-            if (newFulfilment > fulfilment) {
-                fulfilment = newFulfilment;
-            }
-        }
-        return fulfilment;
-    }
-
-    @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("(");
-        for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-            stringBuilder.append(i.next().toString());
-            if (i.hasNext()) {
-                stringBuilder.append(" OR ");
-            }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (PathGenerator generator : generators) {
+            stringBuilder.append(generator.toString());
+            stringBuilder.append(System.getProperty("line.separator"));
         }
-        stringBuilder.append(")");
-        return stringBuilder.toString();
+        return stringBuilder.toString().trim();
     }
 }

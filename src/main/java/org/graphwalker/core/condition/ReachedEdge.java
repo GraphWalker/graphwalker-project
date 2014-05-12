@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public class ReachedEdge implements StopCondition {
+public final class ReachedEdge implements StopCondition {
 
     private final String name;
 

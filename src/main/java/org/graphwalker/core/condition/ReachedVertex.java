@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public class ReachedVertex implements StopCondition {
+public final class ReachedVertex implements StopCondition {
 
     private final String name;
 
