@@ -26,53 +26,18 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author Nils Olsson
  */
-public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
+public final class Guard {
 
-    private String name;
-    private List<Requirement> requirements = new ArrayList<>();
+    private final String script;
 
-    public Vertex setName(String name) {
-        this.name = name;
-        invalidateCache();
-        return this;
+    public Guard(String script) {
+        this.script = script;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Vertex addRequirement(Requirement requirement) {
-        this.requirements.add(requirement);
-        return this;
-    }
-
-    public List<Requirement> getRequirements() {
-        return requirements;
-    }
-
-    @Override
-    protected RuntimeVertex createCache() {
-        return new RuntimeVertex(this);
-    }
-
-    public static final class RuntimeVertex extends NamedElement {
-
-        private final List<Requirement> requirements;
-
-        private RuntimeVertex(Vertex vertex) {
-            super(vertex.getName());
-            this.requirements = Collections.unmodifiableList(vertex.getRequirements());
-        }
-
-        public List<Requirement> getRequirements() {
-            return requirements;
-        }
+    public String getScript() {
+        return script;
     }
 }
