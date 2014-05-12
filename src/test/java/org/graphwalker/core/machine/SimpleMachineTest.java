@@ -36,7 +36,7 @@ import org.junit.Test;
 /**
  * @author Nils Olsson
  */
-public class MachineTest {
+public class SimpleMachineTest {
 
     @Test
     public void simpleMachine() {
