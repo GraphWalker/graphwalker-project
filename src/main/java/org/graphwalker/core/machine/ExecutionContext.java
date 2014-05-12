@@ -41,13 +41,16 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public class ExecutionContext extends SimpleScriptContext implements Context {
 
-    private final RuntimeModel model;
-    private final PathGenerator pathGenerator;
-    private final Profiler profiler = new Profiler(this);
+    private RuntimeModel model;
+    private PathGenerator pathGenerator;
+    private Profiler profiler = new Profiler(this);
 
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
     private Element currentElement;
     private Element nextElement;
+
+    public ExecutionContext() {
+    }
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
         this.model = model.build();
@@ -58,12 +61,20 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return model;
     }
 
+    public void setModel(Model model) {
+        this.model = model.build();
+    }
+
     public Profiler getProfiler() {
         return profiler;
     }
 
     public PathGenerator getPathGenerator() {
         return pathGenerator;
+    }
+
+    public void setPathGenerator(PathGenerator pathGenerator) {
+        this.pathGenerator = pathGenerator;
     }
 
     public ExecutionStatus getExecutionStatus() {

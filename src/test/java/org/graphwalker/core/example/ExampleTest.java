@@ -41,20 +41,6 @@ import org.junit.Test;
  */
 public class ExampleTest extends ExecutionContext {
 
-    private static Vertex start = new Vertex();
-
-    public ExampleTest() {
-        super(new Model().addEdge(new Edge()
-                .setName("edge1")
-                //.setGuard()
-                .setSourceVertex(start
-                        .setName("vertex1"))
-                .setTargetVertex(new Vertex()
-                        .setName("vertex2")))
-                , new RandomPath(new VertexCoverage()));
-        setNextElement(start);
-    }
-
     public void vertex1() {
         System.out.println("vertex1");
     }
@@ -69,18 +55,19 @@ public class ExampleTest extends ExecutionContext {
 
     @Test
     public void success() {
+        Vertex start = new Vertex();
+        Model model = new Model().addEdge(new Edge()
+                .setName("edge1")
+                .setSourceVertex(start
+                        .setName("vertex1"))
+                .setTargetVertex(new Vertex()
+                        .setName("vertex2")));
+        this.setModel(model);
+        this.setPathGenerator(new RandomPath(new VertexCoverage()));
+        setNextElement(start);
         Machine machine = new SimpleMachine(this);
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
     }
-/*
-    @Test(expected = NoPathFoundException.class)
-    public void failure() {
-        Machine machine = new SimpleMachine(this);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-    }
-*/
 }
