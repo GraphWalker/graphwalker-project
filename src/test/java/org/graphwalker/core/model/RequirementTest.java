@@ -26,8 +26,18 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class RequirementTest {
+
+    @Test
+    public void create() {
+        Requirement requirement = new Requirement("REQ");
+        Assert.assertNotNull(requirement);
+        Assert.assertEquals("REQ", requirement.getKey());
+    }
 }

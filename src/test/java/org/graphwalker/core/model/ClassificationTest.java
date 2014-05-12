@@ -26,8 +26,36 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.graphwalker.core.model.Classification.RuntimeClassification;
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class ClassificationTest {
+
+    @Test
+    public void create() {
+        Classification root = new Classification();
+        root.setName("root");
+        root.addClassification(new Classification().setName("leaf1"));
+        root.addClassification(new Classification().setName("leaf2"));
+        Assert.assertNotNull(root);
+        Assert.assertEquals("root", root.getName());
+        Assert.assertThat(root.getClassifications().size(), is(2));
+        RuntimeClassification runtimeRoot = root.build();
+        Assert.assertNotNull(runtimeRoot);
+        Assert.assertThat(runtimeRoot.getClassifications().size(), is(2));
+        Assert.assertNotNull(runtimeRoot.getClassifications().get(0));
+        Assert.assertNotNull(runtimeRoot.getClassifications().get(0).getName());
+        Assert.assertNotNull(runtimeRoot.getClassifications().get(0).getClassifications());
+        Assert.assertThat(runtimeRoot.getClassifications().get(0).getClassifications().size(), is(0));
+        Assert.assertNotNull(runtimeRoot.getClassifications().get(1));
+        Assert.assertNotNull(runtimeRoot.getClassifications().get(1).getName());
+        Assert.assertNotNull(runtimeRoot.getClassifications().get(1).getClassifications());
+        Assert.assertThat(runtimeRoot.getClassifications().get(1).getClassifications().size(), is(0));
+    }
 }

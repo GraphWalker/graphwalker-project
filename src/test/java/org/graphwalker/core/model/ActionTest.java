@@ -26,8 +26,18 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class ActionTest {
+
+    @Test
+    public void create() {
+        Action action = new Action("int i = 0;");
+        Assert.assertNotNull(action);
+        Assert.assertEquals( "int i = 0;", action.getScript());
+    }
 }

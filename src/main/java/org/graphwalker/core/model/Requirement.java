@@ -36,4 +36,8 @@ public final class Requirement {
     public Requirement(String key) {
         this.key = key;
     }
+
+    public String getKey() {
+        return key;
+    }
 }
