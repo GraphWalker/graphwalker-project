@@ -31,5 +31,5 @@ package org.graphwalker.core.machine;
  */
 public interface Context {
     ExecutionStatus getExecutionStatus();
-    void setExecutionStatus(ExecutionStatus executionStatus);
+    ExecutionContext setExecutionStatus(ExecutionStatus executionStatus);
 }

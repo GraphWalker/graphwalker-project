@@ -52,6 +52,6 @@ public final class AStarPath implements PathGenerator {
 
     @Override
     public boolean hasNextStep(ExecutionContext context) {
-        return getStopCondition().isFulfilled(context);
+        return !getStopCondition().isFulfilled(context);
     }
 }

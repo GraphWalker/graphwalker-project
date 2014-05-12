@@ -61,8 +61,9 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return model;
     }
 
-    public void setModel(Model model) {
+    public ExecutionContext setModel(Model model) {
         this.model = model.build();
+        return this;
     }
 
     public Profiler getProfiler() {
@@ -73,32 +74,36 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return pathGenerator;
     }
 
-    public void setPathGenerator(PathGenerator pathGenerator) {
+    public ExecutionContext setPathGenerator(PathGenerator pathGenerator) {
         this.pathGenerator = pathGenerator;
+        return this;
     }
 
     public ExecutionStatus getExecutionStatus() {
         return executionStatus;
     }
 
-    public void setExecutionStatus(ExecutionStatus executionStatus) {
+    public ExecutionContext setExecutionStatus(ExecutionStatus executionStatus) {
         this.executionStatus = executionStatus;
+        return this;
     }
 
     public Element getCurrentElement() {
         return currentElement;
     }
 
-    public void setCurrentElement(Element element) {
+    public ExecutionContext setCurrentElement(Element element) {
         this.currentElement = element;
+        return this;
     }
 
     public Element getNextElement() {
         return nextElement;
     }
 
-    public void setNextElement(Builder<? extends Element> nextElement) {
+    public ExecutionContext setNextElement(Builder<? extends Element> nextElement) {
         this.nextElement = nextElement.build();
         this.currentElement = null;
+        return this;
     }
 }
