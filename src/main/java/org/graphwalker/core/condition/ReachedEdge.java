@@ -28,35 +28,24 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.machine.ExecutionContext;
 
-import java.util.List;
-
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
-
 /**
  * @author Nils Olsson
  */
-public final class VertexCoverage implements StopCondition {
+public class ReachedEdge implements StopCondition {
 
-    private final double percent;
+    private final String name;
 
-    public VertexCoverage(long percent) {
-        this.percent = percent/100;
+    public ReachedEdge(String name) {
+        this.name = name;
     }
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= 1.0;
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
     @Override
     public double getFulfilment(ExecutionContext context) {
-        List<RuntimeVertex> vertices = context.getModel().getVertices();
-        double visitedVertexCount = 0.0;
-        for (RuntimeVertex vertex: vertices) {
-            if (context.getProfiler().isVisited(vertex)) {
-                visitedVertexCount++;
-            }
-        }
-        return (visitedVertexCount / vertices.size()) / percent;
+        throw new RuntimeException("Not implemented, need algorithms");
     }
 }

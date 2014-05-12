@@ -42,7 +42,7 @@ public class MachineTest {
     public void simpleMachine() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -54,7 +54,7 @@ public class MachineTest {
     public void noStartVertex() {
         Edge edge = new Edge().setTargetVertex(new Vertex());
         Model model = new Model().addEdge(edge);
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage()));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(edge);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {

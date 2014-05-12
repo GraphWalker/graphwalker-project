@@ -56,4 +56,8 @@ public final class Profiler {
     public boolean isVisited(Element element) {
         return profile.containsKey(element);
     }
+
+    public long getVisitCount() {
+        return 0; // TODO: return total visit count or return profile and let the user determine
+    }
 }

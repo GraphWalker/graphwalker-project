@@ -63,7 +63,7 @@ public class ExampleTest extends ExecutionContext {
                 .setTargetVertex(new Vertex()
                         .setName("vertex2")));
         this.setModel(model);
-        this.setPathGenerator(new RandomPath(new VertexCoverage()));
+        this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
         setNextElement(start);
         Machine machine = new SimpleMachine(this);
         while (machine.hasNextStep()) {

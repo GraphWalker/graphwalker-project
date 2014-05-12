@@ -60,7 +60,7 @@ public final class RandomPath implements PathGenerator {
         } else if (element instanceof RuntimeVertex) {
             RuntimeVertex vertex = (RuntimeVertex)element;
             List<RuntimeEdge> edges = context.getModel().getEdges(vertex);
-            if (0 == edges.size()) {
+            if (null == edges || 0 == edges.size()) {
                 throw new NoPathFoundException();
             }
             context.setCurrentElement(edges.get(random.nextInt(edges.size())));

@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public class Never implements StopCondition {
+public final class Never implements StopCondition {
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
