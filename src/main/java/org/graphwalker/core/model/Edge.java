@@ -26,6 +26,10 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -36,6 +40,9 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     private String name;
     private Vertex sourceVertex;
     private Vertex targetVertex;
+    private Guard guard;
+    private List<Action> actions = new ArrayList<>();
+    private boolean blocked = false;
 
     public Edge setName(String name) {
         this.name = name;
@@ -67,6 +74,38 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return targetVertex;
     }
 
+    public Edge setGuard(Guard guard) {
+        this.guard = guard;
+        return this;
+    }
+
+    public Guard getGuard() {
+        return guard;
+    }
+
+    public Edge addAction(Action action) {
+        this.actions.add(action);
+        return this;
+    }
+
+    public Edge addActions(List<Action> actions) {
+        this.actions.addAll(actions);
+        return this;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public Edge setBlocked(boolean blocked) {
+        this.blocked = blocked;
+        return this;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
     @Override
     protected RuntimeEdge createCache() {
         return new RuntimeEdge(this);
@@ -76,11 +115,17 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;
+        private final Guard guard;
+        private final List<Action> actions;
+        private final boolean blocked;
 
         private RuntimeEdge(Edge edge) {
             super(edge.getName());
             this.sourceVertex = build(edge.getSourceVertex());
             this.targetVertex = build(edge.getTargetVertex());
+            this.guard = edge.getGuard();
+            this.actions = Collections.unmodifiableList(edge.getActions());
+            this.blocked = edge.isBlocked();
         }
 
         private <T> T build(Builder<T> builder) {
@@ -93,6 +138,18 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         public RuntimeVertex getTargetVertex() {
             return targetVertex;
+        }
+
+        public Guard getGuard() {
+            return guard;
+        }
+
+        public List<Action> getActions() {
+            return actions;
+        }
+
+        public boolean isBlocked() {
+            return blocked;
         }
     }
 }
