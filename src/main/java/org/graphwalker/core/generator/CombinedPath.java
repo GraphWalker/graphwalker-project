@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class CombinedPathGenerator implements PathGenerator {
+public final class CombinedPath implements PathGenerator {
 
     private final List<PathGenerator> generators = new ArrayList<>();
     private int index = 0;
