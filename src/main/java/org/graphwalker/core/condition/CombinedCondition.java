@@ -39,7 +39,7 @@ public final class CombinedCondition implements StopCondition {
 
     private List<StopCondition> conditions = new ArrayList<>();
 
-    public void add(StopCondition condition) {
+    public void addStopCondition(StopCondition condition) {
         this.conditions.add(condition);
     }
 
@@ -66,6 +66,7 @@ public final class CombinedCondition implements StopCondition {
         return fulfilment / conditions.size();
     }
 
+    @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("(");
         for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {

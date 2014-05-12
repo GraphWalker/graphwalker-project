@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public class Length implements StopCondition {
+public final class Length implements StopCondition {
 
     private final long length;
 

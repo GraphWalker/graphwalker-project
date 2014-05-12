@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public class RequirementCoverage implements StopCondition {
+public final class RequirementCoverage implements StopCondition {
 
     private final long limit;
 
