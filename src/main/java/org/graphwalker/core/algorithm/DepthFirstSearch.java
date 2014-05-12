@@ -1,4 +1,4 @@
-package org.graphwalker.core.generator;
+package org.graphwalker.core.algorithm;
 
 /*
  * #%L
@@ -26,8 +26,15 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
 /**
  * @author Nils Olsson
  */
-public final class NoPathFoundException extends RuntimeException {
+public class DepthFirstSearch implements Algorithm<RuntimeModel> {
+
+    @Override
+    public void compute(RuntimeModel model) {
+        throw new AlgorithmException();
+    }
 }

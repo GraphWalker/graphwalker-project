@@ -1,4 +1,4 @@
-package org.graphwalker.core.generator;
+package org.graphwalker.core.algorithm;
 
 /*
  * #%L
@@ -29,5 +29,5 @@ package org.graphwalker.core.generator;
 /**
  * @author Nils Olsson
  */
-public final class NoPathFoundException extends RuntimeException {
+public final class AlgorithmException extends RuntimeException {
 }
