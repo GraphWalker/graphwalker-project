@@ -33,6 +33,8 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public interface StopCondition {
 
+    double FULFILLMENT_LEVEL = 0.999999;
+
     boolean isFulfilled(ExecutionContext context);
     double getFulfilment(ExecutionContext context);
 }

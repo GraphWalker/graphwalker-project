@@ -28,35 +28,28 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.machine.ExecutionContext;
 
-import java.util.List;
-
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Nils Olsson
  */
-public final class VertexCoverage implements StopCondition {
+public final class TimeDuration implements StopCondition {
 
-    private final double percent;
+    private final long duration;
+    private final long timestamp;
 
-    public VertexCoverage(long percent) {
-        this.percent = percent/100;
+    private TimeDuration(long time, TimeUnit unit) {
+        this.timestamp = System.nanoTime();
+        this.duration = TimeUnit.NANOSECONDS.convert(time, unit);
     }
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= 1.0;
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
     }
 
     @Override
     public double getFulfilment(ExecutionContext context) {
-        List<RuntimeVertex> vertices = context.getModel().getVertices();
-        double visitedVertexCount = 0.0;
-        for (RuntimeVertex vertex: vertices) {
-            if (context.getProfiler().isVisited(vertex)) {
-                visitedVertexCount++;
-            }
-        }
-        return (visitedVertexCount / vertices.size()) / percent;
+        return (double) (System.nanoTime() - timestamp) / duration;
     }
 }
