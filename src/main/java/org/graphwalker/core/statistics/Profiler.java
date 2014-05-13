@@ -42,6 +42,7 @@ public final class Profiler {
     }
 
     public void start() {
+        profile.setTotalVisitCount(profile.getTotalVisitCount()+1);
         if (null != context.getCurrentElement() && !profile.containsKey(context.getCurrentElement())) {
             profile.put(context.getCurrentElement(), new ProfileUnit());
         }
@@ -57,7 +58,7 @@ public final class Profiler {
         return profile.containsKey(element);
     }
 
-    public long getVisitCount() {
-        return 0; // TODO: return total visit count or return profile and let the user determine
+    public long getTotalVisitCount() {
+        return profile.getTotalVisitCount();
     }
 }

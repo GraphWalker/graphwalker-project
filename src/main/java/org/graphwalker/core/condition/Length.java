@@ -46,6 +46,6 @@ public final class Length implements StopCondition {
 
     @Override
     public double getFulfilment(ExecutionContext context) {
-        return (double) context.getProfiler().getVisitCount() / length;
+        return (double) context.getProfiler().getTotalVisitCount() / length;
     }
 }

@@ -26,8 +26,40 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class ProfilerTest {
+
+    private static final Vertex start = new Vertex();
+    private static final ExecutionContext context = new ExecutionContext()
+            .setModel(new Model()
+                    .addEdge(new Edge()
+                            .setSourceVertex(start)
+                            .setTargetVertex(new Vertex())))
+            .setCurrentElement(start.build());
+
+    @Test
+    public void create() {
+        Profiler profiler = new Profiler(context);
+        Assert.assertNotNull(profiler);
+        Assert.assertFalse(profiler.isVisited(start.build()));
+        Assert.assertThat(profiler.getTotalVisitCount(), is(0l));
+        profiler.start();
+        Assert.assertTrue(profiler.isVisited(start.build()));
+        Assert.assertThat(profiler.getTotalVisitCount(), is(1l));
+        profiler.stop();
+        Assert.assertTrue(profiler.isVisited(start.build()));
+        Assert.assertThat(profiler.getTotalVisitCount(), is(1l));
+    }
+
 }
