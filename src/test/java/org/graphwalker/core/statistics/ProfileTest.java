@@ -26,8 +26,17 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class ProfileTest {
+
+    @Test
+    public void create() {
+        Profile profile = new Profile();
+        Assert.assertNotNull(profile);
+    }
 }

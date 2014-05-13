@@ -41,4 +41,13 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
     4. vertex visit count
     5. edge visit count
 */
+    private long totalVisitCount = 0;
+
+    public long getTotalVisitCount() {
+        return totalVisitCount;
+    }
+
+    public void setTotalVisitCount(long totalVisitCount) {
+        this.totalVisitCount = totalVisitCount;
+    }
 }
