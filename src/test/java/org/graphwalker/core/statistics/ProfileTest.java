@@ -32,7 +32,7 @@ import org.junit.Test;
 /**
  * @author Nils Olsson
  */
-public class ProfileTest {
+public final class ProfileTest {
 
     @Test
     public void create() {
