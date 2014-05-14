@@ -33,10 +33,14 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class RequirementCoverage implements StopCondition {
 
-    private final long limit;
+    public double getPercent() {
+        return percent;
+    }
 
-    public RequirementCoverage(long limit) {
-        this.limit = limit;
+    private final double percent;
+
+    public RequirementCoverage(double percent) {
+        this.percent = percent/100;
     }
 
     @Override
@@ -46,6 +50,13 @@ public final class RequirementCoverage implements StopCondition {
 
     @Override
     public double getFulfilment(ExecutionContext context) {
-        throw new RuntimeException("Not implemented, need to keep track of requirements");
+/*        double totalCount = context.getModel().getRequirements().size();
+        if (0 == totalCount) {
+            return 1.0;
+        }
+        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
+        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
+        return ((passedCount+failedCount) / totalCount) / limit;*/
+        return 0;
     }
 }
