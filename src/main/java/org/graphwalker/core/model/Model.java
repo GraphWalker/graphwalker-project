@@ -104,7 +104,14 @@ public final class Model implements Builder<Model.RuntimeModel> {
         public List<Element> getElements(Element element) {
             if (element instanceof RuntimeVertex) {
                 RuntimeVertex vertex = (RuntimeVertex)element;
-                return new ArrayList<Element>(getEdges(vertex));
+                List<Element> edges = new ArrayList<>();
+                // TODO: We have to handle edges that get "removed" due to guards
+                for (RuntimeEdge edge: getEdges(vertex)) {
+                    if (!edge.isBlocked()) {
+                        edges.add(edge);
+                    }
+                }
+                return edges;
             } else {
                 RuntimeEdge edge = (RuntimeEdge)element;
                 return Arrays.<Element>asList(edge.getTargetVertex());

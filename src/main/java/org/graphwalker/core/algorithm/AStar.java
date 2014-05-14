@@ -130,10 +130,6 @@ public final class AStar implements Algorithm {
             this.g = g;
         }
 
-        private double getH() {
-            return h;
-        }
-
         private void setH(double h) {
             this.h = h;
         }
