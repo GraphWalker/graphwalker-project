@@ -1,9 +1,10 @@
 lexer grammar LabelLexer;
 
 SLASH     : '/';
+COLON     : ':';
 SEMICOLON : ';';
 BLOCKED   : 'BLOCKED';
-
+SHARED    : 'SHARED';
 
 NestedBrackets
  :  '[' ( ~('[' | ']') | NestedBrackets )* ']'
