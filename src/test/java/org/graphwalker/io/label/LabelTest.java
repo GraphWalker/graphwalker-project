@@ -49,7 +49,11 @@ public class LabelTest {
             "v_BaseURL",
             "e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
             "e_init / num_of_books = 0; MAX_BOOKS = 5;",
-            "/* multi\nline\ncomment */ / i++; [i==0] name"
+            "/* multi\nline\ncomment */ / i++; [i==0] name",
+            "BLOCKED",
+            "[ i ]",
+            "v_vertex  \nSHARED:MyState",
+            "SHARED: MyState"
     );
 
     @Test

@@ -27,7 +27,10 @@ package org.graphwalker.io.factory;
  */
 
 import org.graphwalker.core.model.Model;
+import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -36,13 +39,13 @@ public class GraphMLModelFactoryTest {
 
     @Test(expected = ModelFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
-        GraphMLModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/LKHDIODSOSUBD.graphml");
     }
 /*
     @Test
     public void fileExistsOnFileSystem() {
-        GraphMLModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("src/test/resources/graphml/UC01.graphml");
         //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
         //Assert.assertThat("Number of edges", model.getEdges().size(), is(12));
@@ -50,8 +53,22 @@ public class GraphMLModelFactoryTest {
 */
 
     @Test
+    public void shared() {
+        ModelFactory factory = new GraphMLModelFactory();
+        Model sharedA = factory.create("graphml/SharedA.graphml");
+        Assert.assertNotNull(sharedA);
+        Assert.assertThat(sharedA.getVertices().size(), is(2));
+        Assert.assertThat(sharedA.getEdges().size(), is(1));
+        Model sharedB = factory.create("graphml/SharedB.graphml");
+        Assert.assertNotNull(sharedB);
+        Assert.assertThat(sharedB.getVertices().size(), is(2));
+        Assert.assertThat(sharedB.getEdges().size(), is(1));
+    }
+
+
+    @Test
     public void uc01() {
-        GraphMLModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/UC01.graphml");
         int i = 0;
         //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
@@ -60,7 +77,7 @@ public class GraphMLModelFactoryTest {
 /*
     @Test
     public void efsmWithReqtags() {
-        GraphMLModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/EFSM_with_REQTAGS.graphml");
         Assert.assertThat("Number of vertices", model.getVertices().size(), is(7));
         Assert.assertThat("Number of edges", model.getEdges().size(), is(19));
@@ -68,7 +85,7 @@ public class GraphMLModelFactoryTest {
 
     @Test
     public void guards() {
-        GraphMLModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/Guards.graphml");
         Assert.assertThat("Number of vertices", model.getVertices().size(), is(3));
         Assert.assertThat("Number of edges", model.getEdges().size(), is(2));
