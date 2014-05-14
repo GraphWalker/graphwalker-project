@@ -33,14 +33,14 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class ReachedVertex implements StopCondition {
 
-    public String getName() {
-        return name;
-    }
-
     private final String name;
 
     public ReachedVertex(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override

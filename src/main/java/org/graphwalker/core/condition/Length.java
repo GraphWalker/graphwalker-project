@@ -33,14 +33,14 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class Length implements StopCondition {
 
-    public long getLength() {
-        return length;
-    }
-
     private final long length;
 
     public Length(long length) {
         this.length = length;
+    }
+
+    public long getLength() {
+        return length;
     }
 
     @Override
