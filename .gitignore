@@ -11,6 +11,10 @@
 *.iws
 .idea/
 
+# Temp stuff #
+##############
+doc/.~lock.*
+
 # Build and unit tests stuff #
 #############################
 logs/
