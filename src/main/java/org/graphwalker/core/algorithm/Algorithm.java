@@ -29,7 +29,6 @@ package org.graphwalker.core.algorithm;
 /**
  * @author Nils Olsson
  */
-public interface Algorithm<T> {
+public interface Algorithm {
 
-    void compute(T model);
 }

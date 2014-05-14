@@ -26,8 +26,42 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
-public class FloydWarshallTest {
+public final class FloydWarshallTest {
+
+    private static final Vertex v00 = new Vertex().setName("v00");
+    private static final Vertex v01 = new Vertex().setName("v01");
+    private static final Vertex v10 = new Vertex().setName("v10");
+    private static final Vertex v20 = new Vertex().setName("v20");
+    private static final Vertex v31 = new Vertex().setName("v31");
+
+    private static final Edge e1 = new Edge().setName("e1").setSourceVertex(v00).setTargetVertex(v01);
+    private static final Edge e2 = new Edge().setName("e2").setSourceVertex(v00).setTargetVertex(v10);
+    private static final Edge e3 = new Edge().setName("e3").setSourceVertex(v10).setTargetVertex(v20);
+    private static final Edge e4 = new Edge().setName("e4").setSourceVertex(v20).setTargetVertex(v31);
+    private static final Edge e5 = new Edge().setName("e5").setSourceVertex(v01).setTargetVertex(v31);
+
+    private static final Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
+
+    @Test
+    public void shortestDistance() {
+        FloydWarshall floydWarshall = new FloydWarshall(model.build());
+        Assert.assertThat(floydWarshall.getShortestDistance(v00.build(), v31.build()), is(4));
+    }
+
+    @Test
+    public void maximumDistance() {
+        FloydWarshall floydWarshall = new FloydWarshall(model.build());
+        Assert.assertThat(floydWarshall.getMaximumDistance(v31.build()), is(5));
+    }
 }

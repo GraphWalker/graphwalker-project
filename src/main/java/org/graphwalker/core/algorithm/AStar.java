@@ -31,10 +31,6 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public final class AStar implements Algorithm<RuntimeModel> {
+public final class AStar implements Algorithm {
 
-    @Override
-    public void compute(RuntimeModel model) {
-        throw new AlgorithmException();
-    }
 }
