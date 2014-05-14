@@ -1,33 +1,12 @@
-grammar Label;
+lexer grammar LabelLexer;
 
-parse
- : name? guard? actions? blocked? EOF
- | blocked? name? guard? actions? EOF
- | actions? guard? name? blocked? EOF
- ;
+SLASH     : '/';
+SEMICOLON : ';';
+BLOCKED   : 'BLOCKED';
 
-actions
- : '/' (action)+
- ;
-
-action
- : ~(';')* ';'
- ;
-
-guard
- : NestedBrackets
- ;
 
 NestedBrackets
  :  '[' ( ~('[' | ']') | NestedBrackets )* ']'
- ;
-
-blocked
- : 'BLOCKED'
- ;
-
-name
- : Identifier
  ;
 
 Identifier
@@ -63,3 +42,4 @@ COMMENT
 ANY
  : .
  ;
+
