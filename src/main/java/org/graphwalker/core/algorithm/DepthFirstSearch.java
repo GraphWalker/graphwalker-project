@@ -31,10 +31,6 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public final class DepthFirstSearch implements Algorithm<RuntimeModel> {
+public final class DepthFirstSearch implements Algorithm {
 
-    @Override
-    public void compute(RuntimeModel model) {
-        throw new AlgorithmException();
-    }
 }

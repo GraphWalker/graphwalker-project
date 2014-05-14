@@ -38,7 +38,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Nils Olsson
  */
-public class ProfilerTest {
+public final class ProfilerTest {
 
     private static final Vertex start = new Vertex();
     private static final ExecutionContext context = new ExecutionContext()
