@@ -35,16 +35,16 @@ import java.util.concurrent.TimeUnit;
  */
 public final class TimeDuration implements StopCondition {
 
-    public long getDuration() {
-        return duration;
-    }
-
     private final long duration;
     private final long timestamp;
 
     private TimeDuration(long time, TimeUnit unit) {
         this.timestamp = System.nanoTime();
         this.duration = TimeUnit.NANOSECONDS.convert(time, unit);
+    }
+
+    public long getDuration() {
+        return duration;
     }
 
     @Override

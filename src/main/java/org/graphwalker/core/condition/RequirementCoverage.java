@@ -33,14 +33,14 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class RequirementCoverage implements StopCondition {
 
-    public double getPercent() {
-        return percent;
-    }
-
     private final double percent;
 
     public RequirementCoverage(double percent) {
         this.percent = percent/100;
+    }
+
+    public double getPercent() {
+        return percent * 100;
     }
 
     @Override
