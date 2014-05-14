@@ -43,6 +43,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     private Guard guard;
     private List<Action> actions = new ArrayList<>();
     private boolean blocked = false;
+    private Double weight = 1.0;
 
     public Edge setName(String name) {
         this.name = name;
@@ -106,6 +107,15 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return blocked;
     }
 
+    public Double getWeight() {
+        return weight;
+    }
+
+    public Edge setWeight(Double weight) {
+        this.weight = weight;
+        return this;
+    }
+
     @Override
     protected RuntimeEdge createCache() {
         return new RuntimeEdge(this);
@@ -118,6 +128,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         private final Guard guard;
         private final List<Action> actions;
         private final boolean blocked;
+        private final Double weight;
 
         private RuntimeEdge(Edge edge) {
             super(edge.getName());
@@ -126,6 +137,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
             this.guard = edge.getGuard();
             this.actions = Collections.unmodifiableList(edge.getActions());
             this.blocked = edge.isBlocked();
+            this.weight = edge.getWeight();
         }
 
         private <T> T build(Builder<T> builder) {
@@ -150,6 +162,10 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         public boolean isBlocked() {
             return blocked;
+        }
+
+        public Double getWeight() {
+            return weight;
         }
     }
 }

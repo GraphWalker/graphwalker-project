@@ -70,14 +70,18 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
     public static class RuntimeModel {
 
+        private static final List<RuntimeEdge> EMPTY_LIST = Collections.unmodifiableList(Arrays.<RuntimeEdge>asList());
+
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
         private final Map<RuntimeVertex, List<RuntimeEdge>> vertexEdgeCache;
+        private final List<Element> elements;
 
         private RuntimeModel(Model model) {
             this.vertices = Collections.unmodifiableList(model.getVertices().build());
             this.edges = Collections.unmodifiableList(model.getEdges().build());
             this.vertexEdgeCache = createVertexEdgeCache();
+            this.elements = createElementCache();
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -89,7 +93,19 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
 
         public List<RuntimeEdge> getEdges(RuntimeVertex vertex) {
-            return vertexEdgeCache.get(vertex);
+            List<RuntimeEdge> edges = vertexEdgeCache.get(vertex);
+            return null != edges ? edges: EMPTY_LIST;
+        }
+
+        public List<Element> getElements() {
+            return elements;
+        }
+
+        private List<Element> createElementCache() {
+            List<Element> elements = new ArrayList<>();
+            elements.addAll(vertices);
+            elements.addAll(edges);
+            return Collections.unmodifiableList(elements);
         }
 
         private Map<RuntimeVertex, List<RuntimeEdge>> createVertexEdgeCache() {
