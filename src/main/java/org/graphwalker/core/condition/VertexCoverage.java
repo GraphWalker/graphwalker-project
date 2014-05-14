@@ -37,6 +37,10 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class VertexCoverage implements StopCondition {
 
+    public double getPercent() {
+        return percent * 100;
+    }
+
     private final double percent;
 
     public VertexCoverage(long percent) {
