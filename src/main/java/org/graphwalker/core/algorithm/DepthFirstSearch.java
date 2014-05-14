@@ -26,11 +26,67 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.model.Element;
+
+import java.util.*;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
  */
 public final class DepthFirstSearch implements Algorithm {
 
+    private final RuntimeModel model;
+
+    public DepthFirstSearch(RuntimeModel model) {
+        this.model = model;
+    }
+
+    public List<Element> getConnectedComponent(Element root) {
+        return createConnectedComponent(createElementStatusMap(model.getElements()), root);
+    }
+
+    private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
+        Map<Element, ElementStatus> elementStatusMap = new HashMap<>();
+        for (Element element: elements) {
+            elementStatusMap.put(element, ElementStatus.UNREACHABLE);
+            if (element instanceof RuntimeEdge) {
+                RuntimeEdge edge = (RuntimeEdge)element;
+                if (edge.isBlocked()) {
+                    elementStatusMap.put(element, ElementStatus.BLOCKED);
+                }
+            }
+        }
+        return elementStatusMap;
+    }
+
+    private List<Element> createConnectedComponent(Map<Element, ElementStatus> elementStatusMap, Element root) {
+        List<Element> connectedComponent = new ArrayList<>();
+        Deque<Element> stack = new ArrayDeque<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            Element element = stack.pop();
+            if (ElementStatus.UNREACHABLE.equals(elementStatusMap.get(element))) {
+                connectedComponent.add(element);
+                elementStatusMap.put(element, ElementStatus.REACHABLE);
+                if (element instanceof RuntimeVertex) {
+                    RuntimeVertex vertex = (RuntimeVertex)element;
+                    for (RuntimeEdge edge: model.getEdges(vertex)) {
+                        stack.push(edge);
+                    }
+                } else if (element instanceof RuntimeEdge) {
+                    RuntimeEdge edge = (RuntimeEdge)element;
+                    stack.push(edge.getTargetVertex());
+                }
+            }
+        }
+        return Collections.unmodifiableList(connectedComponent);
+    }
+
+    private enum ElementStatus {
+        UNREACHABLE, REACHABLE, BLOCKED
+    }
 }
