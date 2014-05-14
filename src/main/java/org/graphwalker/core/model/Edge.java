@@ -77,6 +77,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public Edge setGuard(Guard guard) {
         this.guard = guard;
+        invalidateCache();
         return this;
     }
 
@@ -86,11 +87,13 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public Edge addAction(Action action) {
         this.actions.add(action);
+        invalidateCache();
         return this;
     }
 
     public Edge addActions(List<Action> actions) {
         this.actions.addAll(actions);
+        invalidateCache();
         return this;
     }
 
@@ -100,6 +103,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public Edge setBlocked(boolean blocked) {
         this.blocked = blocked;
+        invalidateCache();
         return this;
     }
 
@@ -113,6 +117,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public Edge setWeight(Double weight) {
         this.weight = weight;
+        invalidateCache();
         return this;
     }
 

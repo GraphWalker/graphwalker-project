@@ -1,4 +1,4 @@
-package org.graphwalker.core.algorithm;
+package org.graphwalker.core.model;
 
 /*
  * #%L
@@ -26,8 +26,15 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import java.util.ArrayDeque;
+import java.util.Collection;
+
 /**
  * @author Nils Olsson
  */
-public class AlgorithmTest {
+public final class Path<E extends Element> extends ArrayDeque<E> {
+
+    public Path(Collection<E> collection) {
+        super(collection);
+    }
 }

@@ -26,11 +26,97 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
  */
 public final class Eulerian implements Algorithm {
 
+    private final RuntimeModel model;
+    private final Map<RuntimeVertex, PolarityCounter> polarities;
+
+    public Eulerian(RuntimeModel model) {
+        this.model = model;
+        this.polarities = new HashMap<>(model.getVertices().size());
+        polarize();
+    }
+
+    public enum EulerianType {
+        EULERIAN, SEMI_EULERIAN, NOT_EULERIAN
+    }
+
+    private void polarize() {
+        for (RuntimeEdge edge : model.getEdges()) {
+            getPolarityCounter(edge.getSourceVertex()).decrease();
+            getPolarityCounter(edge.getTargetVertex()).increase();
+        }
+        for (RuntimeVertex vertex : model.getVertices()) {
+            if (!polarities.get(vertex).hasPolarity()) {
+                polarities.remove(vertex);
+            }
+        }
+    }
+
+    private PolarityCounter getPolarityCounter(RuntimeVertex vertex) {
+        if (!polarities.containsKey(vertex)) {
+            polarities.put(vertex, new PolarityCounter());
+        }
+        return polarities.get(vertex);
+    }
+
+    public EulerianType getEulerianType() {
+        if (polarities.isEmpty()) {
+            return EulerianType.EULERIAN;
+        }
+        if (2 == polarities.size()) {
+            return EulerianType.SEMI_EULERIAN;
+        }
+        return EulerianType.NOT_EULERIAN;
+    }
+
+    public RuntimeModel eulerize() {
+        switch (getEulerianType()) {
+            case EULERIAN:
+                break; // missing start edge
+            case NOT_EULERIAN:
+                break; // TODO:
+        }
+        return model; // SEMI_EULERIAN;
+    }
+
+    public Path<Element> getEulerPath() {
+        // TODO:
+        return new Path<>(new ArrayList<Element>());
+    }
+
+    class PolarityCounter {
+
+        private int polarity = 0;
+
+        public void increase() {
+            polarity += 1;
+        }
+
+        public void decrease() {
+            polarity -= 1;
+        }
+
+        public boolean hasPolarity() {
+            return 0 != polarity;
+        }
+
+        public int getPolarity() {
+            return polarity;
+        }
+    }
 }

@@ -64,6 +64,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
     public Vertex setSharedState(String sharedState) {
         this.sharedState = sharedState;
+        invalidateCache();
         return this;
     }
 

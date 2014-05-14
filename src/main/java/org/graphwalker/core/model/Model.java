@@ -101,6 +101,16 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return elements;
         }
 
+        public List<Element> getElements(Element element) {
+            if (element instanceof RuntimeVertex) {
+                RuntimeVertex vertex = (RuntimeVertex)element;
+                return new ArrayList<Element>(getEdges(vertex));
+            } else {
+                RuntimeEdge edge = (RuntimeEdge)element;
+                return Arrays.<Element>asList(edge.getTargetVertex());
+            }
+        }
+
         private List<Element> createElementCache() {
             List<Element> elements = new ArrayList<>();
             elements.addAll(vertices);
