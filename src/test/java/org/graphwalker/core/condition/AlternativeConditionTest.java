@@ -26,8 +26,31 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class AlternativeConditionTest {
+
+    @Test
+    public void testConstructor() {
+        AlternativeCondition alternativeCondition = new AlternativeCondition();
+        Assert.assertNotNull(alternativeCondition);
+        Assert.assertNotNull(alternativeCondition.getStopConditions());
+        Assert.assertThat(alternativeCondition.getStopConditions().size(), is(0));
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }

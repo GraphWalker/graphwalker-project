@@ -39,12 +39,12 @@ public final class VertexCoverage implements StopCondition {
 
     private final double percent;
 
-    public VertexCoverage(long percent) {
-        this.percent = percent/100;
+    public VertexCoverage(int percent) {
+        this.percent = (double)percent/100;
     }
 
-    public double getPercent() {
-        return percent * 100;
+    public int getPercent() {
+        return (int)(percent * 100);
     }
 
     @Override

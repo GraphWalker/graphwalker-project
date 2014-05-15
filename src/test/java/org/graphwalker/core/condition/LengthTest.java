@@ -26,8 +26,29 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class LengthTest {
+
+    @Test
+    public void testConstructor() {
+        Length length = new Length(333);
+        Assert.assertThat(length.getLength(), is(333l));
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }
