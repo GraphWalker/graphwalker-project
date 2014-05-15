@@ -44,7 +44,7 @@ public final class TimeDuration implements StopCondition {
     }
 
     public long getDuration() {
-        return duration;
+        return TimeUnit.SECONDS.convert(duration, TimeUnit.NANOSECONDS);
     }
 
     @Override
