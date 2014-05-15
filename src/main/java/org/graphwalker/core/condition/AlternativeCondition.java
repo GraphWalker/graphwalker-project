@@ -39,8 +39,9 @@ public final class AlternativeCondition implements StopCondition {
 
     private List<StopCondition> conditions = new ArrayList<>();
 
-    public void addStopCondition(StopCondition condition) {
+    public AlternativeCondition addStopCondition(StopCondition condition) {
         this.conditions.add(condition);
+        return this;
     }
 
     public List<StopCondition> getStopConditions() {
