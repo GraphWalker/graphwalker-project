@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,11 +51,37 @@ public class AlternativeConditionTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
+        Model model = new Model().addEdge(e1);
+        StopCondition stopCondition = new AlternativeCondition()
+                .addStopCondition(new VertexCoverage(100))
+                .addStopCondition(new ReachedEdge("e1"));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
+        context.setCurrentElement(v1.build());
+        context.getProfiler().start();
+        Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
+        context.setCurrentElement(e1.build());
+        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
+        Model model = new Model().addEdge(e1);
+        StopCondition stopCondition = new AlternativeCondition()
+                .addStopCondition(new VertexCoverage(100))
+                .addStopCondition(new ReachedEdge("e1"));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(v1.build());
+        context.getProfiler().start();
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(e1.build());
+        Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }
