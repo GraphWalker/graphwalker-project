@@ -30,9 +30,11 @@ import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.statistics.Profiler;
 
 import javax.script.SimpleScriptContext;
+import java.util.List;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -106,4 +108,14 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         this.currentElement = null;
         return this;
     }
+
+    public List<Requirement> getRequirements() {
+        throw new RuntimeException("Not implemented");
+    }
+
+    public List<Requirement> getRequirements(RequirementStatus status) {
+        throw new RuntimeException("Not implemented");
+    }
+
+
 }
