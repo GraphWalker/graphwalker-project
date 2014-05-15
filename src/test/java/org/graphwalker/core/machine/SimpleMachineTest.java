@@ -31,6 +31,7 @@ import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -48,6 +49,7 @@ public class SimpleMachineTest {
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
     }
 
     @Test
@@ -60,5 +62,6 @@ public class SimpleMachineTest {
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
     }
 }

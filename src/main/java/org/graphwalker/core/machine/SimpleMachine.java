@@ -72,7 +72,7 @@ public final class SimpleMachine implements Machine {
     @Override
     public boolean hasNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        if (!currentContext.getPathGenerator().hasNextStep(currentContext)) {
+        if (currentContext.getPathGenerator().hasNextStep(currentContext)) {
             return true;
         }
         // Find another context to execute!?
