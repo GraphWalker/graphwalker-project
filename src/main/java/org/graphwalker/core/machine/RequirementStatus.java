@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.machine;
 
 /*
  * #%L
@@ -26,37 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.machine.RequirementStatus;
-
 /**
  * @author Nils Olsson
  */
-public final class RequirementCoverage implements StopCondition {
-
-    private final double percent;
-
-    public RequirementCoverage(double percent) {
-        this.percent = percent/100;
-    }
-
-    public double getPercent() {
-        return percent * 100;
-    }
-
-    @Override
-    public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
-    }
-
-    @Override
-    public double getFulfilment(ExecutionContext context) {
-        double totalCount = context.getRequirements().size();
-        if (0 == totalCount) {
-            return 1.0;
-        }
-        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount+failedCount) / totalCount) / percent;
-    }
+public enum RequirementStatus {
+    NOT_COVERED, PASSED, FAILED
 }
