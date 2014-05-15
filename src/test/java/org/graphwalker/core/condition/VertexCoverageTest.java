@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,11 +49,33 @@ public class VertexCoverageTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+        VertexCoverage vertexCoverage = new VertexCoverage(100);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(vertexCoverage));
+        Assert.assertThat(vertexCoverage.getFulfilment(context), is(0.0));
+        context.setCurrentElement(v1.build());
+        context.getProfiler().start();
+        Assert.assertThat(vertexCoverage.getFulfilment(context), is(0.5));
+        context.setCurrentElement(v2.build());
+        context.getProfiler().start();
+        Assert.assertThat(vertexCoverage.getFulfilment(context), is(1.0));
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+        VertexCoverage vertexCoverage = new VertexCoverage(100);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(vertexCoverage));
+        Assert.assertFalse(vertexCoverage.isFulfilled(context));
+        context.setCurrentElement(v1.build());
+        context.getProfiler().start();
+        Assert.assertFalse(vertexCoverage.isFulfilled(context));
+        context.setCurrentElement(v2.build());
+        context.getProfiler().start();
+        Assert.assertTrue(vertexCoverage.isFulfilled(context));
     }
 }
