@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,11 +49,37 @@ public class EdgeCoverageTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1);
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        StopCondition stopCondition = new EdgeCoverage(100);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
+        context.setCurrentElement(e1.build());
+        context.getProfiler().start();
+        Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
+        context.setCurrentElement(e2.build());
+        context.getProfiler().start();
+        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1);
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        StopCondition stopCondition = new EdgeCoverage(100);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(e1.build());
+        context.getProfiler().start();
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(e2.build());
+        context.getProfiler().start();
+        Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }

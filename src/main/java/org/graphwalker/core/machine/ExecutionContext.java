@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Builder;
 import org.graphwalker.core.model.Element;
@@ -34,7 +35,11 @@ import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.statistics.Profiler;
 
 import javax.script.SimpleScriptContext;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -50,6 +55,8 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
     private Element currentElement;
     private Element nextElement;
+
+    private Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
 
     public ExecutionContext() {
     }
@@ -117,5 +124,18 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         throw new RuntimeException("Not implemented");
     }
 
-
+    @SuppressWarnings("unchecked")
+    public <T> T getAlgorithm(Class<? extends Algorithm> clazz) {
+        if (!algorithms.containsKey(clazz)) {
+            T instance = null;
+            try {
+                Constructor<? extends Algorithm> constructor = clazz.getConstructor(ExecutionContext.class);
+                instance = (T) constructor.newInstance(this);
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new MachineException(e);
+            }
+            algorithms.put(clazz, instance);
+        }
+        return (T)algorithms.get(clazz);
+    }
 }

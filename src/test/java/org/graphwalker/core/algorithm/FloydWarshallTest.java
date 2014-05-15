@@ -26,6 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
@@ -55,13 +56,13 @@ public final class FloydWarshallTest {
 
     @Test
     public void shortestDistance() {
-        FloydWarshall floydWarshall = new FloydWarshall(model.build());
+        FloydWarshall floydWarshall = new FloydWarshall(new ExecutionContext().setModel(model));
         Assert.assertThat(floydWarshall.getShortestDistance(v00.build(), v31.build()), is(4));
     }
 
     @Test
     public void maximumDistance() {
-        FloydWarshall floydWarshall = new FloydWarshall(model.build());
+        FloydWarshall floydWarshall = new FloydWarshall(new ExecutionContext().setModel(model));
         Assert.assertThat(floydWarshall.getMaximumDistance(v31.build()), is(5));
     }
 }

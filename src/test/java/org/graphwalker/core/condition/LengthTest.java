@@ -26,6 +26,10 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,11 +48,27 @@ public class LengthTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex vertex = new Vertex();
+        Model model = new Model().addVertex(vertex);
+        StopCondition stopCondition = new Length(100);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
+        for (int i = 0; i <= 100; i++) {
+            Assert.assertThat(stopCondition.getFulfilment(context), is((double)i/100));
+            context.getProfiler().start();
+            Assert.assertThat(stopCondition.getFulfilment(context), is((double)(i+1)/100));
+        }
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex vertex = new Vertex();
+        Model model = new Model().addVertex(vertex);
+        StopCondition stopCondition = new Length(100);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
+        for (int i = 0; i < 100; i++) {
+            Assert.assertFalse(stopCondition.isFulfilled(context));
+            context.getProfiler().start();
+        }
+        Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }

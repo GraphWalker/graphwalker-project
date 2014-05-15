@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,11 +49,34 @@ public class ReachedVertexTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2");
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+        Model model = new Model().addEdge(e1);
+        StopCondition stopCondition = new ReachedVertex("v2");
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        context.setCurrentElement(v1.build());
+        Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
+        context.setCurrentElement(e1.build());
+        Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
+        context.setCurrentElement(v2.build());
+        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2");
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+        Model model = new Model().addEdge(e1);
+        StopCondition stopCondition = new ReachedVertex("v2");
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(v1.build());
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(e1.build());
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(v2.build());
+        Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }

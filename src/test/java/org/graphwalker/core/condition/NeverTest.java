@@ -29,6 +29,8 @@ package org.graphwalker.core.condition;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
@@ -42,11 +44,13 @@ public class NeverTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        StopCondition stopCondition = new Never();
+        Assert.assertThat(stopCondition.getFulfilment(null), is(0.0));
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        StopCondition stopCondition = new Never();
+        Assert.assertFalse(stopCondition.isFulfilled(null));
     }
 }
