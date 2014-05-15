@@ -26,6 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public final class Classification extends CachedBuilder<Classification.RuntimeClassification> {
 
-    private final BuilderSet<RuntimeClassification> classifications = new BuilderSet<>();
+    private final List<Classification> classifications = new ArrayList<>();
     private String name;
 
     public Classification addClassification(Classification classification) {
@@ -42,7 +43,7 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
         return this;
     }
 
-    public BuilderSet<RuntimeClassification> getClassifications() {
+    public List<Classification> getClassifications() {
         return classifications;
     }
 
@@ -67,7 +68,7 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
 
         private RuntimeClassification(Classification classification) {
             super(classification.getName());
-            this.classifications = classification.getClassifications().build();
+            this.classifications = BuilderFactory.build(classification.getClassifications());
         }
 
         public List<RuntimeClassification> getClassifications() {

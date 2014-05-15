@@ -29,6 +29,9 @@ package org.graphwalker.core.model;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -156,5 +159,28 @@ public class ModelTest {
         Assert.assertThat(classificationTree.build(), notNullValue());
         Assert.assertThat(classificationTree.build().getRoot(), notNullValue());
         Assert.assertThat(classificationTree.build().getRoot().getClassifications().size(), is(2));
+    }
+
+    @Test
+    public void createLargeModel() {
+        final long startTime = System.nanoTime();
+        final Random random = new Random(System.nanoTime());
+        final Model model = new Model();
+        for (int i = 0; i<50000; i++) {
+            model.addVertex(new Vertex());
+        }
+        for (int i = 0; i<50000; i++) {
+            int source = random.nextInt(model.getVertices().size());
+            int target = random.nextInt(model.getVertices().size());
+            model.addEdge(new Edge()
+                    .setSourceVertex(model.getVertices().get(source))
+                    .setTargetVertex(model.getVertices().get(target)));
+        }
+        final long stopTime = System.nanoTime();
+        Assert.assertThat(model.getVertices().size(), is(50000));
+        Assert.assertThat(model.getEdges().size(), is(50000));
+        Assert.assertThat(model.build().getVertices().size(), is(50000));
+        Assert.assertThat(model.build().getEdges().size(), is(50000));
+        Assert.assertTrue(TimeUnit.MILLISECONDS.convert(stopTime-startTime, TimeUnit.NANOSECONDS) < 1000);
     }
 }

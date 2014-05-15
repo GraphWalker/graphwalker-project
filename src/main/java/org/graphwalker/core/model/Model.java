@@ -36,8 +36,8 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Model implements Builder<Model.RuntimeModel> {
 
-    private final BuilderSet<RuntimeVertex> vertices = new BuilderSet<>();
-    private final BuilderSet<RuntimeEdge> edges = new BuilderSet<>();
+    private final List<Vertex> vertices = new ArrayList<>();
+    private final List<Edge> edges = new ArrayList<>();
 
     public Model addVertex(Vertex vertex) {
         vertices.add(vertex);
@@ -46,20 +46,20 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
     public Model addEdge(Edge edge) {
         edges.add(edge);
-        if (null != edge.getSourceVertex()) {
+        if (null != edge.getSourceVertex() && !vertices.contains(edge.getSourceVertex())) {
             vertices.add(edge.getSourceVertex());
         }
-        if (null != edge.getTargetVertex()) {
+        if (null != edge.getTargetVertex() && !vertices.contains(edge.getTargetVertex())) {
             vertices.add(edge.getTargetVertex());
         }
         return this;
     }
 
-    public BuilderSet<RuntimeVertex> getVertices() {
+    public List<Vertex> getVertices() {
         return vertices;
     }
 
-    public BuilderSet<RuntimeEdge> getEdges() {
+    public List<Edge> getEdges() {
         return edges;
     }
 
@@ -78,8 +78,8 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final List<Element> elements;
 
         private RuntimeModel(Model model) {
-            this.vertices = Collections.unmodifiableList(model.getVertices().build());
-            this.edges = Collections.unmodifiableList(model.getEdges().build());
+            this.vertices = BuilderFactory.build(model.getVertices());
+            this.edges = BuilderFactory.build(model.getEdges());
             this.vertexEdgeCache = createVertexEdgeCache();
             this.elements = createElementCache();
         }
