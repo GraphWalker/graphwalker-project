@@ -88,6 +88,17 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return vertices;
         }
 
+        public List<RuntimeVertex> findVertices(String name) {
+            // TODO: don't loop over all the vertices every time
+            List<RuntimeVertex> result = new ArrayList<>();
+            for (RuntimeVertex vertex: vertices) {
+                if (vertex.hasName() && vertex.getName().equals(name)) {
+                    result.add(vertex);
+                }
+            }
+            return result;
+        }
+
         public List<RuntimeEdge> getEdges() {
             return edges;
         }
@@ -95,6 +106,17 @@ public final class Model implements Builder<Model.RuntimeModel> {
         public List<RuntimeEdge> getEdges(RuntimeVertex vertex) {
             List<RuntimeEdge> edges = vertexEdgeCache.get(vertex);
             return null != edges ? edges: EMPTY_LIST;
+        }
+
+        public List<RuntimeEdge> findEdges(String name) {
+            // TODO: don't loop over all the vertices every time
+            List<RuntimeEdge> result = new ArrayList<>();
+            for (RuntimeEdge edge: edges) {
+                if (edge.hasName() && edge.getName().equals(name)) {
+                    result.add(edge);
+                }
+            }
+            return result;
         }
 
         public List<Element> getElements() {

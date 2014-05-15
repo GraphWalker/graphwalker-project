@@ -26,6 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
@@ -66,7 +67,7 @@ public class DepthFirstSearchTest {
 
     @Test
     public void connectedComponent() {
-        DepthFirstSearch depthFirstSearch = new DepthFirstSearch(model.build());
+        DepthFirstSearch depthFirstSearch = new DepthFirstSearch(new ExecutionContext().setModel(model));
         Assert.assertThat(depthFirstSearch.getConnectedComponent(v00.build()).size(), is(7));
         Assert.assertThat(depthFirstSearch.getConnectedComponent(ve0.build()).size(), is(3));
     }

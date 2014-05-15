@@ -26,12 +26,12 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 
 import java.util.*;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -39,14 +39,14 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class DepthFirstSearch implements Algorithm {
 
-    private final RuntimeModel model;
+    private final ExecutionContext context;
 
-    public DepthFirstSearch(RuntimeModel model) {
-        this.model = model;
+    public DepthFirstSearch(ExecutionContext context) {
+        this.context = context;
     }
 
     public List<Element> getConnectedComponent(Element root) {
-        return createConnectedComponent(createElementStatusMap(model.getElements()), root);
+        return createConnectedComponent(createElementStatusMap(context.getModel().getElements()), root);
     }
 
     private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
@@ -74,7 +74,7 @@ public final class DepthFirstSearch implements Algorithm {
                 elementStatusMap.put(element, ElementStatus.REACHABLE);
                 if (element instanceof RuntimeVertex) {
                     RuntimeVertex vertex = (RuntimeVertex)element;
-                    for (RuntimeEdge edge: model.getEdges(vertex)) {
+                    for (RuntimeEdge edge: context.getModel().getEdges(vertex)) {
                         stack.push(edge);
                     }
                 } else if (element instanceof RuntimeEdge) {

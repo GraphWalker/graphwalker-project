@@ -26,6 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -42,12 +43,12 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Eulerian implements Algorithm {
 
-    private final RuntimeModel model;
+    private final ExecutionContext context;
     private final Map<RuntimeVertex, PolarityCounter> polarities;
 
-    public Eulerian(RuntimeModel model) {
-        this.model = model;
-        this.polarities = new HashMap<>(model.getVertices().size());
+    public Eulerian(ExecutionContext context) {
+        this.context = context;
+        this.polarities = new HashMap<>(context.getModel().getVertices().size());
         polarize();
     }
 
@@ -56,11 +57,11 @@ public final class Eulerian implements Algorithm {
     }
 
     private void polarize() {
-        for (RuntimeEdge edge : model.getEdges()) {
+        for (RuntimeEdge edge : context.getModel().getEdges()) {
             getPolarityCounter(edge.getSourceVertex()).decrease();
             getPolarityCounter(edge.getTargetVertex()).increase();
         }
-        for (RuntimeVertex vertex : model.getVertices()) {
+        for (RuntimeVertex vertex : context.getModel().getVertices()) {
             if (!polarities.get(vertex).hasPolarity()) {
                 polarities.remove(vertex);
             }
@@ -91,7 +92,7 @@ public final class Eulerian implements Algorithm {
             case NOT_EULERIAN:
                 break; // TODO:
         }
-        return model; // SEMI_EULERIAN;
+        return context.getModel(); // SEMI_EULERIAN;
     }
 
     public Path<Element> getEulerPath() {

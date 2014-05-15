@@ -59,6 +59,6 @@ public final class EdgeCoverage implements StopCondition {
                 visitedEdgesCount++;
             }
         }
-        return (visitedEdgesCount / totalEdgesCount) / percent;
+        return ((double)visitedEdgesCount / totalEdgesCount) / percent;
     }
 }

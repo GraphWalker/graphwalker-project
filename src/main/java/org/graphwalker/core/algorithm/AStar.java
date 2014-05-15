@@ -26,30 +26,28 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
 import java.util.*;
-
-import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
  */
 public final class AStar implements Algorithm {
 
-    private final RuntimeModel model;
-    private final FloydWarshall floydWarshall;
+    private final ExecutionContext context;
 
-    public AStar(RuntimeModel model) {
-        this.model = model;
-        this.floydWarshall = new FloydWarshall(model);
+    public AStar(ExecutionContext context) {
+        this.context = context;
     }
 
     public Path<Element> getShortestPath(Element origin, Element destination) {
         Map<Element, AStarNode> openSet = new HashMap<>();
         PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
         Map<Element, AStarNode> closeSet = new HashMap<>();
+        FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
         AStarNode sourceNode = new AStarNode(origin, 0, floydWarshall.getShortestDistance(origin, destination));
         openSet.put(origin, sourceNode);
         queue.add(sourceNode);
@@ -62,7 +60,7 @@ public final class AStar implements Algorithm {
                 break;
             }else{
                 closeSet.put(node.getElement(), node);
-                List<Element> neighbors = model.getElements(node.getElement());
+                List<Element> neighbors = context.getModel().getElements(node.getElement());
                 for (Element neighbor : neighbors) {
                     AStarNode visited = closeSet.get(neighbor);
                     if (visited == null) {

@@ -26,7 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.NamedElement;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 /**
  * @author Nils Olsson
@@ -50,6 +54,24 @@ public final class ReachedEdge implements StopCondition {
 
     @Override
     public double getFulfilment(ExecutionContext context) {
-        throw new RuntimeException("Not implemented, need algorithms");
+        if (context.getCurrentElement() instanceof NamedElement) {
+            NamedElement element = (NamedElement)context.getCurrentElement();
+            if (element.hasName() && element.getName().equals(name)){
+                return 1;
+            } else {
+                double maxFulfilment = 0;
+                FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+                for (RuntimeEdge edge : context.getModel().findEdges(name)) {
+                    int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), edge);
+                    int max = floydWarshall.getMaximumDistance(edge);
+                    double fulfilment = 1 - (double) distance / max;
+                    if (maxFulfilment < fulfilment) {
+                        maxFulfilment = fulfilment;
+                    }
+                }
+                return maxFulfilment;
+            }
+        }
+        return 0;
     }
 }

@@ -40,4 +40,8 @@ public abstract class NamedElement implements Element {
     public String getName() {
         return name;
     }
+
+    public boolean hasName() {
+        return name != null && !"".equals(name);
+    }
 }
