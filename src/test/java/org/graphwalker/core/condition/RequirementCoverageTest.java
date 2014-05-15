@@ -26,8 +26,29 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class RequirementCoverageTest {
+
+    @Test
+    public void testConstructor() {
+        RequirementCoverage requirementCoverage = new RequirementCoverage(66);
+        Assert.assertThat(requirementCoverage.getPercent(), is(66));
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }

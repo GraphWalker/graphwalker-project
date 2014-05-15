@@ -26,8 +26,31 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class TimeDurationTest {
+
+    @Test
+    public void testConstructor() {
+        TimeDuration timeDuration = new TimeDuration(100, TimeUnit.SECONDS);
+        Assert.assertThat(timeDuration.getDuration(), is(100l));
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }

@@ -38,7 +38,7 @@ public final class TimeDuration implements StopCondition {
     private final long duration;
     private final long timestamp;
 
-    private TimeDuration(long time, TimeUnit unit) {
+    public TimeDuration(long time, TimeUnit unit) {
         this.timestamp = System.nanoTime();
         this.duration = TimeUnit.NANOSECONDS.convert(time, unit);
     }

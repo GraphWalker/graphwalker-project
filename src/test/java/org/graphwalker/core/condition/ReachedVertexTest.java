@@ -26,8 +26,29 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class ReachedVertexTest {
+
+    @Test
+    public void testConstructor() {
+        ReachedVertex reachedVertex = new ReachedVertex("MyName");
+        Assert.assertThat(reachedVertex.getName(), is("MyName"));
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }

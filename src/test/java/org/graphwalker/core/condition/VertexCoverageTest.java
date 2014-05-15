@@ -26,8 +26,29 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+
 /**
  * @author Nils Olsson
  */
 public class VertexCoverageTest {
+
+    @Test
+    public void testConstructor() {
+        VertexCoverage vertexCoverage = new VertexCoverage(55);
+        Assert.assertThat(vertexCoverage.getPercent(), is(55));
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }

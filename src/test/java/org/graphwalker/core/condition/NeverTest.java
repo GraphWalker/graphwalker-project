@@ -26,8 +26,27 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class NeverTest {
+
+    @Test
+    public void testConstructor() {
+        Never never = new Never();
+        Assert.assertNotNull(never);
+    }
+
+    @Test
+    public void testFulfilment() {
+        // TODO:
+    }
+
+    @Test
+    public void testIsFulfilled() {
+        // TODO:
+    }
 }
