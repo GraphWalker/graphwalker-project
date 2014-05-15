@@ -127,14 +127,12 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     @SuppressWarnings("unchecked")
     public <T> T getAlgorithm(Class<? extends Algorithm> clazz) {
         if (!algorithms.containsKey(clazz)) {
-            T instance = null;
             try {
                 Constructor<? extends Algorithm> constructor = clazz.getConstructor(ExecutionContext.class);
-                instance = (T) constructor.newInstance(this);
+                algorithms.put(clazz, constructor.newInstance(this));
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new MachineException(e);
             }
-            algorithms.put(clazz, instance);
         }
         return (T)algorithms.get(clazz);
     }
