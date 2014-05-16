@@ -48,7 +48,7 @@ public class GeneratorFactoryTest {
         PathGenerator generator = GeneratorFactory.parse("random(edge_coverage(100))");
         Assert.assertThat(generator, instanceOf(RandomPath.class));
         Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class) );
-        Assert.assertThat(((EdgeCoverage)generator.getStopCondition()).getPercent(), is(100d) );
+        Assert.assertThat(((EdgeCoverage)generator.getStopCondition()).getPercent(), is(100) );
     }
 
     @Test // Single stop condition
@@ -56,7 +56,7 @@ public class GeneratorFactoryTest {
         PathGenerator generator = GeneratorFactory.parse("random(vertex_coverage(100))");
         Assert.assertThat(generator, instanceOf(RandomPath.class));
         Assert.assertThat(generator.getStopCondition(), instanceOf(VertexCoverage.class) );
-        Assert.assertThat(((VertexCoverage)generator.getStopCondition()).getPercent(), is(100d) );
+        Assert.assertThat(((VertexCoverage)generator.getStopCondition()).getPercent(), is(100) );
     }
 
     @Test // Single stop condition

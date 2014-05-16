@@ -64,10 +64,10 @@ public class GrammarTest {
     public void testCLI() {
         for (String generator: generators) {
             ANTLRInputStream inputStream = new ANTLRInputStream(generator);
-            CLILexer lexer = new CLILexer(inputStream);
+            CLI_Lexer lexer = new CLI_Lexer(inputStream);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
-            CLIParser parser = new CLIParser(tokens);
-            CLIParser.ParseContext context = parser.parse();
+            CLI_Parser parser = new CLI_Parser(tokens);
+            CLI_Parser.ParseContext context = parser.parse();
             System.out.println("Number of tokens: " + tokens.getTokens().size() + ", " + tokens.getText());
             Assert.assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
         }

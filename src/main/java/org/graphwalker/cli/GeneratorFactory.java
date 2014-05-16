@@ -38,10 +38,10 @@ import org.graphwalker.core.generator.PathGenerator;
 public class GeneratorFactory {
     public static PathGenerator parse(String str) {
         ANTLRInputStream inputStream = new ANTLRInputStream(str);
-        CLILexer lexer = new CLILexer(inputStream);
+        CLI_Lexer lexer = new CLI_Lexer(inputStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        CLIParser parser = new CLIParser(tokens);
-        CLIParser.ParseContext context = parser.parse();
+        CLI_Parser parser = new CLI_Parser(tokens);
+        CLI_Parser.ParseContext context = parser.parse();
 
         ParseTreeWalker walker = new ParseTreeWalker();
         CombinedPath combinedPath = new CombinedPath();
