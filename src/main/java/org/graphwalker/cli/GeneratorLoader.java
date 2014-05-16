@@ -27,17 +27,13 @@ package org.graphwalker.cli;
  */
 
 
-import org.antlr.v4.runtime.misc.NotNull;
-import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.CombinedPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.AStarPath;
 
 /**
  * Created by krikar on 5/14/14.
  */
-public class GeneratorLoader extends CLIBaseListener {
+public class GeneratorLoader extends CLI_ParserBaseListener {
 
     CombinedPath combinedPath;
     StopCondition stopCondition;
@@ -47,24 +43,4 @@ public class GeneratorLoader extends CLIBaseListener {
         this.combinedPath = combinedPath;
     }
 
-    @Override
-    public void exitGenerator(@NotNull CLIParser.GeneratorContext ctx) {
-        if (ctx.getText().equalsIgnoreCase("RANDOM")) {
-            combinedPath.addPathGenerator(new RandomPath(stopCondition));
-        } else if (ctx.getText().equalsIgnoreCase("A_STAR")) {
-            combinedPath.addPathGenerator(new AStarPath(stopCondition));
-        }
-    }
-
-    @Override
-    public void exitStopCondition(@NotNull CLIParser.StopConditionContext ctx) {
-        if (ctx.edge_coverage().getText().equalsIgnoreCase("edge_coverage")) {
-            stopCondition = new EdgeCoverage(100);
-        }
-    }
-
-    @Override
-    public void exitInteger(@NotNull CLIParser.IntegerContext ctx) {
-        integer = Integer.getInteger(ctx.getText());
-    }
 }
