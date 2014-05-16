@@ -30,7 +30,7 @@
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
-            <artifactId>gw-core</artifactId>
+            <artifactId>graphwalker-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
