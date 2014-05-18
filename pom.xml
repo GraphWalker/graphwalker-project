@@ -35,7 +35,7 @@
         </dependency>
         <dependency>
             <groupId>org.graphwalker</groupId>
-            <artifactId>gw-io</artifactId>
+            <artifactId>graphwalker-io</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
