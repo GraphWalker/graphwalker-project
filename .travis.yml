@@ -20,4 +20,4 @@ before_install:
 install:
  - pushd ../graphwalker-core;mvn -q clean install;popd
  - pushd ../graphwalker-io;mvn -q clean install;popd
- - mvn -q clean install
+ - mvn -q clean install package
