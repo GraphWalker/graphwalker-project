@@ -26,6 +26,7 @@
 package org.graphwalker.cli;
 
 import com.beust.jcommander.JCommander;
+import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
@@ -33,6 +34,7 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.GraphMLModelFactory;
 
 import java.io.IOException;
@@ -103,10 +105,9 @@ public class CLI {
     while(itr.hasNext()) {
       Model model = factory.create((String)itr.next());
 
-      PathGenerator pathGenerator = null;
-      //PathGenerator pathGenerator = GeneratorParser.parse((String)itr.next());
-
+      PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
+      context.setNextElement(new Vertex().setName("Start"));
       Machine machine = new SimpleMachine(context);
       while (machine.hasNextStep()) {
         Element e = (Element) machine.getNextStep();

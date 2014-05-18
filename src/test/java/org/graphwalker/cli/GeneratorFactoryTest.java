@@ -26,7 +26,7 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import org.graphwalker.core.algorithm.AStar;
+import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.CombinedPath;
@@ -125,7 +125,7 @@ public class GeneratorFactoryTest {
 
         CombinedPath combinedPath = (CombinedPath)generator;
         Assert.assertThat(combinedPath.getPathGenerators().get(0), instanceOf(RandomPath.class));
-        Assert.assertThat(combinedPath.getPathGenerators().get(1), instanceOf(AStar.class));
+        Assert.assertThat(combinedPath.getPathGenerators().get(1), instanceOf(AStarPath.class));
 
         StopCondition condition = combinedPath.getPathGenerators().get(0).getStopCondition();
         Assert.assertThat(condition, instanceOf(StopCondition.class));
@@ -141,7 +141,7 @@ public class GeneratorFactoryTest {
 
     @Test // 2 stop condition, logical OR'd, and with white spaces in expression
     public void test11() {
-        PathGenerator generator = GeneratorFactory.parse("RANDOM ( REACHED_VERTEX(Some_vertex) OR REACHED_EDGE ( Some_edge ) )");
+        PathGenerator generator = GeneratorFactory.parse("RANDOM ( REACHED_VERTEX( Some_vertex) OR REACHED_EDGE( Some_edge ) )");
         Assert.assertThat(generator, instanceOf(RandomPath.class));
         Assert.assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class) );
 

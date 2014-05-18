@@ -5,7 +5,11 @@ options {
 }
 
 parse
- : (IDENTIFIER LPAREN logicalExpression RPAREN)* EOF
+ : (generator)* EOF
+ ;
+
+generator
+ : Alphanumeric LPAREN logicalExpression RPAREN
  ;
 
 logicalExpression
@@ -22,7 +26,8 @@ primaryExpression
  ;
 
 stopCondition
- : (IDENTIFIER LPAREN APLHA_NUM RPAREN
- || IDENTIFIER)
+ : (Alphanumeric LPAREN Alphanumeric RPAREN
+ | Alphanumeric LPAREN Number RPAREN
+ | Alphanumeric)
  ;
 
