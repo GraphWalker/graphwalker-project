@@ -68,7 +68,6 @@ public class GrammarTest {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             CLI_Parser parser = new CLI_Parser(tokens);
             CLI_Parser.ParseContext context = parser.parse();
-            System.out.println("Number of tokens: " + tokens.getTokens().size() + ", " + tokens.getText());
             Assert.assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
         }
     }

@@ -1,4 +1,4 @@
-package org.graphwalker.cli;
+package org.graphwalker.cli.antlr;
 
 /*
  * #%L
@@ -29,7 +29,8 @@ package org.graphwalker.cli;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.graphwalker.core.generator.CombinedPath;
+import org.graphwalker.cli.CLI_Lexer;
+import org.graphwalker.cli.CLI_Parser;
 import org.graphwalker.core.generator.PathGenerator;
 
 /**
@@ -44,11 +45,9 @@ public class GeneratorFactory {
         CLI_Parser.ParseContext context = parser.parse();
 
         ParseTreeWalker walker = new ParseTreeWalker();
-        CombinedPath combinedPath = new CombinedPath();
-        GeneratorLoader generatorLoader = new GeneratorLoader(combinedPath);
+        GeneratorLoader generatorLoader = new GeneratorLoader();
         walker.walk(generatorLoader, context);
 
-
-        return null;
+        return generatorLoader.getGenerator();
     }
 }

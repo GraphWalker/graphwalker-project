@@ -1,11 +1,11 @@
 lexer grammar CLI_Lexer;
 
 OR
- : '||' | 'or'
+ : '||' | 'OR' | 'or'
  ;
 
 AND
- : '&&' | 'and'
+ : '&&' | 'AND' | 'and'
  ;
 
 LPAREN
@@ -20,32 +20,8 @@ WHITESPACE
  : [ \t\r\n\u000C]+ -> skip
  ;
 
-INTEGER
- : [0-9]+
- ;
+fragment Digit: '0'..'9' ;
+fragment Alpha: '_' | '-' | 'A'..'Z' | 'a'..'z' ;
 
-APLHA_NUM
- : [a-zA-Z0-9]+
- ;
-
-IDENTIFIER
- : Letter LetterOrDigit*
- ;
-
-fragment
-Letter
- : [a-zA-Z$_]
- | ~[\u0000-\u00FF\uD800-\uDBFF]
-   {Character.isJavaIdentifierStart(_input.LA(-1))}?
- | [\uD800-\uDBFF] [\uDC00-\uDFFF]
-   {Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
- ;
-
-fragment
-LetterOrDigit
- : [a-zA-Z0-9$_]
- | ~[\u0000-\u00FF\uD800-\uDBFF]
-   {Character.isJavaIdentifierPart(_input.LA(-1))}?
- | [\uD800-\uDBFF] [\uDC00-\uDFFF]
-   {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
- ;
+Number: Digit+ ;
+Alphanumeric: (Alpha | Digit)+ ;
