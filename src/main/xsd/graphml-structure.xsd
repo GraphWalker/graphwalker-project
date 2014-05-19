@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 
 <xs:schema
-        targetNamespace="http://graphml.graphdrawing.org/xmlns"
+    targetNamespace="http://graphml.graphdrawing.org/xmlns"
 
-        xmlns="http://graphml.graphdrawing.org/xmlns"
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://graphml.graphdrawing.org/xmlns"
+    xmlns:g="http://graphml.graphdrawing.org/xmlns"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
 
-        elementFormDefault="qualified"
-        attributeFormDefault="unqualified"
-        >
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    >
   <xs:annotation>
     <xs:documentation
         source="http://graphml.graphdrawing.org/"
