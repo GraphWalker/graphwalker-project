@@ -53,7 +53,8 @@ public class LabelTest {
             "BLOCKED",
             "[ i ]",
             "v_vertex  \nSHARED:MyState",
-            "SHARED: MyState"
+            "SHARED: MyState",
+            "e_Init/validLogin=false;rememberMe=false;"
     );
 
     @Test
