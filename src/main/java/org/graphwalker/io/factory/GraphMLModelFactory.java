@@ -68,11 +68,20 @@ public final class GraphMLModelFactory implements ModelFactory {
             if (reader.next() == START_ELEMENT) {
                 if ("node".equals(reader.getLocalName())) {
                     Vertex vertex = new Vertex();
+                    elements.put(reader.getAttributeValue(null, "id"), vertex);
                     parseVertex(vertex, reader);
                     model.addVertex(vertex);
                 }
                 if ("edge".equals(reader.getLocalName())) {
                     Edge edge = new Edge();
+                    String source = reader.getAttributeValue(null, "source");
+                    if (null != elements.get(source)) {
+                        edge.setSourceVertex(elements.get(source));
+                    }
+                    String target = reader.getAttributeValue(null, "target");
+                    if (null != elements.get(target)) {
+                        edge.setTargetVertex(elements.get(target));
+                    }
                     parseEdge(edge, reader);
                     model.addEdge(edge);
                 }
@@ -127,7 +136,7 @@ public final class GraphMLModelFactory implements ModelFactory {
             switch (reader.next()) {
                 case START_ELEMENT: {
                     if ("EdgeLabel".equals(reader.getLocalName()) && reader.hasNext()) {
-                        parseEdgeLabel(edge, reader, reader.getAttributeValue(0), reader.getAttributeValue(1), reader.getAttributeValue(2));
+                        parseEdgeLabel(edge, reader);
                     }
                 }
                 break;
@@ -141,7 +150,7 @@ public final class GraphMLModelFactory implements ModelFactory {
         }
     }
 
-    private void parseEdgeLabel(Edge edge, XMLStreamReader reader, String id, String source, String target) throws XMLStreamException {
+    private void parseEdgeLabel(Edge edge, XMLStreamReader reader) throws XMLStreamException {
         StringBuilder builder = new StringBuilder();
         while (reader.hasNext()) {
             switch (reader.next()) {
@@ -153,12 +162,6 @@ public final class GraphMLModelFactory implements ModelFactory {
                     LabelParser.ParseContext context = parseLabel(builder.toString());
                     if (null != context.name()) {
                         edge.setName(context.name().getText());
-                    }
-                    if (null != elements.get(source)) {
-                        edge.setSourceVertex(elements.get(source));
-                    }
-                    if (null != elements.get(target)) {
-                        edge.setTargetVertex(elements.get(target));
                     }
                     if (null != context.guard()) {
                         edge.setGuard(new Guard(context.guard().getText()));
