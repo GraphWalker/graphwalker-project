@@ -32,6 +32,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
@@ -53,11 +54,16 @@ public class ExampleTest extends ExecutionContext {
         System.out.println("vertex2");
     }
 
+    public boolean isTrue() {
+        return true;
+    }
+
     @Test
     public void success() {
         Vertex start = new Vertex();
         Model model = new Model().addEdge(new Edge()
                 .setName("edge1")
+                .setGuard(new Guard("isTrue()"))
                 .setSourceVertex(start
                         .setName("vertex1"))
                 .setTargetVertex(new Vertex()
