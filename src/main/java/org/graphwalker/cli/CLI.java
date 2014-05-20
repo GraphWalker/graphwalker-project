@@ -26,6 +26,7 @@
 package org.graphwalker.cli;
 
 import com.beust.jcommander.JCommander;
+import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.core.generator.PathGenerator;
@@ -36,6 +37,8 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +46,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 public class CLI {
+  private static final Logger logger = LoggerFactory.getLogger(CLI.class);
   JCommander jc;
   Options options;
   Offline offline;
@@ -55,6 +59,7 @@ public class CLI {
       // We should have caught all exceptions up until here, but there
       // might have been problems with the command parser for instance...
       System.err.println(e);
+      logger.error("Un error occurred when running command: " + StringUtils.join(args, " "), e);
     }
   }
 
@@ -92,9 +97,9 @@ public class CLI {
       }
 
     } catch (Exception e) {
+      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
-      System.out.println();
-      jc.usage();
+      logger.error("Un error occurred when running command: " + StringUtils.join(args, " "), e);
     }
   }
 
@@ -142,7 +147,7 @@ public class CLI {
         try {
           inputStream.close();
         } catch (Exception e) {
-          // ignore all exceptions
+          logger.error("Un error occurred when trying to get the version string", e);
         }
       }
     }
