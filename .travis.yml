@@ -1,0 +1,19 @@
+language: java
+jdk:
+  - openjdk7
+
+# whitelist
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - secure: "Si+FksmD04Qev09hkYqWYN4rYQderrvMt6/kZBTgEek/v4Bd8QVCcbkZemYQCLnfhm94fNJDVrvpbrZhkeSWhCXKnnsYMH9oaxQWSd4aUI55V9QAseVAWMod5d2TSD7kTIo1owV5xh9LHTLmwnv4v6WmV3dSHSQc0zQh09dFC/M="
+    - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
+
+before_install:
+ - sudo apt-get update -qq
+
+install:
+  mvn -q clean install
