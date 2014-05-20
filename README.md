@@ -1,2 +1,2 @@
-GraphWalker CLI [![Build Status](https://travis-ci.org/GraphWalker/graphwalker-core.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-cli)
+GraphWalker CLI [![Build Status](https://travis-ci.org/GraphWalker/graphwalker-cli.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-cli)
 ======
