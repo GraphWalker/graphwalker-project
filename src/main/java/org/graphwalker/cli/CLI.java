@@ -64,7 +64,7 @@ public class CLI {
       // We should have caught all exceptions up until here, but there
       // might have been problems with the command parser for instance...
       System.err.println(e);
-      logger.error("Un error occurred when running command: " + StringUtils.join(args, " "), e);
+      logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
     }
   }
 
@@ -106,24 +106,24 @@ public class CLI {
       System.err.println("");
       jc.usage();
     } catch (ParameterException e) {
-      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       System.err.println("");
       jc.usage();
     } catch (ModelFactoryException e) {
-      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       System.err.println("");
       jc.usage();
     } catch (GeneratorFactoryException e) {
-      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       System.err.println("");
       jc.usage();
     } catch (Exception e) {
-      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
-      logger.error("Un error occurred when running command: " + StringUtils.join(args, " "), e);
+      logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
     }
   }
 
@@ -163,7 +163,7 @@ public class CLI {
     if (!list.isEmpty() && list.get(0) != null) {
       context.setCurrentElement(context.getModel().findVertices("Start").get(0));
 
-    // New GW3 syntax, which defines the Start as the vertex with no in-edges
+    // New GW3 syntax for graphml models, which defines the Start as the vertex with no in-edges
     } else {
       for (Vertex.RuntimeVertex vertex : context.getModel().getVertices() ) {
         if (context.getModel().getInEdges(vertex).size()==0){
@@ -199,7 +199,7 @@ public class CLI {
         try {
           inputStream.close();
         } catch (Exception e) {
-          logger.error("Un error occurred when trying to get the version string", e);
+          logger.error("An error occurred when trying to get the version string", e);
         }
       }
     }
