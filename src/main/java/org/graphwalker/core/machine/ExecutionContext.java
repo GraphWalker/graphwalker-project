@@ -111,10 +111,15 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     }
 
     public ExecutionContext setNextElement(Builder<? extends Element> nextElement) {
-        this.nextElement = nextElement.build();
-        this.currentElement = null;
+        setNextElement(nextElement.build());
         return this;
     }
+
+  public ExecutionContext setNextElement(Element nextElement) {
+    this.nextElement = nextElement;
+    this.currentElement = null;
+    return this;
+  }
 
     public List<Requirement> getRequirements() {
         throw new RuntimeException("Not implemented");
