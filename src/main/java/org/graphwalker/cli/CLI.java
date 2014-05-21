@@ -160,7 +160,7 @@ public class CLI {
   private void SetStartVertex( ExecutionContext context ) {
     // Backward compatibility with GW2, which expects a Start node to exists
     List<Vertex.RuntimeVertex> list = context.getModel().findVertices("Start");
-    if (!list.isEmpty() && list.get(0) != null) {
+    if (null != list && !list.isEmpty() && list.get(0) != null) {
       context.setCurrentElement(context.getModel().findVertices("Start").get(0));
 
     // New GW3 syntax for graphml models, which defines the Start as the vertex with no in-edges
