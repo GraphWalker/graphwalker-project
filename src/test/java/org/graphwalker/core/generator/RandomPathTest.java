@@ -48,7 +48,8 @@ public class RandomPathTest {
     public void simpleTest() {
         ExecutionContext context = new ExecutionContext().setModel(model).setNextElement(source);
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage(100));
-        Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), source.build());
+        context.setCurrentElement(source.build());
+        Assert.assertEquals(context.getCurrentElement(), source.build());
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), edge.build());
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), target.build());
     }

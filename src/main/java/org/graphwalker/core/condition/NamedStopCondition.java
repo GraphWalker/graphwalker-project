@@ -1,4 +1,4 @@
-package org.graphwalker.core.statistics;
+package org.graphwalker.core.condition;
 
 /*
  * #%L
@@ -29,25 +29,7 @@ package org.graphwalker.core.statistics;
 /**
  * @author Nils Olsson
  */
-public final class ProfileUnit {
-/* TODO: should contain information about an Element
-    1. execution count
-    2. min execution time
-    3. avg execution time
-    4. max execution time
-    5. cumulative time
-    6. first execution timestamp
-    7. last execution timestamp
-*/
+public interface NamedStopCondition extends StopCondition {
 
-    private long totalCount = 0;
-
-    public long getVisitCount() {
-        return totalCount;
-    }
-
-    public void setVisitCount(long totalVisitCount) {
-        this.totalCount = totalVisitCount;
-    }
-
+    String getName();
 }

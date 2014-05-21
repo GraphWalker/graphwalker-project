@@ -31,4 +31,5 @@ package org.graphwalker.core.model;
  */
 public interface Element {
     String getName();
+    boolean hasName();
 }

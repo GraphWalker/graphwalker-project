@@ -70,18 +70,26 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
     public static class RuntimeModel {
 
-        private static final List<RuntimeEdge> EMPTY_LIST = Collections.unmodifiableList(Arrays.<RuntimeEdge>asList());
-
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
-        private final Map<RuntimeVertex, List<RuntimeEdge>> vertexEdgeCache;
-        private final List<Element> elements;
+        private final List<Element> elementsCache;
+        private final Map<Element, List<Element>> elementsByElementCache;
+        private final Map<String, List<Element>> elementsByNameCache;
+        private final Map<String, List<RuntimeEdge>> edgesByNameCache;
+        private final Map<String, List<RuntimeVertex>> verticesByNameCache;
+        private final Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache;
+        private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
 
         private RuntimeModel(Model model) {
             this.vertices = BuilderFactory.build(model.getVertices());
             this.edges = BuilderFactory.build(model.getEdges());
-            this.vertexEdgeCache = createVertexEdgeCache();
-            this.elements = createElementCache();
+            this.edgesByNameCache = createEdgesByNameCache();
+            this.verticesByNameCache = createVerticesByNameCache();
+            this.inEdgesByVertexCache = createInEdgesByVertexCache();
+            this.outEdgesByVertexCache = createOutEdgesByVertexCache();
+            this.elementsCache = createElementCache();
+            this.elementsByElementCache = createElementsByElementCache();
+            this.elementsByNameCache = createElementsByNameCache();
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -89,66 +97,35 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
 
         public List<RuntimeVertex> findVertices(String name) {
-            // TODO: don't loop over all the vertices every time
-            List<RuntimeVertex> result = new ArrayList<>();
-            for (RuntimeVertex vertex: vertices) {
-                if (vertex.hasName() && vertex.getName().equals(name)) {
-                    result.add(vertex);
-                }
-            }
-            return result;
+            return verticesByNameCache.get(name);
         }
 
         public List<RuntimeEdge> getInEdges(RuntimeVertex vertex) {
-            // TODO: don't loop over all the vertices every time
-            List<RuntimeEdge> result = new ArrayList<>();
-            for (RuntimeEdge edge: edges) {
-                if (edge.getTargetVertex().equals(vertex)) {
-                    result.add(edge);
-                }
-            }
-            return result;
+            return inEdgesByVertexCache.get(vertex);
         }
 
-      public List<RuntimeEdge> getEdges() {
+        public List<RuntimeEdge> getEdges() {
             return edges;
         }
 
-        public List<RuntimeEdge> getEdges(RuntimeVertex vertex) {
-            List<RuntimeEdge> edges = vertexEdgeCache.get(vertex);
-            return null != edges ? edges: EMPTY_LIST;
+        public List<RuntimeEdge> getOutEdges(RuntimeVertex vertex) {
+            return outEdgesByVertexCache.get(vertex);
         }
 
         public List<RuntimeEdge> findEdges(String name) {
-            // TODO: don't loop over all the vertices every time
-            List<RuntimeEdge> result = new ArrayList<>();
-            for (RuntimeEdge edge: edges) {
-                if (edge.hasName() && edge.getName().equals(name)) {
-                    result.add(edge);
-                }
-            }
-            return result;
+            return edgesByNameCache.get(name);
         }
 
-        public List<Element> getElements() {
-            return elements;
+        public List<Element> findElements(String name) {
+            return elementsByNameCache.get(name);
+        }
+
+        public List<Element> getElementsCache() {
+            return elementsCache;
         }
 
         public List<Element> getElements(Element element) {
-            if (element instanceof RuntimeVertex) {
-                RuntimeVertex vertex = (RuntimeVertex)element;
-                List<Element> edges = new ArrayList<>();
-                // TODO: We have to handle edges that get "removed" due to guards
-                for (RuntimeEdge edge: getEdges(vertex)) {
-                    if (!edge.isBlocked()) {
-                        edges.add(edge);
-                    }
-                }
-                return edges;
-            } else {
-                RuntimeEdge edge = (RuntimeEdge)element;
-                return Arrays.<Element>asList(edge.getTargetVertex());
-            }
+            return elementsByElementCache.get(element);
         }
 
         private List<Element> createElementCache() {
@@ -158,22 +135,102 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Collections.unmodifiableList(elements);
         }
 
-        private Map<RuntimeVertex, List<RuntimeEdge>> createVertexEdgeCache() {
-            Map<RuntimeVertex, List<RuntimeEdge>> vertexEdgeCache = new HashMap<>();
-            for (RuntimeEdge edge: edges) {
-                RuntimeVertex vertex = edge.getSourceVertex();
-                if (null != vertex) {
-                    if (!vertexEdgeCache.containsKey(vertex)) {
-                        vertexEdgeCache.put(vertex, new ArrayList<RuntimeEdge>());
+        private Map<Element, List<Element>> createElementsByElementCache() {
+            Map<Element, List<Element>> elementsByElementCache = new HashMap<>();
+            for (Element element : createElementCache()) {
+                if (element instanceof RuntimeEdge) {
+                    RuntimeEdge edge = (RuntimeEdge) element;
+                    elementsByElementCache.put(element, Arrays.<Element>asList(edge.getTargetVertex()));
+                } else if (element instanceof RuntimeVertex) {
+                    RuntimeVertex vertex = (RuntimeVertex) element;
+                    if (!elementsByElementCache.containsKey(vertex)) {
+                        elementsByElementCache.put(vertex, new ArrayList<Element>());
                     }
-                    vertexEdgeCache.get(vertex).add(edge);
+                    List<Element> edgeCache = elementsByElementCache.get(element);
+                    for (RuntimeEdge edge : edges) {
+                        if (vertex.equals(edge.getSourceVertex())) {
+                            edgeCache.add(edge);
+                        }
+                    }
                 }
             }
-            Map<RuntimeVertex, List<RuntimeEdge>> unmodifiableVertexEdgeCache = new HashMap<>();
-            for (RuntimeVertex vertex: vertexEdgeCache.keySet()) {
-                unmodifiableVertexEdgeCache.put(vertex, Collections.unmodifiableList(vertexEdgeCache.get(vertex)));
-            }
-            return Collections.unmodifiableMap(unmodifiableVertexEdgeCache);
+            return makeImmutable(elementsByElementCache);
         }
+
+        private Map<String, List<Element>> createElementsByNameCache() {
+            Map<String, List<Element>> elementsByElementCache = new HashMap<>();
+            for (Element element : createElementCache()) {
+                if (element.hasName()) {
+                    if (!elementsByElementCache.containsKey(element.getName())) {
+                        elementsByElementCache.put(element.getName(), new ArrayList<Element>());
+                    }
+                    elementsByElementCache.get(element.getName()).add(element);
+                }
+            }
+            return makeImmutable(elementsByElementCache);
+        }
+
+        private Map<String, List<RuntimeEdge>> createEdgesByNameCache() {
+            Map<String, List<RuntimeEdge>> edgesByNameCache = new HashMap<>();
+            for (RuntimeEdge edge : edges) {
+                if (edge.hasName()) {
+                    if (!edgesByNameCache.containsKey(edge.getName())) {
+                        edgesByNameCache.put(edge.getName(), new ArrayList<RuntimeEdge>());
+                    }
+                    edgesByNameCache.get(edge.getName()).add(edge);
+                }
+            }
+            return makeImmutable(edgesByNameCache);
+        }
+
+        private Map<String, List<RuntimeVertex>> createVerticesByNameCache() {
+            Map<String, List<RuntimeVertex>> verticesByNameCache = new HashMap<>();
+            for (RuntimeVertex vertex : vertices) {
+                if (vertex.hasName()) {
+                    if (!verticesByNameCache.containsKey(vertex.getName())) {
+                        verticesByNameCache.put(vertex.getName(), new ArrayList<RuntimeVertex>());
+                    }
+                    verticesByNameCache.get(vertex.getName()).add(vertex);
+                }
+            }
+            return makeImmutable(verticesByNameCache);
+        }
+
+        private Map<RuntimeVertex, List<RuntimeEdge>> createInEdgesByVertexCache() {
+            Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache = new HashMap<>();
+            for (RuntimeVertex vertex : vertices) {
+                inEdgesByVertexCache.put(vertex, new ArrayList<RuntimeEdge>());
+            }
+            for (RuntimeEdge edge : edges) {
+                RuntimeVertex vertex = edge.getTargetVertex();
+                if (null != vertex) {
+                    inEdgesByVertexCache.get(vertex).add(edge);
+                }
+            }
+            return makeImmutable(inEdgesByVertexCache);
+        }
+
+        private Map<RuntimeVertex, List<RuntimeEdge>> createOutEdgesByVertexCache() {
+            Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache = new HashMap<>();
+            for (RuntimeVertex vertex : vertices) {
+                outEdgesByVertexCache.put(vertex, new ArrayList<RuntimeEdge>());
+            }
+            for (RuntimeEdge edge : edges) {
+                RuntimeVertex vertex = edge.getSourceVertex();
+                if (null != vertex) {
+                    outEdgesByVertexCache.get(vertex).add(edge);
+                }
+            }
+            return makeImmutable(outEdgesByVertexCache);
+        }
+
+        private <K, E> Map<K, List<E>> makeImmutable(Map<K, List<E>> source) {
+            Map<K, List<E>> map = new HashMap<>();
+            for (K key : source.keySet()) {
+                map.put(key, Collections.unmodifiableList(source.get(key)));
+            }
+            return Collections.unmodifiableMap(map);
+        }
+
     }
 }

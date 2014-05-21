@@ -28,19 +28,18 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Profiler;
 
-import javax.script.SimpleScriptContext;
+import javax.script.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
@@ -48,9 +47,12 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public class ExecutionContext extends SimpleScriptContext implements Context {
 
+    private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
+    private final Profiler profiler = new Profiler(this);
+    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+
     private RuntimeModel model;
     private PathGenerator pathGenerator;
-    private Profiler profiler = new Profiler(this);
 
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
     private Element currentElement;
@@ -64,6 +66,10 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
         this.model = model.build();
         this.pathGenerator = pathGenerator;
+    }
+
+    public ScriptEngine getScriptEngine() {
+        return scriptEngine;
     }
 
     public RuntimeModel getModel() {
@@ -130,7 +136,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getAlgorithm(Class<? extends Algorithm> clazz) {
+    public <A> A getAlgorithm(Class<? extends Algorithm> clazz) {
         if (!algorithms.containsKey(clazz)) {
             try {
                 Constructor<? extends Algorithm> constructor = clazz.getConstructor(ExecutionContext.class);
@@ -139,6 +145,42 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
                 throw new MachineException(e);
             }
         }
-        return (T)algorithms.get(clazz);
+        return (A)algorithms.get(clazz);
+    }
+
+    public <E> List<E> filter(List<E> elements) {
+        List<E> filteredElements = new ArrayList<>();
+        if (null != elements) {
+            for (E element : elements) {
+                if (element instanceof RuntimeEdge) {
+                    RuntimeEdge edge = (RuntimeEdge) element;
+                    if (!edge.isBlocked() && isAvailable(edge)) {
+                        filteredElements.add(element);
+                    }
+                } else {
+                    filteredElements.add(element);
+                }
+            }
+        }
+        return filteredElements;
+    }
+
+    private boolean isAvailable(RuntimeEdge edge) {
+        if (null != edge.getGuard()) {
+            // TODO: Refactor how script engine is used and created
+            getScriptEngine().setContext(this);
+            Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+            bindings.put("impl", this);
+            try {
+                //ScriptEngineFactory sef = scriptEngine.getFactory();
+                //String s = sef.getMethodCallSyntax("impl", edge.getGuard().getScript(), new String[0]);
+                //return (Boolean)getScriptEngine().eval("(function(){ return " + edge.getGuard().getScript() + ";}.bind(impl))()");
+                return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
+            } catch (ScriptException e) {
+                // TODO: Handle errors
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

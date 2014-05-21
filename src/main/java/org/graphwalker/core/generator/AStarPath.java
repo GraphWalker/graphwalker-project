@@ -26,17 +26,29 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.algorithm.AStar;
+import org.graphwalker.core.algorithm.FloydWarshall;
+import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Path;
+
+import java.util.List;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
  */
 public final class AStarPath implements PathGenerator {
 
-    private final StopCondition stopCondition;
+    private final NamedStopCondition stopCondition;
 
-    public AStarPath(StopCondition stopCondition) {
+    public AStarPath(NamedStopCondition stopCondition) {
         this.stopCondition = stopCondition;
     }
 
@@ -47,7 +59,25 @@ public final class AStarPath implements PathGenerator {
 
     @Override
     public ExecutionContext getNextStep(ExecutionContext context) {
-        throw new NoPathFoundException();
+        List<Element> elements = context.filter(context.getModel().getElements(context.getCurrentElement()));
+        if (elements.isEmpty()) {
+            throw new NoPathFoundException();
+        }
+        Element target = null;
+        RuntimeModel model = context.getModel();
+        int distance = Integer.MAX_VALUE;
+        FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+        for (Element element: context.filter(model.findElements(stopCondition.getName()))) {
+            int edgeDistance = floydWarshall.getShortestDistance(context.getCurrentElement(), element);
+            if (edgeDistance < distance) {
+                distance = edgeDistance;
+                target = element;
+            }
+        }
+        AStar astar = context.getAlgorithm(AStar.class);
+        Path<Element> path = astar.getShortestPath(context.getCurrentElement(), target);
+        path.pollFirst();
+        return context.setCurrentElement(path.getFirst());
     }
 
     @Override

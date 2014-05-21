@@ -35,7 +35,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class ReachedVertex implements StopCondition {
+public final class ReachedVertex implements NamedStopCondition {
 
     private final String name;
 

@@ -57,9 +57,11 @@ public class VertexCoverageTest {
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
         context.setCurrentElement(v2.build());
         context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
     }
 
@@ -73,9 +75,11 @@ public class VertexCoverageTest {
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v2.build());
         context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }
