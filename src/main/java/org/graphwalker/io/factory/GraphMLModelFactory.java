@@ -38,20 +38,18 @@ import org.graphdrawing.graphml.xmlns.EdgeType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphwalker.core.model.*;
+import org.graphwalker.io.EdgeParser;
 import org.graphwalker.io.LabelLexer;
-import org.graphwalker.io.LabelParser;
+import org.graphwalker.io.VertexParser;
 import org.graphwalker.io.common.ResourceUtils;
 
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static javax.xml.stream.XMLStreamConstants.*;
-import static org.graphwalker.io.LabelParser.ActionContext;
+import static org.graphwalker.io.EdgeParser.ActionContext;
+
 
 /**
  * @author Nils Olsson
@@ -86,7 +84,7 @@ public final class GraphMLModelFactory implements ModelFactory {
                         for (NodeLabelType nodeLabel : shape.getNodeLabelArray()) {
                             label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
                         }
-                        LabelParser.ParseContext context = parseLabel(label.toString());
+                        VertexParser.ParseContext context = new VertexParser(getTokenStream(label.toString())).parse();
                         Vertex vertex = new Vertex();
                         if (null != context.name()) {
                             vertex.setName(context.name().getText());
@@ -113,7 +111,7 @@ public final class GraphMLModelFactory implements ModelFactory {
                         for (EdgeLabelType edgeLabel : polyLineEdge.getEdgeLabelArray()) {
                             label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
                         }
-                        LabelParser.ParseContext context = parseLabel(label.toString());
+                        EdgeParser.ParseContext context = new EdgeParser(getTokenStream(label.toString())).parse();
                         Edge edge = new Edge();
                         if (null != elements.get(edgeType.getSource())) {
                             edge.setSourceVertex(elements.get(edgeType.getSource()));
@@ -148,12 +146,10 @@ public final class GraphMLModelFactory implements ModelFactory {
         return actions;
     }
 
-    private LabelParser.ParseContext parseLabel(String label) {
+    private CommonTokenStream getTokenStream(String label) {
         ANTLRInputStream inputStream = new ANTLRInputStream(label);
         LabelLexer lexer = new LabelLexer(inputStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        LabelParser parser = new LabelParser(tokens);
-        return parser.parse();
+        return new CommonTokenStream(lexer);
     }
 
 }
