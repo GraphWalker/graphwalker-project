@@ -10,6 +10,9 @@ parse
 
 generator
  : Alphanumeric LPAREN logicalExpression RPAREN
+ | Alphanumeric LPAREN logicalExpression RPAREN RPAREN {notifyErrorListeners("The generator has too many parentheses");}
+ | Alphanumeric LPAREN logicalExpression {notifyErrorListeners("The generator is missing closing parentheses");}
+ | Alphanumeric  {notifyErrorListeners("A generator needs parentheses");}
  ;
 
 logicalExpression

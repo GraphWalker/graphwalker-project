@@ -27,8 +27,10 @@ package org.graphwalker.cli;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
+import com.beust.jcommander.ParameterException;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.cli.antlr.GeneratorFactory;
+import org.graphwalker.cli.antlr.GeneratorFactoryException;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
@@ -38,6 +40,7 @@ import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +105,21 @@ public class CLI {
       System.err.println("I did not see a valid command.");
       System.err.println("");
       jc.usage();
+    } catch (ParameterException e) {
+      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println(e.getMessage());
+      System.err.println("");
+      jc.usage();
+    } catch (ModelFactoryException e) {
+      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println(e.getMessage());
+      System.err.println("");
+      jc.usage();
+    } catch (GeneratorFactoryException e) {
+      System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println(e.getMessage());
+      System.err.println("");
+      jc.usage();
     } catch (Exception e) {
       System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
@@ -114,7 +132,13 @@ public class CLI {
 
     Iterator itr = offline.model.iterator();
     while(itr.hasNext()) {
-      Model model = factory.create((String)itr.next());
+      Model model = null;
+      String modelFileName = (String) itr.next();
+      try {
+        model = factory.create(modelFileName);
+      } catch (ModelFactoryException e) {
+        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      }
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
