@@ -187,20 +187,32 @@ public class CLITest {
   public void testUnknownCommand() {
     String args[] = {"sputnik"};
     runCommand(args);
-    Assert.assertThat( errMsg, containsString("Expected a command, got sputnik"));
+    Assert.assertThat( errMsg, containsString("I did not see a valid command."));
     Assert.assertThat( outMsg, matches(usageMsg));
   }
 
   /**
    * Simulates
-   * java -jar graphwalker.jar offline -m graphml/UC01.graphml "random(edge_coverage(100))"
+   * java -jar graphwalker.jar offline -m graphml/UC01_GW2.graphml "random(edge_coverage(100))"
    */
   @Test
-  public void testOfflineRandomEdgeCoverage100percent() {
-    String args[] = {"offline", "-m", "graphml/UC01.graphml", "random(edge_coverage(100))"};
+  public void testOfflineRandomEdgeCoverage100percent_GW2() {
+    String args[] = {"offline", "-m", "graphml/UC01_GW2.graphml", "random(edge_coverage(100))"};
     runCommand(args);
-//    Assert.assertThat( "No error messages should occur", errMsg, is(""));
-//    Assert.assertThat( outMsg, matches("^Start\n.*"));
+    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+    Assert.assertThat( outMsg, matches("^e_init\n.*"));
+  }
+
+  /**
+   * Simulates
+   * java -jar graphwalker.jar offline -m graphml/UC01_GW3.graphml "random(edge_coverage(100))"
+   */
+  @Test
+  public void testOfflineRandomEdgeCoverage100percent_GW3() {
+    String args[] = {"offline", "-m", "graphml/UC01_GW3.graphml", "random(edge_coverage(100))"};
+    runCommand(args);
+    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+    Assert.assertThat( outMsg, matches("^v_BrowserStopped\n.*"));
   }
 
   /**
