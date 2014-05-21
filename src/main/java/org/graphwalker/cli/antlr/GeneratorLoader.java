@@ -101,8 +101,10 @@ public class GeneratorLoader extends CLI_ParserBaseListener {
     }
 
     public PathGenerator getGenerator() {
-        if ( pathGenerators.size() == 1 ) {
-            return pathGenerators.get(0);
+        if ( pathGenerators.size() == 0 ) {
+          return null;
+        } else if ( pathGenerators.size() == 1 ) {
+          return pathGenerators.get(0);
         }
 
         CombinedPath combinedPath = new CombinedPath();
