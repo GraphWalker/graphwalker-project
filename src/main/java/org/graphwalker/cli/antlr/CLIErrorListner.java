@@ -26,32 +26,18 @@ package org.graphwalker.cli.antlr;
  * #L%
  */
 
-import org.antlr.v4.runtime.ANTLRErrorStrategy;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.graphwalker.cli.CLI_Lexer;
-import org.graphwalker.cli.CLI_Parser;
-import org.graphwalker.core.generator.PathGenerator;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.misc.Nullable;
+
+import java.util.BitSet;
 
 /**
- * Created by krikar on 5/14/14.
+ * Created by krikar on 5/21/14.
  */
-public class GeneratorFactory {
-    public static PathGenerator parse(String str) {
-        ANTLRInputStream inputStream = new ANTLRInputStream(str);
-        CLI_Lexer lexer = new CLI_Lexer(inputStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        CLI_Parser parser = new CLI_Parser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new CLIErrorListner());
-        CLI_Parser.ParseContext context = parser.parse();
-
-        ParseTreeWalker walker = new ParseTreeWalker();
-        GeneratorLoader generatorLoader = new GeneratorLoader();
-        walker.walk(generatorLoader, context);
-
-        return generatorLoader.getGenerator();
-    }
+public class CLIErrorListner extends BaseErrorListener {
+  @Override
+  public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
+    throw new GeneratorFactoryException(msg + " -> " + ((CommonToken) offendingSymbol).getInputStream().toString());
+  }
 }
