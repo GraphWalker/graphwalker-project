@@ -123,7 +123,9 @@ public final class GraphMLModelFactory implements ModelFactory {
                             edge.setName(context.name().getText());
                         }
                         if (null != context.guard()) {
-                            edge.setGuard(new Guard(context.guard().getText()));
+                            // TODO: Fix this in the parser
+                            String text = context.guard().getText().trim();
+                            edge.setGuard(new Guard(text.substring(1, text.length()-1)));
                         }
                         if (null != context.actions()) {
                             edge.addActions(convert(context.actions().action()));

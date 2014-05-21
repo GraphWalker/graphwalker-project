@@ -69,10 +69,7 @@ public class LabelTest {
     @Test
     public void testVertexLabels() {
         for (String label: vertexLabels) {
-            ANTLRInputStream inputStream = new ANTLRInputStream(label);
-            LabelLexer lexer = new LabelLexer(inputStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            VertexParser parser = new VertexParser(tokens);
+            VertexParser parser = new VertexParser(getTokens(label));
             VertexParser.ParseContext context = parser.parse();
             Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
         }
@@ -81,10 +78,7 @@ public class LabelTest {
     @Test
     public void testEdgeLabels() {
         for (String label: edgeLabels) {
-            ANTLRInputStream inputStream = new ANTLRInputStream(label);
-            LabelLexer lexer = new LabelLexer(inputStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            EdgeParser parser = new EdgeParser(tokens);
+            EdgeParser parser = new EdgeParser(getTokens(label));
             EdgeParser.ParseContext context = parser.parse();
             Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
         }
@@ -93,21 +87,29 @@ public class LabelTest {
 
     @Test(expected = AssertionError.class)
     public void badVertexLabel() {
-        ANTLRInputStream inputStream = new ANTLRInputStream("1name");
-        LabelLexer lexer = new LabelLexer(inputStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        VertexParser parser = new VertexParser(tokens);
+        VertexParser parser = new VertexParser(getTokens("1name"));
         VertexParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
     }
 
     @Test(expected = AssertionError.class)
     public void badEdgeLabel() {
-        ANTLRInputStream inputStream = new ANTLRInputStream("1name");
-        LabelLexer lexer = new LabelLexer(inputStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        EdgeParser parser = new EdgeParser(tokens);
+        EdgeParser parser = new EdgeParser(getTokens("1name"));
         EdgeParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+    }
+
+    @Test
+    public void testGuard() {
+        EdgeParser parser = new EdgeParser(getTokens("[ i[0] ]"));
+        EdgeParser.ParseContext context = parser.parse();
+        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+        Assert.assertThat(context.guard().getText(), is("[ i[0] ]"));
+    }
+
+    private CommonTokenStream getTokens(String label) {
+        ANTLRInputStream inputStream = new ANTLRInputStream(label);
+        LabelLexer lexer = new LabelLexer(inputStream);
+        return new CommonTokenStream(lexer);
     }
 }

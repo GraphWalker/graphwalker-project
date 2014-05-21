@@ -48,7 +48,7 @@ public class GraphMLModelFactoryTest {
         ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("src/test/resources/graphml/UC01.graphml");
         //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
-        //Assert.assertThat("Number of edges", model.getEdges().size(), is(12));
+        //Assert.assertThat("Number of edges", model.getOutEdges().size(), is(12));
     }
 */
 
@@ -72,7 +72,7 @@ public class GraphMLModelFactoryTest {
         Model model = factory.create("graphml/UC01.graphml");
         int i = 0;
         //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
-        //Assert.assertThat("Number of edges", model.getEdges().size(), is(12));
+        //Assert.assertThat("Number of edges", model.getOutEdges().size(), is(12));
     }
 /*
     @Test
@@ -80,7 +80,7 @@ public class GraphMLModelFactoryTest {
         ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/EFSM_with_REQTAGS.graphml");
         Assert.assertThat("Number of vertices", model.getVertices().size(), is(7));
-        Assert.assertThat("Number of edges", model.getEdges().size(), is(19));
+        Assert.assertThat("Number of edges", model.getOutEdges().size(), is(19));
     }
 
     @Test
@@ -88,9 +88,9 @@ public class GraphMLModelFactoryTest {
         ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/Guards.graphml");
         Assert.assertThat("Number of vertices", model.getVertices().size(), is(3));
-        Assert.assertThat("Number of edges", model.getEdges().size(), is(2));
+        Assert.assertThat("Number of edges", model.getOutEdges().size(), is(2));
         Vertex startVertex = model.getStartVertices().get(0);
-        Edge edgeWithGuard = model.getEdges(startVertex).get(0);
+        Edge edgeWithGuard = model.getOutEdges(startVertex).get(0);
         Assert.assertEquals(null, edgeWithGuard.getName());
         Assert.assertNotEquals(edgeWithGuard.getGuard(), new Guard("true"));
     }
