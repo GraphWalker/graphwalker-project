@@ -26,6 +26,7 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,15 +43,6 @@ public class GraphMLModelFactoryTest {
         ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/LKHDIODSOSUBD.graphml");
     }
-/*
-    @Test
-    public void fileExistsOnFileSystem() {
-        ModelFactory factory = new GraphMLModelFactory();
-        Model model = factory.create("src/test/resources/graphml/UC01.graphml");
-        //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
-        //Assert.assertThat("Number of edges", model.getOutEdges().size(), is(12));
-    }
-*/
 
     @Test
     public void shared() {
@@ -69,18 +61,32 @@ public class GraphMLModelFactoryTest {
     @Test
     public void uc01() {
         ModelFactory factory = new GraphMLModelFactory();
-        Model model = factory.create("graphml/UC01.graphml");
-        int i = 0;
-        //Assert.assertThat("Number of vertices", model.getVertices().size(), is(8));
-        //Assert.assertThat("Number of edges", model.getOutEdges().size(), is(12));
+        Model.RuntimeModel model = factory.create("graphml/UC01.graphml").build();
+        Assert.assertThat(model.getVertices().size(), is(8));
+        Assert.assertThat(model.getEdges().size(), is(12));
+        Assert.assertThat(model.findEdges("e_init").size(), is(1));
+        Assert.assertThat(model.findEdges("e_AddBookToCart").size(), is(1));
+        Assert.assertThat(model.findEdges("e_ClickBook").size(), is(1));
+        Assert.assertThat(model.findEdges("e_EnterBaseURL").size(), is(1));
+        Assert.assertThat(model.findEdges("e_SearchBook").size(), is(4));
+        Assert.assertThat(model.findEdges("e_ShoppingCart").size(), is(3));
+        Assert.assertThat(model.findEdges("e_StartBrowser").size(), is(1));
+        Assert.assertNull(model.findEdges(""));
+        Assert.assertThat(model.findVertices("v_BaseURL").size(), is(1));
+        Assert.assertThat(model.findVertices("v_BookInformation").size(), is(1));
+        Assert.assertThat(model.findVertices("v_BrowserStarted").size(), is(1));
+        Assert.assertThat(model.findVertices("v_BrowserStopped").size(), is(1));
+        Assert.assertThat(model.findVertices("v_OtherBoughtBooks").size(), is(1));
+        Assert.assertThat(model.findVertices("v_SearchResult").size(), is(1));
+        Assert.assertThat(model.findVertices("v_ShoppingCart").size(), is(1));
     }
-/*
-    @Test
+
+/*    @Test
     public void efsmWithReqtags() {
         ModelFactory factory = new GraphMLModelFactory();
         Model model = factory.create("graphml/EFSM_with_REQTAGS.graphml");
         Assert.assertThat("Number of vertices", model.getVertices().size(), is(7));
-        Assert.assertThat("Number of edges", model.getOutEdges().size(), is(19));
+        Assert.assertThat("Number of edges", model.getEdges().size(), is(19));
     }
 
     @Test
