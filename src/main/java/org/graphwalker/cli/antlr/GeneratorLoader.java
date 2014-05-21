@@ -31,10 +31,10 @@ import org.antlr.v4.runtime.misc.NotNull;
 import org.graphwalker.cli.CLI_Parser;
 import org.graphwalker.cli.CLI_ParserBaseListener;
 import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.CombinedPath;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.AStarPath;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -95,7 +95,7 @@ public class GeneratorLoader extends CLI_ParserBaseListener {
             pathGenerators.add(new RandomPath(stopCondition));
         }
         else if ( ctx.getChild(0).getText().equalsIgnoreCase("a_star") ) {
-            pathGenerators.add(new AStarPath(stopCondition));
+            pathGenerators.add(new AStarPath((NamedStopCondition)stopCondition));
         }
         stopConditions.clear();
     }
