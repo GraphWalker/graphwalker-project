@@ -99,7 +99,18 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return result;
         }
 
-        public List<RuntimeEdge> getEdges() {
+        public List<RuntimeEdge> getInEdges(RuntimeVertex vertex) {
+            // TODO: don't loop over all the vertices every time
+            List<RuntimeEdge> result = new ArrayList<>();
+            for (RuntimeEdge edge: edges) {
+                if (edge.getTargetVertex().equals(vertex)) {
+                    result.add(edge);
+                }
+            }
+            return result;
+        }
+
+      public List<RuntimeEdge> getEdges() {
             return edges;
         }
 
