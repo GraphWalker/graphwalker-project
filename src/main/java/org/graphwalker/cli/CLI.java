@@ -26,14 +26,15 @@
 package org.graphwalker.cli;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.MissingCommandException;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.GraphMLModelFactory;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 public class CLI {
@@ -96,6 +98,10 @@ public class CLI {
         jc.usage();
       }
 
+    } catch (MissingCommandException e) {
+      System.err.println("I did not see a valid command.");
+      System.err.println("");
+      jc.usage();
     } catch (Exception e) {
       System.err.println("Un error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
@@ -112,14 +118,36 @@ public class CLI {
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
-      context.setNextElement(new Vertex().setName("Start"));
+      SetStartVertex(context);
+
       Machine machine = new SimpleMachine(context);
       while (machine.hasNextStep()) {
-        Element e = (Element) machine.getNextStep();
-        System.out.println(e.getName());
+        try {
+          machine.getNextStep();
+        } catch ( MachineException e) {
+          ;
+        } finally {
+          System.out.println(context.getCurrentElement().getName());
+        }
       }
     }
+  }
 
+  private void SetStartVertex( ExecutionContext context ) {
+    // Backward compatibility with GW2, which expects a Start node to exists
+    List<Vertex.RuntimeVertex> list = context.getModel().findVertices("Start");
+    if (!list.isEmpty() && list.get(0) != null) {
+      context.setCurrentElement(context.getModel().findVertices("Start").get(0));
+
+    // New GW3 syntax, which defines the Start as the vertex with no in-edges
+    } else {
+      for (Vertex.RuntimeVertex vertex : context.getModel().getVertices() ) {
+        if (context.getModel().getInEdges(vertex).size()==0){
+          context.setNextElement(vertex);
+          return;
+        }
+      }
+    }
   }
 
   private String printVersionInformation() {
