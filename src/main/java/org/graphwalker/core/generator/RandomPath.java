@@ -54,20 +54,12 @@ public final class RandomPath implements PathGenerator {
 
     @Override
     public ExecutionContext getNextStep(ExecutionContext context) {
-        Element element = context.getCurrentElement();
-        if (null == element) {
-            context.setCurrentElement(context.getNextElement());
-        } else if (element instanceof RuntimeVertex) {
-            RuntimeVertex vertex = (RuntimeVertex)element;
-            List<RuntimeEdge> edges = context.getModel().getEdges(vertex);
-            if (null == edges || 0 == edges.size()) {
-                throw new NoPathFoundException();
-            }
-            context.setCurrentElement(edges.get(random.nextInt(edges.size())));
-        } else if (element instanceof RuntimeEdge) {
-            RuntimeEdge edge = (RuntimeEdge)element;
-            context.setCurrentElement(edge.getTargetVertex());
+        Element currentElement = context.getCurrentElement();
+        List<Element> elements = context.filter(context.getModel().getElements(currentElement));
+        if (elements.isEmpty()) {
+            throw new NoPathFoundException();
         }
+        context.setCurrentElement(elements.get(random.nextInt(elements.size())));
         return context;
     }
 

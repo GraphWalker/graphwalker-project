@@ -47,8 +47,8 @@ public final class FloydWarshall implements Algorithm {
 
     public FloydWarshall(ExecutionContext context) {
         this.context = context;
-        this.distances = createDistanceMatrix(context.getModel(), context.getModel().getElements());
-        this.predecessors = createPredecessorMatrix(context.getModel().getElements(), distances);
+        this.distances = createDistanceMatrix(context.getModel(), context.getModel().getElementsCache());
+        this.predecessors = createPredecessorMatrix(context.getModel().getElementsCache(), distances);
     }
 
     private int[][] createDistanceMatrix(RuntimeModel model, List<Element> elements) {
@@ -63,7 +63,7 @@ public final class FloydWarshall implements Algorithm {
                 distances[elements.indexOf(edge)][elements.indexOf(target)] = (int) Math.ceil(edge.getWeight());
             } else if (element instanceof RuntimeVertex) {
                 RuntimeVertex vertex = (RuntimeVertex) element;
-                for (RuntimeEdge edge : model.getEdges(vertex)) {
+                for (RuntimeEdge edge : model.getOutEdges(vertex)) {
                     if (!edge.isBlocked()) {
                         distances[elements.indexOf(vertex)][elements.indexOf(edge)] = 1;
                     }
@@ -92,13 +92,13 @@ public final class FloydWarshall implements Algorithm {
     }
 
     public int getShortestDistance(Element origin, Element destination) {
-        return distances[context.getModel().getElements().indexOf(origin)][context.getModel().getElements().indexOf(destination)];
+        return distances[context.getModel().getElementsCache().indexOf(origin)][context.getModel().getElementsCache().indexOf(destination)];
     }
 
     public int getMaximumDistance(Element destination) {
         int maximumDistance = Integer.MIN_VALUE;
         for (int[] distance : distances) {
-            int value = distance[context.getModel().getElements().indexOf(destination)];
+            int value = distance[context.getModel().getElementsCache().indexOf(destination)];
             if (value != Integer.MAX_VALUE && value > maximumDistance) {
                 maximumDistance = value;
             }

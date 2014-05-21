@@ -35,7 +35,7 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 /**
  * @author Nils Olsson
  */
-public final class ReachedEdge implements StopCondition {
+public final class ReachedEdge implements NamedStopCondition {
 
     private final String name;
 

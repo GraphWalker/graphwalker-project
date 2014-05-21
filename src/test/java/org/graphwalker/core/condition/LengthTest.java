@@ -55,6 +55,7 @@ public class LengthTest {
         for (int i = 0; i <= 100; i++) {
             Assert.assertThat(stopCondition.getFulfilment(context), is((double)i/100));
             context.getProfiler().start();
+            context.getProfiler().stop();
             Assert.assertThat(stopCondition.getFulfilment(context), is((double)(i+1)/100));
         }
     }
@@ -68,6 +69,7 @@ public class LengthTest {
         for (int i = 0; i < 100; i++) {
             Assert.assertFalse(stopCondition.isFulfilled(context));
             context.getProfiler().start();
+            context.getProfiler().stop();
         }
         Assert.assertTrue(stopCondition.isFulfilled(context));
     }

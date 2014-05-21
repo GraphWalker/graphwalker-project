@@ -60,8 +60,7 @@ public final class AStar implements Algorithm {
                 break;
             }else{
                 closeSet.put(node.getElement(), node);
-                // TODO: handle if some neighbors is filtered by guards, add methods to the EC layer that can filter elements
-                List<Element> neighbors = context.getModel().getElements(node.getElement());
+                List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
                 for (Element neighbor : neighbors) {
                     AStarNode visited = closeSet.get(neighbor);
                     if (visited == null) {

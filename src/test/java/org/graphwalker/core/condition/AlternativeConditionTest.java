@@ -62,6 +62,7 @@ public class AlternativeConditionTest {
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
         context.setCurrentElement(e1.build());
         Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
@@ -80,6 +81,7 @@ public class AlternativeConditionTest {
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(e1.build());
         Assert.assertTrue(stopCondition.isFulfilled(context));

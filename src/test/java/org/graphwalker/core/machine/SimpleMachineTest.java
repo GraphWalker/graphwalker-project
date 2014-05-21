@@ -26,13 +26,15 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -63,5 +65,39 @@ public class SimpleMachineTest {
             machine.getNextStep();
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    }
+
+    @Test
+    public void executeAction() {
+        Vertex vertex1 = new Vertex();
+        Vertex vertex2 = new Vertex();
+        Model model = new Model()
+                .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
+                .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        context.setNextElement(vertex1);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
+    }
+
+    @Test(expected = NoPathFoundException.class)
+    public void honorGuard() {
+        Vertex vertex1 = new Vertex();
+        Vertex vertex2 = new Vertex();
+        Model model = new Model()
+                .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
+                .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i == 0")));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        context.setNextElement(vertex1);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(3l));
     }
 }

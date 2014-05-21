@@ -26,6 +26,8 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -36,6 +38,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
 /**
  * @author Nils Olsson
  */
@@ -43,9 +48,7 @@ public final class SimpleMachine implements Machine {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
 
-    private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
     private final List<ExecutionContext> contexts = new ArrayList<>();
-    private final ScriptEngine scriptEngine;
 
     private ExecutionContext currentContext;
 
@@ -55,7 +58,6 @@ public final class SimpleMachine implements Machine {
 
     public SimpleMachine(List<ExecutionContext> contexts) {
         this.contexts.addAll(contexts);
-        this.scriptEngine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
         this.currentContext = contexts.get(0);
     }
 
@@ -63,9 +65,13 @@ public final class SimpleMachine implements Machine {
     public Context getNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
         currentContext.getProfiler().stop();
-        currentContext.getPathGenerator().getNextStep(currentContext);
+        if (null == currentContext.getCurrentElement()) {
+            currentContext.setCurrentElement(currentContext.getNextElement());
+        } else {
+            currentContext.getPathGenerator().getNextStep(currentContext);
+        }
         currentContext.getProfiler().start();
-        execute(currentContext.getCurrentElement().getName());
+        execute(currentContext.getCurrentElement());
         return currentContext;
     }
 
@@ -80,14 +86,51 @@ public final class SimpleMachine implements Machine {
         return false;
     }
 
+    private void execute(Element element) {
+        if (element instanceof RuntimeVertex) {
+            execute((RuntimeVertex)element);
+        } else if (element instanceof RuntimeEdge) {
+            execute((RuntimeEdge)element);
+        }
+    }
+
+    private void execute(RuntimeEdge edge) {
+        execute(edge.getActions());
+        execute(edge.getName());
+    }
+
+    private void execute(List<Action> actions) {
+        for (Action action: actions) {
+            execute(action);
+        }
+    }
+
+    private void execute(Action action) {
+        // TODO: Refactor
+        currentContext.getScriptEngine().setContext(currentContext);
+        Bindings bindings = currentContext.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("impl", currentContext);
+        try {
+            currentContext.getScriptEngine().eval(action.getScript());
+        } catch (ScriptException e) {
+            throw new MachineException(e);
+        }
+
+    }
+
+    private void execute(RuntimeVertex vertex) {
+        execute(vertex.getName());
+    }
+
     private void execute(String name) {
         logger.info("Execute {}", currentContext.getCurrentElement().getName());
+        // TODO: Refactor
         if (null != name && !"".equals(name)) {
             try {
-                scriptEngine.setContext(currentContext);
-                Bindings bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+                currentContext.getScriptEngine().setContext(currentContext);
+                Bindings bindings = currentContext.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
                 bindings.put("impl", currentContext);
-                scriptEngine.eval( "impl." + name + "()");
+                currentContext.getScriptEngine().eval( "impl." + name + "()");
             } catch (ScriptException e) {
                 throw new MachineException(e);
             }

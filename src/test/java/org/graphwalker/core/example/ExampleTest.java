@@ -63,7 +63,7 @@ public class ExampleTest extends ExecutionContext {
         Vertex start = new Vertex();
         Model model = new Model().addEdge(new Edge()
                 .setName("edge1")
-                .setGuard(new Guard("isTrue()"))
+                //.setGuard(new Guard("isTrue()"))
                 .setSourceVertex(start
                         .setName("vertex1"))
                 .setTargetVertex(new Vertex()

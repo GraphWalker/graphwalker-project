@@ -42,20 +42,37 @@ public final class Profiler {
     }
 
     public void start() {
-        profile.setTotalVisitCount(profile.getTotalVisitCount()+1);
-        if (null != context.getCurrentElement() && !profile.containsKey(context.getCurrentElement())) {
-            profile.put(context.getCurrentElement(), new ProfileUnit());
+        Element element = context.getCurrentElement();
+        if (null != element) {
+            if (!profile.containsKey(element)) {
+                profile.put(element, new ProfileUnit());
+            }
+            profile.setTotalVisitCount(profile.getTotalVisitCount()+1);
+            ProfileUnit profileUnit = profile.get(element);
+            profileUnit.setVisitCount(profileUnit.getVisitCount()+1);
         }
     }
 
     public void stop() {
-        if (null != context.getCurrentElement()) {
-            profile.put(context.getCurrentElement(), new ProfileUnit());
+        /*
+        Element element = context.getCurrentElement();
+        if (null != element) {
+            if (!profile.containsKey(element)) {
+                profile.put(element, new ProfileUnit());
+            }
+            profile.setTotalVisitCount(profile.getTotalVisitCount()+1);
+            ProfileUnit profileUnit = profile.get(element);
+            profileUnit.setVisitCount(profileUnit.getVisitCount()+1);
         }
+        */
     }
 
     public boolean isVisited(Element element) {
-        return profile.containsKey(element);
+        ProfileUnit profileUnit = profile.get(element);
+        if (null == profileUnit) {
+            return false;
+        }
+        return profileUnit.getVisitCount()>0;
     }
 
     public long getTotalVisitCount() {
