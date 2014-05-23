@@ -88,8 +88,8 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.inEdgesByVertexCache = createInEdgesByVertexCache();
             this.outEdgesByVertexCache = createOutEdgesByVertexCache();
             this.elementsCache = createElementCache();
-            this.elementsByElementCache = createElementsByElementCache();
             this.elementsByNameCache = createElementsByNameCache();
+            this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -135,26 +135,23 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Collections.unmodifiableList(elements);
         }
 
-        private Map<Element, List<Element>> createElementsByElementCache() {
+        private Map<Element, List<Element>> createElementsByElementCache(List<Element> elements, Map<RuntimeVertex, List<RuntimeEdge>> outEdges) {
             Map<Element, List<Element>> elementsByElementCache = new HashMap<>();
-            for (Element element : createElementCache()) {
+            for (Element element : elements) {
                 if (element instanceof RuntimeEdge) {
                     RuntimeEdge edge = (RuntimeEdge) element;
                     elementsByElementCache.put(element, Arrays.<Element>asList(edge.getTargetVertex()));
                 } else if (element instanceof RuntimeVertex) {
                     RuntimeVertex vertex = (RuntimeVertex) element;
-                    if (!elementsByElementCache.containsKey(vertex)) {
-                        elementsByElementCache.put(vertex, new ArrayList<Element>());
-                    }
-                    List<Element> edgeCache = elementsByElementCache.get(element);
-                    for (RuntimeEdge edge : edges) {
-                        if (vertex.equals(edge.getSourceVertex())) {
-                            edgeCache.add(edge);
-                        }
-                    }
+                    elementsByElementCache.put(element, cast(outEdges.get(vertex)));
                 }
             }
             return makeImmutable(elementsByElementCache);
+        }
+
+        @SuppressWarnings("unchecked")
+        private List<Element> cast(List<? extends Element> list) {
+            return (List<Element>)list;
         }
 
         private Map<String, List<Element>> createElementsByNameCache() {
