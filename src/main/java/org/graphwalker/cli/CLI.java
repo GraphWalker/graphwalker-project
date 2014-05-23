@@ -33,6 +33,7 @@ import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.cli.antlr.GeneratorFactoryException;
 import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
+import org.graphwalker.cli.commands.Requirements;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
@@ -40,6 +41,7 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.GraphMLModelFactory;
 import org.graphwalker.io.factory.ModelFactoryException;
@@ -56,6 +58,7 @@ public class CLI {
   Options options;
   Offline offline;
   Methods methods;
+  Requirements requirements;
 
   public static void main(String[] args) {
     CLI cli = new CLI();
@@ -85,6 +88,9 @@ public class CLI {
     methods = new Methods();
     jc.addCommand("methods", methods);
 
+    requirements = new Requirements();
+    jc.addCommand("requirements", requirements);
+
     try {
       jc.parse(args);
 
@@ -94,6 +100,8 @@ public class CLI {
           RunCommandOffline();
         } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
           RunCommandMethods();
+        } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
+          RunCommandRequirements();
         }
       }
 
@@ -133,30 +141,50 @@ public class CLI {
     }
   }
 
+  private void RunCommandRequirements()  throws Exception {
+    GraphMLModelFactory factory = new GraphMLModelFactory();
+
+    Model.RuntimeModel model = null;
+    String modelFileName = requirements.model;
+    try {
+      model = factory.create(modelFileName).build();
+    } catch (ModelFactoryException e) {
+      throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+    }
+
+    SortedSet<Requirement> reqs = new TreeSet<>();
+    for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+      for (Requirement req : vertex.getRequirements()) {
+        reqs.add(req);
+      }
+    }
+
+    for (Requirement req : reqs) {
+      System.out.println(req.getKey());
+    }
+  }
+
   private void RunCommandMethods()  throws Exception {
     GraphMLModelFactory factory = new GraphMLModelFactory();
 
-    Iterator itr = methods.model.iterator();
-    while(itr.hasNext()) {
-      Model.RuntimeModel model = null;
-      String modelFileName = (String) itr.next();
-      try {
-        model = factory.create(modelFileName).build();
-      } catch (ModelFactoryException e) {
-        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-      }
+    Model.RuntimeModel model = null;
+    String modelFileName = methods.model;
+    try {
+      model = factory.create(modelFileName).build();
+    } catch (ModelFactoryException e) {
+      throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+    }
 
-      SortedSet<String> names = new TreeSet<>();
-      for (Vertex.RuntimeVertex vertex : model.getVertices()) {
-        names.add(vertex.getName());
-      }
-      for (Edge.RuntimeEdge edge : model.getEdges()) {
-        names.add(edge.getName());
-      }
+    SortedSet<String> names = new TreeSet<>();
+    for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+      names.add(vertex.getName());
+    }
+    for (Edge.RuntimeEdge edge : model.getEdges()) {
+      names.add(edge.getName());
+    }
 
-      for (String name : names) {
-        System.out.println(name);
-      }
+    for (String name : names) {
+      System.out.println(name);
     }
   }
 

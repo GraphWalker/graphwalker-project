@@ -52,6 +52,7 @@ Command-line syntax
 You need to give the cli an sub-command. These are the sub-command:
   - **offline**
   - **methods**
+  - **requirements**
 
 
 Sub-command: offline
@@ -133,6 +134,10 @@ v_OtherBoughtBooks
 v_SearchResult
 v_ShoppingCart
 ```
+
+Sub-command: requirements
+--------------------------
+Generates a list of unique requirements found in the model.
 
 
 
