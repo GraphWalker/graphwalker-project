@@ -31,8 +31,8 @@ import com.beust.jcommander.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-@Parameters(commandDescription = "Generates a list of unique names of vertices and edges in the model.")
-public class Methods {
+@Parameters(commandDescription = "Generates a list of unique names of the requirements found in the model.")
+public class Requirements {
 
   @Parameter(names = {"--model", "-m"}, required = true, arity = 1,
           description = "The model, as a graphml file.")
