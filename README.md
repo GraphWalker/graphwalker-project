@@ -72,15 +72,15 @@ offline -m model.graphml "a_star(edge_coverge(100)) random(time_duration(900))"
 ```
 
 and where STOP_CONDITION can be:
-  - **edge_coverage(N)** - The stop criteria is a percentage number (N). When, during execution, the percentage of traversed edges is reached, the test is stopped. If an edge is traversed more than one time, it still counts as 1, when calculating the percentage coverage.
+  - **edge_coverage(N)** - The stop criteria is a percentage number (N) between 1 and 100. When, during execution, the percentage of traversed edges is reached, the test is stopped. If an edge is traversed more than one time, it still counts as 1, when calculating the percentage coverage.
 
-  - **vertex_coverage(N)** - The stop criteria is a percentage number (N). When, during execution, the percentage of traversed states is reached, the test is stopped. If vertex is traversed more than one time, it still counts as 1, when calculating the percentage coverage.
+  - **vertex_coverage(N)** - The stop criteria is a percentage number (N) between 1 and 100. When, during execution, the percentage of traversed states is reached, the test is stopped. If vertex is traversed more than one time, it still counts as 1, when calculating the percentage coverage.
 
-  - **reached_vertex(name)** - The stop criteria is a named vertex (name). When, during execution, the vertex is reached, the test is stopped.
+  - **reached_vertex(name)** - The stop criteria is a named vertex (name). When, during execution, the vertex is reached, the test is stopped. The named vertex must exist in the model
 
-  - **reached_edge(name)** - The stop criteria is a named edge (name). When, during execution, the edge is reached, the test is stopped.
+  - **reached_edge(name)** - The stop criteria is a named edge (name). When, during execution, the edge is reached, the test is stopped. The named edge must exist in the model
 
-  - **time_duration(N)** - The stop criteria is a time, representing the number of seconds (N) that the test generator is allowed to execute.
+  - **time_duration(N)** - The stop criteria is a time, representing the number of seconds (N) that the test generator is allowed to execute. The number (N) must be larger than 0.
 
 Stop conditions can be combinational, using logical AND OR, or && ||. For example:
 ```sh
