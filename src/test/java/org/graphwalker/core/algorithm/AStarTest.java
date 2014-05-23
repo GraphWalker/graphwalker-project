@@ -77,6 +77,6 @@ public class AStarTest {
         e1.setBlocked(true);
         e2.setBlocked(true);
         AStar aStar = new AStar(new ExecutionContext().setModel(model));
-        Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
+        aStar.getShortestPath(v00.build(), v31.build());
     }
 }

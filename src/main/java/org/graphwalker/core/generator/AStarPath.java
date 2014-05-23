@@ -31,14 +31,11 @@ import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Path;
 
 import java.util.List;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**

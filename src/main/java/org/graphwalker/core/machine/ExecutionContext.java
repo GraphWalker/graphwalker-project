@@ -30,6 +30,8 @@ import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Profiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.script.*;
 import java.lang.reflect.Constructor;
@@ -46,6 +48,8 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  * @author Nils Olsson
  */
 public class ExecutionContext extends SimpleScriptContext implements Context {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExecutionContext.class);
 
     private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
     private final Profiler profiler = new Profiler(this);
@@ -136,7 +140,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     }
 
     @SuppressWarnings("unchecked")
-    public <A> A getAlgorithm(Class<? extends Algorithm> clazz) {
+    public <A extends Algorithm> A getAlgorithm(Class<A> clazz) {
         if (!algorithms.containsKey(clazz)) {
             try {
                 Constructor<? extends Algorithm> constructor = clazz.getConstructor(ExecutionContext.class);
@@ -165,8 +169,9 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return filteredElements;
     }
 
-    private boolean isAvailable(RuntimeEdge edge) {
+    public boolean isAvailable(RuntimeEdge edge) {
         if (null != edge.getGuard()) {
+            logger.info("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
             // TODO: Refactor how script engine is used and created
             getScriptEngine().setContext(this);
             Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
@@ -177,10 +182,39 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
                 //return (Boolean)getScriptEngine().eval("(function(){ return " + edge.getGuard().getScript() + ";}.bind(impl))()");
                 return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
             } catch (ScriptException e) {
-                // TODO: Handle errors
-                e.printStackTrace();
+                /* TODO: Handle errors or ignore them? when using A* guards will be evaluated before actions is performed that
+                   can make the guard fail due to a ReferenceError: "variable" is not defined */
             }
         }
         return true;
+    }
+
+    public void execute(Action action) {
+        // TODO: Refactor
+        getScriptEngine().setContext(this);
+        Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+        bindings.put("impl", this);
+        try {
+            getScriptEngine().eval(action.getScript());
+        } catch (ScriptException e) {
+            throw new MachineException(e);
+        }
+
+    }
+
+    public void execute(String name) {
+        // TODO: Refactor
+        try {
+            getClass().getMethod(name);
+            getScriptEngine().setContext(this);
+            Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+            bindings.put("impl", this);
+            getScriptEngine().eval("impl." + name + "()");
+        } catch (ScriptException e) {
+            throw new MachineException(e);
+        } catch (NoSuchMethodException e) {
+            // warn
+        }
+
     }
 }

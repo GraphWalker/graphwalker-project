@@ -69,10 +69,7 @@ public final class Profiler {
 
     public boolean isVisited(Element element) {
         ProfileUnit profileUnit = profile.get(element);
-        if (null == profileUnit) {
-            return false;
-        }
-        return profileUnit.getVisitCount()>0;
+        return null != profileUnit && profileUnit.getVisitCount() > 0;
     }
 
     public long getTotalVisitCount() {
