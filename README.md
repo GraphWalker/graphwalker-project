@@ -50,7 +50,7 @@ Usage: java -jar graphwalker.jar [options] [command] [command options]
 Command-line syntax
 ---------------------
 You need to give the cli an sub-command. These are the sub-command:
-  - offline
+  - **offline**
 
 
 Sub-command: offline
