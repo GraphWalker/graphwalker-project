@@ -31,12 +31,14 @@ import com.beust.jcommander.ParameterException;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.cli.antlr.GeneratorFactoryException;
+import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.GraphMLModelFactory;
@@ -46,15 +48,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 public class CLI {
   private static final Logger logger = LoggerFactory.getLogger(CLI.class);
   JCommander jc;
   Options options;
   Offline offline;
+  Methods methods;
 
   public static void main(String[] args) {
     CLI cli = new CLI();
@@ -81,13 +82,18 @@ public class CLI {
     offline = new Offline();
     jc.addCommand("offline", offline);
 
+    methods = new Methods();
+    jc.addCommand("methods", methods);
+
     try {
       jc.parse(args);
 
       // Parse for commands
       if (jc.getParsedCommand() != null) {
-        if (jc.getParsedCommand().equals("offline")) {
+        if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
           RunCommandOffline();
+        } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
+          RunCommandMethods();
         }
       }
 
@@ -124,6 +130,33 @@ public class CLI {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
+    }
+  }
+
+  private void RunCommandMethods()  throws Exception {
+    GraphMLModelFactory factory = new GraphMLModelFactory();
+
+    Iterator itr = methods.model.iterator();
+    while(itr.hasNext()) {
+      Model.RuntimeModel model = null;
+      String modelFileName = (String) itr.next();
+      try {
+        model = factory.create(modelFileName).build();
+      } catch (ModelFactoryException e) {
+        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      }
+
+      SortedSet<String> names = new TreeSet<>();
+      for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+        names.add(vertex.getName());
+      }
+      for (Edge.RuntimeEdge edge : model.getEdges()) {
+        names.add(edge.getName());
+      }
+
+      for (String name : names) {
+        System.out.println(name);
+      }
     }
   }
 
