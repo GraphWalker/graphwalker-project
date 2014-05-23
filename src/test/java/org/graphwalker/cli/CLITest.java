@@ -260,4 +260,28 @@ public class CLITest {
 //    Assert.assertEquals("Expected 38 lines beginning with e_" , 38, getNumMatches(Pattern.compile("e_").matcher(outMsg)));
   }
 
+  /**
+   * Simulates
+   * java -jar graphwalker.jar methods -m graphml/UC01_GW3.graphml
+   */
+  @Test
+  public void testMethods_GW3() {
+    String args[] = {"methods", "-m", "graphml/UC01_GW3.graphml"};
+    runCommand(args);
+    Assert.assertThat(errMsg, is(""));
+    Assert.assertThat(outMsg, is("e_AddBookToCart\n" +
+      "e_ClickBook\n" +
+      "e_EnterBaseURL\n" +
+      "e_SearchBook\n" +
+      "e_ShoppingCart\n" +
+      "e_StartBrowser\n" +
+      "v_BaseURL\n" +
+      "v_BookInformation\n" +
+      "v_BrowserStarted\n" +
+      "v_BrowserStopped\n" +
+      "v_OtherBoughtBooks\n" +
+      "v_SearchResult\n" +
+      "v_ShoppingCart\n"));
+  }
+
 }

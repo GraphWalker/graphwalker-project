@@ -51,6 +51,7 @@ Command-line syntax
 ---------------------
 You need to give the cli an sub-command. These are the sub-command:
   - **offline**
+  - **methods**
 
 
 Sub-command: offline
@@ -59,7 +60,7 @@ Will create a test sequence generated from a model, and write it to the terminal
 
 The syntax is:
 ```sh
-offline -m model.graphml "GENERATOR(STOP_CONDITION)"
+java -jar offline -m model.graphml "GENERATOR(STOP_CONDITION)"
 ```
 where GENERATOR can be:
   - **offline** - Navigate through the model in a completly random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
@@ -68,7 +69,7 @@ where GENERATOR can be:
 
 You can concatenate multiple generators. For example:
 ```sh
-offline -m model.graphml "a_star(edge_coverge(100)) random(time_duration(900))"
+java -jar offline -m model.graphml "a_star(edge_coverge(100)) random(time_duration(900))"
 ```
 
 and where STOP_CONDITION can be:
@@ -84,7 +85,7 @@ and where STOP_CONDITION can be:
 
 Stop conditions can be combinational, using logical AND OR, or && ||. For example:
 ```sh
-offline -m model.graphml "random(edge_coverge(100) || time_duration(900))"
+java -jar gw offline -m model.graphml "random(edge_coverge(100) || time_duration(900))"
 ```
 Let's try it
 ---------------------
@@ -110,6 +111,30 @@ e_SearchBook
 :
 :
 ```
+
+
+Sub-command: methods
+---------------------
+Generates a list of unique names of vertices and edges in the model.
+
+```sh
+java -jar gw methods -m UC01_GW3.graphml"
+e_AddBookToCart
+e_ClickBook
+e_EnterBaseURL
+e_SearchBook
+e_ShoppingCart
+e_StartBrowser
+v_BaseURL
+v_BookInformation
+v_BrowserStarted
+v_BrowserStopped
+v_OtherBoughtBooks
+v_SearchResult
+v_ShoppingCart
+```
+
+
 
 
 [UC01_GW3.graphml]:https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/UC01_GW3.graphml
