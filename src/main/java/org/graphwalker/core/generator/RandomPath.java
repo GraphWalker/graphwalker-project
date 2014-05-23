@@ -33,9 +33,6 @@ import org.graphwalker.core.model.Element;
 import java.util.List;
 import java.util.Random;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
-
 /**
  * @author Nils Olsson
  */
@@ -69,3 +66,4 @@ public final class RandomPath implements PathGenerator {
     }
 
 }
+

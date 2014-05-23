@@ -30,4 +30,19 @@ package org.graphwalker.core.generator;
  * @author Nils Olsson
  */
 public final class NoPathFoundException extends RuntimeException {
+
+    public NoPathFoundException() {
+    }
+
+    public NoPathFoundException(String message) {
+        super(message);
+    }
+
+    public NoPathFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NoPathFoundException(Throwable cause) {
+        super(cause);
+    }
 }

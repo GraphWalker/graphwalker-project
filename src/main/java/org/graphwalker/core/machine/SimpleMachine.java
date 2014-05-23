@@ -26,13 +26,13 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.script.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,11 +65,17 @@ public final class SimpleMachine implements Machine {
     public Context getNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
         currentContext.getProfiler().stop();
+
+        // TODO: move to a method
         if (null == currentContext.getCurrentElement()) {
+            if (null == currentContext.getNextElement()) {
+                throw new NoPathFoundException("No Start element defined");
+            }
             currentContext.setCurrentElement(currentContext.getNextElement());
         } else {
             currentContext.getPathGenerator().getNextStep(currentContext);
         }
+
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement());
         return currentContext;
@@ -95,45 +101,25 @@ public final class SimpleMachine implements Machine {
     }
 
     private void execute(RuntimeEdge edge) {
+        logger.info("Execute {}", currentContext.getCurrentElement());
         execute(edge.getActions());
-        execute(edge.getName());
+        if (edge.hasName()) {
+            currentContext.execute(edge.getName());
+        }
     }
 
     private void execute(List<Action> actions) {
         for (Action action: actions) {
-            execute(action);
+            logger.info("Execute {}", action);
+            currentContext.execute(action);
         }
-    }
-
-    private void execute(Action action) {
-        // TODO: Refactor
-        currentContext.getScriptEngine().setContext(currentContext);
-        Bindings bindings = currentContext.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-        bindings.put("impl", currentContext);
-        try {
-            currentContext.getScriptEngine().eval(action.getScript());
-        } catch (ScriptException e) {
-            throw new MachineException(e);
-        }
-
     }
 
     private void execute(RuntimeVertex vertex) {
-        execute(vertex.getName());
-    }
-
-    private void execute(String name) {
-        logger.info("Execute {}", currentContext.getCurrentElement().getName());
-        // TODO: Refactor
-        if (null != name && !"".equals(name)) {
-            try {
-                currentContext.getScriptEngine().setContext(currentContext);
-                Bindings bindings = currentContext.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-                bindings.put("impl", currentContext);
-                currentContext.getScriptEngine().eval( "impl." + name + "()");
-            } catch (ScriptException e) {
-                throw new MachineException(e);
-            }
+        logger.info("Execute {}", currentContext.getCurrentElement());
+        if (vertex.hasName()) {
+            currentContext.execute(vertex.getName());
         }
     }
+
 }

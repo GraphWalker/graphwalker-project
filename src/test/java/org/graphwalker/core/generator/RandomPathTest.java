@@ -61,6 +61,6 @@ public class RandomPathTest {
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), source.build());
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), edge.build());
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), target.build());
-        pathGenerator.getNextStep(context); // fail
+        pathGenerator.getNextStep(context); // should fail
     }
 }
