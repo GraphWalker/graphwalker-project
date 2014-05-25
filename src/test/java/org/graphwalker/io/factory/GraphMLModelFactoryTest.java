@@ -72,6 +72,7 @@ public class GraphMLModelFactoryTest {
         Assert.assertThat(model.findEdges("e_ShoppingCart").size(), is(3));
         Assert.assertThat(model.findEdges("e_StartBrowser").size(), is(1));
         Assert.assertNull(model.findEdges(""));
+
         Assert.assertThat(model.findVertices("v_BaseURL").size(), is(1));
         Assert.assertThat(model.findVertices("v_BookInformation").size(), is(1));
         Assert.assertThat(model.findVertices("v_BrowserStarted").size(), is(1));
@@ -79,6 +80,12 @@ public class GraphMLModelFactoryTest {
         Assert.assertThat(model.findVertices("v_OtherBoughtBooks").size(), is(1));
         Assert.assertThat(model.findVertices("v_SearchResult").size(), is(1));
         Assert.assertThat(model.findVertices("v_ShoppingCart").size(), is(1));
+
+        Assert.assertThat(model.findEdges("e_init").get(0).getSourceVertex().getName(), is("Start"));
+        Assert.assertThat(model.findEdges("e_init").get(0).getTargetVertex().getName(), is("v_BrowserStopped"));
+
+        Assert.assertThat(model.findEdges("e_StartBrowser").get(0).getSourceVertex().getName(), is("v_BrowserStopped"));
+        Assert.assertThat(model.findEdges("e_StartBrowser").get(0).getTargetVertex().getName(), is("v_BrowserStarted"));
     }
 
 /*    @Test
