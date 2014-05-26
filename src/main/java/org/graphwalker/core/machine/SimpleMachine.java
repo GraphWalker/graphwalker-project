@@ -65,20 +65,21 @@ public final class SimpleMachine implements Machine {
     public Context getNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
         currentContext.getProfiler().stop();
-
-        // TODO: move to a method
-        if (null == currentContext.getCurrentElement()) {
-            if (null == currentContext.getNextElement()) {
-                throw new NoPathFoundException("No Start element defined");
-            }
-            currentContext.setCurrentElement(currentContext.getNextElement());
-        } else {
-            currentContext.getPathGenerator().getNextStep(currentContext);
-        }
-
+        walk(currentContext);
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement());
         return currentContext;
+    }
+
+    private void walk(ExecutionContext context) {
+        if (null == context.getCurrentElement()) {
+            if (null == context.getNextElement()) {
+                throw new NoPathFoundException("No Start element defined");
+            }
+            context.setCurrentElement(context.getNextElement());
+        } else {
+            context.getPathGenerator().getNextStep(context);
+        }
     }
 
     @Override

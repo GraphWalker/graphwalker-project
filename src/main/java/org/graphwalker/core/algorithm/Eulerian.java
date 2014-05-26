@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -85,6 +84,7 @@ public final class Eulerian implements Algorithm {
         return EulerianType.NOT_EULERIAN;
     }
 
+    /*
     public RuntimeModel eulerize() {
         switch (getEulerianType()) {
             case EULERIAN:
@@ -94,6 +94,7 @@ public final class Eulerian implements Algorithm {
         }
         return context.getModel(); // SEMI_EULERIAN;
     }
+    */
 
     public Path<Element> getEulerPath() {
         // TODO:

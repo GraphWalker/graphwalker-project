@@ -177,13 +177,7 @@ public class ModelTest {
                     .setTargetVertex(model.getVertices().get(target)));
         }
         final long stopTime = System.nanoTime();
-
-        // TODO: Speed up the build process
-        final long buildStartTime = System.nanoTime();
         Model.RuntimeModel runtimeModel = model.build();
-        final long buildStopTime = System.nanoTime();
-        System.out.println("Buildtime: "+TimeUnit.MILLISECONDS.convert(buildStopTime-buildStartTime, TimeUnit.NANOSECONDS));
-
         Assert.assertThat(model.getVertices().size(), is(50000));
         Assert.assertThat(model.getEdges().size(), is(50000));
         Assert.assertThat(runtimeModel.getVertices().size(), is(50000));
