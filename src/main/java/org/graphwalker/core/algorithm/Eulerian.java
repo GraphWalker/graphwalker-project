@@ -30,7 +30,6 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,21 +83,8 @@ public final class Eulerian implements Algorithm {
         return EulerianType.NOT_EULERIAN;
     }
 
-    /*
-    public RuntimeModel eulerize() {
-        switch (getEulerianType()) {
-            case EULERIAN:
-                break; // missing start edge
-            case NOT_EULERIAN:
-                break; // TODO:
-        }
-        return context.getModel(); // SEMI_EULERIAN;
-    }
-    */
-
-    public Path<Element> getEulerPath() {
-        // TODO:
-        return new Path<>(new ArrayList<Element>());
+    public Path<Element> getEulerPath(RuntimeVertex vertex) {
+        return context.getAlgorithm(Fleury.class).getTrail(vertex);
     }
 
     class PolarityCounter {
