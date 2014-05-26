@@ -8,18 +8,25 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public final class ShortestAllPaths implements PathGenerator {
 
+    private final StopCondition stopCondition;
+
+    public ShortestAllPaths(StopCondition stopCondition) {
+        this.stopCondition = stopCondition;
+    }
+
     @Override
     public StopCondition getStopCondition() {
-        return null;
+        return stopCondition;
     }
 
     @Override
     public ExecutionContext getNextStep(ExecutionContext context) {
+
         return null;
     }
 
     @Override
     public boolean hasNextStep(ExecutionContext context) {
-        return false;
+        return !getStopCondition().isFulfilled(context);
     }
 }
