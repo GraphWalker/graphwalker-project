@@ -120,7 +120,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return elementsByNameCache.get(name);
         }
 
-        public List<Element> getElementsCache() {
+        public List<Element> getElements() {
             return elementsCache;
         }
 

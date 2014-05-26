@@ -46,7 +46,7 @@ public final class DepthFirstSearch implements Algorithm {
     }
 
     public List<Element> getConnectedComponent(Element root) {
-        return createConnectedComponent(createElementStatusMap(context.getModel().getElementsCache()), root);
+        return createConnectedComponent(createElementStatusMap(context.getModel().getElements()), root);
     }
 
     private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
