@@ -26,17 +26,23 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.junit.Assert;
+import org.junit.Test;
+import org.reflections.Reflections;
+
+import java.util.Set;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Model {
+public class AnnotationTest {
 
-    String file() default "";
+    @Test
+    public void findTest() {
+        Reflections reflections = new Reflections("org.graphwalker.java.annotation.resources");
+        Set<Class<?>> classes = reflections.getTypesAnnotatedWith(GraphWalker.class);
+        Assert.assertThat(classes.size(), is(1));
+    }
 }
