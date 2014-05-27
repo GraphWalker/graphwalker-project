@@ -29,6 +29,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-io</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.7</version>
@@ -42,6 +47,11 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.javaparser</groupId>
+            <artifactId>javaparser</artifactId>
+            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

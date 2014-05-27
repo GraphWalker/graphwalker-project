@@ -1,4 +1,4 @@
-package org.graphwalker.java.annotation;
+package org.graphwalker.java.annotation.resources;
 
 /*
  * #%L
@@ -26,17 +26,28 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.graphwalker.java.annotation.Edge;
+import org.graphwalker.java.annotation.GraphWalker;
+import org.graphwalker.java.annotation.Vertex;
 
 /**
  * @author Nils Olsson
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Model {
+@GraphWalker
+public class MyTest implements MyModel {
 
-    String file() default "";
+    @Vertex
+    public void vertex1() {
+
+    }
+
+    @Edge
+    public void edge12() {
+
+    }
+
+    @Vertex
+    public void vertex2() {
+
+    }
 }

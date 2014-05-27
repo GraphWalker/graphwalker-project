@@ -1,4 +1,4 @@
-package org.graphwalker.java.annotation;
+package org.graphwalker.java.source;
 
 /*
  * #%L
@@ -26,17 +26,19 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Nils Olsson
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Model {
+public class GenerateTest {
 
-    String file() default "";
+    @Test
+    public void generate() {
+        String source = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
+        Assert.assertTrue(source.contains("edge12"));
+        Assert.assertTrue(source.contains("vertex2"));
+        Assert.assertFalse(source.contains("SHARED"));
+    }
 }
