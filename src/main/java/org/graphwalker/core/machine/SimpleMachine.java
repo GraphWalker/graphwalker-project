@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class SimpleMachine implements Machine {
+public final class SimpleMachine extends ObservableMachine {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
 
@@ -80,6 +81,8 @@ public final class SimpleMachine implements Machine {
         } else {
             context.getPathGenerator().getNextStep(context);
         }
+        setChanged();
+        notifyObservers(context.getCurrentElement());
     }
 
     @Override
