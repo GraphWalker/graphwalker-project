@@ -26,13 +26,43 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.event.Observable;
+import org.graphwalker.core.event.Observer;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
  */
-public interface Machine extends Observable<Element> {
-    Context getNextStep();
-    boolean hasNextStep();
+public class ObserverTest implements Observer<Element> {
+
+    private int counter = 0;
+
+    @Override
+    public void update(Observable<Element> observable, Element object) {
+        counter++;
+    }
+
+    @Test
+    public void updateCounter() {
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        machine.addObserver(this);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+        Assert.assertThat(counter, is(3));
+    }
 }
