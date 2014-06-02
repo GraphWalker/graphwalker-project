@@ -29,8 +29,7 @@ package org.graphwalker.core.model;
 /**
  * @author Nils Olsson
  */
-public interface Element {
-    String getName();
-    boolean hasName();
-    <V extends ElementVisitor> void accept(V visitor);
+public interface ElementVisitor {
+
+    <T extends Element> void visit(T element);
 }
