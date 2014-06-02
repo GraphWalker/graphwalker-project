@@ -172,5 +172,10 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         public Double getWeight() {
             return weight;
         }
+
+        @Override
+        public <V extends ElementVisitor> void accept(V visitor) {
+            visitor.visit(this);
+        }
     }
 }

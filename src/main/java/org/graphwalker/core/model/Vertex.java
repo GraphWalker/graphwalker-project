@@ -95,5 +95,10 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         public boolean hasSharedState() {
             return null != sharedState && !"".equals(sharedState);
         }
+
+        @Override
+        public <V extends ElementVisitor> void accept(V visitor) {
+            visitor.visit(this);
+        }
     }
 }

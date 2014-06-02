@@ -74,5 +74,10 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
         public List<RuntimeClassification> getClassifications() {
             return classifications;
         }
+
+        @Override
+        public <V extends ElementVisitor> void accept(V visitor) {
+            visitor.visit(this);
+        }
     }
 }

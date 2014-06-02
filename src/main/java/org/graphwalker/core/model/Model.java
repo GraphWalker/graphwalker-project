@@ -68,7 +68,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return new RuntimeModel(this);
     }
 
-    public static class RuntimeModel {
+    public static class RuntimeModel extends NamedElement {
 
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
@@ -81,6 +81,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
 
         private RuntimeModel(Model model) {
+            super(null);
             this.vertices = BuilderFactory.build(model.getVertices());
             this.edges = BuilderFactory.build(model.getEdges());
             this.edgesByNameCache = createEdgesByNameCache();
@@ -229,5 +230,9 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Collections.unmodifiableMap(map);
         }
 
+        @Override
+        public <V extends ElementVisitor> void accept(V visitor) {
+            visitor.visit(this);
+        }
     }
 }
