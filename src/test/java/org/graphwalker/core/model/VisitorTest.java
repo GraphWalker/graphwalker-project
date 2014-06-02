@@ -67,7 +67,15 @@ public class VisitorTest {
 
     @Test
     public void visitEdges() {
-
+        Vertex startVertex = new Vertex().setName("start");
+        Vertex endVertex = new Vertex().setName("end");
+        RuntimeModel pseudograph = new Model()
+                .addEdge(new Edge().setSourceVertex(startVertex).setTargetVertex(endVertex))
+                .addEdge(new Edge().setSourceVertex(endVertex).setTargetVertex(endVertex))
+                .build();
+        MyLoopEdgeFinder visitor = new MyLoopEdgeFinder();
+        pseudograph.accept(visitor);
+        Assert.assertThat(visitor.count, is(1));
     }
 
     @Test
@@ -75,23 +83,23 @@ public class VisitorTest {
 
     }
 
-    private class MyVertexVisitor implements ElementVisitor {
+    private class MyVertexVisitor implements ElementVisitor<RuntimeVertex> {
 
         @Override
-        public <T extends Element> void visit(T element) {
+        public void visit(RuntimeVertex element) {
             System.out.println(element.getName());
         }
     }
 
-    private class MyNamedVertexCounter implements ElementVisitor {
+    private class MyNamedVertexCounter implements ElementVisitor<Element> {
 
         int count = 0;
 
         @Override
-        public <T extends Element> void visit(T element) {
+        public void visit(Element element) {
             if (element instanceof RuntimeModel) {
                 RuntimeModel model = (RuntimeModel)element;
-                // We don't need to visit all edges to count the vertices with names, it's just PoC
+                // We don't need to visit() all edges to count the vertices with names, it's just PoC (we could just loop over them)
                 for (Element childElement: model.getElements()) {
                     childElement.accept(this);
                 }
@@ -101,18 +109,32 @@ public class VisitorTest {
         }
     }
 
-    private class MyEdgeVisitor implements ElementVisitor {
+    private class MyLoopEdgeFinder implements ElementVisitor<RuntimeModel> {
+
+        int count = 0;
 
         @Override
-        public <T extends Element> void visit(T element) {
+        public void visit(RuntimeModel model) {
+            for (RuntimeEdge edge: model.getEdges()) {
+                if (edge.getSourceVertex().equals(edge.getTargetVertex())) {
+                    count++;
+                }
+            }
+        }
+    }
+
+    private class MyEdgeVisitor implements ElementVisitor<RuntimeEdge> {
+
+        @Override
+        public void visit(RuntimeEdge element) {
             System.out.println(element.getName());
         }
     }
 
-    private class MyTreeVisitor implements ElementVisitor {
+    private class MyTreeVisitor implements ElementVisitor<Element> {
 
         @Override
-        public <T extends Element> void visit(T element) {
+        public void visit(Element element) {
             if (element instanceof RuntimeVertex) {
                 visit((RuntimeVertex)element);
             } else if (element instanceof RuntimeEdge) {
