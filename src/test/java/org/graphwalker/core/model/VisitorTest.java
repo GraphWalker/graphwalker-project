@@ -29,6 +29,9 @@ package org.graphwalker.core.model;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
@@ -79,7 +82,28 @@ public class VisitorTest {
     }
 
     @Test
-    public void visitTree() {
+    public void detectBridge() {
+        Vertex start = new Vertex();
+        Vertex v1 = new Vertex().setName("V1");
+        Vertex v2 = new Vertex().setName("V2");
+        Edge e1 = new Edge().setSourceVertex(start).setTargetVertex(v2);
+        Model model = new Model().addEdge(e1)
+                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1));
+
+        MyVertexCounter count1 = new MyVertexCounter(model.build());
+        MyVertexCounter count2 = new MyVertexCounter(model.build(), e1.build());
+
+        start.build().accept(count1);
+        start.build().accept(count2);
+
+        // if e1 is a bridge then the vertex count will differ between count1 and count2
+        Assert.assertNotEquals(count1.count, count2.count);
+
+        // if we add a edge between v1 and v2 then e1 is no longer a bridge and count1 and count3 should be the same
+        model.addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+        MyVertexCounter count3 = new MyVertexCounter(model.build(), e1.build());
+        start.build().accept(count3);
+        Assert.assertEquals(count1.count, count3.count);
 
     }
 
@@ -131,10 +155,26 @@ public class VisitorTest {
         }
     }
 
-    private class MyTreeVisitor implements ElementVisitor<Element> {
+    private class MyVertexCounter implements ElementVisitor<Element> {
+
+        private RuntimeModel model;
+        private int count = 0;
+        private Set<Element> visited = new HashSet<>();
+
+        MyVertexCounter(RuntimeModel model) {
+            this(model, null);
+        }
+
+        MyVertexCounter(RuntimeModel model, RuntimeEdge skipEdge) {
+            this.model = model;
+            if (null != skipEdge) {
+                visited.add(skipEdge);
+            }
+        }
 
         @Override
         public void visit(Element element) {
+            visited.add(element);
             if (element instanceof RuntimeVertex) {
                 visit((RuntimeVertex)element);
             } else if (element instanceof RuntimeEdge) {
@@ -142,12 +182,23 @@ public class VisitorTest {
             }
         }
 
-        public void visit(RuntimeVertex element) {
-            System.out.println("Vertex: "+element.getName());
+        private void visit(RuntimeVertex vertex) {
+            count++;
+            for (RuntimeEdge edge: model.getOutEdges(vertex)) {
+                if (!isVisited(edge)) {
+                    edge.accept(this);
+                }
+            }
         }
 
-        public void visit(RuntimeEdge element) {
-            System.out.println("Edge: "+element.getName());
+        private void visit(RuntimeEdge edge) {
+            if (!isVisited(edge.getTargetVertex())) {
+                edge.getTargetVertex().accept(this);
+            }
+        }
+
+        private boolean isVisited(Element element) {
+            return visited.contains(element);
         }
     }
 }
