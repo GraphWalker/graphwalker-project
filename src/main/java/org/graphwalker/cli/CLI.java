@@ -28,12 +28,19 @@ package org.graphwalker.cli;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
+import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
+import com.sun.jersey.api.core.DefaultResourceConfig;
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.antlr.GeneratorFactory;
 import org.graphwalker.cli.antlr.GeneratorFactoryException;
 import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
+import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
+import org.graphwalker.cli.service.Restful;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
@@ -48,6 +55,7 @@ import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.ext.RuntimeDelegate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -57,6 +65,7 @@ public class CLI {
   JCommander jc;
   Options options;
   Offline offline;
+  Online online;
   Methods methods;
   Requirements requirements;
 
@@ -85,6 +94,9 @@ public class CLI {
     offline = new Offline();
     jc.addCommand("offline", offline);
 
+    online = new Online();
+    jc.addCommand("online", online);
+
     methods = new Methods();
     jc.addCommand("methods", methods);
 
@@ -98,6 +110,8 @@ public class CLI {
       if (jc.getParsedCommand() != null) {
         if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
           RunCommandOffline();
+        } else if (jc.getParsedCommand().equalsIgnoreCase("online")) {
+          RunCommandOnline();
         } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
           RunCommandMethods();
         } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
@@ -185,6 +199,40 @@ public class CLI {
 
     for (String name : names) {
       System.out.println(name);
+    }
+  }
+
+  private void RunCommandOnline()  throws Exception {
+    GraphMLModelFactory factory = new GraphMLModelFactory();
+
+    Iterator itr = online.model.iterator();
+    while(itr.hasNext()) {
+      Model model = null;
+      String modelFileName = (String) itr.next();
+      try {
+        model = factory.create(modelFileName);
+      } catch (ModelFactoryException e) {
+        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      }
+
+      PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
+      ExecutionContext context = new ExecutionContext(model, pathGenerator);
+      SetStartVertex(context);
+
+      // Todo: We cannot iterate of multiple models and
+      // instantiating the HttpServer every time.
+      // The creation of HttpServer needs to be done outside the while-loop
+      ResourceConfig rc = new DefaultResourceConfig();
+      rc.getSingletons().add(new Restful(new SimpleMachine(context), context));
+      HttpServer server = GrizzlyServerFactory.createHttpServer("http://localhost:9999", rc);
+      try {
+        server.start();
+        Thread.currentThread().join();
+      } catch (Exception e) {
+        logger.error("An error occurred when running command online: ", e);
+      } finally {
+          server.stop();
+      }
     }
   }
 
