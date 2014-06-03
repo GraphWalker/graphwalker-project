@@ -30,7 +30,6 @@ import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
-import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -55,7 +54,6 @@ import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.ext.RuntimeDelegate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
