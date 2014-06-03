@@ -68,7 +68,11 @@ public class Restful {
       } catch (MachineException e) {
         ;
       } finally {
-        return context.getCurrentElement().getName();
+        if (context.getCurrentElement().hasName()) {
+          return context.getCurrentElement().getName();
+        } else {
+          return "";
+        }
       }
     } else {
       return "";
