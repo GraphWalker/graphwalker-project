@@ -7,6 +7,7 @@
     <artifactId>graphwalker-editor</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <name>GraphWalker Editor</name>
+    <packaging>war</packaging>
     <inceptionYear>2011</inceptionYear>
 
     <organization>
@@ -54,6 +55,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>8.1.15.v20140411</version>
             </plugin>
         </plugins>
     </build>
