@@ -222,7 +222,8 @@ public class CLI {
       // The creation of HttpServer needs to be done outside the while-loop
       ResourceConfig rc = new DefaultResourceConfig();
       rc.getSingletons().add(new Restful(new SimpleMachine(context), context));
-      HttpServer server = GrizzlyServerFactory.createHttpServer("http://localhost:9999", rc);
+      HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
+      System.out.println("Press Control+C to end...");
       try {
         server.start();
         Thread.currentThread().join();
