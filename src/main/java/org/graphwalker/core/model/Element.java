@@ -32,5 +32,5 @@ package org.graphwalker.core.model;
 public interface Element {
     String getName();
     boolean hasName();
-    <V extends ElementVisitor> void accept(V visitor);
+    void accept(ElementVisitor visitor);
 }

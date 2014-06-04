@@ -53,7 +53,7 @@ public class VisitorTest {
 
     @Test
     public void visitVertex() {
-        new Vertex().setName("vertex").build().accept(new MyVertexVisitor());
+        new Vertex().setName("vertex").build().accept(new MyElementVisitor());
     }
 
     @Test
@@ -107,15 +107,15 @@ public class VisitorTest {
 
     }
 
-    private class MyVertexVisitor implements ElementVisitor<RuntimeVertex> {
+    private class MyElementVisitor implements ElementVisitor {
 
         @Override
-        public void visit(RuntimeVertex element) {
+        public void visit(Element element) {
             System.out.println(element.getName());
         }
     }
 
-    private class MyNamedVertexCounter implements ElementVisitor<Element> {
+    private class MyNamedVertexCounter implements ElementVisitor {
 
         int count = 0;
 
@@ -133,29 +133,32 @@ public class VisitorTest {
         }
     }
 
-    private class MyLoopEdgeFinder implements ElementVisitor<RuntimeModel> {
+    private class MyLoopEdgeFinder implements ElementVisitor {
 
         int count = 0;
 
         @Override
-        public void visit(RuntimeModel model) {
-            for (RuntimeEdge edge: model.getEdges()) {
-                if (edge.getSourceVertex().equals(edge.getTargetVertex())) {
-                    count++;
+        public void visit(Element element) {
+            if (element instanceof RuntimeModel) {
+                RuntimeModel model = (RuntimeModel)element;
+                for (RuntimeEdge edge : model.getEdges()) {
+                    if (edge.getSourceVertex().equals(edge.getTargetVertex())) {
+                        count++;
+                    }
                 }
             }
         }
     }
 
-    private class MyEdgeVisitor implements ElementVisitor<RuntimeEdge> {
+    private class MyEdgeVisitor implements ElementVisitor {
 
         @Override
-        public void visit(RuntimeEdge element) {
+        public void visit(Element element) {
             System.out.println(element.getName());
         }
     }
 
-    private class MyVertexCounter implements ElementVisitor<Element> {
+    private class MyVertexCounter implements ElementVisitor {
 
         private RuntimeModel model;
         private int count = 0;

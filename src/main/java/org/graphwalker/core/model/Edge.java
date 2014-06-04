@@ -174,8 +174,9 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         }
 
         @Override
-        public <V extends ElementVisitor> void accept(V visitor) {
+        public void accept(ElementVisitor visitor) {
             visitor.visit(this);
         }
+
     }
 }

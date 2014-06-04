@@ -97,7 +97,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         }
 
         @Override
-        public <V extends ElementVisitor> void accept(V visitor) {
+        public void accept(ElementVisitor visitor) {
             visitor.visit(this);
         }
     }
