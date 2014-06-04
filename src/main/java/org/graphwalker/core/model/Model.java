@@ -231,7 +231,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
 
         @Override
-        public <V extends ElementVisitor> void accept(V visitor) {
+        public void accept(ElementVisitor visitor) {
             visitor.visit(this);
         }
     }

@@ -28,6 +28,7 @@ package org.graphwalker.core.algorithm;
 
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.ElementVisitor;
 import org.graphwalker.core.model.Path;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -44,47 +46,98 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 public class Fleury implements Algorithm {
 
     private final ExecutionContext context;
-    private Set<RuntimeEdge> visited;
 
     public Fleury(ExecutionContext context) {
         this.context = context;
     }
 
     public Path<Element> getTrail(RuntimeVertex vertex) {
-        visited = new HashSet<>();
+        Set<Element> visitedEdges = new HashSet<>();
         // Step 1
         Path<Element> trail = new Path<>();
         RuntimeVertex currentVertex = vertex;
         trail.add(vertex);
-        List<RuntimeEdge> edges = new ArrayList<>(context.getModel().getEdges());
-        while (!edges.isEmpty()) {
+        List<RuntimeEdge> availableEdges = new ArrayList<>(context.getModel().getEdges());
+        while (!availableEdges.isEmpty()) {
             // Step 2
-            RuntimeEdge edge = getNextEdge(currentVertex);
+            RuntimeEdge edge = getNextEdge(context.getModel(), visitedEdges, currentVertex);
             // Step 3
             trail.add(edge);
+            visitedEdges.add(edge);
             currentVertex = edge.getTargetVertex();
-            trail.add(vertex);
+            trail.add(currentVertex);
             // Step 4
-            edges.remove(edge);
+            availableEdges.remove(edge);
         }
         return trail;
     }
 
-    private RuntimeEdge getNextEdge(RuntimeVertex vertex) {
-
-        // TODO: We need to be able to remove edges from the model in order to see if it's a bridge!?
-        /*
-        int max = context.getAlgorithm(DepthFirstSearch.class).getConnectedComponent(vertex).size();
-        for (RuntimeEdge edge: context.getModel().getOutEdges(vertex)) {
-            if (!visited.contains(edge)) {
-                int count = context.getAlgorithm(DepthFirstSearch.class).getConnectedComponent(vertex).size();
-                //if () {
-
-                //}
+    private RuntimeEdge getNextEdge(RuntimeModel model, Set<Element> visitedEdges, RuntimeVertex vertex) {
+        List<RuntimeEdge> bridges = new ArrayList<>();
+        for (RuntimeEdge edge: model.getOutEdges(vertex)) {
+            if (!visitedEdges.contains(edge)) {
+                if (!isBridge(model, visitedEdges, edge)) {
+                    return edge;
+                } else {
+                    bridges.add(edge);
+                }
             }
         }
-        */
+        if (!bridges.isEmpty()) {
+            return bridges.get(0);
+        }
         throw new AlgorithmException();
     }
 
+    private boolean isBridge(RuntimeModel model, Set<Element> visitedElements, RuntimeEdge edge) {
+        VertexCounter counter1 = new VertexCounter(model, visitedElements, edge);
+        VertexCounter counter2 = new VertexCounter(model);
+        edge.getSourceVertex().accept(counter1);
+        edge.getSourceVertex().accept(counter2);
+        return counter1.getCount() < counter2.getCount();
+    }
+
+    private static class VertexCounter implements ElementVisitor {
+
+        private final RuntimeModel model;
+        private final Set<Element> visitedElements = new HashSet<>();
+        private int count = 0;
+
+        public VertexCounter(RuntimeModel model) {
+            this.model = model;
+        }
+
+        public VertexCounter(RuntimeModel model, Set<Element> visitedElements, RuntimeEdge edge) {
+            this.model = model;
+            visitedElements.addAll(visitedElements);
+            visitedElements.add(edge);
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        private boolean isVisited(Element element) {
+            return visitedElements.contains(element);
+        }
+
+        @Override
+        public void visit(Element element) {
+            visitedElements.add(element);
+            if (element instanceof RuntimeVertex) {
+                RuntimeVertex vertex = (RuntimeVertex)element;
+                count++;
+                for (RuntimeEdge edge: model.getOutEdges(vertex)) {
+                    if (!isVisited(edge)) {
+                        edge.accept(this);
+                    }
+                }
+            } else if (element instanceof RuntimeEdge) {
+                RuntimeEdge edge = (RuntimeEdge)element;
+                if (!isVisited(edge.getTargetVertex())) {
+                    edge.getTargetVertex().accept(this);
+                }
+            }
+        }
+    }
 }

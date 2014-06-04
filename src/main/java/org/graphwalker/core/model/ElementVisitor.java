@@ -29,7 +29,7 @@ package org.graphwalker.core.model;
 /**
  * @author Nils Olsson
  */
-public interface ElementVisitor<E extends Element> {
+public interface ElementVisitor {
 
-    void visit(E element);
+    void visit(Element element);
 }
