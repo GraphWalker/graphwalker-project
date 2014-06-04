@@ -217,20 +217,22 @@ public class CLI {
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
       SetStartVertex(context);
 
-      // Todo: We cannot iterate of multiple models and
-      // instantiating the HttpServer every time.
-      // The creation of HttpServer needs to be done outside the while-loop
-      ResourceConfig rc = new DefaultResourceConfig();
-      rc.getSingletons().add(new Restful(new SimpleMachine(context), context));
-      HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
-      System.out.println("Press Control+C to end...");
-      try {
-        server.start();
-        Thread.currentThread().join();
-      } catch (Exception e) {
-        logger.error("An error occurred when running command online: ", e);
-      } finally {
+      if (online.restful) {
+        // Todo: We cannot iterate of multiple models and
+        // instantiating the HttpServer every time.
+        // The creation of HttpServer needs to be done outside the while-loop
+        ResourceConfig rc = new DefaultResourceConfig();
+        rc.getSingletons().add(new Restful(new SimpleMachine(context), context));
+        HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
+        System.out.println("Press Control+C to end...");
+        try {
+          server.start();
+          Thread.currentThread().join();
+        } catch (Exception e) {
+          logger.error("An error occurred when running command online: ", e);
+        } finally {
           server.stop();
+        }
       }
     }
   }

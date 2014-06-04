@@ -39,7 +39,7 @@ public class Online {
                   "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
   public List<String> model = new ArrayList<String>();
 
-  @Parameter(names = {"--restful", "-r"}, required = false,
+  @Parameter(names = {"--restful", "-r"}, required = false, arity = 1,
           description = "Starts as a Restful API service.")
   public boolean restful = true;
 }
