@@ -26,8 +26,16 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.algorithm.Eulerian;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
@@ -35,6 +43,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 public final class ShortestAllPaths implements PathGenerator {
 
     private final StopCondition stopCondition;
+    private Path<Element> path = null;
 
     public ShortestAllPaths(StopCondition stopCondition) {
         this.stopCondition = stopCondition;
@@ -47,8 +56,28 @@ public final class ShortestAllPaths implements PathGenerator {
 
     @Override
     public ExecutionContext getNextStep(ExecutionContext context) {
+        if (null == path) {
+            path = getPath(context);
+        }
+        context.setCurrentElement(path.removeFirst());
+        return context;
+    }
 
-        return null;
+    private Path<Element> getPath(ExecutionContext context) {
+        Element element = context.getCurrentElement();
+        if (null == element) {
+            element = context.getNextElement();
+        }
+        if (element instanceof RuntimeVertex) {
+            return getPath(context, (RuntimeVertex)element);
+        } else {
+            RuntimeEdge edge = (RuntimeEdge)element;
+            return getPath(context, edge.getTargetVertex());
+        }
+    }
+
+    private Path<Element> getPath(ExecutionContext contex, RuntimeVertex vertex) {
+        return contex.getAlgorithm(Eulerian.class).getEulerPath(vertex);
     }
 
     @Override

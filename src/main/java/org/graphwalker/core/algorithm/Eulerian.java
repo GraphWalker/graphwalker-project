@@ -85,7 +85,7 @@ public final class Eulerian implements Algorithm {
 
     public Path<Element> getEulerPath(RuntimeVertex vertex) {
         if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
-            throw new AlgorithmException();
+            throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
         }
         return context.getAlgorithm(Fleury.class).getTrail(vertex);
     }
