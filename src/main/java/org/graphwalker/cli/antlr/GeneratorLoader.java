@@ -91,6 +91,9 @@ public class GeneratorLoader extends CLI_ParserBaseListener {
         if ( ctx.getChild(0).getText().equalsIgnoreCase("random") ) {
             pathGenerators.add(new RandomPath(stopCondition));
         }
+        else if ( ctx.getChild(0).getText().equalsIgnoreCase("quick_random") ) {
+          pathGenerators.add(new QuickRandomPath(stopCondition));
+        }
         else if ( ctx.getChild(0).getText().equalsIgnoreCase("a_star") ) {
           pathGenerators.add(new AStarPath((NamedStopCondition)stopCondition));
         }
