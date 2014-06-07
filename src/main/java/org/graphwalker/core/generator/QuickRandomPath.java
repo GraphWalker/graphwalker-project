@@ -31,12 +31,10 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -67,8 +65,13 @@ public final class QuickRandomPath implements PathGenerator {
       unvisitedElements.remove(context.getCurrentElement());
     }
     if (littleWalk==null || littleWalk.isEmpty()) {
-      Element e = unvisitedElements.get(random.nextInt(unvisitedElements.size()));
-      littleWalk = findShortestPath(context, e);
+      if (unvisitedElements.isEmpty()) {
+        Element e = context.getModel().getElements().get(random.nextInt(context.getModel().getElements().size()));
+        littleWalk = findShortestPath(context, e);
+      } else {
+        Element e = unvisitedElements.get(random.nextInt(unvisitedElements.size()));
+        littleWalk = findShortestPath(context, e);
+      }
     }
 
     if (littleWalk.isEmpty()) {
