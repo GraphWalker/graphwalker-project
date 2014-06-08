@@ -19,7 +19,6 @@
         <dependency>
             <groupId>org.graphwalker</groupId>
             <artifactId>graphwalker-io</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
