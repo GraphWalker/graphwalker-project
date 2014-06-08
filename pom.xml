@@ -42,7 +42,7 @@
         <module>../graphwalker-io</module>
         <module>../graphwalker-cli</module>
         <module>../graphwalker-dashboard</module>
-        <module>../graphwalker-intellij-plugin</module>
+        <!--module>../graphwalker-intellij-plugin</module-->
         <module>../graphwalker-maven-plugin</module>
     </modules>
 
