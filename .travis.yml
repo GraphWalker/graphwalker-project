@@ -16,4 +16,4 @@ before_install:
  - sudo apt-get update -qq
 
 install:
- - mvn -N -q clean deploy
+ - mvn -N -q clean install
