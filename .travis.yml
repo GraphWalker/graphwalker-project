@@ -16,7 +16,7 @@ before_install:
  - sudo apt-get update -qq
 
 install:
- - mvn -N -q clean install
+ - mvn -N -q deploy --settings deploy.xml
 
 script:
  - mvn -N test -B
