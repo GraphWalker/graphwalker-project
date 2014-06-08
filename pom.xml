@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.graphwalker</groupId>
+    <artifactId>graphwalker-project</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+    <name>GraphWalker Project</name>
+    <inceptionYear>2011</inceptionYear>
+    <packaging>pom</packaging>
+
+    <organization>
+        <name>GraphWalker</name>
+        <url>http://graphwalker.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>MIT-License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <modules>
+        <module>../graphwalker-core</module>
+        <module>../graphwalker-java</module>
+        <module>../graphwalker-io</module>
+        <module>../graphwalker-cli</module>
+        <module>../graphwalker-dashboard</module>
+        <module>../graphwalker-intellij-plugin</module>
+        <module>../graphwalker-maven-plugin</module>
+    </modules>
+
+    
+</project>
