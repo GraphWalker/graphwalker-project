@@ -11,10 +11,12 @@ env:
   global:
     - secure: "Si+FksmD04Qev09hkYqWYN4rYQderrvMt6/kZBTgEek/v4Bd8QVCcbkZemYQCLnfhm94fNJDVrvpbrZhkeSWhCXKnnsYMH9oaxQWSd4aUI55V9QAseVAWMod5d2TSD7kTIo1owV5xh9LHTLmwnv4v6WmV3dSHSQc0zQh09dFC/M="
     - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
+    - secure: "GUm6cWin1lPdhpELmndQFEUgS0rgMzo/b3eQJsBgNy3Q7SvpNt46xrTyU2vBMLnrwdZ3zd7jk3hlfgALL2SDKNzTo/ztoWzZLdBvv6RVYkVFnM9EGKdigSulnl2vmwUsJoJbfcZ2alydPY+VmZyaIrgIh9RFfZruU1ulbl5dVp0="
+    - secure: "ghC+/KJ/fc4gcYXtORouEzYmHB2Ta0lOxwUdLV05L9XLKS68n07mvooaMvoozRGhIH3nv73ZBOlSrjutdTzL3MoO9M7qeJEIMKoFlgwSInFEvDC8w1DChmXTvhGWhmzwvD2aoonXDLVFqVwJkYAmkM2g3s5sKWHojI9/cPWeY+A="
 
 before_install:
- - sudo apt-get update -qq
- - git clone --depth=50 --branch=master git://github.com/GraphWalker/graphwalker-project.git ../graphwalker-project
+  - sudo apt-get update -qq
+  - git clone --depth=50 --branch=master git://github.com/GraphWalker/graphwalker-project.git ../graphwalker-project
 
 install:
- - mvn -q deploy --settings ../graphwalker-project/deploy.xml
+  - mvn -q deploy --settings ../graphwalker-project/deploy.xml
