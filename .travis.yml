@@ -17,3 +17,6 @@ before_install:
 
 install:
  - mvn -N -q clean install
+
+script:
+ - mvn -N test -B
