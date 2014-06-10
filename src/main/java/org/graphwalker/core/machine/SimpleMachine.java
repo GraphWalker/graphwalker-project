@@ -29,15 +29,13 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Vertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
@@ -79,21 +77,67 @@ public final class SimpleMachine extends ObservableMachine {
             }
             context.setCurrentElement(context.getNextElement());
         } else {
-            context.getPathGenerator().getNextStep(context);
+            if (isVertex(currentContext.getCurrentElement())) {
+                RuntimeVertex vertex = (RuntimeVertex)currentContext.getCurrentElement();
+                if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
+                    List<SharedStateTupel> candidates = getPossibleSharedStates(vertex.getSharedState());
+                    // TODO: If we need other way of determine the next state, we should have some interface for this
+                    Random random = new Random(System.nanoTime());
+                    SharedStateTupel candidate = candidates.get(random.nextInt(candidates.size()));
+                    if (!candidate.getVertex().equals(currentContext.getCurrentElement())) {
+                        candidate.context.setCurrentElement(candidate.getVertex());
+                        currentContext = candidate.context;
+                    } else {
+                        context.getPathGenerator().getNextStep(context);
+                    }
+                } else {
+                    context.getPathGenerator().getNextStep(context);
+                }
+            } else {
+                context.getPathGenerator().getNextStep(context);
+            }
         }
         setChanged();
         notifyObservers(context.getCurrentElement());
     }
 
+    private boolean isVertex(Element element) {
+        return element instanceof RuntimeVertex;
+    }
+
+    private boolean hasPossibleSharedStates(RuntimeVertex vertex) {
+        return null != vertex.getSharedState() && 0 < getPossibleSharedStates(vertex.getSharedState()).size();
+    }
+
+    private List<SharedStateTupel> getPossibleSharedStates(String sharedState) {
+        List<SharedStateTupel> sharedStates = new ArrayList<>();
+        for (ExecutionContext context: contexts) {
+            for (RuntimeVertex vertex: context.getModel().getSharedStates(sharedState)) {
+                if (context.getPathGenerator().hasNextStep(context)) {
+                    sharedStates.add(new SharedStateTupel(context, vertex));
+                }
+            }
+        }
+        return sharedStates;
+    }
+
     @Override
     public boolean hasNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        if (currentContext.getPathGenerator().hasNextStep(currentContext)) {
+        if (hasNextStep(currentContext)) {
             return true;
         }
-        // Find another context to execute!?
-        // ...
+        if (isVertex(currentContext.getCurrentElement())) {
+            RuntimeVertex vertex = (RuntimeVertex)currentContext.getCurrentElement();
+            if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    private boolean hasNextStep(ExecutionContext context) {
+        return context.getPathGenerator().hasNextStep(context);
     }
 
     private void execute(Element element) {
@@ -126,4 +170,22 @@ public final class SimpleMachine extends ObservableMachine {
         }
     }
 
+    private static class SharedStateTupel {
+
+        private final ExecutionContext context;
+        private final RuntimeVertex vertex;
+
+        private SharedStateTupel(ExecutionContext context, RuntimeVertex vertex) {
+            this.context = context;
+            this.vertex = vertex;
+        }
+
+        public ExecutionContext getContext() {
+            return context;
+        }
+
+        public RuntimeVertex getVertex() {
+            return vertex;
+        }
+    }
 }

@@ -43,7 +43,7 @@ import java.util.Deque;
 public class ShortestAllPathsTest {
 
     @Test
-         public void bridge() {
+    public void bridge() {
         Vertex v1 = new Vertex();
         Vertex v2 = new Vertex();
         Vertex v3 = new Vertex();
