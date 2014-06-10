@@ -79,6 +79,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<String, List<RuntimeVertex>> verticesByNameCache;
         private final Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache;
         private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
+        private final Map<String, List<RuntimeVertex>> sharedStateCache;
 
         private RuntimeModel(Model model) {
             super(null);
@@ -91,10 +92,19 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.elementsCache = createElementCache();
             this.elementsByNameCache = createElementsByNameCache();
             this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
+            this.sharedStateCache = createSharedStateCache();
         }
 
         public List<RuntimeVertex> getVertices() {
             return vertices;
+        }
+
+        public List<RuntimeVertex> getSharedStates(String sharedState) {
+            return sharedStateCache.get(sharedState);
+        }
+
+        public boolean hasSharedState(String sharedState) {
+            return sharedStateCache.containsKey(sharedState);
         }
 
         public List<RuntimeVertex> findVertices(String name) {
@@ -220,6 +230,19 @@ public final class Model implements Builder<Model.RuntimeModel> {
                 }
             }
             return makeImmutable(outEdgesByVertexCache);
+        }
+
+        private Map<String, List<RuntimeVertex>> createSharedStateCache() {
+            Map<String, List<RuntimeVertex>> sharedStateCache = new HashMap<>();
+            for (RuntimeVertex vertex: vertices) {
+                if (vertex.hasSharedState()) {
+                    if (!sharedStateCache.containsKey(vertex.getSharedState())) {
+                        sharedStateCache.put(vertex.getSharedState(), new ArrayList<RuntimeVertex>());
+                    }
+                    sharedStateCache.get(vertex.getSharedState()).add(vertex);
+                }
+            }
+            return makeImmutable(sharedStateCache);
         }
 
         private <K, E> Map<K, List<E>> makeImmutable(Map<K, List<E>> source) {

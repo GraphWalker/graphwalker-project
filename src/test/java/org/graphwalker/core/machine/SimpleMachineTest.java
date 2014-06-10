@@ -34,6 +34,9 @@ import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -99,5 +102,24 @@ public class SimpleMachineTest {
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(3l));
+    }
+
+    @Test
+    public void sharedState() {
+        Vertex start = new Vertex();
+        Vertex stop  = new Vertex();
+        Model model1 = new Model().addEdge(new Edge()
+            .setSourceVertex(start).setTargetVertex(new Vertex().setSharedState("MyState")));
+        Model model2 = new Model().addEdge(new Edge()
+            .setSourceVertex(new Vertex().setSharedState("MyState")).setTargetVertex(stop));
+        List<ExecutionContext> contexts = new ArrayList<>();
+        contexts.add(new ExecutionContext(model1, new RandomPath(new VertexCoverage(100))).setNextElement(start));
+        contexts.add(new ExecutionContext(model2, new RandomPath(new VertexCoverage(100))));
+        Machine machine = new SimpleMachine(contexts);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        int i = 0;
+        // TODO: Add assertions on the taken path, based on the data from profiler (needs to be implemented)
     }
 }
