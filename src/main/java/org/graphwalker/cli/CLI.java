@@ -247,7 +247,8 @@ public class CLI {
       try {
         model = factory.create(modelFileName);
       } catch (ModelFactoryException e) {
-        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?\n"+
+        e.getMessage());
       }
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
