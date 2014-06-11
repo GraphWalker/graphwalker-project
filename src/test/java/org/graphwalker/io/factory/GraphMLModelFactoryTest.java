@@ -57,6 +57,11 @@ public class GraphMLModelFactoryTest {
         Assert.assertThat(sharedB.getEdges().size(), is(1));
     }
 
+    @Test
+    public void login() {
+        ModelFactory factory = new GraphMLModelFactory();
+        Model model = factory.create("graphml/Login.graphml");
+    }
 
     @Test
     public void uc01() {
