@@ -79,25 +79,52 @@ public final class GraphMLModelFactory implements ModelFactory {
                 NodeType node = (NodeType)object;
                 for (DataType data: node.getDataArray()) {
                     if (0 < data.getDomNode().getChildNodes().getLength()) {
-                        ShapeNodeType shape = ShapeNodeDocument.Factory.parse(data.xmlText()).getShapeNode();
-                        StringBuilder label = new StringBuilder();
-                        for (NodeLabelType nodeLabel : shape.getNodeLabelArray()) {
-                            label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
+                        if (isSupportedNode(data.xmlText())) {
+                            StringBuilder label = new StringBuilder();
+                            for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
+                                label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
+                            }
+                            VertexParser.ParseContext context = new VertexParser(getTokenStream(label.toString())).parse();
+                            Vertex vertex = new Vertex();
+                            if (null != context.name()) {
+                                vertex.setName(context.name().getText());
+                            }
+                            if (null != context.shared() && null != context.shared().Identifier()) {
+                                vertex.setSharedState(context.shared().Identifier().getText());
+                            }
+                            elements.put(node.getId(), vertex);
+                            model.addVertex(vertex);
                         }
-                        VertexParser.ParseContext context = new VertexParser(getTokenStream(label.toString())).parse();
-                        Vertex vertex = new Vertex();
-                        if (null != context.name()) {
-                            vertex.setName(context.name().getText());
-                        }
-                        if (null != context.shared() && null != context.shared().Identifier()) {
-                            vertex.setSharedState(context.shared().Identifier().getText());
-                        }
-                        elements.put(node.getId(), vertex);
-                        model.addVertex(vertex);
                     }
                 }
             }
         }
+    }
+
+    private boolean isSupportedNode(String xml) {
+        return xml.contains("GenericNode")
+                || xml .contains("ShapeNode")
+                || xml.contains("GenericGroupNode")
+                || xml.contains("GroupNode")
+                || xml.contains("ImageNode")
+                || xml.contains("TableNode");
+    }
+
+    private com.yworks.xml.graphml.NodeType getSupportedNode(String xml) throws XmlException {
+        if (xml.contains("GenericNode")) {
+            return GenericNodeDocument.Factory.parse(xml).getGenericNode();
+        } else if (xml.contains("ShapeNode")) {
+            return ShapeNodeDocument.Factory.parse(xml).getShapeNode();
+        } else if (xml.contains("GenericGroupNode")) {
+            return GenericGroupNodeDocument.Factory.parse(xml).getGenericGroupNode();
+        } else if (xml.contains("GroupNode")) {
+            return GroupNodeDocument.Factory.parse(xml).getGroupNode();
+        } else if (xml.contains("ImageNode")) {
+            return ImageNodeDocument.Factory.parse(xml).getImageNode();
+        } else if (xml.contains("TableNode")) {
+            return TableNodeDocument.Factory.parse(xml).getTableNode();
+        }
+        throw new ModelFactoryException("Unsupported node type: "+xml);
     }
 
     private void addEdges(Model model, GraphmlDocument document) throws XmlException {
@@ -106,38 +133,59 @@ public final class GraphMLModelFactory implements ModelFactory {
                 EdgeType edgeType = (EdgeType)object;
                 for (DataType data: edgeType.getDataArray()) {
                     if (0 < data.getDomNode().getChildNodes().getLength()) {
-                        PolyLineEdgeType polyLineEdge = PolyLineEdgeDocument.Factory.parse(data.xmlText()).getPolyLineEdge();
-                        StringBuilder label = new StringBuilder();
-                        for (EdgeLabelType edgeLabel : polyLineEdge.getEdgeLabelArray()) {
-                            label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
+                        if (isSupportedEdge(data.xmlText())) {
+                            StringBuilder label = new StringBuilder();
+                            for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
+                                label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
+                            }
+                            EdgeParser.ParseContext context = new EdgeParser(getTokenStream(label.toString())).parse();
+                            Edge edge = new Edge();
+                            if (null != elements.get(edgeType.getSource())) {
+                                edge.setSourceVertex(elements.get(edgeType.getSource()));
+                            }
+                            if (null != elements.get(edgeType.getTarget())) {
+                                edge.setTargetVertex(elements.get(edgeType.getTarget()));
+                            }
+                            if (null != context.name()) {
+                                edge.setName(context.name().getText());
+                            }
+                            if (null != context.guard()) {
+                                // TODO: Fix this in the parser
+                                String text = context.guard().getText().trim();
+                                edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
+                            }
+                            if (null != context.actions()) {
+                                edge.addActions(convert(context.actions().action()));
+                            }
+                            if (null != context.blocked()) {
+                                edge.setBlocked(true);
+                            }
+                            model.addEdge(edge);
                         }
-                        EdgeParser.ParseContext context = new EdgeParser(getTokenStream(label.toString())).parse();
-                        Edge edge = new Edge();
-                        if (null != elements.get(edgeType.getSource())) {
-                            edge.setSourceVertex(elements.get(edgeType.getSource()));
-                        }
-                        if (null != elements.get(edgeType.getTarget())) {
-                            edge.setTargetVertex(elements.get(edgeType.getTarget()));
-                        }
-                        if (null != context.name()) {
-                            edge.setName(context.name().getText());
-                        }
-                        if (null != context.guard()) {
-                            // TODO: Fix this in the parser
-                            String text = context.guard().getText().trim();
-                            edge.setGuard(new Guard(text.substring(1, text.length()-1)));
-                        }
-                        if (null != context.actions()) {
-                            edge.addActions(convert(context.actions().action()));
-                        }
-                        if (null != context.blocked()) {
-                            edge.setBlocked(true);
-                        }
-                        model.addEdge(edge);
                     }
                 }
             }
         }
+    }
+
+    private boolean isSupportedEdge(String xml) {
+        return xml.contains("PolyLineEdge")
+                || xml.contains("GenericEdge")
+                || xml.contains("ArcEdge")
+                || xml.contains("QuadCurveEdge");
+    }
+
+    private com.yworks.xml.graphml.EdgeType getSupportedEdge(String xml) throws XmlException {
+        if (xml.contains("GenericEdge")) {
+            return GenericEdgeDocument.Factory.parse(xml).getGenericEdge();
+        } else if (xml.contains("PolyLineEdge")) {
+            return PolyLineEdgeDocument.Factory.parse(xml).getPolyLineEdge();
+        } else if (xml.contains("ArcEdge")) {
+            return ArcEdgeDocument.Factory.parse(xml).getArcEdge();
+        } else if (xml.contains("QuadCurveEdge")) {
+            return QuadCurveEdgeDocument.Factory.parse(xml).getQuadCurveEdge();
+        }
+        throw new ModelFactoryException("Unsupported edge type: "+xml);
     }
 
     private List<Action> convert(List<ActionContext> actionContexts) {
