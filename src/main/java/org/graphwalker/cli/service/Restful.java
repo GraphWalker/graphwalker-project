@@ -26,9 +26,8 @@ package org.graphwalker.cli.service;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.core.machine.SimpleMachine;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,12 +38,10 @@ import javax.ws.rs.Produces;
  */
 @Path("graphwalker")
 public class Restful {
-  private Machine machine;
-  private ExecutionContext context;
+  private SimpleMachine machine;
 
-  public Restful(Machine machine, ExecutionContext context) {
+  public Restful(SimpleMachine machine) {
     this.machine = machine;
-    this.context = context;
   }
 
   @GET
@@ -62,20 +59,16 @@ public class Restful {
   @Produces("text/plain")
   @Path("getNext")
   public String getNext() {
-    if (machine.hasNextStep()) {
-      try {
-        machine.getNextStep();
-      } catch (MachineException e) {
-        ;
-      } finally {
-        if (context.getCurrentElement().hasName()) {
-          return context.getCurrentElement().getName();
-        } else {
-          return "";
-        }
+    String retStr = "";
+    try {
+      machine.getNextStep();
+    } catch (MachineException e) {
+      ;
+    } finally {
+      if (machine.getCurrentContext().getCurrentElement().hasName()) {
+        retStr = machine.getCurrentContext().getCurrentElement().getName();
       }
-    } else {
-      return "";
     }
+    return retStr;
   }
 }
