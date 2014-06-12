@@ -126,12 +126,8 @@ public final class SimpleMachine extends ObservableMachine {
     @Override
     public boolean hasNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        if (hasNextStep(currentContext)) {
-            return true;
-        }
-        if (isVertex(currentContext.getCurrentElement())) {
-            RuntimeVertex vertex = (RuntimeVertex)currentContext.getCurrentElement();
-            if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
+        for (ExecutionContext context: contexts) {
+            if (hasNextStep(context)) {
                 return true;
             }
         }
