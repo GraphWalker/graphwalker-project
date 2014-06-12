@@ -28,6 +28,7 @@ package org.graphwalker.core.statistics;
 
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
 
 /**
  * @author Nils Olsson
@@ -36,43 +37,32 @@ public final class Profiler {
 
     private final ExecutionContext context;
     private final Profile profile = new Profile();
+    private long timestamp = 0;
 
     public Profiler(ExecutionContext context) {
         this.context = context;
     }
 
     public void start() {
-        Element element = context.getCurrentElement();
-        if (null != element) {
-            if (!profile.containsKey(element)) {
-                profile.put(element, new ProfileUnit());
-            }
-            profile.setTotalVisitCount(profile.getTotalVisitCount()+1);
-            ProfileUnit profileUnit = profile.get(element);
-            profileUnit.setVisitCount(profileUnit.getVisitCount()+1);
-        }
+        timestamp = System.nanoTime();
     }
 
     public void stop() {
-        /*
         Element element = context.getCurrentElement();
         if (null != element) {
-            if (!profile.containsKey(element)) {
-                profile.put(element, new ProfileUnit());
-            }
-            profile.setTotalVisitCount(profile.getTotalVisitCount()+1);
-            ProfileUnit profileUnit = profile.get(element);
-            profileUnit.setVisitCount(profileUnit.getVisitCount()+1);
+            profile.addExecution(element, new Execution(timestamp, System.nanoTime()-timestamp));
         }
-        */
     }
 
     public boolean isVisited(Element element) {
-        ProfileUnit profileUnit = profile.get(element);
-        return null != profileUnit && profileUnit.getVisitCount() > 0;
+        return profile.containsKey(element);
     }
 
     public long getTotalVisitCount() {
-        return profile.getTotalVisitCount();
+        return profile.getTotalExecutionCount();
+    }
+
+    public Path<Element> getPath() {
+        return profile.getPath();
     }
 }

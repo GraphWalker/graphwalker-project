@@ -27,27 +27,102 @@ package org.graphwalker.core.statistics;
  */
 
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Nils Olsson
  */
 public final class Profile extends HashMap<Element, ProfileUnit> {
-/* TODO: should contain information about an Element
-    1. cumulative execution count
-    2. cumulative execution time
-    3. start execution timestamp
-    4. vertex visit count
-    5. edge visit count
-*/
-    private long totalVisitCount = 0;
 
-    public long getTotalVisitCount() {
-        return totalVisitCount;
+    private final Path<Element> path = new Path<>();
+
+    public void addExecution(Element element, Execution execution) {
+        path.push(element);
+        if (!containsKey(element)) {
+            put(element, new ProfileUnit(execution));
+        } else {
+            get(element).addExecution(execution);
+        }
     }
 
-    public void setTotalVisitCount(long totalVisitCount) {
-        this.totalVisitCount = totalVisitCount;
+    public Path<Element> getPath() {
+        return path;
+    }
+
+    public long getTotalExecutionCount() {
+        return getTotalExecutionCount(Element.class);
+    }
+
+    public long getTotalExecutionCount(Class<? extends Element> type) {
+        long count = 0;
+        for (Element element: keySet()) {
+            if (type.isAssignableFrom(element.getClass())) {
+                count += get(element).getExecutionCount();
+            }
+        }
+        return count;
+    }
+
+    public long getTotalExecutionTime() {
+        return getTotalExecutionTime(TimeUnit.NANOSECONDS);
+    }
+
+    public long getTotalExecutionTime(TimeUnit unit) {
+        return getTotalExecutionTime(Element.class, unit);
+    }
+
+    public long getTotalExecutionTime(Class<?> type, TimeUnit unit) {
+        long executionTime = 0;
+        for (Element element: keySet()) {
+            if (type.isAssignableFrom(element.getClass())) {
+                executionTime += get(element).getTotalExecutionTime(unit);
+            }
+        }
+        return TimeUnit.NANOSECONDS.convert(executionTime, unit);
+    }
+
+    public long getFirstExecutionTimestamp() {
+        return getFirstExecutionTimestamp(Element.class);
+    }
+
+    public long getFirstExecutionTimestamp(Class<? extends Element> type) {
+        return getFirstExecutionTimestamp(type, TimeUnit.NANOSECONDS);
+    }
+
+    public long getFirstExecutionTimestamp(Class<? extends Element> type, TimeUnit unit) {
+        long timestamp = Long.MAX_VALUE;
+        for (Element element: keySet()) {
+            if (type.isAssignableFrom(element.getClass())) {
+                long firstExecutionTimestamp = get(element).getFirstExecutionTimestamp(unit);
+                if (timestamp > firstExecutionTimestamp) {
+                    timestamp = firstExecutionTimestamp;
+                }
+            }
+        }
+        return timestamp;
+    }
+
+    public long getLastExecutionTimestamp() {
+        return getLastExecutionTimestamp(Element.class);
+    }
+
+    public long getLastExecutionTimestamp(Class<? extends Element> type) {
+        return getLastExecutionTimestamp(type, TimeUnit.NANOSECONDS);
+    }
+
+    public long getLastExecutionTimestamp(Class<? extends Element> type, TimeUnit unit) {
+        long timestamp = Long.MIN_VALUE;
+        for (Element element: keySet()) {
+            if (type.isAssignableFrom(element.getClass())) {
+                long lastExecutionTimestamp = get(element).getLastExecutionTimestamp(unit);
+                if (timestamp < lastExecutionTimestamp) {
+                    timestamp = lastExecutionTimestamp;
+                }
+            }
+        }
+        return timestamp;
     }
 }
