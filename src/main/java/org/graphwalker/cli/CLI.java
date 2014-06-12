@@ -202,7 +202,7 @@ public class CLI {
 
   private void RunCommandOnline()  throws Exception {
     GraphMLModelFactory factory = new GraphMLModelFactory();
-
+    ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
     Iterator itr = online.model.iterator();
     while(itr.hasNext()) {
       Model model = null;
@@ -216,30 +216,31 @@ public class CLI {
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
       SetStartVertex(context);
+      executionContexts.add(context);
+    }
 
-      if (online.restful) {
-        // Todo: We cannot iterate of multiple models and
-        // instantiating the HttpServer every time.
-        // The creation of HttpServer needs to be done outside the while-loop
-        ResourceConfig rc = new DefaultResourceConfig();
-        rc.getSingletons().add(new Restful(new SimpleMachine(context), context));
-        HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
-        System.out.println("Press Control+C to end...");
-        try {
-          server.start();
-          Thread.currentThread().join();
-        } catch (Exception e) {
-          logger.error("An error occurred when running command online: ", e);
-        } finally {
-          server.stop();
-        }
+    if (online.restful) {
+      // Todo: We cannot iterate of multiple models and
+      // instantiating the HttpServer every time.
+      // The creation of HttpServer needs to be done outside the while-loop
+      ResourceConfig rc = new DefaultResourceConfig();
+      rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts)));
+      HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
+      System.out.println("Press Control+C to end...");
+      try {
+        server.start();
+        Thread.currentThread().join();
+      } catch (Exception e) {
+        logger.error("An error occurred when running command online: ", e);
+      } finally {
+        server.stop();
       }
     }
   }
 
   private void RunCommandOffline()  throws Exception {
     GraphMLModelFactory factory = new GraphMLModelFactory();
-
+    ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
     Iterator itr = offline.model.iterator();
     while(itr.hasNext()) {
       Model model = null;
@@ -254,15 +255,18 @@ public class CLI {
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
       SetStartVertex(context);
+      executionContexts.add(context);
+    }
 
-      Machine machine = new SimpleMachine(context);
-      while (machine.hasNextStep()) {
-        try {
-          machine.getNextStep();
-        } catch ( MachineException e) {
-          ;
-        } finally {
-          System.out.println(context.getCurrentElement().getName());
+    SimpleMachine machine = new SimpleMachine(executionContexts);
+    while (machine.hasNextStep()) {
+      try {
+        machine.getNextStep();
+      } catch ( MachineException e) {
+        ;
+      } finally {
+        if (machine.getCurrentContext().getCurrentElement().hasName()) {
+          System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
       }
     }
