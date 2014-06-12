@@ -26,25 +26,38 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Nils Olsson
  */
-public final class ProfileUnitTest {
+public class Execution {
 
-    @Test
-    public void measure() {
-        ProfileUnit profileUnit = new ProfileUnit(new Execution(0L, 350L));
-        profileUnit.addExecution(new Execution(350L, 150L));
-        Assert.assertNotNull(profileUnit);
-        Assert.assertThat(profileUnit.getExecutionCount(), is(2L));
-        Assert.assertThat(profileUnit.getAverageExecutionTime(), is(250L));
-        Assert.assertThat(profileUnit.getMinExecutionTime(), is(150L));
-        Assert.assertThat(profileUnit.getMaxExecutionTime(), is(350L));
-        Assert.assertThat(profileUnit.getTotalExecutionTime(), is(500L));
+    private final long timestamp;
+    private final long duration;
+
+    public Execution(long timestamp, long duration) {
+        this(timestamp, duration, TimeUnit.NANOSECONDS);
+    }
+
+    public Execution(long timestamp, long duration, TimeUnit unit) {
+        this.timestamp = TimeUnit.NANOSECONDS.convert(timestamp, unit);
+        this.duration = TimeUnit.NANOSECONDS.convert(duration, unit);
+    }
+
+    public long getTimestamp(TimeUnit unit) {
+        return TimeUnit.NANOSECONDS.convert(timestamp, unit);
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public long getDuration(TimeUnit unit) {
+        return TimeUnit.NANOSECONDS.convert(duration, unit);
+    }
+
+    public long getDuration() {
+        return duration;
     }
 }

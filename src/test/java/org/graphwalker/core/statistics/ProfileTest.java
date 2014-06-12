@@ -26,8 +26,11 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import org.graphwalker.core.model.Edge;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -35,8 +38,14 @@ import org.junit.Test;
 public final class ProfileTest {
 
     @Test
-    public void create() {
+    public void measure() {
         Profile profile = new Profile();
+        profile.addExecution(new Edge().build(), new Execution(0L, 350));
+        profile.addExecution(new Edge().build(), new Execution(350L, 150));
         Assert.assertNotNull(profile);
+        Assert.assertThat(profile.getTotalExecutionCount(), is(2L));
+        Assert.assertThat(profile.getTotalExecutionTime(), is(500L));
+        Assert.assertThat(profile.getFirstExecutionTimestamp(), is(0L));
+        Assert.assertThat(profile.getLastExecutionTimestamp(), is(350L));
     }
 }

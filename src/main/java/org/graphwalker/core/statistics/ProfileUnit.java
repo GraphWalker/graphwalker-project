@@ -26,28 +26,83 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Nils Olsson
  */
 public final class ProfileUnit {
-/* TODO: should contain information about an Element
-    1. execution count
-    2. min execution time
-    3. avg execution time
-    4. max execution time
-    5. cumulative time
-    6. first execution timestamp
-    7. last execution timestamp
-*/
 
-    private long totalCount = 0;
+    private final List<Execution> executions = new LinkedList<>();
 
-    public long getVisitCount() {
-        return totalCount;
+    public ProfileUnit(Execution execution) {
+        addExecution(execution);
     }
 
-    public void setVisitCount(long totalVisitCount) {
-        this.totalCount = totalVisitCount;
+    public void addExecution(Execution executionTime) {
+        executions.add(executionTime);
     }
 
+    public long getExecutionCount() {
+        return executions.size();
+    }
+
+    public long getMinExecutionTime() {
+        return getMinExecutionTime(TimeUnit.NANOSECONDS);
+    }
+
+    public long getMinExecutionTime(TimeUnit unit) {
+        long duration = Long.MAX_VALUE;
+        for (Execution execution: executions) {
+            if (execution.getDuration() < duration) {
+                duration = execution.getDuration();
+            }
+        }
+        return TimeUnit.NANOSECONDS.convert(duration, unit);
+    }
+
+    public long getAverageExecutionTime() {
+        return getAverageExecutionTime(TimeUnit.NANOSECONDS);
+    }
+
+    public long getAverageExecutionTime(TimeUnit unit) {
+        long duration = getTotalExecutionTime()/(executions.isEmpty()?1:executions.size());
+        return TimeUnit.NANOSECONDS.convert(duration, unit);
+    }
+
+    public long getMaxExecutionTime() {
+        return getMaxExecutionTime(TimeUnit.NANOSECONDS);
+    }
+
+    public long getMaxExecutionTime(TimeUnit unit) {
+        long duration = Long.MIN_VALUE;
+        for (Execution execution: executions) {
+            if (execution.getDuration() > duration) {
+                duration = execution.getDuration();
+            }
+        }
+        return TimeUnit.NANOSECONDS.convert(duration, unit);
+    }
+
+    public long getTotalExecutionTime() {
+        return getTotalExecutionTime(TimeUnit.NANOSECONDS);
+    }
+
+    public long getTotalExecutionTime(TimeUnit unit) {
+        long duration = 0;
+        for (Execution execution: executions) {
+            duration += execution.getDuration();
+        }
+        return TimeUnit.NANOSECONDS.convert(duration, unit);
+    }
+
+    public long getFirstExecutionTimestamp(TimeUnit unit) {
+        return TimeUnit.NANOSECONDS.convert(executions.get(0).getTimestamp(), unit);
+    }
+
+    public long getLastExecutionTimestamp(TimeUnit unit) {
+        return TimeUnit.NANOSECONDS.convert(executions.get(executions.size()-1).getTimestamp(), unit);
+    }
 }
