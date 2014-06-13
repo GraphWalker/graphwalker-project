@@ -60,9 +60,9 @@ public class ShortestAllPathsTest {
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
-            context.getProfiler().stop();
             context.getPathGenerator().getNextStep(context);
             context.getProfiler().start();
+            context.getProfiler().stop();
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
         }
         Assert.assertTrue(expectedElements.isEmpty());
@@ -86,9 +86,9 @@ public class ShortestAllPathsTest {
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
-            context.getProfiler().stop();
             context.getPathGenerator().getNextStep(context);
             context.getProfiler().start();
+            context.getProfiler().stop();
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
         }
         Assert.assertTrue(expectedElements.isEmpty());
@@ -109,9 +109,9 @@ public class ShortestAllPathsTest {
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
-            context.getProfiler().stop();
             context.getPathGenerator().getNextStep(context);
             context.getProfiler().start();
+            context.getProfiler().stop();
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
         }
         Assert.assertTrue(expectedElements.isEmpty());
@@ -128,9 +128,9 @@ public class ShortestAllPathsTest {
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
-            context.getProfiler().stop();
             context.getPathGenerator().getNextStep(context);
             context.getProfiler().start();
+            context.getProfiler().stop();
         }
     }
 

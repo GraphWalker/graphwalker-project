@@ -55,8 +55,6 @@ public final class ProfilerTest {
         Assert.assertFalse(profiler.isVisited(start.build()));
         Assert.assertThat(profiler.getTotalVisitCount(), is(0l));
         profiler.start();
-        Assert.assertTrue(profiler.isVisited(start.build()));
-        Assert.assertThat(profiler.getTotalVisitCount(), is(1l));
         profiler.stop();
         Assert.assertTrue(profiler.isVisited(start.build()));
         Assert.assertThat(profiler.getTotalVisitCount(), is(1l));
