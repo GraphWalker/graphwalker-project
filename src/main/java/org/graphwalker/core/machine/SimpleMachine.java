@@ -63,10 +63,10 @@ public final class SimpleMachine extends ObservableMachine {
     @Override
     public Context getNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        currentContext.getProfiler().stop();
         walk(currentContext);
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement());
+        currentContext.getProfiler().stop();
         return currentContext;
     }
 
