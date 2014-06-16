@@ -35,6 +35,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -107,11 +108,13 @@ public class SimpleMachineTest {
     @Test
     public void sharedState() {
         Vertex start = new Vertex();
+        Vertex shared1 = new Vertex().setSharedState("MyState");
+        Edge edge1 = new Edge().setSourceVertex(start).setTargetVertex(shared1);
+        Vertex shared2 = new Vertex().setSharedState("MyState");
         Vertex stop  = new Vertex();
-        Model model1 = new Model().addEdge(new Edge()
-            .setSourceVertex(start).setTargetVertex(new Vertex().setSharedState("MyState")));
-        Model model2 = new Model().addEdge(new Edge()
-            .setSourceVertex(new Vertex().setSharedState("MyState")).setTargetVertex(stop));
+        Edge edge2 = new Edge().setSourceVertex(shared2).setTargetVertex(stop);
+        Model model1 = new Model().addEdge(edge1);
+        Model model2 = new Model().addEdge(edge2);
         List<ExecutionContext> contexts = new ArrayList<>();
         contexts.add(new ExecutionContext(model1, new RandomPath(new VertexCoverage(100))).setNextElement(start));
         contexts.add(new ExecutionContext(model2, new RandomPath(new VertexCoverage(100))));
@@ -119,7 +122,34 @@ public class SimpleMachineTest {
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
-        int i = 0;
-        // TODO: Add assertions on the taken path, based on the data from profiler (needs to be implemented)
+        // the profiler path is a stack so the first element is the last visited, therefore we create the list in reverse order
+        Path<Element> path1 = new Path<>(Arrays.<Element>asList(shared1.build(), edge1.build(), start.build()));
+        Path<Element> path2 = new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build()));
+        Assert.assertArrayEquals(contexts.get(0).getProfiler().getPath().toArray(), path1.toArray());
+        Assert.assertArrayEquals(contexts.get(1).getProfiler().getPath().toArray(), path2.toArray());
+    }
+
+    @Test
+    public void singleSharedStates() {
+        Vertex start = new Vertex();
+        Vertex shared1 = new Vertex().setSharedState("MyState1");
+        Edge edge1 = new Edge().setSourceVertex(start).setTargetVertex(shared1);
+        Vertex shared2 = new Vertex().setSharedState("MyState2");
+        Vertex stop  = new Vertex();
+        Edge edge2 = new Edge().setSourceVertex(shared2).setTargetVertex(stop);
+        Model model1 = new Model().addEdge(edge1);
+        Model model2 = new Model().addEdge(edge2);
+        List<ExecutionContext> contexts = new ArrayList<>();
+        contexts.add(new ExecutionContext(model1, new RandomPath(new VertexCoverage(100))).setNextElement(start));
+        contexts.add(new ExecutionContext(model2, new RandomPath(new VertexCoverage(100))));
+        Machine machine = new SimpleMachine(contexts);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        // the profiler path is a stack so the first element is the last visited, therefore we create the list in reverse order
+        //Path<Element> path1 = new Path<>(Arrays.<Element>asList(shared1.build(), edge1.build(), start.build()));
+        //Path<Element> path2 = new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build()));
+        //Assert.assertArrayEquals(contexts.get(0).getProfiler().getPath().toArray(), path1.toArray());
+        //Assert.assertArrayEquals(contexts.get(1).getProfiler().getPath().toArray(), path2.toArray());
     }
 }
