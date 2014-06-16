@@ -28,9 +28,18 @@ package org.graphwalker.maven.plugin;
 
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
+import org.graphwalker.io.factory.GraphMLModelFactory;
+import org.graphwalker.io.factory.ModelFactory;
+import org.graphwalker.java.source.CodeGenerator;
+import org.graphwalker.java.source.SourceFile;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
+
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
@@ -40,6 +49,9 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
     private String sourceEncoding;
 
+    private CodeGenerator codeGenerator = new CodeGenerator();
+    private final ModelFactory modelFactory = new GraphMLModelFactory();
+
     protected String getSourceEncoding() {
         return sourceEncoding;
     }
@@ -47,6 +59,46 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     protected abstract File getGeneratedSourcesDirectory();
 
     protected void generate(List<Resource> resources) {
-        // TODO: implement
+        for (Resource resource: resources) {
+            generate(resource);
+        }
+    }
+
+    private void generate(Resource resource) {
+        File baseDirectory = new File(resource.getDirectory());
+        for (File file: findFiles(modelFactory.getSupportedFileTypes(), null, baseDirectory)) {
+            generate(file, baseDirectory, getGeneratedSourcesDirectory());
+        }
+    }
+
+    private void generate(File file, File baseDirectory, File outputDirectory) {
+        generate(new SourceFile(file, baseDirectory, outputDirectory));
+    }
+
+    private void generate(SourceFile sourceFile) {
+        File outputFile = sourceFile.getOutputPath().toFile();
+        try {
+            RuntimeModel model = modelFactory.create(sourceFile.getInputPath().toFile().getAbsolutePath()).build();
+            String source = codeGenerator.generate(sourceFile, model);
+            if (Files.exists(sourceFile.getOutputPath())) {
+                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
+                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
+                    return;
+                }
+            }
+            if (getLog().isInfoEnabled()) {
+                getLog().info("Generate " + sourceFile.getInputPath());
+            }
+            FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+            FileUtils.fileDelete(outputFile.getAbsolutePath());
+            FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
+        } catch (Throwable t) {
+            if (getLog().isInfoEnabled()) {
+                getLog().info("Error: Generate " + sourceFile.getInputPath());
+            }
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
+            }
+        }
     }
 }

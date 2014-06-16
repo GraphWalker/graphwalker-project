@@ -36,7 +36,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  * @author Nils Olsson
  */
 @Mojo(name = "validate-models", defaultPhase = LifecyclePhase.PROCESS_CLASSES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
-public class ValidateMainMojo extends ValidateMojoBase {
+public final class ValidateMainMojo extends ValidateMojoBase {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
