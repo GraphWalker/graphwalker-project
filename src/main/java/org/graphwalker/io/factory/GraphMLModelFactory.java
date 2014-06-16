@@ -172,7 +172,9 @@ public final class GraphMLModelFactory implements ModelFactory {
         return xml.contains("PolyLineEdge")
                 || xml.contains("GenericEdge")
                 || xml.contains("ArcEdge")
-                || xml.contains("QuadCurveEdge");
+                || xml.contains("QuadCurveEdge")
+                || xml.contains("SplineEdge")
+                || xml.contains("BezierEdge");
     }
 
     private com.yworks.xml.graphml.EdgeType getSupportedEdge(String xml) throws XmlException {
@@ -184,6 +186,10 @@ public final class GraphMLModelFactory implements ModelFactory {
             return ArcEdgeDocument.Factory.parse(xml).getArcEdge();
         } else if (xml.contains("QuadCurveEdge")) {
             return QuadCurveEdgeDocument.Factory.parse(xml).getQuadCurveEdge();
+        } else if (xml.contains("SplineEdge")) {
+            return SplineEdgeDocument.Factory.parse(xml).getSplineEdge();
+        } else if (xml.contains("BezierEdge")) {
+            return BezierEdgeDocument.Factory.parse(xml).getBezierEdge();
         }
         throw new ModelFactoryException("Unsupported edge type: "+xml);
     }
