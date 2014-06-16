@@ -28,10 +28,13 @@ package org.graphwalker.io.factory;
 
 import org.graphwalker.core.model.Model;
 
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
 public interface ModelFactory {
 
     Model create(String file);
+    Set<String> getSupportedFileTypes();
 }

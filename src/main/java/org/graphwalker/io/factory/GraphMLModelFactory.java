@@ -43,10 +43,7 @@ import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.VertexParser;
 import org.graphwalker.io.common.ResourceUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.graphwalker.io.EdgeParser.ActionContext;
 
@@ -57,6 +54,8 @@ import static org.graphwalker.io.EdgeParser.ActionContext;
 public final class GraphMLModelFactory implements ModelFactory {
 
     private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
+
+    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
 
     private Map<String, Vertex> elements = new HashMap<>();
 
@@ -71,6 +70,11 @@ public final class GraphMLModelFactory implements ModelFactory {
         } catch (Throwable throwable) {
             throw new ModelFactoryException(throwable);
         }
+    }
+
+    @Override
+    public Set<String> getSupportedFileTypes() {
+        return SUPPORTED_TYPE;
     }
 
     private void addVertices(Model model, GraphmlDocument document) throws XmlException {
