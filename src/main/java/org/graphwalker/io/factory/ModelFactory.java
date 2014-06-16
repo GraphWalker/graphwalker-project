@@ -28,6 +28,7 @@ package org.graphwalker.io.factory;
 
 import org.graphwalker.core.model.Model;
 
+import java.nio.file.Path;
 import java.util.Set;
 
 /**
@@ -35,6 +36,7 @@ import java.util.Set;
  */
 public interface ModelFactory {
 
+    boolean accept(Path path);
     Model create(String file);
     Set<String> getSupportedFileTypes();
 }
