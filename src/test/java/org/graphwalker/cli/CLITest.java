@@ -51,7 +51,6 @@ package org.graphwalker.cli;
 import static org.graphwalker.RegexMatcher.matches;
 import static org.hamcrest.CoreMatchers.*;
 
-import org.graphwalker.cli.CLI;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -221,8 +220,8 @@ public class CLITest {
    */
   @Test
   public void multipleModels() {
-    String args[] = {"offline", "-m", "graphml/switch_model/A.graphml", "random(edge_coverage(100))",
-            "-m", "graphml/switch_model/B.graphml","random(edge_coverage(100))"};
+    String args[] = {"offline", "-m", "graphml/shared_state/A.graphml", "random(edge_coverage(100))",
+            "-m", "graphml/shared_state/B.graphml","random(edge_coverage(100))"};
     runCommand(args);
 //    Assert.assertThat( "No error messages should occur", errMsg, is(""));
 //    Assert.assertEquals("Expected 38 lines beginning with v_" , 38, getNumMatches(Pattern.compile("v_").matcher(outMsg)));
@@ -234,7 +233,7 @@ public class CLITest {
    */
   @Test
   public void testOffline2generators() {
-    String args[] = {"offline", "-m", "graphml/switch_model/A.graphml", "random(edge_coverage(100)) random(vertex_coverage(100))"};
+    String args[] = {"offline", "-m", "graphml/shared_state/A.graphml", "random(edge_coverage(100)) random(vertex_coverage(100))"};
     runCommand(args);
 //    Assert.assertThat( "No error messages should occur", errMsg, is(""));
   }
