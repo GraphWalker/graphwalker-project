@@ -112,10 +112,12 @@ public final class SimpleMachine extends ObservableMachine {
     private List<SharedStateTupel> getPossibleSharedStates(String sharedState) {
         List<SharedStateTupel> sharedStates = new ArrayList<>();
         for (ExecutionContext context: contexts) {
-            for (RuntimeVertex vertex: context.getModel().getSharedStates(sharedState)) {
-                if (context.getPathGenerator().hasNextStep(context)) {
-                    if ( !context.getModel().getOutEdges(vertex).isEmpty() ) {
-                      sharedStates.add(new SharedStateTupel(context, vertex));
+            if (context.getModel().hasSharedState(sharedState)) {
+                for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
+                    if (context.getPathGenerator().hasNextStep(context)) {
+                        if (!context.getModel().getOutEdges(vertex).isEmpty()) {
+                            sharedStates.add(new SharedStateTupel(context, vertex));
+                        }
                     }
                 }
             }
