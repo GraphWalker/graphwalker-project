@@ -50,7 +50,7 @@ public class GraphMLModelFactoryTest {
         Model sharedA = factory.create("graphml/SharedA.graphml");
         Assert.assertNotNull(sharedA);
         Assert.assertThat(sharedA.getVertices().size(), is(2));
-        Assert.assertThat(sharedA.getEdges().size(), is(1));
+        Assert.assertThat(sharedA.getEdges().size(), is(5));
         Model sharedB = factory.create("graphml/SharedB.graphml");
         Assert.assertNotNull(sharedB);
         Assert.assertThat(sharedB.getVertices().size(), is(2));
