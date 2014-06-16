@@ -43,6 +43,7 @@ import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.VertexParser;
 import org.graphwalker.io.common.ResourceUtils;
 
+import java.nio.file.*;
 import java.util.*;
 
 import static org.graphwalker.io.EdgeParser.ActionContext;
@@ -54,10 +55,15 @@ import static org.graphwalker.io.EdgeParser.ActionContext;
 public final class GraphMLModelFactory implements ModelFactory {
 
     private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
-
+    private static final String FILE_TYPE = "graphml";
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
 
     private Map<String, Vertex> elements = new HashMap<>();
+
+    @Override
+    public boolean accept(java.nio.file.Path path) {
+        return path.toFile().toString().endsWith(FILE_TYPE);
+    }
 
     @Override
     public Model create(String file) {
