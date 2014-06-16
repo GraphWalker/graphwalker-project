@@ -37,7 +37,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public class ChangeContext {
+public final class ChangeContext {
 
     private final RuntimeModel model;
     private final Set<String> methodNames;
