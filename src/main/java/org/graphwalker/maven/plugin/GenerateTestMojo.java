@@ -39,7 +39,7 @@ import java.io.File;
  * @author Nils Olsson
  */
 @Mojo(name = "generate-test-sources", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
-public class GenerateTestMojo extends GenerateMojoBase {
+public final class GenerateTestMojo extends GenerateMojoBase {
 
     @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
     private File generatedSourcesDirectory;

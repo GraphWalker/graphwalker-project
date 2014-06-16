@@ -35,7 +35,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * @author Nils Olsson
  */
 @Mojo(name = "watch")
-public class WatchMojo extends AbstractMojo {
+public final class WatchMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

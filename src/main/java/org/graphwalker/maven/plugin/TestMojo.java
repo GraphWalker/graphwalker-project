@@ -29,22 +29,23 @@ package org.graphwalker.maven.plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
+import org.codehaus.plexus.util.StringUtils;
+import org.graphwalker.java.test.Configuration;
+import org.graphwalker.java.test.Group;
+import org.graphwalker.java.test.Manager;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Nils Olsson
  */
 @Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
-public class TestMojo extends DefaultMojoBase {
+public final class TestMojo extends DefaultMojoBase {
 
     @Parameter(property = "project.testClasspathElements")
     private List<String> classpathElements;
@@ -160,7 +161,150 @@ public class TestMojo extends DefaultMojoBase {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        // TODO: Implement the execution of tests
-        getLog().info("TODO: Implement the execution of tests");
+        if (!getSkipTests()) {
+            ClassLoader classLoader = switchClassLoader(createClassLoader());
+            Properties properties = switchProperties(createProperties());
+            displayHeader();
+            Configuration configuration = createConfiguration();
+            Manager manager = new Manager(); //configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
+            displayConfiguration(manager);
+
+// TODO: Implement the execution of tests
+getLog().info("TODO: Implement the execution of tests");
+
+            displayResult(manager);
+            switchProperties(properties);
+            switchClassLoader(classLoader);
+            reportResults(manager);
+        }
+    }
+
+    private void displayHeader() {
+        if (getLog().isInfoEnabled()) {
+            getLog().info("------------------------------------------------------------------------");
+            getLog().info(" G r a p h W a l k e r                                                  ");
+            getLog().info("------------------------------------------------------------------------");
+        }
+    }
+
+    private Configuration createConfiguration() {
+        Configuration configuration = new Configuration();
+        if (StringUtils.isBlank(getTest())) {
+            configuration.setIncludes(getIncludes());
+            configuration.setExcludes(getExcludes());
+        } else {
+            Set<String> include = new HashSet<>();
+            Set<String> exclude = new HashSet<>();
+            for (String test: getTest().split(",")) {
+                test = test.trim();
+                if (StringUtils.isNotBlank(test)) {
+                    if (test.startsWith("!")) {
+                        test = test.substring(1);
+                        if (StringUtils.isNotBlank(test)) {
+                            exclude.add(test);
+                        }
+                    } else {
+                        include.add(test);
+                    }
+                }
+            }
+            configuration.setIncludes(include);
+            configuration.setExcludes(exclude);
+        }
+        configuration.setClassesDirectory(getClassesDirectory());
+        configuration.setTestClassesDirectory(getTestClassesDirectory());
+        configuration.setReportsDirectory(getReportsDirectory());
+        Set<String> groups = new HashSet<>();
+        for (String group: getGroups().split(",")) {
+            groups.add(group.trim());
+        }
+        configuration.setGroups(groups);
+        return configuration;
+    }
+
+    private void displayConfiguration(Manager manager) {
+        /*
+        if (getLog().isInfoEnabled()) {
+            getLog().info("Configuration:");
+            getLog().info("    Include = "+manager.getConfiguration().getIncludes());
+            getLog().info("    Exclude = "+manager.getConfiguration().getExcludes());
+            getLog().info("     Groups = "+manager.getConfiguration().getGroups());
+            getLog().info("   Parallel = false"); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
+            getLog().info("");
+            getLog().info("Tests:");
+            if (manager.getExecutionGroups().isEmpty()) {
+                getLog().info("  No tests found");
+            } else {
+                for (Group group: manager.getExecutionGroups()) {
+                    getLog().info("  [" + group.getName()+"]");
+                    for (Execution execution: group.getExecutions()) {
+                        getLog().info("    "+execution.getName()+"("+execution.getPathGenerator().getSimpleName()+", "+execution.getStopCondition().getSimpleName()+", \""+execution.getStopConditionValue()+"\")");
+                    }
+                    getLog().info("");
+                }
+            }
+            getLog().info("------------------------------------------------------------------------");
+        }
+        */
+    }
+
+    private void displayResult(Manager manager) {
+        /*
+        if (getLog().isInfoEnabled()) {
+            getLog().info("------------------------------------------------------------------------");
+            getLog().info("");
+            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
+            getLog().info("");
+            long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, failed = 0, notExecuted = 0;
+            List<ExecutionContext> failedExecutions = new ArrayList<>();
+            for (Machine machine: machines) {
+                for (ExecutionContext context: machine.getExecutionContexts()) {
+                    switch (context.getExecutionStatus()) {
+                        case COMPLETED: {
+                            completed++;
+                        }
+                        break;
+                        case FAILED: {
+                            failed++;
+                            failedExecutions.add(context);
+                        }
+                        break;
+                        case NOT_EXECUTED: {
+                            notExecuted++;
+                        }
+                        break;
+                    }
+                }
+            }
+            if (!failedExecutions.isEmpty()) {
+                getLog().info("Failed executions: ");
+                for (ExecutionContext context: failedExecutions) {
+                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
+                    String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
+                    String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
+                    String value = context.getPathGenerator().getStopCondition().getValue();
+                    getLog().info("  " + implementations.get(context).getClass().getName()+"("+pathGenerator+", "+stopCondition+", "+value+"): "+Math.round(100*fulfilment)+"%");
+                }
+                getLog().info("");
+            }
+            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", groups, tests, completed, failed, notExecuted));
+            getLog().info("");
+        }
+        */
+    }
+
+    private void reportResults(Manager manager) throws MojoExecutionException {
+        /*
+        boolean hasExceptions = false;
+        for (Machine machine: machines) {
+            //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime());
+            for (ExecutionContext context: machine.getExecutionContexts()) {
+                hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
+            }
+        }
+        if (hasExceptions) {
+            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", getReportsDirectory().getAbsolutePath()));
+        }
+        */
     }
 }
