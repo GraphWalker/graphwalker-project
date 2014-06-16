@@ -52,7 +52,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
+public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
     private final GraphMLModelFactory factory = new GraphMLModelFactory();
 

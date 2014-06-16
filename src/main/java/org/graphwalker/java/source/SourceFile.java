@@ -32,7 +32,7 @@ import java.nio.file.Path;
 /**
  * @author Nils Olsson
  */
-public class SourceFile {
+public final class SourceFile {
 
     private final Path inputPath;
     private final Path relativePath;
