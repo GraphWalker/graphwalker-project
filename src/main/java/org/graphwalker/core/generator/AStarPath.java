@@ -72,9 +72,7 @@ public final class AStarPath implements PathGenerator {
             }
         }
         AStar astar = context.getAlgorithm(AStar.class);
-        Path<Element> path = astar.getShortestPath(context.getCurrentElement(), target);
-        path.pollFirst();
-        return context.setCurrentElement(path.getFirst());
+        return context.setCurrentElement(astar.getNextElement(context.getCurrentElement(), target));
     }
 
     @Override

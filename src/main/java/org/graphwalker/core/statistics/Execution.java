@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Nils Olsson
  */
-public class Execution {
+public final class Execution {
 
     private final long timestamp;
     private final long duration;

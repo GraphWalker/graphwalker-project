@@ -56,7 +56,7 @@ public class ShortestAllPathsTest {
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(v1, e1, v2, e2, v3, e3, v1, e4, v4, e5)
+                Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5)
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
@@ -82,7 +82,7 @@ public class ShortestAllPathsTest {
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(v1, e1, v2, e2, v3, e3)
+                Arrays.asList(e1, v2, e2, v3, e3)
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
@@ -105,7 +105,7 @@ public class ShortestAllPathsTest {
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(v1, e1, v2, e2, v3, e3)
+                Arrays.asList(e1, v2, e2, v3, e3)
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {

@@ -64,7 +64,7 @@ public class FleuryTest {
 
 
     private static final Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(
-            v1.build(), e1.build(), v2.build(), e2.build(), v3.build(), e3.build(), v1.build()
+            e1.build(), v2.build(), e2.build(), v3.build(), e3.build(), v1.build()
             , e4.build(), v4.build(), e5.build(), v5.build(), e6.build(), v6.build(), e7.build(), v4.build()
     ));
 
