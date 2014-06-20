@@ -43,6 +43,44 @@ public final class AStar implements Algorithm {
         this.context = context;
     }
 
+    public Element getNextElement(Element origin, Element destination) {
+        Map<Element, AStarNode> openSet = new HashMap<>();
+        PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
+        Map<Element, AStarNode> closeSet = new HashMap<>();
+        FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+        AStarNode sourceNode = new AStarNode(origin, 0, floydWarshall.getShortestDistance(origin, destination));
+        openSet.put(origin, sourceNode);
+        queue.add(sourceNode);
+        AStarNode node = queue.poll();
+        if(node.getElement().equals(destination)){
+            return node.getElement();
+        }else{
+            closeSet.put(node.getElement(), node);
+            List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
+            for (Element neighbor : neighbors) {
+                AStarNode visited = closeSet.get(neighbor);
+                if (visited == null) {
+                    double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
+                    AStarNode neighborNode = openSet.get(neighbor);
+                    if (null == neighborNode) {
+                        neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
+                        neighborNode.setParent(node);
+                        openSet.put(neighbor, neighborNode);
+                        queue.add(neighborNode);
+                    } else if (g < neighborNode.getG()) {
+                        neighborNode.setParent(node);
+                        neighborNode.setG(g);
+                        neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
+                    }
+                }
+            }
+        }
+        if (!queue.isEmpty()) {
+            return queue.poll().getElement();
+        }
+        throw new AlgorithmException();
+    }
+
     public Path<Element> getShortestPath(Element origin, Element destination) {
         Map<Element, AStarNode> openSet = new HashMap<>();
         PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
@@ -88,7 +126,6 @@ public final class AStar implements Algorithm {
                 path.add(node.getElement());
                 node = node.getParent();
             }
-
             Collections.reverse(path);
             return new Path<>(path);
         }

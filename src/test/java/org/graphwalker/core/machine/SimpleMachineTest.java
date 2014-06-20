@@ -27,15 +27,19 @@ package org.graphwalker.core.machine;
  */
 
 import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -146,5 +150,76 @@ public class SimpleMachineTest {
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
+    }
+
+    @Test
+    public void simpleShortestAllPaths() {
+        Vertex start = new Vertex().setName("Start");
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2");
+        Vertex v3a = new Vertex().setName("v3");
+        Vertex v3b = new Vertex().setName("v3");
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v2).addAction(new Action("x = -1"));
+        Edge e2 = new Edge().setName("e2").setSourceVertex(v2).setTargetVertex(v1).addAction(new Action("x = x + 1"));
+        Edge e3 = new Edge().setName("e3").setSourceVertex(v1).setTargetVertex(v2);
+        Edge e4 = new Edge().setName("e4").setSourceVertex(v2).setTargetVertex(v3a).setGuard(new Guard("x > 1"));
+        Edge e5 = new Edge().setName("e5").setSourceVertex(v3a).setTargetVertex(v2);
+        Edge e6 = new Edge().setName("e6").setSourceVertex(v2).setTargetVertex(v3b);
+        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5).addEdge(e6);
+        ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
+        context.setNextElement(start);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(start.build(), e1.build(), v2.build(), e2.build()
+                , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
+                , e5.build(), v2.build(), e6.build(), v3b.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
+    public void simpleAStar() {
+        Vertex start = new Vertex().setName("Start");
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2");
+        Vertex v3a = new Vertex().setName("v3");
+        Vertex v3b = new Vertex().setName("v3");
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v2).addAction(new Action("x = -1"));
+        Edge e2 = new Edge().setName("e2").setSourceVertex(v2).setTargetVertex(v1).addAction(new Action("x = x + 1"));
+        Edge e3 = new Edge().setName("e3").setSourceVertex(v1).setTargetVertex(v2);
+        Edge e4 = new Edge().setName("e4").setSourceVertex(v2).setTargetVertex(v3a).setGuard(new Guard("x > 1"));
+        Edge e5 = new Edge().setName("e5").setSourceVertex(v3a).setTargetVertex(v2);
+        Edge e6 = new Edge().setName("e6").setSourceVertex(v2).setTargetVertex(v3b);
+        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5).addEdge(e6);
+        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("v3")));
+        context.setNextElement(start);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(
+                start.build(),
+                e1.build(),
+                v2.build(),
+                e2.build(),
+                v1.build(),
+                e3.build(),
+                v2.build(),
+                e2.build(),
+                v1.build(),
+                e3.build(),
+                v2.build(),
+                e2.build(),
+                v1.build(),
+                e3.build(),
+                v2.build(),
+                e4.build(),
+                v3a.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
 }

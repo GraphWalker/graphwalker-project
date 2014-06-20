@@ -58,7 +58,6 @@ public final class ShortestAllPaths implements PathGenerator {
     public ExecutionContext getNextStep(ExecutionContext context) {
         if (null == path) {
             path = getPath(context);
-            path.removeFirst();
         }
         context.setCurrentElement(path.removeFirst());
         return context;

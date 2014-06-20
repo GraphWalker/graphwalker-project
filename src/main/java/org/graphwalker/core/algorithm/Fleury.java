@@ -43,7 +43,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public class Fleury implements Algorithm {
+public final class Fleury implements Algorithm {
 
     private final ExecutionContext context;
 
@@ -56,7 +56,6 @@ public class Fleury implements Algorithm {
         // Step 1
         Path<Element> trail = new Path<>();
         RuntimeVertex currentVertex = vertex;
-        trail.add(vertex);
         List<RuntimeEdge> availableEdges = new ArrayList<>(context.getModel().getEdges());
         while (!availableEdges.isEmpty()) {
             // Step 2
