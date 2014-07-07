@@ -38,6 +38,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
     private String name;
     private List<Requirement> requirements = new ArrayList<>();
     private String sharedState;
+    private String id;
 
     public Vertex setName(String name) {
         this.name = name;
@@ -68,6 +69,16 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return this;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public Vertex setId(String id) {
+        this.id = id;
+        invalidateCache();
+        return this;
+    }
+
     @Override
     protected RuntimeVertex createCache() {
         return new RuntimeVertex(this);
@@ -77,15 +88,21 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
         private final List<Requirement> requirements;
         private final String sharedState;
+        private final String id;
 
         private RuntimeVertex(Vertex vertex) {
             super(vertex.getName());
             this.requirements = Collections.unmodifiableList(vertex.getRequirements());
             this.sharedState = vertex.getSharedState();
+            this.id = vertex.getId();
         }
 
         public List<Requirement> getRequirements() {
             return requirements;
+        }
+
+        public String getId() {
+            return id;
         }
 
         public String getSharedState() {

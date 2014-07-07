@@ -30,6 +30,10 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
+import java.util.ArrayList;
+import java.util.List;
+
+
 /**
  * @author Nils Olsson
  */
@@ -50,7 +54,7 @@ public final class Profiler {
     public void stop() {
         Element element = context.getCurrentElement();
         if (null != element) {
-            profile.addExecution(element, new Execution(timestamp, System.nanoTime()-timestamp));
+            profile.addExecution(element, new Execution(timestamp, System.nanoTime() - timestamp));
         }
     }
 
@@ -62,7 +66,21 @@ public final class Profiler {
         return profile.getTotalExecutionCount();
     }
 
+    public List<Element> getUnvisitedElements() {
+        List<Element> elementList = new ArrayList<>();
+        for (Element e : context.getModel().getElements()) {
+            if (!isVisited(e)) {
+                elementList.add(e);
+            }
+        }
+        return elementList;
+    }
+
     public Path<Element> getPath() {
         return profile.getPath();
+    }
+
+    public void removeStartVertex(Element element) {
+        profile.addExecution(element, new Execution(0, 0));
     }
 }
