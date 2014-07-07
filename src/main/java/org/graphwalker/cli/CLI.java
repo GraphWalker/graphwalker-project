@@ -264,27 +264,30 @@ public class CLI {
       } catch ( MachineException e) {
         ;
       } finally {
-        if ( offline.unvisited ) {
-          if (offline.verbose) {
-            String basename = FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName());
-            System.out.print(basename + " " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
-                "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
-          }
-          for( Element e: machine.getCurrentContext().getProfiler().getUnvisitedElements() ) {
-            System.out.print(e.getName());
-            if (offline.verbose) {
-                System.out.print("(" + e.getId() + ")");
-            }
-            System.out.print(" ");
-          }
-          System.out.println();
-        } else if (machine.getCurrentContext().getCurrentElement().hasName()) {
+        if (offline.verbose) {
+          System.out.print(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ");
+        }
+        if (machine.getCurrentContext().getCurrentElement().hasName()) {
           System.out.print(machine.getCurrentContext().getCurrentElement().getName());
           if (offline.verbose) {
             System.out.print("(" + machine.getCurrentContext().getCurrentElement().getId() + ")");
           }
-          System.out.println();
         }
+
+        if ( offline.unvisited ) {
+          System.out.print(" | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
+                "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
+
+          for( Element e: machine.getCurrentContext().getProfiler().getUnvisitedElements() ) {
+            System.out.print(e.getName());
+            if (offline.verbose) {
+              System.out.print("(" + e.getId() + ")");
+            }
+            System.out.print(" ");
+          }
+        }
+
+        System.out.println();
       }
     }
   }
