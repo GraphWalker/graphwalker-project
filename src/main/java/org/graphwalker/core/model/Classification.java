@@ -65,14 +65,20 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
     public static final class RuntimeClassification extends NamedElement {
 
         private final List<RuntimeClassification> classifications;
+        private final String id;
 
         private RuntimeClassification(Classification classification) {
             super(classification.getName());
             this.classifications = BuilderFactory.build(classification.getClassifications());
+            this.id = "";
         }
 
         public List<RuntimeClassification> getClassifications() {
             return classifications;
+        }
+
+        public String getId() {
+            return id;
         }
 
         @Override

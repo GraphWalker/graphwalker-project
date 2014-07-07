@@ -36,8 +36,18 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Model implements Builder<Model.RuntimeModel> {
 
+    private String name;
     private final List<Vertex> vertices = new ArrayList<>();
     private final List<Edge> edges = new ArrayList<>();
+
+    public Model setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public Model addVertex(Vertex vertex) {
         vertices.add(vertex);
@@ -80,9 +90,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache;
         private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
         private final Map<String, List<RuntimeVertex>> sharedStateCache;
+        private final String id;
 
         private RuntimeModel(Model model) {
-            super(null);
+            super(model.getName());
             this.vertices = BuilderFactory.build(model.getVertices());
             this.edges = BuilderFactory.build(model.getEdges());
             this.edgesByNameCache = createEdgesByNameCache();
@@ -93,6 +104,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.elementsByNameCache = createElementsByNameCache();
             this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
             this.sharedStateCache = createSharedStateCache();
+            this.id = "";
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -251,6 +263,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
                 map.put(key, Collections.unmodifiableList(source.get(key)));
             }
             return Collections.unmodifiableMap(map);
+        }
+
+        public String getId() {
+            return id;
         }
 
         @Override

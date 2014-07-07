@@ -31,6 +31,7 @@ package org.graphwalker.core.model;
  */
 public interface Element {
     String getName();
+    String getId();
     boolean hasName();
     void accept(ElementVisitor visitor);
 }

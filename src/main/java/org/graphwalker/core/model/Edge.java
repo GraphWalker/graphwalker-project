@@ -38,6 +38,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     private String name;
+    private String id;
     private Vertex sourceVertex;
     private Vertex targetVertex;
     private Guard guard;
@@ -53,6 +54,16 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public String getName() {
         return name;
+    }
+
+    public Edge setId(String id) {
+        invalidateCache();
+        this.id = id;
+        return this;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public Edge setSourceVertex(Vertex vertex) {
@@ -128,6 +139,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public static final class RuntimeEdge extends NamedElement {
 
+        private String id;
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;
         private final Guard guard;
@@ -137,6 +149,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         private RuntimeEdge(Edge edge) {
             super(edge.getName());
+            this.id = edge.getId();
             this.sourceVertex = build(edge.getSourceVertex());
             this.targetVertex = build(edge.getTargetVertex());
             this.guard = edge.getGuard();
@@ -147,6 +160,10 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         private <T> T build(Builder<T> builder) {
             return (null!=builder?builder.build():null);
+        }
+
+        public String getId() {
+            return id;
         }
 
         public RuntimeVertex getSourceVertex() {
