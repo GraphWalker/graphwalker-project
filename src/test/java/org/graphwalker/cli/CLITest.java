@@ -203,6 +203,19 @@ public class CLITest {
   }
 
   /**
+   * Simulates the printing of unvisited elements
+   * java -jar graphwalker.jar offline -u -m graphml/UC01_GW2.graphml "random(edge_coverage(100))"
+   */
+  @Test
+  public void testOfflineRandomEdgeCoverage100percent_GW2_unvisited() {
+    String args[] = {"offline", "-u", "true", "-m", "graphml/UC01_GW2.graphml", "random(edge_coverage(100))"};
+    runCommand(args);
+    //System.out.println(outMsg);
+//    Assert.assertThat( "No error messages should occur", errMsg, is(""));
+//    Assert.assertThat( outMsg, matches("^e_init\n.*"));
+  }
+
+  /**
    * Simulates
    * java -jar graphwalker.jar offline -m graphml/UC01_GW3.graphml "random(edge_coverage(100))"
    */
