@@ -103,6 +103,7 @@ public final class GraphMLModelFactory implements ModelFactory {
                                 vertex.setSharedState(context.shared().Identifier().getText());
                             }
                             elements.put(node.getId(), vertex);
+                            vertex.setId(node.getId());
                             model.addVertex(vertex);
                         }
                     }
@@ -170,6 +171,7 @@ public final class GraphMLModelFactory implements ModelFactory {
                             if (null != context.blocked()) {
                                 edge.setBlocked(true);
                             }
+                            edge.setId(edgeType.getId());
                             model.addEdge(edge);
                         }
                     }
