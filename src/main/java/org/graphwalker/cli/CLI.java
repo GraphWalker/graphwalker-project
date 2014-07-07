@@ -31,6 +31,7 @@ import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.antlr.GeneratorFactory;
@@ -45,10 +46,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.io.factory.GraphMLModelFactory;
 import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
@@ -247,6 +245,7 @@ public class CLI {
       String modelFileName = (String) itr.next();
       try {
         model = factory.create(modelFileName);
+        model.setName(modelFileName);
       } catch (ModelFactoryException e) {
         throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?\n"+
         e.getMessage());
@@ -265,8 +264,26 @@ public class CLI {
       } catch ( MachineException e) {
         ;
       } finally {
-        if (machine.getCurrentContext().getCurrentElement().hasName()) {
-          System.out.println(machine.getCurrentContext().getCurrentElement().getName());
+        if ( offline.unvisited ) {
+          if (offline.verbose) {
+            String basename = FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName());
+            System.out.print(basename + " " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
+                "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
+          }
+          for( Element e: machine.getCurrentContext().getProfiler().getUnvisitedElements() ) {
+            System.out.print(e.getName());
+            if (offline.verbose) {
+                System.out.print("(" + e.getId() + ")");
+            }
+            System.out.print(" ");
+          }
+          System.out.println();
+        } else if (machine.getCurrentContext().getCurrentElement().hasName()) {
+          System.out.print(machine.getCurrentContext().getCurrentElement().getName());
+          if (offline.verbose) {
+            System.out.print("(" + machine.getCurrentContext().getCurrentElement().getId() + ")");
+          }
+          System.out.println();
         }
       }
     }
@@ -277,6 +294,7 @@ public class CLI {
     List<Vertex.RuntimeVertex> list = context.getModel().findVertices("Start");
     if (null != list && !list.isEmpty() && list.get(0) != null) {
       context.setCurrentElement(context.getModel().findVertices("Start").get(0));
+      context.getProfiler().removeStartVertex(context.getCurrentElement());
 
     // New GW3 syntax for graphml models, which defines the Start as the vertex with no in-edges
     } else {
