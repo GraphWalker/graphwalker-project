@@ -30,14 +30,16 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.java.test.Configuration;
-import org.graphwalker.java.test.Group;
-import org.graphwalker.java.test.Manager;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.ExecutionStatus;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.java.test.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -166,16 +168,14 @@ public final class TestMojo extends DefaultMojoBase {
             Properties properties = switchProperties(createProperties());
             displayHeader();
             Configuration configuration = createConfiguration();
-            Manager manager = new Manager(); //configuration, scanner.scan(getTestClassesDirectory(), getClassesDirectory()));
+            Manager manager = new Manager(configuration);
             displayConfiguration(manager);
-
-// TODO: Implement the execution of tests
-getLog().info("TODO: Implement the execution of tests");
-
-            displayResult(manager);
+            Executor executor = new Executor(manager);
+            executor.awaitTermination();
+            displayResult(manager, executor);
             switchProperties(properties);
             switchClassLoader(classLoader);
-            reportResults(manager);
+            reportResults(executor);
         }
     }
 
@@ -223,13 +223,11 @@ getLog().info("TODO: Implement the execution of tests");
     }
 
     private void displayConfiguration(Manager manager) {
-        /*
         if (getLog().isInfoEnabled()) {
             getLog().info("Configuration:");
             getLog().info("    Include = "+manager.getConfiguration().getIncludes());
             getLog().info("    Exclude = "+manager.getConfiguration().getExcludes());
             getLog().info("     Groups = "+manager.getConfiguration().getGroups());
-            getLog().info("   Parallel = false"); // TODO: gör så att man kan låta flera trådar köra samma test (kunna utföra lasttest)
             getLog().info("");
             getLog().info("Tests:");
             if (manager.getExecutionGroups().isEmpty()) {
@@ -245,19 +243,17 @@ getLog().info("TODO: Implement the execution of tests");
             }
             getLog().info("------------------------------------------------------------------------");
         }
-        */
     }
 
-    private void displayResult(Manager manager) {
-        /*
+    private void displayResult(Manager manager, Executor executor) {
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");
             getLog().info("");
-            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.label"));
+            getLog().info("Result :");
             getLog().info("");
             long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, failed = 0, notExecuted = 0;
             List<ExecutionContext> failedExecutions = new ArrayList<>();
-            for (Machine machine: machines) {
+            for (Machine machine: executor.getMachines()) {
                 for (ExecutionContext context: machine.getExecutionContexts()) {
                     switch (context.getExecutionStatus()) {
                         case COMPLETED: {
@@ -280,31 +276,27 @@ getLog().info("TODO: Implement the execution of tests");
                 getLog().info("Failed executions: ");
                 for (ExecutionContext context: failedExecutions) {
                     double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
-                    String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
-                    String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
-                    String value = context.getPathGenerator().getStopCondition().getValue();
-                    getLog().info("  " + implementations.get(context).getClass().getName()+"("+pathGenerator+", "+stopCondition+", "+value+"): "+Math.round(100*fulfilment)+"%");
+                    String pathGenerator = context.getPathGenerator().toString();
+                    String stopCondition = context.getPathGenerator().getStopCondition().toString();
+                    getLog().info(MessageFormat.format("  {0}({1}, {2}): {3}%", executor.getImplementations().get(context).getClass().getName(), pathGenerator, stopCondition, Math.round(100*fulfilment)));
                 }
                 getLog().info("");
             }
-            getLog().info(ResourceUtils.getText(Bundle.NAME, "result.summary", groups, tests, completed, failed, notExecuted));
+            getLog().info(MessageFormat.format("Groups: {0}, Tests: {1}, Completed: {2}, Failed: {3}, Not Executed: {4}", groups, tests, completed, failed, notExecuted));
             getLog().info("");
         }
-        */
     }
 
-    private void reportResults(Manager manager) throws MojoExecutionException {
-        /*
+    private void reportResults(Executor executor) throws MojoExecutionException {
         boolean hasExceptions = false;
-        for (Machine machine: machines) {
-            //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime());
+        for (Machine machine: executor.getMachines()) {
+            //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime()); // TODO: Print junit reports
             for (ExecutionContext context: machine.getExecutionContexts()) {
                 hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
             }
         }
         if (hasExceptions) {
-            throw new MojoExecutionException(ResourceUtils.getText(Bundle.NAME, "exception.execution.failed", getReportsDirectory().getAbsolutePath()));
+            throw new MojoExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", getReportsDirectory().getAbsolutePath()));
         }
-        */
     }
 }
