@@ -26,8 +26,93 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.codehaus.plexus.util.SelectorUtils;
+import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.java.annotation.GraphWalker;
+
+import java.util.*;
+
 /**
  * @author Nils Olsson
  */
 public final class Manager {
+
+    private final Configuration configuration;
+    private final Collection<Group> executionGroups;
+
+    public Manager(Configuration configuration) {
+        this.configuration = configuration;
+        Collection<Class<?>> testClasses = new Scanner().scan(configuration.getTestClassesDirectory(), configuration.getClassesDirectory());
+        this.executionGroups = createExecutionGroups(filterTestClasses(testClasses));
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public Collection<Group> getExecutionGroups() {
+        return executionGroups;
+    }
+
+    private Collection<Class<?>> filterTestClasses(Collection<Class<?>> testClasses) {
+        Set<Class<?>> filteredClasses = new HashSet<>(testClasses.size());
+        for (Class<?> testClass: testClasses) {
+            if (isIncluded(testClass)) {
+                filteredClasses.add(testClass);
+            }
+        }
+        return filteredClasses;
+    }
+
+    private boolean isIncluded(Class<?> testClass) {
+        String name = testClass.getName();
+        for (String excluded: configuration.getExcludes()) {
+            if (SelectorUtils.match(excluded, name, true)) {
+                return false;
+            }
+        }
+        for (String included: configuration.getIncludes()) {
+            if (SelectorUtils.match(included, name, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String[] getGroups(Class<?> testClass) {
+        return testClass.getAnnotation(GraphWalker.class).groups();
+    }
+
+    private String getStart(Class<?> testClass) {
+        return testClass.getAnnotation(GraphWalker.class).start();
+    }
+
+    private Collection<Group> createExecutionGroups(Collection<Class<?>> testClasses) {
+        Map<String, Group> groups = new HashMap<>();
+        for (Class<?> testClass: testClasses) {
+            for (String name: getGroups(testClass)) {
+                if (!groups.containsKey(name)) {
+                    groups.put(name, new Group(name));
+                }
+                // TODO: Implement a way to configure the test, like the cli module does it
+                Execution execution = new Execution(testClass, RandomPath.class, EdgeCoverage.class, "100", getStart(testClass));
+                groups.get(name).addExecution(execution);
+            }
+        }
+        return groups.values();
+    }
+
+    public int getGroupCount() {
+        return getExecutionGroups().size();
+    }
+
+    public int getTestCount() {
+        int count = 0;
+        for (Group group: getExecutionGroups()) {
+            count += group.getExecutions().size();
+        }
+        return count;
+    }
 }

@@ -37,4 +37,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface GraphWalker {
+    String start() default "Start";
+    String[] groups() default {"default"};
 }
