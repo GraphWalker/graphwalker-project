@@ -29,10 +29,13 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.event.Observable;
 import org.graphwalker.core.model.Element;
 
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
 public interface Machine extends Observable<Element> {
     Context getNextStep();
     boolean hasNextStep();
+    List<ExecutionContext> getExecutionContexts();
 }
