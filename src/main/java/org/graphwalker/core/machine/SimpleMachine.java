@@ -192,4 +192,8 @@ public final class SimpleMachine extends ObservableMachine {
             return vertex;
         }
     }
+
+    public List<ExecutionContext> getExecutionContexts() {
+        return Collections.unmodifiableList(contexts);
+    }
 }
