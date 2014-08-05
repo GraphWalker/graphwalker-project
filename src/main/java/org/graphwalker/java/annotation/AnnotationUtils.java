@@ -28,6 +28,8 @@ package org.graphwalker.java.annotation;
 
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -44,6 +46,16 @@ public final class AnnotationUtils {
     public static Set<Class<?>> findTests(String packageName) {
         Reflections reflections = new Reflections(packageName);
         return reflections.getTypesAnnotatedWith(GraphWalker.class);
+    }
+
+    public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
+        Set<Annotation> annotations = new HashSet<>();
+        for (Class<?> interfaceClass: clazz.getInterfaces()) {
+            if (interfaceClass.isAnnotationPresent(annotation)) {
+                annotations.add(interfaceClass.getAnnotation(annotation));
+            }
+        }
+        return annotations;
     }
 
 }
