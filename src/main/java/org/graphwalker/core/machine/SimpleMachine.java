@@ -77,24 +77,29 @@ public final class SimpleMachine extends ObservableMachine {
             }
             context.setCurrentElement(context.getNextElement());
         } else {
-            if (isVertex(currentContext.getCurrentElement())) {
-                RuntimeVertex vertex = (RuntimeVertex)currentContext.getCurrentElement();
-                if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
-                    List<SharedStateTupel> candidates = getPossibleSharedStates(vertex.getSharedState());
-                    // TODO: If we need other way of determine the next state, we should have some interface for this
-                    Random random = new Random(System.nanoTime());
-                    SharedStateTupel candidate = candidates.get(random.nextInt(candidates.size()));
-                    if (!candidate.getVertex().equals(currentContext.getCurrentElement())) {
-                        candidate.context.setCurrentElement(candidate.getVertex());
-                        currentContext = candidate.context;
+            try {
+                if (isVertex(currentContext.getCurrentElement())) {
+                    RuntimeVertex vertex = (RuntimeVertex) currentContext.getCurrentElement();
+                    if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
+                        List<SharedStateTupel> candidates = getPossibleSharedStates(vertex.getSharedState());
+                        // TODO: If we need other way of determine the next state, we should have some interface for this
+                        Random random = new Random(System.nanoTime());
+                        SharedStateTupel candidate = candidates.get(random.nextInt(candidates.size()));
+                        if (!candidate.getVertex().equals(currentContext.getCurrentElement())) {
+                            candidate.context.setCurrentElement(candidate.getVertex());
+                            currentContext = candidate.context;
+                        } else {
+                            context.getPathGenerator().getNextStep(context);
+                        }
                     } else {
                         context.getPathGenerator().getNextStep(context);
                     }
                 } else {
                     context.getPathGenerator().getNextStep(context);
                 }
-            } else {
-                context.getPathGenerator().getNextStep(context);
+            } catch (Throwable t) {
+                context.setExecutionStatus(ExecutionStatus.FAILED);
+                throw t;
             }
         }
         if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
@@ -152,10 +157,15 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private void execute(Element element) {
-        if (element instanceof RuntimeVertex) {
-            execute((RuntimeVertex)element);
-        } else if (element instanceof RuntimeEdge) {
-            execute((RuntimeEdge)element);
+        try {
+            if (element instanceof RuntimeVertex) {
+                execute((RuntimeVertex) element);
+            } else if (element instanceof RuntimeEdge) {
+                execute((RuntimeEdge) element);
+            }
+        } catch (Throwable t) {
+            currentContext.setExecutionStatus(ExecutionStatus.FAILED);
+            throw t;
         }
     }
 
