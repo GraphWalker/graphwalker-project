@@ -27,11 +27,13 @@ package org.graphwalker.core.example;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
@@ -54,7 +56,7 @@ public class ExampleTest extends ExecutionContext {
     }
 
     public boolean isTrue() {
-        return true;
+        return false;
     }
 
     @Test
@@ -62,7 +64,25 @@ public class ExampleTest extends ExecutionContext {
         Vertex start = new Vertex();
         Model model = new Model().addEdge(new Edge()
                 .setName("edge1")
-                //.setGuard(new Guard("isTrue()"))
+                .setSourceVertex(start
+                        .setName("vertex1"))
+                .setTargetVertex(new Vertex()
+                        .setName("vertex2")));
+        this.setModel(model);
+        this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+        setNextElement(start);
+        Machine machine = new SimpleMachine(this);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+    }
+
+    @Test(expected = NoPathFoundException.class)
+    public void failure() {
+        Vertex start = new Vertex();
+        Model model = new Model().addEdge(new Edge()
+                .setName("edge1")
+                .setGuard(new Guard("isTrue()"))
                 .setSourceVertex(start
                         .setName("vertex1"))
                 .setTargetVertex(new Vertex()

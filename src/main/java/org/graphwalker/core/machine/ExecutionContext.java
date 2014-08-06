@@ -169,6 +169,10 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return filteredElements;
     }
 
+    private boolean isMethodCall(Guard guard) {
+        return guard.getScript().matches("\\w+\\(\\)");
+    }
+
     public boolean isAvailable(RuntimeEdge edge) {
         if (null != edge.getGuard()) {
             logger.info("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
@@ -180,10 +184,15 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
                 //ScriptEngineFactory sef = scriptEngine.getFactory();
                 //String s = sef.getMethodCallSyntax("impl", edge.getGuard().getScript(), new String[0]);
                 //return (Boolean)getScriptEngine().eval("(function(){ return " + edge.getGuard().getScript() + ";}.bind(impl))()");
-                return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
+                if (isMethodCall(edge.getGuard())) {
+                    return (Boolean)getScriptEngine().eval("impl." + edge.getGuard().getScript());
+                } else {
+                    return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
+                }
             } catch (ScriptException e) {
                 /* TODO: Handle errors or ignore them? when using A* guards will be evaluated before actions is performed that
                    can make the guard fail due to a ReferenceError: "variable" is not defined */
+                int i = 0;
             }
         }
         return true;
