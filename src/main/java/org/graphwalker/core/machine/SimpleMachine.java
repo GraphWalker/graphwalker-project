@@ -137,7 +137,15 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private boolean hasNextStep(ExecutionContext context) {
-        return context.getPathGenerator().hasNextStep(context);
+        ExecutionStatus status = context.getExecutionStatus();
+        if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
+            return false;
+        }
+        boolean hasMoreSteps = context.getPathGenerator().hasNextStep(context);
+        if (!hasMoreSteps) {
+            context.setExecutionStatus(ExecutionStatus.COMPLETED);
+        }
+        return hasMoreSteps;
     }
 
     private void execute(Element element) {
