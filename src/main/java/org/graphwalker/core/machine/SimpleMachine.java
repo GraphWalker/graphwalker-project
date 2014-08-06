@@ -97,6 +97,9 @@ public final class SimpleMachine extends ObservableMachine {
                 context.getPathGenerator().getNextStep(context);
             }
         }
+        if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
+            context.setExecutionStatus(ExecutionStatus.EXECUTING);
+        }
         setChanged();
         notifyObservers(context.getCurrentElement());
     }

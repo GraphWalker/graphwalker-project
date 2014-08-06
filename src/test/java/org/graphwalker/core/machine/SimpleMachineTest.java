@@ -58,6 +58,7 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
+            Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
     }
@@ -71,6 +72,7 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
+            Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
     }
@@ -87,6 +89,7 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
+            Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
@@ -104,6 +107,7 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
+            Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(3l));
