@@ -170,7 +170,11 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private void execute(RuntimeEdge edge) {
-        logger.info("Execute {}", currentContext.getCurrentElement());
+        if (null != currentContext.getCurrentElement().getName()) {
+            logger.info("Execute {}", currentContext.getCurrentElement().getName());
+        } else {
+            logger.debug("Execute {}", currentContext.getCurrentElement());
+        }
         execute(edge.getActions());
         if (edge.hasName()) {
             currentContext.execute(edge.getName());
@@ -185,7 +189,11 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private void execute(RuntimeVertex vertex) {
-        logger.info("Execute {}", currentContext.getCurrentElement());
+        if (null != currentContext.getCurrentElement().getName()) {
+            logger.info("Execute {}", currentContext.getCurrentElement().getName());
+        } else {
+            logger.debug("Execute {}", currentContext.getCurrentElement());
+        }
         if (vertex.hasName()) {
             currentContext.execute(vertex.getName());
         }

@@ -175,7 +175,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
 
     public boolean isAvailable(RuntimeEdge edge) {
         if (null != edge.getGuard()) {
-            logger.info("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
+            logger.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
             // TODO: Refactor how script engine is used and created
             getScriptEngine().setContext(this);
             Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
@@ -192,7 +192,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
             } catch (ScriptException e) {
                 /* TODO: Handle errors or ignore them? when using A* guards will be evaluated before actions is performed that
                    can make the guard fail due to a ReferenceError: "variable" is not defined */
-                int i = 0;
+                e.printStackTrace();
             }
         }
         return true;
