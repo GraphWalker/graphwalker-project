@@ -33,6 +33,9 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.java.annotation.AfterExecution;
+import org.graphwalker.java.annotation.AnnotationUtils;
+import org.graphwalker.java.annotation.BeforeExecution;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -99,18 +102,23 @@ public final class Executor {
             for (Group group: manager.getExecutionGroups()) {
                 List<ExecutionContext> executionContexts = new ArrayList<>();
                 for (Execution execution: group.getExecutions()) {
-                    try {
-                        StopCondition stopCondition = createStopCondition(execution.getStopCondition(), execution.getStopConditionValue());
-                        PathGenerator pathGenerator = execution.getPathGenerator().getConstructor(StopCondition.class).newInstance(stopCondition);
-                        Object implementation = execution.getTestClass().newInstance();
-                        Model model = execution.getModel();
-                        ExecutionContext executionContext = new ExecutionContext(model, pathGenerator);
-                        List<Element> elements = model.build().findElements(execution.getStart());
-                        executionContext.setNextElement(elements.get(new Random(System.nanoTime()).nextInt(elements.size())));
-                        implementations.put(executionContext, implementation);
-                        executionContexts.add(executionContext);
-                    } catch (Throwable t) {
-                        t.printStackTrace();
+                    if (ExecutionContext.class.isAssignableFrom(execution.getTestClass())) {
+                        try {
+                            StopCondition stopCondition = createStopCondition(execution.getStopCondition(), execution.getStopConditionValue());
+                            PathGenerator pathGenerator = execution.getPathGenerator().getConstructor(StopCondition.class).newInstance(stopCondition);
+
+                            ExecutionContext executionContext = (ExecutionContext)execution.getTestClass().newInstance();
+                            Model model = execution.getModel();
+                            executionContext.setModel(model);
+                            executionContext.setPathGenerator(pathGenerator);
+
+                            List<Element> elements = model.build().findElements(execution.getStart());
+                            executionContext.setNextElement(elements.get(new Random(System.nanoTime()).nextInt(elements.size())));
+                            implementations.put(executionContext, executionContext);
+                            executionContexts.add(executionContext);
+                        } catch (Throwable t) {
+                            t.printStackTrace();
+                        }
                     }
                 }
                 machines.add(new SimpleMachine(executionContexts));
@@ -120,25 +128,19 @@ public final class Executor {
                 for (final Machine machine : machines) {
                     executorService.execute(new Runnable() {
                         public void run() {
-                            //AnnotationUtils.execute(BeforeExecution.class, machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()));
-                            while (machine.hasNextStep()) {
-                                ExecutionContext context = (ExecutionContext)machine.getNextStep();
-
-                                System.out.println(context.getCurrentElement().getName());
-
-                                /*
-                                if (null != context.getCurrentElement().getName() && !"Start".equals(context.getName())) {
-                                    try {
-                                        ReflectionUtils.execute(implementations.get(machine.getCurrentExecutionContext())
-                                                , context.getName(), machine.getCurrentExecutionContext().getScriptContext());
-                                    } catch (Throwable throwable) {
-                                        //machine.failCurrentStep();
-                                        //AnnotationUtils.execute(machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()), throwable);
-                                    }
-                                }
-                                */
+                            for (ExecutionContext context: machine.getExecutionContexts()) {
+                                AnnotationUtils.execute(BeforeExecution.class, implementations.get(context));
                             }
-                            //AnnotationUtils.execute(AfterExecution.class, machine.getCurrentExecutionContext(), implementations.get(machine.getCurrentExecutionContext()));
+                            try {
+                                while (machine.hasNextStep()) {
+                                    machine.getNextStep();
+                                }
+                            } catch (Throwable t) {
+                                t.printStackTrace();
+                            }
+                            for (ExecutionContext context: machine.getExecutionContexts()) {
+                                AnnotationUtils.execute(AfterExecution.class, implementations.get(context));
+                            }
                         }
                     });
                 }

@@ -29,6 +29,8 @@ package org.graphwalker.java.annotation;
 import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,5 +59,18 @@ public final class AnnotationUtils {
         }
         return annotations;
     }
+
+    public static void execute(Class<? extends Annotation> annotation, Object implementation) {
+        for (Method method: implementation.getClass().getMethods()) {
+            if (method.isAnnotationPresent(annotation)) {
+                try {
+                    method.invoke(implementation);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
 }
