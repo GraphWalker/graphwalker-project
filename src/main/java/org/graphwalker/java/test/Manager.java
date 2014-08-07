@@ -28,6 +28,8 @@ package org.graphwalker.java.test;
 
 import org.codehaus.plexus.util.SelectorUtils;
 import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.java.annotation.GraphWalker;
 
@@ -80,23 +82,17 @@ public final class Manager {
         return false;
     }
 
-    private String[] getGroups(Class<?> testClass) {
-        return testClass.getAnnotation(GraphWalker.class).groups();
-    }
-
-    private String getStart(Class<?> testClass) {
-        return testClass.getAnnotation(GraphWalker.class).start();
-    }
-
     private Collection<Group> createExecutionGroups(Collection<Class<?>> testClasses) {
         Map<String, Group> groups = new HashMap<>();
         for (Class<?> testClass: testClasses) {
-            for (String name: getGroups(testClass)) {
+            GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
+            for (String name: configuration.groups()) {
                 if (!groups.containsKey(name)) {
                     groups.put(name, new Group(name));
                 }
                 // TODO: Implement a way to configure the test, like the cli module does it
-                Execution execution = new Execution(testClass, RandomPath.class, EdgeCoverage.class, "100", getStart(testClass));
+                Execution execution = new Execution(testClass, configuration.pathGenerator()
+                        , configuration.stopCondition(), configuration.stopConditionValue(), configuration.start());
                 groups.get(name).addExecution(execution);
             }
         }
