@@ -26,6 +26,11 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.generator.RandomPath;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -39,4 +44,7 @@ import java.lang.annotation.Target;
 public @interface GraphWalker {
     String start() default "Start";
     String[] groups() default {"default"};
+    Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
+    Class<? extends StopCondition> stopCondition() default VertexCoverage.class;
+    String stopConditionValue() default "100";
 }
