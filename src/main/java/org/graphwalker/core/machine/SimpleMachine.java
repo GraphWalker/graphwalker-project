@@ -183,7 +183,7 @@ public final class SimpleMachine extends ObservableMachine {
 
     private void execute(List<Action> actions) {
         for (Action action: actions) {
-            logger.info("Execute {}", action);
+            logger.debug("Execute {}", action);
             currentContext.execute(action);
         }
     }

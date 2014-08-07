@@ -29,14 +29,8 @@ package org.graphwalker.core.example;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.machine.ExecutionStatus;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.machine.*;
+import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -63,8 +57,16 @@ public class ExampleTest extends ExecutionContext {
         throw new RuntimeException();
     }
 
-    public boolean isTrue() {
+    public boolean isFalse() {
         return false;
+    }
+
+    public boolean isTrue() {
+        return true;
+    }
+
+    public void myAction() {
+        System.out.println("Action called");
     }
 
     @Test
@@ -72,10 +74,12 @@ public class ExampleTest extends ExecutionContext {
         Vertex start = new Vertex();
         Model model = new Model().addEdge(new Edge()
                 .setName("edge1")
+                .setGuard(new Guard("isTrue()"))
                 .setSourceVertex(start
                         .setName("vertex1"))
                 .setTargetVertex(new Vertex()
-                        .setName("vertex2")));
+                        .setName("vertex2"))
+                .addAction(new Action("myAction();")));
         this.setModel(model);
         this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
         setNextElement(start);
@@ -90,7 +94,7 @@ public class ExampleTest extends ExecutionContext {
         Vertex start = new Vertex();
         Model model = new Model().addEdge(new Edge()
                 .setName("edge1")
-                .setGuard(new Guard("isTrue()"))
+                .setGuard(new Guard("isFalse()"))
                 .setSourceVertex(start
                         .setName("vertex1"))
                 .setTargetVertex(new Vertex()
@@ -125,6 +129,7 @@ public class ExampleTest extends ExecutionContext {
                 Assert.assertThat(getExecutionStatus(), is(ExecutionStatus.EXECUTING));
             }
         } catch (Throwable t) {
+            Assert.assertTrue(MachineException.class.isAssignableFrom(t.getClass()));
             Assert.assertThat(getExecutionStatus(), is(ExecutionStatus.FAILED));
         }
     }

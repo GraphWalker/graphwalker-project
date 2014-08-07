@@ -169,8 +169,8 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return filteredElements;
     }
 
-    private boolean isMethodCall(Guard guard) {
-        return guard.getScript().matches("\\w+\\(\\)");
+    private boolean isMethodCall(String script) {
+        return script.matches("\\w+\\(\\);?");
     }
 
     public boolean isAvailable(RuntimeEdge edge) {
@@ -184,7 +184,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
                 //ScriptEngineFactory sef = scriptEngine.getFactory();
                 //String s = sef.getMethodCallSyntax("impl", edge.getGuard().getScript(), new String[0]);
                 //return (Boolean)getScriptEngine().eval("(function(){ return " + edge.getGuard().getScript() + ";}.bind(impl))()");
-                if (isMethodCall(edge.getGuard())) {
+                if (isMethodCall(edge.getGuard().getScript())) {
                     return (Boolean)getScriptEngine().eval("impl." + edge.getGuard().getScript());
                 } else {
                     return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
@@ -204,11 +204,14 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
         bindings.put("impl", this);
         try {
-            getScriptEngine().eval(action.getScript());
+            if (isMethodCall(action.getScript())) {
+                getScriptEngine().eval("impl." + action.getScript());
+            } else {
+                getScriptEngine().eval(action.getScript());
+            }
         } catch (ScriptException e) {
             throw new MachineException(e);
         }
-
     }
 
     public void execute(String name) {
