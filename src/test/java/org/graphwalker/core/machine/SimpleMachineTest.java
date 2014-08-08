@@ -64,6 +64,20 @@ public class SimpleMachineTest {
     }
 
     @Test
+    public void loopEdge() {
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+        }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    }
+
+    @Test
     public void noStartVertex() {
         Edge edge = new Edge().setTargetVertex(new Vertex());
         Model model = new Model().addEdge(edge);

@@ -30,7 +30,7 @@
         </encoder>
     </appender>
 
-    <root level="error">
+    <root level="warn">
         <appender-ref ref="CONSOLE" />
     </root>
 </configuration>
