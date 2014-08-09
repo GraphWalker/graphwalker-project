@@ -132,18 +132,13 @@ public class CLI {
     } catch (ParameterException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
-      System.err.println("");
-      jc.usage();
+      jc.usage(jc.getParsedCommand());
     } catch (ModelFactoryException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
-      System.err.println("");
-      jc.usage();
     } catch (GeneratorFactoryException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
-      System.err.println("");
-      jc.usage();
     } catch (Exception e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
@@ -247,8 +242,7 @@ public class CLI {
         model = factory.create(modelFileName);
         model.setName(modelFileName);
       } catch (ModelFactoryException e) {
-        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?\n"+
-        e.getMessage());
+        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
       }
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
