@@ -39,7 +39,7 @@ public class Offline {
   public boolean verbose = false;
 
   @Parameter(names = {"--unvisited", "-u"}, required = false, arity = 1,
-      description = "Will only print the unvisited elements in the model.")
+      description = "Will also print the remaining unvisited elements in the model.")
   public boolean unvisited = false;
 
   @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
