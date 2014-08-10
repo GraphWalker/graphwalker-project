@@ -46,7 +46,7 @@ public final class Execution {
     }
 
     public long getTimestamp(TimeUnit unit) {
-        return TimeUnit.NANOSECONDS.convert(timestamp, unit);
+        return unit.convert(timestamp, TimeUnit.NANOSECONDS);
     }
 
     public long getTimestamp() {
@@ -54,7 +54,7 @@ public final class Execution {
     }
 
     public long getDuration(TimeUnit unit) {
-        return TimeUnit.NANOSECONDS.convert(duration, unit);
+        return unit.convert(duration, TimeUnit.NANOSECONDS);
     }
 
     public long getDuration() {
