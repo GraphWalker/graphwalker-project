@@ -30,6 +30,9 @@ import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.event.Observable;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
@@ -51,14 +54,51 @@ public class ObserverTest implements Observer<Element> {
         counter++;
     }
 
-    @Test
-    public void updateCounter() {
+    private ObservableMachine createMachine() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
         ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
-        Machine machine = new SimpleMachine(context);
+        ObservableMachine machine = new SimpleMachine(context);
+        Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));
+        Assert.assertTrue(Observable.class.isAssignableFrom(machine.getClass()));
+        return machine;
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void nullObserver() {
+        ObservableMachine observable = createMachine();
+        observable.addObserver(null);
+    }
+
+    @Test
+    public void changeObserver() {
+        ObservableMachine observable = createMachine();
+        Assert.assertThat(observable.hasChanged(), is(false));
+        observable.notifyObservers();
+        Assert.assertThat(observable.hasChanged(), is(false));
+    }
+
+    @Test
+    public void addRemoveObserver() {
+        ObservableMachine observable = createMachine();
+        observable.addObserver(this);
+        Assert.assertThat(observable.countObservers(), is(1));
+        observable.deleteObserver(this);
+        Assert.assertThat(observable.countObservers(), is(0));
+        observable.addObserver(this);
+        Assert.assertThat(observable.countObservers(), is(1));
+        observable.deleteObservers();
+        Assert.assertThat(observable.countObservers(), is(0));
+        observable.addObserver(this);
+        Assert.assertThat(observable.countObservers(), is(1));
+    }
+
+    @Test
+    public void updateCounter() {
+        Machine machine = createMachine();
         machine.addObserver(this);
+        ExecutionContext context = machine.getExecutionContexts().get(0);
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
