@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface GraphWalker {
-    String start() default "Start";
+    String start() default "";
     String[] groups() default {"default"};
     Class<? extends PathGenerator> pathGenerator() default RandomPath.class;
     Class<? extends StopCondition> stopCondition() default VertexCoverage.class;
