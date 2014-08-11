@@ -26,6 +26,7 @@ package org.graphwalker.maven.plugin.test;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.maven.plugin.model.RingModel;
 
@@ -33,7 +34,7 @@ import org.graphwalker.maven.plugin.model.RingModel;
  * @author Nils Olsson
  */
 @GraphWalker(start = "A")
-public class RingTest implements RingModel {
+public class RingTest extends ExecutionContext implements RingModel {
 
     @Override
     public void D() {
