@@ -26,17 +26,19 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.java.annotation.AfterExecution;
 import org.graphwalker.java.annotation.AnnotationUtils;
 import org.graphwalker.java.annotation.BeforeExecution;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -105,20 +107,35 @@ public final class Executor {
                     if (ExecutionContext.class.isAssignableFrom(execution.getTestClass())) {
                         try {
                             StopCondition stopCondition = createStopCondition(execution.getStopCondition(), execution.getStopConditionValue());
-                            PathGenerator pathGenerator = execution.getPathGenerator().getConstructor(StopCondition.class).newInstance(stopCondition);
+
+                            Constructor<? extends PathGenerator> constructor = null;
+                            try {
+                                constructor = execution.getPathGenerator().getConstructor(StopCondition.class);
+                            } catch (Throwable _) {
+                                // ignore
+                            }
+                            if (null == constructor) {
+                                constructor = execution.getPathGenerator().getConstructor(NamedStopCondition.class);
+                            }
+                            PathGenerator pathGenerator = constructor.newInstance(stopCondition);
 
                             ExecutionContext executionContext = (ExecutionContext)execution.getTestClass().newInstance();
                             Model model = execution.getModel();
                             executionContext.setModel(model);
                             executionContext.setPathGenerator(pathGenerator);
 
-                            List<Element> elements = model.build().findElements(execution.getStart());
-                            executionContext.setNextElement(elements.get(new Random(System.nanoTime()).nextInt(elements.size())));
+                            if (!"".equals(execution.getStart())) {
+                                List<Vertex.RuntimeVertex> vertices = executionContext.getModel().findVertices(execution.getStart());
+                                executionContext.setNextElement(vertices.get(new Random(System.nanoTime()).nextInt(vertices.size())));
+                            }
+
                             implementations.put(executionContext, executionContext);
                             executionContexts.add(executionContext);
                         } catch (Throwable t) {
                             t.printStackTrace();
                         }
+                    } else {
+                        throw new RuntimeException(execution.getName()); // TODO: change exception, this occurs when the implementation is not a execution context
                     }
                 }
                 machines.add(new SimpleMachine(executionContexts));
