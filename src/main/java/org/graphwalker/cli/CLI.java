@@ -47,6 +47,7 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.utils.LoggerUtil;
 import org.graphwalker.io.factory.GraphMLModelFactory;
 import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
@@ -84,6 +85,7 @@ public class CLI {
    */
   private void run(String[] args) {
     options = new Options();
+
     jc = new JCommander(options);
     jc.setProgramName("java -jar graphwalker.jar");
 
@@ -101,6 +103,8 @@ public class CLI {
 
     try {
       jc.parse(args);
+      setLogLevel(options);
+
 
       // Parse for commands
       if (jc.getParsedCommand() != null) {
@@ -143,6 +147,25 @@ public class CLI {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
+    }
+  }
+
+  private void setLogLevel(Options options) {
+    // OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+    if (options.debug.equalsIgnoreCase("OFF")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.OFF);
+    } else if (options.debug.equalsIgnoreCase("ERROR")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.ERROR);
+    } else if (options.debug.equalsIgnoreCase("WARN")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.WARN);
+    } else if (options.debug.equalsIgnoreCase("INFO")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.INFO);
+    } else if (options.debug.equalsIgnoreCase("DEBUG")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.DEBUG);
+    } else if (options.debug.equalsIgnoreCase("TRACE")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.TRACE);
+    } else if (options.debug.equalsIgnoreCase("ALL")) {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.ALL);
     }
   }
 
