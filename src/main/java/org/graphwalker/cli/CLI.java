@@ -256,7 +256,7 @@ public class CLI {
       try {
         machine.getNextStep();
       } catch ( MachineException e) {
-        ;
+          throw e;
       } finally {
         if (offline.verbose) {
           System.out.print(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ");
