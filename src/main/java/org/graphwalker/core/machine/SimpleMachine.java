@@ -76,6 +76,14 @@ public final class SimpleMachine extends ObservableMachine {
                 List<RuntimeVertex> vertices = context.getModel().getStartVertices();
                 RuntimeVertex start = vertices.get(new Random(System.nanoTime()).nextInt(vertices.size()));
                 context.setCurrentElement(context.getModel().getOutEdges(start).get(0));
+            } else if (context.getModel().hasSharedStates()) {
+                // if we don't have a start vertex, but we have shared state, then we try to find another context to execute
+                for (ExecutionContext newContext: contexts) {
+                    if (!newContext.getPathGenerator().getStopCondition().isFulfilled(context)) {
+                        currentContext = newContext;
+                        getNextStep();
+                    }
+                }
             } else {
                 throw new NoPathFoundException("No start element defined");
             }

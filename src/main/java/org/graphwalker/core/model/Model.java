@@ -121,6 +121,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return sharedStateCache.containsKey(sharedState);
         }
 
+        public boolean hasSharedStates() {
+            return !sharedStateCache.isEmpty();
+        }
+
         public List<RuntimeVertex> getStartVertices() {
             return startVerticesCache;
         }
