@@ -96,6 +96,9 @@ public final class GraphMLModelFactory implements ModelFactory {
                             }
                             VertexParser.ParseContext context = new VertexParser(getTokenStream(label.toString())).parse();
                             Vertex vertex = new Vertex();
+                            if (null != context.start()) {
+                                vertex.setStartVertex(true);
+                            }
                             if (null != context.name()) {
                                 vertex.setName(context.name().getText());
                             }

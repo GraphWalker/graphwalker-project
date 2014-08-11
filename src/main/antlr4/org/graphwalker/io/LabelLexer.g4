@@ -5,6 +5,7 @@ COLON     : ':';
 SEMICOLON : ';';
 BLOCKED   : 'BLOCKED';
 SHARED    : 'SHARED';
+START     : [Ss][Tt][Aa][Rr][Tt];
 
 NestedBrackets
  :  '[' ( ~('[' | ']') | NestedBrackets )* ']'

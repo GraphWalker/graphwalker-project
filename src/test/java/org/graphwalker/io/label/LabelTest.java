@@ -84,6 +84,13 @@ public class LabelTest {
         }
     }
 
+    @Test
+    public void startVertex() {
+        VertexParser parser = new VertexParser(getTokens(" StARt "));
+        VertexParser.ParseContext context = parser.parse();
+        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+        Assert.assertNotNull(context.start());
+    }
 
     @Test(expected = AssertionError.class)
     public void badVertexLabel() {
