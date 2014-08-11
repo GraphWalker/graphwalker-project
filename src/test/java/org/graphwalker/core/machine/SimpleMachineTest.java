@@ -240,4 +240,58 @@ public class SimpleMachineTest {
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
+
+    @Test
+    public void multipleStartVerticesA() {
+        Vertex firstStartVertex = new Vertex().setName("Start").setStartVertex(true);
+        Vertex secondStartVertex = new Vertex().setName("Second Start");
+        Vertex endVertex = new Vertex().setName("End");
+        Edge e1 = new Edge().setSourceVertex(firstStartVertex).setTargetVertex(secondStartVertex);
+        Edge e2 = new Edge().setSourceVertex(secondStartVertex).setTargetVertex(endVertex);
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("End")));
+        context.setNextElement(secondStartVertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        // We should start at "Second Start" and then walk the path to the end
+        List<Element> expectedPath = Arrays.<Element>asList(
+                secondStartVertex.build(),
+                e2.build(),
+                endVertex.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+        // Because the "Start" node is flagged as a start node, it shouldn't be part of the statistics
+        Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(3L));
+    }
+
+    @Test
+    public void multipleStartVerticesB() {
+        Vertex firstStartVertex = new Vertex().setName("Start").setStartVertex(true);
+        Vertex secondStartVertex = new Vertex().setName("Second Start");
+        Vertex endVertex = new Vertex().setName("End");
+        Edge e1 = new Edge().setSourceVertex(firstStartVertex).setTargetVertex(secondStartVertex);
+        Edge e2 = new Edge().setSourceVertex(secondStartVertex).setTargetVertex(endVertex);
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("End")));
+        // In this test we don't set the start node, instead we let the machine pick up the start node from the model
+        //context.setNextElement(secondStartVertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        // We should start at "Start" and then walk the path to the end,
+        List<Element> expectedPath = Arrays.<Element>asList(
+                e1.build(),
+                secondStartVertex.build(),
+                e2.build(),
+                endVertex.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+        // Because the "Start" node is flagged as a start node, it shouldn't be part of the statistics
+        Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4L));
+    }
 }

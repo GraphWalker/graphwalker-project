@@ -80,6 +80,7 @@ public final class Profiler {
         return profile.getPath();
     }
 
+    @Deprecated
     public void removeStartVertex(Element element) {
         profile.addExecution(element, new Execution(0, 0));
     }

@@ -32,7 +32,6 @@ import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
 
 import java.util.List;
 

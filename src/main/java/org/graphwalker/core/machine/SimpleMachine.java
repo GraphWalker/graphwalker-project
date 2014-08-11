@@ -29,11 +29,9 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Vertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
 
 import java.util.*;
 
@@ -72,10 +70,15 @@ public final class SimpleMachine extends ObservableMachine {
 
     private void walk(ExecutionContext context) {
         if (null == context.getCurrentElement()) {
-            if (null == context.getNextElement()) {
-                throw new NoPathFoundException("No Start element defined");
+            if (null != context.getNextElement()) {
+                context.setCurrentElement(context.getNextElement());
+            } else if (context.getModel().hasStartVertices()) {
+                List<RuntimeVertex> vertices = context.getModel().getStartVertices();
+                RuntimeVertex start = vertices.get(new Random(System.nanoTime()).nextInt(vertices.size()));
+                context.setCurrentElement(context.getModel().getOutEdges(start).get(0));
+            } else {
+                throw new NoPathFoundException("No start element defined");
             }
-            context.setCurrentElement(context.getNextElement());
         } else {
             try {
                 if (isVertex(currentContext.getCurrentElement())) {

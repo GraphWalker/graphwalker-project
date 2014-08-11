@@ -29,10 +29,8 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.algorithm.Eulerian;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
-import org.graphwalker.core.model.Vertex;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
