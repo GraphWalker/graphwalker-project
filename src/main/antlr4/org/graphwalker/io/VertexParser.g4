@@ -5,8 +5,12 @@ options {
 }
 
 parse
- : name? shared? EOF
- | shared? name? EOF
+ : (start | (name? shared?))? EOF
+ | (start | (shared? name?))? EOF
+ ;
+
+start
+ : START
  ;
 
 shared
