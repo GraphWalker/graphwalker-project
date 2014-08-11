@@ -231,7 +231,6 @@ public class CLI {
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
-      SetStartVertex(context);
       executionContexts.add(context);
     }
 
@@ -270,7 +269,6 @@ public class CLI {
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
-      SetStartVertex(context);
       executionContexts.add(context);
     }
 
@@ -305,24 +303,6 @@ public class CLI {
         }
 
         System.out.println();
-      }
-    }
-  }
-
-  private void SetStartVertex( ExecutionContext context ) {
-    // Backward compatibility with GW2, which expects a Start node to exists
-    List<Vertex.RuntimeVertex> list = context.getModel().findVertices("Start");
-    if (null != list && !list.isEmpty() && list.get(0) != null) {
-      context.setCurrentElement(context.getModel().findVertices("Start").get(0));
-      context.getProfiler().removeStartVertex(context.getCurrentElement());
-
-    // New GW3 syntax for graphml models, which defines the Start as the vertex with no in-edges
-    } else {
-      for (Vertex.RuntimeVertex vertex : context.getModel().getVertices() ) {
-        if (context.getModel().getInEdges(vertex).size()==0){
-          context.setNextElement(vertex);
-          return;
-        }
       }
     }
   }
