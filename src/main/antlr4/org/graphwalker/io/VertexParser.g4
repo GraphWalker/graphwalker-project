@@ -5,8 +5,12 @@ options {
 }
 
 parse
- : (start | (name? shared?))? EOF
- | (start | (shared? name?))? EOF
+ : (start | (name? shared? actions?))? EOF
+ | (start | (actions? shared? name?))? EOF
+ | (start | (shared? name? actions?))? EOF
+ | (start | (actions? name? shared?))? EOF
+ | (start | (name? actions? shared?))? EOF
+ | (start | (shared? actions? name?))? EOF
  ;
 
 start
@@ -19,4 +23,12 @@ shared
 
 name
  : Identifier
+ ;
+
+actions
+ : INIT COLON (action)+
+ ;
+
+action
+ : ~(SEMICOLON)* SEMICOLON
  ;
