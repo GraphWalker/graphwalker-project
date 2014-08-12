@@ -55,7 +55,11 @@ public final class SimpleMachine extends ObservableMachine {
 
     public SimpleMachine(List<ExecutionContext> contexts) {
         this.contexts.addAll(contexts);
-        this.currentContext = contexts.get(0);
+        for (ExecutionContext context: contexts) {
+            this.currentContext = context;
+            execute(context.getModel().getActions());
+        }
+      this.currentContext = contexts.get(0);
     }
 
     @Override
@@ -191,11 +195,6 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private void execute(RuntimeEdge edge) {
-        if (null != currentContext.getCurrentElement().getName()) {
-            logger.info("Execute {}", currentContext.getCurrentElement().getName());
-        } else {
-            logger.debug("Execute {}", currentContext.getCurrentElement());
-        }
         execute(edge.getActions());
         if (edge.hasName()) {
             currentContext.execute(edge.getName());
@@ -204,17 +203,11 @@ public final class SimpleMachine extends ObservableMachine {
 
     private void execute(List<Action> actions) {
         for (Action action: actions) {
-            logger.debug("Execute {}", action);
             currentContext.execute(action);
         }
     }
 
     private void execute(RuntimeVertex vertex) {
-        if (null != currentContext.getCurrentElement().getName()) {
-            logger.info("Execute {}", currentContext.getCurrentElement().getName());
-        } else {
-            logger.debug("Execute {}", currentContext.getCurrentElement());
-        }
         if (vertex.hasName()) {
             currentContext.execute(vertex.getName());
         }

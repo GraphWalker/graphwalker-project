@@ -207,6 +207,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     }
 
     public void execute(Action action) {
+        logger.debug("Execute {}", action.getScript());
         // TODO: Refactor
         getScriptEngine().setContext(this);
         Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
@@ -223,6 +224,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     }
 
     public void execute(String name) {
+        logger.debug("Execute {}", name);
         // TODO: Refactor
         try {
             getClass().getMethod(name);
