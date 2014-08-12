@@ -217,18 +217,6 @@ public class CLITest {
 
   /**
    * Simulates
-   * java -jar graphwalker.jar offline -m graphml/UC01_GW3.graphml "random(edge_coverage(100))"
-   */
-  @Test
-  public void testOfflineRandomEdgeCoverage100percent_GW3() {
-    String args[] = {"offline", "-m", "graphml/UC01_GW3.graphml", "random(edge_coverage(100))"};
-    runCommand(args);
-    Assert.assertThat( "No error messages should occur", errMsg, is(""));
-    Assert.assertThat( outMsg, matches("^v_BrowserStopped\n.*"));
-  }
-
-  /**
-   * Simulates
    * java -jar graphwalker.jar offline -f graphml/UC01.graphml -g A_STAR -s EDGE_COVERAGE:100
    */
   @Test
@@ -277,8 +265,8 @@ public class CLITest {
    * java -jar graphwalker.jar methods -m graphml/UC01_GW3.graphml
    */
   @Test
-  public void testMethods_GW3() {
-    String args[] = {"methods", "-m", "graphml/UC01_GW3.graphml"};
+  public void testMethods_GW() {
+    String args[] = {"methods", "-m", "graphml/UC01_GW2.graphml"};
     runCommand(args);
     Assert.assertThat(errMsg, is(""));
     Assert.assertThat(outMsg, is("e_AddBookToCart\n" +
@@ -287,6 +275,7 @@ public class CLITest {
       "e_SearchBook\n" +
       "e_ShoppingCart\n" +
       "e_StartBrowser\n" +
+      "e_init\n" +
       "v_BaseURL\n" +
       "v_BookInformation\n" +
       "v_BrowserStarted\n" +

@@ -205,7 +205,9 @@ public class CLI {
 
     SortedSet<String> names = new TreeSet<>();
     for (Vertex.RuntimeVertex vertex : model.getVertices()) {
-      names.add(vertex.getName());
+      if (null != vertex.getName()) {
+        names.add(vertex.getName());
+      }
     }
     for (Edge.RuntimeEdge edge : model.getEdges()) {
       names.add(edge.getName());
