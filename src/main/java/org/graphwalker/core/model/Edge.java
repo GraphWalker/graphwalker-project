@@ -57,8 +57,8 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     }
 
     public Edge setId(String id) {
-        invalidateCache();
         this.id = id;
+        invalidateCache();
         return this;
     }
 
@@ -137,23 +137,21 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return new RuntimeEdge(this);
     }
 
-    public static final class RuntimeEdge extends NamedElement {
+    public static final class RuntimeEdge extends ActionElement {
 
         private String id;
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;
         private final Guard guard;
-        private final List<Action> actions;
         private final boolean blocked;
         private final Double weight;
 
         private RuntimeEdge(Edge edge) {
-            super(edge.getName());
+            super(edge.getName(), edge.getActions());
             this.id = edge.getId();
             this.sourceVertex = build(edge.getSourceVertex());
             this.targetVertex = build(edge.getTargetVertex());
             this.guard = edge.getGuard();
-            this.actions = Collections.unmodifiableList(edge.getActions());
             this.blocked = edge.isBlocked();
             this.weight = edge.getWeight();
         }
@@ -176,10 +174,6 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         public Guard getGuard() {
             return guard;
-        }
-
-        public List<Action> getActions() {
-            return actions;
         }
 
         public boolean isBlocked() {
