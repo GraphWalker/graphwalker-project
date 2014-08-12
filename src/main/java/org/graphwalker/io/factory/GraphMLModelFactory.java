@@ -105,6 +105,9 @@ public final class GraphMLModelFactory implements ModelFactory {
                             if (null != context.shared() && null != context.shared().Identifier()) {
                                 vertex.setSharedState(context.shared().Identifier().getText());
                             }
+                            if (null != context.actions()) {
+                                model.addActions(convertVertexAction(context.actions().action()));
+                            }
                             elements.put(node.getId(), vertex);
                             vertex.setId(node.getId());
                             model.addVertex(vertex);
@@ -169,7 +172,7 @@ public final class GraphMLModelFactory implements ModelFactory {
                                 edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
                             }
                             if (null != context.actions()) {
-                                edge.addActions(convert(context.actions().action()));
+                                edge.addActions(convertEdgeAction(context.actions().action()));
                             }
                             if (null != context.blocked()) {
                                 edge.setBlocked(true);
@@ -209,9 +212,17 @@ public final class GraphMLModelFactory implements ModelFactory {
         throw new ModelFactoryException("Unsupported edge type: "+xml);
     }
 
-    private List<Action> convert(List<ActionContext> actionContexts) {
+    private List<Action> convertEdgeAction(List<EdgeParser.ActionContext> actionContexts) {
         List<Action> actions = new ArrayList<>();
-        for (ActionContext actionContext: actionContexts) {
+        for (EdgeParser.ActionContext actionContext: actionContexts) {
+            actions.add(new Action(actionContext.getText()));
+        }
+        return actions;
+    }
+
+    private List<Action> convertVertexAction(List<VertexParser.ActionContext> actionContexts) {
+        List<Action> actions = new ArrayList<>();
+        for (VertexParser.ActionContext actionContext: actionContexts) {
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
