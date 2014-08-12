@@ -230,11 +230,10 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
             Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
             bindings.put("impl", this);
             getScriptEngine().eval("impl." + name + "()");
-        } catch (ScriptException e) {
-            throw new MachineException(e);
         } catch (NoSuchMethodException e) {
-            // warn
+            // ignore, method is not defined in the execution context, TODO: create a warning
+        } catch (Throwable t) {
+            throw new MachineException(t);
         }
-
     }
 }
