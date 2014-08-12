@@ -29,6 +29,7 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
@@ -86,8 +87,8 @@ public class AStarPathTest {
     public void allPathsBlocked() {
         e1.setBlocked(true);
         e4.setBlocked(true);
-        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("end")))
-                .setNextElement(v1);
+        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("end")));
+        context.setNextElement(v1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep(); // should fail due to that there is no way to travel to the end
