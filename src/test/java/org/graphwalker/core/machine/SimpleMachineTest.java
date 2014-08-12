@@ -109,6 +109,25 @@ public class SimpleMachineTest {
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
     }
 
+    @Test
+    public void executeActionInitBlock() {
+        Vertex vertex1 = new Vertex();
+        Vertex vertex2 = new Vertex();
+        Model model = new Model()
+          .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+          .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+        model.addAction(new Action("var i = 1;"));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        context.setNextElement(vertex1);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+          machine.getNextStep();
+          Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+        }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
+    }
+
     @Test(expected = NoPathFoundException.class)
     public void honorGuard() {
         Vertex vertex1 = new Vertex();
