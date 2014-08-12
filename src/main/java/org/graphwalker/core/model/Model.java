@@ -39,6 +39,8 @@ public final class Model implements Builder<Model.RuntimeModel> {
     private String name;
     private final List<Vertex> vertices = new ArrayList<>();
     private final List<Edge> edges = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
+
 
     public Model setName(String name) {
         this.name = name;
@@ -63,6 +65,20 @@ public final class Model implements Builder<Model.RuntimeModel> {
             vertices.add(edge.getTargetVertex());
         }
         return this;
+    }
+
+    public Model addAction(Action action) {
+        this.actions.add(action);
+        return this;
+    }
+
+    public Model addActions(List<Action> actions) {
+        this.actions.addAll(actions);
+        return this;
+    }
+
+    public List<Action> getActions() {
+        return actions;
     }
 
     public List<Vertex> getVertices() {
@@ -92,6 +108,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
         private final Map<String, List<RuntimeVertex>> sharedStateCache;
         private final String id;
+        private final List<Action> actions;
 
         private RuntimeModel(Model model) {
             super(model.getName());
@@ -107,6 +124,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.sharedStateCache = createSharedStateCache();
             this.startVerticesCache = createStartVerticesCache();
             this.id = "";
+            this.actions = Collections.unmodifiableList(model.getActions());
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -296,6 +314,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
         @Override
         public void accept(ElementVisitor visitor) {
             visitor.visit(this);
+        }
+
+        public List<Action> getActions() {
+            return actions;
         }
     }
 }
