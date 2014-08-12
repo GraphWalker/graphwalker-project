@@ -94,7 +94,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return new RuntimeModel(this);
     }
 
-    public static class RuntimeModel extends NamedElement {
+    public static class RuntimeModel extends ActionElement {
 
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
@@ -108,10 +108,9 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
         private final Map<String, List<RuntimeVertex>> sharedStateCache;
         private final String id;
-        private final List<Action> actions;
 
         private RuntimeModel(Model model) {
-            super(model.getName());
+            super(model.getName(), model.getActions());
             this.vertices = BuilderFactory.build(model.getVertices());
             this.edges = BuilderFactory.build(model.getEdges());
             this.edgesByNameCache = createEdgesByNameCache();
@@ -124,7 +123,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.sharedStateCache = createSharedStateCache();
             this.startVerticesCache = createStartVerticesCache();
             this.id = "";
-            this.actions = Collections.unmodifiableList(model.getActions());
         }
 
         public List<RuntimeVertex> getVertices() {
@@ -316,8 +314,5 @@ public final class Model implements Builder<Model.RuntimeModel> {
             visitor.visit(this);
         }
 
-        public List<Action> getActions() {
-            return actions;
-        }
     }
 }

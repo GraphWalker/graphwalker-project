@@ -53,6 +53,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
     public Vertex addRequirement(Requirement requirement) {
         this.requirements.add(requirement);
+        invalidateCache();
         return this;
     }
 
