@@ -65,16 +65,6 @@ public final class SimpleMachine extends ObservableMachine {
     @Override
     public Context getNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        /*
-        if (currentContext.getPathGenerator().getStopCondition().isFulfilled(currentContext)) {
-            for (ExecutionContext context: contexts) {
-                if (hasNextStep(context) && (null != context.getCurrentElement() || context.getModel().hasStartVertices())) {
-                    currentContext = context;
-                    break;
-                }
-            }
-        }
-        */
         walk(currentContext);
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement());
@@ -93,7 +83,7 @@ public final class SimpleMachine extends ObservableMachine {
             } else if (context.getModel().hasSharedStates()) {
                 // if we don't have a start vertex, but we have shared state, then we try to find another context to execute
                 for (ExecutionContext newContext: contexts) {
-                    if (hasNextStep(context) && (null != context.getCurrentElement() || context.getModel().hasStartVertices())) {
+                    if (hasNextStep(newContext) && (null != newContext.getCurrentElement() || newContext.getModel().hasStartVertices()) || null != newContext.getNextElement()) {
                         currentContext = newContext;
                         getNextStep();
                     }
