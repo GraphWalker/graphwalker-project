@@ -39,7 +39,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
     private String name;
     private final List<Vertex> vertices = new ArrayList<>();
     private final List<Edge> edges = new ArrayList<>();
-    private List<Action> actions = new ArrayList<>();
+    private final List<Action> actions = new ArrayList<>();
 
 
     public Model setName(String name) {

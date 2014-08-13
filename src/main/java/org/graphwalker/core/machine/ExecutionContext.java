@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.script.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
 
     private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
     private final Profiler profiler = new Profiler(this);
-    private final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+    private ScriptEngine scriptEngine;
 
     private RuntimeModel model;
     private PathGenerator pathGenerator;
@@ -65,9 +66,28 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     private Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
 
     public ExecutionContext() {
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+        engine.setContext(this);
+        String script = "";
+        Compilable compiler = (Compilable)engine;
+        for (Method method: getClass().getMethods()) {
+            if (0 == method.getParameterTypes().length) {
+                script += "function "+method.getName()+"() { return impl."+method.getName()+"();};";
+            }
+        }
+        try {
+            CompiledScript compiledScript = compiler.compile(script);
+            Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
+            bindings.put("impl", this);
+            compiledScript.eval(bindings);
+            scriptEngine = compiledScript.getEngine();
+        } catch (ScriptException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
+        this();
         this.model = model.build();
         this.pathGenerator = pathGenerator;
 
@@ -177,30 +197,13 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         return filteredElements;
     }
 
-    private boolean isMethodCall(String script) {
-        return script.matches("\\w+\\(\\);?");
-    }
-
     public boolean isAvailable(RuntimeEdge edge) {
         if (null != edge.getGuard()) {
             logger.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
-            // TODO: Refactor how script engine is used and created
-            getScriptEngine().setContext(this);
-            Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-            bindings.put("impl", this);
             try {
-                //ScriptEngineFactory sef = scriptEngine.getFactory();
-                //String s = sef.getMethodCallSyntax("impl", edge.getGuard().getScript(), new String[0]);
-                //return (Boolean)getScriptEngine().eval("(function(){ return " + edge.getGuard().getScript() + ";}.bind(impl))()");
-                if (isMethodCall(edge.getGuard().getScript())) {
-                    return (Boolean)getScriptEngine().eval("impl." + edge.getGuard().getScript());
-                } else {
-                    return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
-                }
+                return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
             } catch (ScriptException e) {
-                /* TODO: Handle errors or ignore them? when using A* guards will be evaluated before actions is performed that
-                   can make the guard fail due to a ReferenceError: "variable" is not defined */
-                e.printStackTrace();
+                throw new MachineException(e);
             }
         }
         return true;
@@ -208,16 +211,8 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
 
     public void execute(Action action) {
         logger.debug("Execute {}", action.getScript());
-        // TODO: Refactor
-        getScriptEngine().setContext(this);
-        Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-        bindings.put("impl", this);
         try {
-            if (isMethodCall(action.getScript())) {
-                getScriptEngine().eval("impl." + action.getScript());
-            } else {
-                getScriptEngine().eval(action.getScript());
-            }
+            getScriptEngine().eval(action.getScript());
         } catch (ScriptException e) {
             throw new MachineException(e);
         }
@@ -225,15 +220,11 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
 
     public void execute(String name) {
         logger.debug("Execute {}", name);
-        // TODO: Refactor
         try {
-            getClass().getMethod(name);
-            getScriptEngine().setContext(this);
-            Bindings bindings = getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-            bindings.put("impl", this);
-            getScriptEngine().eval("impl." + name + "()");
+            getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
+            getScriptEngine().eval(name+"()");
         } catch (NoSuchMethodException e) {
-            // ignore, method is not defined in the execution context, TODO: create a warning
+            // ignore, method is not defined in the execution context
         } catch (Throwable t) {
             throw new MachineException(t);
         }

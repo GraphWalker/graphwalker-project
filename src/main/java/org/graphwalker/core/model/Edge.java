@@ -27,7 +27,6 @@ package org.graphwalker.core.model;
  */
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;

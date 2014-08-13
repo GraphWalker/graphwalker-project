@@ -29,7 +29,6 @@ package org.graphwalker.core.statistics;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
-import org.graphwalker.core.model.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
