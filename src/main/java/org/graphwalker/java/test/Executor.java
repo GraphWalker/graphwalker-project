@@ -148,12 +148,12 @@ public final class Executor {
                             for (ExecutionContext context: machine.getExecutionContexts()) {
                                 AnnotationUtils.execute(BeforeExecution.class, implementations.get(context));
                             }
-                            try {
-                                while (machine.hasNextStep()) {
+                            while (machine.hasNextStep()) {
+                                try {
                                     machine.getNextStep();
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
                                 }
-                            } catch (Throwable t) {
-                                t.printStackTrace();
                             }
                             for (ExecutionContext context: machine.getExecutionContexts()) {
                                 AnnotationUtils.execute(AfterExecution.class, implementations.get(context));
