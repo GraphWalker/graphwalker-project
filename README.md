@@ -9,6 +9,8 @@ GraphWalker is a Model-based testing tool which uses directed graphs (finite sta
 
 GraphWalker generates test sequences from the graph. The test sequences are then used to run the actual tests.
 
+For a working implementation of GW3, please see: https://github.com/GraphWalker/graphwalker-cli
+
 ### Design goal
 Graphwalker-core provides only the
 basic functionality for:
