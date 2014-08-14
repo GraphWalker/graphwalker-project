@@ -52,7 +52,7 @@ import static org.graphwalker.io.EdgeParser.ActionContext;
 /**
  * @author Nils Olsson
  */
-public final class GraphMLModelFactory implements ModelFactory {
+public final class yEdModelFactory implements ModelFactory {
 
     private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
     private static final String FILE_TYPE = "graphml";

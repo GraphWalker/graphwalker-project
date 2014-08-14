@@ -26,7 +26,6 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,17 +35,17 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Nils Olsson
  */
-public class GraphMLModelFactoryTest {
+public class yEdModelFactoryTest {
 
     @Test(expected = ModelFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
-        ModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new yEdModelFactory();
         Model model = factory.create("graphml/LKHDIODSOSUBD.graphml");
     }
 
     @Test
     public void shared() {
-        ModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new yEdModelFactory();
         Model sharedA = factory.create("graphml/SharedA.graphml");
         Assert.assertNotNull(sharedA);
         Assert.assertThat(sharedA.getVertices().size(), is(2));
@@ -59,13 +58,13 @@ public class GraphMLModelFactoryTest {
 
     @Test
     public void login() {
-        ModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new yEdModelFactory();
         Model model = factory.create("graphml/Login.graphml");
     }
 
     @Test
     public void uc01() {
-        ModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new yEdModelFactory();
         Model.RuntimeModel model = factory.create("graphml/UC01.graphml").build();
         Assert.assertThat(model.getVertices().size(), is(8));
         Assert.assertThat(model.getEdges().size(), is(12));
