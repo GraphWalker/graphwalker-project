@@ -13,23 +13,30 @@ This module runs GraphWalker as an command-line tool in a terminal. With GraphWa
 You won't be able to:
   - Run actual tests.
 
-Building
---------------
+### Building and installing
+
 
 ```sh
 git clone https://github.com/GraphWalker/graphwalker-cli graphwalker-cli
 cd graphwalker-cli
 mvn package
 cp target/graphwalker-cli-3.0.0-SNAPSHOT.jar gw.jar
+
+# Create an alias for the gw3 command
+sudo echo "#!/bin/bash\n\njava -jar <PATH TO CLI>/graphwalker-cli/target/graphwalker-cli-3.0.0-SNAPSHOT.jar "$@"" > /usr/local/bin/gw3
+sudo chmod +x /usr/local/bin/gw3
 ```
 
-Running it!
---------------
+### Running it!
 
 ```sh
-java -jar gw.jar 
+%> gw3
 Usage: java -jar graphwalker.jar [options] [command] [command options]
   Options:
+    --debug, -d
+       Sets the log level: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Default is
+       OFF
+       Default: OFF
     --help, -h
        Prints help text
        Default: false
@@ -44,33 +51,76 @@ Usage: java -jar graphwalker.jar [options] [command] [command options]
              The model, as a graphml file followed by generator with stop
              condition. The format is GENERATOR(STOP_CONDITION) See HTML DOC
              Default: []
+          --unvisited, -u
+             Will also print the remaining unvisited elements in the model.
+             Default: false
+          --verbose, -o
+             Will print more details to stdout
+             Default: false
+
+    online      Generate a test sequence offline. The sequence is fetched using different techniques, like RestAPI
+      Usage: online [options]
+        Options:
+        * --model, -m
+             The model, as a graphml file followed by generator with stop
+             condition. The format is GENERATOR(STOP_CONDITION) See HTML DOC
+             Default: []
+          --restful, -r
+             Starts as a Restful API service.
+             Default: true
+
+    methods      Generates a list of unique names of vertices and edges in the model.
+      Usage: methods [options]
+        Options:
+        * --model, -m
+             The model, as a graphml file.
+             Default: <empty string>
+
+    requirements      Generates a list of unique names of the requirements found in the model.
+      Usage: requirements [options]
+        Options:
+        * --model, -m
+             The model, as a graphml file.
+             Default: <empty string>
 
 ```
 
-Command-line syntax
----------------------
+### Command-line syntax
 You need to give the cli an sub-command. These are the sub-command:
   - **offline**
+  - **online**
   - **methods**
   - **requirements**
 
 
-Sub-command: offline
----------------------
+### Sub-command: offline
 Will create a test sequence generated from a model, and write it to the terminal.
 
 The syntax is:
 ```sh
-java -jar offline -m model.graphml "GENERATOR(STOP_CONDITION)"
+%> gw3 offline -m model.graphml "GENERATOR(STOP_CONDITION)"
 ```
 where GENERATOR can be:
-  - **offline** - Navigate through the model in a completly random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
+- **random** - Navigate through the model in a completly random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
 
-  - **a_star** - Will calulate and generate the shortest path through the model. This algorithm is not recommended to use, because for larger models, and using data in the model (EFSM), it will take a considerable time to calculate.
+- **quick_random** - Tries to run the shortest path through a model, but in a fast fashion. This is how the algorithm works:
+   1. Choose an edge not yet visited by random.
+   1. Select the shortest path to that edge using the A Star algorithm
+   1. Walk that path, and mark all those edges being executed as visited.
+   1. When reaching the selected edge in step 1, start all over, repeating steps 1->4.
+   
+   The algorithm works well an very large models, and generates reasonably short sequences. The downside is when useed in conjunction with ESFM, the algorithm can choose a path which is blocked by a guard.
 
-You can concatenate multiple generators. For example:
+- **a_star** - Will calulate and generate the shortest path to a designated vertex in the model.
+- **shortest_all_paths** - Will calulate and generate the shortest path through the model. This algorithm is not recommended to use, because for larger models, and using data in the model (EFSM), it will take a considerable time to calculate.
+
+It's mandatory to give the generator a stop condition. This is done by adding it within paranthesis after the generator name, like:
 ```sh
-java -jar offline -m model.graphml "a_star(edge_coverge(100)) random(time_duration(900))"
+a_star(reached_vertex(v_LoggedIn))
+```
+You can concatenate multiple generators, like:
+```sh
+%> gw3 offline -m model.graphml "a_star(edge_coverge(100)) random(time_duration(900))"
 ```
 
 and where STOP_CONDITION can be:
@@ -84,15 +134,21 @@ and where STOP_CONDITION can be:
 
   - **time_duration(N)** - The stop criteria is a time, representing the number of seconds (N) that the test generator is allowed to execute. The number (N) must be larger than 0.
 
+  - **never** - This special condition will never halt the generator..
+
 Stop conditions can be combinational, using logical AND OR, or && ||. For example:
 ```sh
-java -jar gw offline -m model.graphml "random(edge_coverge(100) || time_duration(900))"
+%> gw3 offline -m model.graphml "random(edge_coverge(100) || time_duration(900))"
+%> gw3 offline -m model.graphml "random(edge_coverge(100) OR time_duration(900))"
+%> gw3 offline -m model.graphml "random(edge_coverge(100) && time_duration(900))"
+%> gw3 offline -m model.graphml "random(edge_coverge(100) AND time_duration(900))"
+%> gw3 offline -m model.graphml "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))""
 ```
-Let's try it
----------------------
-Let's try it. First of all we need a model to work with. Fetch one from our repo: [UC01_GW3.graphml], save it to disk.
+
+### Let's try it
+Let's try it. First of all we need a model to work with. Fetch one from our repo: [Login.graphml], save it to disk.
 ```sh
-java -jar gw.jar offline -m UC01_GW3.graphml "random(edge_coverage(100))"
+%> gw3 offline -m Login.graphml "random(edge_coverage(100))"
 v_BrowserStopped
 e_StartBrowser
 v_BrowserStarted
@@ -110,36 +166,31 @@ e_AddBookToCart
 v_OtherBoughtBooks
 e_SearchBook
 :
-:
 ```
+The generated path will look different evry time we run it, since we are usning a random generator.
 
 
-Sub-command: methods
----------------------
+### Sub-command: methods
 Generates a list of unique names of vertices and edges in the model.
 
 ```sh
-java -jar gw methods -m UC01_GW3.graphml"
-e_AddBookToCart
-e_ClickBook
-e_EnterBaseURL
-e_SearchBook
-e_ShoppingCart
-e_StartBrowser
-v_BaseURL
-v_BookInformation
-v_BrowserStarted
-v_BrowserStopped
-v_OtherBoughtBooks
-v_SearchResult
-v_ShoppingCart
-```
+%> gw3 methods -m Login.graphml"
+e_Close
+e_Exit
+e_Init
+e_InvalidCredentials
+e_Logout
+e_StartClient
+e_ToggleRememberMe
+e_ValidPremiumCredentials
+v_Browse
+v_ClientNotRunning
+v_LoginPrompted
+[```
 
-Sub-command: requirements
---------------------------
+### Sub-command: requirements
 Generates a list of unique requirements found in the model.
 
 
 
-
-[UC01_GW3.graphml]:https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/UC01_GW3.graphml
+[Login.graphml]:https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Login.graphml
