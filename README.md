@@ -186,7 +186,7 @@ e_ValidPremiumCredentials
 v_Browse
 v_ClientNotRunning
 v_LoginPrompted
-[```
+```
 
 ### Sub-command: requirements
 Generates a list of unique requirements found in the model.
