@@ -48,6 +48,7 @@ public final class SimpleMachine extends ObservableMachine {
     private final List<ExecutionContext> contexts = new ArrayList<>();
 
     private ExecutionContext currentContext;
+    private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
 
     public SimpleMachine(ExecutionContext context) {
         this(Arrays.asList(context));
@@ -60,6 +61,10 @@ public final class SimpleMachine extends ObservableMachine {
             execute(context.getModel().getActions());
         }
       this.currentContext = contexts.get(0);
+    }
+
+    public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
+        this.exceptionStrategy = exceptionStrategy;
     }
 
     @Override
@@ -89,7 +94,7 @@ public final class SimpleMachine extends ObservableMachine {
                     }
                 }
             } else {
-                throw new NoPathFoundException("No start element defined");
+                exceptionStrategy.handle(this, new NoPathFoundException("No start element defined"));
             }
         } else {
             try {
@@ -112,9 +117,9 @@ public final class SimpleMachine extends ObservableMachine {
                 } else {
                     context.getPathGenerator().getNextStep(context);
                 }
-            } catch (Throwable t) {
+            } catch (RuntimeException e) {
                 context.setExecutionStatus(ExecutionStatus.FAILED);
-                throw t;
+                exceptionStrategy.handle(this, e);
             }
         }
         if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
@@ -178,9 +183,9 @@ public final class SimpleMachine extends ObservableMachine {
             } else if (element instanceof RuntimeEdge) {
                 execute((RuntimeEdge) element);
             }
-        } catch (Throwable t) {
+        } catch (RuntimeException e) {
             currentContext.setExecutionStatus(ExecutionStatus.FAILED);
-            throw t;
+            exceptionStrategy.handle(this, e);
         }
     }
 
