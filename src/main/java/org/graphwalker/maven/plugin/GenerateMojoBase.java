@@ -30,8 +30,8 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.io.factory.GraphMLModelFactory;
 import org.graphwalker.io.factory.ModelFactory;
+import org.graphwalker.io.factory.YEdModelFactory;
 import org.graphwalker.java.source.CodeGenerator;
 import org.graphwalker.java.source.SourceFile;
 
@@ -50,7 +50,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     private String sourceEncoding;
 
     private CodeGenerator codeGenerator = new CodeGenerator();
-    private final ModelFactory modelFactory = new GraphMLModelFactory();
+    private final ModelFactory modelFactory = new YEdModelFactory();
 
     protected String getSourceEncoding() {
         return sourceEncoding;
