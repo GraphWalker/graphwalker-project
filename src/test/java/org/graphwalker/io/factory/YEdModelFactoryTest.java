@@ -35,7 +35,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Nils Olsson
  */
-public class yEdModelFactoryTest {
+public class YEdModelFactoryTest {
 
     @Test(expected = ModelFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
