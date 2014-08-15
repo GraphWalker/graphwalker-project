@@ -47,14 +47,14 @@ A label is all the text associated to and edge or a vertex.
 Guards is a mechanism only associated to edges. Their role are the same as an if-statement, and makes an edge eligible or not for being walked.
 
 The guard is a conditional expression enclosed between square brackets:
-```javaScript
+```
 [loggedIn == true]
 ``` 
 The above means that if the attribute loggedIn equals to true, the edge is walkable.
 
 ### Action
 This is java script code that we want to execute in the model. Each statement must be ended with a semicolon.
-```javaScript
+```
 /loggedIn=false; rememberMe=true;
 ``` 
 The purpose of the action code, is to serve as data to the guards.
@@ -62,7 +62,7 @@ The purpose of the action code, is to serve as data to the guards.
 In the model, the action is placed after a forward slash.
 
 #### Example
-![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/GuardAndActions.png "Gards and Actions")
+![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/GuardAndActions.png "Guards and Actions")
 
 This example illustrates how actions and guards work.
 * Lets start with the out-edge from the Start vertex:
@@ -85,18 +85,40 @@ Keywords are used in the models to increase functionality and usability.
 * ***BLOCKED*** - A vertex or an edge containing this keyword, will be exclude when a path is generated. If it's an edge, it will simply be removed from the graph. If it's a vertex, the vertex will be removed with its in- and out-edges.
 
 * ***SHARED*** - This keyword is only for vertices. It means that GraphWalker can jump out of the current model, to any other model which shares the same name. The syntax is:
-```javaScript
+```
 SHARED:SOME_NAME
 ``` 
 See: [Multiple models](#Multiple models)
 
 * ***INIT*** - Only a vertex can have this keyword. When using data in a model, the data needs to be initialized. That is what this keyword does. The syntax is:
-```javaScript
+```
 INIT:loggedIn=false; rememberMe=true;
 ``` 
 Only one INIT keyword per model.
 
+
 ### Multiple models
+
+GrapwWalker can work with several models in one session. It means that when generating a path, GraphWalker can choose to jump out of one model into another one. This is very handy when separating different functionaly into several models. For example. Lets say you have a system that you want to test, and you would need to login to do that. Then it might make sense to create a single model handling the login functionality, and other models to handle whatever else you want to test. The login model would then be reused for ever other test scenario.
+
+#### It's not the same thing as flattening
+When flatting models, several models are merged into on single model, which then is being traversed by GraphWalker. This is not the case here. GraphWalker is executing every model in it's own context. The scope of the data in the models are not shared between them.
+
+#### SHARED:SOME_NAME
+The mechanism that controls the jumping between the models is the keyword SHARED. Let's look at an example. Consider these 4 models:
+
+![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/ModelA.png "Model A")
+![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/ModelB.png "Model B")
+![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/ModelC.png "Model C")
+![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/ModelD.png "Model D")
+
+All models are loaded into GraphWalker, and the first model (Model A) is where the path generation is started. Using graphwalker-cli, the command line could look something like this:
+
+```sh
+gw3 offline -m src/test/resources/graphml/shared_state/Model_A.graphml "random(edge_coverage(100))" -m src/test/resources/graphml/shared_state/Model_B.graphml "random(edge_coverage(100))" -m src/test/resources/graphml/shared_state/Model_C.graphml "random(edge_coverage(100))" -m src/test/resources/graphml/shared_state/Model_D.graphml "random(edge_coverage(100))"
+``` 
+
+When the path generation reaches the vertex ***v_B*** in Model A, it has to consider the keyword ***SHARED:B***.. This tells GraphWalker to search all other models for the same keyword using the same name: ***B***. In our case, there is only one, and it's in Model B. Now GraphWalker makes a descision whether to jump out of Model A, into the vertex ***v_B*** in Model B, or to stay in Model A. This descision is based on random.
 
 
 [graphwalker-cli]:https://github.com/GraphWalker/graphwalker-cli
