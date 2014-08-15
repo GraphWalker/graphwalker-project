@@ -204,7 +204,7 @@ public final class SimpleMachine extends ObservableMachine {
 
     private void execute(RuntimeVertex vertex) {
         if (vertex.hasName()) {
-            currentContext.execute(vertex.getName());
+             currentContext.execute(vertex.getName());
         }
     }
 
