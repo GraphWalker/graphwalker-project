@@ -41,7 +41,7 @@ import java.io.File;
 @Mojo(name = "generate-test-sources", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public final class GenerateTestMojo extends GenerateMojoBase {
 
-    @Parameter(defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
+    @Parameter(property = "graphwalker.generate.test.directory", defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
     private File generatedSourcesDirectory;
 
     @Override

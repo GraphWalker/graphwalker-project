@@ -251,7 +251,7 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("");
             getLog().info("Result :");
             getLog().info("");
-            long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, failed = 0, notExecuted = 0;
+            long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
             List<ExecutionContext> failedExecutions = new ArrayList<>();
             for (Machine machine: executor.getMachines()) {
                 for (ExecutionContext context: machine.getExecutionContexts()) {
@@ -269,6 +269,9 @@ public final class TestMojo extends DefaultMojoBase {
                             notExecuted++;
                         }
                         break;
+                        case EXECUTING: {
+                            incomplete++;
+                        }
                     }
                 }
             }
@@ -282,7 +285,7 @@ public final class TestMojo extends DefaultMojoBase {
                 }
                 getLog().info("");
             }
-            getLog().info(MessageFormat.format("Groups: {0}, Tests: {1}, Completed: {2}, Failed: {3}, Not Executed: {4}", groups, tests, completed, failed, notExecuted));
+            getLog().info(MessageFormat.format("Groups: {0}, Tests: {1}, Completed: {2}, Incomplete: {3}, Failed: {4}, Not Executed: {5}", groups, tests, completed, incomplete, failed, notExecuted));
             getLog().info("");
         }
     }

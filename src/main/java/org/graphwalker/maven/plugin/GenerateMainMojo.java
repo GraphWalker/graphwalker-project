@@ -41,7 +41,7 @@ import java.io.File;
 @Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public final class GenerateMainMojo extends GenerateMojoBase  {
 
-    @Parameter(defaultValue = "${project.build.directory}/generated-sources/graphwalker")
+    @Parameter(property = "graphwalker.generate.directory", defaultValue = "${project.build.directory}/generated-sources/graphwalker")
     private File generatedSourcesDirectory;
 
     @Override
