@@ -29,8 +29,8 @@ package org.graphwalker.java.test;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.io.factory.GraphMLModelFactory;
 import org.graphwalker.io.factory.ModelFactory;
+import org.graphwalker.io.factory.YEdModelFactory;
 import org.graphwalker.java.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
@@ -59,7 +59,7 @@ public final class Execution {
     }
 
     private Model createModel(final Class<?> testClass) {
-        ModelFactory factory = new GraphMLModelFactory();
+        ModelFactory factory = new YEdModelFactory();
         for (Annotation annotation: AnnotationUtils.getAnnotations(testClass, org.graphwalker.java.annotation.Model.class)) {
             Path file = Paths.get(((org.graphwalker.java.annotation.Model) annotation).file());
             if (factory.accept(file)) {

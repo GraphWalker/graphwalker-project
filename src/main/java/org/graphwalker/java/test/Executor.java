@@ -149,11 +149,7 @@ public final class Executor {
                                 AnnotationUtils.execute(BeforeExecution.class, implementations.get(context));
                             }
                             while (machine.hasNextStep()) {
-                                try {
-                                    machine.getNextStep();
-                                } catch (Throwable t) {
-                                    t.printStackTrace();
-                                }
+                                machine.getNextStep();
                             }
                             for (ExecutionContext context: machine.getExecutionContexts()) {
                                 AnnotationUtils.execute(AfterExecution.class, implementations.get(context));
