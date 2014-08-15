@@ -39,13 +39,13 @@ public class yEdModelFactoryTest {
 
     @Test(expected = ModelFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
-        ModelFactory factory = new yEdModelFactory();
+        ModelFactory factory = new YEdModelFactory();
         Model model = factory.create("graphml/LKHDIODSOSUBD.graphml");
     }
 
     @Test
     public void shared() {
-        ModelFactory factory = new yEdModelFactory();
+        ModelFactory factory = new YEdModelFactory();
         Model sharedA = factory.create("graphml/SharedA.graphml");
         Assert.assertNotNull(sharedA);
         Assert.assertThat(sharedA.getVertices().size(), is(2));
@@ -58,13 +58,13 @@ public class yEdModelFactoryTest {
 
     @Test
     public void login() {
-        ModelFactory factory = new yEdModelFactory();
+        ModelFactory factory = new YEdModelFactory();
         Model model = factory.create("graphml/Login.graphml");
     }
 
     @Test
     public void uc01() {
-        ModelFactory factory = new yEdModelFactory();
+        ModelFactory factory = new YEdModelFactory();
         Model.RuntimeModel model = factory.create("graphml/UC01.graphml").build();
         Assert.assertThat(model.getVertices().size(), is(8));
         Assert.assertThat(model.getEdges().size(), is(12));
