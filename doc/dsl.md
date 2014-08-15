@@ -5,7 +5,7 @@ This describes the DSL for the [graphwalker-cli], and what the rules are when a 
 
 ## The DSL is a directed graph
 
-The objective of the DSL, is to express the expected behavior of the system under test. To do that we use a [directed graph], in which a vertex (or a node) represents some desired state, and the edges represents whatever actions we need to do in order to achive that desired state.
+The objective of the DSL, is to express the expected behavior of the system under test. To do that we use a [directed graph], in which a vertex (or a node) represents some desired state, and the edges represents whatever actions we need to do in order to achieve that desired state.
 
 For example, let's take a web site that needs authentication before we can access the sites content. Using a directed graph, it might look like this:
 
@@ -19,7 +19,7 @@ In [yEd] a vertex is called node, normally depicted as a box.
 GraphWalker does not care what colors a vertex has.
 
 #### Edge
-Represents the transition from one vertex to another. It is whatever action is need to be made in order to reach the next state. It could be selection some menu choice, clickin a button, or making a SOAP API call.
+Represents the transition from one vertex to another. It is whatever action is need to be made in order to reach the next state. It could be selection some menu choice, clicking a button, or making a SOAP API call.
 
 In [yEd] an edge is also called edge.
 
@@ -29,7 +29,7 @@ GraphWalker does not care what colors or thickness an edge has..
 
 
 ## The Rules
-This section will talke about the modelling rules. But please note that these rules are specific for the graphwalker-cli and the [yEdModelFactory]. They mostly the same as for GraphWalker 2, with some exceptions.
+This section will talk about the modeling rules. But please note that these rules are specific for the graphwalker-cli and the [yEdModelFactory]. They mostly the same as for GraphWalker 2, with some exceptions.
 
 ### Start vertex
 ![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/StartVertex.png "Start Vertex")
@@ -50,7 +50,7 @@ The guard is a conditional expression enclosed between square brackets:
 ```
 [loggedIn == true]
 ``` 
-The above means that if the attribute loggedIn equals to true, the edge is walkable.
+The above means that if the attribute loggedIn equals to true, the edge is accessible.
 
 ### Action
 This is java script code that we want to execute in the model. Each statement must be ended with a semicolon.
@@ -99,7 +99,7 @@ Only one INIT keyword per model.
 
 ### Multiple models
 
-GrapwWalker can work with several models in one session. It means that when generating a path, GraphWalker can choose to jump out of one model into another one. This is very handy when separating different functionaly into several models. For example. Lets say you have a system that you want to test, and you would need to login to do that. Then it might make sense to create a single model handling the login functionality, and other models to handle whatever else you want to test. The login model would then be reused for ever other test scenario.
+GraphWalker can work with several models in one session. It means that when generating a path, GraphWalker can choose to jump out of one model into another one. This is very handy when separating different functionality into several models. For example. Lets say you have a system that you want to test, and you would need to log in to do that. Then it might make sense to create a single model handling the log in functionality, and other models to handle whatever else you want to test. The log in model would then be reused for ever other test scenario.
 
 #### It's not the same thing as flattening
 When flatting models, several models are merged into on single model, which then is being traversed by GraphWalker. This is not the case here. GraphWalker is executing every model in it's own context. The scope of the data in the models are not shared between them.
@@ -118,9 +118,10 @@ All models are loaded into GraphWalker, and the first model (Model A) is where t
 gw3 offline -m src/test/resources/graphml/shared_state/Model_A.graphml "random(edge_coverage(100))" -m src/test/resources/graphml/shared_state/Model_B.graphml "random(edge_coverage(100))" -m src/test/resources/graphml/shared_state/Model_C.graphml "random(edge_coverage(100))" -m src/test/resources/graphml/shared_state/Model_D.graphml "random(edge_coverage(100))"
 ``` 
 
-When the path generation reaches the vertex ***v_B*** in Model A, it has to consider the keyword ***SHARED:B***.. This tells GraphWalker to search all other models for the same keyword using the same name: ***B***. In our case, there is only one, and it's in Model B. Now GraphWalker makes a descision whether to jump out of Model A, into the vertex ***v_B*** in Model B, or to stay in Model A. This descision is based on random.
+When the path generation reaches the vertex ***v_B*** in Model A, it has to consider the keyword ***SHARED:B***.. This tells GraphWalker to search all other models for the same keyword using the same name: ***B***. In our case, there is only one, and it's in Model B. Now GraphWalker makes a decision whether to jump out of Model A, into the vertex ***v_B*** in Model B, or to stay in Model A. This decision is based on random.
 
 Also, if the path generation is executing in Model B, and it reaches the vertex ***v_B***, GraphWalker can jump out of Model B, back to vertex ***v_B*** in Model A.
+
 
 [graphwalker-cli]:https://github.com/GraphWalker/graphwalker-cli
 [yEd]:http://www.yworks.com/en/products_yed_about.html
