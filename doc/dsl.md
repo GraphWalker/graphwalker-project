@@ -1,4 +1,4 @@
-# Domain specific language (DSL) for GraphWalker 3
+# Domain specific language (DSL) for GraphWalker
 
 This describes the DSL for the [graphwalker-cli], and what the rules are when a model is created using the [yEd] model editor.
 
