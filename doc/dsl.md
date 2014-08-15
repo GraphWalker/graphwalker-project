@@ -55,13 +55,13 @@ The above means that if the attribute loggedIn equals to true, the edge is walka
 ### Action
 This is java script code that we want to execute in the model. Each statement must be ended with a semicolon.
 ```javaScript
-loggedIn=false; rememberMe=true;
+/loggedIn=false; rememberMe=true;
 ``` 
-The purpose of the action code, is to serve as data to in guards.
+The purpose of the action code, is to serve as data to the guards.
 
 In the model, the action is placed after a forward slash.
 
-### Example
+#### Example
 ![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/GuardAndActions.png "Gards and Actions")
 
 This example illustrates how actions and guards work.
@@ -76,6 +76,28 @@ The name of the edge is ***e_Init***, followed by a forward slash, denoting that
 * Now lets say that we have traversed the edges ***e_ToggleRememberMe*** and ***e_ValidPremiumCredentials*** and arrive again at the vertex ***v_ClientNotRunning***, we would now expect GraphWalker to select the other ***e_Start*** that has the vertex ***v_Browse*** as destination.
 
 This illustrates how we can direct and control flows through a graph, if we need to do that.
+
+### Keywords
+Keywords are used in the models to increase functionality and usability.
+
+* ***Start*** - This is used in a vertex to denote the Start vertex. See: [Start vertex](#Start vertex). Only one Start vertex per model.
+
+* ***BLOCKED*** - A vertex or an edge containing this keyword, will be exclude when a path is generated. If it's an edge, it will simply be removed from the graph. If it's a vertex, the vertex will be removed with its in- and out-edges.
+
+* ***SHARED*** - This keyword is only for vertices. It means that GraphWalker can jump out of the current model, to any other model which shares the same name. The syntax is:
+```javaScript
+SHARED:SOME_NAME
+``` 
+See: [Multiple models](#Multiple models)
+
+* ***INIT*** - Only a vertex can have this keyword. When using data in a model, the data needs to be initialized. That is what this keyword does. The syntax is:
+```javaScript
+INIT:loggedIn=false; rememberMe=true;
+``` 
+Only one INIT keyword per model.
+
+### Multiple models
+
 
 [graphwalker-cli]:https://github.com/GraphWalker/graphwalker-cli
 [yEd]:http://www.yworks.com/en/products_yed_about.html
