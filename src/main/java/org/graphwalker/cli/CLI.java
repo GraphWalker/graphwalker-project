@@ -47,7 +47,7 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.factory.yEdModelFactory;
+import org.graphwalker.io.factory.YEdModelFactory;
 import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,7 +169,7 @@ public class CLI {
   }
 
   private void RunCommandRequirements()  throws Exception {
-    yEdModelFactory factory = new yEdModelFactory();
+    YEdModelFactory factory = new YEdModelFactory();
 
     Model.RuntimeModel model = null;
     String modelFileName = requirements.model;
@@ -192,7 +192,7 @@ public class CLI {
   }
 
   private void RunCommandMethods()  throws Exception {
-    yEdModelFactory factory = new yEdModelFactory();
+    YEdModelFactory factory = new YEdModelFactory();
 
     Model.RuntimeModel model = null;
     String modelFileName = methods.model;
@@ -218,7 +218,7 @@ public class CLI {
   }
 
   private void RunCommandOnline()  throws Exception {
-    yEdModelFactory factory = new yEdModelFactory();
+    YEdModelFactory factory = new YEdModelFactory();
     ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
     Iterator itr = online.model.iterator();
     while(itr.hasNext()) {
@@ -255,7 +255,7 @@ public class CLI {
   }
 
   private void RunCommandOffline()  throws Exception {
-    yEdModelFactory factory = new yEdModelFactory();
+    YEdModelFactory factory = new YEdModelFactory();
     ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
     Iterator itr = offline.model.iterator();
     while(itr.hasNext()) {
