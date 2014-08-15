@@ -120,6 +120,7 @@ gw3 offline -m src/test/resources/graphml/shared_state/Model_A.graphml "random(e
 
 When the path generation reaches the vertex ***v_B*** in Model A, it has to consider the keyword ***SHARED:B***.. This tells GraphWalker to search all other models for the same keyword using the same name: ***B***. In our case, there is only one, and it's in Model B. Now GraphWalker makes a descision whether to jump out of Model A, into the vertex ***v_B*** in Model B, or to stay in Model A. This descision is based on random.
 
+Also, if the path generation is executing in Model B, and it reaches the vertex ***v_B***, GraphWalker can jump out of Model B, back to vertex ***v_B*** in Model A.
 
 [graphwalker-cli]:https://github.com/GraphWalker/graphwalker-cli
 [yEd]:http://www.yworks.com/en/products_yed_about.html
