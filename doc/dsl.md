@@ -12,7 +12,7 @@ For example, let's take a web site that needs authentication before we can acces
 ![alt text](https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/doc/img/example1.jpg "Simple example 1")
 
 #### Vertex
-A vertex represents a state, and in any implementing code/test, this is where you'll find the assertions. It is here where the [oracles] resides.
+A vertex represents a state, and in any implementing code/test, there is where you'll find the assertions, the [oracles].
 
 In [yEd] a vertex is called node, normally depicted as a box.
 
