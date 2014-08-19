@@ -81,11 +81,15 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
                 executionTime += get(element).getTotalExecutionTime(unit);
             }
         }
-        return TimeUnit.NANOSECONDS.convert(executionTime, unit);
+        return unit.convert(executionTime, TimeUnit.NANOSECONDS);
     }
 
     public long getFirstExecutionTimestamp() {
         return getFirstExecutionTimestamp(Element.class);
+    }
+
+    public long getFirstExecutionTimestamp(TimeUnit unit) {
+        return getFirstExecutionTimestamp(Element.class, unit);
     }
 
     public long getFirstExecutionTimestamp(Class<? extends Element> type) {
@@ -96,7 +100,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
         long timestamp = Long.MAX_VALUE;
         for (Element element: keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
-                long firstExecutionTimestamp = get(element).getFirstExecutionTimestamp(unit);
+                long firstExecutionTimestamp = get(element).getFirstExecutionTime(unit);
                 if (timestamp > firstExecutionTimestamp) {
                     timestamp = firstExecutionTimestamp;
                 }
@@ -117,7 +121,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
         long timestamp = Long.MIN_VALUE;
         for (Element element: keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
-                long lastExecutionTimestamp = get(element).getLastExecutionTimestamp(unit);
+                long lastExecutionTimestamp = get(element).getLastExecutionTime(unit);
                 if (timestamp < lastExecutionTimestamp) {
                     timestamp = lastExecutionTimestamp;
                 }
