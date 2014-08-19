@@ -45,13 +45,10 @@ public class EdgeTest {
                 .setName("name")
                 .setSourceVertex(new Vertex())
                 .setTargetVertex(new Vertex())
-                .setBlocked(true)
                 .addAction(new Action("action1"))
                 .addActions(Arrays.asList(new Action("action2"), new Action("action3")))
                 .setWeight(2.0);
         Assert.assertNotNull(edge);
-        Assert.assertTrue(edge.isBlocked());
-        Assert.assertTrue(edge.build().isBlocked());
         Assert.assertEquals("name", edge.getName());
         Assert.assertEquals("name", edge.build().getName());
         Assert.assertNotNull(edge.getSourceVertex());
