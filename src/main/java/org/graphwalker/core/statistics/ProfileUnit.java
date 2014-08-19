@@ -98,8 +98,16 @@ public final class ProfileUnit {
         return unit.convert(duration, TimeUnit.NANOSECONDS);
     }
 
+    public long getFirstExecutionTime() {
+        return getFirstExecutionTime(TimeUnit.NANOSECONDS);
+    }
+
     public long getFirstExecutionTime(TimeUnit unit) {
         return unit.convert(executions.get(0).getTime(), TimeUnit.NANOSECONDS);
+    }
+
+    public long getLastExecutionTime() {
+        return getLastExecutionTime(TimeUnit.NANOSECONDS);
     }
 
     public long getLastExecutionTime(TimeUnit unit) {

@@ -78,55 +78,55 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
         long executionTime = 0;
         for (Element element: keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
-                executionTime += get(element).getTotalExecutionTime(unit);
+                executionTime += get(element).getTotalExecutionTime();
             }
         }
         return unit.convert(executionTime, TimeUnit.NANOSECONDS);
     }
 
-    public long getFirstExecutionTimestamp() {
-        return getFirstExecutionTimestamp(Element.class);
+    public long getFirstExecutionTime() {
+        return getFirstExecutionTime(Element.class);
     }
 
-    public long getFirstExecutionTimestamp(TimeUnit unit) {
-        return getFirstExecutionTimestamp(Element.class, unit);
+    public long getFirstExecutionTime(TimeUnit unit) {
+        return getFirstExecutionTime(Element.class, unit);
     }
 
-    public long getFirstExecutionTimestamp(Class<? extends Element> type) {
-        return getFirstExecutionTimestamp(type, TimeUnit.NANOSECONDS);
+    public long getFirstExecutionTime(Class<? extends Element> type) {
+        return getFirstExecutionTime(type, TimeUnit.NANOSECONDS);
     }
 
-    public long getFirstExecutionTimestamp(Class<? extends Element> type, TimeUnit unit) {
-        long timestamp = Long.MAX_VALUE;
+    public long getFirstExecutionTime(Class<? extends Element> type, TimeUnit unit) {
+        long time = Long.MAX_VALUE;
         for (Element element: keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
-                long firstExecutionTimestamp = get(element).getFirstExecutionTime(unit);
-                if (timestamp > firstExecutionTimestamp) {
-                    timestamp = firstExecutionTimestamp;
+                long firstExecutionTime = get(element).getFirstExecutionTime();
+                if (time > firstExecutionTime) {
+                    time = firstExecutionTime;
                 }
             }
         }
-        return timestamp;
+        return unit.convert(time, TimeUnit.NANOSECONDS);
     }
 
-    public long getLastExecutionTimestamp() {
-        return getLastExecutionTimestamp(Element.class);
+    public long getLastExecutionTime() {
+        return getLastExecutionTime(Element.class);
     }
 
-    public long getLastExecutionTimestamp(Class<? extends Element> type) {
-        return getLastExecutionTimestamp(type, TimeUnit.NANOSECONDS);
+    public long getLastExecutionTime(Class<? extends Element> type) {
+        return getLastExecutionTime(type, TimeUnit.NANOSECONDS);
     }
 
-    public long getLastExecutionTimestamp(Class<? extends Element> type, TimeUnit unit) {
-        long timestamp = Long.MIN_VALUE;
+    public long getLastExecutionTime(Class<? extends Element> type, TimeUnit unit) {
+        long time = Long.MIN_VALUE;
         for (Element element: keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
-                long lastExecutionTimestamp = get(element).getLastExecutionTime(unit);
-                if (timestamp < lastExecutionTimestamp) {
-                    timestamp = lastExecutionTimestamp;
+                long lastExecutionTime = get(element).getLastExecutionTime();
+                if (time < lastExecutionTime) {
+                    time = lastExecutionTime;
                 }
             }
         }
-        return timestamp;
+        return unit.convert(time, TimeUnit.NANOSECONDS);
     }
 }

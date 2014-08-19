@@ -41,8 +41,8 @@ public final class Execution {
     }
 
     public Execution(long time, long duration, TimeUnit unit) {
-        this.time = TimeUnit.NANOSECONDS.convert(time, unit);
-        this.duration = TimeUnit.NANOSECONDS.convert(duration, unit);
+        this.time = unit.convert(time, TimeUnit.NANOSECONDS);
+        this.duration = unit.convert(duration, TimeUnit.NANOSECONDS);
     }
 
     public long getTime(TimeUnit unit) {
