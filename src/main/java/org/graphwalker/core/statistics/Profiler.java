@@ -41,20 +41,20 @@ public final class Profiler {
 
     private final ExecutionContext context;
     private final Profile profile = new Profile();
-    private long timestamp = 0;
+    private long time = 0;
 
     public Profiler(ExecutionContext context) {
         this.context = context;
     }
 
     public void start() {
-        timestamp = System.nanoTime();
+        time = System.nanoTime();
     }
 
     public void stop() {
         Element element = context.getCurrentElement();
         if (null != element) {
-            profile.addExecution(element, new Execution(timestamp, System.nanoTime() - timestamp));
+            profile.addExecution(element, new Execution(time, System.nanoTime() - time));
         }
     }
 
@@ -80,8 +80,7 @@ public final class Profiler {
         return profile.getPath();
     }
 
-    @Deprecated
-    public void removeStartVertex(Element element) {
-        profile.addExecution(element, new Execution(0, 0));
+    public Profile getProfile() {
+        return profile;
     }
 }
