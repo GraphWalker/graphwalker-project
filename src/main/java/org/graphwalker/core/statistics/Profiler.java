@@ -41,20 +41,20 @@ public final class Profiler {
 
     private final ExecutionContext context;
     private final Profile profile = new Profile();
-    private long time = 0;
+    private long startTime = 0;
 
     public Profiler(ExecutionContext context) {
         this.context = context;
     }
 
     public void start() {
-        time = System.nanoTime();
+        startTime = System.nanoTime();
     }
 
     public void stop() {
         Element element = context.getCurrentElement();
         if (null != element) {
-            profile.addExecution(element, new Execution(time, System.nanoTime() - time));
+            profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
         }
     }
 

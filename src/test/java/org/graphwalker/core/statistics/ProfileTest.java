@@ -45,7 +45,7 @@ public final class ProfileTest {
         Assert.assertNotNull(profile);
         Assert.assertThat(profile.getTotalExecutionCount(), is(2L));
         Assert.assertThat(profile.getTotalExecutionTime(), is(500L));
-        Assert.assertThat(profile.getFirstExecutionTimestamp(), is(0L));
-        Assert.assertThat(profile.getLastExecutionTimestamp(), is(350L));
+        Assert.assertThat(profile.getFirstExecutionTime(), is(0L));
+        Assert.assertThat(profile.getLastExecutionTime(), is(350L));
     }
 }
