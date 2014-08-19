@@ -37,7 +37,7 @@ import java.util.List;
  */
 public final class CombinedCondition implements StopCondition {
 
-    private List<StopCondition> conditions = new ArrayList<>();
+    private final List<StopCondition> conditions = new ArrayList<>();
 
     public void addStopCondition(StopCondition condition) {
         this.conditions.add(condition);

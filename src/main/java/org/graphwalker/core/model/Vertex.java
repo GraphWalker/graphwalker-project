@@ -36,7 +36,7 @@ import java.util.List;
 public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
     private String name;
-    private List<Requirement> requirements = new ArrayList<>();
+    private final List<Requirement> requirements = new ArrayList<>();
     private String sharedState;
     private String id;
     private boolean startVertex = false;

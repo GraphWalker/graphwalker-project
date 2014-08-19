@@ -41,7 +41,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     private Vertex sourceVertex;
     private Vertex targetVertex;
     private Guard guard;
-    private List<Action> actions = new ArrayList<>();
+    private final List<Action> actions = new ArrayList<>();
     private boolean blocked = false;
     private Double weight = 1.0;
 
@@ -138,7 +138,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public static final class RuntimeEdge extends ActionElement {
 
-        private String id;
+        private final String id;
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;
         private final Guard guard;

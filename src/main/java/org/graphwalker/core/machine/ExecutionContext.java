@@ -63,7 +63,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
     private Element currentElement;
     private Element nextElement;
 
-    private Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
+    private final Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
 
     public ExecutionContext() {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
