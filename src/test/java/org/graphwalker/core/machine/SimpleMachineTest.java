@@ -218,6 +218,24 @@ public class SimpleMachineTest {
     }
 
     @Test
+    public void simpleShortestAllPaths2() {
+        Vertex start = new Vertex().setName("Start").setStartVertex(true);
+        Vertex v1 = new Vertex().setName("v1");
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v1);
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build(), e2.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
     public void simpleAStar() {
         Vertex start = new Vertex().setName("Start");
         Vertex v1 = new Vertex().setName("v1");
