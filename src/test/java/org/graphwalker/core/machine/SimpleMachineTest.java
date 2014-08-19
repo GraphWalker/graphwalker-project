@@ -313,4 +313,21 @@ public class SimpleMachineTest {
         Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4L));
     }
+
+    @Test
+    public void simpleAllVerticesTest() {
+        Vertex start = new Vertex().setName("Start").setStartVertex(true);
+        Vertex v1 = new Vertex().setName("v1");
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Model model = new Model().addEdge(e1);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
 }
