@@ -53,12 +53,6 @@ public final class DepthFirstSearch implements Algorithm {
         Map<Element, ElementStatus> elementStatusMap = new HashMap<>();
         for (Element element: elements) {
             elementStatusMap.put(element, ElementStatus.UNREACHABLE);
-            if (element instanceof RuntimeEdge) {
-                RuntimeEdge edge = (RuntimeEdge)element;
-                if (edge.isBlocked()) {
-                    elementStatusMap.put(element, ElementStatus.BLOCKED);
-                }
-            }
         }
         return elementStatusMap;
     }
@@ -87,6 +81,6 @@ public final class DepthFirstSearch implements Algorithm {
     }
 
     private enum ElementStatus {
-        UNREACHABLE, REACHABLE, BLOCKED
+        UNREACHABLE, REACHABLE
     }
 }

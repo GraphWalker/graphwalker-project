@@ -71,12 +71,4 @@ public class AStarTest {
         Assert.assertNotNull(path);
         Assert.assertThat(path.size(), is(7));
     }
-
-    @Test(expected = AlgorithmException.class)
-    public void astarBlocked() {
-        e1.setBlocked(true);
-        e2.setBlocked(true);
-        AStar aStar = new AStar(new ExecutionContext().setModel(model));
-        aStar.getShortestPath(v00.build(), v31.build());
-    }
 }

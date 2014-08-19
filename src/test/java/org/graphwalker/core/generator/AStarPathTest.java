@@ -83,18 +83,6 @@ public class AStarPathTest {
         Assert.assertThat(expectedElements.size(), is(0));
     }
 */
-    @Test(expected = NoPathFoundException.class)
-    public void allPathsBlocked() {
-        e1.setBlocked(true);
-        e4.setBlocked(true);
-        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("end")));
-        context.setNextElement(v1);
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep(); // should fail due to that there is no way to travel to the end
-        }
-    }
-
 
     @Test(expected = NoPathFoundException.class)
     public void failTest() {

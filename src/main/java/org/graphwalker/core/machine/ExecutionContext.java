@@ -186,7 +186,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
             for (E element : elements) {
                 if (element instanceof RuntimeEdge) {
                     RuntimeEdge edge = (RuntimeEdge) element;
-                    if (!edge.isBlocked() && isAvailable(edge)) {
+                    if (isAvailable(edge)) {
                         filteredElements.add(element);
                     }
                 } else {
