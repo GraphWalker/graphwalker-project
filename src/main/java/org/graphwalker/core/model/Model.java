@@ -99,6 +99,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
         private final List<Element> elementsCache;
+        private final List<RuntimeVertex> verticesCache;
         private final List<RuntimeVertex> startVerticesCache;
         private final Map<Element, List<Element>> elementsByElementCache;
         private final Map<String, List<Element>> elementsByNameCache;
@@ -122,11 +123,20 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
             this.sharedStateCache = createSharedStateCache();
             this.startVerticesCache = createStartVerticesCache();
+            this.verticesCache = createVerticesCache();
             this.id = "";
         }
 
-        public List<RuntimeVertex> getVertices() {
+        public List<RuntimeVertex> getAllVertices() {
             return vertices;
+        }
+
+        /**
+         *
+         * @return a list of non-start vertices
+         */
+        public List<RuntimeVertex> getVertices() {
+            return verticesCache;
         }
 
         public List<RuntimeVertex> getSharedStates(String sharedState) {
@@ -295,6 +305,16 @@ public final class Model implements Builder<Model.RuntimeModel> {
                 }
             }
             return Collections.unmodifiableList(startVertices);
+        }
+
+        private List<RuntimeVertex> createVerticesCache() {
+            List<RuntimeVertex> list = new ArrayList<>();
+            for (RuntimeVertex vertex: vertices) {
+                if (!vertex.isStartVertex()) {
+                    list.add(vertex);
+                }
+            }
+            return Collections.unmodifiableList(list);
         }
 
         private <K, E> Map<K, List<E>> makeImmutable(Map<K, List<E>> source) {
