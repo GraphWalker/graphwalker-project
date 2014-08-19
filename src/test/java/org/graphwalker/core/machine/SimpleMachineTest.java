@@ -276,9 +276,9 @@ public class SimpleMachineTest {
         }
         // We should start at "Second Start" and then walk the path to the end
         List<Element> expectedPath = Arrays.<Element>asList(
-                secondStartVertex.build(),
-                e2.build(),
-                endVertex.build());
+            secondStartVertex.build(),
+            e2.build(),
+            endVertex.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
         // Because the "Start" node is flagged as a start node, it shouldn't be part of the statistics
@@ -303,10 +303,10 @@ public class SimpleMachineTest {
         }
         // We should start at "Start" and then walk the path to the end,
         List<Element> expectedPath = Arrays.<Element>asList(
-                e1.build(),
-                secondStartVertex.build(),
-                e2.build(),
-                endVertex.build());
+            e1.build(),
+            secondStartVertex.build(),
+            e2.build(),
+            endVertex.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
         // Because the "Start" node is flagged as a start node, it shouldn't be part of the statistics
@@ -327,6 +327,56 @@ public class SimpleMachineTest {
             System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
+    public void simpleAllVerticesWithBlockedEdgeTest() {
+        Vertex start = new Vertex().setName("Start").setStartVertex(true);
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2");
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v2).setBlocked(true);
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
+    public void simpleAllVerticesWithBlockedVertexTest() {
+        Vertex start = new Vertex().setName("Start").setStartVertex(true);
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2").setBlocked(true);
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v2);
+        Edge e3 = new Edge().setName("e3").setSourceVertex(v2).setTargetVertex(v1);
+        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
+
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+
+        context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
