@@ -38,7 +38,7 @@ import java.util.List;
 public abstract class ObservableMachine implements Machine {
 
     private boolean changed = false;
-    private List<Observer<Element>> observers = new ArrayList<>();
+    private final List<Observer<Element>> observers = new ArrayList<>();
 
     public synchronized void addObserver(Observer<Element> observer) {
         if (observer == null)
