@@ -1,9 +1,9 @@
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.ReachedEdge;
+import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.QuickRandomPath;
+import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
@@ -47,7 +47,7 @@ public class LoginModelTest {
         addEdge(e_ValidPremiumCredentials);
 
     @Test
-    public void shortestAllPathEdgeCoverage() {
+    public void ShortestAllPathEdgeCoverage() {
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Machine machine = new SimpleMachine(context);
 
@@ -58,7 +58,37 @@ public class LoginModelTest {
     }
 
     @Test
-    public void AStarReachedEdge() {
+    public void ShortestAllPathEdgeAndVertexCoverage() {
+        CombinedCondition combinedCondition = new CombinedCondition();
+        combinedCondition.addStopCondition(new EdgeCoverage(100));
+        combinedCondition.addStopCondition(new VertexCoverage(100));
+
+        ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(combinedCondition));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void ShortestAllPathEdgeOrVertexCoverage() {
+        AlternativeCondition alternativeCondition = new AlternativeCondition();
+        alternativeCondition.addStopCondition(new EdgeCoverage(100));
+        alternativeCondition.addStopCondition(new VertexCoverage(100));
+
+        ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(alternativeCondition));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void AStarPathReachedEdgeExit() {
         ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedEdge("e_Exit")));
         Machine machine = new SimpleMachine(context);
 
@@ -80,8 +110,144 @@ public class LoginModelTest {
     }
 
     @Test
-    public void QuickRandomEdgeCoverage() {
+    public void AStarPathReachedEdgeStartClient_2() {
+        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedEdge("e_StartClient")));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+
+        List<Element> expectedPath = Arrays.<Element>asList(
+            e_Init.build(),
+            v_ClientNotRunning.build(),
+            e_StartClient_1.build(),
+            v_LoginPrompted.build(),
+            e_ValidPremiumCredentials.build(),
+            v_Browse.build(),
+            e_Exit.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
+    public void AStarPathReachedVertex() {
+        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("v_Browse")));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+
+        List<Element> expectedPath = Arrays.<Element>asList(
+            e_Init.build(),
+            v_ClientNotRunning.build(),
+            e_StartClient_1.build(),
+            v_LoginPrompted.build(),
+            e_ValidPremiumCredentials.build(),
+            v_Browse.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
+    public void QuickRandomPathEdgeCoverage() {
         ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(new EdgeCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void QuickRandomPathVertexCoverage() {
+        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void QuickRandomPathEdgeAndVertexCoverage() {
+        CombinedCondition combinedCondition = new CombinedCondition();
+        combinedCondition.addStopCondition(new EdgeCoverage(100));
+        combinedCondition.addStopCondition(new VertexCoverage(100));
+
+        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(combinedCondition));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void QuickRandomPathEdgeOrVertexCoverage() {
+        AlternativeCondition alternativeCondition = new AlternativeCondition();
+        alternativeCondition.addStopCondition(new EdgeCoverage(100));
+        alternativeCondition.addStopCondition(new VertexCoverage(100));
+
+        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(alternativeCondition));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void RandomPathEdgeCoverage() {
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void RandomPathVertexCoverage() {
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void RandomPathEdgeAndVertexCoverage() {
+        CombinedCondition combinedCondition = new CombinedCondition();
+        combinedCondition.addStopCondition(new EdgeCoverage(100));
+        combinedCondition.addStopCondition(new VertexCoverage(100));
+
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(combinedCondition));
+        Machine machine = new SimpleMachine(context);
+
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+    }
+
+    @Test
+    public void RandomPathEdgeOrVertexCoverage() {
+        AlternativeCondition alternativeCondition = new AlternativeCondition();
+        alternativeCondition.addStopCondition(new EdgeCoverage(100));
+        alternativeCondition.addStopCondition(new VertexCoverage(100));
+
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(alternativeCondition));
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
