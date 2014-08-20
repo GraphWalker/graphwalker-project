@@ -128,7 +128,7 @@ public class SimpleMachineTest {
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
     }
 
-    @Test(expected = NoPathFoundException.class)
+    @Test(expected = MachineException.class)
     public void honorGuard() {
         Vertex vertex1 = new Vertex();
         Vertex vertex2 = new Vertex();
@@ -170,7 +170,7 @@ public class SimpleMachineTest {
         Assert.assertArrayEquals(contexts.get(1).getProfiler().getPath().toArray(), path2.toArray());
     }
 
-    @Test(expected = NoPathFoundException.class)
+    @Test(expected = MachineException.class)
     public void singleSharedStates() {
         Vertex start = new Vertex();
         Vertex shared1 = new Vertex().setSharedState("MyState1");

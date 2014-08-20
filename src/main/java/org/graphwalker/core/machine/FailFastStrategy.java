@@ -32,8 +32,8 @@ package org.graphwalker.core.machine;
 public final class FailFastStrategy implements ExceptionStrategy {
 
     @Override
-    public void handle(Machine machine, ExecutionContext context, RuntimeException exception) {
-        context.setExecutionStatus(ExecutionStatus.FAILED);
+    public void handle(Machine machine, MachineException exception) {
+        exception.getContext().setExecutionStatus(ExecutionStatus.FAILED);
         throw exception;
     }
 }

@@ -96,7 +96,7 @@ public final class SimpleMachine extends ObservableMachine {
                     }
                 }
             } else {
-                exceptionStrategy.handle(this, currentContext, new NoPathFoundException("No start element defined"));
+                exceptionStrategy.handle(this, new MachineException(currentContext, new NoPathFoundException("No start element defined")));
             }
         } else {
             try {
@@ -119,8 +119,8 @@ public final class SimpleMachine extends ObservableMachine {
                 } else {
                     context.getPathGenerator().getNextStep(context);
                 }
-            } catch (RuntimeException e) {
-                exceptionStrategy.handle(this, currentContext, e);
+            } catch (Throwable t) {
+                exceptionStrategy.handle(this, new MachineException(currentContext, t));
             }
         }
         if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
@@ -185,7 +185,7 @@ public final class SimpleMachine extends ObservableMachine {
                 execute((RuntimeEdge) element);
             }
         } catch (MachineException e) {
-            exceptionStrategy.handle(this, currentContext, e);
+            exceptionStrategy.handle(this, e);
         }
     }
 

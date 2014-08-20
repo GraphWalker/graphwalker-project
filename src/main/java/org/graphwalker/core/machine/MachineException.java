@@ -31,7 +31,14 @@ package org.graphwalker.core.machine;
  */
 public final class MachineException extends RuntimeException {
 
-    public MachineException(Throwable throwable) {
+    private final ExecutionContext context;
+
+    public MachineException(ExecutionContext context, Throwable throwable) {
         super(throwable);
+        this.context = context;
+    }
+
+    public ExecutionContext getContext() {
+        return context;
     }
 }
