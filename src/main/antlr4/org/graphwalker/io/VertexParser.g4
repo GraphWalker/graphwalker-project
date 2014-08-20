@@ -5,12 +5,12 @@ options {
 }
 
 parse
- : (start | (name? shared? actions?))? EOF
- | (start | (actions? shared? name?))? EOF
- | (start | (shared? name? actions?))? EOF
- | (start | (actions? name? shared?))? EOF
- | (start | (name? actions? shared?))? EOF
- | (start | (shared? actions? name?))? EOF
+ : (start | (name? shared? blocked?))? EOF
+ | (start | (blocked? shared? name?))? EOF
+ | (start | (shared? name? blocked?))? EOF
+ | (start | (blocked? name? shared?))? EOF
+ | (start | (name? blocked? shared?))? EOF
+ | (start | (shared? blocked? name?))? EOF
  ;
 
 start
@@ -25,10 +25,6 @@ name
  : Identifier
  ;
 
-actions
- : INIT COLON (action)+
- ;
-
-action
- : ~(SEMICOLON)* SEMICOLON
+blocked
+ : BLOCKED
  ;

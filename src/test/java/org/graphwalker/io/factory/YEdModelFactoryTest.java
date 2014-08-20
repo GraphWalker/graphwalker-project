@@ -66,7 +66,9 @@ public class YEdModelFactoryTest {
     public void uc01() {
         ModelFactory factory = new YEdModelFactory();
         Model.RuntimeModel model = factory.create("graphml/UC01.graphml").build();
-        Assert.assertThat(model.getVertices().size(), is(8));
+
+        // Since the model id the Model.RuntimeModel,the Start vertex is removed from the graph.
+        Assert.assertThat(model.getVertices().size(), is(7));
         Assert.assertThat(model.getEdges().size(), is(12));
         Assert.assertThat(model.findEdges("e_init").size(), is(1));
         Assert.assertThat(model.findEdges("e_AddBookToCart").size(), is(1));
@@ -112,4 +114,28 @@ public class YEdModelFactoryTest {
         Assert.assertNotEquals(edgeWithGuard.getGuard(), new Guard("true"));
     }
    */
+
+    @Test
+    public void singleEdge() {
+        ModelFactory factory = new YEdModelFactory();
+        Model model = factory.create("graphml/blocked/singleEdge.graphml");
+        Assert.assertThat(model.getVertices().size(), is(3));
+        Assert.assertThat(model.getEdges().size(), is(2));
+    }
+
+    @Test
+    public void singleVertex() {
+        ModelFactory factory = new YEdModelFactory();
+        Model model = factory.create("graphml/blocked/singleVertex.graphml");
+        Assert.assertThat(model.getVertices().size(), is(2));
+        Assert.assertThat(model.getEdges().size(), is(1));
+    }
+
+    @Test
+    public void singleVertex2() {
+        ModelFactory factory = new YEdModelFactory();
+        Model model = factory.create("graphml/blocked/singleVertex2.graphml");
+        Assert.assertThat(model.getVertices().size(), is(2));
+        Assert.assertThat(model.getEdges().size(), is(1));
+    }
 }
