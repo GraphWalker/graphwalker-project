@@ -261,12 +261,8 @@ public class CLI {
     while(itr.hasNext()) {
       Model model = null;
       String modelFileName = (String) itr.next();
-      try {
-        model = factory.create(modelFileName);
-        model.setName(modelFileName);
-      } catch (ModelFactoryException e) {
-        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-      }
+      model = factory.create(modelFileName);
+      model.setName(modelFileName);
 
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
@@ -277,9 +273,6 @@ public class CLI {
     while (machine.hasNextStep()) {
       try {
         machine.getNextStep();
-      } catch ( MachineException e) {
-          throw e;
-      } finally {
         if (offline.verbose) {
           System.out.print(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ");
         }
@@ -292,7 +285,7 @@ public class CLI {
 
         if ( offline.unvisited ) {
           System.out.print(" | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
-                "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
+            "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
 
           for( Element e: machine.getCurrentContext().getProfiler().getUnvisitedElements() ) {
             System.out.print(e.getName());
@@ -304,6 +297,8 @@ public class CLI {
         }
 
         System.out.println();
+      } catch ( MachineException e) {
+          throw e;
       }
     }
   }
