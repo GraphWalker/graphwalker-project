@@ -31,6 +31,7 @@ import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
@@ -53,6 +54,7 @@ public final class Executor {
     private final Manager manager;
     private final Map<ExecutionContext, Object> implementations = new HashMap<>();
     private final List<Machine> machines = new ArrayList<>();
+    private final Map<ExecutionContext, MachineException> failures = new HashMap<>();
 
     public Executor(Manager manager) {
         this.manager = manager;
@@ -148,8 +150,12 @@ public final class Executor {
                             for (ExecutionContext context: machine.getExecutionContexts()) {
                                 AnnotationUtils.execute(BeforeExecution.class, implementations.get(context));
                             }
-                            while (machine.hasNextStep()) {
-                                machine.getNextStep();
+                            try {
+                                while (machine.hasNextStep()) {
+                                    machine.getNextStep();
+                                }
+                            } catch (MachineException e) {
+                                failures.put(e.getContext(), e);
                             }
                             for (ExecutionContext context: machine.getExecutionContexts()) {
                                 AnnotationUtils.execute(AfterExecution.class, implementations.get(context));
@@ -163,5 +169,13 @@ public final class Executor {
                 throw new RuntimeException(); // TODO: byt exception
             }
         }
+    }
+
+    public boolean isFailure(ExecutionContext context) {
+        return failures.containsKey(context);
+    }
+
+    public MachineException getFailure(ExecutionContext context) {
+        return failures.get(context);
     }
 }
