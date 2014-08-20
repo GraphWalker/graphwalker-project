@@ -236,6 +236,43 @@ public class SimpleMachineTest {
     }
 
     @Test
+    public void simpleShortestAllPaths3() {
+        Vertex start = new Vertex().setName("Start");
+        Vertex v1 = new Vertex().setName("v1");
+        Vertex v2 = new Vertex().setName("v2");
+        Vertex v3 = new Vertex().setName("v3");
+        Vertex v4 = new Vertex().setName("v4");
+        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v2);
+        Edge e3 = new Edge().setName("e3").setSourceVertex(v1).setTargetVertex(v3);
+        Edge e4 = new Edge().setName("e4").setSourceVertex(v2).setTargetVertex(v4);
+        Edge e5 = new Edge().setName("e5").setSourceVertex(v3).setTargetVertex(v4);
+        Edge e6 = new Edge().setName("e6").setSourceVertex(v4).setTargetVertex(v1);
+        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5).addEdge(e6);
+        ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
+        context.setNextElement(start);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName());
+        }
+        List<Element> expectedPath = Arrays.<Element>asList(
+            start.build(),
+            e1.build(),
+            v1.build(),
+            e2.build(),
+            v2.build(),
+            e4.build(),
+            v4.build(),
+            e6.build(),
+            v1.build(),
+            e3.build(),
+            v3.build());
+        Collections.reverse(expectedPath);
+        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    }
+
+    @Test
     public void simpleAStar() {
         Vertex start = new Vertex().setName("Start");
         Vertex v1 = new Vertex().setName("v1");
