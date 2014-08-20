@@ -351,7 +351,7 @@ public class SimpleMachineTest {
         Edge e2 = new Edge().setSourceVertex(secondStartVertex).setTargetVertex(endVertex);
         Model model = new Model().addEdge(e1).addEdge(e2);
         ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("End")));
-        // In this test we don't set the start node, instead we let the machine pick up the start node from the model
+        // In this test we don't set the start node, instead we let the machine pick up the start node from the loginModel
         //context.setNextElement(secondStartVertex);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
