@@ -34,6 +34,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.*;
+import org.graphwalker.maven.plugin.report.XMLReportGenerator;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -292,8 +293,9 @@ public final class TestMojo extends DefaultMojoBase {
 
     private void reportResults(Executor executor) throws MojoExecutionException {
         boolean hasExceptions = false;
+        XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession());
         for (Machine machine: executor.getMachines()) {
-            //reportWriter.writeReport(graphWalker, reportsDirectory, session.getStartTime()); // TODO: Print junit reports
+            reporter.writeReport(executor, machine);
             for (ExecutionContext context: machine.getExecutionContexts()) {
                 hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
             }

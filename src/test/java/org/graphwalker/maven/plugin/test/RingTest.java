@@ -38,41 +38,50 @@ public class RingTest extends ExecutionContext implements RingModel {
 
     @Override
     public void D() {
-
+        sleep(100);
     }
 
     @Override
     public void d() {
-
+        sleep(100);
     }
 
     @Override
     public void b() {
-
+        sleep(100);
     }
 
     @Override
     public void c() {
-
+        sleep(100);
     }
 
     @Override
     public void A() {
-
+        sleep(100);
     }
 
     @Override
     public void B() {
-
+        sleep(100);
     }
 
     @Override
     public void a() {
-
+        sleep(100);
     }
 
     @Override
     public void C() {
+        sleep(100);
+    }
 
+    private void sleep(long time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            // ignore
+            e.printStackTrace();
+        }
     }
 }
