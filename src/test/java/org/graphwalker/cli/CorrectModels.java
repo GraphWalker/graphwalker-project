@@ -48,57 +48,56 @@
 
 package org.graphwalker.cli;
 
+import static org.graphwalker.RegexMatcher.matches;
+import static org.hamcrest.CoreMatchers.*;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.graphwalker.RegexMatcher.matches;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 
-public class IncorrectModels extends CLITestRoot {
+public class CorrectModels extends CLITestRoot {
+
   /**
-   * wrong vertex syntax
+   * Simplest model
    */
   @Test
-  public void wrongVertexSyntax() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
+  public void simplestModel() {
+    String args[] = {"offline", "-m", "graphml/Correct Models/simplestModel.graphml", "random(vertex_coverage(100))"};
     runCommand(args);
-    Assert.assertThat( errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/wrongVertexSyntax.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "The model does not fulfill the rules for GraphWalker" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
+    Assert.assertThat( errMsg, is(""));
+    Assert.assertThat( outMsg, is("e1" + System.lineSeparator() +
+      "v1" + System.lineSeparator()));
   }
 
   /**
-   * missing Start vertex
+   * shortest All Paths Vertex Coverage
    */
   @Test
-  public void onlyOneVertex() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/singleVertex.graphml", "random(edge_coverage(100))"};
+  public void shortestAllPathsVertexCoverage() {
+    String args[] = {"offline", "-m", "graphml/Correct Models/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
     runCommand(args);
-    Assert.assertThat( errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/singleVertex.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "No start element defined" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
-  }
-
-  /**
-   * single [start] vertex
-   */
-  @Test
-  public void singleStartVertex() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/singleStartVertex.graphml", "random(edge_coverage(100))"};
-    runCommand(args);
-    Assert.assertThat( errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/singleStartVertex.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "Model has less than 2 vertices. [Excluding the Start vertex]" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
+    Assert.assertThat( errMsg, is(""));
+    Assert.assertThat( outMsg, is("e1" + System.lineSeparator() +
+      "v1" + System.lineSeparator() +
+      "e2" + System.lineSeparator() +
+      "v2" + System.lineSeparator() +
+      "e4" + System.lineSeparator() +
+      "v4" + System.lineSeparator() +
+      "e6" + System.lineSeparator() +
+      "v1" + System.lineSeparator() +
+      "e3" + System.lineSeparator() +
+      "v3" + System.lineSeparator()));
   }
 }
