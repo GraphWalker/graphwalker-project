@@ -35,66 +35,52 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
  * @author Kristian Karl
- *
- * Generates a random path, but tries to reach unvisited elements first.
- * This is quite effective for FSM, but for a EFSM this may not work since edges
- * can be inaccessable. 
+ *         <p/>
+ *         Generates a random path, but tries to reach unvisited elements first.
+ *         This is quite effective for FSM, but for a EFSM this may not work since edges
+ *         can be inaccessable.
  */
 public final class QuickRandomPath implements PathGenerator {
 
-  private final Random random = new Random(System.nanoTime());
-  private final StopCondition stopCondition;
-  private Path<Element> littleWalk = null;
-  private ArrayList<Element> unvisitedElements = null;
+    private final Random random = new Random(System.nanoTime());
+    private final StopCondition stopCondition;
+    private final List<Element> unvisitedElements = new ArrayList<>();
+    private Element target = null;
 
-  public QuickRandomPath(StopCondition stopCondition) {
-    this.stopCondition = stopCondition;
-  }
-
-  public StopCondition getStopCondition() {
-    return stopCondition;
-  }
-
-  @Override
-  public ExecutionContext getNextStep(ExecutionContext context) {
-    if (unvisitedElements==null) {
-      unvisitedElements = new ArrayList<>();
-      unvisitedElements.addAll(context.getModel().getElements());
-      unvisitedElements.remove(context.getCurrentElement());
-    }
-    if (littleWalk==null || littleWalk.isEmpty()) {
-      if (unvisitedElements.isEmpty()) {
-        Element e = context.getModel().getElements().get(random.nextInt(context.getModel().getElements().size()));
-        littleWalk = findShortestPath(context, e);
-      } else {
-        Element e = unvisitedElements.get(random.nextInt(unvisitedElements.size()));
-        littleWalk = findShortestPath(context, e);
-      }
+    public QuickRandomPath(StopCondition stopCondition) {
+        this.stopCondition = stopCondition;
     }
 
-    if (littleWalk.isEmpty()) {
-      throw new NoPathFoundException();
+    public StopCondition getStopCondition() {
+        return stopCondition;
     }
 
-    context.setCurrentElement(littleWalk.pop());
-    unvisitedElements.remove(context.getCurrentElement());
-    return context;
-  }
+    @Override
+    public ExecutionContext getNextStep(ExecutionContext context) {
+        if (unvisitedElements.isEmpty()) {
+            unvisitedElements.addAll(context.getModel().getElements());
+            unvisitedElements.remove(context.getCurrentElement());
+        }
+        if (null == target || target.equals(context.getCurrentElement())) {
+            if (unvisitedElements.isEmpty()) {
+                throw new NoPathFoundException();
+            } else {
+                target = unvisitedElements.get(random.nextInt(unvisitedElements.size()));
+            }
+        }
+        Element nextElement = context.getAlgorithm(AStar.class).getNextElement(context.getCurrentElement(), target);
+        unvisitedElements.remove(nextElement);
+        return context.setCurrentElement(nextElement);
+    }
 
-  @Override
-  public boolean hasNextStep(ExecutionContext context) {
-    return !getStopCondition().isFulfilled(context);
-  }
-
-  private Path<Element> findShortestPath(ExecutionContext context, Element target) {
-    AStar astar = context.getAlgorithm(AStar.class);
-    Path<Element> path = astar.getShortestPath(context.getCurrentElement(), target);
-    path.pop();
-    return path;
-  }
+    @Override
+    public boolean hasNextStep(ExecutionContext context) {
+        return !getStopCondition().isFulfilled(context);
+    }
 }
 
