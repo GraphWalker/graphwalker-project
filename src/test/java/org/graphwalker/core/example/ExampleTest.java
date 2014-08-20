@@ -89,7 +89,7 @@ public class ExampleTest extends ExecutionContext {
         }
     }
 
-    @Test(expected = NoPathFoundException.class)
+    @Test(expected = MachineException.class)
     public void failure() {
         Vertex start = new Vertex();
         Model model = new Model().addEdge(new Edge()

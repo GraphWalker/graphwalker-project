@@ -174,7 +174,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
                 Constructor<? extends Algorithm> constructor = clazz.getConstructor(ExecutionContext.class);
                 algorithms.put(clazz, constructor.newInstance(this));
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                throw new MachineException(e);
+                throw new MachineException(this, e);
             }
         }
         return (A)algorithms.get(clazz);
@@ -203,7 +203,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
             try {
                 return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
             } catch (ScriptException e) {
-                throw new MachineException(e);
+                throw new MachineException(this, e);
             }
         }
         return true;
@@ -214,7 +214,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         try {
             getScriptEngine().eval(action.getScript());
         } catch (ScriptException e) {
-            throw new MachineException(e);
+            throw new MachineException(this, e);
         }
     }
 
@@ -226,7 +226,7 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         } catch (NoSuchMethodException e) {
             // ignore, method is not defined in the execution context
         } catch (Throwable t) {
-            throw new MachineException(t);
+            throw new MachineException(this, t);
         }
     }
 }

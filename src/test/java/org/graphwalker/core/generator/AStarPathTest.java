@@ -84,7 +84,7 @@ public class AStarPathTest {
     }
 */
 
-    @Test(expected = NoPathFoundException.class)
+    @Test(expected = MachineException.class)
     public void failTest() {
         ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("end")));
         Machine machine = new SimpleMachine(context);
