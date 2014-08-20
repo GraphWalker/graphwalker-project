@@ -51,54 +51,20 @@ package org.graphwalker.cli;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.graphwalker.RegexMatcher.matches;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 
-public class IncorrectModels extends CLITestRoot {
+public class IOErrors extends CLITestRoot {
   /**
-   * wrong vertex syntax
+   * Non existent file
    */
   @Test
-  public void wrongVertexSyntax() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
+  public void nonExistentFile() {
+    String args[] = {"offline", "-m", "sdsdtkdsjhsl.graphml", "random(edge_coverage(100))"};
     runCommand(args);
     Assert.assertThat( errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/wrongVertexSyntax.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "The model does not fulfill the rules for GraphWalker" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
-  }
-
-  /**
-   * missing Start vertex
-   */
-  @Test
-  public void onlyOneVertex() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/singleVertex.graphml", "random(edge_coverage(100))"};
-    runCommand(args);
-    Assert.assertThat( errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/singleVertex.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "No start element defined" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
-  }
-
-  /**
-   * single [start] vertex
-   */
-  @Test
-  public void singleStartVertex() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/singleStartVertex.graphml", "random(edge_coverage(100))"};
-    runCommand(args);
-    Assert.assertThat( errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/singleStartVertex.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "Model has less than 2 vertices. [Excluding the Start vertex]" + System.lineSeparator()));
+      "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
+      System.lineSeparator() + "Could not open the file." + System.lineSeparator()));
     Assert.assertThat( outMsg, is(""));
   }
 }

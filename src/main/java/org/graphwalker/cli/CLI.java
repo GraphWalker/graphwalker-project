@@ -47,6 +47,7 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.LoggerUtil;
+import org.graphwalker.io.common.ResourceException;
 import org.graphwalker.io.factory.YEdModelFactory;
 import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
@@ -267,6 +268,8 @@ public class CLI {
       PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
       ExecutionContext context = new ExecutionContext(model, pathGenerator);
       executionContexts.add(context);
+
+      verifyModel(context.getModel());
     }
 
     SimpleMachine machine = new SimpleMachine(executionContexts);
@@ -300,6 +303,17 @@ public class CLI {
       } catch ( MachineException e) {
           throw e;
       }
+    }
+  }
+
+  private void verifyModel(Model.RuntimeModel model) {
+    // Verify that the model has more than 1 vertex
+    if ( model.getAllVertices().size() < 2 ) {
+      throw new RuntimeException("Model has less than 2 vertices. [Excluding the Start vertex]");
+    }
+    // Verify that the model has more than 0 edges
+    if ( model.getEdges().size() < 1 ) {
+      throw new RuntimeException("Model has less than 1 edge.");
     }
   }
 
