@@ -67,90 +67,9 @@ import java.util.regex.Pattern;
 import static org.hamcrest.core.Is.is;
 
 
-public class CLITest {
+public class CLITest extends CLITestRoot {
 
-  Pattern pattern;
-  Matcher matcher;
-  StringBuffer stdOutput;
-  StringBuffer errOutput;
-  String outMsg;
-  String errMsg;
   String usageMsg = "^Usage: java -jar graphwalker.jar .*";
-
-  static Logger logger = Logger.getAnonymousLogger();
-  private CLI commandLineInterface;
-
-  private OutputStream redirectOut() {
-    return new OutputStream() {
-      @Override
-      public void write(int b) throws IOException {
-        stdOutput.append(Character.toString((char) b));
-      }
-    };
-  }
-
-  private OutputStream redirectErr() {
-    return new OutputStream() {
-      @Override
-      public void write(int b) throws IOException {
-        errOutput.append(Character.toString((char) b));
-      }
-    };
-  }
-
-  private InputStream redirectIn() {
-    return new InputStream() {
-      @Override
-      public int read() throws IOException {
-        try {
-          Thread.sleep(300);
-        } catch (InterruptedException e) {
-          logger.log(Level.ALL, "Unit testing was interrupted", e.getStackTrace());
-        }
-        return '0';
-      }
-    };
-  }
-
-  private void runCommand(String args[]) {
-    stdOutput = new StringBuffer();
-    errOutput = new StringBuffer();
-
-    PrintStream outStream = new PrintStream(redirectOut());
-    PrintStream oldOutStream = System.out; // backup
-    PrintStream errStream = new PrintStream(redirectErr());
-    PrintStream oldErrStream = System.err; // backup
-
-    System.setOut(outStream);
-    System.setErr(errStream);
-
-    commandLineInterface = new CLI();
-    commandLineInterface.main(args);
-
-    System.setOut(oldOutStream);
-    System.setErr(oldErrStream);
-
-    outMsg = stdOutput.toString();
-    errMsg = errOutput.toString();
-    logger.log(Level.FINER, "stdout: " + outMsg);
-    logger.log(Level.FINER, "stderr: " + errMsg);
-  }
-
-  private void moveMbtPropertiesFile() {
-    File mbt_properties = new File("graphwalker.properties");
-    if (mbt_properties.exists()) {
-      mbt_properties.renameTo(new File("graphwalker.properties.bak"));
-    }
-    Assert.assertFalse(new File("graphwalker.properties").exists());
-  }
-
-  private void restoreMbtPropertiesFile() {
-    File mbt_properties = new File("graphwalker.properties.bak");
-    if (mbt_properties.exists()) {
-      mbt_properties.renameTo(new File("graphwalker.properties"));
-    }
-    Assert.assertFalse(new File("graphwalker.properties.bak").exists());
-  }
 
   /**
    * Simulates
@@ -171,9 +90,7 @@ public class CLITest {
   @Test
   public void testNoArgs() {
     String args[] = {};
-    moveMbtPropertiesFile();
     runCommand(args);
-    restoreMbtPropertiesFile();
     Assert.assertThat( outMsg, matches(usageMsg));
     Assert.assertThat( "Nothing should be written to standard err", errMsg, is(""));
   }
