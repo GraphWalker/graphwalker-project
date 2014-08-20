@@ -52,6 +52,9 @@ public final class RandomPath implements PathGenerator {
     @Override
     public ExecutionContext getNextStep(ExecutionContext context) {
         Element currentElement = context.getCurrentElement();
+        if (null == currentElement) {
+          throw new NoPathFoundException("Execution context has no current element set");
+        }
         List<Element> elements = context.filter(context.getModel().getElements(currentElement));
         if (elements.isEmpty()) {
             throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
