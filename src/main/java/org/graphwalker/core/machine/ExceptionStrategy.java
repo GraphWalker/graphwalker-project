@@ -31,5 +31,5 @@ package org.graphwalker.core.machine;
  */
 public interface ExceptionStrategy {
 
-    void handle(Machine machine, RuntimeException throwable);
+    void handle(Machine machine, ExecutionContext context, RuntimeException throwable);
 }
