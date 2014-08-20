@@ -51,26 +51,25 @@ package org.graphwalker.cli;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.graphwalker.RegexMatcher.matches;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 
-public class IncorrectModels {
+public class CLITestRoot {
 
-  Pattern pattern;
-  Matcher matcher;
   StringBuffer stdOutput;
   StringBuffer errOutput;
   String outMsg;
   String errMsg;
-  String usageMsg = "^Usage: java -jar graphwalker.jar .*";
 
   static Logger logger = Logger.getAnonymousLogger();
   private CLI commandLineInterface;
@@ -107,7 +106,7 @@ public class IncorrectModels {
     };
   }
 
-  private void runCommand(String args[]) {
+  protected void runCommand(String args[]) {
     stdOutput = new StringBuffer();
     errOutput = new StringBuffer();
 
@@ -129,32 +128,5 @@ public class IncorrectModels {
     errMsg = errOutput.toString();
     logger.log(Level.FINER, "stdout: " + outMsg);
     logger.log(Level.FINER, "stderr: " + errMsg);
-  }
-
-
-  /**
-   * wrong vertex syntax
-   */
-  @Test
-  public void wrongVertexSyntax() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
-    runCommand(args);
-    Assert.assertThat( "No error messages should occur", errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/wrongVertexSyntax.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "The model does not fulfill the rules for GraphWalker" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
-  }
-
-  /**
-   * Incorrect model missing Start vertex
-   */
-  @Test
-  public void onlyOneVertex() {
-    String args[] = {"offline", "-m", "graphml/Incorrect Models/singleVertex.graphml", "random(edge_coverage(100))"};
-    runCommand(args);
-    Assert.assertThat( "No error messages should occur", errMsg, is("An error occurred when running command: " +
-      "offline -m graphml/Incorrect Models/singleVertex.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "No start element defined" + System.lineSeparator()));
-    Assert.assertThat( outMsg, is(""));
   }
 }
