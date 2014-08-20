@@ -105,12 +105,11 @@ public final class YEdModelFactory implements ModelFactory {
                             if (null != context.shared() && null != context.shared().Identifier()) {
                                 vertex.setSharedState(context.shared().Identifier().getText());
                             }
-                            if (null != context.actions()) {
-                                model.addActions(convertVertexAction(context.actions().action()));
+                            if (null == context.blocked()) {
+                                elements.put(node.getId(), vertex);
+                                vertex.setId(node.getId());
+                                model.addVertex(vertex);
                             }
-                            elements.put(node.getId(), vertex);
-                            vertex.setId(node.getId());
-                            model.addVertex(vertex);
                         }
                     }
                 }
@@ -174,11 +173,12 @@ public final class YEdModelFactory implements ModelFactory {
                             if (null != context.actions()) {
                                 edge.addActions(convertEdgeAction(context.actions().action()));
                             }
-                            if (null != context.blocked()) {
-                                edge.setBlocked(true);
+                            if (null == context.blocked()) {
+                                if (null != edge.getSourceVertex() && null != edge.getTargetVertex()) {
+                                    edge.setId(edgeType.getId());
+                                    model.addEdge(edge);
+                                }
                             }
-                            edge.setId(edgeType.getId());
-                            model.addEdge(edge);
                         }
                     }
                 }
@@ -215,14 +215,6 @@ public final class YEdModelFactory implements ModelFactory {
     private List<Action> convertEdgeAction(List<EdgeParser.ActionContext> actionContexts) {
         List<Action> actions = new ArrayList<>();
         for (EdgeParser.ActionContext actionContext: actionContexts) {
-            actions.add(new Action(actionContext.getText()));
-        }
-        return actions;
-    }
-
-    private List<Action> convertVertexAction(List<VertexParser.ActionContext> actionContexts) {
-        List<Action> actions = new ArrayList<>();
-        for (VertexParser.ActionContext actionContext: actionContexts) {
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
