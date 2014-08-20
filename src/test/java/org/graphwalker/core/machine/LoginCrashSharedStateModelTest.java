@@ -1,5 +1,31 @@
 package org.graphwalker.core.machine;
 
+/*
+ * #%L
+ * GraphWalker Core
+ * %%
+ * Copyright (C) 2011 - 2014 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
+
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.QuickRandomPath;
@@ -41,16 +67,15 @@ public class LoginCrashSharedStateModelTest {
     Edge e_ToggleRememberMe = new Edge().setName("e_ToggleRememberMe").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("rememberMe=true"));
     Edge e_ValidPremiumCredentials = new Edge().setName("e_ValidPremiumCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_Browse).addAction(new Action("validLogin=true"));
 
-    Model loginModel = new Model().addEdge(e_Close).
-        addEdge(e_Exit).
-        addEdge(e_Init).
-        addEdge(e_InvalidCredentials).
-        addEdge(e_Logout).
-        addEdge(e_StartClient_1).
-        addEdge(e_StartClient_2).
-        addEdge(e_ToggleRememberMe).
-        addEdge(e_ValidPremiumCredentials);
-
+    Model loginModel = new Model().addEdge(e_Close)
+            .addEdge(e_Exit)
+            .addEdge(e_Init)
+            .addEdge(e_InvalidCredentials)
+            .addEdge(e_Logout)
+            .addEdge(e_StartClient_1)
+            .addEdge(e_StartClient_2)
+            .addEdge(e_ToggleRememberMe)
+            .addEdge(e_ValidPremiumCredentials);
 
     /**
      * The crash Model
@@ -62,8 +87,9 @@ public class LoginCrashSharedStateModelTest {
     Edge e_CrashSpotify = new Edge().setName("e_CrashSpotify").setSourceVertex(firstVertex).setTargetVertex(v_CrashDumpFilesGenerated);
     Edge lastEdge = new Edge().setName("e_Exit").setSourceVertex(v_CrashDumpFilesGenerated).setTargetVertex(lastVertex);
 
-    Model crashModel = new Model().addEdge(e_CrashSpotify).
-        addEdge(lastEdge);
+    Model crashModel = new Model()
+            .addEdge(e_CrashSpotify)
+            .addEdge(lastEdge);
 
 
     @Test
