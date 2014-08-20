@@ -90,7 +90,11 @@ public final class FloydWarshall implements Algorithm {
     }
 
     public int getShortestDistance(Element origin, Element destination) {
-        return distances[context.getModel().getElements().indexOf(origin)][context.getModel().getElements().indexOf(destination)];
+        if (origin.equals(destination)) {
+            return 0;
+        } else {
+            return distances[context.getModel().getElements().indexOf(origin)][context.getModel().getElements().indexOf(destination)];
+        }
     }
 
     public int getMaximumDistance(Element destination) {

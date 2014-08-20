@@ -54,7 +54,7 @@ public final class AStar implements Algorithm {
         AStarNode node = queue.poll();
         if(node.getElement().equals(destination)){
             return node.getElement();
-        }else{
+        } else {
             closeSet.put(node.getElement(), node);
             List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
             for (Element neighbor : neighbors) {
