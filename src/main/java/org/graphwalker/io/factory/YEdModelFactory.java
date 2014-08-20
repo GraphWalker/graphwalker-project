@@ -30,6 +30,7 @@ import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -43,6 +44,7 @@ import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.VertexParser;
 import org.graphwalker.io.common.ResourceUtils;
 
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 
@@ -67,15 +69,24 @@ public final class YEdModelFactory implements ModelFactory {
 
     @Override
     public Model create(String file) {
+        Model model = new Model();
+        GraphmlDocument document = null;
         try {
-            Model model = new Model();
-            GraphmlDocument document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(file));
-            addVertices(model, document);
-            addEdges(model, document);
-            return model;
-        } catch (Throwable throwable) {
-            throw new ModelFactoryException(throwable);
+          document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(file));
+        } catch (XmlException e) {
+          throw new ModelFactoryException("The file appears not to be valid yEd formatted.");
+        } catch (IOException e) {
+          throw new ModelFactoryException("Could not read the file.");
         }
+        try {
+          addVertices(model, document);
+          addEdges(model, document);
+        } catch (XmlException e) {
+          throw new ModelFactoryException("The file seams not to be valid yEd formatted.");
+        } catch (YEdParsingException e) {
+          throw new ModelFactoryException("The model does not fulfill the rules for GraphWalker");
+        }
+        return model;
     }
 
     @Override
@@ -94,7 +105,10 @@ public final class YEdModelFactory implements ModelFactory {
                             for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
                                 label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
                             }
-                            VertexParser.ParseContext context = new VertexParser(getTokenStream(label.toString())).parse();
+                            VertexParser parser = new VertexParser(getTokenStream(label.toString()));
+                            parser.removeErrorListeners();
+                            parser.addErrorListener(new DescriptiveErrorListener());
+                            VertexParser.ParseContext context = parser.parse();
                             Vertex vertex = new Vertex();
                             if (null != context.start()) {
                                 vertex.setStartVertex(true);
@@ -223,6 +237,8 @@ public final class YEdModelFactory implements ModelFactory {
     private CommonTokenStream getTokenStream(String label) {
         ANTLRInputStream inputStream = new ANTLRInputStream(label);
         LabelLexer lexer = new LabelLexer(inputStream);
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new DescriptiveErrorListener());
         return new CommonTokenStream(lexer);
     }
 
