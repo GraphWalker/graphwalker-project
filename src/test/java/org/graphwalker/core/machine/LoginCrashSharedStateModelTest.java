@@ -166,7 +166,7 @@ public class LoginCrashSharedStateModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathEdgeCoverage() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
         executionContexts.add( new ExecutionContext(loginModel, new QuickRandomPath(new EdgeCoverage(100))));
@@ -182,7 +182,7 @@ public class LoginCrashSharedStateModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathVertexCoverage() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
         executionContexts.add( new ExecutionContext(loginModel, new QuickRandomPath(new VertexCoverage(100))));
@@ -198,7 +198,7 @@ public class LoginCrashSharedStateModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathEdgeAndVertexCoverage() {
         CombinedCondition combinedCondition = new CombinedCondition();
         combinedCondition.addStopCondition(new EdgeCoverage(100));
@@ -218,7 +218,7 @@ public class LoginCrashSharedStateModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathEdgeOrVertexCoverage() {
         AlternativeCondition alternativeCondition = new AlternativeCondition();
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
