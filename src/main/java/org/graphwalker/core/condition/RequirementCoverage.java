@@ -32,7 +32,7 @@ import org.graphwalker.core.machine.RequirementStatus;
 /**
  * @author Nils Olsson
  */
-public final class RequirementCoverage implements StopCondition {
+public final class RequirementCoverage extends BaseCondition {
 
     private final double percent;
 
@@ -46,7 +46,7 @@ public final class RequirementCoverage implements StopCondition {
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
     }
 
     @Override

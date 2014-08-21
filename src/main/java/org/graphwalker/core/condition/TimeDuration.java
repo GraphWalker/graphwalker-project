@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Nils Olsson
  */
-public final class TimeDuration implements StopCondition {
+public final class TimeDuration extends BaseCondition {
 
     private final long duration;
     private final long timestamp;
@@ -49,7 +49,7 @@ public final class TimeDuration implements StopCondition {
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
     }
 
     @Override

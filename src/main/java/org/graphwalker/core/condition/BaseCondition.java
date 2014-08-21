@@ -28,37 +28,15 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.machine.ExecutionContext;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
  */
-public final class EdgeCoverage extends BaseCondition {
-
-    private final double percent;
-
-    public EdgeCoverage(int percent) {
-        this.percent = (double)percent/100;
-    }
-
-    public int getPercent() {
-        return (int)(percent * 100);
-    }
+public abstract class BaseCondition implements StopCondition {
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
-    }
-
-    @Override
-    public double getFulfilment(ExecutionContext context) {
-        long totalEdgesCount = context.getModel().getEdges().size();
-        long visitedEdgesCount = 0;
-        for (RuntimeEdge edge: context.getModel().getEdges()) {
-            if (context.getProfiler().isVisited(edge)) {
-                visitedEdgesCount++;
-            }
-        }
-        return ((double)visitedEdgesCount / totalEdgesCount) / percent;
+        return context.getCurrentElement() instanceof RuntimeVertex;
     }
 }

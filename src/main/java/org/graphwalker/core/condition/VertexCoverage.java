@@ -35,7 +35,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class VertexCoverage implements StopCondition {
+public final class VertexCoverage extends BaseCondition {
 
     private final double percent;
 
@@ -49,7 +49,7 @@ public final class VertexCoverage implements StopCondition {
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= 1.0;
+        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
     }
 
     @Override

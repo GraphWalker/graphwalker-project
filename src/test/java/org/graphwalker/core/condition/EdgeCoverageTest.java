@@ -84,6 +84,10 @@ public class EdgeCoverageTest {
         context.setCurrentElement(e2.build());
         context.getProfiler().start();
         context.getProfiler().stop();
+        Assert.assertFalse(stopCondition.isFulfilled(context));
+        context.setCurrentElement(v2.build());
+        context.getProfiler().start();
+        context.getProfiler().stop();
         Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }
