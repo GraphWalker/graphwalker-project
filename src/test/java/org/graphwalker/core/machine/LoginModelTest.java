@@ -72,7 +72,7 @@ public class LoginModelTest {
         addEdge(e_ToggleRememberMe).
         addEdge(e_ValidPremiumCredentials);
 
-    @Test
+    //@Test
     public void ShortestAllPathEdgeCoverage() {
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Machine machine = new SimpleMachine(context);
