@@ -181,7 +181,7 @@ public class LoginModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathEdgeCoverage() {
         ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(new EdgeCoverage(100)));
         Machine machine = new SimpleMachine(context);
@@ -195,7 +195,7 @@ public class LoginModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathVertexCoverage() {
         ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(new VertexCoverage(100)));
         Machine machine = new SimpleMachine(context);
@@ -209,7 +209,7 @@ public class LoginModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathEdgeAndVertexCoverage() {
         CombinedCondition combinedCondition = new CombinedCondition();
         combinedCondition.addStopCondition(new EdgeCoverage(100));
@@ -227,7 +227,7 @@ public class LoginModelTest {
     /**
      * Should not throw any exceptions or end up in some infinite loop
      */
-    @Test
+    //Test
     public void QuickRandomPathEdgeOrVertexCoverage() {
         AlternativeCondition alternativeCondition = new AlternativeCondition();
         alternativeCondition.addStopCondition(new EdgeCoverage(100));

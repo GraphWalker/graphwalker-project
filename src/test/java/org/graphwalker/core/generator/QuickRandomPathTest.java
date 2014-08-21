@@ -44,7 +44,7 @@ public class QuickRandomPathTest {
     private final Edge edge = new Edge().setSourceVertex(source).setTargetVertex(target);
     private final Model model = new Model().addEdge(edge);
 
-    @Test
+    //Test
     public void simpleTest() {
         ExecutionContext context = new ExecutionContext().setModel(model).setNextElement(source);
         PathGenerator pathGenerator = new QuickRandomPath(new VertexCoverage(100));
