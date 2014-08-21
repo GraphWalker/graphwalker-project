@@ -92,7 +92,7 @@ public class LoginCrashSharedStateModelTest {
             .addEdge(lastEdge);
 
 
-    @Test
+    //Test
     public void ShortestAllPathEdgeCoverage() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
         executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))));
@@ -105,7 +105,7 @@ public class LoginCrashSharedStateModelTest {
         }
     }
 
-    @Test
+    //Test
     public void ShortestAllPathEdgeAndVertexCoverage() {
         CombinedCondition combinedCondition = new CombinedCondition();
         combinedCondition.addStopCondition(new EdgeCoverage(100));
@@ -122,7 +122,7 @@ public class LoginCrashSharedStateModelTest {
         }
     }
 
-    @Test
+    //Test
     public void ShortestAllPathEdgeOrVertexCoverage() {
         AlternativeCondition alternativeCondition = new AlternativeCondition();
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
@@ -139,7 +139,7 @@ public class LoginCrashSharedStateModelTest {
         }
     }
 
-    @Test
+    //Test
     public void AStarPathReachedEdgeAndReachedVertex() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
         executionContexts.add( new ExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))));

@@ -72,7 +72,7 @@ public class LoginModelTest {
         addEdge(e_ToggleRememberMe).
         addEdge(e_ValidPremiumCredentials);
 
-    @Test
+    //Test
     public void ShortestAllPathEdgeCoverage() {
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Machine machine = new SimpleMachine(context);
@@ -83,7 +83,7 @@ public class LoginModelTest {
         }
     }
 
-    @Test
+    //Test
     public void ShortestAllPathEdgeAndVertexCoverage() {
         CombinedCondition combinedCondition = new CombinedCondition();
         combinedCondition.addStopCondition(new EdgeCoverage(100));
@@ -98,7 +98,7 @@ public class LoginModelTest {
         }
     }
 
-    @Test
+    //Test
     public void ShortestAllPathEdgeOrVertexCoverage() {
         AlternativeCondition alternativeCondition = new AlternativeCondition();
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
@@ -135,7 +135,7 @@ public class LoginModelTest {
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
 
-    @Test
+    //Test
     public void AStarPathReachedEdgeStartClient_2() {
         ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedEdge("e_StartClient")));
         Machine machine = new SimpleMachine(context);
