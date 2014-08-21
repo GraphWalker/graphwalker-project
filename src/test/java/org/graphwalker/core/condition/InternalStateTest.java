@@ -62,4 +62,24 @@ public class InternalStateTest {
         Assert.assertTrue(stopCondition.isFulfilled(context));
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
+
+    @Test
+    public void testIsFulfilledWithInitEdge() {
+        Vertex start = new Vertex();
+        Vertex vertex = new Vertex();
+        Model model = new Model()
+                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+                .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+        StopCondition stopCondition = new InternalState("index == 99");
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
+            Assert.assertFalse(stopCondition.isFulfilled(context));
+            machine.getNextStep();
+        }
+        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
+        Assert.assertTrue(stopCondition.isFulfilled(context));
+        Assert.assertThat(context.getKeys().get("index"), is("99"));
+    }
 }

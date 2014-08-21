@@ -33,7 +33,7 @@ import javax.script.ScriptException;
 /**
  * @author Nils Olsson
  */
-public class InternalState implements StopCondition {
+public final class InternalState implements StopCondition {
 
     private final String script;
 
@@ -51,7 +51,7 @@ public class InternalState implements StopCondition {
                 throw new StopConditionException("Wrong type of expression");
             }
         } catch (ScriptException e) {
-            throw new StopConditionException(e);
+            return false;
         }
     }
 
