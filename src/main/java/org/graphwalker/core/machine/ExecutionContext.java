@@ -240,17 +240,21 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
             Map<String, Object> global = (Map<String, Object>)getBindings(ENGINE_SCOPE).get("nashorn.global");
             for (String key: global.keySet()) {
                 if (isVariable(key, methods)) {
-                    keys.put(key, global.get(key).toString());
+                    if (global.get(key) instanceof Double) {
+                        keys.put(key, ""+Math.round((double)global.get(key)));
+                    } else {
+                        keys.put(key, global.get(key).toString());
+                    }
                 }
             }
         } else {
             for (String key: getBindings(ENGINE_SCOPE).keySet()) {
                 if (isVariable(key, methods)) {
                     Object value = getBindings(ENGINE_SCOPE).get(key);
-                    if (value instanceof String) {
-                        keys.put(key, value.toString());
-                    } else {
+                    if (value instanceof Double) {
                         keys.put(key, ""+Math.round((double)value));
+                    } else {
+                        keys.put(key, value.toString());
                     }
                 }
             }
