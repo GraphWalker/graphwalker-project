@@ -30,7 +30,6 @@ import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
 import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -46,7 +45,6 @@ import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
 
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.*;
 
 import static org.graphwalker.io.EdgeParser.ActionContext;
@@ -79,7 +77,7 @@ public final class YEdModelFactory implements ModelFactory {
         } catch (IOException e) {
           throw new ModelFactoryException("Could not read the file.");
         } catch (ResourceNotFoundException e) {
-            throw new ModelFactoryException(e);
+          throw new ModelFactoryException("Could not read the file.");
         }
         try {
           addVertices(model, document);
