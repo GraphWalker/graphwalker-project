@@ -229,4 +229,31 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
             throw new MachineException(this, t);
         }
     }
+
+    public Map<String, String> getKeys() {
+        Map<String, String> keys = new HashMap<>();
+        List<String> methods = new ArrayList<>();
+        for (Method method: getClass().getMethods()) {
+            methods.add(method.getName());
+        }
+        if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
+            Map<String, Object> global = (Map<String, Object>)getBindings(ENGINE_SCOPE).get("nashorn.global");
+            for (String key: global.keySet()) {
+                if (isVariable(key, methods)) {
+                    keys.put(key, global.get(key).toString());
+                }
+            }
+        } else {
+            for (String key: getBindings(ENGINE_SCOPE).keySet()) {
+                if (isVariable(key, methods)) {
+                    keys.put(key, getBindings(ENGINE_SCOPE).get(key).toString());
+                }
+            }
+        }
+        return keys;
+    }
+
+    private boolean isVariable(String key, List<String> methods) {
+        return !"impl".equals(key) && !methods.contains(key) && !"print".equals(key) && !"println".equals(key) && !"context".equals(key);
+    }
 }
