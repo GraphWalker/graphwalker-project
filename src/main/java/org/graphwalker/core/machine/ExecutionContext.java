@@ -246,7 +246,12 @@ public class ExecutionContext extends SimpleScriptContext implements Context {
         } else {
             for (String key: getBindings(ENGINE_SCOPE).keySet()) {
                 if (isVariable(key, methods)) {
-                    keys.put(key, getBindings(ENGINE_SCOPE).get(key).toString());
+                    Object value = getBindings(ENGINE_SCOPE).get(key);
+                    if (value instanceof String) {
+                        keys.put(key, value.toString());
+                    } else {
+                        keys.put(key, ""+Math.round((double)value));
+                    }
                 }
             }
         }
