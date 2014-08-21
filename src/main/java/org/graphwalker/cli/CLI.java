@@ -47,7 +47,6 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.common.ResourceException;
 import org.graphwalker.io.factory.YEdModelFactory;
 import org.graphwalker.io.factory.ModelFactoryException;
 import org.slf4j.Logger;
