@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public final class Length implements StopCondition {
+public final class Length extends BaseCondition {
 
     private final long length;
 
@@ -45,7 +45,7 @@ public final class Length implements StopCondition {
 
     @Override
     public boolean isFulfilled(ExecutionContext context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
     }
 
     @Override

@@ -107,7 +107,7 @@ public class SimpleMachineTest {
             Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5l));
     }
 
     @Test
@@ -126,7 +126,7 @@ public class SimpleMachineTest {
           Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4l));
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5l));
     }
 
     @Test(expected = MachineException.class)
@@ -231,7 +231,7 @@ public class SimpleMachineTest {
             machine.getNextStep();
             System.out.println(context.getCurrentElement().getName());
         }
-        List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build(), e2.build());
+        List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build(), e2.build(), v1.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
