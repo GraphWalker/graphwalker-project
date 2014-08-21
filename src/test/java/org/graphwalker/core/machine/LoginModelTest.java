@@ -72,7 +72,7 @@ public class LoginModelTest {
         addEdge(e_ToggleRememberMe).
         addEdge(e_ValidPremiumCredentials);
 
-    //Test
+    @Test
     public void ShortestAllPathEdgeCoverage() {
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Machine machine = new SimpleMachine(context);
@@ -176,70 +176,6 @@ public class LoginModelTest {
             v_Browse.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
-    }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    //Test
-    public void QuickRandomPathEdgeCoverage() {
-        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(new EdgeCoverage(100)));
-        Machine machine = new SimpleMachine(context);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
-        }
-    }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    //Test
-    public void QuickRandomPathVertexCoverage() {
-        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(new VertexCoverage(100)));
-        Machine machine = new SimpleMachine(context);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
-        }
-    }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    //Test
-    public void QuickRandomPathEdgeAndVertexCoverage() {
-        CombinedCondition combinedCondition = new CombinedCondition();
-        combinedCondition.addStopCondition(new EdgeCoverage(100));
-        combinedCondition.addStopCondition(new VertexCoverage(100));
-
-        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(combinedCondition));
-        Machine machine = new SimpleMachine(context);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
-        }
-    }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    //Test
-    public void QuickRandomPathEdgeOrVertexCoverage() {
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
-        alternativeCondition.addStopCondition(new EdgeCoverage(100));
-        alternativeCondition.addStopCondition(new VertexCoverage(100));
-
-        ExecutionContext context = new ExecutionContext(model, new QuickRandomPath(alternativeCondition));
-        Machine machine = new SimpleMachine(context);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
-        }
     }
 
     /**
