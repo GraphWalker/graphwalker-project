@@ -42,6 +42,7 @@ import org.graphwalker.core.model.*;
 import org.graphwalker.io.EdgeParser;
 import org.graphwalker.io.LabelLexer;
 import org.graphwalker.io.VertexParser;
+import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
 
 import java.io.IOException;
@@ -77,6 +78,8 @@ public final class YEdModelFactory implements ModelFactory {
           throw new ModelFactoryException("The file appears not to be valid yEd formatted.");
         } catch (IOException e) {
           throw new ModelFactoryException("Could not read the file.");
+        } catch (ResourceNotFoundException e) {
+            throw new ModelFactoryException(e);
         }
         try {
           addVertices(model, document);

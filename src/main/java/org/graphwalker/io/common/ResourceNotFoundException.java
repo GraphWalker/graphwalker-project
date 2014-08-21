@@ -29,12 +29,12 @@ package org.graphwalker.io.common;
 /**
  * @author Nils Olsson
  */
-public class ResourceException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 
-    public ResourceException() {
+    public ResourceNotFoundException() {
         super();
     }
-    public ResourceException(String message) {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 }
