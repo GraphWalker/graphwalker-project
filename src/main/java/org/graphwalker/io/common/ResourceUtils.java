@@ -54,7 +54,7 @@ public final class ResourceUtils {
             if (null != resource) {
                 return new File(resource.getFile());
             }
-            throw new ResourceException();
+            throw new ResourceNotFoundException();
         }
     }
 
@@ -64,7 +64,7 @@ public final class ResourceUtils {
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
-                throw new ResourceException();
+                throw new ResourceNotFoundException();
             }
         } else {
             InputStream resource = ResourceUtils.class.getResourceAsStream(filename);
@@ -74,7 +74,7 @@ public final class ResourceUtils {
             if (null != resource) {
                 return resource;
             }
-            throw new ResourceException();
+            throw new ResourceNotFoundException();
         }
     }
 
