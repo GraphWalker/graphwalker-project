@@ -58,6 +58,7 @@
         <module>../graphwalker-dashboard</module>
         <!--module>../graphwalker-intellij-plugin</module-->
         <module>../graphwalker-maven-plugin</module>
+        <module>../graphwalker-example</module>
     </modules>
 
     <dependencyManagement>
