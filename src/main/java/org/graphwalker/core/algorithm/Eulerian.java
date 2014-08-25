@@ -90,6 +90,13 @@ public final class Eulerian implements Algorithm {
         return context.getAlgorithm(Fleury.class).getTrail(vertex);
     }
 
+    public Path<Element> getEulerPath(RuntimeEdge edge) {
+        if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
+            throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
+        }
+        return context.getAlgorithm(Fleury.class).getTrail(edge);
+    }
+
     class PolarityCounter {
 
         private int polarity = 0;

@@ -51,12 +51,24 @@ public final class Fleury implements Algorithm {
         this.context = context;
     }
 
+    public Path<Element> getTrail(RuntimeEdge edge) {
+        Set<Element> visitedEdges = new HashSet<Element>();
+        visitedEdges.add(edge);
+        Path<Element> path = getTrail(edge.getTargetVertex(), visitedEdges);
+        path.addFirst(edge.getTargetVertex());
+        return path;
+    }
+
     public Path<Element> getTrail(RuntimeVertex vertex) {
-        Set<Element> visitedEdges = new HashSet<>();
+        return getTrail(vertex, new HashSet<Element>());
+    }
+
+    private Path<Element> getTrail(RuntimeVertex vertex, Set<Element> visitedEdges) {
         // Step 1
         Path<Element> trail = new Path<>();
         RuntimeVertex currentVertex = vertex;
         List<RuntimeEdge> availableEdges = new ArrayList<>(context.getModel().getEdges());
+        availableEdges.removeAll(visitedEdges);
         while (!availableEdges.isEmpty()) {
             // Step 2
             RuntimeEdge edge = getNextEdge(context.getModel(), visitedEdges, currentVertex);

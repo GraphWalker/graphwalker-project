@@ -99,8 +99,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
         private final List<Element> elementsCache;
-        private final List<RuntimeVertex> verticesCache;
-        private final List<RuntimeVertex> startVerticesCache;
         private final Map<Element, List<Element>> elementsByElementCache;
         private final Map<String, List<Element>> elementsByNameCache;
         private final Map<String, List<RuntimeEdge>> edgesByNameCache;
@@ -122,8 +120,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.elementsByNameCache = createElementsByNameCache();
             this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
             this.sharedStateCache = createSharedStateCache();
-            this.startVerticesCache = createStartVerticesCache();
-            this.verticesCache = createVerticesCache();
             this.id = "";
         }
 
@@ -136,7 +132,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
          * @return a list of non-start vertices
          */
         public List<RuntimeVertex> getVertices() {
-            return verticesCache;
+            return vertices;
         }
 
         public List<RuntimeVertex> getSharedStates(String sharedState) {
@@ -149,14 +145,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         public boolean hasSharedStates() {
             return !sharedStateCache.isEmpty();
-        }
-
-        public List<RuntimeVertex> getStartVertices() {
-            return startVerticesCache;
-        }
-
-        public boolean hasStartVertices() {
-            return !startVerticesCache.isEmpty();
         }
 
         public List<RuntimeVertex> findVertices(String name) {
@@ -295,26 +283,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
                 }
             }
             return makeImmutable(sharedStateCache);
-        }
-
-        private List<RuntimeVertex> createStartVerticesCache() {
-            List<RuntimeVertex> startVertices = new ArrayList<>();
-            for (RuntimeVertex vertex: vertices) {
-                if (vertex.isStartVertex()) {
-                    startVertices.add(vertex);
-                }
-            }
-            return Collections.unmodifiableList(startVertices);
-        }
-
-        private List<RuntimeVertex> createVerticesCache() {
-            List<RuntimeVertex> list = new ArrayList<>();
-            for (RuntimeVertex vertex: vertices) {
-                if (!vertex.isStartVertex()) {
-                    list.add(vertex);
-                }
-            }
-            return Collections.unmodifiableList(list);
         }
 
         private <K, E> Map<K, List<E>> makeImmutable(Map<K, List<E>> source) {

@@ -69,7 +69,7 @@ public final class Profiler {
     public List<Element> getUnvisitedElements() {
         List<Element> elementList = new ArrayList<>();
         for (Element e : context.getModel().getElements()) {
-            if (!context.getModel().getStartVertices().contains(e) && !isVisited(e)) {
+            if (!isVisited(e)) {
                 elementList.add(e);
             }
         }

@@ -219,12 +219,12 @@ public class SimpleMachineTest {
 
     @Test
     public void simpleShortestAllPaths2() {
-        Vertex start = new Vertex().setName("Start").setStartVertex(true);
         Vertex v1 = new Vertex().setName("v1");
-        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Edge e1 = new Edge().setName("e1").setTargetVertex(v1);
         Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2);
         ExecutionContext context = new ExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        context.setNextElement(e1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -317,7 +317,8 @@ public class SimpleMachineTest {
 
     @Test
     public void multipleStartVerticesA() {
-        Vertex firstStartVertex = new Vertex().setName("Start").setStartVertex(true);
+        // It's not true that we can have several start elements, core only care about the actual start point
+        Vertex firstStartVertex = new Vertex().setName("Start");
         Vertex secondStartVertex = new Vertex().setName("Second Start");
         Vertex endVertex = new Vertex().setName("End");
         Edge e1 = new Edge().setSourceVertex(firstStartVertex).setTargetVertex(secondStartVertex);
@@ -336,46 +337,16 @@ public class SimpleMachineTest {
             endVertex.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
-        // Because the "Start" node is flagged as a start node, it shouldn't be part of the statistics
         Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(3L));
     }
 
     @Test
-    public void multipleStartVerticesB() {
-        Vertex firstStartVertex = new Vertex().setName("Start").setStartVertex(true);
-        Vertex secondStartVertex = new Vertex().setName("Second Start");
-        Vertex endVertex = new Vertex().setName("End");
-        Edge e1 = new Edge().setSourceVertex(firstStartVertex).setTargetVertex(secondStartVertex);
-        Edge e2 = new Edge().setSourceVertex(secondStartVertex).setTargetVertex(endVertex);
-        Model model = new Model().addEdge(e1).addEdge(e2);
-        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("End")));
-        // In this test we don't set the start node, instead we let the machine pick up the start node from the loginModel
-        //context.setNextElement(secondStartVertex);
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        // We should start at "Start" and then walk the path to the end,
-        List<Element> expectedPath = Arrays.<Element>asList(
-            e1.build(),
-            secondStartVertex.build(),
-            e2.build(),
-            endVertex.build());
-        Collections.reverse(expectedPath);
-        Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
-        // Because the "Start" node is flagged as a start node, it shouldn't be part of the statistics
-        Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
-        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(4L));
-    }
-
-    @Test
     public void simpleAllVerticesTest() {
-        Vertex start = new Vertex().setName("Start").setStartVertex(true);
         Vertex v1 = new Vertex().setName("v1");
-        Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v1);
+        Edge e1 = new Edge().setName("e1").setTargetVertex(v1);
         Model model = new Model().addEdge(e1);
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100))).setNextElement(e1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();

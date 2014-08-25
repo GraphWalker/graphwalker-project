@@ -50,20 +50,6 @@ public class ModelTest {
     }
 
     @Test
-    public void buildStartVertex() {
-        Vertex vertex = new Vertex().setName("test").setStartVertex(true);
-        Assert.assertThat(vertex, notNullValue());
-        Assert.assertThat(vertex.getName(), is("test"));
-        Assert.assertThat(vertex.build(), notNullValue());
-        Assert.assertThat(vertex.build().getName(), is("test"));
-        Assert.assertThat(vertex.isStartVertex(), is(true));
-        Assert.assertThat(vertex.build().isStartVertex(), is(true));
-        vertex.setStartVertex(false);
-        Assert.assertThat(vertex.isStartVertex(), is(false));
-        Assert.assertThat(vertex.build().isStartVertex(), is(false));
-    }
-
-    @Test
     public void buildEdge() {
         Vertex vertex1 = new Vertex().setName("vertex1");
         Vertex vertex2 = new Vertex().setName("vertex2");
