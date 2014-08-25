@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.graphwalker.core.Assert.expect;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -115,7 +116,7 @@ public class AssertTest {
 
     @Test
     public void testEqual1() {
-        expect(1).to.equal(1);
+        expect(1).to.be.equal(1);
     }
 
     @Test
@@ -299,6 +300,94 @@ public class AssertTest {
     @Test(expected = AssertionError.class)
     public void testNotFailure() {
         expect(new ArrayList<>()).to.not.have.property("size");
+    }
+
+    @Test
+    public void verifyEqualMessage() {
+        String message = null;
+        try {
+            expect(1).to.equal(2);
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("expected: java.lang.Integer<1> but was: java.lang.Integer<2>"));
+    }
+
+    @Test
+    public void verifyNotEqualMessage() {
+        String message = null;
+        try {
+            expect(1).not.to.equal(1);
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("expected not: java.lang.Integer<1> but was: java.lang.Integer<1>"));
+    }
+
+    @Test
+    public void verifyTypeMessage() {
+        String message = null;
+        try {
+            expect(Integer.class).to.equal(Long.class);
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("expected: java.lang.Class<class java.lang.Integer> but was: java.lang.Class<class java.lang.Long>"));
+    }
+
+    @Test
+    public void verifyWrongTypeMessage() {
+        String message = null;
+        try {
+            expect(Integer.class).not.to.equal(Integer.class);
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("expected not: java.lang.Class<class java.lang.Integer> but was: java.lang.Class<class java.lang.Integer>"));
+    }
+
+    @Test
+    public void verifySizeMessage() {
+        String message = null;
+        try {
+            expect(new int[]{1}).to.have.size(2);
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("expected size: 1 but was: 2"));
+    }
+
+    @Test
+    public void verifyWrongSizeMessage() {
+        String message = null;
+        try {
+            expect(new int[]{1}).not.to.have.size(1);
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("expected different size: 1 but was: 1"));
+    }
+
+    @Test
+    public void verifyPropertyNotFoundMessage() {
+        String message = null;
+        try {
+            expect(Integer.class).have.property("myMethods");
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("property: myMethods not found"));
+    }
+
+    @Test
+    public void verifyPropertyFoundMessage() {
+        String message = null;
+        try {
+            expect(Integer.class).not.have.property("methods");
+        } catch (AssertionError e) {
+            message = e.getMessage();
+        }
+        org.junit.Assert.assertThat(message, is("property: methods found"));
     }
 
     class MyPropertyTest {
