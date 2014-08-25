@@ -29,6 +29,8 @@ package org.graphwalker.core;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Nils Olsson
@@ -77,7 +79,7 @@ public class Assert<T> {
     }
 
     public Assert<?> property(String name) {
-        return property(name, MessageFormat.format("property: {0} not found", name));
+        return property(name, MessageFactory.build("property", invert, name));
     }
 
     public Assert<?> property(String name, String message) {
@@ -96,13 +98,13 @@ public class Assert<T> {
     }
 
     public Assert<T> size(int size) {
-        return size(size, MessageFormat.format("expected: {0} but was: {1}", object.getClass().isArray()?Array.getLength(object):invoke("size"), size));
+        return size(size, MessageFactory.build("size", invert, object.getClass().isArray() ? Array.getLength(object) : invoke("size"), size));
     }
 
     public Assert<T> size(int size, String message) {
         if (object.getClass().isArray() && Array.getLength(object) == size) {
             success(message);
-        } else if (invoke("size").equals(size)) {
+        } else if (hasMethod("size") && invoke("size").equals(size)) {
             success(message);
         } else {
             fail(message);
@@ -127,7 +129,7 @@ public class Assert<T> {
     }
 
     public Assert<T> equal(Object object) {
-        return equal(object, MessageFormat.format("expected: {0} but was: {1}", format(this.object), format(object)));
+        return equal(object, MessageFactory.build("equal", invert, format(this.object), format(object)));
     }
 
     public Assert<T> equal(Object object, String message) {
@@ -140,7 +142,7 @@ public class Assert<T> {
     }
 
     public Assert<T> a(Class<?> clazz) {
-        return a(clazz, MessageFormat.format("incompatible types: required: {0} found: {1}", object.getClass().getName(), clazz==null?"null":(clazz.getName())));
+        return a(clazz, MessageFactory.build("type", invert, object.getClass().getName(), clazz == null ? "null" : (clazz.getName())));
     }
 
     public Assert<T> a(Class<?> clazz, String message) {
@@ -264,4 +266,34 @@ public class Assert<T> {
         return object.getClass().isArray();
     }
 
+    static class MessageFactory {
+
+        static Map<String, Message> messages = new HashMap<>();
+
+        static {
+            messages.put("equal", new Message("expected: {0} but was: {1}", "expected not: {0} but was: {1}"));
+            messages.put("type", new Message("incompatible types: required: {0} found: {1}", "compatible types: required not: {0} found: {1}"));
+            messages.put("size", new Message("expected size: {0} but was: {1}", "expected different size: {0} but was: {1}"));
+            messages.put("property", new Message("property: {0} not found", "property: {0} found"));
+        }
+
+        static String build(String key, boolean invert, Object... arguments) {
+            return MessageFormat.format(messages.get(key).getMessage(invert), arguments);
+        }
+
+        static class Message {
+
+            String standardMessage;
+            String invertedMessage;
+
+            Message(String standardMessage, String invertedMessage) {
+                this.standardMessage = standardMessage;
+                this.invertedMessage = invertedMessage;
+            }
+
+            String getMessage(boolean inverted) {
+                return inverted?invertedMessage:standardMessage;
+            }
+        }
+    }
 }
