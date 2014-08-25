@@ -67,15 +67,10 @@ public final class ShortestAllPaths implements PathGenerator {
             element = context.getNextElement();
         }
         if (element instanceof RuntimeVertex) {
-            return getPath(context, (RuntimeVertex)element);
+            return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeVertex)element);
         } else {
-            RuntimeEdge edge = (RuntimeEdge)element;
-            return getPath(context, edge.getTargetVertex());
+            return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeEdge)element);
         }
-    }
-
-    private Path<Element> getPath(ExecutionContext context, RuntimeVertex vertex) {
-        return context.getAlgorithm(Eulerian.class).getEulerPath(vertex);
     }
 
     @Override

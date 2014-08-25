@@ -81,16 +81,10 @@ public final class SimpleMachine extends ObservableMachine {
         if (null == context.getCurrentElement()) {
             if (null != context.getNextElement()) {
                 context.setCurrentElement(context.getNextElement());
-            } else if (context.getModel().hasStartVertices()) {
-                List<RuntimeVertex> vertices = context.getModel().getStartVertices();
-                RuntimeVertex start = vertices.get(new Random(System.nanoTime()).nextInt(vertices.size()));
-                //context.setCurrentElement(context.getModel().getOutEdges(start).get(0));
-                context.setCurrentElement(start);
-                context.getPathGenerator().getNextStep(context);
             } else if (context.getModel().hasSharedStates()) {
                 // if we don't have a start vertex, but we have shared state, then we try to find another context to execute
                 for (ExecutionContext newContext: contexts) {
-                    if (hasNextStep(newContext) && (null != newContext.getCurrentElement() || newContext.getModel().hasStartVertices()) || null != newContext.getNextElement()) {
+                    if (hasNextStep(newContext) && null != newContext.getCurrentElement() || null != newContext.getNextElement()) {
                         currentContext = newContext;
                         getNextStep();
                     }

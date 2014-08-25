@@ -52,14 +52,12 @@ public class LoginCrashSharedStateModelTest {
     /**
      * The login Model
      */
-    Vertex start = new Vertex().setName("Start").setStartVertex(true);
     Vertex v_Browse = new Vertex().setName("v_Browse").setSharedState("LOGGED_IN");
     Vertex v_ClientNotRunning = new Vertex().setName("v_ClientNotRunning").setSharedState("CLIENT_NOT_RUNNING");
     Vertex v_LoginPrompted = new Vertex().setName("v_LoginPrompted");
 
     Edge e_Close = new Edge().setName("e_Close").setSourceVertex(v_LoginPrompted).setTargetVertex(v_ClientNotRunning);
     Edge e_Exit = new Edge().setName("e_Exit").setSourceVertex(v_Browse).setTargetVertex(v_ClientNotRunning);
-    Edge e_Init = new Edge().setName("e_Init").setSourceVertex(start).setTargetVertex(v_ClientNotRunning).addAction(new Action("validLogin=false")).addAction(new Action("rememberMe=false"));
     Edge e_InvalidCredentials = new Edge().setName("e_InvalidCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("validLogin=false"));
     Edge e_Logout = new Edge().setName("e_Logout").setSourceVertex(v_Browse).setTargetVertex(v_LoginPrompted);
     Edge e_StartClient_1 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_LoginPrompted).setGuard(new Guard("!rememberMe||!validLogin"));
@@ -69,13 +67,15 @@ public class LoginCrashSharedStateModelTest {
 
     Model loginModel = new Model().addEdge(e_Close)
             .addEdge(e_Exit)
-            .addEdge(e_Init)
             .addEdge(e_InvalidCredentials)
             .addEdge(e_Logout)
             .addEdge(e_StartClient_1)
             .addEdge(e_StartClient_2)
             .addEdge(e_ToggleRememberMe)
-            .addEdge(e_ValidPremiumCredentials);
+            .addEdge(e_ValidPremiumCredentials)
+            //.addAction(new Action("e_Init()"))
+            .addAction(new Action("validLogin=false"))
+            .addAction(new Action("rememberMe=false"));
 
     /**
      * The crash Model
@@ -95,7 +95,7 @@ public class LoginCrashSharedStateModelTest {
     //Test
     public void ShortestAllPathEdgeCoverage() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))));
+        executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new ShortestAllPaths(new EdgeCoverage(100))));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -112,7 +112,7 @@ public class LoginCrashSharedStateModelTest {
         combinedCondition.addStopCondition(new VertexCoverage(100));
 
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(combinedCondition)));
+        executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new ShortestAllPaths(combinedCondition)));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -129,7 +129,7 @@ public class LoginCrashSharedStateModelTest {
         alternativeCondition.addStopCondition(new VertexCoverage(100));
 
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(alternativeCondition)));
+        executionContexts.add( new ExecutionContext(loginModel, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new ShortestAllPaths(alternativeCondition)));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -142,7 +142,7 @@ public class LoginCrashSharedStateModelTest {
     //Test
     public void AStarPathReachedEdgeAndReachedVertex() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))));
+        executionContexts.add( new ExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new AStarPath(new ReachedVertex("v_CrashDumpFilesGenerated"))));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -152,7 +152,6 @@ public class LoginCrashSharedStateModelTest {
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
-            e_Init.build(),
             v_ClientNotRunning.build(),
             e_StartClient_1.build(),
             v_LoginPrompted.build(),
@@ -169,7 +168,7 @@ public class LoginCrashSharedStateModelTest {
     @Test
     public void RandomPathEdgeCoverage() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))));
+        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new RandomPath(new EdgeCoverage(100))));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -185,7 +184,7 @@ public class LoginCrashSharedStateModelTest {
     @Test
     public void RandomPathVertexCoverage() {
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))));
+        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new RandomPath(new VertexCoverage(100))));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -205,7 +204,7 @@ public class LoginCrashSharedStateModelTest {
         combinedCondition.addStopCondition(new VertexCoverage(100));
 
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(combinedCondition)));
+        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new RandomPath(combinedCondition)));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
@@ -225,7 +224,7 @@ public class LoginCrashSharedStateModelTest {
         alternativeCondition.addStopCondition(new VertexCoverage(100));
 
         ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(alternativeCondition)));
+        executionContexts.add( new ExecutionContext(loginModel, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning));
         executionContexts.add( new ExecutionContext(crashModel, new RandomPath(alternativeCondition)));
         SimpleMachine machine = new SimpleMachine(executionContexts);
 
