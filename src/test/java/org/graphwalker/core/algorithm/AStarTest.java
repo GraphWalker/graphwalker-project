@@ -27,6 +27,7 @@ package org.graphwalker.core.algorithm;
  */
 
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class AStarTest {
     public void astar() {
         // set the weight
         e1.setWeight(1.0);
-        AStar aStar = new AStar(new ExecutionContext().setModel(model));
+        AStar aStar = new AStar(new TestExecutionContext().setModel(model));
         Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
         Assert.assertNotNull(path);
         Assert.assertThat(path.size(), is(5));
@@ -66,7 +67,7 @@ public class AStarTest {
     public void astarWeighted() {
         // set the weight so that we will take the road with more jumps
         e1.setWeight(100.0);
-        AStar aStar = new AStar(new ExecutionContext().setModel(model));
+        AStar aStar = new AStar(new TestExecutionContext().setModel(model));
         Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
         Assert.assertNotNull(path);
         Assert.assertThat(path.size(), is(7));

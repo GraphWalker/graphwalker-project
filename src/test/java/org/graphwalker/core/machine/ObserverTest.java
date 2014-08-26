@@ -57,7 +57,7 @@ public class ObserverTest implements Observer<Element> {
     private ObservableMachine createMachine() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
         ObservableMachine machine = new SimpleMachine(context);
         Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));

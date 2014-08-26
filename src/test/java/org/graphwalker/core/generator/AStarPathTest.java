@@ -27,10 +27,7 @@ package org.graphwalker.core.generator;
  */
 
 import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
-import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -86,7 +83,7 @@ public class AStarPathTest {
 
     @Test(expected = MachineException.class)
     public void failTest() {
-        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("end")));
+        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("end")));
         Machine machine = new SimpleMachine(context);
         // Missing a start point, shall generate an exception
         while (machine.hasNextStep()) {
