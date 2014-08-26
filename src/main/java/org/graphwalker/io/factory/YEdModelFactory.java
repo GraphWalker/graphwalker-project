@@ -112,7 +112,7 @@ public final class YEdModelFactory implements ModelFactory {
                             VertexParser.ParseContext context = parser.parse();
                             Vertex vertex = new Vertex();
                             if (null != context.start()) {
-                                vertex.setStartVertex(true);
+
                             }
                             if (null != context.name()) {
                                 vertex.setName(context.name().getText());
