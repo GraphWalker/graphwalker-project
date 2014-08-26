@@ -52,7 +52,7 @@ public final class Fleury implements Algorithm {
     }
 
     public Path<Element> getTrail(RuntimeEdge edge) {
-        Set<Element> visitedEdges = new HashSet<Element>();
+        Set<Element> visitedEdges = new HashSet<>();
         visitedEdges.add(edge);
         Path<Element> path = getTrail(edge.getTargetVertex(), visitedEdges);
         path.addFirst(edge.getTargetVertex());

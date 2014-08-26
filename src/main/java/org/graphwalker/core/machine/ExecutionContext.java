@@ -230,6 +230,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         }
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, String> getKeys() {
         Map<String, String> keys = new HashMap<>();
         List<String> methods = new ArrayList<>();

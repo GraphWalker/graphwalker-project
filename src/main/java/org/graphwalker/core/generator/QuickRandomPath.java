@@ -32,7 +32,6 @@ import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
 
 import java.util.ArrayList;
 import java.util.List;
