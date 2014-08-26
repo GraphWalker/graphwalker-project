@@ -28,6 +28,7 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
@@ -58,7 +59,7 @@ public class AlternativeConditionTest {
         StopCondition stopCondition = new AlternativeCondition()
                 .addStopCondition(new VertexCoverage(100))
                 .addStopCondition(new ReachedEdge("e1"));
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        ExecutionContext context = new TestExecutionContext(model, new RandomPath(stopCondition));
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();
@@ -77,7 +78,7 @@ public class AlternativeConditionTest {
         StopCondition stopCondition = new AlternativeCondition()
                 .addStopCondition(new VertexCoverage(100))
                 .addStopCondition(new ReachedEdge("e1"));
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition));
+        ExecutionContext context = new TestExecutionContext(model, new RandomPath(stopCondition));
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();

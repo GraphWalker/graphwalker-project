@@ -48,7 +48,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public class ExecutionContext extends SimpleScriptContext implements Context {
+public abstract class ExecutionContext extends SimpleScriptContext implements Context {
 
     private static final Logger logger = LoggerFactory.getLogger(ExecutionContext.class);
 

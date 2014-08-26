@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  * @author Nils Olsson
  */
-public class Assert<T> {
+public final class Assert<T> {
 
     // language chains, to improve the readability of assertions
     public final Assert<T> a;

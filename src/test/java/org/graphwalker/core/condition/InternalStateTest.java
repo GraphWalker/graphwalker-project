@@ -30,6 +30,7 @@ import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -51,7 +52,7 @@ public class InternalStateTest {
                 .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
                 .addAction(new Action("var index = 0"));
         StopCondition stopCondition = new InternalState("index == 99");
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
+        ExecutionContext context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
@@ -71,7 +72,7 @@ public class InternalStateTest {
                 .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
                 .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
         StopCondition stopCondition = new InternalState("index == 99");
-        ExecutionContext context = new ExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
+        ExecutionContext context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
