@@ -103,7 +103,7 @@ public final class Executor {
             for (Group group: manager.getExecutionGroups()) {
                 List<Context> contexts = new ArrayList<>();
                 for (Execution execution: group.getExecutions()) {
-                    if (ExecutionContext.class.isAssignableFrom(execution.getTestClass())) {
+                    if (Context.class.isAssignableFrom(execution.getTestClass())) {
                         try {
                             StopCondition stopCondition = createStopCondition(execution.getStopCondition(), execution.getStopConditionValue());
 
@@ -168,11 +168,11 @@ public final class Executor {
         }
     }
 
-    public boolean isFailure(ExecutionContext context) {
+    public boolean isFailure(Context context) {
         return failures.containsKey(context);
     }
 
-    public MachineException getFailure(ExecutionContext context) {
+    public MachineException getFailure(Context context) {
         return failures.get(context);
     }
 }
