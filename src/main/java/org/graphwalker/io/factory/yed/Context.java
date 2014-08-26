@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io.factory.yed;
 
 /*
  * #%L
@@ -26,16 +26,11 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
+
 /**
- * Created by krikar on 8/20/14.
+ * @author Nils Olsson
  */
-public class YEdParsingException extends RuntimeException {
+public final class Context extends ExecutionContext {
 
-  public YEdParsingException(Throwable throwable) {
-    super(throwable);
-  }
-
-  public YEdParsingException(String message) {
-    super(message);
-  }
 }

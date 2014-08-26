@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io.factory.yed;
 
 /*
  * #%L
@@ -26,17 +26,25 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.model.Model;
-
-import java.nio.file.Path;
-import java.util.Set;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @author Nils Olsson
+ * Created by krikar on 8/20/14.
  */
-public interface ModelFactory {
+public class DescriptiveErrorListener extends BaseErrorListener {
+  private static final Logger logger = LoggerFactory.getLogger(DescriptiveErrorListener.class);
+  public static DescriptiveErrorListener INSTANCE = new DescriptiveErrorListener();
 
-    boolean accept(Path path);
-    Model create(String file);
-    Set<String> getSupportedFileTypes();
+  @Override
+  public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                          int line, int charPositionInLine,
+                          String msg, RecognitionException e)
+  {
+    logger.error(msg);
+    throw new ContextFactoryException(msg);
+  }
 }
