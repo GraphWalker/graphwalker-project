@@ -68,7 +68,7 @@ public class YEdModelFactoryTest {
         Model.RuntimeModel model = factory.create("graphml/UC01.graphml").build();
 
         // Since the model id the Model.RuntimeModel,the Start vertex is removed from the graph.
-        Assert.assertThat(model.getVertices().size(), is(7));
+        Assert.assertThat(model.getVertices().size(), is(8)); // one of the vertices is the start vertex and that shouldn't be a part of the model
         Assert.assertThat(model.getEdges().size(), is(12));
         Assert.assertThat(model.findEdges("e_init").size(), is(1));
         Assert.assertThat(model.findEdges("e_AddBookToCart").size(), is(1));
@@ -87,7 +87,6 @@ public class YEdModelFactoryTest {
         Assert.assertThat(model.findVertices("v_SearchResult").size(), is(1));
         Assert.assertThat(model.findVertices("v_ShoppingCart").size(), is(1));
 
-        Assert.assertThat(model.findEdges("e_init").get(0).getSourceVertex().isStartVertex(), is(true));
         Assert.assertThat(model.findEdges("e_init").get(0).getTargetVertex().getName(), is("v_BrowserStopped"));
 
         Assert.assertThat(model.findEdges("e_StartBrowser").get(0).getSourceVertex().getName(), is("v_BrowserStopped"));
