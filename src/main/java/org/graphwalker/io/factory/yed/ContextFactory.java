@@ -57,6 +57,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
 
     private Vertex startVertex = null;
+    private Edge startEdge = null;
     private Map<String, Vertex> elements = new HashMap<>();
 
     @Override
@@ -96,6 +97,16 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
         }
 
         context.setModel(model);
+        if (null != startEdge) {
+            context.setNextElement(startEdge);
+        } else {
+            for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
+                if (context.getModel().getOutEdges(vertex).isEmpty()) {
+                    context.setNextElement(vertex);
+                }
+            }
+
+        }
         return context;
     }
 
@@ -201,6 +212,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
                                         edge.setSourceVertex(null);
                                         edge.setId(edgeType.getId());
                                         model.addEdge(edge);
+                                        startEdge = edge;
                                     } else if (null != edge.getSourceVertex()) {
                                         edge.setId(edgeType.getId());
                                         model.addEdge(edge);
