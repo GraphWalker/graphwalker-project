@@ -28,7 +28,7 @@ package org.graphwalker.maven.plugin.report;
 
 import org.apache.maven.execution.MavenSession;
 import org.codehaus.plexus.util.FileUtils;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.Executor;
 
@@ -77,7 +77,7 @@ public class XMLReportGenerator {
                     .append(SPACE).append("value=\"").append(properties.getProperty(name).replaceAll("\\\\", "\\\\")).append("\"/>").append(NEWLINE);
         }
         builder.append(INDENT).append(INDENT).append("</properties>").append(NEWLINE);
-        for (ExecutionContext context: machine.getExecutionContexts()) {
+        for (Context context: machine.getContexts()) {
             builder.append(INDENT).append(INDENT).append("<testcase")
                     .append(SPACE).append("classname=\"").append(context.getClass().getName()).append("\"")
                     .append(SPACE).append("name=\"").append(context.getClass().getSimpleName()).append("\"")
@@ -137,7 +137,7 @@ public class XMLReportGenerator {
 
     private class Report {
 
-        private final List<ExecutionContext> failedExecutions = new ArrayList<>();
+        private final List<Context> failedExecutions = new ArrayList<>();
         private long skipped = 0;
         private long tests = 0;
         private long failures = 0;
@@ -147,7 +147,7 @@ public class XMLReportGenerator {
         Report(Machine machine, Date startTime) {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             timestamp = formatter.format(startTime);
-            for (ExecutionContext context: machine.getExecutionContexts()) {
+            for (Context context: machine.getContexts()) {
                 tests++;
                 switch (context.getExecutionStatus()) {
                     case FAILED: {
@@ -167,7 +167,7 @@ public class XMLReportGenerator {
             }
         }
 
-        public boolean failed(ExecutionContext context) {
+        public boolean failed(Context context) {
             return failedExecutions.contains(context);
         }
 

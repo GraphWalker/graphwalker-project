@@ -30,7 +30,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.*;
@@ -253,9 +253,9 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("Result :");
             getLog().info("");
             long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
-            List<ExecutionContext> failedExecutions = new ArrayList<>();
+            List<Context> failedExecutions = new ArrayList<>();
             for (Machine machine: executor.getMachines()) {
-                for (ExecutionContext context: machine.getExecutionContexts()) {
+                for (Context context: machine.getContexts()) {
                     switch (context.getExecutionStatus()) {
                         case COMPLETED: {
                             completed++;
@@ -278,7 +278,7 @@ public final class TestMojo extends DefaultMojoBase {
             }
             if (!failedExecutions.isEmpty()) {
                 getLog().info("Failed executions: ");
-                for (ExecutionContext context: failedExecutions) {
+                for (Context context: failedExecutions) {
                     double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
                     String pathGenerator = context.getPathGenerator().toString();
                     String stopCondition = context.getPathGenerator().getStopCondition().toString();
@@ -296,7 +296,7 @@ public final class TestMojo extends DefaultMojoBase {
         XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession());
         for (Machine machine: executor.getMachines()) {
             reporter.writeReport(executor, machine);
-            for (ExecutionContext context: machine.getExecutionContexts()) {
+            for (Context context: machine.getContexts()) {
                 hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
             }
         }
