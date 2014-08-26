@@ -33,7 +33,8 @@ import org.graphwalker.cli.CLI_ParserBaseListener;
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.*;
 
-import java.util.ArrayList;
+import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,6 +58,7 @@ public class GeneratorLoader extends CLI_ParserBaseListener {
 
     @Override
     public void exitStopCondition(@NotNull CLI_Parser.StopConditionContext ctx) {
+
         if ( ctx.getChild(0).getText().equalsIgnoreCase("never") ) {
             stopConditions.add(new Never());
         } else if ( ctx.getChild(0).getText().equalsIgnoreCase("edge_coverage") ) {
