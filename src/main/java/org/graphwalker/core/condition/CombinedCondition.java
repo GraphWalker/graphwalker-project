@@ -26,7 +26,7 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +48,7 @@ public final class CombinedCondition implements StopCondition {
     }
 
     @Override
-    public boolean isFulfilled(ExecutionContext context) {
+    public boolean isFulfilled(Context context) {
         for (StopCondition condition : conditions) {
             if (!condition.isFulfilled(context)) {
                 return false;
@@ -58,7 +58,7 @@ public final class CombinedCondition implements StopCondition {
     }
 
     @Override
-    public double getFulfilment(ExecutionContext context) {
+    public double getFulfilment(Context context) {
         double fulfilment = 0;
         for (StopCondition condition : conditions) {
             fulfilment += condition.getFulfilment(context);

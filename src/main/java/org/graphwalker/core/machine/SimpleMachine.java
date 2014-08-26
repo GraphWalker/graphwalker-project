@@ -45,18 +45,18 @@ public final class SimpleMachine extends ObservableMachine {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
 
-    private final List<ExecutionContext> contexts = new ArrayList<>();
+    private final List<Context> contexts = new ArrayList<>();
 
-    private ExecutionContext currentContext;
+    private Context currentContext;
     private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
 
-    public SimpleMachine(ExecutionContext context) {
+    public SimpleMachine(Context context) {
         this(Arrays.asList(context));
     }
 
-    public SimpleMachine(List<ExecutionContext> contexts) {
+    public SimpleMachine(List<Context> contexts) {
         this.contexts.addAll(contexts);
-        for (ExecutionContext context: contexts) {
+        for (Context context: contexts) {
             this.currentContext = context;
             execute(context.getModel().getActions());
         }
@@ -77,13 +77,13 @@ public final class SimpleMachine extends ObservableMachine {
         return currentContext;
     }
 
-    private void walk(ExecutionContext context) {
+    private void walk(Context context) {
         if (null == context.getCurrentElement()) {
             if (null != context.getNextElement()) {
                 context.setCurrentElement(context.getNextElement());
             } else if (context.getModel().hasSharedStates()) {
                 // if we don't have a start vertex, but we have shared state, then we try to find another context to execute
-                for (ExecutionContext newContext: contexts) {
+                for (Context newContext: contexts) {
                     if (hasNextStep(newContext) && null != newContext.getCurrentElement() || null != newContext.getNextElement()) {
                         currentContext = newContext;
                         getNextStep();
@@ -134,7 +134,7 @@ public final class SimpleMachine extends ObservableMachine {
 
     private List<SharedStateTupel> getPossibleSharedStates(String sharedState) {
         List<SharedStateTupel> sharedStates = new ArrayList<>();
-        for (ExecutionContext context: contexts) {
+        for (Context context: contexts) {
             if (context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
                     if (context.getPathGenerator().hasNextStep(context)) {
@@ -151,7 +151,7 @@ public final class SimpleMachine extends ObservableMachine {
     @Override
     public boolean hasNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        for (ExecutionContext context: contexts) {
+        for (Context context: contexts) {
             if (hasNextStep(context)) {
                 return true;
             }
@@ -159,7 +159,7 @@ public final class SimpleMachine extends ObservableMachine {
         return false;
     }
 
-    private boolean hasNextStep(ExecutionContext context) {
+    private boolean hasNextStep(Context context) {
         ExecutionStatus status = context.getExecutionStatus();
         if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
             return false;
@@ -202,21 +202,21 @@ public final class SimpleMachine extends ObservableMachine {
         }
     }
 
-    public ExecutionContext getCurrentContext() {
+    public Context getCurrentContext() {
         return currentContext;
     }
 
     private static class SharedStateTupel {
 
-        private final ExecutionContext context;
+        private final Context context;
         private final RuntimeVertex vertex;
 
-        private SharedStateTupel(ExecutionContext context, RuntimeVertex vertex) {
+        private SharedStateTupel(Context context, RuntimeVertex vertex) {
             this.context = context;
             this.vertex = vertex;
         }
 
-        public ExecutionContext getContext() {
+        public Context getContext() {
             return context;
         }
 
@@ -225,7 +225,7 @@ public final class SimpleMachine extends ObservableMachine {
         }
     }
 
-    public List<ExecutionContext> getExecutionContexts() {
+    public List<Context> getContexts() {
         return Collections.unmodifiableList(contexts);
     }
 }

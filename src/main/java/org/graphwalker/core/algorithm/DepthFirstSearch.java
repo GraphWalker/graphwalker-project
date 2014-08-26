@@ -26,7 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.*;
@@ -39,9 +39,9 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class DepthFirstSearch implements Algorithm {
 
-    private final ExecutionContext context;
+    private final Context context;
 
-    public DepthFirstSearch(ExecutionContext context) {
+    public DepthFirstSearch(Context context) {
         this.context = context;
     }
 

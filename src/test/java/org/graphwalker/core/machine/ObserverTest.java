@@ -30,7 +30,7 @@ import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.event.Observable;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
@@ -57,7 +57,7 @@ public class ObserverTest implements Observer<Element> {
     private ObservableMachine createMachine() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
         ObservableMachine machine = new SimpleMachine(context);
         Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));
@@ -98,7 +98,7 @@ public class ObserverTest implements Observer<Element> {
     public void updateCounter() {
         Machine machine = createMachine();
         machine.addObserver(this);
-        ExecutionContext context = machine.getExecutionContexts().get(0);
+        Context context = machine.getContexts().get(0);
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }

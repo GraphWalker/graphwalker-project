@@ -26,7 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -37,9 +37,9 @@ import java.util.*;
  */
 public final class AStar implements Algorithm {
 
-    private final ExecutionContext context;
+    private final Context context;
 
-    public AStar(ExecutionContext context) {
+    public AStar(Context context) {
         this.context = context;
     }
 

@@ -73,7 +73,7 @@ public class LoginModelTest {
 
     //@Test
     public void ShortestAllPathEdgeCoverage() {
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -88,7 +88,7 @@ public class LoginModelTest {
         combinedCondition.addStopCondition(new EdgeCoverage(100));
         combinedCondition.addStopCondition(new VertexCoverage(100));
 
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -103,7 +103,7 @@ public class LoginModelTest {
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
         alternativeCondition.addStopCondition(new VertexCoverage(100));
 
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -114,7 +114,7 @@ public class LoginModelTest {
 
     @Test
     public void AStarPathReachedEdgeExit() {
-        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedEdge("e_Exit"))).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new AStarPath(new ReachedEdge("e_Exit"))).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -135,7 +135,7 @@ public class LoginModelTest {
 
     //Test
     public void AStarPathReachedEdgeStartClient_2() {
-        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedEdge("e_StartClient"))).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new AStarPath(new ReachedEdge("e_StartClient"))).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -156,7 +156,7 @@ public class LoginModelTest {
 
     @Test
     public void AStarPathReachedVertex() {
-        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("v_Browse"))).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("v_Browse"))).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -179,7 +179,7 @@ public class LoginModelTest {
      */
     @Test
     public void RandomPathEdgeCoverage() {
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -193,7 +193,7 @@ public class LoginModelTest {
      */
     @Test
     public void RandomPathVertexCoverage() {
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -211,7 +211,7 @@ public class LoginModelTest {
         combinedCondition.addStopCondition(new EdgeCoverage(100));
         combinedCondition.addStopCondition(new VertexCoverage(100));
 
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {
@@ -229,7 +229,7 @@ public class LoginModelTest {
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
         alternativeCondition.addStopCondition(new VertexCoverage(100));
 
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning);
+        Context context = new TestExecutionContext(model, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning);
         Machine machine = new SimpleMachine(context);
 
         while (machine.hasNextStep()) {

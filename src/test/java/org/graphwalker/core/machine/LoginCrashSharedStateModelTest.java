@@ -94,10 +94,10 @@ public class LoginCrashSharedStateModelTest {
 
     //Test
     public void ShortestAllPathEdgeCoverage() {
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new ShortestAllPaths(new EdgeCoverage(100))));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new ShortestAllPaths(new EdgeCoverage(100))));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -111,10 +111,10 @@ public class LoginCrashSharedStateModelTest {
         combinedCondition.addStopCondition(new EdgeCoverage(100));
         combinedCondition.addStopCondition(new VertexCoverage(100));
 
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new ShortestAllPaths(combinedCondition)));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new ShortestAllPaths(combinedCondition)));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -128,10 +128,10 @@ public class LoginCrashSharedStateModelTest {
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
         alternativeCondition.addStopCondition(new VertexCoverage(100));
 
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new ShortestAllPaths(alternativeCondition)));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new ShortestAllPaths(alternativeCondition)));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -141,10 +141,10 @@ public class LoginCrashSharedStateModelTest {
 
     //Test
     public void AStarPathReachedEdgeAndReachedVertex() {
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new AStarPath(new ReachedVertex("v_CrashDumpFilesGenerated"))));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add(new TestExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))).setNextElement(v_ClientNotRunning));
+        contexts.add(new TestExecutionContext(crashModel, new AStarPath(new ReachedVertex("v_CrashDumpFilesGenerated"))));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -167,10 +167,10 @@ public class LoginCrashSharedStateModelTest {
      */
     @Test
     public void RandomPathEdgeCoverage() {
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new RandomPath(new EdgeCoverage(100))));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new RandomPath(new EdgeCoverage(100))));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -183,10 +183,10 @@ public class LoginCrashSharedStateModelTest {
      */
     @Test
     public void RandomPathVertexCoverage() {
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new RandomPath(new VertexCoverage(100))));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new RandomPath(new VertexCoverage(100))));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -203,10 +203,10 @@ public class LoginCrashSharedStateModelTest {
         combinedCondition.addStopCondition(new EdgeCoverage(100));
         combinedCondition.addStopCondition(new VertexCoverage(100));
 
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new RandomPath(combinedCondition)));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new RandomPath(combinedCondition)));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
@@ -223,10 +223,10 @@ public class LoginCrashSharedStateModelTest {
         alternativeCondition.addStopCondition(new EdgeCoverage(100));
         alternativeCondition.addStopCondition(new VertexCoverage(100));
 
-        ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
-        executionContexts.add( new TestExecutionContext(loginModel, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning));
-        executionContexts.add( new TestExecutionContext(crashModel, new RandomPath(alternativeCondition)));
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        List<Context> contexts = new ArrayList<>();
+        contexts.add( new TestExecutionContext(loginModel, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning));
+        contexts.add( new TestExecutionContext(crashModel, new RandomPath(alternativeCondition)));
+        SimpleMachine machine = new SimpleMachine(contexts);
 
         while (machine.hasNextStep()) {
             machine.getNextStep();

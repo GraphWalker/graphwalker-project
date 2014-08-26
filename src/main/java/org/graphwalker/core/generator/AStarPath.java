@@ -30,7 +30,7 @@ import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public final class AStarPath implements PathGenerator {
     }
 
     @Override
-    public ExecutionContext getNextStep(ExecutionContext context) {
+    public Context getNextStep(Context context) {
         List<Element> elements = context.filter(context.getModel().getElements(context.getCurrentElement()));
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
@@ -75,7 +75,7 @@ public final class AStarPath implements PathGenerator {
     }
 
     @Override
-    public boolean hasNextStep(ExecutionContext context) {
+    public boolean hasNextStep(Context context) {
         return !getStopCondition().isFulfilled(context);
     }
 }

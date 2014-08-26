@@ -27,7 +27,7 @@ package org.graphwalker.core.generator;
  */
 
 import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 
 /**
  * @author Nils Olsson
@@ -35,6 +35,6 @@ import org.graphwalker.core.machine.ExecutionContext;
 public interface PathGenerator {
 
     StopCondition getStopCondition();
-    ExecutionContext getNextStep(ExecutionContext context);
-    boolean hasNextStep(ExecutionContext context);
+    Context getNextStep(Context context);
+    boolean hasNextStep(Context context);
 }

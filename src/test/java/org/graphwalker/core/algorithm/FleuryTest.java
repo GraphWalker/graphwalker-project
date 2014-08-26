@@ -26,7 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
@@ -71,7 +71,7 @@ public class FleuryTest {
 
     @Test
     public void findTrail() {
-        ExecutionContext context = new TestExecutionContext(model, null);
+        Context context = new TestExecutionContext(model, null);
         Fleury fleury = new Fleury(context);
         Path<Element> path = fleury.getTrail(v1.build());
         Assert.assertArrayEquals(expectedPath.toArray(), path.toArray());

@@ -26,7 +26,7 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -39,11 +39,11 @@ import java.util.List;
  */
 public final class Profiler {
 
-    private final ExecutionContext context;
+    private final Context context;
     private final Profile profile = new Profile();
     private long startTime = 0;
 
-    public Profiler(ExecutionContext context) {
+    public Profiler(Context context) {
         this.context = context;
     }
 

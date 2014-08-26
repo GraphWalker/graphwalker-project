@@ -26,7 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.Arrays;
@@ -41,11 +41,11 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class FloydWarshall implements Algorithm {
 
-    private final ExecutionContext context;
+    private final Context context;
     private final int[][] distances;
     private final Element[][] predecessors;
 
-    public FloydWarshall(ExecutionContext context) {
+    public FloydWarshall(Context context) {
         this.context = context;
         this.distances = createDistanceMatrix(context.getModel(), context.getModel().getElements());
         this.predecessors = createPredecessorMatrix(context.getModel().getElements(), distances);

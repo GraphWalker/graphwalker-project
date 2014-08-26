@@ -108,7 +108,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return model;
     }
 
-    public ExecutionContext setModel(Model model) {
+    public Context setModel(Model model) {
         this.model = model.build();
         return this;
     }
@@ -121,7 +121,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return pathGenerator;
     }
 
-    public ExecutionContext setPathGenerator(PathGenerator pathGenerator) {
+    public Context setPathGenerator(PathGenerator pathGenerator) {
         this.pathGenerator = pathGenerator;
         return this;
     }
@@ -130,7 +130,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return executionStatus;
     }
 
-    public ExecutionContext setExecutionStatus(ExecutionStatus executionStatus) {
+    public Context setExecutionStatus(ExecutionStatus executionStatus) {
         this.executionStatus = executionStatus;
         return this;
     }
@@ -139,7 +139,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return currentElement;
     }
 
-    public ExecutionContext setCurrentElement(Element element) {
+    public Context setCurrentElement(Element element) {
         this.currentElement = element;
         return this;
     }
@@ -148,12 +148,12 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return nextElement;
     }
 
-    public ExecutionContext setNextElement(Builder<? extends Element> nextElement) {
+    public Context setNextElement(Builder<? extends Element> nextElement) {
         setNextElement(nextElement.build());
         return this;
     }
 
-  public ExecutionContext setNextElement(Element nextElement) {
+  public Context setNextElement(Element nextElement) {
     this.nextElement = nextElement;
     this.currentElement = null;
     return this;
@@ -171,7 +171,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     public <A extends Algorithm> A getAlgorithm(Class<A> clazz) {
         if (!algorithms.containsKey(clazz)) {
             try {
-                Constructor<? extends Algorithm> constructor = clazz.getConstructor(ExecutionContext.class);
+                Constructor<? extends Algorithm> constructor = clazz.getConstructor(Context.class);
                 algorithms.put(clazz, constructor.newInstance(this));
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new MachineException(this, e);

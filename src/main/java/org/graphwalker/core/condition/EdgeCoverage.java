@@ -26,7 +26,7 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
@@ -46,12 +46,12 @@ public final class EdgeCoverage extends BaseCondition {
     }
 
     @Override
-    public boolean isFulfilled(ExecutionContext context) {
+    public boolean isFulfilled(Context context) {
         return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
     }
 
     @Override
-    public double getFulfilment(ExecutionContext context) {
+    public double getFulfilment(Context context) {
         long totalEdgesCount = context.getModel().getEdges().size();
         long visitedEdgesCount = 0;
         for (RuntimeEdge edge: context.getModel().getEdges()) {
