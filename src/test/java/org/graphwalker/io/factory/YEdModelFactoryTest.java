@@ -26,9 +26,14 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.model.Model;
+import org.graphwalker.io.factory.yed.Context;
+import org.graphwalker.io.factory.yed.ContextFactory;
+import org.graphwalker.io.factory.yed.ContextFactoryException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 
 import static org.hamcrest.core.Is.is;
 
@@ -37,60 +42,56 @@ import static org.hamcrest.core.Is.is;
  */
 public class YEdModelFactoryTest {
 
-    @Test(expected = ModelFactoryException.class)
+    @Test(expected = ContextFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
-        ModelFactory factory = new YEdModelFactory();
-        Model model = factory.create("graphml/LKHDIODSOSUBD.graphml");
+        Context context = (Context) new ContextFactory().create(FileSystems.getDefault().getPath("graphml/LKHDIODSOSUBD.graphml"));
     }
 
     @Test
     public void shared() {
-        ModelFactory factory = new YEdModelFactory();
-        Model sharedA = factory.create("graphml/SharedA.graphml");
-        Assert.assertNotNull(sharedA);
-        Assert.assertThat(sharedA.getVertices().size(), is(2));
-        Assert.assertThat(sharedA.getEdges().size(), is(5));
-        Model sharedB = factory.create("graphml/SharedB.graphml");
-        Assert.assertNotNull(sharedB);
-        Assert.assertThat(sharedB.getVertices().size(), is(2));
-        Assert.assertThat(sharedB.getEdges().size(), is(1));
+        Context sharedAContext = (Context) new ContextFactory().create(Paths.get("graphml/SharedA.graphml"));
+        Assert.assertNotNull(sharedAContext);
+        Assert.assertThat(sharedAContext.getModel().getVertices().size(), is(2));
+        Assert.assertThat(sharedAContext.getModel().getEdges().size(), is(5));
+        Context sharedBContext = (Context) new ContextFactory().create(Paths.get("graphml/SharedB.graphml"));
+        Assert.assertNotNull(sharedBContext);
+        Assert.assertThat(sharedBContext.getModel().getVertices().size(), is(2));
+        Assert.assertThat(sharedBContext.getModel().getEdges().size(), is(1));
     }
 
     @Test
     public void login() {
-        ModelFactory factory = new YEdModelFactory();
-        Model model = factory.create("graphml/Login.graphml");
+        new ContextFactory().create(Paths.get("graphml/Login.graphml"));
     }
 
     @Test
     public void uc01() {
-        ModelFactory factory = new YEdModelFactory();
-        Model.RuntimeModel model = factory.create("graphml/UC01.graphml").build();
+        Context context = (Context) new ContextFactory().create(Paths.get("graphml/UC01.graphml"));
 
         // Since the model id the Model.RuntimeModel,the Start vertex is removed from the graph.
-        Assert.assertThat(model.getVertices().size(), is(8)); // one of the vertices is the start vertex and that shouldn't be a part of the model
-        Assert.assertThat(model.getEdges().size(), is(12));
-        Assert.assertThat(model.findEdges("e_init").size(), is(1));
-        Assert.assertThat(model.findEdges("e_AddBookToCart").size(), is(1));
-        Assert.assertThat(model.findEdges("e_ClickBook").size(), is(1));
-        Assert.assertThat(model.findEdges("e_EnterBaseURL").size(), is(1));
-        Assert.assertThat(model.findEdges("e_SearchBook").size(), is(4));
-        Assert.assertThat(model.findEdges("e_ShoppingCart").size(), is(3));
-        Assert.assertThat(model.findEdges("e_StartBrowser").size(), is(1));
-        Assert.assertNull(model.findEdges(""));
+        Assert.assertThat(context.getModel().getVertices().size(), is(7)); // one of the vertices is the start vertex and that shouldn't be a part of the model
+        Assert.assertThat(context.getModel().getEdges().size(), is(12));
+        Assert.assertThat(context.getModel().findEdges("e_init").size(), is(1));
+        Assert.assertThat(context.getModel().findEdges("e_AddBookToCart").size(), is(1));
+        Assert.assertThat(context.getModel().findEdges("e_ClickBook").size(), is(1));
+        Assert.assertThat(context.getModel().findEdges("e_EnterBaseURL").size(), is(1));
+        Assert.assertThat(context.getModel().findEdges("e_SearchBook").size(), is(4));
+        Assert.assertThat(context.getModel().findEdges("e_ShoppingCart").size(), is(3));
+        Assert.assertThat(context.getModel().findEdges("e_StartBrowser").size(), is(1));
+        Assert.assertNull(context.getModel().findEdges(""));
 
-        Assert.assertThat(model.findVertices("v_BaseURL").size(), is(1));
-        Assert.assertThat(model.findVertices("v_BookInformation").size(), is(1));
-        Assert.assertThat(model.findVertices("v_BrowserStarted").size(), is(1));
-        Assert.assertThat(model.findVertices("v_BrowserStopped").size(), is(1));
-        Assert.assertThat(model.findVertices("v_OtherBoughtBooks").size(), is(1));
-        Assert.assertThat(model.findVertices("v_SearchResult").size(), is(1));
-        Assert.assertThat(model.findVertices("v_ShoppingCart").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_BaseURL").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_BookInformation").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_BrowserStarted").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_BrowserStopped").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_OtherBoughtBooks").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_SearchResult").size(), is(1));
+        Assert.assertThat(context.getModel().findVertices("v_ShoppingCart").size(), is(1));
 
-        Assert.assertThat(model.findEdges("e_init").get(0).getTargetVertex().getName(), is("v_BrowserStopped"));
+        Assert.assertThat(context.getModel().findEdges("e_init").get(0).getTargetVertex().getName(), is("v_BrowserStopped"));
 
-        Assert.assertThat(model.findEdges("e_StartBrowser").get(0).getSourceVertex().getName(), is("v_BrowserStopped"));
-        Assert.assertThat(model.findEdges("e_StartBrowser").get(0).getTargetVertex().getName(), is("v_BrowserStarted"));
+        Assert.assertThat(context.getModel().findEdges("e_StartBrowser").get(0).getSourceVertex().getName(), is("v_BrowserStopped"));
+        Assert.assertThat(context.getModel().findEdges("e_StartBrowser").get(0).getTargetVertex().getName(), is("v_BrowserStarted"));
     }
 
 /*    @Test
@@ -116,25 +117,22 @@ public class YEdModelFactoryTest {
 
     @Test
     public void singleEdge() {
-        ModelFactory factory = new YEdModelFactory();
-        Model model = factory.create("graphml/blocked/singleEdge.graphml");
-        Assert.assertThat(model.getVertices().size(), is(3));
-        Assert.assertThat(model.getEdges().size(), is(2));
+        Context context = (Context) new ContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(2));
+        Assert.assertThat(context.getModel().getEdges().size(), is(2));
     }
 
     @Test
     public void singleVertex() {
-        ModelFactory factory = new YEdModelFactory();
-        Model model = factory.create("graphml/blocked/singleVertex.graphml");
-        Assert.assertThat(model.getVertices().size(), is(2));
-        Assert.assertThat(model.getEdges().size(), is(1));
+        Context context = (Context) new ContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(1));
+        Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }
 
     @Test
     public void singleVertex2() {
-        ModelFactory factory = new YEdModelFactory();
-        Model model = factory.create("graphml/blocked/singleVertex2.graphml");
-        Assert.assertThat(model.getVertices().size(), is(2));
-        Assert.assertThat(model.getEdges().size(), is(1));
+        Context context = (Context) new ContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(1));
+        Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }
 }

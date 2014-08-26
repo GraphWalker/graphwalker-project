@@ -29,6 +29,7 @@ package org.graphwalker.io.factory;
 import org.graphwalker.core.machine.Context;
 
 import java.nio.file.Path;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
@@ -37,4 +38,6 @@ public interface ContextFactory {
 
     Context create(Path model);
     Context create(Path model, Context context);
+    boolean accept(Path path);
+    Set<String> getSupportedFileTypes();
 }
