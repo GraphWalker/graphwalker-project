@@ -268,7 +268,7 @@ public final class Assert<T> {
 
     static class MessageFactory {
 
-        static Map<String, Message> messages = new HashMap<>();
+        static final Map<String, Message> messages = new HashMap<>();
 
         static {
             messages.put("equal", new Message("expected: {0} but was: {1}", "expected not: {0} but was: {1}"));
@@ -283,8 +283,8 @@ public final class Assert<T> {
 
         static class Message {
 
-            String standardMessage;
-            String invertedMessage;
+            final String standardMessage;
+            final String invertedMessage;
 
             Message(String standardMessage, String invertedMessage) {
                 this.standardMessage = standardMessage;
