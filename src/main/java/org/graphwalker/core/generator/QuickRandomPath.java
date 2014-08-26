@@ -30,7 +30,7 @@ package org.graphwalker.core.generator;
 
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -61,7 +61,7 @@ public final class QuickRandomPath implements PathGenerator {
     }
 
     @Override
-    public ExecutionContext getNextStep(ExecutionContext context) {
+    public Context getNextStep(Context context) {
         if (unvisitedElements.isEmpty()) {
             unvisitedElements.addAll(context.getModel().getElements());
             unvisitedElements.remove(context.getCurrentElement());
@@ -79,7 +79,7 @@ public final class QuickRandomPath implements PathGenerator {
     }
 
     @Override
-    public boolean hasNextStep(ExecutionContext context) {
+    public boolean hasNextStep(Context context) {
         return !getStopCondition().isFulfilled(context);
     }
 }

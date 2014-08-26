@@ -26,7 +26,7 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -42,7 +42,7 @@ import static org.hamcrest.core.Is.is;
 public final class ProfilerTest {
 
     private static final Vertex start = new Vertex();
-    private static final ExecutionContext context = new TestExecutionContext()
+    private static final Context context = new TestExecutionContext()
             .setModel(new Model()
                     .addEdge(new Edge()
                             .setSourceVertex(start)

@@ -27,7 +27,7 @@ package org.graphwalker.core.generator;
  */
 
 import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.List;
@@ -50,7 +50,7 @@ public final class RandomPath implements PathGenerator {
     }
 
     @Override
-    public ExecutionContext getNextStep(ExecutionContext context) {
+    public Context getNextStep(Context context) {
         Element currentElement = context.getCurrentElement();
         if (null == currentElement) {
           throw new NoPathFoundException("Execution context has no current element set");
@@ -64,7 +64,7 @@ public final class RandomPath implements PathGenerator {
     }
 
     @Override
-    public boolean hasNextStep(ExecutionContext context) {
+    public boolean hasNextStep(Context context) {
         return !getStopCondition().isFulfilled(context);
     }
 

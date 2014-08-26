@@ -37,6 +37,6 @@ import java.util.List;
 public interface Machine extends Observable<Element> {
     Context getNextStep();
     boolean hasNextStep();
-    List<ExecutionContext> getExecutionContexts();
+    List<Context> getContexts();
     void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
 }

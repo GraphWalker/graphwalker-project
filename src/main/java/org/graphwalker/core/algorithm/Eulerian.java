@@ -26,7 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -41,10 +41,10 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Eulerian implements Algorithm {
 
-    private final ExecutionContext context;
+    private final Context context;
     private final Map<RuntimeVertex, PolarityCounter> polarities;
 
-    public Eulerian(ExecutionContext context) {
+    public Eulerian(Context context) {
         this.context = context;
         this.polarities = new HashMap<>(context.getModel().getVertices().size());
         polarize();

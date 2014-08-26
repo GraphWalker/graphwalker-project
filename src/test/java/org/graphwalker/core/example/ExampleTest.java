@@ -27,7 +27,6 @@ package org.graphwalker.core.example;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.*;

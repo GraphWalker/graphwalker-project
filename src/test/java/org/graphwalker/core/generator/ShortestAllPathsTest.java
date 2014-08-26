@@ -28,7 +28,7 @@ package org.graphwalker.core.generator;
 
 import org.graphwalker.core.algorithm.AlgorithmException;
 import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.*;
 import org.junit.Assert;
@@ -55,7 +55,7 @@ public class ShortestAllPathsTest {
         Edge e4 = new Edge().setSourceVertex(v1).setTargetVertex(v4);
         Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
                 Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
         );
@@ -81,7 +81,7 @@ public class ShortestAllPathsTest {
         Edge e4 = new Edge().setSourceVertex(v1).setTargetVertex(v4);
         Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
                 Arrays.asList(e1, v2, e2, v3, e3, v1)
         );
@@ -104,7 +104,7 @@ public class ShortestAllPathsTest {
         Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
         Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
                 Arrays.asList(e1, v2, e2, v3, e3, v1)
         );
@@ -126,7 +126,7 @@ public class ShortestAllPathsTest {
         Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
         Edge e2 = new Edge().setSourceVertex(v1).setTargetVertex(v3);
         Model model = new Model().addEdge(e1).addEdge(e2);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
             context.getPathGenerator().getNextStep(context);

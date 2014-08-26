@@ -26,7 +26,7 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -36,7 +36,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 public abstract class BaseCondition implements StopCondition {
 
     @Override
-    public boolean isFulfilled(ExecutionContext context) {
+    public boolean isFulfilled(Context context) {
         return context.getCurrentElement() instanceof RuntimeVertex;
     }
 }

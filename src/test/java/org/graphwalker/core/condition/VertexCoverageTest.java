@@ -27,7 +27,7 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -54,7 +54,7 @@ public class VertexCoverageTest {
         Vertex v2 = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
         StopCondition stopCondition = new VertexCoverage(100);
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();
@@ -72,7 +72,7 @@ public class VertexCoverageTest {
         Vertex v2 = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
         StopCondition stopCondition = new VertexCoverage(100);
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v1.build());
         context.getProfiler().start();

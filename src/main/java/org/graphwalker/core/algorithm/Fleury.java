@@ -26,7 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.ElementVisitor;
 import org.graphwalker.core.model.Path;
@@ -45,9 +45,9 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Fleury implements Algorithm {
 
-    private final ExecutionContext context;
+    private final Context context;
 
-    public Fleury(ExecutionContext context) {
+    public Fleury(Context context) {
         this.context = context;
     }
 

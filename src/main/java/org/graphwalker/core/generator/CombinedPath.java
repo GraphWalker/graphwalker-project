@@ -27,7 +27,7 @@ package org.graphwalker.core.generator;
  */
 
 import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public final class CombinedPath implements PathGenerator {
     }
 
     @Override
-    public ExecutionContext getNextStep(ExecutionContext context) {
+    public Context getNextStep(Context context) {
         if (hasNextStep(context)) {
             return getActivePathGenerator().getNextStep(context);
         }
@@ -66,7 +66,7 @@ public final class CombinedPath implements PathGenerator {
     }
 
     @Override
-    public boolean hasNextStep(ExecutionContext context) {
+    public boolean hasNextStep(Context context) {
         for (; index < generators.size(); index++) {
             if (getActivePathGenerator().hasNextStep(context)) {
                 return true;

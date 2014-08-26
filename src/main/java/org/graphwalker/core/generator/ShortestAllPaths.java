@@ -28,7 +28,7 @@ package org.graphwalker.core.generator;
 
 import org.graphwalker.core.algorithm.Eulerian;
 import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -53,7 +53,7 @@ public final class ShortestAllPaths implements PathGenerator {
     }
 
     @Override
-    public ExecutionContext getNextStep(ExecutionContext context) {
+    public Context getNextStep(Context context) {
         if (null == path) {
             path = getPath(context);
         }
@@ -61,7 +61,7 @@ public final class ShortestAllPaths implements PathGenerator {
         return context;
     }
 
-    private Path<Element> getPath(ExecutionContext context) {
+    private Path<Element> getPath(Context context) {
         Element element = context.getCurrentElement();
         if (null == element) {
             element = context.getNextElement();
@@ -74,7 +74,7 @@ public final class ShortestAllPaths implements PathGenerator {
     }
 
     @Override
-    public boolean hasNextStep(ExecutionContext context) {
+    public boolean hasNextStep(Context context) {
         return !getStopCondition().isFulfilled(context);
     }
 }

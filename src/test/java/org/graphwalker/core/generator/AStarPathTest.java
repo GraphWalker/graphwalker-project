@@ -63,27 +63,10 @@ public class AStarPathTest {
             .addEdge(e4)
             .addEdge(e5)
             .addEdge(e6);
-/*
-    @Test
-    public void simpleTest() {
-        ExecutionContext context = new ExecutionContext(model, new AStarPath(new ReachedVertex("end")))
-                .setNextElement(v1);
-        Machine machine = new SimpleMachine(context);
-        Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(v1, e4, v5, e6, v1, e1, v2, e2, v3, e3, v4)
-        );
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
-            //Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
-        }
-        Assert.assertThat(expectedElements.size(), is(0));
-    }
-*/
 
     @Test(expected = MachineException.class)
     public void failTest() {
-        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("end")));
+        Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("end")));
         Machine machine = new SimpleMachine(context);
         // Missing a start point, shall generate an exception
         while (machine.hasNextStep()) {

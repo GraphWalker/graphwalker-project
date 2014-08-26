@@ -26,7 +26,7 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
 
 /**
  * @author Nils Olsson
@@ -35,6 +35,6 @@ public interface StopCondition {
 
     double FULFILLMENT_LEVEL = 0.999999;
 
-    boolean isFulfilled(ExecutionContext context);
-    double getFulfilment(ExecutionContext context);
+    boolean isFulfilled(Context context);
+    double getFulfilment(Context context);
 }

@@ -54,7 +54,7 @@ public class SimpleMachineTest {
     public void simpleMachine() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -68,7 +68,7 @@ public class SimpleMachineTest {
     public void loopEdge() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -82,7 +82,7 @@ public class SimpleMachineTest {
     public void noStartVertex() {
         Edge edge = new Edge().setTargetVertex(new Vertex());
         Model model = new Model().addEdge(edge);
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(edge);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -99,7 +99,7 @@ public class SimpleMachineTest {
         Model model = new Model()
                 .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
                 .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
         context.setNextElement(vertex1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -118,7 +118,7 @@ public class SimpleMachineTest {
           .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
           .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
         model.addAction(new Action("var i = 1;"));
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
         context.setNextElement(vertex1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -136,7 +136,7 @@ public class SimpleMachineTest {
         Model model = new Model()
                 .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
                 .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i == 0")));
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
         context.setNextElement(vertex1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -156,7 +156,7 @@ public class SimpleMachineTest {
         Edge edge2 = new Edge().setSourceVertex(shared2).setTargetVertex(stop);
         Model model1 = new Model().addEdge(edge1);
         Model model2 = new Model().addEdge(edge2);
-        List<ExecutionContext> contexts = new ArrayList<>();
+        List<Context> contexts = new ArrayList<>();
         contexts.add(new TestExecutionContext(model1, new RandomPath(new VertexCoverage(100))).setNextElement(start));
         contexts.add(new TestExecutionContext(model2, new RandomPath(new VertexCoverage(100))));
         Machine machine = new SimpleMachine(contexts);
@@ -180,7 +180,7 @@ public class SimpleMachineTest {
         Edge edge2 = new Edge().setSourceVertex(shared2).setTargetVertex(stop);
         Model model1 = new Model().addEdge(edge1);
         Model model2 = new Model().addEdge(edge2);
-        List<ExecutionContext> contexts = new ArrayList<>();
+        List<Context> contexts = new ArrayList<>();
         contexts.add(new TestExecutionContext(model1, new RandomPath(new VertexCoverage(100))).setNextElement(start));
         contexts.add(new TestExecutionContext(model2, new RandomPath(new VertexCoverage(100))));
         Machine machine = new SimpleMachine(contexts);
@@ -203,7 +203,7 @@ public class SimpleMachineTest {
         Edge e5 = new Edge().setName("e5").setSourceVertex(v3a).setTargetVertex(v2);
         Edge e6 = new Edge().setName("e6").setSourceVertex(v2).setTargetVertex(v3b);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5).addEdge(e6);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
         context.setNextElement(start);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -223,7 +223,7 @@ public class SimpleMachineTest {
         Edge e1 = new Edge().setName("e1").setTargetVertex(v1);
         Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         context.setNextElement(e1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -249,7 +249,7 @@ public class SimpleMachineTest {
         Edge e5 = new Edge().setName("e5").setSourceVertex(v3).setTargetVertex(v4);
         Edge e6 = new Edge().setName("e6").setSourceVertex(v4).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5).addEdge(e6);
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
+        Context context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
         context.setNextElement(start);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -286,7 +286,7 @@ public class SimpleMachineTest {
         Edge e5 = new Edge().setName("e5").setSourceVertex(v3a).setTargetVertex(v2);
         Edge e6 = new Edge().setName("e6").setSourceVertex(v2).setTargetVertex(v3b);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5).addEdge(e6);
-        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("v3")));
+        Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("v3")));
         context.setNextElement(start);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -324,7 +324,7 @@ public class SimpleMachineTest {
         Edge e1 = new Edge().setSourceVertex(firstStartVertex).setTargetVertex(secondStartVertex);
         Edge e2 = new Edge().setSourceVertex(secondStartVertex).setTargetVertex(endVertex);
         Model model = new Model().addEdge(e1).addEdge(e2);
-        ExecutionContext context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("End")));
+        Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("End")));
         context.setNextElement(secondStartVertex);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
@@ -346,7 +346,7 @@ public class SimpleMachineTest {
         Vertex v1 = new Vertex().setName("v1");
         Edge e1 = new Edge().setName("e1").setTargetVertex(v1);
         Model model = new Model().addEdge(e1);
-        ExecutionContext context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100))).setNextElement(e1);
+        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100))).setNextElement(e1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
