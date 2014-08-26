@@ -42,18 +42,20 @@ import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
 import org.graphwalker.cli.service.Restful;
 import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.factory.YEdModelFactory;
-import org.graphwalker.io.factory.ModelFactoryException;
+import org.graphwalker.io.factory.yed.ContextFactory;
+import org.graphwalker.io.factory.yed.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class CLI {
@@ -136,7 +138,7 @@ public class CLI {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       jc.usage(jc.getParsedCommand());
-    } catch (ModelFactoryException e) {
+    } catch (ContextFactoryException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
     } catch (GeneratorFactoryException e) {
@@ -169,18 +171,18 @@ public class CLI {
   }
 
   private void RunCommandRequirements()  throws Exception {
-    YEdModelFactory factory = new YEdModelFactory();
+    ContextFactory factory = new ContextFactory();
+    Context context = null;
 
-    Model.RuntimeModel model = null;
     String modelFileName = requirements.model;
     try {
-      model = factory.create(modelFileName).build();
-    } catch (ModelFactoryException e) {
-      throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      context= (Context) factory.create(Paths.get(modelFileName));
+    } catch (ContextFactoryException e) {
+      throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
     }
 
     SortedSet<Requirement> reqs = new TreeSet<>();
-    for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+    for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
       for (Requirement req : vertex.getRequirements()) {
         reqs.add(req);
       }
@@ -192,23 +194,23 @@ public class CLI {
   }
 
   private void RunCommandMethods()  throws Exception {
-    YEdModelFactory factory = new YEdModelFactory();
+    ContextFactory factory = new ContextFactory();
+    Context context = null;
 
-    Model.RuntimeModel model = null;
     String modelFileName = methods.model;
     try {
-      model = factory.create(modelFileName).build();
-    } catch (ModelFactoryException e) {
-      throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      context = (Context) factory.create(Paths.get(modelFileName));
+    } catch (ContextFactoryException e) {
+      throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
     }
 
     SortedSet<String> names = new TreeSet<>();
-    for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+    for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
       if (null != vertex.getName()) {
         names.add(vertex.getName());
       }
     }
-    for (Edge.RuntimeEdge edge : model.getEdges()) {
+    for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
       names.add(edge.getName());
     }
 
@@ -218,20 +220,19 @@ public class CLI {
   }
 
   private void RunCommandOnline()  throws Exception {
-    YEdModelFactory factory = new YEdModelFactory();
-    ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
+    ContextFactory factory = new ContextFactory();
+    Context context = null;
+
+    ArrayList<Context> executionContexts = new ArrayList<>();
     Iterator itr = online.model.iterator();
     while(itr.hasNext()) {
-      Model model = null;
       String modelFileName = (String) itr.next();
       try {
-        model = factory.create(modelFileName);
-      } catch (ModelFactoryException e) {
-        throw new ModelFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+        context = factory.create(Paths.get(modelFileName));
+      } catch (ContextFactoryException e) {
+        throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
       }
-
-      PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
-      ExecutionContext context = new ExecutionContext(model, pathGenerator);
+      context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
       executionContexts.add(context);
     }
 
@@ -240,7 +241,7 @@ public class CLI {
       // instantiating the HttpServer every time.
       // The creation of HttpServer needs to be done outside the while-loop
       ResourceConfig rc = new DefaultResourceConfig();
-      rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts)));
+      rc.getSingletons().add(new Restful(new SimpleMachine((org.graphwalker.core.machine.Context) executionContexts)));
       HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
       System.out.println("Press Control+C to end...");
       try {
@@ -255,19 +256,16 @@ public class CLI {
   }
 
   private void RunCommandOffline()  throws Exception {
-    YEdModelFactory factory = new YEdModelFactory();
-    ArrayList<ExecutionContext> executionContexts = new ArrayList<>();
+    ContextFactory factory = new ContextFactory();
+    Context context = null;
+
+    ArrayList<Context> executionContexts = new ArrayList<>();
     Iterator itr = offline.model.iterator();
     while(itr.hasNext()) {
-      Model model = null;
       String modelFileName = (String) itr.next();
-      model = factory.create(modelFileName);
-      model.setName(modelFileName);
-
-      PathGenerator pathGenerator = GeneratorFactory.parse((String) itr.next());
-      ExecutionContext context = new ExecutionContext(model, pathGenerator);
+      context = factory.create(Paths.get(modelFileName));
+      context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
       executionContexts.add(context);
-
       verifyModel(context.getModel());
     }
 
@@ -282,6 +280,7 @@ public class CLI {
           System.out.print(machine.getCurrentContext().getCurrentElement().getName());
           if (offline.verbose) {
             System.out.print("(" + machine.getCurrentContext().getCurrentElement().getId() + ")");
+            System.out.print(":" + machine.getCurrentContext().getKeys());
           }
         }
 
@@ -307,8 +306,8 @@ public class CLI {
 
   private void verifyModel(Model.RuntimeModel model) {
     // Verify that the model has more than 1 vertex
-    if ( model.getAllVertices().size() < 2 ) {
-      throw new RuntimeException("Model has less than 2 vertices. [Excluding the Start vertex]");
+    if ( model.getAllVertices().size() < 1 ) {
+      throw new RuntimeException("Model has less than 1 vertices. [Excluding the Start vertex]");
     }
     // Verify that the model has more than 0 edges
     if ( model.getEdges().size() < 1 ) {
