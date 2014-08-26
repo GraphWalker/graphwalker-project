@@ -29,10 +29,7 @@ package org.graphwalker.java.test;
 import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
-import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.java.annotation.AfterExecution;
@@ -52,9 +49,9 @@ import java.util.concurrent.TimeUnit;
 public final class Executor {
 
     private final Manager manager;
-    private final Map<ExecutionContext, Object> implementations = new HashMap<>();
+    private final Map<Context, Object> implementations = new HashMap<>();
     private final List<Machine> machines = new ArrayList<>();
-    private final Map<ExecutionContext, MachineException> failures = new HashMap<>();
+    private final Map<Context, MachineException> failures = new HashMap<>();
 
     public Executor(Manager manager) {
         this.manager = manager;
@@ -64,7 +61,7 @@ public final class Executor {
         return Collections.unmodifiableList(machines);
     }
 
-    public Map<ExecutionContext, Object> getImplementations() {
+    public Map<Context, Object> getImplementations() {
         return Collections.unmodifiableMap(implementations);
     }
 
@@ -104,7 +101,7 @@ public final class Executor {
         if (!manager.getExecutionGroups().isEmpty()) {
             machines.clear();
             for (Group group: manager.getExecutionGroups()) {
-                List<ExecutionContext> executionContexts = new ArrayList<>();
+                List<Context> contexts = new ArrayList<>();
                 for (Execution execution: group.getExecutions()) {
                     if (ExecutionContext.class.isAssignableFrom(execution.getTestClass())) {
                         try {
@@ -121,18 +118,18 @@ public final class Executor {
                             }
                             PathGenerator pathGenerator = constructor.newInstance(stopCondition);
 
-                            ExecutionContext executionContext = (ExecutionContext)execution.getTestClass().newInstance();
+                            Context context = (Context)execution.getTestClass().newInstance();
                             Model model = execution.getModel();
-                            executionContext.setModel(model);
-                            executionContext.setPathGenerator(pathGenerator);
+                            context.setModel(model);
+                            context.setPathGenerator(pathGenerator);
 
                             if (!"".equals(execution.getStart())) {
-                                List<Vertex.RuntimeVertex> vertices = executionContext.getModel().findVertices(execution.getStart());
-                                executionContext.setNextElement(vertices.get(new Random(System.nanoTime()).nextInt(vertices.size())));
+                                List<Vertex.RuntimeVertex> vertices = context.getModel().findVertices(execution.getStart());
+                                context.setNextElement(vertices.get(new Random(System.nanoTime()).nextInt(vertices.size())));
                             }
 
-                            implementations.put(executionContext, executionContext);
-                            executionContexts.add(executionContext);
+                            implementations.put(context, context);
+                            contexts.add(context);
                         } catch (Throwable t) {
                             t.printStackTrace();
                         }
@@ -140,14 +137,14 @@ public final class Executor {
                         throw new RuntimeException(execution.getName()); // TODO: change exception, this occurs when the implementation is not a execution context
                     }
                 }
-                machines.add(new SimpleMachine(executionContexts));
+                machines.add(new SimpleMachine(contexts));
             }
             try {
                 ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
                 for (final Machine machine : machines) {
                     executorService.execute(new Runnable() {
                         public void run() {
-                            for (ExecutionContext context: machine.getExecutionContexts()) {
+                            for (Context context: machine.getContexts()) {
                                 AnnotationUtils.execute(BeforeExecution.class, implementations.get(context));
                             }
                             try {
@@ -157,7 +154,7 @@ public final class Executor {
                             } catch (MachineException e) {
                                 failures.put(e.getContext(), e);
                             }
-                            for (ExecutionContext context: machine.getExecutionContexts()) {
+                            for (Context context: machine.getContexts()) {
                                 AnnotationUtils.execute(AfterExecution.class, implementations.get(context));
                             }
                         }
