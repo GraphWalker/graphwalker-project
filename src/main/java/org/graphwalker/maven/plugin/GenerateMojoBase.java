@@ -30,8 +30,8 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.io.factory.ModelFactory;
-import org.graphwalker.io.factory.YEdModelFactory;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.java.source.CodeGenerator;
 import org.graphwalker.java.source.SourceFile;
 
@@ -50,7 +50,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     private String sourceEncoding;
 
     private CodeGenerator codeGenerator = new CodeGenerator();
-    private final ModelFactory modelFactory = new YEdModelFactory();
+    private final ContextFactory contextFactory = new YEdContextFactory();
 
     protected String getSourceEncoding() {
         return sourceEncoding;
@@ -66,7 +66,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
 
     private void generate(Resource resource) {
         File baseDirectory = new File(resource.getDirectory());
-        for (File file: findFiles(modelFactory.getSupportedFileTypes(), null, baseDirectory)) {
+        for (File file: findFiles(contextFactory.getSupportedFileTypes(), null, baseDirectory)) {
             generate(file, baseDirectory, getGeneratedSourcesDirectory());
         }
     }
@@ -78,7 +78,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     private void generate(SourceFile sourceFile) {
         File outputFile = sourceFile.getOutputPath().toFile();
         try {
-            RuntimeModel model = modelFactory.create(sourceFile.getInputPath().toFile().getAbsolutePath()).build();
+            RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
             String source = codeGenerator.generate(sourceFile, model);
             if (Files.exists(sourceFile.getOutputPath())) {
                 String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
