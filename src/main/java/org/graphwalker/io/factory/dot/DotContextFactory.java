@@ -28,12 +28,22 @@ package org.graphwalker.io.factory.dot;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
+import org.graphwalker.io.common.ResourceUtils;
+import org.graphwalker.io.dot.DOTLexer;
+import org.graphwalker.io.dot.DOTParser;
 import org.graphwalker.io.factory.ContextFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -67,30 +77,41 @@ public final class DotContextFactory implements ContextFactory {
     public Context create(Path path, Context context) {
 
         Model model = new Model();
-
-        addVertices(model, context);
-        addEdges(model, context);
-
         context.setModel(model);
-        if (null != startEdge) {
-            context.setNextElement(startEdge);
-        } else {
-            for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
-                if (context.getModel().getOutEdges(vertex).isEmpty()) {
-                    context.setNextElement(vertex);
-                }
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
+        StringBuilder out = new StringBuilder();
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                out.append(line);
             }
-
+        } catch (IOException e) {
+            throw new DotContextFactoryException("Could not read the file.");
         }
+        System.out.println(out.toString());   //Prints the string content read from input stream
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new DotContextFactoryException("Could not read the file.");
+        }
+
+        DOTLexer lexer = new DOTLexer(new ANTLRInputStream(out.toString()));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        DOTParser parser = new DOTParser(tokens);
+        ParseTreeWalker walker = new ParseTreeWalker();
+
+        AntlrDotListener listener = new AntlrDotListener();
+        walker.walk(listener, parser.graph());
+
+        for (Vertex vertex : listener.vertices.values()) {
+            model.addVertex(vertex);
+        }
+        for (Edge edge : listener.edges.values()) {
+            model.addEdge(edge);
+        }
+
         return context;
-    }
-
-    private void addVertices(Model model, Context context) {
-
-    }
-
-
-    private void addEdges(Model model, Context context) {
-
     }
 }

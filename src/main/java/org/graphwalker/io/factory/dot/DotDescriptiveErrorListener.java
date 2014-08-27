@@ -26,33 +26,25 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactoryException;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.nio.file.FileSystems;
-import java.nio.file.Paths;
-
-import static org.hamcrest.core.Is.is;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * @author Kristian Karl
+ * Created by krikar on 8/20/14.
  */
-public class DotContextFactoryTest {
+public class DotDescriptiveErrorListener extends BaseErrorListener {
+  private static final Logger logger = LoggerFactory.getLogger(DotDescriptiveErrorListener.class);
+  public static DotDescriptiveErrorListener INSTANCE = new DotDescriptiveErrorListener();
 
-    //@Test
-    public void SimplestGraph() {
-        Context context = new DotContextFactory().create(Paths.get("dot/Simplest Graph.dot"));
-        Assert.assertThat(context.getModel().getVertices().size(), is(1));
-        Assert.assertThat(context.getModel().getEdges().size(), is(1));
-    }
-
-    //@Test
-    public void SimpleGraph() {
-        Context context = new DotContextFactory().create(Paths.get("dot/Simple.dot"));
-        Assert.assertThat(context.getModel().getVertices().size(), is(1));
-        Assert.assertThat(context.getModel().getEdges().size(), is(1));
-    }
+  @Override
+  public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                          int line, int charPositionInLine,
+                          String msg, RecognitionException e)
+  {
+    logger.error(msg);
+    throw new DotContextFactoryException(msg);
+  }
 }
