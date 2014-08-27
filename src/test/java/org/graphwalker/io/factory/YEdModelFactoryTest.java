@@ -26,9 +26,10 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.io.factory.yed.Context;
-import org.graphwalker.io.factory.yed.ContextFactory;
-import org.graphwalker.io.factory.yed.ContextFactoryException;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.yed.YEdContext;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactoryException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,18 +43,19 @@ import static org.hamcrest.core.Is.is;
  */
 public class YEdModelFactoryTest {
 
-    @Test(expected = ContextFactoryException.class)
+    @Test(expected = YEdContextFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
-        Context context = (Context) new ContextFactory().create(FileSystems.getDefault().getPath("graphml/LKHDIODSOSUBD.graphml"));
+        Context context = new YEdContextFactory().create(FileSystems.getDefault().getPath("graphml/LKHDIODSOSUBD.graphml"));
     }
 
     @Test
     public void shared() {
-        Context sharedAContext = (Context) new ContextFactory().create(Paths.get("graphml/SharedA.graphml"));
+        Context sharedAContext = new YEdContextFactory().create(Paths.get("graphml/SharedA.graphml"));
         Assert.assertNotNull(sharedAContext);
         Assert.assertThat(sharedAContext.getModel().getVertices().size(), is(2));
         Assert.assertThat(sharedAContext.getModel().getEdges().size(), is(5));
-        Context sharedBContext = (Context) new ContextFactory().create(Paths.get("graphml/SharedB.graphml"));
+        
+        Context sharedBContext = new YEdContextFactory().create(Paths.get("graphml/SharedB.graphml"));
         Assert.assertNotNull(sharedBContext);
         Assert.assertThat(sharedBContext.getModel().getVertices().size(), is(2));
         Assert.assertThat(sharedBContext.getModel().getEdges().size(), is(1));
@@ -61,12 +63,12 @@ public class YEdModelFactoryTest {
 
     @Test
     public void login() {
-        new ContextFactory().create(Paths.get("graphml/Login.graphml"));
+        new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
     }
 
     @Test
     public void uc01() {
-        Context context = (Context) new ContextFactory().create(Paths.get("graphml/UC01.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
 
         // Since the model id the Model.RuntimeModel,the Start vertex is removed from the graph.
         Assert.assertThat(context.getModel().getVertices().size(), is(7)); // one of the vertices is the start vertex and that shouldn't be a part of the model
@@ -117,21 +119,21 @@ public class YEdModelFactoryTest {
 
     @Test
     public void singleEdge() {
-        Context context = (Context) new ContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
         Assert.assertThat(context.getModel().getVertices().size(), is(2));
         Assert.assertThat(context.getModel().getEdges().size(), is(2));
     }
 
     @Test
     public void singleVertex() {
-        Context context = (Context) new ContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
         Assert.assertThat(context.getModel().getVertices().size(), is(1));
         Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }
 
     @Test
     public void singleVertex2() {
-        Context context = (Context) new ContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
         Assert.assertThat(context.getModel().getVertices().size(), is(1));
         Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }

@@ -50,7 +50,7 @@ import java.util.*;
 /**
  * @author Nils Olsson
  */
-public final class ContextFactory implements org.graphwalker.io.factory.ContextFactory {
+public final class YEdContextFactory implements org.graphwalker.io.factory.ContextFactory {
 
     private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
     private static final String FILE_TYPE = "graphml";
@@ -72,7 +72,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
 
     @Override
     public org.graphwalker.core.machine.Context create(Path path) {
-        return create(path, new Context());
+        return create(path, new YEdContext());
     }
 
     @Override
@@ -83,17 +83,17 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
         try {
             document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(path.toString()));
         } catch (XmlException e) {
-            throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
+            throw new YEdContextFactoryException("The file appears not to be valid yEd formatted.");
         } catch (IOException e) {
-            throw new ContextFactoryException("Could not read the file.");
+            throw new YEdContextFactoryException("Could not read the file.");
         } catch (ResourceNotFoundException e) {
-            throw new ContextFactoryException("Could not read the file.");
+            throw new YEdContextFactoryException("Could not read the file.");
         }
         try {
             addVertices(model, context, document);
             addEdges(model, context, document);
         } catch (XmlException e) {
-            throw new ContextFactoryException("The file seams not to be valid yEd formatted.");
+            throw new YEdContextFactoryException("The file seams not to be valid yEd formatted.");
         }
 
         context.setModel(model);
@@ -123,7 +123,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
                             }
                             VertexParser parser = new VertexParser(getTokenStream(label.toString()));
                             parser.removeErrorListeners();
-                            parser.addErrorListener(new DescriptiveErrorListener());
+                            parser.addErrorListener(new YEdDescriptiveErrorListener());
                             VertexParser.ParseContext parseContext = parser.parse();
                             Vertex vertex = new Vertex();
                             if (null != parseContext.start()) {
@@ -173,7 +173,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
         } else if (xml.contains("TableNode")) {
             return TableNodeDocument.Factory.parse(xml).getTableNode();
         }
-        throw new ContextFactoryException("Unsupported node type: "+xml);
+        throw new YEdContextFactoryException("Unsupported node type: "+xml);
     }
 
     private void addEdges(Model model, org.graphwalker.core.machine.Context context, GraphmlDocument document) throws XmlException {
@@ -249,7 +249,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
         } else if (xml.contains("BezierEdge")) {
             return BezierEdgeDocument.Factory.parse(xml).getBezierEdge();
         }
-        throw new ContextFactoryException("Unsupported edge type: "+xml);
+        throw new YEdContextFactoryException("Unsupported edge type: "+xml);
     }
 
     private List<Action> convertEdgeAction(List<EdgeParser.ActionContext> actionContexts) {
@@ -264,7 +264,7 @@ public final class ContextFactory implements org.graphwalker.io.factory.ContextF
         ANTLRInputStream inputStream = new ANTLRInputStream(label);
         LabelLexer lexer = new LabelLexer(inputStream);
         lexer.removeErrorListeners();
-        lexer.addErrorListener(new DescriptiveErrorListener());
+        lexer.addErrorListener(new YEdDescriptiveErrorListener());
         return new CommonTokenStream(lexer);
     }
 
