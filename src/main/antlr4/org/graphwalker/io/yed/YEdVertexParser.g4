@@ -1,7 +1,7 @@
-parser grammar VertexParser;
+parser grammar YEdVertexParser;
 
 options {
-	tokenVocab=LabelLexer;
+	tokenVocab=YEdLabelLexer;
 }
 
 parse

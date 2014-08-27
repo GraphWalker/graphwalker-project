@@ -1,7 +1,7 @@
-parser grammar EdgeParser;
+parser grammar YEdEdgeParser;
 
 options {
-	tokenVocab=LabelLexer;
+	tokenVocab=YEdLabelLexer;
 }
 
 parse

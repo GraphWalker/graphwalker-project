@@ -1,4 +1,4 @@
-lexer grammar LabelLexer;
+lexer grammar YEdLabelLexer;
 
 SLASH     : '/';
 COLON     : ':';
