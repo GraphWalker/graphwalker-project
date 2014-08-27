@@ -28,9 +28,9 @@ package org.graphwalker.java.test;
 
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.io.factory.ModelFactory;
-import org.graphwalker.io.factory.YEdModelFactory;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.java.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
@@ -46,7 +46,7 @@ public final class Execution {
     private final Class<? extends PathGenerator> pathGenerator;
     private final Class<? extends StopCondition> stopCondition;
     private final String stopConditionValue;
-    private final Model model;
+    private final Context context;
     private final String start;
 
     public Execution(final Class<?> testClass, final Class<? extends PathGenerator> pathGenerator, final Class<? extends StopCondition> stopCondition, String stopConditionValue, String start) {
@@ -54,16 +54,16 @@ public final class Execution {
         this.stopCondition = stopCondition;
         this.pathGenerator = pathGenerator;
         this.stopConditionValue = stopConditionValue;
-        this.model = createModel(testClass);
+        this.context = createContext(testClass);
         this.start = start;
     }
 
-    private Model createModel(final Class<?> testClass) {
-        ModelFactory factory = new YEdModelFactory();
+    private Context createContext(final Class<?> testClass) {
+        ContextFactory factory = new YEdContextFactory();
         for (Annotation annotation: AnnotationUtils.getAnnotations(testClass, org.graphwalker.java.annotation.Model.class)) {
             Path file = Paths.get(((org.graphwalker.java.annotation.Model) annotation).file());
             if (factory.accept(file)) {
-                return factory.create(file.toString());
+                return factory.create(file);
             }
         }
         throw new RuntimeException(); // TODO:
@@ -89,8 +89,8 @@ public final class Execution {
         return stopConditionValue;
     }
 
-    public Model getModel() {
-        return model;
+    public Context getContext() {
+        return context;
     }
 
     public String getStart() {
