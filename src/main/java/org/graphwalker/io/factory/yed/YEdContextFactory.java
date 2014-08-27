@@ -36,6 +36,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.graphdrawing.graphml.xmlns.DataType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
 import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
@@ -71,12 +72,12 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
     }
 
     @Override
-    public org.graphwalker.core.machine.Context create(Path path) {
+    public Context create(Path path) {
         return create(path, new YEdContext());
     }
 
     @Override
-    public org.graphwalker.core.machine.Context create(Path path, org.graphwalker.core.machine.Context context) {
+    public Context create(Path path, Context context) {
 
         Model model = new Model();
         GraphmlDocument document = null;
@@ -110,7 +111,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         return context;
     }
 
-    private void addVertices(Model model, org.graphwalker.core.machine.Context context, GraphmlDocument document) throws XmlException {
+    private void addVertices(Model model, Context context, GraphmlDocument document) throws XmlException {
         for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")) {
             if (object instanceof NodeType) {
                 NodeType node = (NodeType)object;
@@ -176,7 +177,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         throw new YEdContextFactoryException("Unsupported node type: "+xml);
     }
 
-    private void addEdges(Model model, org.graphwalker.core.machine.Context context, GraphmlDocument document) throws XmlException {
+    private void addEdges(Model model, Context context, GraphmlDocument document) throws XmlException {
         for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:edge")) {
             if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
                 org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType)object;
