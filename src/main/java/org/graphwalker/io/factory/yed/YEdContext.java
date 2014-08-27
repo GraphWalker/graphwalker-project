@@ -31,6 +31,6 @@ import org.graphwalker.core.machine.ExecutionContext;
 /**
  * @author Nils Olsson
  */
-public final class Context extends ExecutionContext {
+public final class YEdContext extends ExecutionContext {
 
 }
