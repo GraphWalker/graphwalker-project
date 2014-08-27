@@ -41,15 +41,13 @@ import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
 import org.graphwalker.cli.service.Restful;
-import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.factory.yed.ContextFactory;
-import org.graphwalker.io.factory.yed.ContextFactoryException;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,7 +136,7 @@ public class CLI {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
       jc.usage(jc.getParsedCommand());
-    } catch (ContextFactoryException e) {
+    } catch (YEdContextFactoryException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage());
     } catch (GeneratorFactoryException e) {
@@ -171,14 +169,14 @@ public class CLI {
   }
 
   private void RunCommandRequirements()  throws Exception {
-    ContextFactory factory = new ContextFactory();
+    YEdContextFactory factory = new YEdContextFactory();
     Context context = null;
 
     String modelFileName = requirements.model;
     try {
-      context= (Context) factory.create(Paths.get(modelFileName));
-    } catch (ContextFactoryException e) {
-      throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      context = factory.create(Paths.get(modelFileName));
+    } catch (YEdContextFactoryException e) {
+      throw new YEdContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
     }
 
     SortedSet<Requirement> reqs = new TreeSet<>();
@@ -194,14 +192,14 @@ public class CLI {
   }
 
   private void RunCommandMethods()  throws Exception {
-    ContextFactory factory = new ContextFactory();
+    YEdContextFactory factory = new YEdContextFactory();
     Context context = null;
 
     String modelFileName = methods.model;
     try {
-      context = (Context) factory.create(Paths.get(modelFileName));
-    } catch (ContextFactoryException e) {
-      throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      context = factory.create(Paths.get(modelFileName));
+    } catch (YEdContextFactoryException e) {
+      throw new YEdContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
     }
 
     SortedSet<String> names = new TreeSet<>();
@@ -220,7 +218,7 @@ public class CLI {
   }
 
   private void RunCommandOnline()  throws Exception {
-    ContextFactory factory = new ContextFactory();
+    YEdContextFactory factory = new YEdContextFactory();
     Context context = null;
 
     ArrayList<Context> executionContexts = new ArrayList<>();
@@ -229,8 +227,8 @@ public class CLI {
       String modelFileName = (String) itr.next();
       try {
         context = factory.create(Paths.get(modelFileName));
-      } catch (ContextFactoryException e) {
-        throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+      } catch (YEdContextFactoryException e) {
+        throw new YEdContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
       }
       context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
       executionContexts.add(context);
@@ -256,7 +254,7 @@ public class CLI {
   }
 
   private void RunCommandOffline()  throws Exception {
-    ContextFactory factory = new ContextFactory();
+    YEdContextFactory factory = new YEdContextFactory();
     Context context = null;
 
     ArrayList<Context> executionContexts = new ArrayList<>();
