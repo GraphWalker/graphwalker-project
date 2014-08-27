@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io.factory.yed;
 
 /*
  * #%L

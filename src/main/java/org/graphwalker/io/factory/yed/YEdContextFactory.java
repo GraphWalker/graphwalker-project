@@ -37,11 +37,11 @@ import org.graphdrawing.graphml.xmlns.DataType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphwalker.core.model.*;
-import org.graphwalker.io.EdgeParser;
-import org.graphwalker.io.LabelLexer;
-import org.graphwalker.io.VertexParser;
 import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
+import org.graphwalker.io.yed.EdgeParser;
+import org.graphwalker.io.yed.LabelLexer;
+import org.graphwalker.io.yed.VertexParser;
 
 import java.io.IOException;
 import java.nio.file.Path;
