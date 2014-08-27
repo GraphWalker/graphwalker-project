@@ -28,9 +28,9 @@ package org.graphwalker.io.label.yed;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.io.yed.EdgeParser;
-import org.graphwalker.io.yed.LabelLexer;
-import org.graphwalker.io.yed.VertexParser;
+import org.graphwalker.io.yed.YEdEdgeParser;
+import org.graphwalker.io.yed.YEdLabelLexer;
+import org.graphwalker.io.yed.YEdVertexParser;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +42,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Nils Olsson
  */
-public class LabelTest {
+public class YEdLabelTest {
 
 
     private List<String> vertexLabels = Arrays.asList(
@@ -69,8 +69,8 @@ public class LabelTest {
     @Test
     public void testVertexLabels() {
         for (String label: vertexLabels) {
-            VertexParser parser = new VertexParser(getTokens(label));
-            VertexParser.ParseContext context = parser.parse();
+            YEdVertexParser parser = new YEdVertexParser(getTokens(label));
+            YEdVertexParser.ParseContext context = parser.parse();
             Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
         }
     }
@@ -78,45 +78,45 @@ public class LabelTest {
     @Test
     public void testEdgeLabels() {
         for (String label: edgeLabels) {
-            EdgeParser parser = new EdgeParser(getTokens(label));
-            EdgeParser.ParseContext context = parser.parse();
+            YEdEdgeParser parser = new YEdEdgeParser(getTokens(label));
+            YEdEdgeParser.ParseContext context = parser.parse();
             Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
         }
     }
 
     @Test
     public void startVertex() {
-        VertexParser parser = new VertexParser(getTokens(" StARt "));
-        VertexParser.ParseContext context = parser.parse();
+        YEdVertexParser parser = new YEdVertexParser(getTokens(" StARt "));
+        YEdVertexParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
         Assert.assertNotNull(context.start());
     }
 
     @Test(expected = AssertionError.class)
     public void badVertexLabel() {
-        VertexParser parser = new VertexParser(getTokens("1name"));
-        VertexParser.ParseContext context = parser.parse();
+        YEdVertexParser parser = new YEdVertexParser(getTokens("1name"));
+        YEdVertexParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
     }
 
     @Test(expected = AssertionError.class)
     public void badEdgeLabel() {
-        EdgeParser parser = new EdgeParser(getTokens("1name"));
-        EdgeParser.ParseContext context = parser.parse();
+        YEdEdgeParser parser = new YEdEdgeParser(getTokens("1name"));
+        YEdEdgeParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
     }
 
     @Test
     public void testGuard() {
-        EdgeParser parser = new EdgeParser(getTokens("[ i[0] ]"));
-        EdgeParser.ParseContext context = parser.parse();
+        YEdEdgeParser parser = new YEdEdgeParser(getTokens("[ i[0] ]"));
+        YEdEdgeParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
         Assert.assertThat(context.guard().getText(), is("[ i[0] ]"));
     }
 
     private CommonTokenStream getTokens(String label) {
         ANTLRInputStream inputStream = new ANTLRInputStream(label);
-        LabelLexer lexer = new LabelLexer(inputStream);
+        YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
         return new CommonTokenStream(lexer);
     }
 }

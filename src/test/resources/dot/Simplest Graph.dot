@@ -1,0 +1,3 @@
+digraph SimplestGraph{
+    Start -> v1 [label="e1"];
+}

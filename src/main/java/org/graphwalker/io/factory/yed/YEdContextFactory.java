@@ -40,9 +40,9 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
 import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
-import org.graphwalker.io.yed.EdgeParser;
-import org.graphwalker.io.yed.LabelLexer;
-import org.graphwalker.io.yed.VertexParser;
+import org.graphwalker.io.yed.YEdEdgeParser;
+import org.graphwalker.io.yed.YEdLabelLexer;
+import org.graphwalker.io.yed.YEdVertexParser;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -122,10 +122,10 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                             for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
                                 label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
                             }
-                            VertexParser parser = new VertexParser(getTokenStream(label.toString()));
+                            YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
                             parser.removeErrorListeners();
                             parser.addErrorListener(new YEdDescriptiveErrorListener());
-                            VertexParser.ParseContext parseContext = parser.parse();
+                            YEdVertexParser.ParseContext parseContext = parser.parse();
                             Vertex vertex = new Vertex();
                             if (null != parseContext.start()) {
                                 elements.put(node.getId(), vertex);
@@ -188,7 +188,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                             for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
                                 label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
                             }
-                            EdgeParser.ParseContext parseContext = new EdgeParser(getTokenStream(label.toString())).parse();
+                            YEdEdgeParser.ParseContext parseContext = new YEdEdgeParser(getTokenStream(label.toString())).parse();
                             Edge edge = new Edge();
                             if (null != elements.get(edgeType.getSource())) {
                                 edge.setSourceVertex(elements.get(edgeType.getSource()));
@@ -253,9 +253,9 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         throw new YEdContextFactoryException("Unsupported edge type: "+xml);
     }
 
-    private List<Action> convertEdgeAction(List<EdgeParser.ActionContext> actionContexts) {
+    private List<Action> convertEdgeAction(List<YEdEdgeParser.ActionContext> actionContexts) {
         List<Action> actions = new ArrayList<>();
-        for (EdgeParser.ActionContext actionContext: actionContexts) {
+        for (YEdEdgeParser.ActionContext actionContext: actionContexts) {
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
@@ -263,7 +263,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
 
     private CommonTokenStream getTokenStream(String label) {
         ANTLRInputStream inputStream = new ANTLRInputStream(label);
-        LabelLexer lexer = new LabelLexer(inputStream);
+        YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
         lexer.removeErrorListeners();
         lexer.addErrorListener(new YEdDescriptiveErrorListener());
         return new CommonTokenStream(lexer);

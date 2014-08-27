@@ -41,11 +41,11 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Nils Olsson
  */
-public class YEdModelFactoryTest {
+public class YEdContextFactoryTest {
 
     @Test(expected = YEdContextFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
-        Context context = new YEdContextFactory().create(FileSystems.getDefault().getPath("graphml/LKHDIODSOSUBD.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/LKHDIODSOSUBD.graphml"));
     }
 
     @Test
