@@ -1,4 +1,4 @@
-package org.graphwalker.io.label;
+package org.graphwalker.io.label.yed;
 
 /*
  * #%L
@@ -28,9 +28,9 @@ package org.graphwalker.io.label;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.io.EdgeParser;
-import org.graphwalker.io.LabelLexer;
-import org.graphwalker.io.VertexParser;
+import org.graphwalker.io.yed.EdgeParser;
+import org.graphwalker.io.yed.LabelLexer;
+import org.graphwalker.io.yed.VertexParser;
 import org.junit.Assert;
 import org.junit.Test;
 

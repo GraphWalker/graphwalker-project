@@ -1,4 +1,4 @@
-package org.graphwalker.io.xmlbeans;
+package org.graphwalker.io.xmlbeans.yed;
 
 /*
  * #%L
