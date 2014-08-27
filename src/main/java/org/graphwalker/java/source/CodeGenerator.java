@@ -37,8 +37,8 @@ import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
-import org.graphwalker.io.factory.ModelFactory;
-import org.graphwalker.io.factory.YEdModelFactory;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -55,13 +55,13 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
-    private final ModelFactory factory = new YEdModelFactory();
+    private final ContextFactory factory = new YEdContextFactory();
 
     public String generate(String file) {
         return generate(new SourceFile(Paths.get(file)
                 , Paths.get("/")
                 , Paths.get("/"))
-                , factory.create("org/graphwalker/java/annotation/MyModel.graphml").build());
+                , factory.create(Paths.get("org/graphwalker/java/annotation/MyModel.graphml")).getModel());
     }
 
     public String generate(SourceFile sourceFile, RuntimeModel model) {

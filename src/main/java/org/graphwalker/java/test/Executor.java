@@ -118,14 +118,14 @@ public final class Executor {
                             }
                             PathGenerator pathGenerator = constructor.newInstance(stopCondition);
 
-                            Context context = (Context)execution.getTestClass().newInstance();
-                            Model model = execution.getModel();
-                            context.setModel(model);
+                            Context context = execution.getContext();
                             context.setPathGenerator(pathGenerator);
 
-                            if (!"".equals(execution.getStart())) {
+                            if (null != execution.getStart() && !"".equals(execution.getStart())) {
                                 List<Vertex.RuntimeVertex> vertices = context.getModel().findVertices(execution.getStart());
-                                context.setNextElement(vertices.get(new Random(System.nanoTime()).nextInt(vertices.size())));
+                                if (null != vertices && !vertices.isEmpty()) {
+                                    context.setNextElement(vertices.get(new Random(System.nanoTime()).nextInt(vertices.size())));
+                                }
                             }
 
                             implementations.put(context, context);
