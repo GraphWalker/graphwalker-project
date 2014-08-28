@@ -57,19 +57,19 @@ public final class FloydWarshallTest {
 
     @Test
     public void shortestDistance() {
-        FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model));
+        FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model.build()));
         Assert.assertThat(floydWarshall.getShortestDistance(v00.build(), v31.build()), is(4));
     }
 
     @Test
     public void maximumDistance() {
-        FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model));
+        FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model.build()));
         Assert.assertThat(floydWarshall.getMaximumDistance(v31.build()), is(5));
     }
 
     @Test
     public void noDistance() {
-        FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model));
+        FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model.build()));
         Assert.assertThat(floydWarshall.getShortestDistance(v00.build(), v00.build()), is(0));
         Assert.assertThat(floydWarshall.getShortestDistance(e1.build(), e1.build()), is(0));
     }

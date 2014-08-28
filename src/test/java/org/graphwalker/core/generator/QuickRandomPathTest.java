@@ -47,7 +47,7 @@ public class QuickRandomPathTest {
 
     //Test
     public void simpleTest() {
-        Context context = new TestExecutionContext().setModel(model).setNextElement(source);
+        Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
         PathGenerator pathGenerator = new QuickRandomPath(new VertexCoverage(100));
         context.setCurrentElement(source.build());
         Assert.assertEquals(context.getCurrentElement(), source.build());
@@ -57,7 +57,7 @@ public class QuickRandomPathTest {
 
     @Test(expected = NoPathFoundException.class)
     public void failTest() {
-        Context context = new TestExecutionContext().setModel(model).setNextElement(source);
+        Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
         PathGenerator pathGenerator = new RandomPath(new VertexCoverage(100));
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), source.build());
         Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), edge.build());

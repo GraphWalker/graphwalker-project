@@ -108,8 +108,8 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return model;
     }
 
-    public Context setModel(Model model) {
-        this.model = model.build();
+    public Context setModel(RuntimeModel model) {
+        this.model = model;
         return this;
     }
 

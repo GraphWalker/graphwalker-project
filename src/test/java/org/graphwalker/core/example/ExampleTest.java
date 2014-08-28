@@ -79,7 +79,7 @@ public class ExampleTest extends ExecutionContext {
                 .setTargetVertex(new Vertex()
                         .setName("vertex2"))
                 .addAction(new Action("myAction();")));
-        this.setModel(model);
+        this.setModel(model.build());
         this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
         setNextElement(start);
         Machine machine = new SimpleMachine(this);
@@ -98,7 +98,7 @@ public class ExampleTest extends ExecutionContext {
                         .setName("vertex1"))
                 .setTargetVertex(new Vertex()
                         .setName("vertex2")));
-        this.setModel(model);
+        this.setModel(model.build());
         this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
         setNextElement(start);
         Machine machine = new SimpleMachine(this);
@@ -117,7 +117,7 @@ public class ExampleTest extends ExecutionContext {
                         .setName("vertex3"))
                 .setTargetVertex(new Vertex()
                         .setName("vertex2")));
-        this.setModel(model);
+        this.setModel(model.build());
         this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
         setNextElement(start);
         Machine machine = new SimpleMachine(this);
