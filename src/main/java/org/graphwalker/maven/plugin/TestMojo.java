@@ -183,7 +183,11 @@ public final class TestMojo extends DefaultMojoBase {
     private void displayHeader() {
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");
-            getLog().info(" G r a p h W a l k e r                                                  ");
+            getLog().info("  _____             _   _ _ _     _ _                                   ");
+            getLog().info(" |   __|___ ___ ___| |_| | | |___| | |_ ___ ___                         ");
+            getLog().info(" |  |  |  _| .'| . |   | | | | .'| | '_| -_|  _|                        ");
+            getLog().info(" |_____|_| |__,|  _|_|_|_____|__,|_|_,_|___|_|                          ");
+            getLog().info("               |_|         ("+"3.0.0-SNAPSHOT"+")                       ");
             getLog().info("------------------------------------------------------------------------");
         }
     }
