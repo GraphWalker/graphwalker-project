@@ -30,8 +30,7 @@ import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.*;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.Element;
 import org.graphwalker.java.annotation.AfterExecution;
 import org.graphwalker.java.annotation.AnnotationUtils;
 import org.graphwalker.java.annotation.BeforeExecution;
@@ -118,13 +117,15 @@ public final class Executor {
                             }
                             PathGenerator pathGenerator = constructor.newInstance(stopCondition);
 
-                            Context context = execution.getContext();
+                            Context context = (Context)execution.getTestClass().newInstance();
+                            //Context context = execution.getContext();
+                            context.setModel(execution.getContext().getModel());
                             context.setPathGenerator(pathGenerator);
 
                             if (null != execution.getStart() && !"".equals(execution.getStart())) {
-                                List<Vertex.RuntimeVertex> vertices = context.getModel().findVertices(execution.getStart());
-                                if (null != vertices && !vertices.isEmpty()) {
-                                    context.setNextElement(vertices.get(new Random(System.nanoTime()).nextInt(vertices.size())));
+                                List<Element> elements = context.getModel().findElements(execution.getStart());
+                                if (null != elements && !elements.isEmpty()) {
+                                    context.setNextElement(elements.get(new Random(System.nanoTime()).nextInt(elements.size())));
                                 }
                             }
 
@@ -149,7 +150,9 @@ public final class Executor {
                             }
                             try {
                                 while (machine.hasNextStep()) {
-                                    machine.getNextStep();
+                                    Context context = machine.getNextStep();
+                                    if (context.getCurrentElement().hasName())
+                                        System.out.println(context.getCurrentElement().getName());
                                 }
                             } catch (MachineException e) {
                                 failures.put(e.getContext(), e);
