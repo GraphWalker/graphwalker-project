@@ -77,7 +77,7 @@ public final class DotContextFactory implements ContextFactory {
     public Context create(Path path, Context context) {
 
         Model model = new Model();
-        context.setModel(model);
+        context.setModel(model.build());
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
         StringBuilder out = new StringBuilder();
