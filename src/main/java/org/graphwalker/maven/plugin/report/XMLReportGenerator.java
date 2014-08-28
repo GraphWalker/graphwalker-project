@@ -32,6 +32,9 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.Executor;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -45,7 +48,6 @@ public class XMLReportGenerator {
 
     private static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
-    private static final String SPACE = " ";
 
     private final File reportDirectory;
     private final MavenSession session;
@@ -55,75 +57,99 @@ public class XMLReportGenerator {
         this.session = session;
     }
 
-    public void writeReport(Executor executor, Machine machine) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>").append(NEWLINE);
-        builder.append("<testsuites>").append(NEWLINE);
-        Report report = new Report(machine, session.getStartTime());
-        builder.append(INDENT).append("<testsuite")
-                .append(SPACE).append("tests=\"").append(report.getTests()).append("\"")
-                .append(SPACE).append("skipped=\"").append(report.getSkipped()).append("\"")
-                .append(SPACE).append("failures=\"").append(report.getFailures()).append("\"")
-                .append(SPACE).append("time=\"").append(report.getTime()).append("\"")
-                .append(SPACE).append("timestamp=\"").append(report.getTimestamp()).append("\"")
-                .append(">").append(NEWLINE);
-        Properties properties = session.getSystemProperties();
-        List<String> keys = new ArrayList<>(properties.stringPropertyNames());
-        Collections.sort(keys);
-        builder.append(INDENT).append(INDENT).append("<properties>").append(NEWLINE);
-        for (String name: keys) {
-            builder.append(INDENT).append(INDENT).append(INDENT).append("<property")
-                    .append(SPACE).append("name=\"").append(name).append("\"")
-                    .append(SPACE).append("value=\"").append(properties.getProperty(name).replaceAll("\\\\", "\\\\")).append("\"/>").append(NEWLINE);
-        }
-        builder.append(INDENT).append(INDENT).append("</properties>").append(NEWLINE);
-        for (Context context: machine.getContexts()) {
-            builder.append(INDENT).append(INDENT).append("<testcase")
-                    .append(SPACE).append("classname=\"").append(context.getClass().getName()).append("\"")
-                    .append(SPACE).append("name=\"").append(context.getClass().getSimpleName()).append("\"")
-                    .append(SPACE).append("time=\"").append(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS))).append("\"")
-                    .append(">").append(NEWLINE);
-            // if failed
-            if (executor.isFailure(context)) {
-                Throwable throwable = executor.getFailure(context).getCause();
-                builder.append(INDENT).append(INDENT).append(INDENT).append("<failure")
-                        .append(SPACE).append("type=\"").append(throwable.getClass().getName()).append("\"")
-                        .append(SPACE).append("message=\"").append(throwable.getMessage()).append("\"")
-                        .append(">").append(NEWLINE);
-                builder.append(getStackTrace(throwable));
-                builder.append(INDENT).append(INDENT).append(INDENT).append("</failure>").append(NEWLINE);
+    public void writeReport(Executor executor) {
+        Testsuites testsuites = new Testsuites();
+        List<Report> reports = new ArrayList<>();
+        for (Machine machine: executor.getMachines()) {
+            Report report = new Report(machine, session.getStartTime());
+            Testsuite testsuite = new Testsuite();
+            List<String> keys = new ArrayList<>(session.getSystemProperties().stringPropertyNames());
+            Collections.sort(keys);
+            Properties properties = new Properties();
+            for (String name: keys) {
+                Property property = new Property();
+                property.setName(name);
+                property.setValue(session.getSystemProperties().getProperty(name));
+                properties.getProperty().add(property);
             }
-            builder.append(INDENT).append(INDENT).append("</testcase>").append(NEWLINE);
+            testsuite.setProperties(properties);
+            testsuite.setTests(report.getTestsAsString());
+            testsuite.setFailures(report.getFailuresAsString());
+            testsuite.setErrors(report.getErrorsAsString());
+            testsuite.setTime(report.getTimeAsString());
+            testsuite.setTimestamp(report.getTimestamp());
+            for (Context context: machine.getContexts()) {
+                Testcase testcase = new Testcase();
+                testcase.setName(context.getClass().getSimpleName());
+                testcase.setClassname(context.getClass().getName());
+                testcase.setTime(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS)));
+                if (executor.isFailure(context)) {
+                    Throwable throwable = executor.getFailure(context).getCause();
+                    Error error = new Error();
+                    error.setType(throwable.getClass().getName());
+                    error.setMessage(throwable.getMessage());
+                    error.setContent(getStackTrace(throwable));
+                    testcase.getError().add(error);
+                } else if (report.isFailure(context)) {
+                    Failure failure = new Failure();
+                    failure.setType("Not fulfilled");
+                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
+                    failure.setMessage(String.valueOf(Math.round(100*fulfilment)));
+                    testcase.getFailure().add(failure);
+                }
+                testsuite.getTestcase().add(testcase);
+            }
+            testsuites.getTestsuite().add(testsuite);
+            reports.add(report);
         }
-        builder.append(INDENT).append("</testsuite>").append(NEWLINE);
-        builder.append("</testsuites>").append(NEWLINE);
-        write("TEST-TestSuites.xml", builder.toString());
+        consolidate(testsuites, reports);
+        try {
+            JAXBContext context = JAXBContext.newInstance("org.graphwalker.maven.plugin.report");
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(testsuites, getOutputStream(reportDirectory, getName()));
+        } catch (JAXBException e) {
+            throw new XMLReportException(e);
+        }
+    }
+
+    private void consolidate(Testsuites testsuites, List<Report> reports) {
+        long tests = 0;
+        long failures = 0;
+        long errors = 0;
+        double time = Double.MAX_VALUE;
+        for (Report report: reports) {
+            tests += report.getTests();
+            failures += report.getFailures();
+            errors += report.getErrors();
+            if (time > report.getTime()) {
+                time = report.getTime();
+            }
+        }
+        testsuites.setTime(String.valueOf(time));
+        testsuites.setFailures(String.valueOf(failures));
+        testsuites.setErrors(String.valueOf(errors));
+        testsuites.setTests(String.valueOf(tests));
+    }
+
+    private String getName() {
+        return "TEST-TestSuites.xml";
     }
 
     public static String getStackTrace(final Throwable throwable) {
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter, true);
         throwable.printStackTrace(printWriter);
-        StringBuffer buffer = new StringBuffer();
-        for (String line: stringWriter.getBuffer().toString().split("\n")) {
+        StringBuffer buffer = new StringBuffer().append(NEWLINE);
+        for (String line: stringWriter.getBuffer().toString().split(NEWLINE)) {
             buffer.append(INDENT).append(INDENT).append(INDENT).append(INDENT).append(line).append(NEWLINE);
         }
         return buffer.toString();
     }
 
-    private double getSeconds(long milliseconds) {
-        return (double)milliseconds / 1000.0;
-    }
-
-    private void write(String name, String data) {
-        OutputStream outputStream = getOutputStream(reportDirectory, name);
-        try {
-            outputStream.write(data.getBytes());
-            outputStream.flush();
-            outputStream.close();
-        } catch (IOException e) {
-            throw new XMLReportException(e);
-        }
+    private String getSeconds(long milliseconds) {
+        return String.valueOf((double)milliseconds / 1000.0);
     }
 
     private OutputStream getOutputStream(File directory, String reportName) {
@@ -138,10 +164,10 @@ public class XMLReportGenerator {
     private class Report {
 
         private final List<Context> failedExecutions = new ArrayList<>();
-        private long skipped = 0;
-        private long tests = 0;
-        private long failures = 0;
-        private long time = 0;
+        private int errors = 0;
+        private int tests = 0;
+        private int failures = 0;
+        private int time = 0;
         private final String timestamp;
 
         Report(Machine machine, Date startTime) {
@@ -151,40 +177,53 @@ public class XMLReportGenerator {
                 tests++;
                 switch (context.getExecutionStatus()) {
                     case FAILED: {
-                        failures++;
-                        failedExecutions.add(context);
+                        errors++;
                     }
                     break;
-                    case NOT_EXECUTED: {
-                        skipped++;
-                    }
-                    break;
+                    case NOT_EXECUTED:
                     case EXECUTING: {
                         failures++;
+                        failedExecutions.add(context);
                     }
                 }
                 time += context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS);
             }
         }
 
-        public boolean failed(Context context) {
+        public boolean isFailure(Context context) {
             return failedExecutions.contains(context);
         }
 
-        public long getSkipped() {
-            return skipped;
+        public int getErrors() {
+            return errors;
         }
 
-        public long getTests() {
+        public String getErrorsAsString() {
+            return String.valueOf(errors);
+        }
+
+        public int getTests() {
             return tests;
         }
 
-        public long getFailures() {
+        public String getTestsAsString() {
+            return String.valueOf(tests);
+        }
+
+        public int getFailures() {
             return failures;
+        }
+
+        public String getFailuresAsString() {
+            return String.valueOf(failures);
         }
 
         public double getTime() {
             return (double)time / 1000.0;
+        }
+
+        public String getTimeAsString() {
+            return String.valueOf((double) time / 1000.0);
         }
 
         public String getTimestamp() {
