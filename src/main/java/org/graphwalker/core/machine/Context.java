@@ -46,7 +46,7 @@ public interface Context {
     Context setExecutionStatus(ExecutionStatus executionStatus);
     ScriptEngine getScriptEngine();
     RuntimeModel getModel();
-    Context setModel(Model model);
+    Context setModel(RuntimeModel model);
     Profiler getProfiler();
     PathGenerator getPathGenerator();
     Context setPathGenerator(PathGenerator pathGenerator);

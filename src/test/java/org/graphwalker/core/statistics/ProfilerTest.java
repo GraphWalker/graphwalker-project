@@ -46,7 +46,7 @@ public final class ProfilerTest {
             .setModel(new Model()
                     .addEdge(new Edge()
                             .setSourceVertex(start)
-                            .setTargetVertex(new Vertex())))
+                            .setTargetVertex(new Vertex())).build())
             .setCurrentElement(start.build());
 
     @Test
