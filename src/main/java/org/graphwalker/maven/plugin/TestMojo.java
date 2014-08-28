@@ -298,8 +298,10 @@ public final class TestMojo extends DefaultMojoBase {
     private void reportResults(Executor executor) throws MojoExecutionException {
         boolean hasExceptions = false;
         XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession());
+
+        reporter.writeReport(executor);
+
         for (Machine machine: executor.getMachines()) {
-            reporter.writeReport(executor, machine);
             for (Context context: machine.getContexts()) {
                 hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
             }
