@@ -1,8 +1,6 @@
-#!/usr/bin/env sh
-
-set -e
+#!/bin/bash
+set -ev
 modules="core java io cli maven-plugin dashboard example"
-
 for module in $modules
 do
     pushd ..
