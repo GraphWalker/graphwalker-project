@@ -17,8 +17,6 @@ env:
 before_install:
   - sudo apt-get update -qq
   - git clone --depth=50 --branch=master git://github.com/GraphWalker/graphwalker-project.git ../graphwalker-project
-
-before_script:
   - ../graphwalker-project/tools/clone.sh
   - ../graphwalker-project/tools/build.sh
 
