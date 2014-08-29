@@ -1,4 +1,4 @@
-#!/usr/bin/env/sh
+#!/usr/bin/env sh
 
 set -e
 modules="core java io cli maven-plugin dashboard example"
