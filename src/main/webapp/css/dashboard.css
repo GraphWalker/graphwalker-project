@@ -1,0 +1,67 @@
+
+html, body {
+    overflow: hidden;
+}
+
+.master {
+    border-left: 1px solid #c4cbcc;
+}
+
+.detail {
+    padding-top: 10px;
+    border-right: 1px solid #c4cbcc;
+    margin-left: 10px;
+}
+
+.search-panel {
+    padding: 10px 10px 20px 10px;
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    height: 65px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding-right: 30px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 0;
+    padding: 10px 12px;
+}
+
+.list-group {
+    margin-top: 65px;
+    margin-bottom: 0;
+}
+
+.list-group-item {
+    border-width: 1px 0 1px 0;
+    border-color: #ddd;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:first-child, .list-group-item:last-child {
+    border-radius: 0;
+}
+
+.ui-splitbar {
+    border-left: 1px solid #ddd;
+}
+
+.progress {
+    margin-bottom: 0;
+}
+
+.content {
+    border-left: 1px solid #ddd;
+    margin-top: 51px;
+    padding: 10px;
+}
