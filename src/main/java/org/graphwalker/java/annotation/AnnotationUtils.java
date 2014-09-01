@@ -52,10 +52,14 @@ public final class AnnotationUtils {
 
     public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
         Set<Annotation> annotations = new HashSet<>();
-        for (Class<?> interfaceClass: clazz.getInterfaces()) {
-            if (interfaceClass.isAnnotationPresent(annotation)) {
-                annotations.add(interfaceClass.getAnnotation(annotation));
+        Class<?> queryClass = clazz;
+        while (null != queryClass) {
+            for (Class<?> interfaceClass: queryClass.getInterfaces()) {
+                if (interfaceClass.isAnnotationPresent(annotation)) {
+                    annotations.add(interfaceClass.getAnnotation(annotation));
+                }
             }
+            queryClass = queryClass.getSuperclass();
         }
         return annotations;
     }
