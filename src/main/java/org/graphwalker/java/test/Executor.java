@@ -143,6 +143,7 @@ public final class Executor {
             try {
                 ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
                 for (final Machine machine : machines) {
+                    machine.addObserver(new LogObserver());
                     executorService.execute(new Runnable() {
                         public void run() {
                             for (Context context: machine.getContexts()) {
@@ -150,9 +151,7 @@ public final class Executor {
                             }
                             try {
                                 while (machine.hasNextStep()) {
-                                    Context context = machine.getNextStep();
-                                    if (context.getCurrentElement().hasName())
-                                        System.out.println(context.getCurrentElement().getName());
+                                    machine.getNextStep();
                                 }
                             } catch (MachineException e) {
                                 failures.put(e.getContext(), e);
