@@ -31,9 +31,7 @@ import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.java.annotation.AfterExecution;
-import org.graphwalker.java.annotation.AnnotationUtils;
-import org.graphwalker.java.annotation.BeforeExecution;
+import org.graphwalker.java.annotation.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -150,8 +148,13 @@ public final class Executor {
                                 AnnotationUtils.execute(BeforeExecution.class, implementations.get(context));
                             }
                             try {
+                                Context context = null;
                                 while (machine.hasNextStep()) {
-                                    machine.getNextStep();
+                                    if (null != context) {
+                                        AnnotationUtils.execute(BeforeElement.class, implementations.get(context));
+                                    }
+                                    context = machine.getNextStep();
+                                    AnnotationUtils.execute(AfterElement.class, implementations.get(context));
                                 }
                             } catch (MachineException e) {
                                 failures.put(e.getContext(), e);
