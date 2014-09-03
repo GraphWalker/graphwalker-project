@@ -26,7 +26,10 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Vertex;
@@ -49,10 +52,17 @@ public class AntlrDotListener extends DOTBaseListener {
     private Vertex vertex = null;
     private State state = State.NONE;
 
-    enum State { NONE, LABEL }
+    enum State {
+        NONE,
+        EDGE_LABEL,
+        VERTEX_LABEL,
+        EDGE_SRC_VERTEX,
+        EDGE_DST_VERTEX
+                }
 
     @Override
     public void enterNode_id(@NotNull DOTParser.Node_idContext ctx) {
+        System.out.println("enterNode_id: "+ctx.getText());
         if (!vertices.containsKey(ctx.getText())) {
             edge = null;
             vertex = new Vertex();
@@ -63,18 +73,93 @@ public class AntlrDotListener extends DOTBaseListener {
     }
 
     @Override
+    public void enterAttr_stmt(@NotNull DOTParser.Attr_stmtContext ctx) {
+        System.out.println("enterAttr_stmt: "+ctx.getText());
+    }
+
+    @Override
+    public void enterPort(@NotNull DOTParser.PortContext ctx) {
+        System.out.println("enterPort: "+ctx.getText());
+    }
+
+    @Override
+    public void enterEdgeop(@NotNull DOTParser.EdgeopContext ctx) {
+        System.out.println("enterEdgeop: "+ctx.getText());
+    }
+
+    @Override
+    public void enterStmt_list(@NotNull DOTParser.Stmt_listContext ctx) {
+        System.out.println("enterStmt_list: "+ctx.getText());
+    }
+
+    @Override
+    public void enterStmt(@NotNull DOTParser.StmtContext ctx) {
+        System.out.println("enterStmt: "+ctx.getText());
+    }
+
+    @Override
+    public void enterSubgraph(@NotNull DOTParser.SubgraphContext ctx) {
+        System.out.println("enterSubgraph: "+ctx.getText());
+    }
+
+    @Override
+    public void enterGraph(@NotNull DOTParser.GraphContext ctx) {
+        System.out.println("enterGraph: "+ctx.getText());
+    }
+
+    @Override
+    public void enterA_list(@NotNull DOTParser.A_listContext ctx) {
+        System.out.println("enterA_list: "+ctx.getText());
+    }
+
+    @Override
+    public void enterAttr_list(@NotNull DOTParser.Attr_listContext ctx) {
+        System.out.println("enterAttr_list: "+ctx.getText());
+    }
+
+    @Override
+    public void enterNode_stmt(@NotNull DOTParser.Node_stmtContext ctx) {
+        System.out.println("enterNode_stmt: "+ctx.getText());
+    }
+
+    @Override
+    public void exitNode_stmt(@NotNull DOTParser.Node_stmtContext ctx) {
+        System.out.println("exitNode_stmt: "+ctx.getText());
+    }
+
+    @Override
+    public void enterEveryRule(@NotNull ParserRuleContext ctx) {
+        System.out.println("enterEveryRule: "+ctx.getText());
+    }
+
+    @Override
+    public void exitEveryRule(@NotNull ParserRuleContext ctx) {
+        System.out.println("exitEveryRule: "+ctx.getText());
+    }
+
+    @Override
+    public void visitTerminal(@NotNull TerminalNode node) {
+        System.out.println("visitTerminal: "+ node.getText());
+    }
+
+    @Override
+    public void visitErrorNode(@NotNull ErrorNode node) {
+        super.visitErrorNode(node);
+    }
+
+    @Override
     public void enterId(@NotNull DOTParser.IdContext ctx) {
         System.out.println("enterId: "+ctx.getText());
         switch (state) {
             case NONE:
                 if (ctx.getText().equalsIgnoreCase("label")) {
-                    state = State.LABEL;
+                    state = State.EDGE_LABEL;
                 } else if (null != edge) {
 
                 }
                 break;
 
-            case LABEL:
+            case EDGE_LABEL:
                 if (null!=edge) {
                     edge.setName(ctx.getText());
                 } else if(null!=vertex) {
@@ -86,7 +171,13 @@ public class AntlrDotListener extends DOTBaseListener {
     }
 
     @Override
+    public void enterEdgeRHS(@NotNull DOTParser.EdgeRHSContext ctx) {
+        System.out.println("enterEdgeRHS: " + ctx.getText());
+    }
+
+    @Override
     public void enterEdge_stmt(@NotNull DOTParser.Edge_stmtContext ctx) {
+        System.out.println("enterEdge_stmt: "+ctx.getText());
         if (!edges.containsKey(ctx.getText())) {
             vertex = null;
             edge = new Edge();
