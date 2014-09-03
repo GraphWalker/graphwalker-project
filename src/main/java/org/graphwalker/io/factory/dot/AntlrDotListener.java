@@ -26,12 +26,17 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.dot.DOTBaseListener;
 import org.graphwalker.io.dot.DOTParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,57 +46,96 @@ import java.util.Vector;
  * Created by krikar on 8/27/14.
  */
 public class AntlrDotListener extends DOTBaseListener {
+    private static final Logger logger = LoggerFactory.getLogger(AntlrDotListener.class);
 
     public Map<String, Vertex> vertices = new HashMap<>();
-    public Map<String, Edge> edges = new HashMap<>();
+    public Vector<Edge> edges = new Vector<>();
 
+    private Vertex src, dst = null;
     private Edge edge = null;
-    private Vertex vertex = null;
-    private State state = State.NONE;
 
-    enum State { NONE, LABEL }
+    private boolean expectEdge        = false;
+    private boolean expectVertex      = false;
+    private boolean expectEdgeLabel   = false;
+    private boolean expectVertexLabel = false;
+
 
     @Override
     public void enterNode_id(@NotNull DOTParser.Node_idContext ctx) {
+        expectVertex =true;
+        logger.trace("Parsing vertex: "+ctx.getText());
         if (!vertices.containsKey(ctx.getText())) {
-            edge = null;
-            vertex = new Vertex();
-            vertex.setId(ctx.getText());
-            vertices.put(ctx.getText(), vertex);
-            System.out.println("Adding node: " + ctx.getText());
+            if (src==null) {
+                logger.trace("Create source vertex: "+ctx.getText());
+                src = new Vertex();
+                src.setId(ctx.getText());
+                src.setName(ctx.getText());
+                vertices.put(ctx.getText(), src);
+            } else if (dst==null || src!=null){
+                logger.trace("Create target vertex: "+ctx.getText());
+                dst = new Vertex();
+                dst.setId(ctx.getText());
+                dst.setName(ctx.getText());
+                vertices.put(ctx.getText(), dst);
+                if ( edge != null ) {
+                    logger.trace("Setting source and target vertices for edge");
+                    edge.setSourceVertex(src);
+                    edge.setTargetVertex(dst);
+                }
+            }
+        } else {
+            if ( src==null) {
+                src = vertices.get(ctx.getText());
+                logger.trace("Using earlier read source vertex: " + src.getId());
+            } else if (dst == null) {
+                dst = vertices.get(ctx.getText());
+                logger.trace("Using earlier read target vertex: " + dst.getId());
+            }
         }
+    }
+
+    @Override
+    public void enterEdgeop(@NotNull DOTParser.EdgeopContext ctx) {
+        expectEdge = true;
+        edge = new Edge();
+        edges.add(edge);
+        logger.debug("Create edge");
     }
 
     @Override
     public void enterId(@NotNull DOTParser.IdContext ctx) {
-        System.out.println("enterId: "+ctx.getText());
-        switch (state) {
-            case NONE:
-                if (ctx.getText().equalsIgnoreCase("label")) {
-                    state = State.LABEL;
-                } else if (null != edge) {
-
-                }
-                break;
-
-            case LABEL:
-                if (null!=edge) {
-                    edge.setName(ctx.getText());
-                } else if(null!=vertex) {
-                    vertex.setName(ctx.getText());
-                }
-                state = State.NONE;
-                break;
+        if (ctx.getText().equalsIgnoreCase("LABEL")) {
+            if (expectEdge) {
+                expectEdgeLabel = true;
+            } else if (expectVertex) {
+                expectVertexLabel = true;
+            }
+            return;
         }
-    }
 
-    @Override
-    public void enterEdge_stmt(@NotNull DOTParser.Edge_stmtContext ctx) {
-        if (!edges.containsKey(ctx.getText())) {
-            vertex = null;
-            edge = new Edge();
-            edges.put(ctx.getText(), edge);
-            System.out.println("Adding edge: "+ctx.getText());
+        String label = ctx.getText();
+        if (label.length()>2) {
+            label = label.substring(1, label.length() - 1);
+        }
+
+        if (expectEdgeLabel) {
+            logger.debug("Edge label: " + label);
+            expectEdgeLabel=false;
+            expectEdge=false;
+
+            edge.setId(label);
+            edge.setName(label);
+            edge.setSourceVertex(src);
+            edge.setTargetVertex(dst);
+            src = dst = null;
+        } else if (expectVertexLabel){
+            logger.debug("Vertex label: " + label);
+            expectVertexLabel=false;
+            if(dst!=null){
+                dst.setName(label);
+            } else if(src!=null){
+                src.setName(label);
+            }
         }
     }
 }

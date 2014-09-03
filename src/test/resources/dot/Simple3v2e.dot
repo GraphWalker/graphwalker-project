@@ -1,0 +1,3 @@
+ digraph SimplestGraph {
+     a -> b -> c;
+ }
