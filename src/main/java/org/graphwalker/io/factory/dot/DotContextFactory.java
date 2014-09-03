@@ -30,7 +30,9 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.dot.DOTLexer;
 import org.graphwalker.io.dot.DOTParser;
@@ -77,7 +79,6 @@ public final class DotContextFactory implements ContextFactory {
     public Context create(Path path, Context context) {
 
         Model model = new Model();
-        context.setModel(model.build());
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
         StringBuilder out = new StringBuilder();
@@ -112,6 +113,7 @@ public final class DotContextFactory implements ContextFactory {
             model.addEdge(edge);
         }
 
+        context.setModel(model.build());
         return context;
     }
 }
