@@ -80,6 +80,10 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return this;
     }
 
+    public String toString() {
+        return "{ id: " + getId() + ", name: " + getName() + "}";
+    }
+
     @Override
     protected RuntimeVertex createCache() {
         return new RuntimeVertex(this);

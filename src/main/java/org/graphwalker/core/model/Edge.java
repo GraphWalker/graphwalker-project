@@ -120,6 +120,10 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return this;
     }
 
+    public String toString() {
+        return "{ id: " + getId() + ", name: " + getName() + "}";
+    }
+
     @Override
     protected RuntimeEdge createCache() {
         return new RuntimeEdge(this);
