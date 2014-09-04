@@ -109,6 +109,7 @@ public final class DotContextFactory implements ContextFactory {
         AntlrDotListener listener = new AntlrDotListener();
         walker.walk(listener, parser.graph());
 
+        Edge startEdge = null;
         for (Vertex vertex : listener.vertices.values()) {
             if (!vertex.getName().equalsIgnoreCase("START")) {
                 model.addVertex(vertex);
@@ -118,11 +119,22 @@ public final class DotContextFactory implements ContextFactory {
             if (edge.getSourceVertex().getName() != null &&
                 edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
                 edge.setSourceVertex(null);
+                startEdge = edge;
             }
             model.addEdge(edge);
         }
 
         context.setModel(model.build());
+        if (null != startEdge) {
+            context.setNextElement(startEdge);
+        } else {
+            for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
+                if (context.getModel().getOutEdges(vertex).isEmpty()) {
+                    context.setNextElement(vertex);
+                }
+            }
+
+        }
         return context;
     }
 }
