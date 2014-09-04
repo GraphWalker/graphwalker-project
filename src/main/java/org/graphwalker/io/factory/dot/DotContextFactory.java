@@ -37,6 +37,8 @@ import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.dot.DOTLexer;
 import org.graphwalker.io.dot.DOTParser;
 import org.graphwalker.io.factory.ContextFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,6 +55,7 @@ import java.util.*;
  */
 public final class DotContextFactory implements ContextFactory {
 
+    private static final Logger logger = LoggerFactory.getLogger(DotContextFactory.class);
     private static final String FILE_TYPE = "dot";
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.dot"));
 
@@ -90,7 +93,7 @@ public final class DotContextFactory implements ContextFactory {
         } catch (IOException e) {
             throw new DotContextFactoryException("Could not read the file.");
         }
-        System.out.println(out.toString());   //Prints the string content read from input stream
+        logger.debug(out.toString());
         try {
             reader.close();
         } catch (IOException e) {
@@ -107,9 +110,15 @@ public final class DotContextFactory implements ContextFactory {
         walker.walk(listener, parser.graph());
 
         for (Vertex vertex : listener.vertices.values()) {
-            model.addVertex(vertex);
+            if (!vertex.getName().equalsIgnoreCase("START")) {
+                model.addVertex(vertex);
+            }
         }
-        for (Edge edge : listener.edges.values()) {
+        for (Edge edge : listener.edges) {
+            if (edge.getSourceVertex().getName() != null &&
+                edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
+                edge.setSourceVertex(null);
+            }
             model.addEdge(edge);
         }
 

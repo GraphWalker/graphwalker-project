@@ -1,0 +1,4 @@
+ digraph SimplestGraph {
+     a -> b [label="e1"];
+     b -> c [label="e2"];
+ }
