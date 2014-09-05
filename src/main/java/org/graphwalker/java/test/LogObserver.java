@@ -43,15 +43,21 @@ public final class LogObserver implements Observer<Element> {
 
     @Override
     public void update(Observable<Element> observable, Element object) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("State changed [");
-        if (null != lastElement) {
-            builder.append(lastElement.hasName()?lastElement.getName():"Element["+lastElement.getId()+"]");
-            builder.append(" -> ");
+        try {
+            if (null != object) {
+                StringBuilder builder = new StringBuilder();
+                builder.append("State changed [");
+                if (null != lastElement) {
+                    builder.append(lastElement.hasName() ? lastElement.getName() : "Element[" + lastElement.getId() + "]");
+                    builder.append(" -> ");
+                }
+                builder.append(object.hasName() ? object.getName() : "Element[" + object.getId() + "]");
+                builder.append("]");
+                logger.info(builder.toString());
+                lastElement = object;
+            }
+        } catch (Throwable t) {
+            int i = 0;
         }
-        builder.append(object.hasName()?object.getName():"Element["+object.getId()+"]");
-        builder.append("]");
-        logger.info(builder.toString());
-        lastElement = object;
     }
 }
