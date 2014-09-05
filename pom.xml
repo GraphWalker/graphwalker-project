@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-project</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-RC1</version>
     <name>GraphWalker Project</name>
     <inceptionYear>2011</inceptionYear>
     <packaging>pom</packaging>
@@ -29,6 +29,11 @@
     </properties>
 
     <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-releases</id>
+            <name>Sonatype Nexus Releases</name>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+        </repository>
         <snapshotRepository>
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
@@ -37,6 +42,17 @@
     </distributionManagement>
 
     <repositories>
+        <repository>
+            <id>sonatype-nexus-releases</id>
+            <name>Sonatype Nexus Releases</name>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
@@ -55,7 +71,6 @@
         <module>../graphwalker-java</module>
         <module>../graphwalker-io</module>
         <module>../graphwalker-dashboard</module>
-        <!--module>../graphwalker-intellij-plugin</module-->
         <module>../graphwalker-maven-plugin</module>
         <module>../graphwalker-example</module>
         <module>../graphwalker-cli</module>
