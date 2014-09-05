@@ -45,11 +45,11 @@ public class DotContextFactoryTest {
         Assert.assertThat(context.getModel().getVertices().size(), is(2));
         Assert.assertThat(context.getModel().getEdges().size(), is(1));
 
-        Assert.assertThat(context.getModel().getVertices().get(0).getName(), is("b"));
-        Assert.assertThat(context.getModel().getVertices().get(0).getId(), is("b"));
+        Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
+        Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
 
-        Assert.assertThat(context.getModel().getVertices().get(1).getName(), is("a"));
-        Assert.assertThat(context.getModel().getVertices().get(1).getId(), is("a"));
+        Assert.assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
+        Assert.assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
 
         Assert.assertNull(context.getModel().getEdges().get(0).getId());
         Assert.assertThat(context.getModel().getEdges().get(0).getSourceVertex().getId(), is("a"));
@@ -69,19 +69,21 @@ public class DotContextFactoryTest {
         Assert.assertThat(context.getModel().getVertices().size(), is(3));
         Assert.assertThat(context.getModel().getEdges().size(), is(2));
 
-        Assert.assertThat(context.getModel().getVertices().get(0).getName(), is("b"));
-        Assert.assertThat(context.getModel().getVertices().get(0).getId(), is("b"));
 
-        Assert.assertThat(context.getModel().getVertices().get(1).getName(), is("c"));
-        Assert.assertThat(context.getModel().getVertices().get(1).getId(), is("c"));
 
-        Assert.assertThat(context.getModel().getEdges().get(0).getId(), is("e1"));
-        Assert.assertThat(context.getModel().getEdges().get(0).getSourceVertex().getId(), is("a"));
-        Assert.assertThat(context.getModel().getEdges().get(0).getTargetVertex().getId(), is("b"));
+        Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
+        Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
 
-        Assert.assertThat(context.getModel().getEdges().get(1).getId(), is("e2"));
-        Assert.assertThat(context.getModel().getEdges().get(1).getSourceVertex().getId(), is("b"));
-        Assert.assertThat(context.getModel().getEdges().get(1).getTargetVertex().getId(), is("c"));
+        Assert.assertThat(context.getModel().findVertices("c").get(0).getName(), is("c"));
+        Assert.assertThat(context.getModel().findVertices("c").get(0).getId(), is("c"));
+
+        Assert.assertThat(context.getModel().findEdges("e1").get(0).getId(), is("e1"));
+        Assert.assertThat(context.getModel().findEdges("e1").get(0).getSourceVertex().getId(), is("a"));
+        Assert.assertThat(context.getModel().findEdges("e1").get(0).getTargetVertex().getId(), is("b"));
+
+        Assert.assertThat(context.getModel().findEdges("e2").get(0).getId(), is("e2"));
+        Assert.assertThat(context.getModel().findEdges("e2").get(0).getSourceVertex().getId(), is("b"));
+        Assert.assertThat(context.getModel().findEdges("e2").get(0).getTargetVertex().getId(), is("c"));
     }
 
     @Test
@@ -90,14 +92,14 @@ public class DotContextFactoryTest {
         Assert.assertThat(context.getModel().getVertices().size(), is(3));
         Assert.assertThat(context.getModel().getEdges().size(), is(2));
 
-        Assert.assertThat(context.getModel().getVertices().get(0).getName(), is("b"));
-        Assert.assertThat(context.getModel().getVertices().get(0).getId(), is("b"));
+        Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
+        Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
 
-        Assert.assertThat(context.getModel().getVertices().get(1).getName(), is("c"));
-        Assert.assertThat(context.getModel().getVertices().get(1).getId(), is("c"));
+        Assert.assertThat(context.getModel().findVertices("c").get(0).getName(), is("c"));
+        Assert.assertThat(context.getModel().findVertices("c").get(0).getId(), is("c"));
 
-        Assert.assertThat(context.getModel().getVertices().get(2).getName(), is("a"));
-        Assert.assertThat(context.getModel().getVertices().get(2).getId(), is("a"));
+        Assert.assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
+        Assert.assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
 
         Assert.assertNull(context.getModel().getEdges().get(0).getName());
         Assert.assertNull(context.getModel().getEdges().get(0).getId());
