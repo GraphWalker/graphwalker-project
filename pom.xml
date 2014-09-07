@@ -6,14 +6,12 @@
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-project</artifactId>
     <version>3.0.0-RC1</version>
-    <name>GraphWalker Project</name>
-    <inceptionYear>2011</inceptionYear>
     <packaging>pom</packaging>
 
-    <organization>
-        <name>GraphWalker</name>
-        <url>http://graphwalker.org</url>
-    </organization>
+    <name>GraphWalker Project</name>
+    <description>Model-Based Testing Tool</description>
+    <url>http://graphwalker.org</url>
+    <inceptionYear>2011</inceptionYear>
 
     <licenses>
         <license>
@@ -23,48 +21,53 @@
         </license>
     </licenses>
 
+    <organization>
+        <name>GraphWalker</name>
+        <url>http://graphwalker.org</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>nilols</id>
+            <name>Nils Olsson</name>
+            <email>nilols.at.spotify.dot.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+2</timezone>
+        </developer>
+        <developer>
+            <id>krikar</id>
+            <name>Kristian Karl</name>
+            <email>krikar.at.spotify.dot.com</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+2</timezone>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/GraphWalker/graphwalker-project</url>
+        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+    </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>sonatype-nexus-releases</id>
-            <name>Sonatype Nexus Releases</name>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>sonatype-nexus-releases</id>
-            <name>Sonatype Nexus Releases</name>
-            <url>https://oss.sonatype.org/content/repositories/releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus Snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <modules>
         <module>../graphwalker-core</module>
@@ -155,6 +158,61 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.3</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadoc</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <keyname>GraphWalker</keyname>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
