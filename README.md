@@ -31,6 +31,16 @@ cd graphwalker-core
 mvn install
 ```
 
+### Include it into your mavenproject
+For a maven project just add this dependency:
+```xml
+<dependency>
+    <groupId>org.graphwalker</groupId>
+    <artifactId>graphwalker-core</artifactId>
+    <version>3.0.0-RC1</version>
+</dependency>
+```
+
 ### Model data structure
 The model represents a finite state diagram. It consists of vertices (nodes or states) and edges (transistions).
 
