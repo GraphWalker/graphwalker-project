@@ -26,6 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observable;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.model.Element;
@@ -42,7 +43,7 @@ public final class LogObserver implements Observer<Element> {
     private Element lastElement = null;
 
     @Override
-    public void update(Observable<Element> observable, Element object) {
+    public void update(Observable<Element> observable, Element object, EventType type) {
         try {
             if (null != object) {
                 StringBuilder builder = new StringBuilder();
