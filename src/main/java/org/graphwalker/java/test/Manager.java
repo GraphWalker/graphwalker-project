@@ -82,18 +82,29 @@ public final class Manager {
         return false;
     }
 
+    private boolean isIncluded(String name) {
+        for (String group: configuration.getGroups()) {
+            if (SelectorUtils.match(group, name, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Collection<Group> createExecutionGroups(Collection<Class<?>> testClasses) {
         Map<String, Group> groups = new HashMap<>();
         for (Class<?> testClass: testClasses) {
             GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
             for (String name: configuration.groups()) {
-                if (!groups.containsKey(name)) {
-                    groups.put(name, new Group(name));
+                if (isIncluded(name)) {
+                    if (!groups.containsKey(name)) {
+                        groups.put(name, new Group(name));
+                    }
+                    // TODO: Implement a way to configure the test, like the cli module does it
+                    Execution execution = new Execution(testClass, configuration.pathGenerator()
+                            , configuration.stopCondition(), configuration.stopConditionValue(), configuration.start());
+                    groups.get(name).addExecution(execution);
                 }
-                // TODO: Implement a way to configure the test, like the cli module does it
-                Execution execution = new Execution(testClass, configuration.pathGenerator()
-                        , configuration.stopCondition(), configuration.stopConditionValue(), configuration.start());
-                groups.get(name).addExecution(execution);
             }
         }
         return groups.values();
