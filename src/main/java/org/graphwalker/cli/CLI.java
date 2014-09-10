@@ -326,39 +326,16 @@ public class CLI {
 
   private String getVersionString() {
     Properties properties = new Properties();
-    InputStream inputStream = null;
-    try {
-      inputStream = getClass().getResourceAsStream("/org/graphwalker/resources/version.properties");
-      properties.load(inputStream);
-      inputStream.close();
-    } catch (IOException e) {
-      ;
-    } finally {
-      if (inputStream != null) {
+    InputStream inputStream = getClass().getResourceAsStream("/version.properties");
+    if (null != inputStream) {
         try {
-          inputStream.close();
-        } catch (Exception e) {
-          logger.error("An error occurred when trying to get the version string", e);
+            properties.load(inputStream);
+        } catch (IOException e) {
+            logger.error("An error occurred when trying to get the version string", e);
+            return "unknown";
         }
-      }
     }
-    StringBuilder stringBuilder = new StringBuilder();
-    if (properties.containsKey("version.major")) {
-      stringBuilder.append(properties.getProperty("version.major"));
-    }
-    if (properties.containsKey("version.minor")) {
-      stringBuilder.append(".");
-      stringBuilder.append(properties.getProperty("version.minor"));
-    }
-    if (properties.containsKey("version.fix")) {
-      stringBuilder.append(".");
-      stringBuilder.append(properties.getProperty("version.fix"));
-    }
-    if (properties.containsKey("version.git.commit")) {
-      stringBuilder.append(", git commit ");
-      stringBuilder.append(properties.getProperty("version.git.commit"));
-    }
-    return stringBuilder.toString();
+    return properties.getProperty("graphwalker.version");
   }
 
   private String generateListOfValidGenerators() {
