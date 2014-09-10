@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
@@ -71,9 +72,11 @@ public final class SimpleMachine extends ObservableMachine {
     public Context getNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
         walk(currentContext);
+        notifyObservers(currentContext.getCurrentElement(), EventType.BEFORE_ELEMENT);
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement());
         currentContext.getProfiler().stop();
+        notifyObservers(currentContext.getCurrentElement(), EventType.AFTER_ELEMENT);
         return currentContext;
     }
 
@@ -120,8 +123,6 @@ public final class SimpleMachine extends ObservableMachine {
         if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
             context.setExecutionStatus(ExecutionStatus.EXECUTING);
         }
-        setChanged();
-        notifyObservers(context.getCurrentElement());
     }
 
     private boolean isVertex(Element element) {
