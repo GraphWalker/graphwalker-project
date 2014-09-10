@@ -1,4 +1,4 @@
-package org.graphwalker.core.machine;
+package org.graphwalker.core.event;
 
 /*
  * #%L
@@ -27,12 +27,11 @@ package org.graphwalker.core.machine;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observable;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
@@ -40,6 +39,11 @@ import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.graphwalker.core.event.EventType.AFTER_ELEMENT;
+import static org.graphwalker.core.event.EventType.BEFORE_ELEMENT;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -50,8 +54,10 @@ public class ObserverTest implements Observer<Element> {
     private int counter = 0;
 
     @Override
-    public void update(Observable<Element> observable, Element object) {
-        counter++;
+    public void update(Observable<Element> observable, Element object, EventType type) {
+        if (EventType.BEFORE_ELEMENT.equals(type)) {
+            counter++;
+        }
     }
 
     private ObservableMachine createMachine() {
@@ -65,33 +71,30 @@ public class ObserverTest implements Observer<Element> {
         return machine;
     }
 
+    @Test
+    public void verifyEvents() {
+        Machine machine = createMachine();
+        final List<EventType> types = new ArrayList<>();
+        machine.addObserver(new Observer<Element>() {
+            @Override
+            public void update(Observable<Element> observable, Element object, EventType type) {
+                types.add(type);
+            }
+        });
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertArrayEquals(new Object[]{
+                  BEFORE_ELEMENT, AFTER_ELEMENT
+                , BEFORE_ELEMENT, AFTER_ELEMENT
+                , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
+    }
+
+
     @Test(expected = NullPointerException.class)
     public void nullObserver() {
         ObservableMachine observable = createMachine();
         observable.addObserver(null);
-    }
-
-    @Test
-    public void changeObserver() {
-        ObservableMachine observable = createMachine();
-        Assert.assertThat(observable.hasChanged(), is(false));
-        observable.notifyObservers();
-        Assert.assertThat(observable.hasChanged(), is(false));
-    }
-
-    @Test
-    public void addRemoveObserver() {
-        ObservableMachine observable = createMachine();
-        observable.addObserver(this);
-        Assert.assertThat(observable.countObservers(), is(1));
-        observable.deleteObserver(this);
-        Assert.assertThat(observable.countObservers(), is(0));
-        observable.addObserver(this);
-        Assert.assertThat(observable.countObservers(), is(1));
-        observable.deleteObservers();
-        Assert.assertThat(observable.countObservers(), is(0));
-        observable.addObserver(this);
-        Assert.assertThat(observable.countObservers(), is(1));
     }
 
     @Test
@@ -104,5 +107,18 @@ public class ObserverTest implements Observer<Element> {
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
         Assert.assertThat(counter, is(3));
+    }
+
+    @Test
+    public void removeObserver() {
+        Machine machine = createMachine();
+        machine.addObserver(this);
+        Context context = machine.getContexts().get(0);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            machine.deleteObserver(this);
+        }
+        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+        Assert.assertThat(counter, is(1));
     }
 }

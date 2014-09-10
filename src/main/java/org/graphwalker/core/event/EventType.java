@@ -1,4 +1,4 @@
-package org.graphwalker.core.machine;
+package org.graphwalker.core.event;
 
 /*
  * #%L
@@ -26,41 +26,9 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import org.graphwalker.core.event.EventType;
-import org.graphwalker.core.event.Observer;
-import org.graphwalker.core.model.Element;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Nils Olsson
  */
-public abstract class ObservableMachine implements Machine {
-
-    private final List<Observer<Element>> observers = new ArrayList<>();
-
-    public synchronized void addObserver(Observer<Element> observer) {
-        if (observer == null)
-            throw new NullPointerException();
-        if (!observers.contains(observer)) {
-            observers.add(observer);
-        }
-    }
-
-    public synchronized void deleteObserver(Observer observer) {
-        observers.remove(observer);
-    }
-
-    public synchronized void notifyObservers(Element object, EventType type) {
-        List<Observer<Element>> observers = new ArrayList<>(this.observers);
-        for (Observer<Element> observer: observers) {
-            observer.update(this, object, type);
-        }
-    }
-
-    public synchronized void deleteObservers() {
-        observers.clear();
-    }
-
+public enum EventType {
+    BEFORE_ELEMENT, AFTER_ELEMENT
 }

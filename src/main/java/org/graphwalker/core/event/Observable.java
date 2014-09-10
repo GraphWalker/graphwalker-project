@@ -31,11 +31,8 @@ package org.graphwalker.core.event;
  */
 public interface Observable<T> {
 
-    void addObserver(Observer<T> observer) ;
+    void addObserver(Observer<T> observer);
     void deleteObserver(Observer observer);
-    void notifyObservers();
-    void notifyObservers(T object);
     void deleteObservers();
-    boolean hasChanged();
-    int countObservers();
+    void notifyObservers(T object, EventType type);
 }
