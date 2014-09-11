@@ -141,6 +141,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     public Context setCurrentElement(Element element) {
         this.currentElement = element;
+        this.nextElement = null;
         return this;
     }
 
