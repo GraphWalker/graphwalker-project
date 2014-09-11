@@ -34,12 +34,12 @@ import java.util.List;
 @Parameters(commandDescription = "Generate a test sequence offline. The sequence is fetched using different techniques, like RestAPI")
 public class Online {
 
-  @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
-          description = "The model, as a graphml file followed by generator with stop condition. " +
-                  "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
-  public List<String> model = new ArrayList<String>();
+    @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
+        description = "The model, as a graphml file followed by generator with stop condition. " +
+            "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
+    public List<String> model = new ArrayList<String>();
 
-  @Parameter(names = {"--restful", "-r"}, required = false, arity = 1,
-          description = "Starts as a Restful API service.")
-  public boolean restful = true;
+    @Parameter(names = {"--restful", "-r"}, required = false, arity = 1,
+        description = "Starts as a Restful API service.")
+    public boolean restful = true;
 }

@@ -26,14 +26,11 @@ package org.graphwalker.cli.antlr;
  * #L%
  */
 
-import org.antlr.v4.runtime.ANTLRErrorStrategy;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.graphwalker.cli.CLI_Lexer;
 import org.graphwalker.cli.CLI_Parser;
-import org.graphwalker.core.generator.CombinedPath;
 import org.graphwalker.core.generator.PathGenerator;
 
 /**
@@ -53,8 +50,8 @@ public class GeneratorFactory {
         GeneratorLoader generatorLoader = new GeneratorLoader();
         walker.walk(generatorLoader, context);
 
-        if ( generatorLoader.getGenerator() == null ) {
-          throw new GeneratorFactoryException("No valid generator found.");
+        if (generatorLoader.getGenerator() == null) {
+            throw new GeneratorFactoryException("No valid generator found.");
         }
 
         return generatorLoader.getGenerator();

@@ -26,18 +26,19 @@ package org.graphwalker.cli.antlr;
  * #L%
  */
 
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.misc.Nullable;
-
-import java.util.BitSet;
 
 /**
  * Created by krikar on 5/21/14.
  */
 public class CLIErrorListner extends BaseErrorListener {
-  @Override
-  public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
-    throw new GeneratorFactoryException(msg + " -> " + ((CommonToken) offendingSymbol).getInputStream().toString());
-  }
+    @Override
+    public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
+        throw new GeneratorFactoryException(msg + " -> " + ((CommonToken) offendingSymbol).getInputStream().toString());
+    }
 }

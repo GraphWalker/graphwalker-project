@@ -31,11 +31,11 @@ package org.graphwalker.cli.antlr;
  */
 public class GeneratorFactoryException extends RuntimeException {
 
-  public GeneratorFactoryException(Throwable throwable) {
-    super(throwable);
-  }
+    public GeneratorFactoryException(Throwable throwable) {
+        super(throwable);
+    }
 
-  public GeneratorFactoryException(String message) {
-    super(message);
-  }
+    public GeneratorFactoryException(String message) {
+        super(message);
+    }
 }

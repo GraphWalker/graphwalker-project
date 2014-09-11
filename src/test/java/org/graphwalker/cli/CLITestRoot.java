@@ -48,85 +48,77 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.graphwalker.RegexMatcher.matches;
-import static org.hamcrest.core.Is.is;
 
 
 public class CLITestRoot {
 
-  StringBuffer stdOutput;
-  StringBuffer errOutput;
-  String outMsg;
-  String errMsg;
+    StringBuffer stdOutput;
+    StringBuffer errOutput;
+    String outMsg;
+    String errMsg;
 
-  static Logger logger = Logger.getAnonymousLogger();
-  private CLI commandLineInterface;
+    static Logger logger = Logger.getAnonymousLogger();
+    private CLI commandLineInterface;
 
-  private OutputStream redirectOut() {
-    return new OutputStream() {
-      @Override
-      public void write(int b) throws IOException {
-        stdOutput.append(Character.toString((char) b));
-      }
-    };
-  }
+    private OutputStream redirectOut() {
+        return new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                stdOutput.append(Character.toString((char) b));
+            }
+        };
+    }
 
-  private OutputStream redirectErr() {
-    return new OutputStream() {
-      @Override
-      public void write(int b) throws IOException {
-        errOutput.append(Character.toString((char) b));
-      }
-    };
-  }
+    private OutputStream redirectErr() {
+        return new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                errOutput.append(Character.toString((char) b));
+            }
+        };
+    }
 
-  private InputStream redirectIn() {
-    return new InputStream() {
-      @Override
-      public int read() throws IOException {
-        try {
-          Thread.sleep(300);
-        } catch (InterruptedException e) {
-          logger.log(Level.ALL, "Unit testing was interrupted", e.getStackTrace());
-        }
-        return '0';
-      }
-    };
-  }
+    private InputStream redirectIn() {
+        return new InputStream() {
+            @Override
+            public int read() throws IOException {
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    logger.log(Level.ALL, "Unit testing was interrupted", e.getStackTrace());
+                }
+                return '0';
+            }
+        };
+    }
 
-  protected void runCommand(String args[]) {
-    stdOutput = new StringBuffer();
-    errOutput = new StringBuffer();
+    protected void runCommand(String args[]) {
+        stdOutput = new StringBuffer();
+        errOutput = new StringBuffer();
 
-    PrintStream outStream = new PrintStream(redirectOut());
-    PrintStream oldOutStream = System.out; // backup
-    PrintStream errStream = new PrintStream(redirectErr());
-    PrintStream oldErrStream = System.err; // backup
+        PrintStream outStream = new PrintStream(redirectOut());
+        PrintStream oldOutStream = System.out; // backup
+        PrintStream errStream = new PrintStream(redirectErr());
+        PrintStream oldErrStream = System.err; // backup
 
-    System.setOut(outStream);
-    System.setErr(errStream);
+        System.setOut(outStream);
+        System.setErr(errStream);
 
-    commandLineInterface = new CLI();
-    commandLineInterface.main(args);
+        commandLineInterface = new CLI();
+        commandLineInterface.main(args);
 
-    System.setOut(oldOutStream);
-    System.setErr(oldErrStream);
+        System.setOut(oldOutStream);
+        System.setErr(oldErrStream);
 
-    outMsg = stdOutput.toString();
-    errMsg = errOutput.toString();
-    logger.log(Level.FINER, "stdout: " + outMsg);
-    logger.log(Level.FINER, "stderr: " + errMsg);
-  }
+        outMsg = stdOutput.toString();
+        errMsg = errOutput.toString();
+        logger.log(Level.FINER, "stdout: " + outMsg);
+        logger.log(Level.FINER, "stderr: " + errMsg);
+    }
 }
