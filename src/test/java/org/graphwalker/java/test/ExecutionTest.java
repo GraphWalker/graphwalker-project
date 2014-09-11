@@ -1,4 +1,4 @@
-package org.graphwalker.java.annotation;
+package org.graphwalker.java.test;
 
 /*
  * #%L
@@ -26,24 +26,29 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.resources.MyModel;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.java.annotation.resources.MyTest;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
  */
-@GraphWalker
-public class MyOtherTest extends ExecutionContext implements MyModel {
+public class ExecutionTest {
 
-    @Override
-    public void vertex1() {
-    }
-
-    @Override
-    public void vertex2() {
-    }
-
-    @Override
-    public void edge12() {
+    @Test
+    public void createExecution() {
+        Execution execution = new Execution(MyTest.class, RandomPath.class, VertexCoverage.class, "100", "start");
+        Assert.assertTrue(Context.class.isAssignableFrom(execution.getTestClass()));
+        Assert.assertTrue(PathGenerator.class.isAssignableFrom(execution.getPathGenerator()));
+        Assert.assertTrue(StopCondition.class.isAssignableFrom(execution.getStopCondition()));
+        Assert.assertThat(execution.getStopConditionValue(), is("100"));
+        Assert.assertThat(execution.getStart(), is("start"));
     }
 }

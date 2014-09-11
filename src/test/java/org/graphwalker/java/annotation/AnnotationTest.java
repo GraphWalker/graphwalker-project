@@ -26,8 +26,15 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.java.annotation.resources.MyTest;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.lang.annotation.Annotation;
+import java.util.Set;
 
 import static org.hamcrest.core.Is.is;
 
@@ -46,5 +53,36 @@ public class AnnotationTest {
     public void findMoreTest() {
         // Should find both MyTest and MyOtherTest
         Assert.assertThat(AnnotationUtils.findTests().size(), is(2));
+    }
+
+    @Test
+    public void getAnnotationsTest() {
+        Set<Annotation> annotations = AnnotationUtils.getAnnotations(MyTest.class, GraphWalker.class);
+        Assert.assertThat(annotations.size(), is(1));
+        Assert.assertTrue(annotations.toArray()[0] instanceof GraphWalker);
+        GraphWalker annotation = (GraphWalker)annotations.toArray()[0];
+        Assert.assertThat(annotation.start(), is("vertex1"));
+        Assert.assertThat(annotation.groups(), is(new String[] {"MyTests"}));
+        Assert.assertTrue(RandomPath.class.isAssignableFrom(annotation.pathGenerator()));
+        Assert.assertTrue(VertexCoverage.class.isAssignableFrom(annotation.stopCondition()));
+        Assert.assertThat(annotation.stopConditionValue(), is("100"));
+        Assert.assertThat(AnnotationUtils.getAnnotations(MyTest.class, Vertex.class).size(), is(0));
+    }
+
+    @Test
+    public void executeTest() {
+        MyTest myTest = new MyTest();
+        AnnotationUtils.execute(BeforeExecution.class, myTest);
+        Assert.assertThat(myTest.getCount(), is(1));
+        AnnotationUtils.execute(AfterExecution.class, myTest);
+        Assert.assertThat(myTest.getCount(), is(2));
+        AnnotationUtils.execute(BeforeElement.class, myTest);
+        Assert.assertThat(myTest.getCount(), is(3));
+    }
+
+    @Test
+    public void executePrivateTest() {
+        MyTest myTest = new MyTest();
+        AnnotationUtils.execute(AfterElement.class, myTest);
     }
 }
