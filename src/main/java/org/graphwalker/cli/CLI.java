@@ -218,28 +218,11 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        YEdContextFactory factory = new YEdContextFactory();
-        Context context = null;
-
-        ArrayList<Context> executionContexts = new ArrayList<>();
-        Iterator itr = online.model.iterator();
-        while (itr.hasNext()) {
-            String modelFileName = (String) itr.next();
-            try {
-                context = factory.create(Paths.get(modelFileName));
-            } catch (YEdContextFactoryException e) {
-                throw new YEdContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-            }
-            context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
-            executionContexts.add(context);
-        }
-
+        ArrayList<Context> executionContexts = getContexts(online.model.iterator());
         if (online.restful) {
-            // Todo: We cannot iterate of multiple models and
-            // instantiating the HttpServer every time.
-            // The creation of HttpServer needs to be done outside the while-loop
+
             ResourceConfig rc = new DefaultResourceConfig();
-            rc.getSingletons().add(new Restful(new SimpleMachine((org.graphwalker.core.machine.Context) executionContexts)));
+            rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
             HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
             System.out.println("Press Control+C to end...");
             try {
@@ -254,20 +237,7 @@ public class CLI {
     }
 
     private void RunCommandOffline() throws Exception {
-        YEdContextFactory factory = new YEdContextFactory();
-        Context context = null;
-
-        ArrayList<Context> executionContexts = new ArrayList<>();
-        Iterator itr = offline.model.iterator();
-        while (itr.hasNext()) {
-            String modelFileName = (String) itr.next();
-            context = factory.create(Paths.get(modelFileName));
-            context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
-            executionContexts.add(context);
-            verifyModel(context.getModel());
-        }
-
-        SimpleMachine machine = new SimpleMachine(executionContexts);
+        SimpleMachine machine = new SimpleMachine(getContexts(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
                 machine.getNextStep();
@@ -300,6 +270,21 @@ public class CLI {
                 throw e;
             }
         }
+    }
+
+    private ArrayList<Context> getContexts(Iterator itr) {
+        YEdContextFactory factory = new YEdContextFactory();
+        Context context = null;
+
+        ArrayList<Context> executionContexts = new ArrayList<>();
+        while (itr.hasNext()) {
+            String modelFileName = (String) itr.next();
+            context = factory.create(Paths.get(modelFileName));
+            context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
+            executionContexts.add(context);
+            verifyModel(context.getModel());
+        }
+        return executionContexts;
     }
 
     private void verifyModel(Model.RuntimeModel model) {
