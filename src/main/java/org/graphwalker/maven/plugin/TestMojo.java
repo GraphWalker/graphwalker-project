@@ -210,35 +210,29 @@ public final class TestMojo extends DefaultMojoBase {
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
         if (StringUtils.isBlank(getTest())) {
-            configuration.setIncludes(getIncludes());
-            configuration.setExcludes(getExcludes());
+            configuration.addInclude(getIncludes());
+            configuration.addExclude(getExcludes());
         } else {
-            Set<String> include = new HashSet<>();
-            Set<String> exclude = new HashSet<>();
             for (String test: getTest().split(",")) {
                 test = test.trim();
                 if (StringUtils.isNotBlank(test)) {
                     if (test.startsWith("!")) {
                         test = test.substring(1);
                         if (StringUtils.isNotBlank(test)) {
-                            exclude.add(test);
+                            configuration.addExclude(test);
                         }
                     } else {
-                        include.add(test);
+                        configuration.addInclude(test);
                     }
                 }
             }
-            configuration.setIncludes(include);
-            configuration.setExcludes(exclude);
         }
         configuration.setClassesDirectory(getClassesDirectory());
         configuration.setTestClassesDirectory(getTestClassesDirectory());
         configuration.setReportsDirectory(getReportsDirectory());
-        Set<String> groups = new HashSet<>();
         for (String group: getGroups().split(",")) {
-            groups.add(group.trim());
+            configuration.addGroup(group.trim());
         }
-        configuration.setGroups(groups);
         return configuration;
     }
 
