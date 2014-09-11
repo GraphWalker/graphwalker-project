@@ -27,16 +27,13 @@ package org.graphwalker.cli;
 
 import com.beust.jcommander.Parameter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Options {
-  @Parameter(names = { "--help", "-h" }, help = true, description = "Prints help text")
-  private boolean help;
+    @Parameter(names = {"--help", "-h"}, help = true, description = "Prints help text")
+    private boolean help;
 
-    @Parameter(names = { "--version", "-v" }, description = "Prints the version of graphwalker")
+    @Parameter(names = {"--version", "-v"}, description = "Prints the version of graphwalker")
     public boolean version = false;
 
-    @Parameter(names = { "--debug", "-d" }, description = "Sets the log level: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Default is OFF")
+    @Parameter(names = {"--debug", "-d"}, description = "Sets the log level: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Default is OFF")
     public String debug = "OFF";
 }

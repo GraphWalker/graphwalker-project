@@ -28,13 +28,10 @@ package org.graphwalker.cli.commands;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Parameters(commandDescription = "Generates a list of unique names of vertices and edges in the model.")
 public class Methods {
 
-  @Parameter(names = {"--model", "-m"}, required = true, arity = 1,
-          description = "The model, as a graphml file.")
-  public String model = "";
+    @Parameter(names = {"--model", "-m"}, required = true, arity = 1,
+        description = "The model, as a graphml file.")
+    public String model = "";
 }

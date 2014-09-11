@@ -38,37 +38,37 @@ import javax.ws.rs.Produces;
  */
 @Path("graphwalker")
 public class Restful {
-  private SimpleMachine machine;
+    private SimpleMachine machine;
 
-  public Restful(SimpleMachine machine) {
-    this.machine = machine;
-  }
-
-  @GET
-  @Produces("text/plain")
-  @Path("hasNext")
-  public String hasNext() {
-    if (machine.hasNextStep()) {
-      return "true";
-    } else {
-      return "false";
+    public Restful(SimpleMachine machine) {
+        this.machine = machine;
     }
-  }
 
-  @GET
-  @Produces("text/plain")
-  @Path("getNext")
-  public String getNext() {
-    String retStr = "";
-    try {
-      machine.getNextStep();
-    } catch (MachineException e) {
-      ;
-    } finally {
-      if (machine.getCurrentContext().getCurrentElement().hasName()) {
-        retStr = machine.getCurrentContext().getCurrentElement().getName();
-      }
+    @GET
+    @Produces("text/plain")
+    @Path("hasNext")
+    public String hasNext() {
+        if (machine.hasNextStep()) {
+            return "true";
+        } else {
+            return "false";
+        }
     }
-    return retStr;
-  }
+
+    @GET
+    @Produces("text/plain")
+    @Path("getNext")
+    public String getNext() {
+        String retStr = "";
+        try {
+            machine.getNextStep();
+        } catch (MachineException e) {
+            ;
+        } finally {
+            if (machine.getCurrentContext().getCurrentElement().hasName()) {
+                retStr = machine.getCurrentContext().getCurrentElement().getName();
+            }
+        }
+        return retStr;
+    }
 }
