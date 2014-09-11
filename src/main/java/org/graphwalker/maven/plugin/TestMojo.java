@@ -37,6 +37,8 @@ import org.graphwalker.java.test.*;
 import org.graphwalker.maven.plugin.report.XMLReportGenerator;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -187,9 +189,22 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info(" |   __|___ ___ ___| |_| | | |___| | |_ ___ ___                         ");
             getLog().info(" |  |  |  _| .'| . |   | | | | .'| | '_| -_|  _|                        ");
             getLog().info(" |_____|_| |__,|  _|_|_|_____|__,|_|_,_|___|_|                          ");
-            getLog().info("               |_|         ("+"3.0.0-SNAPSHOT"+")                            ");
+            getLog().info("               |_|         ("+getVersion()+")                            ");
             getLog().info("------------------------------------------------------------------------");
         }
+    }
+
+    private String getVersion() {
+        Properties properties = new Properties();
+        InputStream inputStream = getClass().getResourceAsStream("/version.properties");
+        if (null != inputStream) {
+            try {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                return "unknown";
+            }
+        }
+        return properties.getProperty("graphwalker.version");
     }
 
     private Configuration createConfiguration() {
