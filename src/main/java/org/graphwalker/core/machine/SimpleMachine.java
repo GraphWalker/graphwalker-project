@@ -55,6 +55,10 @@ public final class SimpleMachine extends ObservableMachine {
         this(Arrays.asList(context));
     }
 
+    public SimpleMachine(Context... context) {
+        this(Arrays.asList(context));
+    }
+
     public SimpleMachine(List<Context> contexts) {
         this.contexts.addAll(contexts);
         for (Context context: contexts) {
@@ -80,49 +84,77 @@ public final class SimpleMachine extends ObservableMachine {
         return currentContext;
     }
 
-    private void walk(Context context) {
-        if (null == context.getCurrentElement()) {
-            if (null != context.getNextElement()) {
-                context.setCurrentElement(context.getNextElement());
-            } else if (context.getModel().hasSharedStates()) {
-                // if we don't have a start vertex, but we have shared state, then we try to find another context to execute
-                for (Context newContext: contexts) {
-                    if (hasNextStep(newContext) && null != newContext.getCurrentElement() || null != newContext.getNextElement()) {
-                        currentContext = newContext;
-                        getNextStep();
-                    }
-                }
-            } else {
-                exceptionStrategy.handle(this, new MachineException(currentContext, new NoPathFoundException("No start element defined")));
-            }
+    private Context getNextStep(Context context) {
+        if (null != context.getNextElement()) {
+            context.setCurrentElement(context.getNextElement());
         } else {
-            try {
-                if (isVertex(currentContext.getCurrentElement())) {
-                    RuntimeVertex vertex = (RuntimeVertex) currentContext.getCurrentElement();
-                    if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
-                        List<SharedStateTupel> candidates = getPossibleSharedStates(vertex.getSharedState());
-                        // TODO: If we need other way of determine the next state, we should have some interface for this
-                        Random random = new Random(System.nanoTime());
-                        SharedStateTupel candidate = candidates.get(random.nextInt(candidates.size()));
-                        if (!candidate.getVertex().equals(currentContext.getCurrentElement())) {
-                            candidate.context.setCurrentElement(candidate.getVertex());
-                            currentContext = candidate.context;
-                        } else {
-                            context.getPathGenerator().getNextStep(context);
-                        }
-                    } else {
-                        context.getPathGenerator().getNextStep(context);
-                    }
-                } else {
-                    context.getPathGenerator().getNextStep(context);
-                }
-            } catch (Throwable t) {
-                exceptionStrategy.handle(this, new MachineException(currentContext, t));
+            context.getPathGenerator().getNextStep(context);
+        }
+        return context;
+    }
+
+    private void walk(Context context) {
+        try {
+            if (null == context.getCurrentElement()) {
+                context = takeFirstStep(context);
+            } else {
+                context = takeNextStep(context);
+            }
+            if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
+                context.setExecutionStatus(ExecutionStatus.EXECUTING);
+            }
+        } catch (Throwable t) {
+            exceptionStrategy.handle(this, new MachineException(context, t));
+        }
+    }
+
+    private Context takeFirstStep(Context context) {
+        if (null != context.getNextElement()) {
+            context = getNextStep(context);
+        } else {
+            context = switchContext(findStartContext());
+        }
+        return context;
+    }
+
+    private Context findStartContext() {
+        Context startContext = null;
+        for (Context context: contexts) {
+            if (hasNextStep(context) && (null != context.getCurrentElement() || null != context.getNextElement())) {
+                startContext = context;
+                break;
             }
         }
-        if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
-            context.setExecutionStatus(ExecutionStatus.EXECUTING);
+        if (null == startContext) {
+            throw new NoPathFoundException("No start element defined");
         }
+        return startContext;
+    }
+
+    private Context switchContext(Context context) {
+        return currentContext = context;
+    }
+
+    private Context takeNextStep(Context context) {
+        if (isVertex(context.getCurrentElement())) {
+            RuntimeVertex vertex = (RuntimeVertex) context.getCurrentElement();
+            if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
+                context = x(context, vertex);
+            }
+        }
+        return getNextStep(context);
+    }
+
+    private Context x(Context context, RuntimeVertex vertex) {
+        List<SharedStateTupel> candidates = getPossibleSharedStates(vertex.getSharedState());
+        // TODO: If we need other way of determine the next state, we should have some interface for this
+        Random random = new Random(System.nanoTime());
+        SharedStateTupel candidate = candidates.get(random.nextInt(candidates.size()));
+        if (!candidate.getVertex().equals(context.getCurrentElement())) {
+            candidate.context.setNextElement(candidate.getVertex());
+            context = switchContext(candidate.context);
+        }
+        return context;
     }
 
     private boolean isVertex(Element element) {
@@ -136,10 +168,15 @@ public final class SimpleMachine extends ObservableMachine {
     private List<SharedStateTupel> getPossibleSharedStates(String sharedState) {
         List<SharedStateTupel> sharedStates = new ArrayList<>();
         for (Context context: contexts) {
-            if (context.getModel().hasSharedState(sharedState)) {
+            if (currentContext.equals(context) && hasNextStep(currentContext)) {
+                sharedStates.add(new SharedStateTupel(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
+            } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
+
+
+
                     //if (context.getPathGenerator().hasNextStep(context)) {
-                        if (!context.getModel().getOutEdges(vertex).isEmpty()) {
+                        if (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty()) {
                             sharedStates.add(new SharedStateTupel(context, vertex));
                         }
                     //}
