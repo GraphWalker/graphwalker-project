@@ -34,6 +34,14 @@ import java.util.List;
 @Parameters(commandDescription = "Generate a test sequence offline. The sequence is fetched using different techniques, like RestAPI")
 public class Online {
 
+    @Parameter(names = {"--verbose", "-o"}, required = false, arity = 1,
+        description = "Will print more details")
+    public boolean verbose = false;
+
+    @Parameter(names = {"--unvisited", "-u"}, required = false, arity = 1,
+        description = "Will also print the remaining unvisited elements in the model.")
+    public boolean unvisited = false;
+
     @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
         description = "The model, as a graphml file followed by generator with stop condition. " +
             "The format is GENERATOR(STOP_CONDITION) See HTML DOC")

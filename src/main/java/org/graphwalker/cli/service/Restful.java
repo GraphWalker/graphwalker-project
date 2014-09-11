@@ -26,8 +26,11 @@ package org.graphwalker.cli.service;
  * #L%
  */
 
+import org.apache.commons.io.FilenameUtils;
+import org.graphwalker.cli.commands.Online;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Element;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,9 +42,11 @@ import javax.ws.rs.Produces;
 @Path("graphwalker")
 public class Restful {
     private SimpleMachine machine;
+    private Online online;
 
-    public Restful(SimpleMachine machine) {
+    public Restful(SimpleMachine machine, Online online) {
         this.machine = machine;
+        this.online = online;
     }
 
     @GET
@@ -65,8 +70,28 @@ public class Restful {
         } catch (MachineException e) {
             ;
         } finally {
+            if (online.verbose) {
+                retStr = FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ";
+            }
             if (machine.getCurrentContext().getCurrentElement().hasName()) {
-                retStr = machine.getCurrentContext().getCurrentElement().getName();
+                retStr += machine.getCurrentContext().getCurrentElement().getName();
+                if (online.verbose) {
+                    retStr += "(" + machine.getCurrentContext().getCurrentElement().getId() + ")";
+                    retStr += ":" + machine.getCurrentContext().getKeys();
+                }
+            }
+
+            if (online.unvisited) {
+                retStr += " | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
+                    "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ";
+
+                for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
+                    retStr += e.getName();
+                    if (online.verbose) {
+                        retStr += "(" + e.getId() + ")";
+                    }
+                    retStr += " ";
+                }
             }
         }
         return retStr;
