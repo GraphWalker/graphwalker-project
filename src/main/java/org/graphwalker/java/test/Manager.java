@@ -82,6 +82,10 @@ public final class Manager {
         return false;
     }
 
+    private Set<String> get(Set<String> x, Set<String> defaultValue) {
+        return x.isEmpty()?defaultValue:x;
+    }
+
     private boolean isIncluded(String name) {
         for (String group: configuration.getGroups()) {
             if (SelectorUtils.match(group, name, true)) {
@@ -100,9 +104,7 @@ public final class Manager {
                     if (!groups.containsKey(name)) {
                         groups.put(name, new Group(name));
                     }
-                    // TODO: Implement a way to configure the test, like the cli module does it
-                    Execution execution = new Execution(testClass, configuration.pathGenerator()
-                            , configuration.stopCondition(), configuration.stopConditionValue(), configuration.start());
+                    Execution execution = new Execution(testClass, configuration);
                     groups.get(name).addExecution(execution);
                 }
             }

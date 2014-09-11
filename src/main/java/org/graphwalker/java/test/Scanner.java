@@ -73,6 +73,7 @@ public final class Scanner {
             return new String[]{};
         }
     }
+
     private boolean acceptClass(Class<?> clazz) {
         return clazz.isAnnotationPresent(GraphWalker.class);
     }

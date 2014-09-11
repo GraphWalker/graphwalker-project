@@ -1,4 +1,4 @@
-package org.graphwalker.java.annotation;
+package org.graphwalker.java.test;
 
 /*
  * #%L
@@ -26,24 +26,29 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.resources.MyModel;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.File;
+
+import static org.hamcrest.core.Is.is;
+
 
 /**
  * @author Nils Olsson
  */
-@GraphWalker
-public class MyOtherTest extends ExecutionContext implements MyModel {
+public class ManagerTest {
 
-    @Override
-    public void vertex1() {
+    @Test
+    public void createManager() {
+        Manager manager = new Manager(new Configuration().setTestClassesDirectory(getTestClassesDirectory()));
+        Assert.assertNotNull(manager.getConfiguration());
+        Assert.assertThat(manager.getExecutionGroups().size(), is(2));
+        Assert.assertThat(manager.getGroupCount(), is(2));
+        Assert.assertThat(manager.getTestCount(), is(2));
     }
 
-    @Override
-    public void vertex2() {
-    }
-
-    @Override
-    public void edge12() {
+    public File getTestClassesDirectory() {
+        return new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
     }
 }

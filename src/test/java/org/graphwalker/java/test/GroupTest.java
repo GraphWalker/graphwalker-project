@@ -1,4 +1,4 @@
-package org.graphwalker.java.annotation;
+package org.graphwalker.java.test;
 
 /*
  * #%L
@@ -26,24 +26,26 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.resources.MyModel;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.java.annotation.resources.MyTest;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
  */
-@GraphWalker
-public class MyOtherTest extends ExecutionContext implements MyModel {
+public class GroupTest {
 
-    @Override
-    public void vertex1() {
-    }
-
-    @Override
-    public void vertex2() {
-    }
-
-    @Override
-    public void edge12() {
+    @Test
+    public void createGroup() {
+        Group group = new Group("test");
+        Assert.assertThat(group.getName(), is("test"));
+        Assert.assertNotNull(group.getExecutions());
+        Assert.assertThat(group.getExecutions().size(), is(0));
+        group.addExecution(new Execution(MyTest.class, RandomPath.class, VertexCoverage.class, "100", "start"));
+        Assert.assertThat(group.getExecutions().size(), is(1));
     }
 }

@@ -1,4 +1,4 @@
-package org.graphwalker.java.annotation;
+package org.graphwalker.java.test;
 
 /*
  * #%L
@@ -26,24 +26,10 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.resources.MyModel;
-
 /**
  * @author Nils Olsson
  */
-@GraphWalker
-public class MyOtherTest extends ExecutionContext implements MyModel {
+public class ExecutorTest {
 
-    @Override
-    public void vertex1() {
-    }
 
-    @Override
-    public void vertex2() {
-    }
-
-    @Override
-    public void edge12() {
-    }
 }
