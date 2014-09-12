@@ -5,18 +5,30 @@ options {
 }
 
 parse
- : name? guard? actions? blocked? EOF
- | name? actions? blocked? guard? EOF
- | name? blocked? guard? actions? EOF
- | guard? actions? blocked? name? EOF
- | guard? blocked? name? actions? EOF
- | guard? name? actions? blocked? EOF
- | actions? blocked? name? guard? EOF
- | actions? name? guard? blocked? EOF
- | actions? guard? blocked? name? EOF
- | blocked? name? guard? actions? EOF
- | blocked? guard? actions? name? EOF
- | blocked? actions? name? guard? EOF
+ : name? guard? actions? blocked? reqtags? EOF
+ | name? guard? actions? reqtags? blocked? EOF
+ | name? guard? blocked? actions? reqtags? EOF
+ | name? guard? blocked? reqtags? actions? EOF
+ | name? guard? reqtags? actions? blocked? EOF
+ | name? guard? reqtags? blocked? actions? EOF
+ | name? actions? guard? reqtags? blocked? EOF
+ | name? actions? guard? blocked? reqtags? EOF
+ | name? actions? blocked? reqtags? guard? EOF
+ | name? actions? blocked? guard? reqtags? EOF
+ | name? actions? reqtags? blocked? guard? EOF
+ | name? actions? reqtags? guard? blocked? EOF
+ | name? blocked? guard? actions? reqtags? EOF
+ | name? blocked? guard? reqtags? actions? EOF
+ | name? blocked? actions? guard? reqtags? EOF
+ | name? blocked? actions? reqtags? guard? EOF
+ | name? blocked? reqtags? guard? actions? EOF
+ | name? blocked? reqtags? actions? guard? EOF
+ | name? reqtags? guard? blocked? actions? EOF
+ | name? reqtags? guard? actions? blocked? EOF
+ | name? reqtags? actions? blocked? guard? EOF
+ | name? reqtags? actions? guard? blocked? EOF
+ | name? reqtags? blocked? actions? guard? EOF
+ | name? reqtags? blocked? guard? actions? EOF
  ;
 
 actions
@@ -25,6 +37,14 @@ actions
 
 action
  : ~(SEMICOLON)* SEMICOLON
+ ;
+
+reqtags
+ : REQTAG (COLON | ASSIGN) (reqtag)+
+ ;
+
+reqtag
+ : ~(COMMA)+ COMMA?
  ;
 
 guard

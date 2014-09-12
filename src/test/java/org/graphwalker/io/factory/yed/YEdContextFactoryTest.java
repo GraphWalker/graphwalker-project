@@ -27,6 +27,9 @@ package org.graphwalker.io.factory.yed;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.yed.YEdContext;
 import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.io.factory.yed.YEdContextFactoryException;
@@ -96,26 +99,30 @@ public class YEdContextFactoryTest {
         Assert.assertThat(context.getModel().findEdges("e_StartBrowser").get(0).getTargetVertex().getName(), is("v_BrowserStarted"));
     }
 
-/*    @Test
-    public void efsmWithReqtags() {
-        ModelFactory factory = new GraphMLModelFactory();
-        Model model = factory.create("graphml/EFSM_with_REQTAGS.graphml");
-        Assert.assertThat("Number of vertices", model.getVertices().size(), is(7));
-        Assert.assertThat("Number of edges", model.getEdges().size(), is(19));
+    @Test
+    public void efsmWithReqtags1() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/reqtags/ShoppingCart.graphml"));
+        Assert.assertThat("Number of vertices", context.getModel().getVertices().size(), is(6));
+        Assert.assertThat("Number of edges", context.getModel().getEdges().size(), is(11));
+        // TODO Fix req
+        //Assert.assertThat("Number of requirements", context.getRequirements().size(), is(5));
+    }
+
+    @Test
+    public void efsmWithReqtags2() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/reqtags/EFSM_with_REQTAGS.graphml"));
+        Assert.assertThat("Number of vertices", context.getModel().getVertices().size(), is(7));
+        Assert.assertThat("Number of edges", context.getModel().getEdges().size(), is(19));
+        // TODO Fix req
+        //Assert.assertThat("Number of requirements", context.getRequirements().size(), is(6));
     }
 
     @Test
     public void guards() {
-        ModelFactory factory = new GraphMLModelFactory();
-        Model model = factory.create("graphml/Guards.graphml");
-        Assert.assertThat("Number of vertices", model.getVertices().size(), is(3));
-        Assert.assertThat("Number of edges", model.getOutEdges().size(), is(2));
-        Vertex startVertex = model.getStartVertices().get(0);
-        Edge edgeWithGuard = model.getOutEdges(startVertex).get(0);
-        Assert.assertEquals(null, edgeWithGuard.getName());
-        Assert.assertNotEquals(edgeWithGuard.getGuard(), new Guard("true"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/Guards.graphml"));
+        Assert.assertThat("Number of vertices", context.getModel().getVertices().size(), is(2));
+        Assert.assertThat("Number of edges", context.getModel().getEdges().size(), is(2));
     }
-   */
 
     @Test
     public void singleEdge() {

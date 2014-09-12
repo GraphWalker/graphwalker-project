@@ -3,10 +3,13 @@ lexer grammar YEdLabelLexer;
 SLASH     : '/';
 COLON     : ':';
 SEMICOLON : ';';
+COMMA     : ',';
+ASSIGN    : '=';
 BLOCKED   : 'BLOCKED';
 SHARED    : 'SHARED';
 INIT      : 'INIT';
 START     : [Ss][Tt][Aa][Rr][Tt];
+REQTAG    : 'REQTAG';
 
 NestedBrackets
  :  '[' ( ~('[' | ']') | NestedBrackets )* ']'

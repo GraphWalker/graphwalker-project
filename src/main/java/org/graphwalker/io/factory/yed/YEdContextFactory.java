@@ -139,6 +139,9 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                             if (null != parseContext.shared() && null != parseContext.shared().Identifier()) {
                                 vertex.setSharedState(parseContext.shared().Identifier().getText());
                             }
+                            if (null != parseContext.reqtags()) {
+                                vertex.addRequirements(convertVertexRequirement(parseContext.reqtags().reqtag()));
+                            }
                             if (null == parseContext.blocked()) {
                                 elements.put(node.getId(), vertex);
                                 vertex.setId(node.getId());
@@ -207,6 +210,9 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                             if (null != parseContext.actions()) {
                                 edge.addActions(convertEdgeAction(parseContext.actions().action()));
                             }
+                            if (null != parseContext.reqtags()) {
+                                edge.addRequirements(convertEdgeRequirement(parseContext.reqtags().reqtag()));
+                            }
                             if (null == parseContext.blocked()) {
                                 if (null != edge.getTargetVertex() ) {
                                     if (null != startVertex && edgeType.getSource().equals(startVertex.getId())) {
@@ -259,6 +265,22 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
+    }
+
+    private List<Requirement> convertEdgeRequirement(List<YEdEdgeParser.ReqtagContext> reqtagContexts) {
+        List<Requirement> requirements = new ArrayList<>();
+        for (YEdEdgeParser.ReqtagContext reqtagContext: reqtagContexts) {
+            requirements.add(new Requirement(reqtagContext.getText()));
+        }
+        return requirements;
+    }
+
+    private List<Requirement> convertVertexRequirement(List<YEdVertexParser.ReqtagContext> reqtagContexts) {
+        List<Requirement> requirements = new ArrayList<>();
+        for (YEdVertexParser.ReqtagContext reqtagContext: reqtagContexts) {
+            requirements.add(new Requirement(reqtagContext.getText()));
+        }
+        return requirements;
     }
 
     private CommonTokenStream getTokenStream(String label) {
