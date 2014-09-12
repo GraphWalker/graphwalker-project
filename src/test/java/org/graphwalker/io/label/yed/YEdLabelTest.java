@@ -59,9 +59,9 @@ public class YEdLabelTest {
             "Label",
             "e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
             "e_init / num_of_books = 0; MAX_BOOKS = 5;",
-            "/* multi\nline\ncomment */ / i++; [i==0] name",
+            "name /* multi\nline\ncomment */ / i++; [i==0]",
             "BLOCKED",
-            "BLOCKED e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
+            "e_AddBookToCart BLOCKED [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
             "[ i ]",
             "e_Init/validLogin=false;rememberMe=false;"
     );
