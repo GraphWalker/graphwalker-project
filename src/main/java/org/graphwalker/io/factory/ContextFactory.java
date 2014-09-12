@@ -36,8 +36,8 @@ import java.util.Set;
  */
 public interface ContextFactory {
 
-    Context create(Path model);
-    Context create(Path model, Context context);
+    Context create(Path path);
+    <T extends Context> T create(Path path, T context);
     boolean accept(Path path);
     Set<String> getSupportedFileTypes();
 }

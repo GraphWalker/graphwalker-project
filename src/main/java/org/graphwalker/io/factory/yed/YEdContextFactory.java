@@ -73,7 +73,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
     }
 
     @Override
-    public Context create(Path path, Context context) {
+    public <T extends Context> T create(Path path, T context) {
         Edge startEdge = null;
         Map<String, Vertex> elements = new HashMap<>();
         Model model = new Model();

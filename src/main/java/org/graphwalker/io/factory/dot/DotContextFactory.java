@@ -79,7 +79,7 @@ public final class DotContextFactory implements ContextFactory {
     }
 
     @Override
-    public Context create(Path path, Context context) {
+    public <T extends Context> T create(Path path, T context) {
 
         Model model = new Model();
 
