@@ -10,10 +10,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -188,45 +188,28 @@ public class CLI {
     }
 
     private void RunCommandRequirements() throws Exception {
-        Context context = null;
-        String modelFileName = requirements.model;
-        try {
-            Path path = Paths.get(modelFileName);
-            context = ContextFactoryScanner.get(path).create(path);
-        } catch (ContextFactoryException e) {
-            throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-        }
-
         SortedSet<Requirement> reqs = new TreeSet<>();
-        for (RuntimeVertex vertex : context.getModel().getVertices()) {
-            for (Requirement req : vertex.getRequirements()) {
+        for (Context context : getContexts(requirements.model.iterator())) {
+            for (Requirement req : context.getRequirements()) {
                 reqs.add(req);
             }
         }
-
         for (Requirement req : reqs) {
             System.out.println(req.getKey());
         }
     }
 
     private void RunCommandMethods() throws Exception {
-        Context context = null;
-        String modelFileName = methods.model;
-        try {
-            Path path = Paths.get(modelFileName);
-            context = ContextFactoryScanner.get(path).create(path);
-        } catch (ContextFactoryException e) {
-            throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-        }
-
         SortedSet<String> names = new TreeSet<>();
-        for (RuntimeVertex vertex : context.getModel().getVertices()) {
-            if (null != vertex.getName()) {
-                names.add(vertex.getName());
+        for (Context context : getContexts(methods.model.iterator())) {
+            for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+                if (null != vertex.getName()) {
+                    names.add(vertex.getName());
+                }
             }
-        }
-        for (RuntimeEdge edge : context.getModel().getEdges()) {
-            names.add(edge.getName());
+            for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+                names.add(edge.getName());
+            }
         }
 
         for (String name : names) {
@@ -235,7 +218,7 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        List<Context> executionContexts = getContexts(online.model.iterator());
+        ArrayList<Context> executionContexts = getContextsOfflineOnline(online.model.iterator());
         if (online.restful) {
 
             ResourceConfig rc = new DefaultResourceConfig();
@@ -255,7 +238,7 @@ public class CLI {
     }
 
     private void RunCommandOffline() throws Exception {
-        SimpleMachine machine = new SimpleMachine(getContexts(offline.model.iterator()));
+        SimpleMachine machine = new SimpleMachine(getContextsOfflineOnline(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
                 machine.getNextStep();
@@ -273,8 +256,21 @@ public class CLI {
     private List<Context> getContexts(Iterator itr) {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
-            Path modelFile = Paths.get((String)itr.next());
-            Context context = ContextFactoryScanner.get(modelFile).create(modelFile);
+            String modelFileName = (String) itr.next();
+            context = factory.create(Paths.get(modelFileName));
+            executionContexts.add(context);
+        }
+        return executionContexts;
+    }
+
+    private ArrayList<Context> getContextsOfflineOnline(Iterator itr) {
+        YEdContextFactory factory = new YEdContextFactory();
+        Context context = null;
+
+        ArrayList<Context> executionContexts = new ArrayList<>();
+        while (itr.hasNext()) {
+            String modelFileName = (String) itr.next();
+            context = factory.create(Paths.get(modelFileName));
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
             executionContexts.add(context);
             verifyModel(context.getModel());
