@@ -34,17 +34,17 @@ import java.util.List;
  */
 public final class Classification extends CachedBuilder<Classification.RuntimeClassification> {
 
-    private final List<Classification> classifications = new ArrayList<>();
+    private String id;
     private String name;
+    private final List<Classification> classifications = new ArrayList<>();
 
-    public Classification addClassification(Classification classification) {
-        this.classifications.add(classification);
-        invalidateCache();
-        return this;
+    public String getId() {
+        return id;
     }
 
-    public List<Classification> getClassifications() {
-        return classifications;
+    public Classification setId(String id) {
+        this.id = id;
+        return this;
     }
 
     public Classification setName(String name) {
@@ -57,28 +57,51 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
         return name;
     }
 
+    public Classification addClassification(Classification classification) {
+        this.classifications.add(classification);
+        invalidateCache();
+        return this;
+    }
+
+    public List<Classification> getClassifications() {
+        return classifications;
+    }
+
     @Override
     protected RuntimeClassification createCache() {
         return new RuntimeClassification(this);
     }
 
-    public static final class RuntimeClassification extends NamedElement {
+    public static final class RuntimeClassification implements Element {
 
-        private final List<RuntimeClassification> classifications;
         private final String id;
+        private final String name;
+        private final List<RuntimeClassification> classifications;
 
         private RuntimeClassification(Classification classification) {
-            super(classification.getName());
+            this.id = classification.getId();
+            this.name = classification.getName();
             this.classifications = BuilderFactory.build(classification.getClassifications());
-            this.id = "";
-        }
-
-        public List<RuntimeClassification> getClassifications() {
-            return classifications;
         }
 
         public String getId() {
             return id;
+        }
+
+        public boolean hasId() {
+            return id != null && !"".equals(id);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean hasName() {
+            return name != null && !"".equals(name);
+        }
+
+        public List<RuntimeClassification> getClassifications() {
+            return classifications;
         }
 
         @Override

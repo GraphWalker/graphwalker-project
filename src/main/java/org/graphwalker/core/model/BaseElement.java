@@ -26,19 +26,46 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public abstract class ActionElement extends NamedElement {
+public abstract class BaseElement implements Element {
 
+    private final String id;
+    private final String name;
     private final List<Action> actions;
+    private final Set<Requirement> requirements;
 
-    protected ActionElement(String name, List<Action> actions) {
-        super(name);
+    protected BaseElement(String id, String name, Set<Requirement> requirements) {
+        this(id, name, new ArrayList<Action>(), requirements);
+    }
+
+    protected BaseElement(String id, String name, List<Action> actions, Set<Requirement> requirements) {
+        this.id = id;
+        this.name = name;
         this.actions = Collections.unmodifiableList(actions);
+        this.requirements = Collections.unmodifiableSet(requirements);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public boolean hasId() {
+        return id != null && !"".equals(id);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean hasName() {
+        return name != null && !"".equals(name);
     }
 
     public List<Action> getActions() {
@@ -47,5 +74,13 @@ public abstract class ActionElement extends NamedElement {
 
     public boolean hasActions() {
         return !actions.isEmpty();
+    }
+
+    public Set<Requirement> getRequirements() {
+        return requirements;
+    }
+
+    public boolean hasRequirements() {
+        return !requirements.isEmpty();
     }
 }

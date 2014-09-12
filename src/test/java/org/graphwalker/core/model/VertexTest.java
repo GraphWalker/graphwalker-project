@@ -40,11 +40,14 @@ public class VertexTest {
     public void create() {
         Vertex vertex = new Vertex()
             .setName("vertex")
+            .setSharedState("MY_STATE")
             .addRequirement(new Requirement("REQ1"))
             .addRequirement(new Requirement("REQ2"));
         Assert.assertNotNull(vertex);
         Assert.assertNotNull(vertex.getName());
         Assert.assertEquals(vertex.getName(), "vertex");
+        Assert.assertNotNull(vertex.getSharedState());
+        Assert.assertThat(vertex.getSharedState(), is("MY_STATE"));
         Assert.assertNotNull(vertex.getRequirements());
         Assert.assertThat(vertex.getRequirements().size(), is(2));
         Assert.assertNotNull(vertex.build());

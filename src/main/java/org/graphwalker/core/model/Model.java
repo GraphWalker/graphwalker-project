@@ -36,11 +36,21 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Model implements Builder<Model.RuntimeModel> {
 
+    private String id;
     private String name;
     private final List<Vertex> vertices = new ArrayList<>();
     private final List<Edge> edges = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
+    private final Set<Requirement> requirements = new HashSet<>();
 
+    public Model setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public Model setName(String name) {
         this.name = name;
@@ -68,8 +78,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
     }
 
     public Model addAction(Action action) {
-        this.actions.add(action);
-        return this;
+        return addActions(Arrays.asList(action));
     }
 
     public Model addActions(List<Action> actions) {
@@ -89,12 +98,26 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return edges;
     }
 
+    public Model addRequirement(Requirement requirement) {
+        this.requirements.add(requirement);
+        return this;
+    }
+
+    public Model addRequirements(Set<Requirement> requirements) {
+        this.requirements.addAll(requirements);
+        return this;
+    }
+
+    public Set<Requirement> getRequirements() {
+        return requirements;
+    }
+
     @Override
     public RuntimeModel build() {
         return new RuntimeModel(this);
     }
 
-    public static class RuntimeModel extends ActionElement {
+    public static class RuntimeModel extends BaseElement {
 
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
@@ -106,10 +129,9 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache;
         private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
         private final Map<String, List<RuntimeVertex>> sharedStateCache;
-        private final String id;
 
         private RuntimeModel(Model model) {
-            super(model.getName(), model.getActions());
+            super(model.getId(), model.getName(), model.getActions(), model.getRequirements());
             this.vertices = BuilderFactory.build(model.getVertices());
             this.edges = BuilderFactory.build(model.getEdges());
             this.edgesByNameCache = createEdgesByNameCache();
@@ -120,7 +142,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.elementsByNameCache = createElementsByNameCache();
             this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
             this.sharedStateCache = createSharedStateCache();
-            this.id = "";
         }
 
         public List<RuntimeVertex> getAllVertices() {
@@ -291,10 +312,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
                 map.put(key, Collections.unmodifiableList(source.get(key)));
             }
             return Collections.unmodifiableMap(map);
-        }
-
-        public String getId() {
-            return id;
         }
 
         @Override
