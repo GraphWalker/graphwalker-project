@@ -143,6 +143,9 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                             if (null != parseContext.reqtags()) {
                                 vertex.addRequirements(convertVertexRequirement(parseContext.reqtags().reqtag()));
                             }
+                            if (null != parseContext.actions()) {
+                                model.addActions(convertVertexAction(parseContext.actions().action()));
+                            }
                             if (null == parseContext.blocked()) {
                                 elements.put(node.getId(), vertex);
                                 vertex.setId(node.getId());
@@ -263,6 +266,14 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
     private List<Action> convertEdgeAction(List<YEdEdgeParser.ActionContext> actionContexts) {
         List<Action> actions = new ArrayList<>();
         for (YEdEdgeParser.ActionContext actionContext: actionContexts) {
+            actions.add(new Action(actionContext.getText()));
+        }
+        return actions;
+    }
+
+    private List<Action> convertVertexAction(List<YEdVertexParser.ActionContext> actionContexts) {
+        List<Action> actions = new ArrayList<>();
+        for (YEdVertexParser.ActionContext actionContext: actionContexts) {
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
