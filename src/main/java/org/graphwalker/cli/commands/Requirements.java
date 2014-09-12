@@ -28,10 +28,12 @@ package org.graphwalker.cli.commands;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Parameters(commandDescription = "Generates a list of unique names of the requirements found in the model.")
 public class Requirements {
-
-    @Parameter(names = {"--model", "-m"}, required = true, arity = 1,
-        description = "The model, as a graphml file.")
-    public String model = "";
+    @Parameter(names = {"--model", "-m"}, required = true,
+        description = "The model(s)")
+    public List<String> model = new ArrayList<String>();
 }
