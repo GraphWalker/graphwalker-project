@@ -30,6 +30,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.yed.YEdContext;
 import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.io.factory.yed.YEdContextFactoryException;
@@ -39,6 +40,7 @@ import org.junit.Test;
 import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -149,5 +151,16 @@ public class YEdContextFactoryTest {
     public void readInit() {
         Context context = new YEdContextFactory().create(Paths.get("graphml/init/init.graphml"));
         Assert.assertThat(context.getModel().getActions().size(), is(2));
+    }
+
+    @Test
+    public void readLoginAndCrashModels() {
+        ContextFactory factory = new YEdContextFactory();
+        Context login = factory.create(Paths.get("graphml/shared_state/Login.graphml"));
+        Context crash = factory.create(Paths.get("graphml/shared_state/Crash.graphml"));
+        for (RuntimeEdge edge: crash.getModel().getEdges()) {
+            Assert.assertNotNull(edge.getSourceVertex());
+            Assert.assertNotNull(edge.getTargetVertex());
+        }
     }
 }

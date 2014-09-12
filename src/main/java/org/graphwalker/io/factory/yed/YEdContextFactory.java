@@ -57,10 +57,6 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
     private static final String FILE_TYPE = "graphml";
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
 
-    private Vertex startVertex = null;
-    private Edge startEdge = null;
-    private Map<String, Vertex> elements = new HashMap<>();
-
     @Override
     public Set<String> getSupportedFileTypes() {
         return SUPPORTED_TYPE;
@@ -78,7 +74,8 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
 
     @Override
     public Context create(Path path, Context context) {
-
+        Edge startEdge = null;
+        Map<String, Vertex> elements = new HashMap<>();
         Model model = new Model();
         GraphmlDocument document = null;
         try {
@@ -91,8 +88,8 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
             throw new YEdContextFactoryException("Could not read the file.");
         }
         try {
-            addVertices(model, context, document);
-            addEdges(model, context, document);
+            Vertex startVertex =addVertices(model, context, document, elements);
+            startEdge = addEdges(model, context, document, elements, startVertex);
         } catch (XmlException e) {
             throw new YEdContextFactoryException("The file seams not to be valid yEd formatted.");
         }
@@ -112,7 +109,8 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         return context;
     }
 
-    private void addVertices(Model model, Context context, GraphmlDocument document) throws XmlException {
+    private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
+        Vertex startVertex = null;
         for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")) {
             if (object instanceof NodeType) {
                 NodeType node = (NodeType)object;
@@ -156,6 +154,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                 }
             }
         }
+        return startVertex;
     }
 
     private boolean isSupportedNode(String xml) {
@@ -184,7 +183,8 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         throw new YEdContextFactoryException("Unsupported node type: "+xml);
     }
 
-    private void addEdges(Model model, Context context, GraphmlDocument document) throws XmlException {
+    private Edge addEdges(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
+        Edge startEdge = null;
         for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:edge")) {
             if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
                 org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType)object;
@@ -235,6 +235,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
                 }
             }
         }
+        return startEdge;
     }
 
     private boolean isSupportedEdge(String xml) {
@@ -279,16 +280,16 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         return actions;
     }
 
-    private List<Requirement> convertEdgeRequirement(List<YEdEdgeParser.ReqtagContext> reqtagContexts) {
-        List<Requirement> requirements = new ArrayList<>();
+    private Set<Requirement> convertEdgeRequirement(List<YEdEdgeParser.ReqtagContext> reqtagContexts) {
+        Set<Requirement> requirements = new HashSet<>();
         for (YEdEdgeParser.ReqtagContext reqtagContext: reqtagContexts) {
             requirements.add(new Requirement(reqtagContext.getText()));
         }
         return requirements;
     }
 
-    private List<Requirement> convertVertexRequirement(List<YEdVertexParser.ReqtagContext> reqtagContexts) {
-        List<Requirement> requirements = new ArrayList<>();
+    private Set<Requirement> convertVertexRequirement(List<YEdVertexParser.ReqtagContext> reqtagContexts) {
+        Set<Requirement> requirements = new HashSet<>();
         for (YEdVertexParser.ReqtagContext reqtagContext: reqtagContexts) {
             requirements.add(new Requirement(reqtagContext.getText()));
         }
