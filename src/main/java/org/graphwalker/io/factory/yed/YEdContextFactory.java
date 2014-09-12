@@ -97,6 +97,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
             throw new YEdContextFactoryException("The file seams not to be valid yEd formatted.");
         }
 
+        model.setName(path.toString());
         context.setModel(model.build());
         if (null != startEdge) {
             context.setNextElement(startEdge);
