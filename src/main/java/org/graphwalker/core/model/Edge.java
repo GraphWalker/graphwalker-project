@@ -26,9 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -37,24 +35,14 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
-    private String name;
     private String id;
+    private String name;
     private Vertex sourceVertex;
     private Vertex targetVertex;
     private Guard guard;
     private final List<Action> actions = new ArrayList<>();
-    private final List<Requirement> requirements = new ArrayList<>();
+    private final Set<Requirement> requirements = new HashSet<>();
     private Double weight = 1.0;
-
-    public Edge setName(String name) {
-        this.name = name;
-        invalidateCache();
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public Edge setId(String id) {
         this.id = id;
@@ -66,13 +54,23 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return id;
     }
 
+    public Edge setName(String name) {
+        this.name = name;
+        invalidateCache();
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public Edge addRequirement(Requirement requirement) {
         this.requirements.add(requirement);
         invalidateCache();
         return this;
     }
 
-    public Edge addRequirements(List<Requirement> requirements) {
+    public Edge addRequirements(Set<Requirement> requirements) {
         this.requirements.addAll(requirements);
         invalidateCache();
         return this;
@@ -108,7 +106,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return guard;
     }
 
-    public List<Requirement> getRequirements() {
+    public Set<Requirement> getRequirements() {
         return requirements;
     }
 
@@ -147,31 +145,23 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return new RuntimeEdge(this);
     }
 
-    public static final class RuntimeEdge extends ActionElement {
+    public static final class RuntimeEdge extends BaseElement {
 
-        private final String id;
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;
         private final Guard guard;
         private final Double weight;
-        private final List<Requirement> requirements;
 
         private RuntimeEdge(Edge edge) {
-            super(edge.getName(), edge.getActions());
-            this.id = edge.getId();
+            super(edge.getId(), edge.getName(), edge.getActions(), edge.getRequirements());
             this.sourceVertex = build(edge.getSourceVertex());
             this.targetVertex = build(edge.getTargetVertex());
             this.guard = edge.getGuard();
             this.weight = edge.getWeight();
-            this.requirements = Collections.unmodifiableList(edge.getRequirements());
         }
 
         private <T> T build(Builder<T> builder) {
             return (null!=builder?builder.build():null);
-        }
-
-        public String getId() {
-            return id;
         }
 
         public RuntimeVertex getSourceVertex() {
@@ -180,10 +170,6 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
         public RuntimeVertex getTargetVertex() {
             return targetVertex;
-        }
-
-        public List<Requirement> getRequirements() {
-            return requirements;
         }
 
         public Guard getGuard() {

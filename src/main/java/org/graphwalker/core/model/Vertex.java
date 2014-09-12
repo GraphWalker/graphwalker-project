@@ -26,19 +26,17 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Nils Olsson
  */
 public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
-    private String name;
-    private final List<Requirement> requirements = new ArrayList<>();
-    private String sharedState;
     private String id;
+    private String name;
+    private String sharedState;
+    private final Set<Requirement> requirements = new HashSet<>();
 
     public Vertex setName(String name) {
         this.name = name;
@@ -48,22 +46,6 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
     public String getName() {
         return name;
-    }
-
-    public Vertex addRequirement(Requirement requirement) {
-        this.requirements.add(requirement);
-        invalidateCache();
-        return this;
-    }
-
-    public Vertex addRequirements(List<Requirement> requirements) {
-        this.requirements.addAll(requirements);
-        invalidateCache();
-        return this;
-    }
-
-    public List<Requirement> getRequirements() {
-        return requirements;
     }
 
     public String getSharedState() {
@@ -86,6 +68,22 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return this;
     }
 
+    public Vertex addRequirement(Requirement requirement) {
+        this.requirements.add(requirement);
+        invalidateCache();
+        return this;
+    }
+
+    public Vertex addRequirements(Set<Requirement> requirements) {
+        this.requirements.addAll(requirements);
+        invalidateCache();
+        return this;
+    }
+
+    public Set<Requirement> getRequirements() {
+        return requirements;
+    }
+
     public String toString() {
         return "{ id: " + getId() + ", name: " + getName() + "}";
     }
@@ -95,25 +93,13 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return new RuntimeVertex(this);
     }
 
-    public static final class RuntimeVertex extends NamedElement {
+    public static final class RuntimeVertex extends BaseElement {
 
-        private final List<Requirement> requirements;
         private final String sharedState;
-        private final String id;
 
         private RuntimeVertex(Vertex vertex) {
-            super(vertex.getName());
-            this.requirements = Collections.unmodifiableList(vertex.getRequirements());
+            super(vertex.getId(), vertex.getName(), vertex.getRequirements());
             this.sharedState = vertex.getSharedState();
-            this.id = vertex.getId();
-        }
-
-        public List<Requirement> getRequirements() {
-            return requirements;
-        }
-
-        public String getId() {
-            return id;
         }
 
         public String getSharedState() {

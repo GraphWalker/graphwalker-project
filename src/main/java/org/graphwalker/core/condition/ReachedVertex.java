@@ -28,7 +28,7 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.NamedElement;
+import org.graphwalker.core.model.BaseElement;
 
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -54,8 +54,8 @@ public final class ReachedVertex implements NamedStopCondition {
 
     @Override
     public double getFulfilment(Context context) {
-        if (context.getCurrentElement() instanceof NamedElement) {
-            NamedElement element = (NamedElement) context.getCurrentElement();
+        if (context.getCurrentElement() instanceof BaseElement) {
+            BaseElement element = (BaseElement)context.getCurrentElement();
             if (element.hasName() && element.getName().equals(name)) {
                 return 1;
             } else {
