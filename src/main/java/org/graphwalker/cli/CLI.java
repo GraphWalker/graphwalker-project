@@ -77,7 +77,7 @@ public class CLI {
         } catch (Exception e) {
             // We should have caught all exceptions up until here, but there
             // might have been problems with the command parser for instance...
-            System.err.println(e);
+            System.err.println(e + System.lineSeparator());
             logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
         }
     }
@@ -130,28 +130,27 @@ public class CLI {
 
             // No commands or options were found
             else {
-                jc.usage();
+                throw new MissingCommandException("Missing a command.");
             }
 
         } catch (MissingCommandException e) {
-            System.err.println("I did not see a valid command.");
-            System.err.println("");
+            System.err.println(e.getMessage() + System.lineSeparator());
             jc.usage();
         } catch (ParameterException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
             if (jc.getParsedCommand()!=null) {
                 jc.usage(jc.getParsedCommand());
             }
         } catch (YEdContextFactoryException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
         } catch (GeneratorFactoryException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
         } catch (Exception e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
             logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
         }
     }
