@@ -144,4 +144,10 @@ public class YEdContextFactoryTest {
         Assert.assertThat(context.getModel().getVertices().size(), is(1));
         Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }
+
+    @Test
+    public void readInit() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/init/init.graphml"));
+        Assert.assertThat(context.getModel().getActions().size(), is(2));
+    }
 }
