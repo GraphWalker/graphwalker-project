@@ -172,6 +172,8 @@ public class CLI {
             LoggerUtil.setLogLevel(LoggerUtil.Level.TRACE);
         } else if (options.debug.equalsIgnoreCase("ALL")) {
             LoggerUtil.setLogLevel(LoggerUtil.Level.ALL);
+        } else {
+            throw new ParameterException("Incorrect argument to --debug");
         }
     }
 
