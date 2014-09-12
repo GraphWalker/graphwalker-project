@@ -124,6 +124,7 @@ public final class DotContextFactory implements ContextFactory {
             model.addEdge(edge);
         }
 
+        model.setName(path.toString());
         context.setModel(model.build());
         if (null != startEdge) {
             context.setNextElement(startEdge);
