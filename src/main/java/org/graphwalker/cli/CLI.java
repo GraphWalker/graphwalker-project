@@ -10,10 +10,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -140,8 +140,10 @@ public class CLI {
         } catch (ParameterException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage());
-            jc.usage(jc.getParsedCommand());
-        } catch (ContextFactoryException e) {
+            if (jc.getParsedCommand()!=null) {
+                jc.usage(jc.getParsedCommand());
+            }
+        } catch (YEdContextFactoryException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage());
         } catch (GeneratorFactoryException e) {
@@ -227,6 +229,7 @@ public class CLI {
             ResourceConfig rc = new DefaultResourceConfig();
             rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
             HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
+            System.out.println("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext");
             System.out.println("Press Control+C to end...");
             try {
                 server.start();
