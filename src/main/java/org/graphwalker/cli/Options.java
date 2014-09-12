@@ -28,8 +28,8 @@ package org.graphwalker.cli;
 import com.beust.jcommander.Parameter;
 
 public class Options {
-    @Parameter(names = {"--help", "-h"}, help = true, description = "Prints help text")
-    private boolean help;
+    @Parameter(names = {"--help", "-h"}, description = "Prints help text")
+    public boolean help = false;
 
     @Parameter(names = {"--version", "-v"}, description = "Prints the version of graphwalker")
     public boolean version = false;

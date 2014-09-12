@@ -89,26 +89,43 @@ public class CLI {
      */
     private void run(String[] args) {
         options = new Options();
-
         jc = new JCommander(options);
         jc.setProgramName("java -jar graphwalker.jar");
-
-        offline = new Offline();
-        jc.addCommand("offline", offline);
-
-        online = new Online();
-        jc.addCommand("online", online);
-
-        methods = new Methods();
-        jc.addCommand("methods", methods);
-
-        requirements = new Requirements();
-        jc.addCommand("requirements", requirements);
+        try {
+            jc.parseWithoutValidation(args);
+        } catch (Exception e) {
+            ;
+        }
 
         try {
-            jc.parse(args);
             setLogLevel(options);
 
+            if (options.help) {
+                jc.usage();
+                return;
+            } else if (options.version) {
+                System.out.println(printVersionInformation());
+                return;
+            }
+
+
+            // Need to instantiate options again to avoid
+            // ParameterException "Can only specify option --debug once."
+            options = new Options();
+            jc = new JCommander(options);
+            offline = new Offline();
+            jc.addCommand("offline", offline);
+
+            online = new Online();
+            jc.addCommand("online", online);
+
+            methods = new Methods();
+            jc.addCommand("methods", methods);
+
+            requirements = new Requirements();
+            jc.addCommand("requirements", requirements);
+
+            jc.parse(args);
 
             // Parse for commands
             if (jc.getParsedCommand() != null) {
@@ -123,11 +140,6 @@ public class CLI {
                 }
             }
 
-            // Parse for arguments
-            else if (options.version) {
-                System.out.println(printVersionInformation());
-            }
-
             // No commands or options were found
             else {
                 throw new MissingCommandException("Missing a command.");
@@ -135,7 +147,6 @@ public class CLI {
 
         } catch (MissingCommandException e) {
             System.err.println(e.getMessage() + System.lineSeparator());
-            jc.usage();
         } catch (ParameterException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage() + System.lineSeparator());
