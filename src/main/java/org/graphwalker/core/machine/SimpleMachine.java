@@ -146,10 +146,10 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private Context x(Context context, RuntimeVertex vertex) {
-        List<SharedStateTupel> candidates = getPossibleSharedStates(vertex.getSharedState());
+        List<SharedStateTuple> candidates = getPossibleSharedStates(vertex.getSharedState());
         // TODO: If we need other way of determine the next state, we should have some interface for this
         Random random = new Random(System.nanoTime());
-        SharedStateTupel candidate = candidates.get(random.nextInt(candidates.size()));
+        SharedStateTuple candidate = candidates.get(random.nextInt(candidates.size()));
         if (!candidate.getVertex().equals(context.getCurrentElement())) {
             candidate.context.setNextElement(candidate.getVertex());
             context = switchContext(candidate.context);
@@ -165,11 +165,11 @@ public final class SimpleMachine extends ObservableMachine {
         return null != vertex.getSharedState() && 0 < getPossibleSharedStates(vertex.getSharedState()).size();
     }
 
-    private List<SharedStateTupel> getPossibleSharedStates(String sharedState) {
-        List<SharedStateTupel> sharedStates = new ArrayList<>();
+    private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
+        List<SharedStateTuple> sharedStates = new ArrayList<>();
         for (Context context: contexts) {
             if (currentContext.equals(context) && hasNextStep(currentContext)) {
-                sharedStates.add(new SharedStateTupel(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
+                sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
             } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
 
@@ -177,7 +177,7 @@ public final class SimpleMachine extends ObservableMachine {
 
                     //if (context.getPathGenerator().hasNextStep(context)) {
                         if (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty()) {
-                            sharedStates.add(new SharedStateTupel(context, vertex));
+                            sharedStates.add(new SharedStateTuple(context, vertex));
                         }
                     //}
                 }
@@ -244,12 +244,12 @@ public final class SimpleMachine extends ObservableMachine {
         return currentContext;
     }
 
-    private static class SharedStateTupel {
+    private static class SharedStateTuple {
 
         private final Context context;
         private final RuntimeVertex vertex;
 
-        private SharedStateTupel(Context context, RuntimeVertex vertex) {
+        private SharedStateTuple(Context context, RuntimeVertex vertex) {
             this.context = context;
             this.vertex = vertex;
         }
