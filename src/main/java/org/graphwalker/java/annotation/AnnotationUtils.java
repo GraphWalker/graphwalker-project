@@ -27,10 +27,17 @@ package org.graphwalker.java.annotation;
  */
 
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,12 +48,34 @@ public final class AnnotationUtils {
 
     private AnnotationUtils() {}
 
-    public static Set<Class<?>> findTests() {
-        return findTests("");
+    private static String getExtension(String path) {
+        int position = path.lastIndexOf('.');
+        return path.lastIndexOf(File.separator)>position?"":path.substring(position+1);
     }
 
-    public static Set<Class<?>> findTests(String packageName) {
-        Reflections reflections = new Reflections(packageName);
+    private static boolean valid(URL url) {
+        String extension = getExtension(url.getPath());
+        return "".equals(extension) || "jar".equals(extension);
+    }
+
+    private static Collection<URL> getUrls() {
+        Set<URL> filteredUrls = new HashSet<>();
+        Set<URL> urls = new HashSet<>();
+        urls.addAll(ClasspathHelper.forClassLoader());
+        urls.addAll(ClasspathHelper.forJavaClassPath());
+        for (URL url: urls) {
+            if (valid(url)) {
+                filteredUrls.add(url);
+            }
+        }
+        return filteredUrls;
+    }
+
+    private static Reflections reflections = new Reflections(new ConfigurationBuilder()
+            .addUrls(getUrls())
+            .addScanners(new TypeAnnotationsScanner()));
+
+    public static Set<Class<?>> findTests() {
         return reflections.getTypesAnnotatedWith(GraphWalker.class);
     }
 
@@ -80,6 +109,5 @@ public final class AnnotationUtils {
             }
         }
     }
-
 
 }
