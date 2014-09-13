@@ -9,7 +9,7 @@
         <include>**/*.java</include>
       </includes>
     </fileSet>
-    <fileSet encoding="UTF-8">
+    <fileSet filtered="true" packaged="true" encoding="UTF-8">
       <directory>src/main/resources</directory>
       <includes>
         <include>**/*.graphml</include>

@@ -30,45 +30,34 @@ package ${package};
  */
 
 
-import ${groupId}.core.machine.ExecutionContext;
-import ${groupId}.java.annotation.GraphWalker;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.java.annotation.GraphWalker;
 
-@GraphWalker(start="e_StartBrowser")
-public class AmazonSearchTest extends ExecutionContext implements AmazonSearch {
+@GraphWalker(start="e_AnotherAction")
+public class SomeSmallTest extends ExecutionContext implements SmallTest {
 
     @Override
-    public void e_BroadSearch() {
+    public void e_AnotherAction() {
+        System.out.println("Running: e_AnotherAction");
     }
 
     @Override
-    public void e_Home() {
+    public void e_SomeAction() {
+        System.out.println("Running: e_SomeAction");
     }
 
     @Override
-    public void e_ImpossibleSearch() {
+    public void e_SomeOtherAction() {
+        System.out.println("Running: e_SomeOtherAction");
     }
 
     @Override
-    public void e_SearchForSpecificBook() {
+    public void v_VerifySomeAction() {
+        System.out.println("Running: v_VerifySomeAction");
     }
 
     @Override
-    public void e_StartBrowser() {
-    }
-
-    @Override
-    public void v_AmazonHomePage() {
-    }
-
-    @Override
-    public void v_ManyBooks() {
-    }
-
-    @Override
-    public void v_NoBooks() {
-    }
-
-    @Override
-    public void v_OneBookOnly() {
+    public void v_VerifySomeOtherAction() {
+        System.out.println("Running: v_VerifySomeOtherAction");
     }
 }
