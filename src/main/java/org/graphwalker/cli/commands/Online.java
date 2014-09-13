@@ -48,6 +48,10 @@ public class Online {
     public List<String> model = new ArrayList<String>();
 
     @Parameter(names = {"--restful", "-r"}, required = false, arity = 1,
-        description = "Starts as a Restful API service.")
+            description = "Starts as a Restful API service.")
     public boolean restful = true;
+
+    @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
+            description = "Returns data formatted as json")
+    public boolean json = true;
 }
