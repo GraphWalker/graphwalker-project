@@ -73,16 +73,16 @@ public final class TestMojo extends DefaultMojoBase {
     @Parameter(property = "graphwalker.test.skip", defaultValue = "false")
     private boolean graphwalkerTestSkip;
 
-    @Parameter(property = "includes")
+    @Parameter(property = "graphwalker.includes")
     private Set<String> includes;
 
-    @Parameter(property = "excludes")
+    @Parameter(property = "graphwalker.excludes")
     private Set<String> excludes;
 
-    @Parameter(property = "test", defaultValue = "*")
+    @Parameter(property = "graphwalker.test", defaultValue = "*")
     private String test;
 
-    @Parameter(property = "groups", defaultValue = "*")
+    @Parameter(property = "graphwalker.groups", defaultValue = "*")
     private String groups;
 
     protected List<String> getClasspathElements() {
@@ -171,11 +171,10 @@ public final class TestMojo extends DefaultMojoBase {
             Properties properties = switchProperties(createProperties());
             displayHeader();
             Configuration configuration = createConfiguration();
-            Manager manager = new Manager(configuration);
-            displayConfiguration(manager);
-            Executor executor = new Executor(manager);
-            executor.awaitTermination();
-            displayResult(manager, executor);
+            TestExecutor executor = new TestExecutor(configuration);
+            displayConfiguration(configuration, executor);
+            executor.execute();
+            displayResult(executor);
             switchProperties(properties);
             switchClassLoader(classLoader);
             reportResults(executor);
@@ -236,21 +235,25 @@ public final class TestMojo extends DefaultMojoBase {
         return configuration;
     }
 
-    private void displayConfiguration(Manager manager) {
+    private void displayConfiguration(Configuration configuration, TestExecutor executor) {
         if (getLog().isInfoEnabled()) {
             getLog().info("Configuration:");
-            getLog().info("    Include = "+manager.getConfiguration().getIncludes());
-            getLog().info("    Exclude = "+manager.getConfiguration().getExcludes());
-            getLog().info("     Groups = "+manager.getConfiguration().getGroups());
+            getLog().info("    Include = " + configuration.getIncludes());
+            getLog().info("    Exclude = " + configuration.getExcludes());
+            getLog().info("     Groups = " + configuration.getGroups());
             getLog().info("");
             getLog().info("Tests:");
-            if (manager.getExecutionGroups().isEmpty()) {
+            if (executor.getMachines().isEmpty()) {
                 getLog().info("  No tests found");
             } else {
-                for (Group group: manager.getExecutionGroups()) {
-                    getLog().info("  [" + group.getName()+"]");
-                    for (Execution execution: group.getExecutions()) {
-                        getLog().info("    "+execution.getName()+"("+execution.getPathGenerator().getSimpleName()+", "+execution.getStopCondition().getSimpleName()+", \""+execution.getStopConditionValue()+"\")");
+                for (Machine machine: executor.getMachines()) {
+                    //getLog().info("  ["+"]");
+                    for (Context context: machine.getContexts()) {
+                        getLog().info("    "
+                            + context.getClass().getSimpleName()+"("
+                            + context.getPathGenerator().getClass().getSimpleName()+", "
+                            + context.getPathGenerator().getStopCondition().getClass().getSimpleName()+", \""
+                            /*+ context.getPathGenerator().getStopCondition().getValue()*/+"\")");
                     }
                     getLog().info("");
                 }
@@ -259,16 +262,18 @@ public final class TestMojo extends DefaultMojoBase {
         }
     }
 
-    private void displayResult(Manager manager, Executor executor) {
+    private void displayResult(TestExecutor executor) {
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");
             getLog().info("");
             getLog().info("Result :");
             getLog().info("");
-            long groups = manager.getGroupCount(), tests = manager.getTestCount(), completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
+
+            long tests = 0, completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
             List<Context> failedExecutions = new ArrayList<>();
             for (Machine machine: executor.getMachines()) {
                 for (Context context: machine.getContexts()) {
+                    tests++;
                     switch (context.getExecutionStatus()) {
                         case COMPLETED: {
                             completed++;
@@ -293,18 +298,18 @@ public final class TestMojo extends DefaultMojoBase {
                 getLog().info("Failed executions: ");
                 for (Context context: failedExecutions) {
                     double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
-                    String pathGenerator = context.getPathGenerator().toString();
-                    String stopCondition = context.getPathGenerator().getStopCondition().toString();
-                    getLog().info(MessageFormat.format("  {0}({1}, {2}): {3}%", executor.getImplementations().get(context).getClass().getName(), pathGenerator, stopCondition, Math.round(100*fulfilment)));
+                    String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
+                    String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
+                    getLog().info(MessageFormat.format("  {0}({1}, {2}): {3}%", context.getClass().getSimpleName(), pathGenerator, stopCondition, Math.round(100*fulfilment)));
                 }
                 getLog().info("");
             }
-            getLog().info(MessageFormat.format("Groups: {0}, Tests: {1}, Completed: {2}, Incomplete: {3}, Failed: {4}, Not Executed: {5}", groups, tests, completed, incomplete, failed, notExecuted));
+            getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}", tests, completed, incomplete, failed, notExecuted));
             getLog().info("");
         }
     }
 
-    private void reportResults(Executor executor) throws MojoExecutionException {
+    private void reportResults(TestExecutor executor) throws MojoExecutionException {
         boolean hasExceptions = false;
         XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession().getStartTime(), getSession().getSystemProperties());
 
