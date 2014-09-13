@@ -37,7 +37,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.CodeGenerator;
 import org.graphwalker.java.source.SourceFile;
 
@@ -84,7 +84,6 @@ public final class WatchMojo extends AbstractMojo {
     private final CodeGenerator codeGenerator = new CodeGenerator();
     private final Map<Path, File> resourceMap = new HashMap<>();
     private final Map<WatchKey, Path> watchKeyMap = new HashMap<>();
-    private final ContextFactory modelFactory = new YEdContextFactory();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -171,13 +170,14 @@ public final class WatchMojo extends AbstractMojo {
     }
 
     private boolean isSupportedFileType(Path path) throws IOException {
-        return modelFactory.accept(path);
+        return null != ContextFactoryScanner.get(path);
     }
 
     private void generate(SourceFile sourceFile) {
         File outputFile = sourceFile.getOutputPath().toFile();
         try {
-            RuntimeModel model = modelFactory.create(sourceFile.getInputPath()).getModel();
+            ContextFactory contextFactory = ContextFactoryScanner.get(sourceFile.getInputPath());
+            RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
             String source = codeGenerator.generate(sourceFile, model);
             if (Files.exists(sourceFile.getOutputPath())) {
                 String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
