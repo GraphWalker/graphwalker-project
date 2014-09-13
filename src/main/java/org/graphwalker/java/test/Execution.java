@@ -29,8 +29,7 @@ package org.graphwalker.java.test;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.annotation.AnnotationUtils;
 import org.graphwalker.java.annotation.GraphWalker;
 
@@ -68,12 +67,10 @@ public final class Execution {
     }
 
     private Context createContext(final Class<?> testClass) {
-        // TODO: Change so any factory could be used
-        ContextFactory factory = new YEdContextFactory();
         for (Annotation annotation: AnnotationUtils.getAnnotations(testClass, org.graphwalker.java.annotation.Model.class)) {
-            Path file = Paths.get(((org.graphwalker.java.annotation.Model) annotation).file());
-            if (factory.accept(file)) {
-                return factory.create(file);
+            Path path = Paths.get(((org.graphwalker.java.annotation.Model) annotation).file());
+            if (null != ContextFactoryScanner.get(path)) {
+                return ContextFactoryScanner.get(path).create(path);
             }
         }
         throw new RuntimeException(); // TODO:
