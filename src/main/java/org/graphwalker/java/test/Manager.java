@@ -27,10 +27,6 @@ package org.graphwalker.java.test;
  */
 
 import org.codehaus.plexus.util.SelectorUtils;
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.java.annotation.GraphWalker;
 
 import java.util.*;

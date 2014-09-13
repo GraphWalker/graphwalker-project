@@ -29,7 +29,10 @@ package org.graphwalker.java.test;
 import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.machine.*;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.java.annotation.*;
 

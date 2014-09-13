@@ -27,7 +27,6 @@ package org.graphwalker.java.annotation;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.java.annotation.resources.MyTest;
 import org.junit.Assert;

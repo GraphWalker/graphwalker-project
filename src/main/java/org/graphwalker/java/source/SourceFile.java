@@ -28,19 +28,29 @@ package org.graphwalker.java.source;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Nils Olsson
  */
 public final class SourceFile {
 
+    private static final Path DEFAULT_PATH = Paths.get("/");
     private final Path inputPath;
     private final Path relativePath;
     private final Path outputPath;
     private final String packageName;
 
+    public SourceFile(File file) {
+        this(file.toPath(), DEFAULT_PATH, DEFAULT_PATH);
+    }
+
     public SourceFile(File file, File baseDirectory, File outputDirectory) {
         this(file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
+    }
+
+    public SourceFile(Path inputPath) {
+        this(inputPath, DEFAULT_PATH, DEFAULT_PATH);
     }
 
     public SourceFile(Path inputPath, Path basePath, Path outputPath) {

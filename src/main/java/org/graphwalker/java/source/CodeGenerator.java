@@ -38,11 +38,12 @@ import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,13 +56,18 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
-    private final ContextFactory factory = new YEdContextFactory();
-
     public String generate(String file) {
-        return generate(new SourceFile(Paths.get(file)
-                , Paths.get("/")
-                , Paths.get("/"))
-                , factory.create(Paths.get("org/graphwalker/java/annotation/MyModel.graphml")).getModel());
+        return generate(Paths.get(file));
+    }
+
+    public String generate(File file) {
+        return generate(file.toPath());
+    }
+
+    public String generate(Path path) {
+        ContextFactory factory = ContextFactoryScanner.get(path);
+        SourceFile sourceFile = new SourceFile(path);
+        return generate(sourceFile, factory.create(path).getModel());
     }
 
     public String generate(SourceFile sourceFile, RuntimeModel model) {
