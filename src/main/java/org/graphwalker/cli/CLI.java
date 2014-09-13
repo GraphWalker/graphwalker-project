@@ -244,7 +244,7 @@ public class CLI {
         while (machine.hasNextStep()) {
             try {
                 machine.getNextStep();
-                if (online.json) {
+                if (offline.json) {
                     System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
                 } else {
                     System.out.println(Util.getStepAsString(machine, offline.verbose, offline.unvisited));
