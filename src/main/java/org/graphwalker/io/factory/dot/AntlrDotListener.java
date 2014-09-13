@@ -26,12 +26,8 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.dot.DOTBaseListener;
 import org.graphwalker.io.dot.DOTParser;

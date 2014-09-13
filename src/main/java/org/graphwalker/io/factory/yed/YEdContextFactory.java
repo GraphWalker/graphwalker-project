@@ -40,6 +40,8 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
 import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
 import org.graphwalker.io.yed.YEdEdgeParser;
 import org.graphwalker.io.yed.YEdLabelLexer;
 import org.graphwalker.io.yed.YEdVertexParser;
@@ -51,7 +53,7 @@ import java.util.*;
 /**
  * @author Nils Olsson
  */
-public final class YEdContextFactory implements org.graphwalker.io.factory.ContextFactory {
+public final class YEdContextFactory implements ContextFactory {
 
     private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
     private static final String FILE_TYPE = "graphml";
@@ -81,17 +83,17 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         try {
             document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(path.toString()));
         } catch (XmlException e) {
-            throw new YEdContextFactoryException("The file appears not to be valid yEd formatted.");
+            throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
         } catch (IOException e) {
-            throw new YEdContextFactoryException("Could not read the file.");
+            throw new ContextFactoryException("Could not read the file.");
         } catch (ResourceNotFoundException e) {
-            throw new YEdContextFactoryException("Could not read the file.");
+            throw new ContextFactoryException("Could not read the file.");
         }
         try {
             Vertex startVertex =addVertices(model, context, document, elements);
             startEdge = addEdges(model, context, document, elements, startVertex);
         } catch (XmlException e) {
-            throw new YEdContextFactoryException("The file seams not to be valid yEd formatted.");
+            throw new ContextFactoryException("The file seams not to be valid yEd formatted.");
         }
 
         model.setName(path.toString());
@@ -180,7 +182,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         } else if (xml.contains("TableNode")) {
             return TableNodeDocument.Factory.parse(xml).getTableNode();
         }
-        throw new YEdContextFactoryException("Unsupported node type: "+xml);
+        throw new ContextFactoryException("Unsupported node type: "+xml);
     }
 
     private Edge addEdges(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
@@ -261,7 +263,7 @@ public final class YEdContextFactory implements org.graphwalker.io.factory.Conte
         } else if (xml.contains("BezierEdge")) {
             return BezierEdgeDocument.Factory.parse(xml).getBezierEdge();
         }
-        throw new YEdContextFactoryException("Unsupported edge type: "+xml);
+        throw new ContextFactoryException("Unsupported edge type: "+xml);
     }
 
     private List<Action> convertEdgeAction(List<YEdEdgeParser.ActionContext> actionContexts) {

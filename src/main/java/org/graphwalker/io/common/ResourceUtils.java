@@ -30,8 +30,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.String;
-import java.lang.Thread;
 import java.net.URL;
 
 /**

@@ -37,17 +37,14 @@ import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.dot.DOTLexer;
 import org.graphwalker.io.dot.DOTParser;
 import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -91,13 +88,13 @@ public final class DotContextFactory implements ContextFactory {
                 out.append(line);
             }
         } catch (IOException e) {
-            throw new DotContextFactoryException("Could not read the file.");
+            throw new ContextFactoryException("Could not read the file.");
         }
         logger.debug(out.toString());
         try {
             reader.close();
         } catch (IOException e) {
-            throw new DotContextFactoryException("Could not read the file.");
+            throw new ContextFactoryException("Could not read the file.");
         }
 
         DOTLexer lexer = new DOTLexer(new ANTLRInputStream(out.toString()));

@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory.dot;
+package org.graphwalker.io.factory;
 
 /*
  * #%L
@@ -26,16 +26,16 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
-
 /**
- * Created by krikar on 8/26/14.
+ * @author Nils Olsson
  */
-public class DotContextFactoryException extends RuntimeException {
-    public DotContextFactoryException(Throwable throwable) {
-        super(throwable);
+public class ContextFactoryException extends RuntimeException {
+
+    public ContextFactoryException() {
+        super();
     }
 
-    public DotContextFactoryException(String message) {
+    public ContextFactoryException(String message) {
         super(message);
     }
 }
