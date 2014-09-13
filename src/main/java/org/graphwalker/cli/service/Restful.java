@@ -107,7 +107,22 @@ public class Restful {
     @GET
     @Produces("text/plain")
     @Path("setData")
-    public void setData(@QueryParam("script") String script) {
-        machine.getCurrentContext().execute(new Action(script));
+    public String setData(@QueryParam("script") String script) {
+        try {
+            machine.getCurrentContext().execute(new Action(script));
+            if (online.json) {
+                JSONObject obj = new JSONObject();
+                return obj.put("Result", "Ok").toString();
+            } else {
+                return "Ok";
+            }
+        } catch (Exception e) {
+            if (online.json) {
+                JSONObject obj = new JSONObject();
+                return obj.put("Result", e.getMessage()).toString();
+            } else {
+                return e.getMessage();
+            }
+        }
     }
 }
