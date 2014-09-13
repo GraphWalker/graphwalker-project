@@ -26,29 +26,16 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.io.File;
-
-import static org.hamcrest.core.Is.is;
-
-
 /**
  * @author Nils Olsson
  */
-public class ManagerTest {
+public class TestExecutionException extends RuntimeException {
 
-    @Test
-    public void createManager() {
-        Manager manager = new Manager(new Configuration().setTestClassesDirectory(getTestClassesDirectory()));
-        Assert.assertNotNull(manager.getConfiguration());
-        Assert.assertThat(manager.getExecutionGroups().size(), is(2));
-        Assert.assertThat(manager.getGroupCount(), is(2));
-        Assert.assertThat(manager.getTestCount(), is(2));
+    public TestExecutionException() {
+        super();
     }
 
-    public File getTestClassesDirectory() {
-        return new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+    public TestExecutionException(Throwable throwable) {
+        super(throwable);
     }
 }
