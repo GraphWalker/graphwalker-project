@@ -33,6 +33,8 @@ import org.graphwalker.core.model.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by krikar on 9/13/14.
  */
@@ -85,6 +87,14 @@ public class Util {
                 obj.put("CurrentElementName", machine.getCurrentContext().getCurrentElement().getName());
                 if (verbose) {
                     obj.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
+
+                    JSONArray jsonKeys = new JSONArray();
+                    for (Map.Entry<String,String> key : machine.getCurrentContext().getKeys().entrySet() ) {
+                        JSONObject jsonKey = new JSONObject();
+                        jsonKey.put(key.getKey(), key.getValue());
+                        jsonKeys.put(jsonKey);
+                    }
+                    obj.put("Data", jsonKeys);
                 }
             }
 
@@ -93,8 +103,8 @@ public class Util {
                 obj.put("NumberOfUnvisitedElements", machine.getCurrentContext().getProfiler().getUnvisitedElements().size());
 
                 JSONArray jsonElements = new JSONArray();
-                JSONObject jsonElement = new JSONObject();
                 for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
+                    JSONObject jsonElement = new JSONObject();
                     jsonElement.put("ElementName", e.getName());
                     if (verbose) {
                         jsonElement.put("ElementId", e.getId());
