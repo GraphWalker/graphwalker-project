@@ -26,30 +26,28 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import java.util.HashSet;
-import java.util.Set;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.graphwalker.java.test.SelectorUtils.match;
 
 /**
  * @author Nils Olsson
  */
-public final class Group {
+public class SelectorUtilsTest {
 
-    private final String name;
-    private final Set<Execution> executions = new HashSet<>();
-
-    public Group(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void addExecution(Execution execution) {
-        executions.add(execution);
-    }
-
-    public Set<Execution> getExecutions() {
-        return executions;
+    @Test
+    public void testMatch() {
+        Assert.assertTrue(match("foo", "foo"));
+        Assert.assertTrue(match("fo*", "foo"));
+        Assert.assertFalse(match("fo*", "bar"));
+        Assert.assertTrue(match("org.graphwalker.*", "org.graphwalker.java.test"));
+        Assert.assertFalse(match("org.graphwalker.*", "graphwalker"));
+        Assert.assertTrue(match("*", "graphwalker"));
+        Assert.assertTrue(match("*", "123"));
+        Assert.assertFalse(match("*2", "123"));
+        Assert.assertTrue(match("1*3", "123"));
+        Assert.assertTrue(match("1*3", "12.3"));
+        Assert.assertFalse(match("foo", "FOO"));
     }
 }

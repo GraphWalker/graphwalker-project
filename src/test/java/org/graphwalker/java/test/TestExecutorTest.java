@@ -26,26 +26,10 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.java.annotation.resources.MyTest;
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Nils Olsson
  */
-public class GroupTest {
+public class TestExecutorTest {
 
-    @Test
-    public void createGroup() {
-        Group group = new Group("test");
-        Assert.assertThat(group.getName(), is("test"));
-        Assert.assertNotNull(group.getExecutions());
-        Assert.assertThat(group.getExecutions().size(), is(0));
-        group.addExecution(new Execution(MyTest.class, RandomPath.class, VertexCoverage.class, "100", "start"));
-        Assert.assertThat(group.getExecutions().size(), is(1));
-    }
+
 }

@@ -50,7 +50,7 @@ public class AnnotationTest {
 
     @Test
     public void getAnnotationsTest() {
-        Set<Annotation> annotations = AnnotationUtils.getAnnotations(MyTest.class, GraphWalker.class);
+        Set<GraphWalker> annotations = AnnotationUtils.getAnnotations(MyTest.class, GraphWalker.class);
         Assert.assertThat(annotations.size(), is(1));
         Assert.assertTrue(annotations.toArray()[0] instanceof GraphWalker);
         GraphWalker annotation = (GraphWalker)annotations.toArray()[0];

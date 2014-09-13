@@ -26,28 +26,14 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.io.File;
-import java.util.Collection;
-
-import static org.hamcrest.core.Is.is;
+import java.util.regex.Pattern;
 
 /**
  * @author Nils Olsson
  */
-public class ScannerTest {
+public abstract class SelectorUtils {
 
-    @Test
-    public void scanTest() {
-        Scanner scanner = new Scanner();
-        Collection<Class<?>> tests =  scanner.scan(getTestClassesDirectory());
-        Assert.assertNotNull(tests);
-        Assert.assertThat(tests.size(), is(2));
-    }
-
-    public File getTestClassesDirectory() {
-        return new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+    public static boolean match(String pattern, String value) {
+        return Pattern.matches(pattern.replaceAll("\\*", ".*"), value);
     }
 }

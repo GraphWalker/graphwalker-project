@@ -26,10 +26,9 @@ package org.graphwalker.java.report;
  * #L%
  */
 
-import org.codehaus.plexus.util.FileUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.java.test.Executor;
+import org.graphwalker.java.test.TestExecutor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -58,7 +57,7 @@ public class XMLReportGenerator {
         this.systemProperties = systemProperties;
     }
 
-    public void writeReport(Executor executor) {
+    public void writeReport(TestExecutor executor) {
         Testsuites testsuites = new Testsuites();
         List<Report> reports = new ArrayList<>();
         for (Machine machine: executor.getMachines()) {
@@ -154,10 +153,12 @@ public class XMLReportGenerator {
     }
 
     private OutputStream getOutputStream(File directory, String reportName) {
-        FileUtils.mkdir(directory.getAbsolutePath());
         try {
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
             return new FileOutputStream(new File(directory, reportName));
-        } catch (FileNotFoundException e) {
+        } catch (Throwable e) {
             throw new XMLReportException(e);
         }
     }

@@ -1,4 +1,4 @@
-package org.graphwalker.java.test;
+package org.graphwalker.java.report;
 
 /*
  * #%L
@@ -29,7 +29,5 @@ package org.graphwalker.java.test;
 /**
  * @author Nils Olsson
  */
-public class ExecutorTest {
-
-
+public class ReportTest {
 }

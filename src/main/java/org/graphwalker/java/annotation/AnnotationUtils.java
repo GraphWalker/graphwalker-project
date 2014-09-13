@@ -27,7 +27,6 @@ package org.graphwalker.java.annotation;
  */
 
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -36,7 +35,9 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +56,14 @@ public final class AnnotationUtils {
 
     private static boolean valid(URL url) {
         String extension = getExtension(url.getPath());
-        return "".equals(extension) || "jar".equals(extension);
+        if ("".equals(extension)) {
+            try {
+                return Paths.get(url.toURI()).toFile().exists();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return "jar".equals(extension);
     }
 
     private static Collection<URL> getUrls() {
@@ -79,8 +87,8 @@ public final class AnnotationUtils {
         return reflections.getTypesAnnotatedWith(GraphWalker.class);
     }
 
-    public static Set<Annotation> getAnnotations(final Class<?> clazz, final Class<? extends Annotation> annotation) {
-        Set<Annotation> annotations = new HashSet<>();
+    public static <T extends Annotation> Set<T> getAnnotations(final Class<?> clazz, final Class<T> annotation) {
+        Set<T> annotations = new HashSet<>();
         Class<?> queryClass = clazz;
         while (null != queryClass) {
             addAnnotation(queryClass, annotations, annotation);
@@ -92,7 +100,7 @@ public final class AnnotationUtils {
         return annotations;
     }
 
-    private static void addAnnotation(final Class<?> clazz, final Set<Annotation> annotations, final Class<? extends Annotation> annotation) {
+    private static <T extends Annotation> void addAnnotation(final Class<?> clazz, final Set<T> annotations, final Class<T> annotation) {
         if (clazz.isAnnotationPresent(annotation)) {
             annotations.add(clazz.getAnnotation(annotation));
         }
