@@ -31,7 +31,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.CodeGenerator;
 import org.graphwalker.java.source.SourceFile;
 
@@ -50,7 +50,6 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     private String sourceEncoding;
 
     private CodeGenerator codeGenerator = new CodeGenerator();
-    private final ContextFactory contextFactory = new YEdContextFactory();
 
     protected String getSourceEncoding() {
         return sourceEncoding;
@@ -66,7 +65,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
 
     private void generate(Resource resource) {
         File baseDirectory = new File(resource.getDirectory());
-        for (File file: findFiles(contextFactory.getSupportedFileTypes(), null, baseDirectory)) {
+        for (File file: findFiles("**/*.*", null, baseDirectory)) {
             generate(file, baseDirectory, getGeneratedSourcesDirectory());
         }
     }
@@ -76,28 +75,31 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     }
 
     private void generate(SourceFile sourceFile) {
-        File outputFile = sourceFile.getOutputPath().toFile();
-        try {
-            RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
-            String source = codeGenerator.generate(sourceFile, model);
-            if (Files.exists(sourceFile.getOutputPath())) {
-                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
-                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
-                    return;
+        if (null != ContextFactoryScanner.get(sourceFile.getInputPath())) {
+            File outputFile = sourceFile.getOutputPath().toFile();
+            try {
+                ContextFactory contextFactory = ContextFactoryScanner.get(sourceFile.getInputPath());
+                RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
+                String source = codeGenerator.generate(sourceFile, model);
+                if (Files.exists(sourceFile.getOutputPath())) {
+                    String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
+                    if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
+                        return;
+                    }
                 }
-            }
-            if (getLog().isInfoEnabled()) {
-                getLog().info("Generate " + sourceFile.getInputPath());
-            }
-            FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
-            FileUtils.fileDelete(outputFile.getAbsolutePath());
-            FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
-        } catch (Throwable t) {
-            if (getLog().isInfoEnabled()) {
-                getLog().info("Error: Generate " + sourceFile.getInputPath());
-            }
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
+                if (getLog().isInfoEnabled()) {
+                    getLog().info("Generate " + sourceFile.getInputPath());
+                }
+                FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+                FileUtils.fileDelete(outputFile.getAbsolutePath());
+                FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
+            } catch (Throwable t) {
+                if (getLog().isInfoEnabled()) {
+                    getLog().info("Error: Generate " + sourceFile.getInputPath());
+                }
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
+                }
             }
         }
     }
