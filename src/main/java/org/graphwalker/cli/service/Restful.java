@@ -31,6 +31,7 @@ import org.graphwalker.cli.Util;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
 import org.json.JSONObject;
 
@@ -103,4 +104,10 @@ public class Restful {
         }
     }
 
+    @GET
+    @Produces("text/plain")
+    @Path("setData")
+    public void setData(@QueryParam("script") String script) {
+        machine.getCurrentContext().execute(new Action(script));
+    }
 }
