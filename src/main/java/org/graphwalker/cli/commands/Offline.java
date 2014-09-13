@@ -46,4 +46,8 @@ public class Offline {
         description = "The model, as a graphml file followed by generator with stop condition. " +
             "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
     public List<String> model = new ArrayList<String>();
+
+    @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
+            description = "Returns data formatted as json")
+    public boolean json = true;
 }

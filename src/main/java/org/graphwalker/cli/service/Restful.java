@@ -27,10 +27,12 @@ package org.graphwalker.cli.service;
  */
 
 import org.apache.commons.io.FilenameUtils;
+import org.graphwalker.cli.Util;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
+import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -54,9 +56,21 @@ public class Restful {
     @Path("hasNext")
     public String hasNext() {
         if (machine.hasNextStep()) {
-            return "true";
+            if (online.json) {
+                JSONObject obj = new JSONObject();
+                obj.put("HasNext", "true");
+                return obj.toString();
+            } else {
+                return "true";
+            }
         } else {
-            return "false";
+            if (online.json) {
+                JSONObject obj = new JSONObject();
+                obj.put("HasNext", "false");
+                return obj.toString();
+            } else {
+                return "false";
+           }
         }
     }
 
@@ -64,36 +78,15 @@ public class Restful {
     @Produces("text/plain")
     @Path("getNext")
     public String getNext() {
-        String retStr = "";
         try {
             machine.getNextStep();
+            if (online.json) {
+                return Util.getStepAsJSON(machine, online.verbose, online.unvisited).toString();
+            } else {
+                return Util.getStepAsString(machine, online.verbose, online.unvisited);
+            }
         } catch (MachineException e) {
-            ;
-        } finally {
-            if (online.verbose) {
-                retStr = FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ";
-            }
-            if (machine.getCurrentContext().getCurrentElement().hasName()) {
-                retStr += machine.getCurrentContext().getCurrentElement().getName();
-                if (online.verbose) {
-                    retStr += "(" + machine.getCurrentContext().getCurrentElement().getId() + ")";
-                    retStr += ":" + machine.getCurrentContext().getKeys();
-                }
-            }
-
-            if (online.unvisited) {
-                retStr += " | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
-                    "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ";
-
-                for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
-                    retStr += e.getName();
-                    if (online.verbose) {
-                        retStr += "(" + e.getId() + ")";
-                    }
-                    retStr += " ";
-                }
-            }
+            throw e;
         }
-        return retStr;
     }
 }

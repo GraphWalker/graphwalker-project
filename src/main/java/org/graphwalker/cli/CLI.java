@@ -244,31 +244,11 @@ public class CLI {
         while (machine.hasNextStep()) {
             try {
                 machine.getNextStep();
-                if (offline.verbose) {
-                    System.out.print(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ");
+                if (online.json) {
+                    System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
+                } else {
+                    System.out.println(Util.getStepAsString(machine, offline.verbose, offline.unvisited));
                 }
-                if (machine.getCurrentContext().getCurrentElement().hasName()) {
-                    System.out.print(machine.getCurrentContext().getCurrentElement().getName());
-                    if (offline.verbose) {
-                        System.out.print("(" + machine.getCurrentContext().getCurrentElement().getId() + ")");
-                        System.out.print(":" + machine.getCurrentContext().getKeys());
-                    }
-                }
-
-                if (offline.unvisited) {
-                    System.out.print(" | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
-                        "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
-
-                    for (Element element : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
-                        System.out.print(element.getName());
-                        if (offline.verbose) {
-                            System.out.print("(" + element.getId() + ")");
-                        }
-                        System.out.print(" ");
-                    }
-                }
-
-                System.out.println();
             } catch (MachineException e) {
                 throw e;
             }
