@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory.yed;
+package org.graphwalker.io.factory;
 
 /*
  * #%L
@@ -26,16 +26,29 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.File;
 
 /**
- * Created by krikar on 8/26/14.
+ * @author Nils Olsson
  */
-public class YEdContextFactoryException extends RuntimeException {
-    public YEdContextFactoryException(Throwable throwable) {
-        super(throwable);
+public class ContextFactoryScannerTest {
+
+    @Test
+    public void dot() {
+        File dotFile = new File(getTestClassesDirectory(), "dot/3v2e.dot");
+        Assert.assertNotNull(ContextFactoryScanner.get(dotFile.toPath()));
     }
 
-    public YEdContextFactoryException(String message) {
-        super(message);
+    @Test
+    public void graphml() {
+        File graphmlFile = new File(getTestClassesDirectory(), "graphml/UC01.graphml");
+        Assert.assertNotNull(ContextFactoryScanner.get(graphmlFile.toPath()));
+    }
+
+    public File getTestClassesDirectory() {
+        return new File(getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
     }
 }

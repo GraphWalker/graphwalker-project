@@ -29,6 +29,7 @@ package org.graphwalker.io.factory.dot;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
+import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,6 @@ public class DotDescriptiveErrorListener extends BaseErrorListener {
                           String msg, RecognitionException e)
   {
     logger.error(msg);
-    throw new DotContextFactoryException(msg);
+    throw new ContextFactoryException(msg);
   }
 }

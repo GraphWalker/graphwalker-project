@@ -27,17 +27,11 @@ package org.graphwalker.io.factory.yed;
  */
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.yed.YEdContext;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactoryException;
+import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
@@ -48,7 +42,7 @@ import static org.hamcrest.core.Is.is;
  */
 public class YEdContextFactoryTest {
 
-    @Test(expected = YEdContextFactoryException.class)
+    @Test(expected = ContextFactoryException.class)
     public void fileDoesNotExistsOnFileSystem() {
         Context context = new YEdContextFactory().create(Paths.get("graphml/LKHDIODSOSUBD.graphml"));
     }
