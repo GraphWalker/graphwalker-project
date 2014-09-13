@@ -46,15 +46,20 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactoryException;
+import org.graphwalker.io.factory.ContextFactoryException;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Model.RuntimeModel;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 public class CLI {
     private static final Logger logger = LoggerFactory.getLogger(CLI.class);
@@ -136,7 +141,7 @@ public class CLI {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage());
             jc.usage(jc.getParsedCommand());
-        } catch (YEdContextFactoryException e) {
+        } catch (ContextFactoryException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage());
         } catch (GeneratorFactoryException e) {
@@ -169,18 +174,17 @@ public class CLI {
     }
 
     private void RunCommandRequirements() throws Exception {
-        YEdContextFactory factory = new YEdContextFactory();
         Context context = null;
-
         String modelFileName = requirements.model;
         try {
-            context = factory.create(Paths.get(modelFileName));
-        } catch (YEdContextFactoryException e) {
-            throw new YEdContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+            Path path = Paths.get(modelFileName);
+            context = ContextFactoryScanner.get(path).create(path);
+        } catch (ContextFactoryException e) {
+            throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
         }
 
         SortedSet<Requirement> reqs = new TreeSet<>();
-        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+        for (RuntimeVertex vertex : context.getModel().getVertices()) {
             for (Requirement req : vertex.getRequirements()) {
                 reqs.add(req);
             }
@@ -192,23 +196,22 @@ public class CLI {
     }
 
     private void RunCommandMethods() throws Exception {
-        YEdContextFactory factory = new YEdContextFactory();
         Context context = null;
-
         String modelFileName = methods.model;
         try {
-            context = factory.create(Paths.get(modelFileName));
-        } catch (YEdContextFactoryException e) {
-            throw new YEdContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
+            Path path = Paths.get(modelFileName);
+            context = ContextFactoryScanner.get(path).create(path);
+        } catch (ContextFactoryException e) {
+            throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
         }
 
         SortedSet<String> names = new TreeSet<>();
-        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+        for (RuntimeVertex vertex : context.getModel().getVertices()) {
             if (null != vertex.getName()) {
                 names.add(vertex.getName());
             }
         }
-        for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+        for (RuntimeEdge edge : context.getModel().getEdges()) {
             names.add(edge.getName());
         }
 
@@ -218,7 +221,7 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        ArrayList<Context> executionContexts = getContexts(online.model.iterator());
+        List<Context> executionContexts = getContexts(online.model.iterator());
         if (online.restful) {
 
             ResourceConfig rc = new DefaultResourceConfig();
@@ -256,10 +259,10 @@ public class CLI {
                     System.out.print(" | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
                         "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
 
-                    for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
-                        System.out.print(e.getName());
+                    for (Element element : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
+                        System.out.print(element.getName());
                         if (offline.verbose) {
-                            System.out.print("(" + e.getId() + ")");
+                            System.out.print("(" + element.getId() + ")");
                         }
                         System.out.print(" ");
                     }
@@ -272,14 +275,11 @@ public class CLI {
         }
     }
 
-    private ArrayList<Context> getContexts(Iterator itr) {
-        YEdContextFactory factory = new YEdContextFactory();
-        Context context = null;
-
-        ArrayList<Context> executionContexts = new ArrayList<>();
+    private List<Context> getContexts(Iterator itr) {
+        List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
-            String modelFileName = (String) itr.next();
-            context = factory.create(Paths.get(modelFileName));
+            Path modelFile = Paths.get((String)itr.next());
+            Context context = ContextFactoryScanner.get(modelFile).create(modelFile);
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
             executionContexts.add(context);
             verifyModel(context.getModel());
@@ -287,7 +287,7 @@ public class CLI {
         return executionContexts;
     }
 
-    private void verifyModel(Model.RuntimeModel model) {
+    private void verifyModel(RuntimeModel model) {
         // Verify that the model has more than 1 vertex
         if (model.getAllVertices().size() < 1) {
             throw new RuntimeException("Model has less than 1 vertices. [Excluding the Start vertex]");
