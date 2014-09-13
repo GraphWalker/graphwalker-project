@@ -34,7 +34,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.*;
-import org.graphwalker.maven.plugin.report.XMLReportGenerator;
+import org.graphwalker.java.report.XMLReportGenerator;
 
 import java.io.File;
 import java.io.IOException;
@@ -306,7 +306,7 @@ public final class TestMojo extends DefaultMojoBase {
 
     private void reportResults(Executor executor) throws MojoExecutionException {
         boolean hasExceptions = false;
-        XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession());
+        XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession().getStartTime(), getSession().getSystemProperties());
 
         reporter.writeReport(executor);
 

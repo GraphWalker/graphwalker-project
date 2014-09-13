@@ -62,22 +62,6 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
-                <version>1.6</version>
-                <executions>
-                    <execution>
-                        <id>xjc</id>
-                        <goals>
-                            <goal>xjc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageName>org.graphwalker.maven.plugin.report</packageName>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>${maven.plugin.version}</version>
