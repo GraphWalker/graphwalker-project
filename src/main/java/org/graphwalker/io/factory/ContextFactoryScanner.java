@@ -31,9 +31,10 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import java.io.File;
+import java.net.URL;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Nils Olsson
@@ -42,9 +43,31 @@ public final class ContextFactoryScanner {
 
     private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
 
+    private static String getExtension(String path) {
+        int position = path.lastIndexOf('.');
+        return path.lastIndexOf(File.separator)>position?"":path.substring(position+1);
+    }
+
+    private static boolean valid(URL url) {
+        String extension = getExtension(url.getPath());
+        return "".equals(extension) || "jar".equals(extension);
+    }
+
+    private static Collection<URL> getUrls() {
+        Set<URL> filteredUrls = new HashSet<>();
+        Set<URL> urls = new HashSet<>();
+        urls.addAll(ClasspathHelper.forClassLoader());
+        urls.addAll(ClasspathHelper.forJavaClassPath());
+        for (URL url: urls) {
+            if (valid(url)) {
+                filteredUrls.add(url);
+            }
+        }
+        return filteredUrls;
+    }
+
     private static Reflections reflections = new Reflections(new ConfigurationBuilder()
-            .addUrls(ClasspathHelper.forJavaClassPath())
-            .addUrls(ClasspathHelper.forClassLoader())
+            .addUrls(getUrls())
             .addScanners(new SubTypesScanner()));
 
     public static ContextFactory get(Path path) {
