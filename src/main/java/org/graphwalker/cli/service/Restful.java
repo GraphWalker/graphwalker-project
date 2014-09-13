@@ -37,6 +37,8 @@ import org.json.JSONObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import java.util.Map;
 
 /**
  * Created by krikar on 5/30/14.
@@ -58,16 +60,14 @@ public class Restful {
         if (machine.hasNextStep()) {
             if (online.json) {
                 JSONObject obj = new JSONObject();
-                obj.put("HasNext", "true");
-                return obj.toString();
+                return obj.put("HasNext", "true").toString();
             } else {
                 return "true";
             }
         } else {
             if (online.json) {
                 JSONObject obj = new JSONObject();
-                obj.put("HasNext", "false");
-                return obj.toString();
+                return obj.put("HasNext", "false").toString();
             } else {
                 return "false";
            }
@@ -89,4 +89,18 @@ public class Restful {
             throw e;
         }
     }
+
+    @GET
+    @Produces("text/plain")
+    @Path("getData")
+    public String getData(@QueryParam("key") String key) {
+        String value = machine.getCurrentContext().getKeys().get(key);
+        if (online.json) {
+            JSONObject obj = new JSONObject();
+            return obj.put("Value", value).toString();
+        } else {
+            return value;
+        }
+    }
+
 }
