@@ -1,0 +1,31 @@
+# Eclipse stuff #
+#################
+.classpath
+.project
+.settings/
+
+# Intellij stuff #
+##################
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Build and unit tests stuff #
+#############################
+logs/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+work/
+amps-standalone/
+*/dependency-reduced-pom.xml
+
+# Mac stuff #
+#############
+.DS_Store
+
+
+
