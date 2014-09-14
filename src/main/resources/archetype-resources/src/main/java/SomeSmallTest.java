@@ -4,8 +4,8 @@
 package ${package};
 
 /*
- * ${symbol_pound}%L
- * GraphWalker Example
+ * #%L
+ * GraphWalker Maven Archetype
  * %%
  * Copyright (C) 2011 - 2014 GraphWalker
  * %%
@@ -26,9 +26,8 @@ package ${package};
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * ${symbol_pound}L%
+ * #L%
  */
-
 
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.GraphWalker;
