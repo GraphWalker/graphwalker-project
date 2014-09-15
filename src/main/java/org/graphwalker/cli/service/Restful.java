@@ -26,20 +26,17 @@ package org.graphwalker.cli.service;
  * #L%
  */
 
-import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.cli.Util;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Element;
 import org.json.JSONObject;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import java.util.Map;
 
 /**
  * Created by krikar on 5/30/14.
