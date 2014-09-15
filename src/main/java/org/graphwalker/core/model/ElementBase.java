@@ -34,36 +34,40 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public abstract class BaseElement implements Element {
+public abstract class ElementBase implements Element {
 
     private final String id;
     private final String name;
     private final List<Action> actions;
     private final Set<Requirement> requirements;
 
-    protected BaseElement(String id, String name, Set<Requirement> requirements) {
+    protected ElementBase(String id, String name, Set<Requirement> requirements) {
         this(id, name, new ArrayList<Action>(), requirements);
     }
 
-    protected BaseElement(String id, String name, List<Action> actions, Set<Requirement> requirements) {
+    protected ElementBase(String id, String name, List<Action> actions, Set<Requirement> requirements) {
         this.id = id;
         this.name = name;
         this.actions = Collections.unmodifiableList(actions);
         this.requirements = Collections.unmodifiableSet(requirements);
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public boolean hasId() {
         return id != null && !"".equals(id);
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public boolean hasName() {
         return name != null && !"".equals(name);
     }

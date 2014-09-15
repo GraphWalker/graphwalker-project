@@ -145,7 +145,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return new RuntimeEdge(this);
     }
 
-    public static final class RuntimeEdge extends BaseElement {
+    public static final class RuntimeEdge extends ElementBase {
 
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;

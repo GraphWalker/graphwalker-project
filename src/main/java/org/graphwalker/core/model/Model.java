@@ -117,7 +117,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return new RuntimeModel(this);
     }
 
-    public static class RuntimeModel extends BaseElement {
+    public static class RuntimeModel extends ElementBase {
 
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;

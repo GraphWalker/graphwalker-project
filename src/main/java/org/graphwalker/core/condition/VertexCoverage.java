@@ -35,7 +35,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class VertexCoverage extends BaseCondition {
+public final class VertexCoverage extends StopConditionBase {
 
     private final double percent;
 

@@ -28,7 +28,7 @@ package org.graphwalker.core.generator;
 
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.algorithm.FloydWarshall;
-import org.graphwalker.core.condition.NamedStopCondition;
+import org.graphwalker.core.condition.ReachedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
@@ -42,9 +42,9 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class AStarPath implements PathGenerator {
 
-    private final NamedStopCondition stopCondition;
+    private final ReachedStopCondition stopCondition;
 
-    public AStarPath(NamedStopCondition stopCondition) {
+    public AStarPath(ReachedStopCondition stopCondition) {
         this.stopCondition = stopCondition;
     }
 
@@ -63,7 +63,7 @@ public final class AStarPath implements PathGenerator {
         RuntimeModel model = context.getModel();
         int distance = Integer.MAX_VALUE;
         FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-        for (Element element: context.filter(model.findElements(stopCondition.getName()))) {
+        for (Element element: context.filter(stopCondition.getTargetElements(context))) {
             int edgeDistance = floydWarshall.getShortestDistance(context.getCurrentElement(), element);
             if (edgeDistance < distance) {
                 distance = edgeDistance;

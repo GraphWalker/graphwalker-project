@@ -31,7 +31,7 @@ import org.graphwalker.core.machine.Context;
 /**
  * @author Nils Olsson
  */
-public final class Length extends BaseCondition {
+public final class Length extends StopConditionBase {
 
     private final long length;
 

@@ -93,7 +93,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return new RuntimeVertex(this);
     }
 
-    public static final class RuntimeVertex extends BaseElement {
+    public static final class RuntimeVertex extends ElementBase {
 
         private final String sharedState;
 

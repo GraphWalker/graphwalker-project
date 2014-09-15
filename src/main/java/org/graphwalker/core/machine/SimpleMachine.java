@@ -61,11 +61,15 @@ public final class SimpleMachine extends ObservableMachine {
 
     public SimpleMachine(List<Context> contexts) {
         this.contexts.addAll(contexts);
+        executeInitActions(contexts);
+        this.currentContext = chooseStartContext(contexts);
+    }
+
+    private void executeInitActions(List<Context> contexts) {
         for (Context context: contexts) {
             this.currentContext = context;
             execute(context.getModel().getActions());
         }
-      this.currentContext = chooseStartContext(contexts);
     }
 
     private Context chooseStartContext(List<Context> contexts) {
@@ -181,14 +185,9 @@ public final class SimpleMachine extends ObservableMachine {
                 sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
             } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-
-
-
-                    //if (context.getPathGenerator().hasNextStep(context)) {
-                        if (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty()) {
-                            sharedStates.add(new SharedStateTuple(context, vertex));
-                        }
-                    //}
+                    if (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty()) {
+                        sharedStates.add(new SharedStateTuple(context, vertex));
+                    }
                 }
             }
         }

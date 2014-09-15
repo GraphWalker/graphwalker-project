@@ -33,7 +33,7 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 /**
  * @author Nils Olsson
  */
-public final class EdgeCoverage extends BaseCondition {
+public final class EdgeCoverage extends StopConditionBase {
 
     private final double percent;
 

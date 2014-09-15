@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Nils Olsson
  */
-public final class LoggerUtil {
+public abstract class LoggerUtil {
 
     public enum Level {
         OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL

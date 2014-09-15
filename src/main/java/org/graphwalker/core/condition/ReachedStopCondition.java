@@ -26,10 +26,16 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
-public interface NamedStopCondition extends StopCondition {
+public interface ReachedStopCondition extends StopCondition {
 
-    String getName();
+    String getTarget();
+    Set<Element> getTargetElements(Context context);
 }

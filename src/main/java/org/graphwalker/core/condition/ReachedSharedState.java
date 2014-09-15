@@ -27,16 +27,23 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
 
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public abstract class BaseCondition implements StopCondition {
+public class ReachedSharedState extends ReachedStopConditionBase {
 
-    @Override
-    public boolean isFulfilled(Context context) {
-        return context.getCurrentElement() instanceof RuntimeVertex;
+    public ReachedSharedState(String target) {
+        super(target);
+    }
+
+    public Set<Element> getTargetElements(Context context) {
+        Set<Element> elements = new HashSet<>();
+        elements.addAll(context.getModel().getSharedStates(getTarget()));
+        return elements;
     }
 }
