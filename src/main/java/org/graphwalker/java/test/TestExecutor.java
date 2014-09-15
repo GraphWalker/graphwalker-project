@@ -26,7 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.condition.NamedStopCondition;
+import org.graphwalker.core.condition.ReachedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
@@ -129,7 +129,7 @@ public final class TestExecutor {
             try {
                 constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
             } catch (Throwable _) {
-                constructor = annotation.pathGenerator().getConstructor(NamedStopCondition.class);
+                constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
             }
             if (null == constructor) {
                 throw new TestExecutionException("Couldn't find a valid constructor");
