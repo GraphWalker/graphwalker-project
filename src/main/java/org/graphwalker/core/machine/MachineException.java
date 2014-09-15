@@ -33,6 +33,11 @@ public final class MachineException extends RuntimeException {
 
     private final Context context;
 
+    public MachineException(String message) {
+        super(message);
+        context = null;
+    }
+
     public MachineException(Context context, Throwable throwable) {
         super(throwable);
         this.context = context;
