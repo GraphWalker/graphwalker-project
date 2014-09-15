@@ -56,7 +56,11 @@ public final class SourceFile {
     public SourceFile(Path inputPath, Path basePath, Path outputPath) {
         this.inputPath = inputPath;
         this.relativePath = basePath.relativize(inputPath);
-        this.packageName = this.relativePath.getParent().toString().replace(File.separator, ".");
+        if (null != this.relativePath.getParent()) {
+            this.packageName = this.relativePath.getParent().toString().replace(File.separator, ".");
+        } else {
+            this.packageName = "";
+        }
         this.outputPath = outputPath.resolve(this.relativePath).resolveSibling(getFileName() + ".java");
     }
 
