@@ -26,6 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.condition.NamedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
@@ -37,6 +38,7 @@ import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.annotation.Model;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.nio.file.Paths;
 import java.nio.file.Path;
@@ -123,7 +125,15 @@ public final class TestExecutor {
 
     private PathGenerator createPathGenerator(GraphWalker annotation) {
         try {
-            Constructor constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
+            Constructor constructor = null;
+            try {
+                constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
+            } catch (Throwable _) {
+                constructor = annotation.pathGenerator().getConstructor(NamedStopCondition.class);
+            }
+            if (null == constructor) {
+                throw new TestExecutionException("Couldn't find a valid constructor");
+            }
             return (PathGenerator)constructor.newInstance(createStopCondition(annotation));
         } catch (Throwable e) {
             throw new TestExecutionException(e);
@@ -179,29 +189,24 @@ public final class TestExecutor {
 
     public void execute() {
         if (!machines.isEmpty()) {
+            executeAnnotation(BeforeExecution.class, machines);
             ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
             for (final Machine machine : machines) {
                 executorService.execute(new Runnable() {
                     @Override
                     public void run() {
                         machine.addObserver(new LogObserver());
-                        for (Context context : machine.getContexts()) {
-                            AnnotationUtils.execute(BeforeExecution.class, context);
-                        }
                         try {
                             Context context = null;
                             while (machine.hasNextStep()) {
                                 if (null != context) {
-                                    AnnotationUtils.execute(BeforeElement.class, context);
+                                    executeAnnotation(BeforeElement.class, context);
                                 }
                                 context = machine.getNextStep();
-                                AnnotationUtils.execute(AfterElement.class, context);
+                                executeAnnotation(AfterElement.class, context);
                             }
                         } catch (MachineException e) {
                             failures.put(e.getContext(), e);
-                        }
-                        for (Context context : machine.getContexts()) {
-                            AnnotationUtils.execute(AfterExecution.class, context);
                         }
                     }
                 });
@@ -212,7 +217,24 @@ public final class TestExecutor {
             } catch (InterruptedException e) {
                 // ignore
             }
+            executeAnnotation(AfterExecution.class, machines);
         }
+    }
+
+    private void executeAnnotation(Class<? extends Annotation> annotation, Set<Machine> machines) {
+        for (Machine machine: machines) {
+            executeAnnotation(annotation, machine);
+        }
+    }
+
+    private void executeAnnotation(Class<? extends Annotation> annotation, Machine machine) {
+        for (Context context: machine.getContexts()) {
+            executeAnnotation(annotation, context);
+        }
+    }
+
+    private void executeAnnotation(Class<? extends Annotation> annotation, Context context) {
+        AnnotationUtils.execute(annotation, context);
     }
 
     public boolean isFailure(Context context) {
