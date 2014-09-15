@@ -99,6 +99,21 @@ public class CLI {
             setLogLevel(options);
 
             if (options.help) {
+                options = new Options();
+                jc = new JCommander(options);
+                offline = new Offline();
+                jc.addCommand("offline", offline);
+
+                online = new Online();
+                jc.addCommand("online", online);
+
+                methods = new Methods();
+                jc.addCommand("methods", methods);
+
+                requirements = new Requirements();
+                jc.addCommand("requirements", requirements);
+
+                jc.parse(args);
                 jc.usage();
                 return;
             } else if (options.version) {
