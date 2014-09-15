@@ -75,10 +75,10 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     }
 
     private void generate(SourceFile sourceFile) {
-        if (null != ContextFactoryScanner.get(sourceFile.getInputPath())) {
+        ContextFactory contextFactory = getContextFactory(sourceFile);
+        if (null != contextFactory) {
             File outputFile = sourceFile.getOutputPath().toFile();
             try {
-                ContextFactory contextFactory = ContextFactoryScanner.get(sourceFile.getInputPath());
                 RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
                 String source = codeGenerator.generate(sourceFile, model);
                 if (Files.exists(sourceFile.getOutputPath())) {
@@ -101,6 +101,14 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
                     getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
                 }
             }
+        }
+    }
+
+    private ContextFactory getContextFactory(SourceFile sourceFile) {
+        try {
+            return ContextFactoryScanner.get(sourceFile.getInputPath());
+        } catch (Throwable t) {
+            return null;
         }
     }
 }
