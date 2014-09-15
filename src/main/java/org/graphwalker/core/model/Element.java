@@ -30,8 +30,9 @@ package org.graphwalker.core.model;
  * @author Nils Olsson
  */
 public interface Element {
-    String getName();
     String getId();
+    boolean hasId();
+    String getName();
     boolean hasName();
     void accept(ElementVisitor visitor);
 }

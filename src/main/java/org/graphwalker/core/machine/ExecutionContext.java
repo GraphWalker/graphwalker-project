@@ -37,10 +37,7 @@ import javax.script.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
@@ -181,7 +178,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return (A)algorithms.get(clazz);
     }
 
-    public <E> List<E> filter(List<E> elements) {
+    public <E> List<E> filter(Collection<E> elements) {
         List<E> filteredElements = new ArrayList<>();
         if (null != elements) {
             for (E element : elements) {

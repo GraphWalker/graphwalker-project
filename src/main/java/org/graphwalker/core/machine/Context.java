@@ -32,8 +32,10 @@ import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Profiler;
 
 import javax.script.ScriptEngine;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
@@ -59,7 +61,7 @@ public interface Context {
     List<Requirement> getRequirements(RequirementStatus status);
     @SuppressWarnings("unchecked")
     public <A extends Algorithm> A getAlgorithm(Class<A> clazz);
-    <E> List<E> filter(List<E> elements);
+    <E> List<E> filter(Collection<E> elements);
     boolean isAvailable(RuntimeEdge edge);
     void execute(Action action);
     void execute(String name);

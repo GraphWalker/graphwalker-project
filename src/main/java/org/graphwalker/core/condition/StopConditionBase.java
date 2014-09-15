@@ -27,23 +27,16 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
 
-import java.util.HashSet;
-import java.util.Set;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
  */
-public final class ReachedVertex extends ReachedStopConditionBase {
+public abstract class StopConditionBase implements StopCondition {
 
-    public ReachedVertex(String target) {
-        super(target);
-    }
-
-    public Set<Element> getTargetElements(Context context) {
-        Set<Element> elements = new HashSet<>();
-        elements.addAll(context.getModel().findVertices(getTarget()));
-        return elements;
+    @Override
+    public boolean isFulfilled(Context context) {
+        return context.getCurrentElement() instanceof RuntimeVertex;
     }
 }

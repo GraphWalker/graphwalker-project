@@ -43,12 +43,6 @@ import static org.hamcrest.core.Is.is;
 public class ReachedVertexTest {
 
     @Test
-    public void testConstructor() {
-        ReachedVertex reachedVertex = new ReachedVertex("MyName");
-        Assert.assertThat(reachedVertex.getName(), is("MyName"));
-    }
-
-    @Test
     public void testFulfilment() {
         Vertex v1 = new Vertex().setName("v1");
         Vertex v2 = new Vertex().setName("v2");

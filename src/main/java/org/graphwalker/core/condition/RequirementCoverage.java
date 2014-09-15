@@ -32,7 +32,7 @@ import org.graphwalker.core.machine.RequirementStatus;
 /**
  * @author Nils Olsson
  */
-public final class RequirementCoverage extends BaseCondition {
+public final class RequirementCoverage extends StopConditionBase {
 
     private final double percent;
 

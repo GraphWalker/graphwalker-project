@@ -26,52 +26,24 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.BaseElement;
+import org.graphwalker.core.model.Element;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public final class ReachedEdge implements NamedStopCondition {
+public final class ReachedEdge extends ReachedStopConditionBase {
 
-    private final String name;
-
-    public ReachedEdge(String name) {
-        this.name = name;
+    public ReachedEdge(String target) {
+        super(target);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
-    }
-
-    @Override
-    public double getFulfilment(Context context) {
-        if (context.getCurrentElement() instanceof BaseElement) {
-            BaseElement element = (BaseElement)context.getCurrentElement();
-            if (element.hasName() && element.getName().equals(name)){
-                return 1;
-            } else {
-                double maxFulfilment = 0;
-                FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-                for (RuntimeEdge edge : context.getModel().findEdges(name)) {
-                    int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), edge);
-                    int max = floydWarshall.getMaximumDistance(edge);
-                    double fulfilment = 1 - (double) distance / max;
-                    if (maxFulfilment < fulfilment) {
-                        maxFulfilment = fulfilment;
-                    }
-                }
-                return maxFulfilment;
-            }
-        }
-        return 0;
+    public Set<Element> getTargetElements(Context context) {
+        Set<Element> elements = new HashSet<>();
+        elements.addAll(context.getModel().findEdges(getTarget()));
+        return elements;
     }
 }

@@ -278,7 +278,7 @@ public class SimpleMachineTest {
         Vertex v1 = new Vertex().setName("v1");
         Vertex v2 = new Vertex().setName("v2");
         Vertex v3a = new Vertex().setName("v3");
-        Vertex v3b = new Vertex().setName("v3");
+        Vertex v3b = new Vertex().setName("v4");
         Edge e1 = new Edge().setName("e1").setSourceVertex(start).setTargetVertex(v2).addAction(new Action("x = -1"));
         Edge e2 = new Edge().setName("e2").setSourceVertex(v2).setTargetVertex(v1).addAction(new Action("x = x + 1"));
         Edge e3 = new Edge().setName("e3").setSourceVertex(v1).setTargetVertex(v2);

@@ -26,24 +26,45 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public final class ReachedVertex extends ReachedStopConditionBase {
+public abstract class ReachedStopConditionBase implements ReachedStopCondition {
 
-    public ReachedVertex(String target) {
-        super(target);
+    private final String target;
+
+    protected ReachedStopConditionBase(String target) {
+        this.target = target;
     }
 
-    public Set<Element> getTargetElements(Context context) {
-        Set<Element> elements = new HashSet<>();
-        elements.addAll(context.getModel().findVertices(getTarget()));
-        return elements;
+    @Override
+    public String getTarget() {
+        return target;
+    }
+
+    @Override
+    public boolean isFulfilled(Context context) {
+        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+    }
+
+    @Override
+    public double getFulfilment(Context context) {
+        double maxFulfilment = 0;
+        if (null != context.getCurrentElement()) {
+            FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+            for (Element target : getTargetElements(context)) {
+                int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), target);
+                int max = floydWarshall.getMaximumDistance(target);
+                double fulfilment = 1 - (double) distance / max;
+                if (maxFulfilment < fulfilment) {
+                    maxFulfilment = fulfilment;
+                }
+            }
+        }
+        return maxFulfilment;
     }
 }
