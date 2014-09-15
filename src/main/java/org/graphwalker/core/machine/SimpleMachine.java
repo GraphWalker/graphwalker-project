@@ -65,7 +65,16 @@ public final class SimpleMachine extends ObservableMachine {
             this.currentContext = context;
             execute(context.getModel().getActions());
         }
-      this.currentContext = contexts.get(0);
+      this.currentContext = chooseStartContext(contexts);
+    }
+
+    private Context chooseStartContext(List<Context> contexts) {
+        for (Context context: contexts) {
+            if (null != context.getCurrentElement() || null != context.getNextElement()) {
+                return context;
+            }
+        }
+        throw new MachineException("No start context found");
     }
 
     public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
