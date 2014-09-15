@@ -64,7 +64,7 @@ public class GeneratorFactoryTest {
         PathGenerator generator = GeneratorFactory.parse("a_star(reached_vertex(v_ABC))");
         Assert.assertThat(generator, instanceOf(AStarPath.class));
         Assert.assertThat(generator.getStopCondition(), instanceOf(ReachedVertex.class));
-        Assert.assertThat(((ReachedVertex) generator.getStopCondition()).getName(), is("v_ABC"));
+        Assert.assertThat(((ReachedVertex) generator.getStopCondition()).getTarget(), is("v_ABC"));
     }
 
     @Test // Single stop condition
@@ -72,7 +72,7 @@ public class GeneratorFactoryTest {
         PathGenerator generator = GeneratorFactory.parse("random(reached_edge(edgeName))");
         Assert.assertThat(generator, instanceOf(RandomPath.class));
         Assert.assertThat(generator.getStopCondition(), instanceOf(ReachedEdge.class));
-        Assert.assertThat(((ReachedEdge) generator.getStopCondition()).getName(), is("edgeName"));
+        Assert.assertThat(((ReachedEdge) generator.getStopCondition()).getTarget(), is("edgeName"));
     }
 
     @Test // Single stop condition
@@ -80,7 +80,7 @@ public class GeneratorFactoryTest {
         PathGenerator generator = GeneratorFactory.parse("random(reached_vertex(vertexName))");
         Assert.assertThat(generator, instanceOf(RandomPath.class));
         Assert.assertThat(generator.getStopCondition(), instanceOf(ReachedVertex.class));
-        Assert.assertThat(((ReachedVertex) generator.getStopCondition()).getName(), is("vertexName"));
+        Assert.assertThat(((ReachedVertex) generator.getStopCondition()).getTarget(), is("vertexName"));
     }
 
     @Test // Single stop condition
@@ -106,9 +106,9 @@ public class GeneratorFactoryTest {
 
         AlternativeCondition condition = (AlternativeCondition) generator.getStopCondition();
         Assert.assertThat(condition.getStopConditions().get(0), instanceOf(ReachedVertex.class));
-        Assert.assertThat(((ReachedVertex) condition.getStopConditions().get(0)).getName(), is("Some_vertex"));
+        Assert.assertThat(((ReachedVertex) condition.getStopConditions().get(0)).getTarget(), is("Some_vertex"));
         Assert.assertThat(condition.getStopConditions().get(1), instanceOf(ReachedEdge.class));
-        Assert.assertThat(((ReachedEdge) condition.getStopConditions().get(1)).getName(), is("Some_edge"));
+        Assert.assertThat(((ReachedEdge) condition.getStopConditions().get(1)).getTarget(), is("Some_edge"));
     }
 
     @Test // 2 stop condition, logical OR'd, and with white spaces in expression
@@ -136,7 +136,7 @@ public class GeneratorFactoryTest {
 
         condition = combinedPath.getPathGenerators().get(1).getStopCondition();
         Assert.assertThat(condition, instanceOf(ReachedVertex.class));
-        Assert.assertThat(((ReachedVertex) condition).getName(), is("v_ABC"));
+        Assert.assertThat(((ReachedVertex) condition).getTarget(), is("v_ABC"));
     }
 
     @Test // 2 stop condition, logical OR'd, and with white spaces in expression
@@ -147,8 +147,8 @@ public class GeneratorFactoryTest {
 
         AlternativeCondition condition = (AlternativeCondition) generator.getStopCondition();
         Assert.assertThat(condition.getStopConditions().get(0), instanceOf(ReachedVertex.class));
-        Assert.assertThat(((ReachedVertex) condition.getStopConditions().get(0)).getName(), is("Some_vertex"));
+        Assert.assertThat(((ReachedVertex) condition.getStopConditions().get(0)).getTarget(), is("Some_vertex"));
         Assert.assertThat(condition.getStopConditions().get(1), instanceOf(ReachedEdge.class));
-        Assert.assertThat(((ReachedEdge) condition.getStopConditions().get(1)).getName(), is("Some_edge"));
+        Assert.assertThat(((ReachedEdge) condition.getStopConditions().get(1)).getTarget(), is("Some_edge"));
     }
 }
