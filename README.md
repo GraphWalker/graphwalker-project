@@ -6,6 +6,8 @@ graphwalker-project [![Build Status](https://travis-ci.org/GraphWalker/graphwalk
 <br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-io.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-io) [graphwalker-io](https://github.com/GraphWalker/graphwalker-io)
 <br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-cli.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-cli) [graphwalker-cli](https://github.com/GraphWalker/graphwalker-cli)
 <br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-maven-plugin.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-maven-plugin) [graphwalker-maven-plugin](https://github.com/GraphWalker/graphwalker-maven-plugin)
+<br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-maven-archetype.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-maven-archetype) [graphwalker-maven-archetype](https://github.com/GraphWalker/graphwalker-maven-archetype)
+<br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-gradle-plugin.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-gradle-plugin) [graphwalker-gradle-plugin](https://github.com/GraphWalker/graphwalker-gradle-plugin)
 <br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-dashboard.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-dashboard) [graphwalker-dashboard](https://github.com/GraphWalker/graphwalker-dashboard)
 <br/>[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-example.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-example) [graphwalker-example](https://github.com/GraphWalker/graphwalker-example)
         
