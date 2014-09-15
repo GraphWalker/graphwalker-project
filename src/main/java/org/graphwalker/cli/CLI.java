@@ -31,7 +31,6 @@ import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.antlr.GeneratorFactory;
@@ -44,22 +43,21 @@ import org.graphwalker.cli.service.Restful;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.factory.ContextFactoryException;
+import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 public class CLI {
     private static final Logger logger = LoggerFactory.getLogger(CLI.class);
@@ -153,9 +151,6 @@ public class CLI {
             if (jc.getParsedCommand()!=null) {
                 jc.usage(jc.getParsedCommand());
             }
-        } catch (YEdContextFactoryException e) {
-            System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage() + System.lineSeparator());
         } catch (GeneratorFactoryException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage() + System.lineSeparator());
@@ -218,7 +213,7 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        ArrayList<Context> executionContexts = getContextsOfflineOnline(online.model.iterator());
+        List<Context> executionContexts = getContexts(online.model.iterator());
         if (online.restful) {
 
             ResourceConfig rc = new DefaultResourceConfig();
@@ -238,7 +233,7 @@ public class CLI {
     }
 
     private void RunCommandOffline() throws Exception {
-        SimpleMachine machine = new SimpleMachine(getContextsOfflineOnline(offline.model.iterator()));
+        SimpleMachine machine = new SimpleMachine(getContexts(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
                 machine.getNextStep();
@@ -257,23 +252,10 @@ public class CLI {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
-            context = factory.create(Paths.get(modelFileName));
-            executionContexts.add(context);
-        }
-        return executionContexts;
-    }
-
-    private ArrayList<Context> getContextsOfflineOnline(Iterator itr) {
-        YEdContextFactory factory = new YEdContextFactory();
-        Context context = null;
-
-        ArrayList<Context> executionContexts = new ArrayList<>();
-        while (itr.hasNext()) {
-            String modelFileName = (String) itr.next();
-            context = factory.create(Paths.get(modelFileName));
+            ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+            Context context = factory.create(Paths.get(modelFileName));
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
             executionContexts.add(context);
-            verifyModel(context.getModel());
         }
         return executionContexts;
     }
