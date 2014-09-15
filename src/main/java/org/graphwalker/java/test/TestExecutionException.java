@@ -35,6 +35,10 @@ public class TestExecutionException extends RuntimeException {
         super();
     }
 
+    public TestExecutionException(String message) {
+        super(message);
+    }
+
     public TestExecutionException(Throwable throwable) {
         super(throwable);
     }
