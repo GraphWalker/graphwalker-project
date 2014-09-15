@@ -31,7 +31,6 @@ import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.antlr.GeneratorFactory;
@@ -44,22 +43,21 @@ import org.graphwalker.cli.service.Restful;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.io.factory.ContextFactoryException;
+import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 public class CLI {
     private static final Logger logger = LoggerFactory.getLogger(CLI.class);
@@ -77,7 +75,7 @@ public class CLI {
         } catch (Exception e) {
             // We should have caught all exceptions up until here, but there
             // might have been problems with the command parser for instance...
-            System.err.println(e);
+            System.err.println(e + System.lineSeparator());
             logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
         }
     }
@@ -89,26 +87,43 @@ public class CLI {
      */
     private void run(String[] args) {
         options = new Options();
-
         jc = new JCommander(options);
         jc.setProgramName("java -jar graphwalker.jar");
-
-        offline = new Offline();
-        jc.addCommand("offline", offline);
-
-        online = new Online();
-        jc.addCommand("online", online);
-
-        methods = new Methods();
-        jc.addCommand("methods", methods);
-
-        requirements = new Requirements();
-        jc.addCommand("requirements", requirements);
+        try {
+            jc.parseWithoutValidation(args);
+        } catch (Exception e) {
+            ;
+        }
 
         try {
-            jc.parse(args);
             setLogLevel(options);
 
+            if (options.help) {
+                jc.usage();
+                return;
+            } else if (options.version) {
+                System.out.println(printVersionInformation());
+                return;
+            }
+
+
+            // Need to instantiate options again to avoid
+            // ParameterException "Can only specify option --debug once."
+            options = new Options();
+            jc = new JCommander(options);
+            offline = new Offline();
+            jc.addCommand("offline", offline);
+
+            online = new Online();
+            jc.addCommand("online", online);
+
+            methods = new Methods();
+            jc.addCommand("methods", methods);
+
+            requirements = new Requirements();
+            jc.addCommand("requirements", requirements);
+
+            jc.parse(args);
 
             // Parse for commands
             if (jc.getParsedCommand() != null) {
@@ -123,33 +138,25 @@ public class CLI {
                 }
             }
 
-            // Parse for arguments
-            else if (options.version) {
-                System.out.println(printVersionInformation());
-            }
-
             // No commands or options were found
             else {
-                jc.usage();
+                throw new MissingCommandException("Missing a command.");
             }
 
         } catch (MissingCommandException e) {
-            System.err.println("I did not see a valid command.");
-            System.err.println("");
-            jc.usage();
+            System.err.println(e.getMessage() + System.lineSeparator());
         } catch (ParameterException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
-            jc.usage(jc.getParsedCommand());
-        } catch (ContextFactoryException e) {
-            System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
+            if (jc.getParsedCommand()!=null) {
+                jc.usage(jc.getParsedCommand());
+            }
         } catch (GeneratorFactoryException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
         } catch (Exception e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage() + System.lineSeparator());
             logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
         }
     }
@@ -170,49 +177,34 @@ public class CLI {
             LoggerUtil.setLogLevel(LoggerUtil.Level.TRACE);
         } else if (options.debug.equalsIgnoreCase("ALL")) {
             LoggerUtil.setLogLevel(LoggerUtil.Level.ALL);
+        } else {
+            throw new ParameterException("Incorrect argument to --debug");
         }
     }
 
     private void RunCommandRequirements() throws Exception {
-        Context context = null;
-        String modelFileName = requirements.model;
-        try {
-            Path path = Paths.get(modelFileName);
-            context = ContextFactoryScanner.get(path).create(path);
-        } catch (ContextFactoryException e) {
-            throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-        }
-
         SortedSet<Requirement> reqs = new TreeSet<>();
-        for (RuntimeVertex vertex : context.getModel().getVertices()) {
-            for (Requirement req : vertex.getRequirements()) {
+        for (Context context : getContexts(requirements.model.iterator())) {
+            for (Requirement req : context.getRequirements()) {
                 reqs.add(req);
             }
         }
-
         for (Requirement req : reqs) {
             System.out.println(req.getKey());
         }
     }
 
     private void RunCommandMethods() throws Exception {
-        Context context = null;
-        String modelFileName = methods.model;
-        try {
-            Path path = Paths.get(modelFileName);
-            context = ContextFactoryScanner.get(path).create(path);
-        } catch (ContextFactoryException e) {
-            throw new ContextFactoryException("Could not parse the model: '" + modelFileName + "'. Does it exists and is it readable?");
-        }
-
         SortedSet<String> names = new TreeSet<>();
-        for (RuntimeVertex vertex : context.getModel().getVertices()) {
-            if (null != vertex.getName()) {
-                names.add(vertex.getName());
+        for (Context context : getContexts(methods.model.iterator())) {
+            for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+                if (null != vertex.getName()) {
+                    names.add(vertex.getName());
+                }
             }
-        }
-        for (RuntimeEdge edge : context.getModel().getEdges()) {
-            names.add(edge.getName());
+            for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+                names.add(edge.getName());
+            }
         }
 
         for (String name : names) {
@@ -227,6 +219,7 @@ public class CLI {
             ResourceConfig rc = new DefaultResourceConfig();
             rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
             HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
+            System.out.println("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext");
             System.out.println("Press Control+C to end...");
             try {
                 server.start();
@@ -258,11 +251,11 @@ public class CLI {
     private List<Context> getContexts(Iterator itr) {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
-            Path modelFile = Paths.get((String)itr.next());
-            Context context = ContextFactoryScanner.get(modelFile).create(modelFile);
+            String modelFileName = (String) itr.next();
+            ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+            Context context = factory.create(Paths.get(modelFileName));
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
             executionContexts.add(context);
-            verifyModel(context.getModel());
         }
         return executionContexts;
     }
