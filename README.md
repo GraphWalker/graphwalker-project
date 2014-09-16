@@ -38,7 +38,7 @@ For a maven project just add this dependency:
 <dependency>
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-core</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
