@@ -30,6 +30,7 @@ import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -93,8 +94,17 @@ public final class SimpleMachine extends ObservableMachine {
         currentContext.getProfiler().start();
         execute(currentContext.getCurrentElement());
         currentContext.getProfiler().stop();
+        updateRequirements(currentContext, currentContext.getCurrentElement());
         notifyObservers(currentContext.getCurrentElement(), EventType.AFTER_ELEMENT);
         return currentContext;
+    }
+
+    private void updateRequirements(Context context, Element element) {
+        if (element.hasRequirements()) {
+            for (Requirement requirement: element.getRequirements()) {
+                context.setRequirementStatus(requirement, RequirementStatus.PASSED);
+            }
+        }
     }
 
     private Context getNextStep(Context context) {
