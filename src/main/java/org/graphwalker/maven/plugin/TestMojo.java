@@ -33,6 +33,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionStatus;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.java.test.*;
 import org.graphwalker.java.report.XMLReportGenerator;
 
@@ -252,8 +253,8 @@ public final class TestMojo extends DefaultMojoBase {
                         getLog().info("    "
                             + context.getClass().getSimpleName()+"("
                             + context.getPathGenerator().getClass().getSimpleName()+", "
-                            + context.getPathGenerator().getStopCondition().getClass().getSimpleName()+", \""
-                            /*+ context.getPathGenerator().getStopCondition().getValue()*/+"\")");
+                            + context.getPathGenerator().getStopCondition().getClass().getSimpleName()+", "
+                            + context.getPathGenerator().getStopCondition().getValue()+")");
                     }
                     getLog().info("");
                 }
@@ -262,7 +263,23 @@ public final class TestMojo extends DefaultMojoBase {
         }
     }
 
+    public Machine getFailedMachine(TestExecutor executor) {
+        for (Machine machine: executor.getMachines()) {
+            for (Context context: machine.getContexts()) {
+                if (executor.isFailure(context)) {
+                    return machine;
+                }
+            }
+        }
+        return null;
+    }
+
     private void displayResult(TestExecutor executor) {
+        if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
+            for (MachineException exception: executor.getFailures()) {
+                getLog().error(exception);
+            }
+        }
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");
             getLog().info("");
