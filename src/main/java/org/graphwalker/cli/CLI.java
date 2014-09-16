@@ -228,7 +228,7 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        List<Context> executionContexts = getContexts(online.model.iterator());
+        List<Context> executionContexts = getContextsOfflineOnline(online.model.iterator());
         if (online.restful) {
 
             ResourceConfig rc = new DefaultResourceConfig();
@@ -248,7 +248,7 @@ public class CLI {
     }
 
     private void RunCommandOffline() throws Exception {
-        SimpleMachine machine = new SimpleMachine(getContexts(offline.model.iterator()));
+        SimpleMachine machine = new SimpleMachine(getContextsOfflineOnline(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
                 machine.getNextStep();
@@ -263,13 +263,24 @@ public class CLI {
         }
     }
 
-    private List<Context> getContexts(Iterator itr) {
+    private List<Context> getContextsOfflineOnline(Iterator itr) {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
             ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
             Context context = factory.create(Paths.get(modelFileName));
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
+            executionContexts.add(context);
+        }
+        return executionContexts;
+    }
+
+    private List<Context> getContexts(Iterator itr) {
+        List<Context> executionContexts = new ArrayList<>();
+        while (itr.hasNext()) {
+            String modelFileName = (String) itr.next();
+            ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+            Context context = factory.create(Paths.get(modelFileName));
             executionContexts.add(context);
         }
         return executionContexts;
