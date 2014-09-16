@@ -100,13 +100,6 @@ public final class YEdContextFactory implements ContextFactory {
         context.setModel(model.build());
         if (null != startEdge) {
             context.setNextElement(startEdge);
-        } else {
-            for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
-                if (context.getModel().getOutEdges(vertex).isEmpty()) {
-                    context.setNextElement(vertex);
-                }
-            }
-
         }
         return context;
     }
