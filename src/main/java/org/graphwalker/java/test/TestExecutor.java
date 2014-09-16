@@ -244,4 +244,8 @@ public final class TestExecutor {
     public MachineException getFailure(Context context) {
         return failures.get(context);
     }
+
+    public Collection<MachineException> getFailures() {
+        return failures.values();
+    }
 }
