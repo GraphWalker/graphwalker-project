@@ -198,14 +198,14 @@ public class CLI {
     }
 
     private void RunCommandRequirements() throws Exception {
-        SortedSet<Requirement> reqs = new TreeSet<>();
+        SortedSet<String> reqs = new TreeSet<>();
         for (Context context : getContexts(requirements.model.iterator())) {
             for (Requirement req : context.getRequirements()) {
-                reqs.add(req);
+                reqs.add(req.getKey());
             }
         }
-        for (Requirement req : reqs) {
-            System.out.println(req.getKey());
+        for (String req : reqs) {
+            System.out.println(req);
         }
     }
 
