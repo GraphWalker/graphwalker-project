@@ -44,7 +44,7 @@ import java.util.Random;
  *         This is quite effective for FSM, but for a EFSM this may not work since edges
  *         can be inaccessable.
  */
-public final class QuickRandomPath implements PathGenerator {
+public final class QuickRandomPath extends PathGeneratorBase {
 
     private final Random random = new Random(System.nanoTime());
     private final StopCondition stopCondition;

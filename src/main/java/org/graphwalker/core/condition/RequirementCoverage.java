@@ -37,6 +37,7 @@ public final class RequirementCoverage extends StopConditionBase {
     private final double percent;
 
     public RequirementCoverage(int percent) {
+        super(String.valueOf(percent));
         this.percent = (double)percent/100;
     }
 

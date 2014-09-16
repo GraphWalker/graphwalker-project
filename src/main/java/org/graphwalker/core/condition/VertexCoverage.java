@@ -40,6 +40,7 @@ public final class VertexCoverage extends StopConditionBase {
     private final double percent;
 
     public VertexCoverage(int percent) {
+        super(String.valueOf(percent));
         this.percent = (double)percent/100;
     }
 

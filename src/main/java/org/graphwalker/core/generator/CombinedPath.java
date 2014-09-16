@@ -30,12 +30,13 @@ import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public final class CombinedPath implements PathGenerator {
+public final class CombinedPath extends PathGeneratorBase {
 
     private final List<PathGenerator> generators = new ArrayList<>();
     private int index = 0;
@@ -76,12 +77,14 @@ public final class CombinedPath implements PathGenerator {
     }
 
     @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (PathGenerator generator : generators) {
-            stringBuilder.append(generator.toString());
-            stringBuilder.append(System.getProperty("line.separator"));
+    public StringBuilder toString(StringBuilder builder) {
+        Iterator<PathGenerator> iterator = generators.iterator();
+        while (iterator.hasNext()) {
+            iterator.next().toString(builder);
+            if (iterator.hasNext()) {
+                builder.append(" AND ");
+            }
         }
-        return stringBuilder.toString().trim();
+        return builder;
     }
 }

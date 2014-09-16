@@ -39,6 +39,7 @@ public final class TimeDuration extends StopConditionBase {
     private final long timestamp;
 
     public TimeDuration(long time, TimeUnit unit) {
+        super(String.valueOf(time));
         this.timestamp = System.nanoTime();
         this.duration = TimeUnit.NANOSECONDS.convert(time, unit);
     }

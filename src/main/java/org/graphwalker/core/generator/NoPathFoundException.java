@@ -38,11 +38,4 @@ public final class NoPathFoundException extends RuntimeException {
         super(message);
     }
 
-    public NoPathFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NoPathFoundException(Throwable cause) {
-        super(cause);
-    }
 }

@@ -36,6 +36,7 @@ public final class Length extends StopConditionBase {
     private final long length;
 
     public Length(long length) {
+        super(String.valueOf(length));
         this.length = length;
     }
 

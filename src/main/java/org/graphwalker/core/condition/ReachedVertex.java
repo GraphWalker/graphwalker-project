@@ -30,7 +30,10 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * @author Nils Olsson
@@ -43,7 +46,12 @@ public final class ReachedVertex extends ReachedStopConditionBase {
 
     public Set<Element> getTargetElements(Context context) {
         Set<Element> elements = new HashSet<>();
-        elements.addAll(context.getModel().findVertices(getTarget()));
+        List<RuntimeVertex> vertices = context.getModel().findVertices(getValue());
+        if (null != vertices && !vertices.isEmpty()) {
+            elements.addAll(vertices);
+        }
         return elements;
     }
+
+
 }

@@ -37,4 +37,5 @@ public interface PathGenerator {
     StopCondition getStopCondition();
     Context getNextStep(Context context);
     boolean hasNextStep(Context context);
+    StringBuilder toString(StringBuilder builder);
 }

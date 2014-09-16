@@ -35,9 +35,13 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class CombinedCondition implements StopCondition {
+public final class CombinedCondition extends StopConditionBase {
 
     private final List<StopCondition> conditions = new ArrayList<>();
+
+    public CombinedCondition() {
+        super("");
+    }
 
     public void addStopCondition(StopCondition condition) {
         this.conditions.add(condition);
@@ -67,15 +71,14 @@ public final class CombinedCondition implements StopCondition {
     }
 
     @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("(");
-        for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-            stringBuilder.append(i.next().toString());
-            if (i.hasNext()) {
-                stringBuilder.append(" AND ");
+    public StringBuilder toString(StringBuilder builder) {
+        Iterator<StopCondition> iterator = conditions.iterator();
+        while (iterator.hasNext()) {
+            iterator.next().toString(builder);
+            if (iterator.hasNext()) {
+                builder.append(" AND ");
             }
         }
-        stringBuilder.append(")");
-        return stringBuilder.toString();
+        return builder;
     }
 }
