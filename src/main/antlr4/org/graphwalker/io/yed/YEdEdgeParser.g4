@@ -40,11 +40,11 @@ action
  ;
 
 reqtags
- : REQTAG (COLON | ASSIGN) reqtagn
+ : REQTAG (COLON | ASSIGN) reqtagList
  ;
 
-reqtagn
- : ((reqtag) COMMA)* reqtag
+reqtagList
+ : (reqtag COMMA)* reqtag
  ;
 
 reqtag

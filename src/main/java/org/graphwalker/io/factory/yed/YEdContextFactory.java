@@ -134,7 +134,7 @@ public final class YEdContextFactory implements ContextFactory {
                                 vertex.setSharedState(parseContext.shared().Identifier().getText());
                             }
                             if (null != parseContext.reqtags()) {
-                                vertex.addRequirements(convertVertexRequirement(parseContext.reqtags().reqtagn().reqtag()));
+                                vertex.addRequirements(convertVertexRequirement(parseContext.reqtags().reqtagList().reqtag()));
                             }
                             if (null != parseContext.actions()) {
                                 model.addActions(convertVertexAction(parseContext.actions().action()));
@@ -210,7 +210,7 @@ public final class YEdContextFactory implements ContextFactory {
                                 edge.addActions(convertEdgeAction(parseContext.actions().action()));
                             }
                             if (null != parseContext.reqtags()) {
-                                edge.addRequirements(convertEdgeRequirement(parseContext.reqtags().reqtagn().reqtag()));
+                                edge.addRequirements(convertEdgeRequirement(parseContext.reqtags().reqtagList().reqtag()));
                             }
                             if (null == parseContext.blocked()) {
                                 if (null != edge.getTargetVertex() ) {
