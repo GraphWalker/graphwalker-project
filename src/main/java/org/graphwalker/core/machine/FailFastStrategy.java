@@ -26,6 +26,9 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Requirement;
+
 /**
  * @author Nils Olsson
  */
@@ -33,7 +36,14 @@ public final class FailFastStrategy implements ExceptionStrategy {
 
     @Override
     public void handle(Machine machine, MachineException exception) {
-        exception.getContext().setExecutionStatus(ExecutionStatus.FAILED);
+        Context context = exception.getContext();
+        Element currentElement = context.getCurrentElement();
+        if (currentElement.hasRequirements()) {
+            for (Requirement requirement: currentElement.getRequirements()) {
+                context.setRequirementStatus(requirement, RequirementStatus.FAILED);
+            }
+        }
+        context.setExecutionStatus(ExecutionStatus.FAILED);
         throw exception;
     }
 }

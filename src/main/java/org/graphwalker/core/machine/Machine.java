@@ -38,5 +38,6 @@ public interface Machine extends Observable<Element> {
     Context getNextStep();
     boolean hasNextStep();
     List<Context> getContexts();
+    Context getCurrentContext();
     void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
 }

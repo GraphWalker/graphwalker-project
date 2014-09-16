@@ -26,6 +26,8 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
@@ -34,5 +36,7 @@ public interface Element {
     boolean hasId();
     String getName();
     boolean hasName();
+    Set<Requirement> getRequirements();
+    boolean hasRequirements();
     void accept(ElementVisitor visitor);
 }

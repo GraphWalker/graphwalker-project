@@ -72,32 +72,13 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
         return new RuntimeClassification(this);
     }
 
-    public static final class RuntimeClassification implements Element {
+    public static final class RuntimeClassification extends ElementBase {
 
-        private final String id;
-        private final String name;
         private final List<RuntimeClassification> classifications;
 
         private RuntimeClassification(Classification classification) {
-            this.id = classification.getId();
-            this.name = classification.getName();
+            super(classification.getId(), classification.getName());
             this.classifications = BuilderFactory.build(classification.getClassifications());
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public boolean hasId() {
-            return id != null && !"".equals(id);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public boolean hasName() {
-            return name != null && !"".equals(name);
         }
 
         public List<RuntimeClassification> getClassifications() {

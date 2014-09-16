@@ -26,10 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Nils Olsson
@@ -40,6 +37,10 @@ public abstract class ElementBase implements Element {
     private final String name;
     private final List<Action> actions;
     private final Set<Requirement> requirements;
+
+    protected ElementBase(String id, String name) {
+        this(id, name, new ArrayList<Action>(), new HashSet<Requirement>());
+    }
 
     protected ElementBase(String id, String name, Set<Requirement> requirements) {
         this(id, name, new ArrayList<Action>(), requirements);

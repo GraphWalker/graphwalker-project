@@ -62,6 +62,8 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     private final Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
 
+    private final Map<Requirement, RequirementStatus> requirements = new HashMap<>();
+
     public ExecutionContext() {
         ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
         engine.setContext(this);
@@ -85,7 +87,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
         this();
-        this.model = model.build();
+        setModel(model.build());
         this.pathGenerator = pathGenerator;
 
         for (RuntimeEdge edge: this.model.getEdges()) {
@@ -107,7 +109,20 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     public Context setModel(RuntimeModel model) {
         this.model = model;
+        addRequirements(model);
         return this;
+    }
+
+    private void addRequirements(RuntimeModel model) {
+        requirements.clear();
+        for (Requirement requirement: model.getRequirements()) {
+            requirements.put(requirement, RequirementStatus.NOT_COVERED);
+        }
+        for (Element element: model.getElements()) {
+            for (Requirement requirement: element.getRequirements()) {
+                requirements.put(requirement, RequirementStatus.NOT_COVERED);
+            }
+        }
     }
 
     public Profiler getProfiler() {
@@ -151,18 +166,29 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         return this;
     }
 
-  public Context setNextElement(Element nextElement) {
-    this.nextElement = nextElement;
-    this.currentElement = null;
-    return this;
-  }
+    public Context setNextElement(Element nextElement) {
+        this.nextElement = nextElement;
+        this.currentElement = null;
+        return this;
+    }
+
+    public Context setRequirementStatus(Requirement requirement, RequirementStatus requirementStatus) {
+        requirements.put(requirement, requirementStatus);
+        return this;
+    }
 
     public List<Requirement> getRequirements() {
-        throw new RuntimeException("Not implemented");
+        return new ArrayList<>(requirements.keySet());
     }
 
     public List<Requirement> getRequirements(RequirementStatus status) {
-        throw new RuntimeException("Not implemented");
+        List<Requirement> filteredRequirements = new ArrayList<>();
+        for (Requirement requirement: requirements.keySet()) {
+            if (status.equals(requirements.get(requirement))) {
+                filteredRequirements.add(requirement);
+            }
+        }
+        return filteredRequirements;
     }
 
     @SuppressWarnings("unchecked")

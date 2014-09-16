@@ -59,6 +59,7 @@ public interface Context {
     Context setNextElement(Element nextElement);
     List<Requirement> getRequirements();
     List<Requirement> getRequirements(RequirementStatus status);
+    Context setRequirementStatus(Requirement requirement, RequirementStatus requirementStatus);
     @SuppressWarnings("unchecked")
     public <A extends Algorithm> A getAlgorithm(Class<A> clazz);
     <E> List<E> filter(Collection<E> elements);
