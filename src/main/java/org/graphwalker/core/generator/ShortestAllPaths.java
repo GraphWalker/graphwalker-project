@@ -38,7 +38,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class ShortestAllPaths implements PathGenerator {
+public final class ShortestAllPaths extends PathGeneratorBase {
 
     private final StopCondition stopCondition;
     private Path<Element> path = null;

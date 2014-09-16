@@ -33,17 +33,10 @@ import org.graphwalker.core.model.Element;
 /**
  * @author Nils Olsson
  */
-public abstract class ReachedStopConditionBase implements ReachedStopCondition {
+public abstract class ReachedStopConditionBase extends StopConditionBase implements ReachedStopCondition {
 
-    private final String target;
-
-    protected ReachedStopConditionBase(String target) {
-        this.target = target;
-    }
-
-    @Override
-    public String getTarget() {
-        return target;
+    protected ReachedStopConditionBase(String value) {
+        super(value);
     }
 
     @Override

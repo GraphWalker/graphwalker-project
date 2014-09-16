@@ -31,7 +31,11 @@ import org.graphwalker.core.machine.Context;
 /**
  * @author Nils Olsson
  */
-public final class Never implements StopCondition {
+public final class Never extends StopConditionBase {
+
+    public Never() {
+        super("");
+    }
 
     @Override
     public boolean isFulfilled(Context context) {

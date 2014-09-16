@@ -38,6 +38,7 @@ public final class EdgeCoverage extends StopConditionBase {
     private final double percent;
 
     public EdgeCoverage(int percent) {
+        super(String.valueOf(percent));
         this.percent = (double)percent/100;
     }
 

@@ -26,6 +26,13 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.junit.Assert;
+import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 /**
@@ -33,13 +40,47 @@ import org.junit.Test;
  */
 public class CombinedPathTest {
 
+    Vertex start = new Vertex();
+    Vertex v1 = new Vertex().setName("v1");
+    Vertex v2 = new Vertex().setName("v2");
+    Model model = new Model()
+        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1))
+        .addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+
     @Test
     public void simpleTest() {
-
+        CombinedPath pathGenerator = new CombinedPath();
+        pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
+        pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
+        Context context = new TestExecutionContext(model, pathGenerator);
+        context.setCurrentElement(start.build());
+        while (context.getPathGenerator().hasNextStep(context)) {
+            context.getPathGenerator().getNextStep(context);
+            System.out.println(context.getCurrentElement());
+        }
     }
 
-    @Test//(expected = NoPathFoundException.class)
+    @Test(expected = NoPathFoundException.class)
     public void failTest() {
+        CombinedPath pathGenerator = new CombinedPath();
+        pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
+        pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
+        Context context = new TestExecutionContext(model, pathGenerator);
+        context.setCurrentElement(start.build());
+        while (context.getPathGenerator().hasNextStep(context)) {
+            context.getPathGenerator().getNextStep(context);
+            System.out.println(context.getCurrentElement());
+        }
+        context.getPathGenerator().getNextStep(context);
+    }
 
+    @Test
+    public void toStringTest() {
+        CombinedPath pathGenerator = new CombinedPath();
+        Assert.assertEquals(pathGenerator.toString(), "");
+        pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
+        Assert.assertEquals("RandomPath(ReachedVertex(v1))", pathGenerator.toString());
+        pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
+        Assert.assertEquals("RandomPath(ReachedVertex(v1)) AND RandomPath(ReachedVertex(v2))", pathGenerator.toString());
     }
 }

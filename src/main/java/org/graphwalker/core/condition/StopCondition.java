@@ -37,4 +37,6 @@ public interface StopCondition {
 
     boolean isFulfilled(Context context);
     double getFulfilment(Context context);
+    String getValue();
+    StringBuilder toString(StringBuilder builder);
 }

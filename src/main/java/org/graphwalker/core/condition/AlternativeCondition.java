@@ -35,9 +35,13 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class AlternativeCondition implements StopCondition {
+public final class AlternativeCondition extends StopConditionBase {
 
     private final List<StopCondition> conditions = new ArrayList<>();
+
+    public AlternativeCondition() {
+        super("");
+    }
 
     public AlternativeCondition addStopCondition(StopCondition condition) {
         this.conditions.add(condition);
@@ -71,15 +75,14 @@ public final class AlternativeCondition implements StopCondition {
     }
 
     @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("(");
-        for (Iterator<StopCondition> i = conditions.iterator(); i.hasNext();) {
-            stringBuilder.append(i.next().toString());
-            if (i.hasNext()) {
-                stringBuilder.append(" OR ");
+    public StringBuilder toString(StringBuilder builder) {
+        Iterator<StopCondition> iterator = conditions.iterator();
+        while (iterator.hasNext()) {
+            iterator.next().toString(builder);
+            if (iterator.hasNext()) {
+                builder.append(" OR ");
             }
         }
-        stringBuilder.append(")");
-        return stringBuilder.toString();
+        return builder;
     }
 }

@@ -1,4 +1,4 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.core.generator;
 
 /*
  * #%L
@@ -26,15 +26,19 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
-
-import java.util.Set;
-
 /**
  * @author Nils Olsson
  */
-public interface ReachedStopCondition extends StopCondition {
+public abstract class PathGeneratorBase implements PathGenerator {
 
-    Set<Element> getTargetElements(Context context);
+    @Override
+    public String toString() {
+        return toString(new StringBuilder()).toString();
+    }
+
+    public StringBuilder toString(StringBuilder builder) {
+        builder.append(getClass().getSimpleName()).append("(");
+        getStopCondition().toString(builder).append(")");
+        return builder;
+    }
 }

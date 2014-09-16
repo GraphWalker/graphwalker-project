@@ -41,14 +41,14 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class FloydWarshall implements Algorithm {
 
-    private final Context context;
+    private final RuntimeModel model;
     private final int[][] distances;
     private final Element[][] predecessors;
 
     public FloydWarshall(Context context) {
-        this.context = context;
-        this.distances = createDistanceMatrix(context.getModel(), context.getModel().getElements());
-        this.predecessors = createPredecessorMatrix(context.getModel().getElements(), distances);
+        this.model = context.getModel();
+        this.distances = createDistanceMatrix(model, model.getElements());
+        this.predecessors = createPredecessorMatrix(model.getElements(), distances);
     }
 
     private int[][] createDistanceMatrix(RuntimeModel model, List<Element> elements) {
@@ -90,17 +90,19 @@ public final class FloydWarshall implements Algorithm {
     }
 
     public int getShortestDistance(Element origin, Element destination) {
-        if (origin.equals(destination)) {
+        if (!model.getElements().contains(destination)) {
+            return Integer.MAX_VALUE;
+        } else if (origin.equals(destination)) {
             return 0;
         } else {
-            return distances[context.getModel().getElements().indexOf(origin)][context.getModel().getElements().indexOf(destination)];
+            return distances[model.getElements().indexOf(origin)][model.getElements().indexOf(destination)];
         }
     }
 
     public int getMaximumDistance(Element destination) {
         int maximumDistance = Integer.MIN_VALUE;
         for (int[] distance : distances) {
-            int value = distance[context.getModel().getElements().indexOf(destination)];
+            int value = distance[model.getElements().indexOf(destination)];
             if (value != Integer.MAX_VALUE && value > maximumDistance) {
                 maximumDistance = value;
             }

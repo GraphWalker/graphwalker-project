@@ -74,4 +74,14 @@ public class AStarPathTest {
             System.out.println(context.getCurrentElement());
         }
     }
+
+    @Test(expected = NoPathFoundException.class)
+    public void failTest2() {
+        Context context = new TestExecutionContext(new Model().addEdge(e1), new AStarPath(new ReachedVertex("end")));
+        context.setNextElement(v1);
+        while (context.getPathGenerator().hasNextStep(context)) {
+            context.getPathGenerator().getNextStep(context);
+            System.out.println(context.getCurrentElement());
+        }
+    }
 }

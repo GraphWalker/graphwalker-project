@@ -40,7 +40,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public final class AStarPath implements PathGenerator {
+public final class AStarPath extends PathGeneratorBase {
 
     private final ReachedStopCondition stopCondition;
 
@@ -60,7 +60,6 @@ public final class AStarPath implements PathGenerator {
             throw new NoPathFoundException();
         }
         Element target = null;
-        RuntimeModel model = context.getModel();
         int distance = Integer.MAX_VALUE;
         FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
         for (Element element: context.filter(stopCondition.getTargetElements(context))) {

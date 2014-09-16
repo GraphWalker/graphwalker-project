@@ -33,11 +33,12 @@ import javax.script.ScriptException;
 /**
  * @author Nils Olsson
  */
-public final class InternalState implements StopCondition {
+public final class InternalState extends StopConditionBase {
 
     private final String script;
 
     public InternalState(String script) {
+        super(String.valueOf(script));
         this.script = script;
     }
 

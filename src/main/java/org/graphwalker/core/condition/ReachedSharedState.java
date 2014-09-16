@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * @author Nils Olsson
  */
-public class ReachedSharedState extends ReachedStopConditionBase {
+public final class ReachedSharedState extends ReachedStopConditionBase {
 
     public ReachedSharedState(String target) {
         super(target);
@@ -43,7 +43,7 @@ public class ReachedSharedState extends ReachedStopConditionBase {
 
     public Set<Element> getTargetElements(Context context) {
         Set<Element> elements = new HashSet<>();
-        elements.addAll(context.getModel().getSharedStates(getTarget()));
+        elements.addAll(context.getModel().getSharedStates(getValue()));
         return elements;
     }
 }

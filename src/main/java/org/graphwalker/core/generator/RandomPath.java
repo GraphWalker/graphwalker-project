@@ -36,7 +36,7 @@ import java.util.Random;
 /**
  * @author Nils Olsson
  */
-public final class RandomPath implements PathGenerator {
+public final class RandomPath extends PathGeneratorBase {
 
     private final Random random = new Random(System.nanoTime());
     private final StopCondition stopCondition;
