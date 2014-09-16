@@ -36,15 +36,19 @@ actions
  ;
 
 action
- : ~(SEMICOLON)* SEMICOLON
+ : ~(SEMICOLON)+ SEMICOLON
  ;
 
 reqtags
- : REQTAG (COLON | ASSIGN) (reqtag)+
+ : REQTAG (COLON | ASSIGN) reqtagn
+ ;
+
+reqtagn
+ : ((reqtag) COMMA)* reqtag
  ;
 
 reqtag
- : ~(COMMA)+ COMMA?
+ : ~(COMMA)+
  ;
 
 guard
