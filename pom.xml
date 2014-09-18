@@ -23,5 +23,29 @@
                 <version>2.2</version>
             </extension>
         </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <licenseName>mit</licenseName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>update-license</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/archetype-resources/**/*.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
