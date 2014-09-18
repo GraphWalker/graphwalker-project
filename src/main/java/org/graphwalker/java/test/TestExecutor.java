@@ -52,7 +52,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 /**
  * @author Nils Olsson
  */
-public final class TestExecutor {
+public final class TestExecutor implements Executor {
 
     private final Configuration configuration;
     private final Set<Machine> machines = new HashSet<>();
@@ -60,8 +60,16 @@ public final class TestExecutor {
 
     public TestExecutor(Configuration configuration) {
         this.configuration = configuration;
-        List<Context> contexts = createContexts();
+        List<Context> contexts = createContexts(AnnotationUtils.findTests());
         if (!contexts.isEmpty()) {
+            this.machines.add(new SimpleMachine(contexts));
+        }
+    }
+
+    public TestExecutor(Context... contexts) {
+        this.configuration = new Configuration();
+        configureContexts(contexts);
+        if (0 < contexts.length) {
             this.machines.add(new SimpleMachine(contexts));
         }
     }
@@ -70,20 +78,34 @@ public final class TestExecutor {
         return machines;
     }
 
-    private List<Context> createContexts() {
+    private List<Context> createContexts(Set<Class<? extends Context>> testClasses) {
         List<Context> contexts = new ArrayList<>();
-        for (Class<? extends Context> testClass: AnnotationUtils.findTests()) {
+        for (Class<? extends Context> testClass: testClasses) {
             GraphWalker annotation = testClass.getAnnotation(GraphWalker.class);
             if (isTestIncluded(annotation, testClass.getName())) {
                 Context context = createContext(testClass);
-                context.setPathGenerator(createPathGenerator(annotation));
-                if (!"".equals(annotation.start())) {
-                    context.setNextElement(getElement(context.getModel(), annotation.start()));
-                }
+                configureContext(context, annotation);
                 contexts.add(context);
             }
         }
         return contexts;
+    }
+
+    private void configureContexts(Context... contexts) {
+        for (Context context: contexts) {
+            configureContext(context);
+        }
+    }
+
+    private void configureContext(Context context) {
+        configureContext(context, context.getClass().getAnnotation(GraphWalker.class));
+    }
+
+    private void configureContext(Context context, GraphWalker annotation) {
+        context.setPathGenerator(createPathGenerator(annotation));
+        if (!"".equals(annotation.start())) {
+            context.setNextElement(getElement(context.getModel(), annotation.start()));
+        }
     }
 
     private boolean isTestIncluded(GraphWalker annotation, String name) {
@@ -183,11 +205,13 @@ public final class TestExecutor {
 
     private Element getElement(RuntimeModel model, String name) {
         List<Element> elements = model.findElements(name);
-        if (null != elements && !elements.isEmpty()) {
-            Random random = new Random(System.nanoTime());
-            return elements.get(random.nextInt(elements.size()));
+        if (null == elements || 0 == elements.size()) {
+            throw new TestExecutionException("Start element not found");
         }
-        return null;
+        if (1 < elements.size()) {
+            throw new TestExecutionException("Ambiguous start element defined");
+        }
+        return elements.get(0);
     }
 
     public void execute() {

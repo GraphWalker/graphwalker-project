@@ -26,10 +26,68 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.java.annotation.GraphWalker;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class TestExecutorTest {
 
+    @GraphWalker(start = "myStartElement")
+    public class MultipleStartElements extends ExecutionContext {
+        public MultipleStartElements() {
+            Vertex vertex = new Vertex();
+            Model model = new Model()
+                    .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
+                    .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
+            setModel(model.build());
+
+        }
+    }
+
+    @Test(expected = TestExecutionException.class)
+    public void multipleStartElements() {
+        Executor executor = new TestExecutor(new MultipleStartElements());
+        executor.execute();
+    }
+
+    @GraphWalker(start = "myOnlyStartElement")
+    public class SingleStartElements extends ExecutionContext {
+        public SingleStartElements() {
+            Vertex vertex = new Vertex().setName("myOnlyStartElement");
+            Model model = new Model()
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+            setModel(model.build());
+        }
+    }
+
+    @Test
+    public void singleStartElements() {
+        Executor executor = new TestExecutor(new SingleStartElements());
+        executor.execute();
+    }
+
+    @GraphWalker(start = "nonExistingStartElement")
+    public class NonExistingStartElement extends ExecutionContext {
+        public NonExistingStartElement() {
+            Vertex vertex = new Vertex();
+            Model model = new Model()
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+            setModel(model.build());
+        }
+    }
+
+    @Test(expected = TestExecutionException.class)
+    public void nonExistingStartElement() {
+        Executor executor = new TestExecutor(new NonExistingStartElement());
+        executor.execute();
+    }
 
 }
