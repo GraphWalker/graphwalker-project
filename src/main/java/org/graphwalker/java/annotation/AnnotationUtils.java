@@ -86,13 +86,17 @@ public final class AnnotationUtils {
             .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
 
     public static Set<Class<? extends Context>> findTests() {
-        Set<Class<? extends Context>> testClasses = new HashSet<>();
-        for (Class<? extends Context> testClass: reflections.getSubTypesOf(Context.class)) {
-            if (testClass.isAnnotationPresent(GraphWalker.class)) {
-                testClasses.add(testClass);
+        return find(Context.class, GraphWalker.class);
+    }
+
+    public static <T> Set<Class<? extends T>> find(Class<T> type, Class<? extends Annotation> annotation) {
+        Set<Class<? extends T>> classes = new HashSet<>();
+        for (Class<? extends T> subType: reflections.getSubTypesOf(type)) {
+            if (subType.isAnnotationPresent(annotation)) {
+                classes.add(subType);
             }
         }
-        return testClasses;
+        return classes;
     }
 
     public static <T extends Annotation> Set<T> getAnnotations(final Class<?> clazz, final Class<T> annotation) {

@@ -90,4 +90,10 @@ public class TestExecutorTest {
         executor.execute();
     }
 
+    @Test
+    public void noContext() {
+        Executor executor = new TestExecutor();
+        executor.execute();
+    }
+
 }
