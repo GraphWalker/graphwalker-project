@@ -26,7 +26,9 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
 import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
@@ -81,10 +83,16 @@ public final class AnnotationUtils {
 
     private static Reflections reflections = new Reflections(new ConfigurationBuilder()
             .addUrls(getUrls())
-            .addScanners(new TypeAnnotationsScanner()));
+            .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
 
-    public static Set<Class<?>> findTests() {
-        return reflections.getTypesAnnotatedWith(GraphWalker.class);
+    public static Set<Class<? extends Context>> findTests() {
+        Set<Class<? extends Context>> testClasses = new HashSet<>();
+        for (Class<? extends Context> testClass: reflections.getSubTypesOf(Context.class)) {
+            if (testClass.isAnnotationPresent(GraphWalker.class)) {
+                testClasses.add(testClass);
+            }
+        }
+        return testClasses;
     }
 
     public static <T extends Annotation> Set<T> getAnnotations(final Class<?> clazz, final Class<T> annotation) {

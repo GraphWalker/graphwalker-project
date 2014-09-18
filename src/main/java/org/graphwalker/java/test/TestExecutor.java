@@ -72,7 +72,7 @@ public final class TestExecutor {
 
     private List<Context> createContexts() {
         List<Context> contexts = new ArrayList<>();
-        for (Class<?> testClass: AnnotationUtils.findTests()) {
+        for (Class<? extends Context> testClass: AnnotationUtils.findTests()) {
             GraphWalker annotation = testClass.getAnnotation(GraphWalker.class);
             if (isTestIncluded(annotation, testClass.getName())) {
                 Context context = createContext(testClass);
@@ -111,13 +111,16 @@ public final class TestExecutor {
         return false;
     }
 
-    private Context createContext(Class<?> testClass) {
+    private Context createContext(Class<? extends Context> testClass) {
         try {
             // TODO: support classes with multiple models
             Set<Model> models = AnnotationUtils.getAnnotations(testClass, Model.class);
-            Context context = (Context)testClass.newInstance();
-            Path path = Paths.get(models.iterator().next().file());
-            return ContextFactoryScanner.get(path).create(path, context);
+            Context context = testClass.newInstance();
+            if (!models.isEmpty()) {
+                Path path = Paths.get(models.iterator().next().file());
+                context = ContextFactoryScanner.get(path).create(path, context);
+            }
+            return context;
         } catch (Throwable e) {
             throw new RuntimeException(e); // TODO: change exception
         }
