@@ -172,7 +172,7 @@ public final class TestMojo extends DefaultMojoBase {
             Properties properties = switchProperties(createProperties());
             displayHeader();
             Configuration configuration = createConfiguration();
-            TestExecutor executor = new TestExecutor(configuration);
+            Executor executor = new TestExecutor(configuration);
             displayConfiguration(configuration, executor);
             executor.execute();
             displayResult(executor);
@@ -236,7 +236,7 @@ public final class TestMojo extends DefaultMojoBase {
         return configuration;
     }
 
-    private void displayConfiguration(Configuration configuration, TestExecutor executor) {
+    private void displayConfiguration(Configuration configuration, Executor executor) {
         if (getLog().isInfoEnabled()) {
             getLog().info("Configuration:");
             getLog().info("    Include = " + configuration.getIncludes());
@@ -263,7 +263,7 @@ public final class TestMojo extends DefaultMojoBase {
         }
     }
 
-    public Machine getFailedMachine(TestExecutor executor) {
+    public Machine getFailedMachine(Executor executor) {
         for (Machine machine: executor.getMachines()) {
             for (Context context: machine.getContexts()) {
                 if (executor.isFailure(context)) {
@@ -274,7 +274,7 @@ public final class TestMojo extends DefaultMojoBase {
         return null;
     }
 
-    private void displayResult(TestExecutor executor) {
+    private void displayResult(Executor executor) {
         if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
             for (MachineException exception: executor.getFailures()) {
                 getLog().error(exception);
@@ -326,7 +326,7 @@ public final class TestMojo extends DefaultMojoBase {
         }
     }
 
-    private void reportResults(TestExecutor executor) throws MojoExecutionException {
+    private void reportResults(Executor executor) throws MojoExecutionException {
         boolean hasExceptions = false;
         XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession().getStartTime(), getSession().getSystemProperties());
 
