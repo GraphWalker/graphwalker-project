@@ -43,12 +43,6 @@ import static org.hamcrest.core.Is.is;
 public class AnnotationTest {
 
     @Test
-    public void findMoreTest() {
-        // Should find both MyTest and MyOtherTest
-        Assert.assertThat(AnnotationUtils.findTests().size(), is(2));
-    }
-
-    @Test
     public void getAnnotationsTest() {
         Set<GraphWalker> annotations = AnnotationUtils.getAnnotations(MyTest.class, GraphWalker.class);
         Assert.assertThat(annotations.size(), is(1));
