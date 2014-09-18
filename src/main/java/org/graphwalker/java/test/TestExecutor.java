@@ -28,6 +28,7 @@ package org.graphwalker.java.test;
 
 import org.graphwalker.core.condition.ReachedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -62,16 +63,32 @@ public final class TestExecutor implements Executor {
         this.configuration = configuration;
         List<Context> contexts = createContexts(AnnotationUtils.findTests());
         if (!contexts.isEmpty()) {
-            this.machines.add(new SimpleMachine(contexts));
+            this.machines.add(createMachine(contexts));
         }
     }
 
     public TestExecutor(Context... contexts) {
         this.configuration = new Configuration();
         configureContexts(contexts);
+
         if (0 < contexts.length) {
-            this.machines.add(new SimpleMachine(contexts));
+            this.machines.add(createMachine(contexts));
         }
+    }
+
+    private Machine createMachine(Context... contexts) {
+        return createMachine(Arrays.asList(contexts));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Machine createMachine(List<Context> contexts) {
+        Machine machine = new SimpleMachine(contexts);
+        for (Context context: contexts) {
+            if (context instanceof Observer) {
+                machine.addObserver((Observer)context);
+            }
+        }
+        return machine;
     }
 
     public Set<Machine> getMachines() {
@@ -222,7 +239,6 @@ public final class TestExecutor implements Executor {
                 executorService.execute(new Runnable() {
                     @Override
                     public void run() {
-                        machine.addObserver(new LogObserver());
                         try {
                             Context context = null;
                             while (machine.hasNextStep()) {
