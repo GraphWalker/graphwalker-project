@@ -162,13 +162,13 @@ public final class SimpleMachine extends ObservableMachine {
         if (isVertex(context.getCurrentElement())) {
             RuntimeVertex vertex = (RuntimeVertex) context.getCurrentElement();
             if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
-                context = x(context, vertex);
+                context = chooseSharedContext(context, vertex);
             }
         }
         return getNextStep(context);
     }
 
-    private Context x(Context context, RuntimeVertex vertex) {
+    private Context chooseSharedContext(Context context, RuntimeVertex vertex) {
         List<SharedStateTuple> candidates = getPossibleSharedStates(vertex.getSharedState());
         // TODO: If we need other way of determine the next state, we should have some interface for this
         Random random = new Random(System.nanoTime());
@@ -191,7 +191,7 @@ public final class SimpleMachine extends ObservableMachine {
     private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
         List<SharedStateTuple> sharedStates = new ArrayList<>();
         for (Context context: contexts) {
-            if (currentContext.equals(context) && hasNextStep(currentContext)) {
+            if (currentContext.equals(context) && hasOutEdges(context)) {
                 sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
             } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
@@ -202,6 +202,12 @@ public final class SimpleMachine extends ObservableMachine {
             }
         }
         return sharedStates;
+    }
+
+    private boolean hasOutEdges(Context context) {
+        return null != context.getCurrentElement()
+            && context.getCurrentElement() instanceof RuntimeVertex
+            && !context.getModel().getOutEdges((RuntimeVertex)context.getCurrentElement()).isEmpty();
     }
 
     @Override
