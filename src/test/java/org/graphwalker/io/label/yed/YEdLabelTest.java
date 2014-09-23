@@ -28,9 +28,9 @@ package org.graphwalker.io.label.yed;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.io.yed.YEdEdgeParser;
-import org.graphwalker.io.yed.YEdLabelLexer;
-import org.graphwalker.io.yed.YEdVertexParser;
+import org.graphwalker.dsl.yed.YEdEdgeParser;
+import org.graphwalker.dsl.yed.YEdLabelLexer;
+import org.graphwalker.dsl.yed.YEdVertexParser;
 import org.junit.Assert;
 import org.junit.Test;
 

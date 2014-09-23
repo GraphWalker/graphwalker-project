@@ -38,13 +38,14 @@ import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
+import org.graphwalker.dsl.antlr.yed.YEdDescriptiveErrorListener;
+import org.graphwalker.dsl.yed.YEdEdgeParser;
+import org.graphwalker.dsl.yed.YEdLabelLexer;
+import org.graphwalker.dsl.yed.YEdVertexParser;
 import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
-import org.graphwalker.io.yed.YEdEdgeParser;
-import org.graphwalker.io.yed.YEdLabelLexer;
-import org.graphwalker.io.yed.YEdVertexParser;
 
 import java.io.IOException;
 import java.nio.file.Path;

@@ -20,12 +20,12 @@
             <artifactId>graphwalker-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.xmlbeans</groupId>
-            <artifactId>xmlbeans</artifactId>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-dsl</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
@@ -40,19 +40,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>antlr</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>xmlbeans-maven-plugin</artifactId>
