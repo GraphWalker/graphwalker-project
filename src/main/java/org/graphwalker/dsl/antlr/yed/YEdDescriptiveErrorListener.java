@@ -1,8 +1,8 @@
-package org.graphwalker.dsl.antlr;
+package org.graphwalker.dsl.antlr.yed;
 
 /*
  * #%L
- * GraphWalker Command Line Interface
+ * GraphWalker Input/Output
  * %%
  * Copyright (C) 2011 - 2014 GraphWalker
  * %%
@@ -27,18 +27,25 @@ package org.graphwalker.dsl.antlr;
  */
 
 import org.antlr.v4.runtime.BaseErrorListener;
-import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.misc.Nullable;
+import org.graphwalker.dsl.antlr.DslException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Created by krikar on 5/21/14.
+ * Created by krikar on 8/20/14.
  */
-public class DslErrorListner extends BaseErrorListener {
-    @Override
-    public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
-        throw new DslException(msg + " -> " + ((CommonToken) offendingSymbol).getInputStream().toString());
-    }
+public class YEdDescriptiveErrorListener extends BaseErrorListener {
+  private static final Logger logger = LoggerFactory.getLogger(YEdDescriptiveErrorListener.class);
+  public static YEdDescriptiveErrorListener INSTANCE = new YEdDescriptiveErrorListener();
+
+  @Override
+  public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                          int line, int charPositionInLine,
+                          String msg, RecognitionException e)
+  {
+    logger.error(msg);
+    throw new DslException(msg);
+  }
 }

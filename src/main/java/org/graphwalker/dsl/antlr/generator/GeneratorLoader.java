@@ -1,4 +1,4 @@
-package org.graphwalker.dsl.antlr;
+package org.graphwalker.dsl.antlr.generator;
 
 /*
  * #%L
@@ -30,8 +30,8 @@ package org.graphwalker.dsl.antlr;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.*;
-import org.graphwalker.dsl.Generator_Parser;
-import org.graphwalker.dsl.Generator_ParserBaseListener;
+import org.graphwalker.dsl.generator.Generator_Parser;
+import org.graphwalker.dsl.generator.Generator_ParserBaseListener;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

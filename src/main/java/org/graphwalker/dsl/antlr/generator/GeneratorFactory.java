@@ -1,4 +1,4 @@
-package org.graphwalker.dsl.antlr;
+package org.graphwalker.dsl.antlr.generator;
 
 /*
  * #%L
@@ -30,8 +30,10 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.dsl.Generator_Parser;
-import org.graphwalker.dsl.Logical_Lexer;
+import org.graphwalker.dsl.antlr.DslErrorListner;
+import org.graphwalker.dsl.antlr.DslException;
+import org.graphwalker.dsl.generator.Generator_Parser;
+import org.graphwalker.dsl.generator.Logical_Lexer;
 
 /**
  * Created by krikar on 5/14/14.
@@ -51,7 +53,7 @@ public class GeneratorFactory {
         walker.walk(generatorLoader, context);
 
         if (generatorLoader.getGenerator() == null) {
-            throw new GeneratorFactoryException("No valid generator found.");
+            throw new DslException("No valid generator found.");
         }
 
         return generatorLoader.getGenerator();

@@ -31,7 +31,7 @@ import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.CombinedPath;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.dsl.antlr.GeneratorFactory;
+import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

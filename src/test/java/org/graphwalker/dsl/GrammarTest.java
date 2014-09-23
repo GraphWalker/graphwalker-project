@@ -28,8 +28,8 @@ package org.graphwalker.dsl;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.dsl.Generator_Parser;
-import org.graphwalker.dsl.Logical_Lexer;
+import org.graphwalker.dsl.generator.Generator_Parser;
+import org.graphwalker.dsl.generator.Logical_Lexer;
 import org.junit.Assert;
 import org.junit.Test;
 

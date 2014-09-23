@@ -29,13 +29,13 @@ package org.graphwalker.dsl.antlr;
 /**
  * Created by krikar on 5/21/14.
  */
-public class GeneratorFactoryException extends RuntimeException {
+public class DslException extends RuntimeException {
 
-    public GeneratorFactoryException(Throwable throwable) {
+    public DslException(Throwable throwable) {
         super(throwable);
     }
 
-    public GeneratorFactoryException(String message) {
+    public DslException(String message) {
         super(message);
     }
 }
