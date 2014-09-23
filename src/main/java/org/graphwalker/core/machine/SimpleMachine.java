@@ -31,6 +31,7 @@ import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.statistics.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -46,6 +47,8 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 public final class SimpleMachine extends ObservableMachine {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
+
+    private final Profiler profiler = new Profiler();
 
     private final List<Context> contexts = new ArrayList<>();
 
@@ -66,9 +69,14 @@ public final class SimpleMachine extends ObservableMachine {
         this.currentContext = chooseStartContext(contexts);
     }
 
+    public Profiler getProfiler() {
+        return profiler;
+    }
+
     private void executeInitActions(List<Context> contexts) {
         for (Context context: contexts) {
             this.currentContext = context;
+            this.currentContext.setProfiler(getProfiler());
             execute(context.getModel().getActions());
         }
     }
@@ -91,9 +99,9 @@ public final class SimpleMachine extends ObservableMachine {
         MDC.put("trace", UUID.randomUUID().toString());
         walk(currentContext);
         notifyObservers(currentContext.getCurrentElement(), EventType.BEFORE_ELEMENT);
-        currentContext.getProfiler().start();
+        getProfiler().start(currentContext);
         execute(currentContext.getCurrentElement());
-        currentContext.getProfiler().stop();
+        getProfiler().stop(currentContext);
         updateRequirements(currentContext, currentContext.getCurrentElement());
         notifyObservers(currentContext.getCurrentElement(), EventType.AFTER_ELEMENT);
         return currentContext;

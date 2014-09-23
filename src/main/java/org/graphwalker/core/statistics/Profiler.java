@@ -27,6 +27,7 @@ package org.graphwalker.core.statistics;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
@@ -39,19 +40,14 @@ import java.util.List;
  */
 public final class Profiler {
 
-    private final Context context;
     private final Profile profile = new Profile();
     private long startTime = 0;
 
-    public Profiler(Context context) {
-        this.context = context;
-    }
-
-    public void start() {
+    public void start(Context context) {
         startTime = System.nanoTime();
     }
 
-    public void stop() {
+    public void stop(Context context) {
         Element element = context.getCurrentElement();
         if (null != element) {
             profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
@@ -66,7 +62,7 @@ public final class Profiler {
         return profile.getTotalExecutionCount();
     }
 
-    public List<Element> getUnvisitedElements() {
+    public List<Element> getUnvisitedElements(Context context) {
         List<Element> elementList = new ArrayList<>();
         for (Element e : context.getModel().getElements()) {
             if (!isVisited(e)) {

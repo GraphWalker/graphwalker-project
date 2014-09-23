@@ -50,6 +50,7 @@ public interface Context {
     RuntimeModel getModel();
     Context setModel(RuntimeModel model);
     Profiler getProfiler();
+    Context setProfiler(Profiler profiler);
     PathGenerator getPathGenerator();
     Context setPathGenerator(PathGenerator pathGenerator);
     Element getCurrentElement();
