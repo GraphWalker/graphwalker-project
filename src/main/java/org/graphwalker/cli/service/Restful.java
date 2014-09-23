@@ -68,7 +68,7 @@ public class Restful {
                 return obj.put("HasNext", "false").toString();
             } else {
                 return "false";
-           }
+            }
         }
     }
 
