@@ -48,6 +48,6 @@ public class Offline {
     public List<String> model = new ArrayList<String>();
 
     @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
-            description = "Returns data formatted as json")
+        description = "Returns data formatted as json")
     public boolean json = true;
 }

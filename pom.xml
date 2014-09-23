@@ -25,8 +25,8 @@
             <artifactId>graphwalker-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-dsl</artifactId>
         </dependency>
         <dependency>
             <groupId>com.beust</groupId>
@@ -73,19 +73,6 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.antlr</groupId>
-                <artifactId>antlr4-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>antlr</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>antlr4</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
