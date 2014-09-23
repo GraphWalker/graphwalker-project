@@ -33,8 +33,6 @@ import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.graphwalker.cli.antlr.GeneratorFactory;
-import org.graphwalker.cli.antlr.GeneratorFactoryException;
 import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.cli.commands.Online;
@@ -47,6 +45,8 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.LoggerUtil;
+import org.graphwalker.dsl.antlr.GeneratorFactory;
+import org.graphwalker.dsl.antlr.GeneratorFactoryException;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
@@ -163,7 +163,7 @@ public class CLI {
         } catch (ParameterException e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage() + System.lineSeparator());
-            if (jc.getParsedCommand()!=null) {
+            if (jc.getParsedCommand() != null) {
                 jc.usage(jc.getParsedCommand());
             }
         } catch (GeneratorFactoryException e) {
@@ -251,7 +251,6 @@ public class CLI {
         SimpleMachine machine = new SimpleMachine(getContextsOfflineOnline(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
-                machine.getNextStep();
                 if (offline.json) {
                     System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
                 } else {

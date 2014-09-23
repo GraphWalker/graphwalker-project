@@ -39,7 +39,7 @@ import java.util.Map;
  * Created by krikar on 9/13/14.
  */
 public class Util {
-    static public String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited ) {
+    static public String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
         StringBuilder str = new StringBuilder();
         try {
             machine.getNextStep();
@@ -59,7 +59,7 @@ public class Util {
 
             if (showUnvisited) {
                 str.append(" | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
-                        "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
+                    "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
 
                 for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
                     str.append(e.getName());
@@ -73,7 +73,7 @@ public class Util {
         return str.toString();
     }
 
-    static public JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited ) {
+    static public JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
         JSONObject obj = new JSONObject();
         try {
             machine.getNextStep();
@@ -89,7 +89,7 @@ public class Util {
                     obj.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
 
                     JSONArray jsonKeys = new JSONArray();
-                    for (Map.Entry<String,String> key : machine.getCurrentContext().getKeys().entrySet() ) {
+                    for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
                         JSONObject jsonKey = new JSONObject();
                         jsonKey.put(key.getKey(), key.getValue());
                         jsonKeys.put(jsonKey);

@@ -64,7 +64,7 @@ public class IncorrectModels extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
             "offline -m graphml/Incorrect Models/wrongVertexSyntax.graphml random(edge_coverage(100))" +
-            System.lineSeparator() + "no viable alternative at input '1'" + System.lineSeparator()));
+            System.lineSeparator() + "no viable alternative at input '1'" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 
@@ -77,7 +77,7 @@ public class IncorrectModels extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
             "offline -m graphml/Incorrect Models/singleVertex.graphml random(edge_coverage(100))" +
-            System.lineSeparator() + "Model has less than 1 edge." + System.lineSeparator()));
+            System.lineSeparator() + "No start context found" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 
@@ -90,7 +90,7 @@ public class IncorrectModels extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
             "offline -m graphml/Incorrect Models/singleStartVertex.graphml random(edge_coverage(100))" +
-            System.lineSeparator() + "Model has less than 1 vertices. [Excluding the Start vertex]" + System.lineSeparator()));
+            System.lineSeparator() + "No start context found" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 }
