@@ -45,8 +45,7 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.utils.LoggerUtil;
-import org.graphwalker.dsl.antlr.GeneratorFactory;
-import org.graphwalker.dsl.antlr.GeneratorFactoryException;
+import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
@@ -166,9 +165,6 @@ public class CLI {
             if (jc.getParsedCommand() != null) {
                 jc.usage(jc.getParsedCommand());
             }
-        } catch (GeneratorFactoryException e) {
-            System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-            System.err.println(e.getMessage() + System.lineSeparator());
         } catch (Exception e) {
             System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
             System.err.println(e.getMessage() + System.lineSeparator());
