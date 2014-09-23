@@ -72,6 +72,7 @@
     <modules>
         <module>../graphwalker-core</module>
         <module>../graphwalker-java</module>
+        <module>../graphwalker-dsl</module>
         <module>../graphwalker-io</module>
         <module>../graphwalker-maven-plugin</module>
         <module>../graphwalker-maven-archetype</module>
@@ -91,6 +92,11 @@
             <dependency>
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-io</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-dsl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
