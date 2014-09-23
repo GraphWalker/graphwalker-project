@@ -27,6 +27,7 @@ package org.graphwalker.cli;
  */
 
 import org.apache.commons.io.FilenameUtils;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
@@ -58,10 +59,11 @@ public class Util {
             }
 
             if (showUnvisited) {
-                str.append(" | " + machine.getCurrentContext().getProfiler().getUnvisitedElements().size() +
-                        "(" + machine.getCurrentContext().getModel().getElements().size() + ") : ");
+                Context context = machine.getCurrentContext();
+                str.append(" | " + context.getProfiler().getUnvisitedElements(context).size() +
+                        "(" + context.getModel().getElements().size() + ") : ");
 
-                for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
+                for (Element e : context.getProfiler().getUnvisitedElements(context)) {
                     str.append(e.getName());
                     if (verbose) {
                         str.append("(" + e.getId() + ")");
@@ -99,11 +101,12 @@ public class Util {
             }
 
             if (showUnvisited) {
-                obj.put("NumberOfElements", machine.getCurrentContext().getModel().getElements().size());
-                obj.put("NumberOfUnvisitedElements", machine.getCurrentContext().getProfiler().getUnvisitedElements().size());
+                Context context = machine.getCurrentContext();
+                obj.put("NumberOfElements", context.getModel().getElements().size());
+                obj.put("NumberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
 
                 JSONArray jsonElements = new JSONArray();
-                for (Element e : machine.getCurrentContext().getProfiler().getUnvisitedElements()) {
+                for (Element e : context.getProfiler().getUnvisitedElements(context)) {
                     JSONObject jsonElement = new JSONObject();
                     jsonElement.put("ElementName", e.getName());
                     if (verbose) {
