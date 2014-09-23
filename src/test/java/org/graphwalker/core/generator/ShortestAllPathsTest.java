@@ -31,6 +31,7 @@ import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.statistics.Profiler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -56,14 +57,15 @@ public class ShortestAllPathsTest {
         Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
         Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        context.setProfiler(new Profiler());
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
                 Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
             context.getPathGenerator().getNextStep(context);
-            context.getProfiler().start();
-            context.getProfiler().stop();
+            context.getProfiler().start(context);
+            context.getProfiler().stop(context);
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
         }
         Assert.assertTrue(expectedElements.isEmpty());
@@ -82,14 +84,15 @@ public class ShortestAllPathsTest {
         Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
         Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
+        context.setProfiler(new Profiler());
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
                 Arrays.asList(e1, v2, e2, v3, e3, v1)
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
             context.getPathGenerator().getNextStep(context);
-            context.getProfiler().start();
-            context.getProfiler().stop();
+            context.getProfiler().start(context);
+            context.getProfiler().stop(context);
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
         }
         Assert.assertTrue(expectedElements.isEmpty());
@@ -105,14 +108,15 @@ public class ShortestAllPathsTest {
         Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
         Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
         Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        context.setProfiler(new Profiler());
         Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
                 Arrays.asList(e1, v2, e2, v3, e3, v1)
         );
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
             context.getPathGenerator().getNextStep(context);
-            context.getProfiler().start();
-            context.getProfiler().stop();
+            context.getProfiler().start(context);
+            context.getProfiler().stop(context);
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
         }
         Assert.assertTrue(expectedElements.isEmpty());
@@ -127,11 +131,12 @@ public class ShortestAllPathsTest {
         Edge e2 = new Edge().setSourceVertex(v1).setTargetVertex(v3);
         Model model = new Model().addEdge(e1).addEdge(e2);
         Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+        context.setProfiler(new Profiler());
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep(context)) {
             context.getPathGenerator().getNextStep(context);
-            context.getProfiler().start();
-            context.getProfiler().stop();
+            context.getProfiler().start(context);
+            context.getProfiler().stop(context);
         }
     }
 

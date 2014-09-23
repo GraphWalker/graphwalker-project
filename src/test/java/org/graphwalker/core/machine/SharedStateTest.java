@@ -54,7 +54,7 @@ public class SharedStateTest {
         while (machine.hasNextStep()) {
             machine.getNextStep();
         }
-        Assert.assertThat(context.getProfiler().getUnvisitedElements().isEmpty(), is(true));
-        Assert.assertThat(sharedContext.getProfiler().getUnvisitedElements().isEmpty(), is(true));
+        Assert.assertThat(context.getProfiler().getUnvisitedElements(context).isEmpty(), is(true));
+        Assert.assertThat(sharedContext.getProfiler().getUnvisitedElements(context).isEmpty(), is(true));
     }
 }

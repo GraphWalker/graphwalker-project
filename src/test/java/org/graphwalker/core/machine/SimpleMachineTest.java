@@ -164,10 +164,8 @@ public class SimpleMachineTest {
             machine.getNextStep();
         }
         // the profiler path is a stack so the first element is the last visited, therefore we create the list in reverse order
-        Path<Element> path1 = new Path<>(Arrays.<Element>asList(shared1.build(), edge1.build(), start.build()));
-        Path<Element> path2 = new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build()));
-        Assert.assertArrayEquals(contexts.get(0).getProfiler().getPath().toArray(), path1.toArray());
-        Assert.assertArrayEquals(contexts.get(1).getProfiler().getPath().toArray(), path2.toArray());
+        Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build(), shared1.build(), edge1.build(), start.build()));
+        Assert.assertArrayEquals(expectedPath.toArray(), machine.getProfiler().getPath().toArray());
     }
 
     @Test(expected = MachineException.class)

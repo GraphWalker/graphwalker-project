@@ -32,6 +32,7 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.statistics.Profiler;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -55,14 +56,15 @@ public class VertexCoverageTest {
         Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
         StopCondition stopCondition = new VertexCoverage(100);
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        context.setProfiler(new Profiler());
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
         context.setCurrentElement(v1.build());
-        context.getProfiler().start();
-        context.getProfiler().stop();
+        context.getProfiler().start(context);
+        context.getProfiler().stop(context);
         Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
         context.setCurrentElement(v2.build());
-        context.getProfiler().start();
-        context.getProfiler().stop();
+        context.getProfiler().start(context);
+        context.getProfiler().stop(context);
         Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
     }
 
@@ -73,14 +75,15 @@ public class VertexCoverageTest {
         Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
         StopCondition stopCondition = new VertexCoverage(100);
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        context.setProfiler(new Profiler());
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v1.build());
-        context.getProfiler().start();
-        context.getProfiler().stop();
+        context.getProfiler().start(context);
+        context.getProfiler().stop(context);
         Assert.assertFalse(stopCondition.isFulfilled(context));
         context.setCurrentElement(v2.build());
-        context.getProfiler().start();
-        context.getProfiler().stop();
+        context.getProfiler().start(context);
+        context.getProfiler().stop(context);
         Assert.assertTrue(stopCondition.isFulfilled(context));
     }
 }

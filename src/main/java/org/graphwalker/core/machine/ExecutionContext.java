@@ -50,12 +50,11 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     private static final Logger logger = LoggerFactory.getLogger(ExecutionContext.class);
 
     private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
-    private final Profiler profiler = new Profiler(this);
     private ScriptEngine scriptEngine;
 
     private RuntimeModel model;
     private PathGenerator pathGenerator;
-
+    private Profiler profiler;
     private ExecutionStatus executionStatus = ExecutionStatus.NOT_EXECUTED;
     private Element currentElement;
     private Element nextElement;
@@ -127,6 +126,11 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     public Profiler getProfiler() {
         return profiler;
+    }
+
+    public Context setProfiler(Profiler profiler) {
+        this.profiler = profiler;
+        return this;
     }
 
     public PathGenerator getPathGenerator() {
