@@ -30,10 +30,15 @@ import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -43,7 +48,7 @@ import static org.hamcrest.core.Is.is;
 public class SharedStateTest {
 
     @Test
-    public void shared() {
+    public void singleSharedStates() {
         Vertex vertex = new Vertex().setName("A").setSharedState("CUSTOM_STATE");
         Edge edge = new Edge().setName("B").setSourceVertex(vertex).setTargetVertex(vertex);
         Model model = new Model().addEdge(edge);
@@ -56,5 +61,34 @@ public class SharedStateTest {
         }
         Assert.assertThat(context.getProfiler().getUnvisitedElements(context).isEmpty(), is(true));
         Assert.assertThat(sharedContext.getProfiler().getUnvisitedElements(context).isEmpty(), is(true));
+    }
+
+    @Test
+    public void multipleSharedStates() {
+        Vertex shared1 = new Vertex().setName("A");
+        Vertex shared2 = new Vertex().setName("B");
+        Vertex shared3 = new Vertex().setName("E");
+        Model model1 = new Model().addVertex(shared1.setSharedState("SHARED1")).addEdge(new Edge().setName("I").setSourceVertex(new Vertex().setName("H").setSharedState("SHARED3")).setTargetVertex(shared1));
+        Model model2 = new Model().addVertex(shared2.setSharedState("SHARED1")).addEdge(new Edge().setName("C").setSourceVertex(shared2).setTargetVertex(new Vertex().setName("D").setSharedState("SHARED2")));
+        Model model3 = new Model().addVertex(shared3.setSharedState("SHARED2")).addEdge(new Edge().setName("F").setSourceVertex(shared3).setTargetVertex(new Vertex().setName("G").setSharedState("SHARED3")));
+        Context context1 = new TestExecutionContext(model1, new RandomPath(new EdgeCoverage(100))).setNextElement(shared1);
+        Context context2 = new TestExecutionContext(model2, new RandomPath(new VertexCoverage(100)));
+        Context context3 = new TestExecutionContext(model3, new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context1, context2, context3);
+        while (machine.hasNextStep()) {
+            Context context = machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName()
+                +" "+context1.getPathGenerator().getStopCondition().getFulfilment(context1)
+                +" "+context2.getPathGenerator().getStopCondition().getFulfilment(context2)
+                +" "+context3.getPathGenerator().getStopCondition().getFulfilment(context3));
+        }
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(context3).isEmpty(), is(true));
+        List<String> names = new ArrayList<>();
+        for (Element element: machine.getProfiler().getPath()) {
+            names.add(element.getName());
+        }
+        Assert.assertArrayEquals(names.toArray(), Arrays.asList("A", "I", "H", "G", "F", "E", "D", "C", "B", "A").toArray());
     }
 }
