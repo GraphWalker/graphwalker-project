@@ -1,5 +1,5 @@
 #!/bin/bash
 set -ev
 pushd ../graphwalker-project
-mvn -q install
+mvn -q clean install
 popd
