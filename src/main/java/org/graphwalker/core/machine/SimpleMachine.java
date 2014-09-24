@@ -54,6 +54,7 @@ public final class SimpleMachine extends ObservableMachine {
 
     private Context currentContext;
     private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
+    private Element lastElement;
 
     public SimpleMachine(Context context) {
         this(Arrays.asList(context));
@@ -163,6 +164,9 @@ public final class SimpleMachine extends ObservableMachine {
     }
 
     private Context switchContext(Context context) {
+        hasNextStep(currentContext);
+        lastElement = currentContext.getCurrentElement();
+        currentContext.setCurrentElement(null);
         return currentContext = context;
     }
 
@@ -178,7 +182,6 @@ public final class SimpleMachine extends ObservableMachine {
 
     private Context chooseSharedContext(Context context, RuntimeVertex vertex) {
         List<SharedStateTuple> candidates = getPossibleSharedStates(vertex.getSharedState());
-        // TODO: If we need other way of determine the next state, we should have some interface for this
         Random random = new Random(System.nanoTime());
         SharedStateTuple candidate = candidates.get(random.nextInt(candidates.size()));
         if (!candidate.getVertex().equals(context.getCurrentElement())) {
@@ -203,7 +206,7 @@ public final class SimpleMachine extends ObservableMachine {
                 sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
             } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-                    if (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty()) {
+                    if (!vertex.equals(lastElement) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
                         sharedStates.add(new SharedStateTuple(context, vertex));
                     }
                 }
