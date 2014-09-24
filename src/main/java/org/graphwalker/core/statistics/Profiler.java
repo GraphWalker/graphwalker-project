@@ -32,7 +32,9 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -60,6 +62,18 @@ public final class Profiler {
 
     public long getTotalVisitCount() {
         return profile.getTotalExecutionCount();
+    }
+
+    public long getVisitCount(Element element) {
+        Iterator it = profile.entrySet().iterator();
+        int counter = 0;
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            if (pairs.getKey()==element) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
     public List<Element> getUnvisitedElements(Context context) {
