@@ -206,7 +206,7 @@ public final class SimpleMachine extends ObservableMachine {
                 sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
             } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-                    if (!vertex.equals(lastElement) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
+                    if ((!vertex.equals(lastElement) || currentContext.getModel().getOutEdges((RuntimeVertex)currentContext.getCurrentElement()).isEmpty()) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
                         sharedStates.add(new SharedStateTuple(context, vertex));
                     }
                 }

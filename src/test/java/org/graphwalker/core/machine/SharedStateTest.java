@@ -52,15 +52,18 @@ public class SharedStateTest {
         Vertex vertex = new Vertex().setName("A").setSharedState("CUSTOM_STATE");
         Edge edge = new Edge().setName("B").setSourceVertex(vertex).setTargetVertex(vertex);
         Model model = new Model().addEdge(edge);
-        Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
-        context.setNextElement(vertex);
-        Context sharedContext = new TestExecutionContext(new Model().addVertex(new Vertex().setName("C").setSharedState("CUSTOM_STATE")), new RandomPath(new VertexCoverage(100)));
-        Machine machine = new SimpleMachine(context, sharedContext);
+        Context context1 = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+        context1.setNextElement(vertex);
+        Context context2 = new TestExecutionContext(new Model().addVertex(new Vertex().setName("C").setSharedState("CUSTOM_STATE")), new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context1, context2);
         while (machine.hasNextStep()) {
-            machine.getNextStep();
+            Context context = machine.getNextStep();
+            System.out.println(context.getCurrentElement().getName()
+                    +" "+context1.getPathGenerator().getStopCondition().getFulfilment(context1)
+                    +" "+context2.getPathGenerator().getStopCondition().getFulfilment(context2));
         }
-        Assert.assertThat(context.getProfiler().getUnvisitedElements(context).isEmpty(), is(true));
-        Assert.assertThat(sharedContext.getProfiler().getUnvisitedElements(context).isEmpty(), is(true));
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
     }
 
     @Test
