@@ -55,10 +55,12 @@ public final class ProfilerTest {
         Assert.assertNotNull(profiler);
         Assert.assertFalse(profiler.isVisited(start.build()));
         Assert.assertThat(profiler.getTotalVisitCount(), is(0l));
+        Assert.assertThat(profiler.getVisitCount(start.build()), is(0l));
         profiler.start(context);
         profiler.stop(context);
         Assert.assertTrue(profiler.isVisited(start.build()));
         Assert.assertThat(profiler.getTotalVisitCount(), is(1l));
+        Assert.assertThat(profiler.getVisitCount(start.build()), is(1l));
         Assert.assertThat(profiler.getUnvisitedElements(context).size(), is(2));
         Assert.assertThat(profiler.getPath().size(), is(1));
     }
