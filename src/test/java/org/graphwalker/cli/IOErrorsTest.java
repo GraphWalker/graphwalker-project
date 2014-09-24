@@ -54,7 +54,7 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 
 
-public class IOErrors extends CLITestRoot {
+public class IOErrorsTest extends CLITestRoot {
     /**
      * Non existent file
      */
