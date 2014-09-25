@@ -93,7 +93,7 @@ public class XMLReportGenerator {
                 } else if (report.isFailure(context)) {
                     Failure failure = new Failure();
                     failure.setType("Not fulfilled");
-                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
+                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
                     failure.setMessage(String.valueOf(Math.round(100*fulfilment)));
                     testcase.getFailure().add(failure);
                 }
