@@ -76,45 +76,40 @@ public class Util {
 
     static public JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
         JSONObject obj = new JSONObject();
-        try {
-            machine.getNextStep();
-        } catch (MachineException e) {
-            ;
-        } finally {
+        machine.getNextStep();
+        if (verbose) {
+            obj.put("ModelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
+        }
+        if (machine.getCurrentContext().getCurrentElement().hasName()) {
+            obj.put("CurrentElementName", machine.getCurrentContext().getCurrentElement().getName());
             if (verbose) {
-                obj.put("ModelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
+                obj.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
+
+                JSONArray jsonKeys = new JSONArray();
+                for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
+                    JSONObject jsonKey = new JSONObject();
+                    jsonKey.put(key.getKey(), key.getValue());
+                    jsonKeys.put(jsonKey);
+                }
+                obj.put("Data", jsonKeys);
             }
-            if (machine.getCurrentContext().getCurrentElement().hasName()) {
-                obj.put("CurrentElementName", machine.getCurrentContext().getCurrentElement().getName());
+        }
+
+        if (showUnvisited) {
+            Context context = machine.getCurrentContext();
+            obj.put("NumberOfElements", context.getModel().getElements().size());
+            obj.put("NumberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
+
+            JSONArray jsonElements = new JSONArray();
+            for (Element e : context.getProfiler().getUnvisitedElements(context)) {
+                JSONObject jsonElement = new JSONObject();
+                jsonElement.put("ElementName", e.getName());
                 if (verbose) {
-                    obj.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
-
-                    JSONArray jsonKeys = new JSONArray();
-                    for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
-                        JSONObject jsonKey = new JSONObject();
-                        jsonKey.put(key.getKey(), key.getValue());
-                        jsonKeys.put(jsonKey);
-                    }
-                    obj.put("Data", jsonKeys);
+                    jsonElement.put("ElementId", e.getId());
                 }
+                jsonElements.put(jsonElement);
             }
-
-            if (showUnvisited) {
-                Context context = machine.getCurrentContext();
-                obj.put("NumberOfElements", context.getModel().getElements().size());
-                obj.put("NumberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
-
-                JSONArray jsonElements = new JSONArray();
-                for (Element e : context.getProfiler().getUnvisitedElements(context)) {
-                    JSONObject jsonElement = new JSONObject();
-                    jsonElement.put("ElementName", e.getName());
-                    if (verbose) {
-                        jsonElement.put("ElementId", e.getId());
-                    }
-                    jsonElements.put(jsonElement);
-                }
-                obj.put("UnvisitedElements", jsonElements);
-            }
+            obj.put("UnvisitedElements", jsonElements);
         }
         return obj;
     }
