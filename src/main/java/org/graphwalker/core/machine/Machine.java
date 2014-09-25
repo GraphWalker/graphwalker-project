@@ -27,6 +27,7 @@ package org.graphwalker.core.machine;
  */
 
 import org.graphwalker.core.event.Observable;
+import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
 
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public interface Machine extends Observable<Element> {
+public interface Machine extends Observable {
     Context getNextStep();
     boolean hasNextStep();
     List<Context> getContexts();

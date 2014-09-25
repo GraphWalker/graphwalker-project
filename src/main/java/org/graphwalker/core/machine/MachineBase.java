@@ -36,30 +36,33 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public abstract class ObservableMachine implements Machine {
+public abstract class MachineBase implements Machine {
 
-    private final List<Observer<Element>> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
-    public synchronized void addObserver(Observer<Element> observer) {
-        if (observer == null)
-            throw new NullPointerException();
-        if (!observers.contains(observer)) {
-            observers.add(observer);
+    @Override
+    public void addObserver(Observer observer) {
+        if (null != observer) {
+            if (!observers.contains(observer)) {
+                observers.add(observer);
+            }
         }
     }
 
-    public synchronized void deleteObserver(Observer observer) {
+    @Override
+    public void notifyObservers(Element element, EventType type) {
+        for (Observer observer: observers) {
+            observer.update(this, element, type);
+        }
+    }
+
+    @Override
+    public void deleteObserver(Observer observer) {
         observers.remove(observer);
     }
 
-    public synchronized void notifyObservers(Element object, EventType type) {
-        List<Observer<Element>> observers = new ArrayList<>(this.observers);
-        for (Observer<Element> observer: observers) {
-            observer.update(this, object, type);
-        }
-    }
-
-    public synchronized void deleteObservers() {
+    @Override
+    public void deleteObservers() {
         observers.clear();
     }
 
