@@ -66,6 +66,16 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
         return count;
     }
 
+    public long getTotalExecutionCount(Element element) {
+        long count = 0;
+        for (Element e: keySet()) {
+            if (element == e) {
+                count += get(e).getExecutionCount();
+            }
+        }
+        return count;
+    }
+
     public long getTotalExecutionTime() {
         return getTotalExecutionTime(TimeUnit.NANOSECONDS);
     }

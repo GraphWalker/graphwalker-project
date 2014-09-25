@@ -65,15 +65,7 @@ public final class Profiler {
     }
 
     public long getVisitCount(Element element) {
-        Iterator it = profile.entrySet().iterator();
-        int counter = 0;
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            if (pairs.getKey()==element) {
-                counter++;
-            }
-        }
-        return counter;
+        return profile.getTotalExecutionCount(element);
     }
 
     public List<Element> getUnvisitedElements(Context context) {
