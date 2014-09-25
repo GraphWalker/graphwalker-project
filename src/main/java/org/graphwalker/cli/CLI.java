@@ -214,7 +214,9 @@ public class CLI {
                 }
             }
             for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-                names.add(edge.getName());
+                if (edge.getName()!=null) {
+                    names.add(edge.getName());
+                }
             }
         }
 
