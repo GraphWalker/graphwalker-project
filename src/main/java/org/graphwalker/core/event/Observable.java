@@ -26,13 +26,15 @@ package org.graphwalker.core.event;
  * #L%
  */
 
+import org.graphwalker.core.model.Element;
+
 /**
  * @author Nils Olsson
  */
-public interface Observable<T> {
+public interface Observable {
 
-    void addObserver(Observer<T> observer);
+    void addObserver(Observer observer);
     void deleteObserver(Observer observer);
     void deleteObservers();
-    void notifyObservers(T object, EventType type);
+    void notifyObservers(Element element, EventType type);
 }

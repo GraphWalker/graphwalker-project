@@ -26,9 +26,12 @@ package org.graphwalker.core.event;
  * #L%
  */
 
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Element;
+
 /**
  * @author Nils Olsson
  */
-public interface Observer<T> {
-    void update(Observable<T> observable, T object, EventType type);
+public interface Observer {
+    void update(Machine machine, Element element, EventType type);
 }

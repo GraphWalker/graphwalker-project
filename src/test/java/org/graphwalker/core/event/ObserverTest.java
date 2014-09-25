@@ -27,9 +27,6 @@ package org.graphwalker.core.event;
  */
 
 import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.event.EventType;
-import org.graphwalker.core.event.Observable;
-import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Edge;
@@ -49,23 +46,23 @@ import static org.hamcrest.core.Is.is;
 /**
  * @author Nils Olsson
  */
-public class ObserverTest implements Observer<Element> {
+public class ObserverTest implements Observer {
 
     private int counter = 0;
 
     @Override
-    public void update(Observable<Element> observable, Element object, EventType type) {
+    public void update(Machine observable, Element object, EventType type) {
         if (EventType.BEFORE_ELEMENT.equals(type)) {
             counter++;
         }
     }
 
-    private ObservableMachine createMachine() {
+    private MachineBase createMachine() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
         Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
         context.setNextElement(vertex);
-        ObservableMachine machine = new SimpleMachine(context);
+        MachineBase machine = new SimpleMachine(context);
         Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));
         Assert.assertTrue(Observable.class.isAssignableFrom(machine.getClass()));
         return machine;
@@ -75,9 +72,9 @@ public class ObserverTest implements Observer<Element> {
     public void verifyEvents() {
         Machine machine = createMachine();
         final List<EventType> types = new ArrayList<>();
-        machine.addObserver(new Observer<Element>() {
+        machine.addObserver(new Observer() {
             @Override
-            public void update(Observable<Element> observable, Element object, EventType type) {
+            public void update(Machine observable, Element object, EventType type) {
                 types.add(type);
             }
         });
@@ -88,13 +85,6 @@ public class ObserverTest implements Observer<Element> {
                   BEFORE_ELEMENT, AFTER_ELEMENT
                 , BEFORE_ELEMENT, AFTER_ELEMENT
                 , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
-    }
-
-
-    @Test(expected = NullPointerException.class)
-    public void nullObserver() {
-        ObservableMachine observable = createMachine();
-        observable.addObserver(null);
     }
 
     @Test

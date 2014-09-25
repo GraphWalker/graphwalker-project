@@ -44,7 +44,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class SimpleMachine extends ObservableMachine {
+public final class SimpleMachine extends MachineBase {
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
 
