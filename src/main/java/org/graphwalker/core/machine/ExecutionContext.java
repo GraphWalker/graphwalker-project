@@ -87,8 +87,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
         this();
         setModel(model.build());
-        this.pathGenerator = pathGenerator;
-
+        setPathGenerator(pathGenerator);
         for (RuntimeEdge edge: this.model.getEdges()) {
             if (null == edge.getName() && null != edge.getSourceVertex() && null != edge.getTargetVertex() && edge.getSourceVertex().equals(edge.getTargetVertex())) {
                 // TODO: Refactor we probably want to have multiple rules checked, not only loop edges
@@ -139,6 +138,9 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     public Context setPathGenerator(PathGenerator pathGenerator) {
         this.pathGenerator = pathGenerator;
+        if (null != pathGenerator) {
+            this.pathGenerator.setContext(this);
+        }
         return this;
     }
 

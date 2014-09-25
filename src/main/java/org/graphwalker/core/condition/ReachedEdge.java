@@ -26,7 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.HashSet;
@@ -41,9 +40,9 @@ public final class ReachedEdge extends ReachedStopConditionBase {
         super(target);
     }
 
-    public Set<Element> getTargetElements(Context context) {
+    public Set<Element> getTargetElements() {
         Set<Element> elements = new HashSet<>();
-        elements.addAll(context.getModel().findEdges(getValue()));
+        elements.addAll(getContext().getModel().findEdges(getValue()));
         return elements;
     }
 }

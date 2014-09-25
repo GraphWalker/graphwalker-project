@@ -49,12 +49,13 @@ public final class VertexCoverage extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
+    public boolean isFulfilled() {
+        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
+        Context context = getContext();
         List<RuntimeVertex> vertices = context.getModel().getVertices();
         double visitedVertexCount = 0.0;
         for (RuntimeVertex vertex: vertices) {

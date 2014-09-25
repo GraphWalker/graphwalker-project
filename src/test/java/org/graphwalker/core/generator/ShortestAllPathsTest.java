@@ -62,8 +62,8 @@ public class ShortestAllPathsTest {
                 Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
         );
         context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
@@ -89,8 +89,8 @@ public class ShortestAllPathsTest {
                 Arrays.asList(e1, v2, e2, v3, e3, v1)
         );
         context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
@@ -113,8 +113,8 @@ public class ShortestAllPathsTest {
                 Arrays.asList(e1, v2, e2, v3, e3, v1)
         );
         context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
             Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
@@ -133,8 +133,8 @@ public class ShortestAllPathsTest {
         Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
         context.setProfiler(new Profiler());
         context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
         }

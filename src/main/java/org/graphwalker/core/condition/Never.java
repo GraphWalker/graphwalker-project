@@ -26,8 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 /**
  * @author Nils Olsson
  */
@@ -38,12 +36,12 @@ public final class Never extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
+    public boolean isFulfilled() {
         return false;
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
         return 0;
     }
 }

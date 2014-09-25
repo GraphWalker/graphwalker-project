@@ -62,13 +62,13 @@ public class AlternativeConditionTest {
                 .addStopCondition(new ReachedEdge("e1"));
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
         context.setProfiler(new Profiler());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
         context.setCurrentElement(v1.build());
         context.getProfiler().start(context);
         context.getProfiler().stop(context);
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.5));
         context.setCurrentElement(e1.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
+        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
     }
 
     @Test
@@ -82,12 +82,12 @@ public class AlternativeConditionTest {
                 .addStopCondition(new ReachedEdge("e1"));
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
         context.setProfiler(new Profiler());
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(v1.build());
         context.getProfiler().start(context);
         context.getProfiler().stop(context);
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(e1.build());
-        Assert.assertTrue(stopCondition.isFulfilled(context));
+        Assert.assertTrue(stopCondition.isFulfilled());
     }
 }

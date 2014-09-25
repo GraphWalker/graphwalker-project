@@ -47,12 +47,13 @@ public final class EdgeCoverage extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
+    public boolean isFulfilled() {
+        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
+        Context context = getContext();
         long totalEdgesCount = context.getModel().getEdges().size();
         long visitedEdgesCount = 0;
         for (RuntimeEdge edge: context.getModel().getEdges()) {

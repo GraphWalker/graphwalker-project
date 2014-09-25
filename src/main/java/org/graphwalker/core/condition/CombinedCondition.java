@@ -45,6 +45,16 @@ public final class CombinedCondition extends StopConditionBase {
 
     public void addStopCondition(StopCondition condition) {
         this.conditions.add(condition);
+        condition.setContext(getContext());
+    }
+
+
+    @Override
+    public void setContext(Context context) {
+        super.setContext(context);
+        for (StopCondition condition: conditions) {
+            condition.setContext(context);
+        }
     }
 
     public List<StopCondition> getStopConditions() {
@@ -52,9 +62,9 @@ public final class CombinedCondition extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
+    public boolean isFulfilled() {
         for (StopCondition condition : conditions) {
-            if (!condition.isFulfilled(context)) {
+            if (!condition.isFulfilled()) {
                 return false;
             }
         }
@@ -62,10 +72,10 @@ public final class CombinedCondition extends StopConditionBase {
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
         double fulfilment = 0;
         for (StopCondition condition : conditions) {
-            fulfilment += condition.getFulfilment(context);
+            fulfilment += condition.getFulfilment();
         }
         return fulfilment / conditions.size();
     }

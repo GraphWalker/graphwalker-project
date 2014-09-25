@@ -52,13 +52,13 @@ public class ReachedEdgeTest {
         StopCondition stopCondition = new ReachedEdge("e2");
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
         context.setCurrentElement(v1.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.25));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.25));
         context.setCurrentElement(e1.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.50));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.50));
         context.setCurrentElement(v2.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.75));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.75));
         context.setCurrentElement(e2.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
+        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
     }
 
     @Test
@@ -70,10 +70,10 @@ public class ReachedEdgeTest {
         Model model = new Model().addEdge(e1).addEdge(e2);
         StopCondition stopCondition = new ReachedEdge("e2");
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(e1.build());
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(e2.build());
-        Assert.assertTrue(stopCondition.isFulfilled(context));
+        Assert.assertTrue(stopCondition.isFulfilled());
     }
 }

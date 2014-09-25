@@ -26,7 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.HashSet;
@@ -44,9 +43,9 @@ public final class ReachedVertex extends ReachedStopConditionBase {
         super(target);
     }
 
-    public Set<Element> getTargetElements(Context context) {
+    public Set<Element> getTargetElements() {
         Set<Element> elements = new HashSet<>();
-        List<RuntimeVertex> vertices = context.getModel().findVertices(getValue());
+        List<RuntimeVertex> vertices = getContext().getModel().findVertices(getValue());
         if (null != vertices && !vertices.isEmpty()) {
             elements.addAll(vertices);
         }

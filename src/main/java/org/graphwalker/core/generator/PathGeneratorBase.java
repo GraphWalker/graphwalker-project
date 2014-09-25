@@ -26,10 +26,38 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.machine.Context;
+
 /**
  * @author Nils Olsson
  */
 public abstract class PathGeneratorBase implements PathGenerator {
+
+    private Context context;
+    private StopCondition stopCondition;
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+        if (null != getStopCondition()) {
+            getStopCondition().setContext(getContext());
+        }
+    }
+
+    public StopCondition getStopCondition() {
+        return stopCondition;
+    }
+
+    public void setStopCondition(StopCondition stopCondition) {
+        this.stopCondition = stopCondition;
+        if (null != getContext()) {
+            this.stopCondition.setContext(getContext());
+        }
+    }
 
     @Override
     public String toString() {

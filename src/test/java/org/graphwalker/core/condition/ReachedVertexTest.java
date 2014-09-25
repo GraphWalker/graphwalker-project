@@ -51,11 +51,11 @@ public class ReachedVertexTest {
         StopCondition stopCondition = new ReachedVertex("v2");
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
         context.setCurrentElement(v1.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
         context.setCurrentElement(e1.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(0.5));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.5));
         context.setCurrentElement(v2.build());
-        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
+        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
     }
 
     @Test
@@ -66,12 +66,12 @@ public class ReachedVertexTest {
         Model model = new Model().addEdge(e1);
         StopCondition stopCondition = new ReachedVertex("v2");
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(v1.build());
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(e1.build());
-        Assert.assertFalse(stopCondition.isFulfilled(context));
+        Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(v2.build());
-        Assert.assertTrue(stopCondition.isFulfilled(context));
+        Assert.assertTrue(stopCondition.isFulfilled());
     }
 }

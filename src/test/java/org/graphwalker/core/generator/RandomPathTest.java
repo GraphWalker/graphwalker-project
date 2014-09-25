@@ -48,20 +48,20 @@ public class RandomPathTest {
     @Test
     public void simpleTest() {
         Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
-        PathGenerator pathGenerator = new RandomPath(new VertexCoverage(100));
+        context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
         context.setCurrentElement(source.build());
         Assert.assertEquals(context.getCurrentElement(), source.build());
-        Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), edge.build());
-        Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), target.build());
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
     }
 
     @Test(expected = NoPathFoundException.class)
     public void failTest() {
         Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
-        PathGenerator pathGenerator = new RandomPath(new VertexCoverage(100));
-        Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), source.build());
-        Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), edge.build());
-        Assert.assertEquals(pathGenerator.getNextStep(context).getCurrentElement(), target.build());
-        pathGenerator.getNextStep(context); // should fail
+        context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), source.build());
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
+        context.getPathGenerator().getNextStep(); // should fail
     }
 }

@@ -26,8 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,12 +47,12 @@ public final class TimeDuration extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
+    public boolean isFulfilled() {
+        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
         return (double) (System.nanoTime() - timestamp) / duration;
     }
 }

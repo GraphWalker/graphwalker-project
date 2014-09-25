@@ -54,8 +54,8 @@ public class CombinedPathTest {
         pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
         Context context = new TestExecutionContext(model, pathGenerator);
         context.setCurrentElement(start.build());
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             System.out.println(context.getCurrentElement());
         }
     }
@@ -67,11 +67,11 @@ public class CombinedPathTest {
         pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
         Context context = new TestExecutionContext(model, pathGenerator);
         context.setCurrentElement(start.build());
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             System.out.println(context.getCurrentElement());
         }
-        context.getPathGenerator().getNextStep(context);
+        context.getPathGenerator().getNextStep();
     }
 
     @Test

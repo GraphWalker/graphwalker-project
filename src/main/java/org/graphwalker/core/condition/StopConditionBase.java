@@ -36,6 +36,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 public abstract class StopConditionBase implements StopCondition {
 
     private final String value;
+    private Context context;
 
     protected StopConditionBase(String value) {
         this.value = value;
@@ -45,9 +46,17 @@ public abstract class StopConditionBase implements StopCondition {
         return value;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     @Override
-    public boolean isFulfilled(Context context) {
-        return context.getCurrentElement() instanceof RuntimeVertex;
+    public boolean isFulfilled() {
+        return getContext().getCurrentElement() instanceof RuntimeVertex;
     }
 
     @Override

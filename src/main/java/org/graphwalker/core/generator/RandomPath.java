@@ -50,7 +50,8 @@ public final class RandomPath extends PathGeneratorBase {
     }
 
     @Override
-    public Context getNextStep(Context context) {
+    public Context getNextStep() {
+        Context context = getContext();
         Element currentElement = context.getCurrentElement();
         if (null == currentElement) {
           throw new NoPathFoundException("Execution context has no current element set");
@@ -64,8 +65,8 @@ public final class RandomPath extends PathGeneratorBase {
     }
 
     @Override
-    public boolean hasNextStep(Context context) {
-        return !getStopCondition().isFulfilled(context);
+    public boolean hasNextStep() {
+        return !getStopCondition().isFulfilled();
     }
 
 }

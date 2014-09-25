@@ -26,8 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 /**
  * @author Nils Olsson
  */
@@ -45,12 +43,12 @@ public final class Length extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
+    public boolean isFulfilled() {
+        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
     }
 
     @Override
-    public double getFulfilment(Context context) {
-        return (double) context.getProfiler().getTotalVisitCount() / length;
+    public double getFulfilment() {
+        return (double) getContext().getProfiler().getTotalVisitCount() / length;
     }
 }
