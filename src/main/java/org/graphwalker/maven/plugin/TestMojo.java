@@ -314,7 +314,7 @@ public final class TestMojo extends DefaultMojoBase {
             if (!failedExecutions.isEmpty()) {
                 getLog().info("Failed executions: ");
                 for (Context context: failedExecutions) {
-                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment(context);
+                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
                     String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
                     String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
                     getLog().info(MessageFormat.format("  {0}({1}, {2}): {3}%", context.getClass().getSimpleName(), pathGenerator, stopCondition, Math.round(100*fulfilment)));
