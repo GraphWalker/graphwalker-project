@@ -26,7 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.Set;
@@ -36,5 +35,5 @@ import java.util.Set;
  */
 public interface ReachedStopCondition extends StopCondition {
 
-    Set<Element> getTargetElements(Context context);
+    Set<Element> getTargetElements();
 }

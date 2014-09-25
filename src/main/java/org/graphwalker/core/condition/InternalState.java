@@ -26,8 +26,6 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 import javax.script.ScriptException;
 
 /**
@@ -43,9 +41,9 @@ public final class InternalState extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
+    public boolean isFulfilled() {
         try {
-            Object value = context.getScriptEngine().eval(script);
+            Object value = getContext().getScriptEngine().eval(script);
             if (value instanceof Boolean) {
                 return (Boolean)value;
             } else {
@@ -57,7 +55,7 @@ public final class InternalState extends StopConditionBase {
     }
 
     @Override
-    public double getFulfilment(Context context) {
-        return isFulfilled(context)?1.0:0.0;
+    public double getFulfilment() {
+        return isFulfilled()?1.0:0.0;
     }
 }

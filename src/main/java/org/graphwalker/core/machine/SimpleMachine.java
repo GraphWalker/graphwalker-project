@@ -120,7 +120,7 @@ public final class SimpleMachine extends ObservableMachine {
         if (null != context.getNextElement()) {
             context.setCurrentElement(context.getNextElement());
         } else {
-            context.getPathGenerator().getNextStep(context);
+            context.getPathGenerator().getNextStep();
         }
         return context;
     }
@@ -237,7 +237,7 @@ public final class SimpleMachine extends ObservableMachine {
         if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
             return false;
         }
-        boolean hasMoreSteps = context.getPathGenerator().hasNextStep(context);
+        boolean hasMoreSteps = context.getPathGenerator().hasNextStep();
         if (!hasMoreSteps) {
             context.setExecutionStatus(ExecutionStatus.COMPLETED);
         }

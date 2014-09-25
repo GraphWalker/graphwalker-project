@@ -60,7 +60,8 @@ public final class QuickRandomPath extends PathGeneratorBase {
     }
 
     @Override
-    public Context getNextStep(Context context) {
+    public Context getNextStep() {
+        Context context = getContext();
         if (unvisitedElements.isEmpty()) {
             unvisitedElements.addAll(context.getModel().getElements());
             unvisitedElements.remove(context.getCurrentElement());
@@ -78,8 +79,8 @@ public final class QuickRandomPath extends PathGeneratorBase {
     }
 
     @Override
-    public boolean hasNextStep(Context context) {
-        return !getStopCondition().isFulfilled(context);
+    public boolean hasNextStep() {
+        return !getStopCondition().isFulfilled();
     }
 }
 

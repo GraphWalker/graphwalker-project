@@ -40,16 +40,17 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL;
+    public boolean isFulfilled() {
+        return getFulfilment() >= FULFILLMENT_LEVEL;
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
+        Context context = getContext();
         double maxFulfilment = 0;
         if (null != context.getCurrentElement()) {
             FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-            for (Element target : getTargetElements(context)) {
+            for (Element target : getTargetElements()) {
                 int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), target);
                 int max = floydWarshall.getMaximumDistance(target);
                 double fulfilment = 1 - (double) distance / max;

@@ -35,8 +35,6 @@ import org.graphwalker.core.model.Element;
 
 import java.util.List;
 
-import static org.graphwalker.core.model.Model.RuntimeModel;
-
 /**
  * @author Nils Olsson
  */
@@ -54,7 +52,8 @@ public final class AStarPath extends PathGeneratorBase {
     }
 
     @Override
-    public Context getNextStep(Context context) {
+    public Context getNextStep() {
+        Context context = getContext();
         List<Element> elements = context.filter(context.getModel().getElements(context.getCurrentElement()));
         if (elements.isEmpty()) {
             throw new NoPathFoundException();
@@ -62,7 +61,7 @@ public final class AStarPath extends PathGeneratorBase {
         Element target = null;
         int distance = Integer.MAX_VALUE;
         FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-        for (Element element: context.filter(stopCondition.getTargetElements(context))) {
+        for (Element element: context.filter(stopCondition.getTargetElements())) {
             int edgeDistance = floydWarshall.getShortestDistance(context.getCurrentElement(), element);
             if (edgeDistance < distance) {
                 distance = edgeDistance;
@@ -74,7 +73,7 @@ public final class AStarPath extends PathGeneratorBase {
     }
 
     @Override
-    public boolean hasNextStep(Context context) {
-        return !getStopCondition().isFulfilled(context);
+    public boolean hasNextStep() {
+        return !getStopCondition().isFulfilled();
     }
 }

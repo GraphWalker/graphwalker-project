@@ -55,12 +55,12 @@ public class InternalStateTest {
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
-            Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
-            Assert.assertFalse(stopCondition.isFulfilled(context));
+            Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
+            Assert.assertFalse(stopCondition.isFulfilled());
             machine.getNextStep();
         }
-        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
-        Assert.assertTrue(stopCondition.isFulfilled(context));
+        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertTrue(stopCondition.isFulfilled());
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
 
@@ -75,12 +75,12 @@ public class InternalStateTest {
         Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
-            Assert.assertThat(stopCondition.getFulfilment(context), is(0.0));
-            Assert.assertFalse(stopCondition.isFulfilled(context));
+            Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
+            Assert.assertFalse(stopCondition.isFulfilled());
             machine.getNextStep();
         }
-        Assert.assertThat(stopCondition.getFulfilment(context), is(1.0));
-        Assert.assertTrue(stopCondition.isFulfilled(context));
+        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertTrue(stopCondition.isFulfilled());
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
 }

@@ -45,7 +45,16 @@ public final class AlternativeCondition extends StopConditionBase {
 
     public AlternativeCondition addStopCondition(StopCondition condition) {
         this.conditions.add(condition);
+        condition.setContext(getContext());
         return this;
+    }
+
+    @Override
+    public void setContext(Context context) {
+        super.setContext(context);
+        for (StopCondition condition: conditions) {
+            condition.setContext(context);
+        }
     }
 
     public List<StopCondition> getStopConditions() {
@@ -53,9 +62,9 @@ public final class AlternativeCondition extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        for (StopCondition condition : conditions) {
-            if (condition.isFulfilled(context)) {
+    public boolean isFulfilled() {
+        for (StopCondition condition: conditions) {
+            if (condition.isFulfilled()) {
                 return true;
             }
         }
@@ -63,10 +72,10 @@ public final class AlternativeCondition extends StopConditionBase {
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
         double fulfilment = 0;
-        for (StopCondition condition : conditions) {
-            double newFulfilment = condition.getFulfilment(context);
+        for (StopCondition condition: conditions) {
+            double newFulfilment = condition.getFulfilment();
             if (newFulfilment > fulfilment) {
                 fulfilment = newFulfilment;
             }

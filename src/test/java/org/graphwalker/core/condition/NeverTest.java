@@ -45,12 +45,12 @@ public class NeverTest {
     @Test
     public void testFulfilment() {
         StopCondition stopCondition = new Never();
-        Assert.assertThat(stopCondition.getFulfilment(null), is(0.0));
+        Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
     }
 
     @Test
     public void testIsFulfilled() {
         StopCondition stopCondition = new Never();
-        Assert.assertFalse(stopCondition.isFulfilled(null));
+        Assert.assertFalse(stopCondition.isFulfilled());
     }
 }

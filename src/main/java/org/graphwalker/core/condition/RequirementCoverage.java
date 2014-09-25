@@ -46,12 +46,13 @@ public final class RequirementCoverage extends StopConditionBase {
     }
 
     @Override
-    public boolean isFulfilled(Context context) {
-        return getFulfilment(context) >= FULFILLMENT_LEVEL && super.isFulfilled(context);
+    public boolean isFulfilled() {
+        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
     }
 
     @Override
-    public double getFulfilment(Context context) {
+    public double getFulfilment() {
+        Context context = getContext();
         double totalCount = context.getRequirements().size();
         if (0 == totalCount) {
             return 1.0;

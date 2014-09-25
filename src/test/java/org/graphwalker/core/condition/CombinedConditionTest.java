@@ -48,7 +48,7 @@ public class CombinedConditionTest {
     public void testFulfilment() {
         CombinedCondition condition = new CombinedCondition();
         condition.addStopCondition(new Never());
-        Assert.assertThat("Should be zero", condition.getFulfilment(null), is(0.0));
+        Assert.assertThat("Should be zero", condition.getFulfilment(), is(0.0));
     }
 
     @Test
@@ -56,12 +56,12 @@ public class CombinedConditionTest {
         CombinedCondition condition = new CombinedCondition();
 
         condition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", condition.isFulfilled(null), is(false));
+        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
 
         condition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", condition.isFulfilled(null), is(false));
+        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
 
         condition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", condition.isFulfilled(null), is(false));
+        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
     }
 }

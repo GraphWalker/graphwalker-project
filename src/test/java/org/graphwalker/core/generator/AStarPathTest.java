@@ -79,8 +79,8 @@ public class AStarPathTest {
     public void failTest2() {
         Context context = new TestExecutionContext(new Model().addEdge(e1), new AStarPath(new ReachedVertex("end")));
         context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep(context)) {
-            context.getPathGenerator().getNextStep(context);
+        while (context.getPathGenerator().hasNextStep()) {
+            context.getPathGenerator().getNextStep();
             System.out.println(context.getCurrentElement());
         }
     }
