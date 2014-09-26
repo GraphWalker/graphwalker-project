@@ -36,17 +36,12 @@ import java.util.Random;
 /**
  * @author Nils Olsson
  */
-public final class RandomPath extends PathGeneratorBase {
+public final class RandomPath extends PathGeneratorBase<StopCondition> {
 
     private final Random random = new Random(System.nanoTime());
-    private final StopCondition stopCondition;
 
     public RandomPath(StopCondition stopCondition) {
-        this.stopCondition = stopCondition;
-    }
-
-    public StopCondition getStopCondition() {
-        return stopCondition;
+        setStopCondition(stopCondition);
     }
 
     @Override
