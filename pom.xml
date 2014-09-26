@@ -11,7 +11,7 @@
       <relativePath>../graphwalker-project/pom.xml</relativePath>
     </parent>
 
-    <name>graphwalker-example-archetype</name>
+    <name>graphwalker-maven-archetype</name>
     <artifactId>graphwalker-maven-archetype</artifactId>
     <packaging>maven-archetype</packaging>
 
