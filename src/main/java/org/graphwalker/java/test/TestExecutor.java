@@ -35,6 +35,7 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
+import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.annotation.Model;
@@ -119,7 +120,11 @@ public final class TestExecutor implements Executor {
     }
 
     private void configureContext(Context context, GraphWalker annotation) {
-        context.setPathGenerator(createPathGenerator(annotation));
+        if (!"".equals(annotation.value())) {
+            context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
+        } else {
+            context.setPathGenerator(createPathGenerator(annotation));
+        }
         if (!"".equals(annotation.start())) {
             context.setNextElement(getElement(context.getModel(), annotation.start()));
         }
