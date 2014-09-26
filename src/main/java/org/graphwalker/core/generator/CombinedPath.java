@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class CombinedPath extends PathGeneratorBase {
+public final class CombinedPath extends PathGeneratorBase<StopCondition> {
 
     private final List<PathGenerator> generators = new ArrayList<>();
     private int index = 0;

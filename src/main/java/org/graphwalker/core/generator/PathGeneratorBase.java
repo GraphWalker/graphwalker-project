@@ -32,10 +32,10 @@ import org.graphwalker.core.machine.Context;
 /**
  * @author Nils Olsson
  */
-public abstract class PathGeneratorBase implements PathGenerator {
+public abstract class PathGeneratorBase<T extends StopCondition> implements PathGenerator<T> {
 
     private Context context;
-    private StopCondition stopCondition;
+    private T stopCondition;
 
     public Context getContext() {
         return context;
@@ -48,11 +48,11 @@ public abstract class PathGeneratorBase implements PathGenerator {
         }
     }
 
-    public StopCondition getStopCondition() {
+    public T getStopCondition() {
         return stopCondition;
     }
 
-    public void setStopCondition(StopCondition stopCondition) {
+    public void setStopCondition(T stopCondition) {
         this.stopCondition = stopCondition;
         if (null != getContext()) {
             this.stopCondition.setContext(getContext());

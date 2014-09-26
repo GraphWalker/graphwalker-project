@@ -85,8 +85,12 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     }
 
     public ExecutionContext(Model model, PathGenerator pathGenerator) {
+        this(model.build(), pathGenerator);
+    }
+
+    public ExecutionContext(RuntimeModel model, PathGenerator pathGenerator) {
         this();
-        setModel(model.build());
+        setModel(model);
         setPathGenerator(pathGenerator);
         for (RuntimeEdge edge: this.model.getEdges()) {
             if (null == edge.getName() && null != edge.getSourceVertex() && null != edge.getTargetVertex() && edge.getSourceVertex().equals(edge.getTargetVertex())) {

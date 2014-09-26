@@ -38,17 +38,10 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class AStarPath extends PathGeneratorBase {
-
-    private final ReachedStopCondition stopCondition;
+public final class AStarPath extends PathGeneratorBase<ReachedStopCondition> {
 
     public AStarPath(ReachedStopCondition stopCondition) {
-        this.stopCondition = stopCondition;
-    }
-
-    @Override
-    public StopCondition getStopCondition() {
-        return stopCondition;
+        setStopCondition(stopCondition);
     }
 
     @Override
@@ -61,7 +54,7 @@ public final class AStarPath extends PathGeneratorBase {
         Element target = null;
         int distance = Integer.MAX_VALUE;
         FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-        for (Element element: context.filter(stopCondition.getTargetElements())) {
+        for (Element element: context.filter(getStopCondition().getTargetElements())) {
             int edgeDistance = floydWarshall.getShortestDistance(context.getCurrentElement(), element);
             if (edgeDistance < distance) {
                 distance = edgeDistance;

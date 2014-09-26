@@ -38,18 +38,12 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * @author Nils Olsson
  */
-public final class ShortestAllPaths extends PathGeneratorBase {
+public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
 
-    private final StopCondition stopCondition;
     private Path<Element> path = null;
 
     public ShortestAllPaths(StopCondition stopCondition) {
-        this.stopCondition = stopCondition;
-    }
-
-    @Override
-    public StopCondition getStopCondition() {
-        return stopCondition;
+        setStopCondition(stopCondition);
     }
 
     @Override

@@ -29,6 +29,8 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Model;
 
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
 /**
  * @author Nils Olsson
  */
@@ -39,6 +41,10 @@ public final class TestExecutionContext extends ExecutionContext {
     }
 
     public TestExecutionContext(Model model, PathGenerator pathGenerator) {
+        super(model, pathGenerator);
+    }
+
+    public TestExecutionContext(RuntimeModel model, PathGenerator pathGenerator) {
         super(model, pathGenerator);
     }
 }
