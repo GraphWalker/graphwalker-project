@@ -96,4 +96,20 @@ public class TestExecutorTest {
         executor.execute();
     }
 
+    @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
+    public class DSLConfiguredTest extends ExecutionContext {
+        public DSLConfiguredTest() {
+            Vertex vertex = new Vertex().setName("myStartElement");
+            Model model = new Model()
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+            setModel(model.build());
+        }
+    }
+
+    @Test
+    public void dslTest() {
+        new TestExecutor(new DSLConfiguredTest()).execute();
+    }
+
 }

@@ -18,6 +18,10 @@
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-dsl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.graphwalker</groupId>
             <artifactId>graphwalker-io</artifactId>
         </dependency>
         <dependency>
