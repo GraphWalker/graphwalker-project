@@ -6,8 +6,13 @@ package ${package};
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.GraphWalker;
 
-@GraphWalker(start="e_AnotherAction")
+@GraphWalker(value = "random(edge_coverage(100))", start = "e_FirstAction")
 public class SomeSmallTest extends ExecutionContext implements SmallTest {
+
+    @Override
+    public void e_FirstAction() {
+        System.out.println("Running: e_FirstAction");
+    }
 
     @Override
     public void e_AnotherAction() {
