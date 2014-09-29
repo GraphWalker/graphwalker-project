@@ -26,6 +26,14 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,11 +54,30 @@ public class TimeDurationTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        long start = System.nanoTime();
+        Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        long stop = System.nanoTime();
+        Assert.assertEquals(1000, (stop-start)/1000000, 200);
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));
+        Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
     }
 }

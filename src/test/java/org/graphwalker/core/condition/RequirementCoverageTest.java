@@ -26,8 +26,16 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
 
@@ -44,11 +52,46 @@ public class RequirementCoverageTest {
 
     @Test
     public void testFulfilment() {
-        // TODO:
+        Vertex vertex = new Vertex().addRequirement(new Requirement("1"));
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex)
+                .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
+        Context context = new TestExecutionContext(model, new RandomPath(new RequirementCoverage(100)));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertEquals(context.getRequirements(), context.getRequirements(RequirementStatus.PASSED));
+        Assert.assertTrue(context.getRequirements(RequirementStatus.NOT_COVERED).isEmpty());
+        Assert.assertTrue(context.getRequirements(RequirementStatus.FAILED).isEmpty());
     }
 
     @Test
     public void testIsFulfilled() {
-        // TODO:
+        Vertex vertex = new Vertex().addRequirement(new Requirement("1"));
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex)
+                .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
+        Context context = new TestExecutionContext(model, new RandomPath(new RequirementCoverage(100)));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+            machine.getNextStep();
+        }
+        Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
+    }
+
+    @Test
+    public void testNoRequirements() {
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        Context context = new TestExecutionContext(model, new RandomPath(new RequirementCoverage(100)));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+            machine.getNextStep();
+        }
+        Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
     }
 }

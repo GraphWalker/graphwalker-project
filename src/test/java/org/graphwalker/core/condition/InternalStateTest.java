@@ -83,4 +83,24 @@ public class InternalStateTest {
         Assert.assertTrue(stopCondition.isFulfilled());
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
+
+    @Test(expected = StopConditionException.class)
+    public void testWrongTypeOfExpression() {
+        Vertex start = new Vertex();
+        Vertex vertex = new Vertex();
+        Model model = new Model()
+                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+                .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+        StopCondition stopCondition = new InternalState("var test = 'test'");
+        Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
+            Assert.assertFalse(stopCondition.isFulfilled());
+            machine.getNextStep();
+        }
+        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertThat(context.getKeys().get("index"), is("99"));
+    }
 }

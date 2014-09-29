@@ -26,6 +26,7 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
@@ -53,6 +54,19 @@ public class RandomPathTest {
         Assert.assertEquals(context.getCurrentElement(), source.build());
         Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
         Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void newStopConditionTest() {
+        Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+        context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+        context.setCurrentElement(source.build());
+        Assert.assertEquals(context.getCurrentElement(), source.build());
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
+        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
+        context.getPathGenerator().setStopCondition(new EdgeCoverage(100));
+        Assert.assertTrue(EdgeCoverage.class.isAssignableFrom(context.getPathGenerator().getStopCondition().getClass()));
     }
 
     @Test(expected = NoPathFoundException.class)

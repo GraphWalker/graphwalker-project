@@ -77,10 +77,13 @@ public class CombinedPathTest {
     @Test
     public void toStringTest() {
         CombinedPath pathGenerator = new CombinedPath();
+        Assert.assertEquals(pathGenerator.getPathGenerators().size(), 0);
         Assert.assertEquals(pathGenerator.toString(), "");
         pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
+        Assert.assertEquals(pathGenerator.getPathGenerators().size(), 1);
         Assert.assertEquals("RandomPath(ReachedVertex(v1))", pathGenerator.toString());
         pathGenerator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
+        Assert.assertEquals(pathGenerator.getPathGenerators().size(), 2);
         Assert.assertEquals("RandomPath(ReachedVertex(v1)) AND RandomPath(ReachedVertex(v2))", pathGenerator.toString());
     }
 }

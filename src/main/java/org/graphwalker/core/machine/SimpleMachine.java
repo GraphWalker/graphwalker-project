@@ -240,6 +240,7 @@ public final class SimpleMachine extends MachineBase {
         boolean hasMoreSteps = context.getPathGenerator().hasNextStep();
         if (!hasMoreSteps) {
             context.setExecutionStatus(ExecutionStatus.COMPLETED);
+            updateRequirements(context, context.getModel());
         }
         return hasMoreSteps;
     }
