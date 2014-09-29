@@ -49,16 +49,16 @@ public class ReachedEdgeTest {
         Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
         Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setName("e2");
         Model model = new Model().addEdge(e1).addEdge(e2);
-        StopCondition stopCondition = new ReachedEdge("e2");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        StopCondition condition = new ReachedEdge("e2");
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
         context.setCurrentElement(v1.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.25));
+        Assert.assertThat(condition.getFulfilment(), is(0.25));
         context.setCurrentElement(e1.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.50));
+        Assert.assertThat(condition.getFulfilment(), is(0.50));
         context.setCurrentElement(v2.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.75));
+        Assert.assertThat(condition.getFulfilment(), is(0.75));
         context.setCurrentElement(e2.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertThat(condition.getFulfilment(), is(1.0));
     }
 
     @Test
@@ -68,12 +68,30 @@ public class ReachedEdgeTest {
         Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
         Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setName("e2");
         Model model = new Model().addEdge(e1).addEdge(e2);
-        StopCondition stopCondition = new ReachedEdge("e2");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
-        Assert.assertFalse(stopCondition.isFulfilled());
+        StopCondition condition = new ReachedEdge("e2");
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(e1.build());
-        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(e2.build());
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertTrue(condition.isFulfilled());
+    }
+
+
+    @Test
+    public void testInterface() {
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
+        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setName("e2");
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        ReachedStopCondition condition = new ReachedEdge("e2");
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
+        Assert.assertFalse(condition.isFulfilled());
+        context.setCurrentElement(e1.build());
+        Assert.assertFalse(condition.isFulfilled());
+        context.setCurrentElement(e2.build());
+        Assert.assertTrue(condition.isFulfilled());
+        Assert.assertFalse(condition.getTargetElements().isEmpty());
     }
 }

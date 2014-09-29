@@ -54,18 +54,18 @@ public class VertexCoverageTest {
         Vertex v1 = new Vertex();
         Vertex v2 = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
-        StopCondition stopCondition = new VertexCoverage(100);
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        StopCondition condition = new VertexCoverage(100);
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
         context.setProfiler(new Profiler());
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
+        Assert.assertThat(condition.getFulfilment(), is(0.0));
         context.setCurrentElement(v1.build());
         context.getProfiler().start(context);
         context.getProfiler().stop(context);
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.5));
+        Assert.assertThat(condition.getFulfilment(), is(0.5));
         context.setCurrentElement(v2.build());
         context.getProfiler().start(context);
         context.getProfiler().stop(context);
-        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertThat(condition.getFulfilment(), is(1.0));
     }
 
     @Test
@@ -73,17 +73,17 @@ public class VertexCoverageTest {
         Vertex v1 = new Vertex();
         Vertex v2 = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
-        StopCondition stopCondition = new VertexCoverage(100);
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        StopCondition condition = new VertexCoverage(100);
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
         context.setProfiler(new Profiler());
-        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(v1.build());
         context.getProfiler().start(context);
         context.getProfiler().stop(context);
-        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(v2.build());
         context.getProfiler().start(context);
         context.getProfiler().stop(context);
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertTrue(condition.isFulfilled());
     }
 }

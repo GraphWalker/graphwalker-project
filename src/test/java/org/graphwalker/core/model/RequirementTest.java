@@ -72,10 +72,10 @@ public class RequirementTest {
         Model model = new Model()
                 .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt1).addRequirement(new Requirement("road1")))
                 .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt2).addRequirement(new Requirement("road2")));
-        AlternativeCondition stopCondition = new AlternativeCondition();
-        stopCondition.addStopCondition(new ReachedVertex("Alt1"));
-        stopCondition.addStopCondition(new ReachedVertex("Alt2"));
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        AlternativeCondition condition = new AlternativeCondition();
+        condition.addStopCondition(new ReachedVertex("Alt1"));
+        condition.addStopCondition(new ReachedVertex("Alt2"));
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
         context.setNextElement(model.getVertices().get(0));
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {

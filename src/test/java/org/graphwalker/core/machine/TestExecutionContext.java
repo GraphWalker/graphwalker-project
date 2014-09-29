@@ -40,11 +40,11 @@ public final class TestExecutionContext extends ExecutionContext {
         super();
     }
 
-    public TestExecutionContext(Model model, PathGenerator pathGenerator) {
-        super(model, pathGenerator);
+    public TestExecutionContext(Model model, PathGenerator generator) {
+        super(model, generator);
     }
 
-    public TestExecutionContext(RuntimeModel model, PathGenerator pathGenerator) {
-        super(model, pathGenerator);
+    public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
+        super(model, generator);
     }
 }

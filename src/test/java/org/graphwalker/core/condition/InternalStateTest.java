@@ -51,16 +51,16 @@ public class InternalStateTest {
         Model model = new Model()
                 .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
                 .addAction(new Action("var index = 0"));
-        StopCondition stopCondition = new InternalState("index == 99");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
+        StopCondition condition = new InternalState("index == 99");
+        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
-            Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
-            Assert.assertFalse(stopCondition.isFulfilled());
+            Assert.assertThat(condition.getFulfilment(), is(0.0));
+            Assert.assertFalse(condition.isFulfilled());
             machine.getNextStep();
         }
-        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertThat(condition.getFulfilment(), is(1.0));
+        Assert.assertTrue(condition.isFulfilled());
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
 
@@ -71,16 +71,16 @@ public class InternalStateTest {
         Model model = new Model()
                 .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
                 .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
-        StopCondition stopCondition = new InternalState("index == 99");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
+        StopCondition condition = new InternalState("index == 99");
+        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
-            Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
-            Assert.assertFalse(stopCondition.isFulfilled());
+            Assert.assertThat(condition.getFulfilment(), is(0.0));
+            Assert.assertFalse(condition.isFulfilled());
             machine.getNextStep();
         }
-        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertThat(condition.getFulfilment(), is(1.0));
+        Assert.assertTrue(condition.isFulfilled());
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
 
@@ -91,16 +91,16 @@ public class InternalStateTest {
         Model model = new Model()
                 .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
                 .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
-        StopCondition stopCondition = new InternalState("var test = 'test'");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(start.build());
+        StopCondition condition = new InternalState("var test = 'test'");
+        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
-            Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
-            Assert.assertFalse(stopCondition.isFulfilled());
+            Assert.assertThat(condition.getFulfilment(), is(0.0));
+            Assert.assertFalse(condition.isFulfilled());
             machine.getNextStep();
         }
-        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertThat(condition.getFulfilment(), is(1.0));
+        Assert.assertTrue(condition.isFulfilled());
         Assert.assertThat(context.getKeys().get("index"), is("99"));
     }
 }
