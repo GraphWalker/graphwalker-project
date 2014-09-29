@@ -48,14 +48,14 @@ public class ReachedVertexTest {
         Vertex v2 = new Vertex().setName("v2");
         Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
         Model model = new Model().addEdge(e1);
-        StopCondition stopCondition = new ReachedVertex("v2");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        StopCondition condition = new ReachedVertex("v2");
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
         context.setCurrentElement(v1.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.0));
+        Assert.assertThat(condition.getFulfilment(), is(0.0));
         context.setCurrentElement(e1.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(0.5));
+        Assert.assertThat(condition.getFulfilment(), is(0.5));
         context.setCurrentElement(v2.build());
-        Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertThat(condition.getFulfilment(), is(1.0));
     }
 
     @Test
@@ -64,14 +64,14 @@ public class ReachedVertexTest {
         Vertex v2 = new Vertex().setName("v2");
         Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
         Model model = new Model().addEdge(e1);
-        StopCondition stopCondition = new ReachedVertex("v2");
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
-        Assert.assertFalse(stopCondition.isFulfilled());
+        StopCondition condition = new ReachedVertex("v2");
+        Context context = new TestExecutionContext(model, new RandomPath(condition));
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(v1.build());
-        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(e1.build());
-        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertFalse(condition.isFulfilled());
         context.setCurrentElement(v2.build());
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertTrue(condition.isFulfilled());
     }
 }

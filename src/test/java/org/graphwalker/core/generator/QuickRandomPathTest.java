@@ -45,14 +45,15 @@ public class QuickRandomPathTest {
     private final Edge edge = new Edge().setSourceVertex(source).setTargetVertex(target);
     private final Model model = new Model().addEdge(edge);
 
-    //Test
+    @Test
     public void simpleTest() {
         Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
-        PathGenerator pathGenerator = new QuickRandomPath(new VertexCoverage(100));
+        PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
+        context.setPathGenerator(generator);
         context.setCurrentElement(source.build());
         Assert.assertEquals(context.getCurrentElement(), source.build());
-        Assert.assertEquals(pathGenerator.getNextStep().getCurrentElement(), edge.build());
-        Assert.assertEquals(pathGenerator.getNextStep().getCurrentElement(), target.build());
+        Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
+        Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
     }
 
     @Test(expected = NoPathFoundException.class)

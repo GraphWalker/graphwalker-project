@@ -46,21 +46,21 @@ public class CombinedConditionTest {
 
     @Test
     public void testFulfilment() {
-        CombinedCondition stopCondition = new CombinedCondition();
-        stopCondition.addStopCondition(new Never());
-        Assert.assertThat("Should be zero", stopCondition.getFulfilment(), is(0.0));
-        Assert.assertThat(stopCondition.toString(), is("Never()"));
+        CombinedCondition condition = new CombinedCondition();
+        condition.addStopCondition(new Never());
+        Assert.assertThat("Should be zero", condition.getFulfilment(), is(0.0));
+        Assert.assertThat(condition.toString(), is("Never()"));
     }
 
     @Test
     public void testIsFulfilled() {
-        CombinedCondition stopCondition = new CombinedCondition();
-        stopCondition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", stopCondition.isFulfilled(), is(false));
-        stopCondition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", stopCondition.isFulfilled(), is(false));
-        stopCondition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", stopCondition.isFulfilled(), is(false));
-        Assert.assertThat(stopCondition.toString(), is("Never() AND Never() AND Never()"));
+        CombinedCondition condition = new CombinedCondition();
+        condition.addStopCondition(new Never());
+        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
+        condition.addStopCondition(new Never());
+        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
+        condition.addStopCondition(new Never());
+        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
+        Assert.assertThat(condition.toString(), is("Never() AND Never() AND Never()"));
     }
 }

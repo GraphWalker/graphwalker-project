@@ -52,14 +52,14 @@ public class LengthTest {
     public void testFulfilment() {
         Vertex vertex = new Vertex();
         Model model = new Model().addVertex(vertex);
-        StopCondition stopCondition = new Length(100);
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
+        StopCondition condition = new Length(100);
+        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
         context.setProfiler(new Profiler());
         for (int i = 0; i <= 100; i++) {
-            Assert.assertThat(stopCondition.getFulfilment(), is((double)i/100));
+            Assert.assertThat(condition.getFulfilment(), is((double)i/100));
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
-            Assert.assertThat(stopCondition.getFulfilment(), is((double)(i+1)/100));
+            Assert.assertThat(condition.getFulfilment(), is((double)(i+1)/100));
         }
     }
 
@@ -67,14 +67,14 @@ public class LengthTest {
     public void testIsFulfilled() {
         Vertex vertex = new Vertex();
         Model model = new Model().addVertex(vertex);
-        StopCondition stopCondition = new Length(100);
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition)).setCurrentElement(vertex.build());
+        StopCondition condition = new Length(100);
+        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
         context.setProfiler(new Profiler());
         for (int i = 0; i < 100; i++) {
-            Assert.assertFalse(stopCondition.isFulfilled());
+            Assert.assertFalse(condition.isFulfilled());
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
         }
-        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertTrue(condition.isFulfilled());
     }
 }
