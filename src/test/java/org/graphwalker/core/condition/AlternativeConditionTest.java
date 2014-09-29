@@ -69,6 +69,8 @@ public class AlternativeConditionTest {
         Assert.assertThat(stopCondition.getFulfilment(), is(0.5));
         context.setCurrentElement(e1.build());
         Assert.assertThat(stopCondition.getFulfilment(), is(1.0));
+        Assert.assertThat(stopCondition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
+
     }
 
     @Test
@@ -89,5 +91,6 @@ public class AlternativeConditionTest {
         Assert.assertFalse(stopCondition.isFulfilled());
         context.setCurrentElement(e1.build());
         Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertThat(stopCondition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
     }
 }
