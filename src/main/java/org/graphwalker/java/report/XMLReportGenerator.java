@@ -134,7 +134,8 @@ public class XMLReportGenerator {
     }
 
     private String getName() {
-        return "TEST-TestSuites.xml";
+        DateFormat formatter = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS");
+        return "TEST-GraphWalker-"+formatter.format(startTime)+".xml";
     }
 
     public static String getStackTrace(final Throwable throwable) {
