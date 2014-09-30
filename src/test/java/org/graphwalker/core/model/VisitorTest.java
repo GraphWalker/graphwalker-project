@@ -53,7 +53,8 @@ public class VisitorTest {
 
     @Test
     public void visitVertex() {
-        new Vertex().setName("vertex").build().accept(new MyElementVisitor());
+        ElementVisitor visitor = new MyElementVisitor();
+        new Vertex().setName("vertex").build().accept(visitor);
     }
 
     @Test
@@ -65,7 +66,8 @@ public class VisitorTest {
 
     @Test
     public void visitEdge() {
-        new Edge().setName("edge1").setSourceVertex(new Vertex()).setTargetVertex(new Vertex()).build().accept(new MyEdgeVisitor());
+        ElementVisitor visitor = new MyEdgeVisitor();
+        new Edge().setName("edge1").setSourceVertex(new Vertex()).setTargetVertex(new Vertex()).build().accept(visitor);
     }
 
     @Test
@@ -111,7 +113,6 @@ public class VisitorTest {
 
         @Override
         public void visit(Element element) {
-            System.out.println(element.getName());
         }
     }
 
@@ -154,7 +155,6 @@ public class VisitorTest {
 
         @Override
         public void visit(Element element) {
-            System.out.println(element.getName());
         }
     }
 

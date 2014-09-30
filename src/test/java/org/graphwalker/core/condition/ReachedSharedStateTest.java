@@ -63,7 +63,6 @@ public class ReachedSharedStateTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(
                 start.build(),
@@ -94,7 +93,6 @@ public class ReachedSharedStateTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(
                 start.build(),

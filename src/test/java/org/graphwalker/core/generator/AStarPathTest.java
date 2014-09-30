@@ -71,7 +71,6 @@ public class AStarPathTest {
         // Missing a start point, shall generate an exception
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement());
         }
     }
 
@@ -81,7 +80,6 @@ public class AStarPathTest {
         context.setNextElement(v1);
         while (context.getPathGenerator().hasNextStep()) {
             context.getPathGenerator().getNextStep();
-            System.out.println(context.getCurrentElement());
         }
     }
 }

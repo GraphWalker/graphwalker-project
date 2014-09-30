@@ -58,9 +58,6 @@ public class SharedStateTest {
         Machine machine = new SimpleMachine(context1, context2);
         while (machine.hasNextStep()) {
             Context context = machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName()
-                    +" "+context1.getPathGenerator().getStopCondition().getFulfilment()
-                    +" "+context2.getPathGenerator().getStopCondition().getFulfilment());
         }
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
@@ -80,10 +77,6 @@ public class SharedStateTest {
         Machine machine = new SimpleMachine(context1, context2, context3);
         while (machine.hasNextStep()) {
             Context context = machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName()
-                +" "+context1.getPathGenerator().getStopCondition().getFulfilment()
-                +" "+context2.getPathGenerator().getStopCondition().getFulfilment()
-                +" "+context3.getPathGenerator().getStopCondition().getFulfilment());
         }
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));

@@ -101,7 +101,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 
@@ -118,7 +117,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 
@@ -135,7 +133,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 
@@ -148,7 +145,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
@@ -174,7 +170,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 
@@ -190,7 +185,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 
@@ -210,7 +204,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 
@@ -230,7 +223,6 @@ public class LoginCrashSharedStateModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
         }
     }
 }

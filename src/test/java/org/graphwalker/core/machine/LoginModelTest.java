@@ -78,7 +78,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 
@@ -93,7 +92,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 
@@ -108,7 +106,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 
@@ -119,7 +116,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
@@ -140,7 +136,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
@@ -161,7 +156,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
@@ -184,7 +178,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 
@@ -198,7 +191,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 
@@ -216,7 +208,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 
@@ -234,7 +225,6 @@ public class LoginModelTest {
 
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
     }
 }

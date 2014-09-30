@@ -41,15 +41,12 @@ import static org.hamcrest.core.Is.is;
 public class ExampleTest extends ExecutionContext {
 
     public void vertex1() {
-        System.out.println("vertex1");
     }
 
     public void edge1() {
-        System.out.println("edge1");
     }
 
     public void vertex2() {
-        System.out.println("vertex2");
     }
 
     public void vertex3() {
@@ -65,7 +62,6 @@ public class ExampleTest extends ExecutionContext {
     }
 
     public void myAction() {
-        System.out.println("Action called");
     }
 
     @Test

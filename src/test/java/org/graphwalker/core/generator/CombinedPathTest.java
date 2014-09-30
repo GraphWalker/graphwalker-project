@@ -56,7 +56,6 @@ public class CombinedPathTest {
         context.setCurrentElement(start.build());
         while (context.getPathGenerator().hasNextStep()) {
             context.getPathGenerator().getNextStep();
-            System.out.println(context.getCurrentElement());
         }
     }
 
@@ -69,7 +68,6 @@ public class CombinedPathTest {
         context.setCurrentElement(start.build());
         while (context.getPathGenerator().hasNextStep()) {
             context.getPathGenerator().getNextStep();
-            System.out.println(context.getCurrentElement());
         }
         context.getPathGenerator().getNextStep();
     }

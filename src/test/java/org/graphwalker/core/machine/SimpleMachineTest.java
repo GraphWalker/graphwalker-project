@@ -141,7 +141,6 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getKeys());
             Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
     }
@@ -206,7 +205,6 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(start.build(), e1.build(), v2.build(), e2.build()
                 , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
@@ -226,7 +224,6 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build(), e2.build(), v1.build());
         Collections.reverse(expectedPath);
@@ -252,7 +249,6 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(
             start.build(),
@@ -289,7 +285,6 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(
                 start.build(),
@@ -348,7 +343,6 @@ public class SimpleMachineTest {
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
             machine.getNextStep();
-            System.out.println(context.getCurrentElement().getName());
         }
         List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
         Collections.reverse(expectedPath);
