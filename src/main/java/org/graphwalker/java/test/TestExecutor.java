@@ -116,7 +116,10 @@ public final class TestExecutor implements Executor {
     }
 
     private void configureContext(Context context) {
-        configureContext(context, context.getClass().getAnnotation(GraphWalker.class));
+        GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
+        if (null != annotation) {
+            configureContext(context, annotation);
+        }
     }
 
     private void configureContext(Context context, GraphWalker annotation) {
@@ -236,7 +239,7 @@ public final class TestExecutor implements Executor {
         return elements.get(0);
     }
 
-    public void execute() {
+    public Executor execute() {
         if (!machines.isEmpty()) {
             executeAnnotation(BeforeExecution.class, machines);
             ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
@@ -267,6 +270,7 @@ public final class TestExecutor implements Executor {
             }
             executeAnnotation(AfterExecution.class, machines);
         }
+        return this;
     }
 
     private void executeAnnotation(Class<? extends Annotation> annotation, Set<Machine> machines) {
