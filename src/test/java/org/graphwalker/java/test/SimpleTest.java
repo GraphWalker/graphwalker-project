@@ -26,20 +26,43 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.junit.Test;
 
-import java.util.Collection;
-import java.util.Set;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Nils Olsson
  */
-public interface Executor {
-    Executor execute();
-    Set<Machine> getMachines();
-    boolean isFailure(Context context);
-    MachineException getFailure(Context context);
-    Collection<MachineException> getFailures();
+public class SimpleTest extends ExecutionContext implements SimpleModel {
+
+    public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/SimpleModel.graphml");
+
+    @Override
+    public void vertex1() {
+
+    }
+
+    @Override
+    public void vertex2() {
+
+    }
+
+    @Override
+    public void edge1() {
+
+    }
+
+    @Test
+    public void run() {
+        new TestBuilder()
+            .setModel(MODEL_PATH)
+            .setContext(new SimpleTest())
+            .setPathGenerator(new RandomPath(new VertexCoverage(100)))
+            .setStart("vertex1").execute();
+    }
+
 }
