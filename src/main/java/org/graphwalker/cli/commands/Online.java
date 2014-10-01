@@ -54,4 +54,8 @@ public class Online {
     @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
         description = "Returns data formatted as json")
     public boolean json = true;
+
+    @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
+    public int port = 8887;
+
 }
