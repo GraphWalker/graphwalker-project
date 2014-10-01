@@ -26,32 +26,41 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import org.graphwalker.core.model.Element;
+import org.graphwalker.core.condition.RequirementCoverage;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
+import org.junit.Test;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
  */
-public final class FailFastStrategy implements ExceptionStrategy {
+public class FailedEdgeRequirementTest extends ExecutionContext {
 
-    @Override
-    public void handle(Machine machine, MachineException exception) {
-        Context context = exception.getContext();
-        fail(context, context.getCurrentElement());
-        if (context.getLastElement() instanceof RuntimeEdge) {
-            fail(context, context.getLastElement());
-        }
-        context.setExecutionStatus(ExecutionStatus.FAILED);
-        throw exception;
+    public void fail() {
+        throw new RuntimeException("fail");
     }
 
-    private void fail(Context context, Element element) {
-        if (element.hasRequirements()) {
-            for (Requirement requirement: element.getRequirements()) {
-                context.setRequirementStatus(requirement, RequirementStatus.FAILED);
+    @Test
+    public void failEdgeRequirement() {
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).setName("fail").addRequirement(new Requirement("REQ1")));
+        StopCondition stopCondition = new RequirementCoverage(100);
+        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        try {
+            while (machine.hasNextStep()) {
+                machine.getNextStep();
             }
+        } catch (RuntimeException e) {
+            Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(1));
         }
     }
 }

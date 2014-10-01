@@ -57,7 +57,7 @@ public class SharedStateTest {
         Context context2 = new TestExecutionContext(new Model().addVertex(new Vertex().setName("C").setSharedState("CUSTOM_STATE")), new RandomPath(new VertexCoverage(100)));
         Machine machine = new SimpleMachine(context1, context2);
         while (machine.hasNextStep()) {
-            Context context = machine.getNextStep();
+            machine.getNextStep();
         }
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
@@ -76,7 +76,7 @@ public class SharedStateTest {
         Context context3 = new TestExecutionContext(model3, new RandomPath(new VertexCoverage(100)));
         Machine machine = new SimpleMachine(context1, context2, context3);
         while (machine.hasNextStep()) {
-            Context context = machine.getNextStep();
+            machine.getNextStep();
         }
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
