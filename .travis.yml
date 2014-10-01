@@ -9,10 +9,8 @@ branches:
 
 env:
   global:
-    - secure: "Si+FksmD04Qev09hkYqWYN4rYQderrvMt6/kZBTgEek/v4Bd8QVCcbkZemYQCLnfhm94fNJDVrvpbrZhkeSWhCXKnnsYMH9oaxQWSd4aUI55V9QAseVAWMod5d2TSD7kTIo1owV5xh9LHTLmwnv4v6WmV3dSHSQc0zQh09dFC/M="
-    - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
-    - secure: "fajibrY17s5ih1W91FLTr1J3G10h2ujF7B7T/XgSbbXWds5rhM1KdAbcZhDe4zEizqvloakkmZxfhtBCZpVtQWxW7E6Z7EHzLJph21Q9ncliVE0AagofnSN6brv9FyFLGS8hz2l/OgPonuKyz1WYqSEWRTxcEQpqg9np5rD/kKY="
-    - secure: "goLZHAYVDwFEUVfOBKTT50gqYF8HB/4LjtM0YoKzsYz8POZosASdmZ5D7u9FzOX5rwjWlNrP+vG1NLE9hbjGwv54i94my9OpmN2okVJt8VTBtRPQ/PoWJfLEftnKHmfcuA9c8nqyPo81VK4JLW1XhWkU2WKuWdzXhaYhNkqb9Tw="
+    - secure: "AfJjHSpk741KebQ5Itut/M71MjO3GPte12sDzqfrGhUxUFHB49oUroPWeKi3dpTsDowcdSCX1SnecL6oW1NmbfZKM1mPLoOnBvsZ22EbDQK+NMxSv7Wvisjc377lXFxZU55yhLGoi2aJoW5yDNDq2fOSMou1M+UlxrZQGFi176U="
+    - secure: "YRG3INo4QLAE1yCB9xRaDO2eEbNpkoRL+fcZM1SKb8CXYBMn5zZi8zzaDNCbbV+YRquJ5HsYJDyA2RTuc2Jd6b0ZwoCHUVKo8hI9/8bl5wa+zzo40rmb21KEoSrQNtQN7OAGPHsSVrPapWpPk4ZDmyHQkhukfOnynxjcftheAj0="
 
 before_install:
   - sudo apt-get update -qq
@@ -22,3 +20,8 @@ before_install:
 
 install:
   - mvn -q deploy --settings ../graphwalker-project/deploy.xml
+
+after_success:
+ - mvn -q package
+ - cp target/graphwalker-*.jar target/graphwalker.jar
+ - sshpass -p $GW_PASSWORD scp target/graphwalker.jar $GW_USER@graphwalker.org:/var/www/archive
