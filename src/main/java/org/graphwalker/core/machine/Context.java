@@ -53,6 +53,7 @@ public interface Context {
     Context setProfiler(Profiler profiler);
     PathGenerator getPathGenerator();
     Context setPathGenerator(PathGenerator pathGenerator);
+    Element getLastElement();
     Element getCurrentElement();
     Context setCurrentElement(Element element);
     Element getNextElement();

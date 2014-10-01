@@ -103,7 +103,12 @@ public final class SimpleMachine extends MachineBase {
         getProfiler().start(currentContext);
         execute(currentContext.getCurrentElement());
         getProfiler().stop(currentContext);
-        updateRequirements(currentContext, currentContext.getCurrentElement());
+        if (currentContext.getLastElement() instanceof RuntimeEdge) {
+            updateRequirements(currentContext, currentContext.getLastElement());
+        }
+        if (currentContext.getCurrentElement() instanceof RuntimeVertex) {
+            updateRequirements(currentContext, currentContext.getCurrentElement());
+        }
         notifyObservers(currentContext.getCurrentElement(), EventType.AFTER_ELEMENT);
         return currentContext;
     }

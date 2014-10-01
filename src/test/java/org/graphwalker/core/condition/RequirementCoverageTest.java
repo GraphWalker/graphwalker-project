@@ -94,4 +94,29 @@ public class RequirementCoverageTest {
         }
         Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
     }
+
+    @Test
+    public void testEdgeRequirement() {
+        Vertex vertex = new Vertex();
+        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addRequirement(new Requirement("REQ1")));
+        StopCondition stopCondition = new RequirementCoverage(100);
+        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+        context.setNextElement(vertex);
+        Machine machine = new SimpleMachine(context);
+        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
+        machine.getNextStep();
+        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
+        machine.getNextStep();
+        Assert.assertFalse(stopCondition.isFulfilled());
+        Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
+        machine.getNextStep();
+        Assert.assertTrue(stopCondition.isFulfilled());
+        Assert.assertNotNull(context.getRequirements());
+        Assert.assertThat(context.getRequirements().size(), is(1));
+        Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
+        Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
+        Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
+    }
 }

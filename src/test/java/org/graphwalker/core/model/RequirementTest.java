@@ -28,6 +28,7 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.condition.RequirementCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.*;
