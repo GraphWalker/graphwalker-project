@@ -28,4 +28,5 @@ install:
   - mvn -q deploy --settings ../graphwalker-project/deploy.xml
 
 after_success:
+ - cp target/graphwalker-*.jar target/graphwalker.jar
  - sshpass -p $GW_PASSWORD scp target/graphwalker.jar $GW_USER@graphwalker.org:/var/www/archive/graphwalker.jar
