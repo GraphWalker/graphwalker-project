@@ -102,6 +102,13 @@ public final class YEdContextFactory implements ContextFactory {
         if (null != startEdge) {
             context.setNextElement(startEdge);
         }
+
+        for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
+            if (0 == context.getModel().getInEdges(vertex).size() && !vertex.equals(context.getNextElement()) && !vertex.hasSharedState()) {
+                throw new ContextFactoryException("No in-edges! Vertex: '"+(vertex.hasName()?vertex.getName():vertex.getId())+"'");
+            }
+        }
+
         return context;
     }
 
