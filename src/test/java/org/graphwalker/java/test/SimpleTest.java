@@ -42,18 +42,11 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
     public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/SimpleModel.graphml");
 
     @Override
-    public void vertex1() {
-
+    public void vertex() {
     }
 
     @Override
-    public void vertex2() {
-
-    }
-
-    @Override
-    public void edge1() {
-
+    public void edge() {
     }
 
     @Test
@@ -62,7 +55,7 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
             .setModel(MODEL_PATH)
             .setContext(new SimpleTest())
             .setPathGenerator(new RandomPath(new VertexCoverage(100)))
-            .setStart("vertex1").execute();
+            .setStart("vertex").execute();
     }
 
 }

@@ -36,11 +36,8 @@ import org.graphwalker.java.annotation.Model;
 public interface SimpleModel {
 
     @Edge()
-    void vertex1();
+    void vertex();
 
     @Edge()
-    void vertex2();
-
-    @Edge()
-    void edge1();
+    void edge();
 }

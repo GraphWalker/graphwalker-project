@@ -71,12 +71,13 @@ public final class TestBuilder {
 
     public Context build() {
         ContextFactory factory = ContextFactoryScanner.get(model);
-        if (null != factory) {
+        try {
             return factory.create(model, context)
-                .setPathGenerator(generator)
-                .setNextElement(context.getModel().findElements(start).get(0));
+                    .setPathGenerator(generator)
+                    .setNextElement(context.getModel().findElements(start).get(0));
+        } catch (Throwable t) {
+            throw new ContextFactoryException("Failed to create context", t);
         }
-        throw new ContextFactoryException("Failed to create setContext");
     }
 
     public Executor execute() {
