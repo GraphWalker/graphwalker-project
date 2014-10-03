@@ -39,7 +39,6 @@ import java.util.Random;
 
 /**
  * @author Kristian Karl
- *         <p/>
  *         Generates a random path, but tries to reach unvisited elements first.
  *         This is quite effective for FSM, but for a EFSM this may not work since edges
  *         can be inaccessable.
