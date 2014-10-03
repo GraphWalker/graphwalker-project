@@ -20,10 +20,10 @@ You won't be able to:
 git clone https://github.com/GraphWalker/graphwalker-cli graphwalker-cli
 cd graphwalker-cli
 mvn package
-cp target/graphwalker-cli-3.0.1-SNAPSHOT.jar gw.jar
+cp target/graphwalker-cli-3.1.0.jar gw.jar
 
 # Create an alias for the gw3 command
-sudo echo "#!/bin/bash\n\njava -jar <PATH TO CLI>/graphwalker-cli/target/graphwalker-cli-3.0.1-SNAPSHOT.jar "$@"" > /usr/local/bin/gw3
+sudo echo "#!/bin/bash\n\njava -jar <PATH TO CLI>/graphwalker-cli/target/graphwalker-cli-3.1.0.jar "$@"" > /usr/local/bin/gw3
 sudo chmod +x /usr/local/bin/gw3
 ```
 
