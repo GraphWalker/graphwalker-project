@@ -178,7 +178,7 @@ public final class TestExecutor implements Executor {
             Constructor constructor = null;
             try {
                 constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
-            } catch (Throwable _) {
+            } catch (Throwable t) {
                 constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
             }
             if (null == constructor) {
