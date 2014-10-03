@@ -52,7 +52,7 @@ public class YEdContextFactoryTest {
         Context sharedAContext = new YEdContextFactory().create(Paths.get("graphml/SharedA.graphml"));
         Assert.assertNotNull(sharedAContext);
         Assert.assertThat(sharedAContext.getModel().getVertices().size(), is(2));
-        Assert.assertThat(sharedAContext.getModel().getEdges().size(), is(5));
+        Assert.assertThat(sharedAContext.getModel().getEdges().size(), is(6));
         
         Context sharedBContext = new YEdContextFactory().create(Paths.get("graphml/SharedB.graphml"));
         Assert.assertNotNull(sharedBContext);
@@ -156,5 +156,34 @@ public class YEdContextFactoryTest {
             Assert.assertNotNull(edge.getSourceVertex());
             Assert.assertNotNull(edge.getTargetVertex());
         }
+    }
+
+    @Test(expected = ContextFactoryException.class)
+    public void blockedBranch1() {
+        new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
+    }
+
+    @Test
+    public void blockedBranch2() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch2.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(3));
+        Assert.assertThat(context.getModel().getEdges().size(), is(4));
+    }
+
+    @Test
+    public void blockedVertex1() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex1.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(2));
+        Assert.assertThat(context.getModel().getEdges().size(), is(2));
+    }
+
+    @Test(expected = ContextFactoryException.class)
+    public void blockedVertex2() {
+        new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
+    }
+
+    @Test(expected = ContextFactoryException.class)
+    public void blockedVertex3() {
+        new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
     }
 }

@@ -38,4 +38,8 @@ public class ContextFactoryException extends RuntimeException {
     public ContextFactoryException(String message) {
         super(message);
     }
+
+    public ContextFactoryException(String message, Throwable t) {
+        super(message, t);
+    }
 }
