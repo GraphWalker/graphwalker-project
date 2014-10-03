@@ -231,8 +231,15 @@ public class CLI {
 
             ResourceConfig rc = new DefaultResourceConfig();
             rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
-            HttpServer server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9999", rc);
-            System.out.println("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext");
+
+            String url = "http://0.0.0.0:" + online.port;
+
+            HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
+            System.out.println("Try http://localhost:"
+                + online.port
+                + "/graphwalker/hasNext or http://localhost:"
+                + online.port
+                + " /graphwalker/getNext");
             System.out.println("Press Control+C to end...");
             try {
                 server.start();
