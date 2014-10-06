@@ -28,16 +28,12 @@ package org.graphwalker.cli;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
-import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
-import com.sun.jersey.api.core.DefaultResourceConfig;
-import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
-import org.graphwalker.cli.service.Restful;
+import org.graphwalker.cli.service.GraphWalkerWebSocketServer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
@@ -214,7 +210,7 @@ public class CLI {
                 }
             }
             for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-                if (edge.getName()!=null) {
+                if (edge.getName() != null) {
                     names.add(edge.getName());
                 }
             }
@@ -226,34 +222,16 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        List<Context> executionContexts = getContextsOfflineOnline(online.model.iterator());
-        if (online.restful) {
-
-            ResourceConfig rc = new DefaultResourceConfig();
-            rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
-
-            String url = "http://0.0.0.0:" + online.port;
-
-            HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
-            System.out.println("Try http://localhost:"
-                + online.port
-                + "/graphwalker/hasNext or http://localhost:"
-                + online.port
-                + " /graphwalker/getNext");
-            System.out.println("Press Control+C to end...");
-            try {
-                server.start();
-                Thread.currentThread().join();
-            } catch (Exception e) {
-                logger.error("An error occurred when running command online: ", e);
-            } finally {
-                server.stop();
-            }
+        GraphWalkerWebSocketServer GraphWalkerWebSocketServer = new GraphWalkerWebSocketServer(online.port);
+        try {
+            GraphWalkerWebSocketServer.startService();
+        } catch (Exception e) {
+            logger.error("Something went wrong.", e);
         }
     }
 
     private void RunCommandOffline() throws Exception {
-        SimpleMachine machine = new SimpleMachine(getContextsOfflineOnline(offline.model.iterator()));
+        SimpleMachine machine = new SimpleMachine(getContextsWithPathGenerators(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
                 if (offline.json) {
@@ -267,7 +245,7 @@ public class CLI {
         }
     }
 
-    private List<Context> getContextsOfflineOnline(Iterator itr) {
+    private List<Context> getContextsWithPathGenerators(Iterator itr) {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
