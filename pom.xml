@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-project</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GraphWalker Project</name>
@@ -77,6 +77,10 @@
         <module>../graphwalker-maven-plugin</module>
         <module>../graphwalker-maven-archetype</module>
         <module>../graphwalker-cli</module>
+        <module>../graphwalker-example</module>
+        <module>../graphwalker-service</module>
+        <module>../graphwalker-gradle-plugin</module>
+        <module>../graphwalker-dashboard</module>
     </modules>
 
     <dependencyManagement>
