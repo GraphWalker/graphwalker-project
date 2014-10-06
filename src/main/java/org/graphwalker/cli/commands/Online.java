@@ -31,31 +31,8 @@ import com.beust.jcommander.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-@Parameters(commandDescription = "Generate a test sequence offline. The sequence is fetched using different techniques, like RestAPI")
+@Parameters(commandDescription = "Starts GraphWalker as a WebSocket server.")
 public class Online {
-
-    @Parameter(names = {"--verbose", "-o"}, required = false, arity = 1,
-        description = "Will print more details")
-    public boolean verbose = false;
-
-    @Parameter(names = {"--unvisited", "-u"}, required = false, arity = 1,
-        description = "Will also print the remaining unvisited elements in the model.")
-    public boolean unvisited = false;
-
-    @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
-        description = "The model, as a graphml file followed by generator with stop condition. " +
-            "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
-    public List<String> model = new ArrayList<String>();
-
-    @Parameter(names = {"--restful", "-r"}, required = false, arity = 1,
-        description = "Starts as a Restful API service.")
-    public boolean restful = true;
-
-    @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
-        description = "Returns data formatted as json")
-    public boolean json = true;
-
     @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
     public int port = 8887;
-
 }
