@@ -78,7 +78,6 @@
         <module>../graphwalker-maven-archetype</module>
         <module>../graphwalker-cli</module>
         <module>../graphwalker-example</module>
-        <module>../graphwalker-service</module>
         <module>../graphwalker-gradle-plugin</module>
         <module>../graphwalker-dashboard</module>
     </modules>
