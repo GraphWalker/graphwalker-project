@@ -1,3 +1,4 @@
+
 language: java
 jdk:
   - openjdk7
@@ -11,10 +12,8 @@ branches:
 
 env:
   global:
-    - secure: "Si+FksmD04Qev09hkYqWYN4rYQderrvMt6/kZBTgEek/v4Bd8QVCcbkZemYQCLnfhm94fNJDVrvpbrZhkeSWhCXKnnsYMH9oaxQWSd4aUI55V9QAseVAWMod5d2TSD7kTIo1owV5xh9LHTLmwnv4v6WmV3dSHSQc0zQh09dFC/M="
-    - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
-    - secure: "FN70Qk7DQdZE023fmC35vb+l9ilWlj0WmNDV/uE+8OmS9iNPJXnLvC2SA47CHJdLvTOn0NipXHnZqrF5OtLg6eHA25UF7W1c1/GKOiEUPHwBKfMo/0Xz9Tf7nh25v7kabaJaxSKqICsLxBEx6xbivwNgsJDb1bODmTC3wOxloqI="
-    - secure: "EStsLRu11NfpoijzBtyTQBcif9//ah+ofAkFDFI8yRFKEOvG798tdIcV9oW+QsrRfnXwmSuzgotkTyFdvNHLvpNYtbd7SYdum/RgwNhzeetNI9umZSaN+7jnv/nQzcRQWJHOYEZ64PVD453qWwgGKZ1lfmMMCQlwB//P1dX0G3M="
+    - secure: "UvDbfv3TciDjt0mWgUxYsuI+PsQiTBzmG3puUCbIFwb7AfnGXwJvKC21Tyo5/ZwgQ768QtbMDbYYm/JOhcwnyzTLEZcdgmfONzWRKP7NNPzaN6kvSsCRwACd0SgYUOusMSoJ76Pugut1Dr9hw33TY/Nv+Bm+QZL/ecaa76WwavE="
+    - secure: "An9favJXj9Y34/dZmOF1Vkv3A3NOmegCfH52ub6O/ocVnUKzUZtx0/pW0aa+gz33XWKqRDjjXrnFtbh86CB8KIYzf5nsKxp6CpSPJOJBt3GTcDASj9sn0EcwmfTgSf3jEQ3sUe47uw8LqQEyRQ/BDxSOZDOGuAeqBmR48BSdN5g="
 
 before_install:
   - sudo apt-get update -qq
