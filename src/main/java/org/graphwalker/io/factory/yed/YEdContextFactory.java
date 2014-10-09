@@ -135,8 +135,8 @@ public final class YEdContextFactory implements ContextFactory {
                                 startVertex = vertex;
                                 continue;
                             }
-                            if (null != parseContext.name()) {
-                                vertex.setName(parseContext.name().getText());
+                            if (null != parseContext.names()) {
+                                vertex.setName(parseContext.names().getText());
                             }
                             if (null != parseContext.shared() && null != parseContext.shared().Identifier()) {
                                 vertex.setSharedState(parseContext.shared().Identifier().getText());
@@ -206,8 +206,8 @@ public final class YEdContextFactory implements ContextFactory {
                             if (null != elements.get(edgeType.getTarget())) {
                                 edge.setTargetVertex(elements.get(edgeType.getTarget()));
                             }
-                            if (null != parseContext.name()) {
-                                edge.setName(parseContext.name().getText());
+                            if (null != parseContext.names()) {
+                                edge.setName(parseContext.names().getText());
                             }
                             if (null != parseContext.guard()) {
                                 // TODO: Fix this in the parser
