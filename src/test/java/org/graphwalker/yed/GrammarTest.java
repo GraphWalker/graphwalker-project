@@ -45,13 +45,13 @@ import static org.hamcrest.core.Is.is;
 public class GrammarTest {
 
     private List<String> vertices = Arrays.asList(
-            "test",
-            "test.test"
+        "test",
+        "test.test"
     );
 
     private List<String> edges = Arrays.asList(
-            "test",
-            "test.test"
+        "test",
+        "test.test"
     );
 
     @Test
