@@ -34,6 +34,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.graphdrawing.graphml.xmlns.DataType;
+import org.graphdrawing.graphml.xmlns.GraphType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphwalker.core.machine.Context;
@@ -91,10 +92,10 @@ public final class YEdContextFactory implements ContextFactory {
             throw new ContextFactoryException("Could not read the file.");
         }
         try {
-            Vertex startVertex =addVertices(model, context, document, elements);
+            Vertex startVertex = addVertices(model, context, document, elements);
             startEdge = addEdges(model, context, document, elements, startVertex);
         } catch (XmlException e) {
-            throw new ContextFactoryException("The file seams not to be valid yEd formatted.");
+            throw new ContextFactoryException("The file seems not to be of valid yEd format.");
         }
 
         model.setName(path.toString());
@@ -114,43 +115,58 @@ public final class YEdContextFactory implements ContextFactory {
 
     private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
         Vertex startVertex = null;
-        for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")) {
+        Deque<XmlObject> workQueue = new ArrayDeque<>();
+        workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")));
+        while (!workQueue.isEmpty()) {
+            XmlObject object = workQueue.pop();
             if (object instanceof NodeType) {
                 NodeType node = (NodeType)object;
-                for (DataType data: node.getDataArray()) {
-                    if (0 < data.getDomNode().getChildNodes().getLength()) {
-                        if (isSupportedNode(data.xmlText())) {
-                            StringBuilder label = new StringBuilder();
-                            for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
-                                label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
-                            }
-                            YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
-                            parser.removeErrorListeners();
-                            parser.addErrorListener(new YEdDescriptiveErrorListener());
-                            YEdVertexParser.ParseContext parseContext = parser.parse();
-                            Vertex vertex = new Vertex();
-                            if (null != parseContext.start()) {
-                                elements.put(node.getId(), vertex);
-                                vertex.setId(node.getId());
-                                startVertex = vertex;
-                                continue;
-                            }
-                            if (null != parseContext.name()) {
-                                vertex.setName(parseContext.name().getText());
-                            }
-                            if (null != parseContext.shared() && null != parseContext.shared().Identifier()) {
-                                vertex.setSharedState(parseContext.shared().Identifier().getText());
-                            }
-                            if (null != parseContext.reqtags()) {
-                                vertex.addRequirements(convertVertexRequirement(parseContext.reqtags().reqtagList().reqtag()));
-                            }
-                            if (null != parseContext.actions()) {
-                                model.addActions(convertVertexAction(parseContext.actions().action()));
-                            }
-                            if (null == parseContext.blocked()) {
-                                elements.put(node.getId(), vertex);
-                                vertex.setId(node.getId());
-                                model.addVertex(vertex);
+                if (0 < node.getGraphArray().length) {
+                    for (GraphType subgraph: node.getGraphArray()) {
+                        workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
+                    }
+                } else {
+                    for (DataType data: node.getDataArray()) {
+                        if (0 < data.getDomNode().getChildNodes().getLength()) {
+                            if (isSupportedNode(data.xmlText())) {
+                                StringBuilder label = new StringBuilder();
+                                for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
+                                    label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
+                                }
+                                YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
+                                parser.removeErrorListeners();
+                                parser.addErrorListener(new YEdDescriptiveErrorListener());
+                                YEdVertexParser.ParseContext parseContext = parser.parse();
+                                Vertex vertex = new Vertex();
+                                boolean blocked = false;
+                                if (null != parseContext.start()) {
+                                    elements.put(node.getId(), vertex);
+                                    vertex.setId(node.getId());
+                                    startVertex = vertex;
+                                } else {
+                                    for (YEdVertexParser.FieldContext field : parseContext.field()) {
+                                        if (null != field.names()) {
+                                            vertex.setName(field.names().getText());
+                                        }
+                                        if (null != field.shared() && null != field.shared().Identifier()) {
+                                            vertex.setSharedState(field.shared().Identifier().getText());
+                                        }
+                                        if (null != field.reqtags()) {
+                                            vertex.addRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
+                                        }
+                                        if (null != field.actions()) {
+                                            model.addActions(convertVertexAction(field.actions().action()));
+                                        }
+                                        if (null != field.blocked()) {
+                                            blocked = true;
+                                        }
+                                    }
+                                    if (!blocked) {
+                                        elements.put(node.getId(), vertex);
+                                        vertex.setId(node.getId());
+                                        model.addVertex(vertex);
+                                    }
+                                }
                             }
                         }
                     }
@@ -206,21 +222,27 @@ public final class YEdContextFactory implements ContextFactory {
                             if (null != elements.get(edgeType.getTarget())) {
                                 edge.setTargetVertex(elements.get(edgeType.getTarget()));
                             }
-                            if (null != parseContext.name()) {
-                                edge.setName(parseContext.name().getText());
+                            boolean blocked = false;
+                            for (YEdEdgeParser.FieldContext field: parseContext.field()) {
+                                if (null != field.names()) {
+                                    edge.setName(field.names().getText());
+                                }
+                                if (null != field.guard()) {
+                                    // TODO: Fix this in the parser
+                                    String text = field.guard().getText().trim();
+                                    edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
+                                }
+                                if (null != field.actions()) {
+                                    edge.addActions(convertEdgeAction(field.actions().action()));
+                                }
+                                if (null != field.reqtags()) {
+                                    edge.addRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));
+                                }
+                                if (null != field.blocked()) {
+                                    blocked = true;
+                                }
                             }
-                            if (null != parseContext.guard()) {
-                                // TODO: Fix this in the parser
-                                String text = parseContext.guard().getText().trim();
-                                edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
-                            }
-                            if (null != parseContext.actions()) {
-                                edge.addActions(convertEdgeAction(parseContext.actions().action()));
-                            }
-                            if (null != parseContext.reqtags()) {
-                                edge.addRequirements(convertEdgeRequirement(parseContext.reqtags().reqtagList().reqtag()));
-                            }
-                            if (null == parseContext.blocked()) {
+                            if (!blocked) {
                                 if (null != edge.getTargetVertex() ) {
                                     if (null != startVertex && edgeType.getSource().equals(startVertex.getId())) {
                                         edge.setSourceVertex(null);
