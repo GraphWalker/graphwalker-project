@@ -50,37 +50,37 @@ public class AntlrDotListener extends DOTBaseListener {
     private Vertex src, dst = null;
     private Edge edge = null;
 
-    private boolean expectEdge        = false;
-    private boolean expectVertex      = false;
-    private boolean expectEdgeLabel   = false;
+    private boolean expectEdge = false;
+    private boolean expectVertex = false;
+    private boolean expectEdgeLabel = false;
     private boolean expectVertexLabel = false;
 
 
     @Override
     public void enterNode_id(@NotNull DOTParser.Node_idContext ctx) {
-        expectVertex =true;
-        logger.trace("Parsing vertex: "+ctx.getText());
+        expectVertex = true;
+        logger.trace("Parsing vertex: " + ctx.getText());
         if (!vertices.containsKey(ctx.getText())) {
-            if (src==null) {
-                logger.trace("Create source vertex: "+ctx.getText());
+            if (src == null) {
+                logger.trace("Create source vertex: " + ctx.getText());
                 src = new Vertex();
                 src.setId(ctx.getText());
                 src.setName(ctx.getText());
                 vertices.put(ctx.getText(), src);
-            } else if (dst==null || src!=null){
-                logger.trace("Create target vertex: "+ctx.getText());
+            } else if (dst == null || src != null) {
+                logger.trace("Create target vertex: " + ctx.getText());
                 dst = new Vertex();
                 dst.setId(ctx.getText());
                 dst.setName(ctx.getText());
                 vertices.put(ctx.getText(), dst);
-                if ( edge != null ) {
+                if (edge != null) {
                     logger.trace("Setting source and target vertices for edge");
                     edge.setSourceVertex(src);
                     edge.setTargetVertex(dst);
                 }
             }
         } else {
-            if ( src==null) {
+            if (src == null) {
                 src = vertices.get(ctx.getText());
                 logger.trace("Using earlier read source vertex: " + src.getId());
             } else if (dst == null) {
@@ -110,26 +110,26 @@ public class AntlrDotListener extends DOTBaseListener {
         }
 
         String label = ctx.getText();
-        if (label.length()>2) {
+        if (label.length() > 2) {
             label = label.substring(1, label.length() - 1);
         }
 
         if (expectEdgeLabel) {
             logger.debug("Edge label: " + label);
-            expectEdgeLabel=false;
-            expectEdge=false;
+            expectEdgeLabel = false;
+            expectEdge = false;
 
             edge.setId(label);
             edge.setName(label);
             edge.setSourceVertex(src);
             edge.setTargetVertex(dst);
             src = dst = null;
-        } else if (expectVertexLabel){
+        } else if (expectVertexLabel) {
             logger.debug("Vertex label: " + label);
-            expectVertexLabel=false;
-            if(dst!=null){
+            expectVertexLabel = false;
+            if (dst != null) {
                 dst.setName(label);
-            } else if(src!=null){
+            } else if (src != null) {
                 src.setName(label);
             }
         }

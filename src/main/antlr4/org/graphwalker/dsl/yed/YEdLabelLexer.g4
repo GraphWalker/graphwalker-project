@@ -1,5 +1,6 @@
 lexer grammar YEdLabelLexer;
 
+DOT       : '.';
 SLASH     : '/';
 COLON     : ':';
 SEMICOLON : ';';
