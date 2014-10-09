@@ -9,10 +9,8 @@ branches:
 
 env:
   global:
-    - secure: "Si+FksmD04Qev09hkYqWYN4rYQderrvMt6/kZBTgEek/v4Bd8QVCcbkZemYQCLnfhm94fNJDVrvpbrZhkeSWhCXKnnsYMH9oaxQWSd4aUI55V9QAseVAWMod5d2TSD7kTIo1owV5xh9LHTLmwnv4v6WmV3dSHSQc0zQh09dFC/M="
-    - secure: "IVcJyf13GCwLkpYKqygwTH9f3EG1YiqdmXWPCt5d9DXKKLjbSq/MFQ/nwdgfgfJAsgrSXN0I+6fIf8/INtI4YcKTpzAblXdeAkWdVrD4xpRSC7TpEHdEGMWEBtSWzJy8b92F2cxCXuk/QPDK4d8/QuelkFD9C9IztmgSqq7fQQg="
-    - secure: "EfE5G2KP0rXsIXmoofKCY0l0mfbzdAR7tXew7mfihjSG9ZaLJ1bCWqzE2cnR4RJ4kTEqj7YvqvcBvSFuTEgr0iRMwxvOVaWtxHuLNXHGJxbK9bvAEn7pSe3BnhYQsvDh7x62j/pqF2FE+zyl0nfds8seMm/5gVuvgp5VypqQOac="
-    - secure: "AItWavq85mKf/LhG0e4oG/8g/AYz7T9gHR0RqIwtRRhM+AyfwVSCcMFMb9HhDuamLV1/bGTzzqLcCl/HwuYgXMyBBjG3/07QuReXYxM5WE3fnBVPyTZd8bF+E8/2pA/TaG+IWbFpSsWe72nKVjHCEZq0YQpmgjTvocC9lM0X5UY="
+    - secure: "HXKUwozdlJVGmzPOrJvi+TwfM5+WCNnF/J1dqT75YR4NUj6akp74yCRPbmW46aK4SSWLJjTMvbuAA7fsUm2Ho41k/E/Ou1kFkG91nrAvX4cg/6n9+ntfufMvKl1XpJdR0MwWtaww9vegvYyEJPdKlE9zfnN1ZGtOKUXYCZRlP1E="
+    - secure: "Ee2lJsZx+SepVikgBpTogLbJJ6F6J2XrwV8DQZaH7APY3zVW5BMLfxrcTw77kLAqo/4jOybAYlWrT6PQmSDn5Xx8u1CAV56RxkHRFGcmcbo6pJ55p3Pgl148XfgGXHnOET7nmNoDCyADjWxoPdp4wmEcb+M476ARx+W075N5b8g="
 
 before_install:
   - sudo apt-get update -qq
