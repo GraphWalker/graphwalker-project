@@ -111,7 +111,7 @@ public class YEdLabelTest {
         YEdEdgeParser parser = new YEdEdgeParser(getTokens("[ i[0] ]"));
         YEdEdgeParser.ParseContext context = parser.parse();
         Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
-        Assert.assertThat(context.guard().getText(), is("[ i[0] ]"));
+        Assert.assertThat(context.field(0).guard().getText(), is("[ i[0] ]"));
     }
 
     private CommonTokenStream getTokens(String label) {
