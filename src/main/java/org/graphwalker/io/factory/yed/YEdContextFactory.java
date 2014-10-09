@@ -34,6 +34,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.graphdrawing.graphml.xmlns.DataType;
+import org.graphdrawing.graphml.xmlns.GraphType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphwalker.core.machine.Context;
@@ -91,10 +92,10 @@ public final class YEdContextFactory implements ContextFactory {
             throw new ContextFactoryException("Could not read the file.");
         }
         try {
-            Vertex startVertex =addVertices(model, context, document, elements);
+            Vertex startVertex = addVertices(model, context, document, elements);
             startEdge = addEdges(model, context, document, elements, startVertex);
         } catch (XmlException e) {
-            throw new ContextFactoryException("The file seams not to be valid yEd formatted.");
+            throw new ContextFactoryException("The file seems not to be of valid yEd format.");
         }
 
         model.setName(path.toString());
@@ -114,48 +115,57 @@ public final class YEdContextFactory implements ContextFactory {
 
     private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
         Vertex startVertex = null;
-        for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")) {
+        Deque<XmlObject> workQueue = new ArrayDeque<>();
+        workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")));
+        while (!workQueue.isEmpty()) {
+            XmlObject object = workQueue.pop();
             if (object instanceof NodeType) {
                 NodeType node = (NodeType)object;
-                for (DataType data: node.getDataArray()) {
-                    if (0 < data.getDomNode().getChildNodes().getLength()) {
-                        if (isSupportedNode(data.xmlText())) {
-                            StringBuilder label = new StringBuilder();
-                            for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
-                                label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
-                            }
-                            YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
-                            parser.removeErrorListeners();
-                            parser.addErrorListener(new YEdDescriptiveErrorListener());
-                            YEdVertexParser.ParseContext parseContext = parser.parse();
-                            Vertex vertex = new Vertex();
-                            boolean blocked = false;
-                            if (null != parseContext.start()) {
-                                elements.put(node.getId(), vertex);
-                                vertex.setId(node.getId());
-                                startVertex = vertex;
-                            } else {
-                                for (YEdVertexParser.FieldContext field : parseContext.field()) {
-                                    if (null != field.names()) {
-                                        vertex.setName(field.names().getText());
-                                    }
-                                    if (null != field.shared() && null != field.shared().Identifier()) {
-                                        vertex.setSharedState(field.shared().Identifier().getText());
-                                    }
-                                    if (null != field.reqtags()) {
-                                        vertex.addRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
-                                    }
-                                    if (null != field.actions()) {
-                                        model.addActions(convertVertexAction(field.actions().action()));
-                                    }
-                                    if (null != field.blocked()) {
-                                        blocked = true;
-                                    }
+                if (0 < node.getGraphArray().length) {
+                    for (GraphType subgraph: node.getGraphArray()) {
+                        workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
+                    }
+                } else {
+                    for (DataType data: node.getDataArray()) {
+                        if (0 < data.getDomNode().getChildNodes().getLength()) {
+                            if (isSupportedNode(data.xmlText())) {
+                                StringBuilder label = new StringBuilder();
+                                for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
+                                    label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
                                 }
-                                if (!blocked) {
+                                YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
+                                parser.removeErrorListeners();
+                                parser.addErrorListener(new YEdDescriptiveErrorListener());
+                                YEdVertexParser.ParseContext parseContext = parser.parse();
+                                Vertex vertex = new Vertex();
+                                boolean blocked = false;
+                                if (null != parseContext.start()) {
                                     elements.put(node.getId(), vertex);
                                     vertex.setId(node.getId());
-                                    model.addVertex(vertex);
+                                    startVertex = vertex;
+                                } else {
+                                    for (YEdVertexParser.FieldContext field : parseContext.field()) {
+                                        if (null != field.names()) {
+                                            vertex.setName(field.names().getText());
+                                        }
+                                        if (null != field.shared() && null != field.shared().Identifier()) {
+                                            vertex.setSharedState(field.shared().Identifier().getText());
+                                        }
+                                        if (null != field.reqtags()) {
+                                            vertex.addRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
+                                        }
+                                        if (null != field.actions()) {
+                                            model.addActions(convertVertexAction(field.actions().action()));
+                                        }
+                                        if (null != field.blocked()) {
+                                            blocked = true;
+                                        }
+                                    }
+                                    if (!blocked) {
+                                        elements.put(node.getId(), vertex);
+                                        vertex.setId(node.getId());
+                                        model.addVertex(vertex);
+                                    }
                                 }
                             }
                         }
