@@ -37,15 +37,14 @@ import org.slf4j.LoggerFactory;
  * Created by krikar on 8/20/14.
  */
 public class YEdDescriptiveErrorListener extends BaseErrorListener {
-  private static final Logger logger = LoggerFactory.getLogger(YEdDescriptiveErrorListener.class);
-  public static YEdDescriptiveErrorListener INSTANCE = new YEdDescriptiveErrorListener();
+    private static final Logger logger = LoggerFactory.getLogger(YEdDescriptiveErrorListener.class);
+    public static YEdDescriptiveErrorListener INSTANCE = new YEdDescriptiveErrorListener();
 
-  @Override
-  public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
-                          int line, int charPositionInLine,
-                          String msg, RecognitionException e)
-  {
-    logger.error(msg);
-    throw new DslException(msg);
-  }
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                            int line, int charPositionInLine,
+                            String msg, RecognitionException e) {
+        logger.error(msg);
+        throw new DslException(msg);
+    }
 }
