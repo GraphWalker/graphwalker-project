@@ -3,7 +3,7 @@
 
 
 set -ev
-modules="core java io cli dsl service maven-plugin gradle-plugin dashboard example maven-archetype"
+modules="core java io cli dsl maven-plugin gradle-plugin dashboard example maven-archetype"
 for module in $modules
 do
     pushd ..
