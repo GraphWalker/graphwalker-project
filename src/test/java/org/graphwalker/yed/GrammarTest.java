@@ -45,19 +45,39 @@ import static org.hamcrest.core.Is.is;
 public class GrammarTest {
 
     private List<String> vertices = Arrays.asList(
-            "test",
-            "test.test",
-            "test;test",
-            "test.test;test",
-            "test.test;test.test",
-            "SHARED:MY_STATE",
-            "v2 SHARED:MY_STATE"
+            "word1",
+            "word1 BLOCKED",
+            "word1\nBLOCKED",
+            "word1 INIT: x=y;",
+            "word1 INIT:x=y;",
+            "word1 INIT: x=y;z=0;",
+            "word1\n INIT: x=y;",
+            "word1 REQTAG:UC02 3.4.1",
+            "word1 REQTAG:UC02 3.4.1, UC02 3.4.2",
+            "word1\nREQTAG:UC02 3.4.1",
+            "word1\nREQTAG:UC02 3.4.1, UC02 3.4.2",
+            "word1 REQTAG=UC02 3.4.1",
+            "word1 REQTAG=UC02 3.4.1, UC02 3.4.2",
+            "word1\nREQTAG=UC02 3.4.1",
+            "word1\nREQTAG=UC02 3.4.1, UC02 3.4.2",
+            "word1.word2",
+            "word1;word2",
+            "word1.word2;word3",
+            "word1;word2.word3"
     );
 
     private List<String> edges = Arrays.asList(
-            "test",
-            "test.test",
-            "test;test"
+            "word1",
+            "word1[x=>y]",
+            "word1\n[x=>y]",
+            "word1/x=y;",
+            "word1\n/x=y;",
+            "word1[x=>y]/x=y;",
+            "word1\n[x=>y]\n/x=y;",
+            "word1.word2",
+            "word1;word2",
+            "word1.word2;word3",
+            "word1;word2.word3"
     );
 
     @Test
