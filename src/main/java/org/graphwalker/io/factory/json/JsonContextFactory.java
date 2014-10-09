@@ -27,10 +27,7 @@ package org.graphwalker.io.factory.json;
  */
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
@@ -87,11 +84,17 @@ public final class JsonContextFactory implements ContextFactory {
         JSONArray vertices = root.getJSONArray("vertices");
         for (int vertexIndex = 0; vertexIndex < vertices.length(); ++vertexIndex) {
             JSONObject vertex = vertices.getJSONObject(vertexIndex);
+
+            logger.debug("New vertex");
             Vertex v = new Vertex().setId(vertex.getString("id")).setName(vertex.getString("name"));
+            logger.debug("  id: " + vertex.getString("id"));
+            logger.debug("  name: " + vertex.getString("name"));
+
             gwModel.addVertex(v);
             elements.put(v.getId(), v);
             try {
                 if (vertex.getBoolean("startElement")) {
+                    logger.debug("  startElement: " + vertex.getBoolean("startElement"));
                     startElement = v.build();
                 }
             } catch (JSONException ex) {
@@ -103,20 +106,38 @@ public final class JsonContextFactory implements ContextFactory {
         for (int edgeIndex = 0; edgeIndex < edges.length(); ++edgeIndex) {
             JSONObject edge = edges.getJSONObject(edgeIndex);
 
+            logger.debug("New edge");
             Edge e = new Edge().setId(edge.getString("id")).setName(edge.getString("name"));
+            logger.debug("  id: " + edge.getString("id"));
+            logger.debug("  name: " + edge.getString("name"));
 
             // The source vertex is not mandatory, since it implies the starting element
             try {
                 e.setSourceVertex(elements.get(edge.getString("srcVertexId")));
+                logger.debug("  srcVertexId: " + edge.getString("srcVertexId"));
+            } catch (JSONException ex) {
+                ;
+            }
+
+            // Actions (java script) is not mandatory
+            try {
+                JSONArray actions = edge.getJSONArray("actions");
+                for (int actionIndex = 0; actionIndex < vertices.length(); ++actionIndex) {
+                    JSONObject action = actions.getJSONObject(actionIndex);
+                    e.addAction(new Action(action.getString("action")));
+                    logger.debug("  action: " + action.getString("action"));
+                }
             } catch (JSONException ex) {
                 ;
             }
 
             e.setTargetVertex(elements.get(edge.getString("dstVertexId")));
+            logger.debug("  dstVertexId: " + edge.getString("dstVertexId"));
             gwModel.addEdge(e);
 
             try {
                 if (edge.getBoolean("startElement")) {
+                    logger.debug("  startElement: " + edge.getBoolean("startElement"));
                     startElement = e.build();
                 }
             } catch (JSONException ex) {
@@ -125,8 +146,10 @@ public final class JsonContextFactory implements ContextFactory {
         }
 
         gwModel.setName(root.getString("name"));
+        logger.debug("Model name: " + root.getString("name"));
         context.setModel(gwModel.build());
         context.setPathGenerator(GeneratorFactory.parse(root.getString("generator")));
+        logger.debug("Generator: " + root.getString("generator"));
         context.setNextElement(startElement);
         return context;
     }
