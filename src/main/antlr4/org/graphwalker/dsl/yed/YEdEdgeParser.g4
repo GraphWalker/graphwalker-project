@@ -5,30 +5,30 @@ options {
 }
 
 parse
- : name? guard? actions? blocked? reqtags? EOF
- | name? guard? actions? reqtags? blocked? EOF
- | name? guard? blocked? actions? reqtags? EOF
- | name? guard? blocked? reqtags? actions? EOF
- | name? guard? reqtags? actions? blocked? EOF
- | name? guard? reqtags? blocked? actions? EOF
- | name? actions? guard? reqtags? blocked? EOF
- | name? actions? guard? blocked? reqtags? EOF
- | name? actions? blocked? reqtags? guard? EOF
- | name? actions? blocked? guard? reqtags? EOF
- | name? actions? reqtags? blocked? guard? EOF
- | name? actions? reqtags? guard? blocked? EOF
- | name? blocked? guard? actions? reqtags? EOF
- | name? blocked? guard? reqtags? actions? EOF
- | name? blocked? actions? guard? reqtags? EOF
- | name? blocked? actions? reqtags? guard? EOF
- | name? blocked? reqtags? guard? actions? EOF
- | name? blocked? reqtags? actions? guard? EOF
- | name? reqtags? guard? blocked? actions? EOF
- | name? reqtags? guard? actions? blocked? EOF
- | name? reqtags? actions? blocked? guard? EOF
- | name? reqtags? actions? guard? blocked? EOF
- | name? reqtags? blocked? actions? guard? EOF
- | name? reqtags? blocked? guard? actions? EOF
+ : names? guard? actions? blocked? reqtags? EOF
+ | names? guard? actions? reqtags? blocked? EOF
+ | names? guard? blocked? actions? reqtags? EOF
+ | names? guard? blocked? reqtags? actions? EOF
+ | names? guard? reqtags? actions? blocked? EOF
+ | names? guard? reqtags? blocked? actions? EOF
+ | names? actions? guard? reqtags? blocked? EOF
+ | names? actions? guard? blocked? reqtags? EOF
+ | names? actions? blocked? reqtags? guard? EOF
+ | names? actions? blocked? guard? reqtags? EOF
+ | names? actions? reqtags? blocked? guard? EOF
+ | names? actions? reqtags? guard? blocked? EOF
+ | names? blocked? guard? actions? reqtags? EOF
+ | names? blocked? guard? reqtags? actions? EOF
+ | names? blocked? actions? guard? reqtags? EOF
+ | names? blocked? actions? reqtags? guard? EOF
+ | names? blocked? reqtags? guard? actions? EOF
+ | names? blocked? reqtags? actions? guard? EOF
+ | names? reqtags? guard? blocked? actions? EOF
+ | names? reqtags? guard? actions? blocked? EOF
+ | names? reqtags? actions? blocked? guard? EOF
+ | names? reqtags? actions? guard? blocked? EOF
+ | names? reqtags? blocked? actions? guard? EOF
+ | names? reqtags? blocked? guard? actions? EOF
  ;
 
 actions
@@ -59,6 +59,10 @@ blocked
  : BLOCKED
  ;
 
+names
+ : name (SEMICOLON name)*
+ ;
+
 name
- : Identifier
+ : Identifier (DOT Identifier)?
  ;
