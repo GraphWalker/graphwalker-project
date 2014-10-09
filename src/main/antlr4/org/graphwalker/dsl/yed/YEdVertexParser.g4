@@ -31,7 +31,7 @@ names
  ;
 
 name
- : Identifier (DOT Identifier)?
+ : Identifier (DOT Identifier)*
  ;
 
 blocked
