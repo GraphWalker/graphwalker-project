@@ -46,12 +46,18 @@ public class GrammarTest {
 
     private List<String> vertices = Arrays.asList(
             "test",
-            "test.test"
+            "test.test",
+            "test;test",
+            "test.test;test",
+            "test.test;test.test",
+            "SHARED:MY_STATE",
+            "v2 SHARED:MY_STATE"
     );
 
     private List<String> edges = Arrays.asList(
             "test",
-            "test.test"
+            "test.test",
+            "test;test"
     );
 
     @Test
