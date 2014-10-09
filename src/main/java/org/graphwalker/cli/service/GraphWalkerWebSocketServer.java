@@ -87,7 +87,7 @@ public class GraphWalkerWebSocketServer extends WebSocketServer implements Obser
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        logger.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " sent msg: " + message);
+        logger.debug(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " sent msg: " + message);
         JSONObject response = new JSONObject();
         JSONObject root = null;
         try {
