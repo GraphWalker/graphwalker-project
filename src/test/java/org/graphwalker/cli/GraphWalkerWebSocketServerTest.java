@@ -26,83 +26,107 @@ package org.graphwalker.cli;
  * #L%
  */
 
+import org.graphwalker.cli.service.GraphWalkerWebSocketServer;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.example.GraphWalkerWebSocketClient;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.java_websocket.WebSocket;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.UnknownHostException;
 import java.nio.file.Paths;
+
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * Created by krikar on 10/10/14.
  */
 @GraphWalker(value = "random(edge_coverage(100))", start = "e_Connect")
-public class GraphWalkerWebSocketServerTest  extends ExecutionContext implements WebSocketFlow {
+public class GraphWalkerWebSocketServerTest extends ExecutionContext implements WebSocketFlow {
 
     private static final Logger logger = LoggerFactory.getLogger(GraphWalkerWebSocketServerTest.class);
     GraphWalkerWebSocketClient client = new GraphWalkerWebSocketClient();
+    GraphWalkerWebSocketServer server;
+    int numOfConns = 0;
+    int numOfModels = 0;
+
+    public GraphWalkerWebSocketServerTest() throws Exception {
+        server = new GraphWalkerWebSocketServer(8887);
+        server.start();
+    }
 
     @Override
     public void v_ModelLoaded() {
-        logger.info("v_ModelLoaded");
+        WebSocket conn = server.getConns().iterator().next();
+        Assert.assertNull(server.getMachines().get(conn));
+      //  Assert.assertThat(server.getContexts().get(conn).size(), is(numOfModels));
     }
 
     @Override
     public void e_StartMachine() {
-        logger.info("e_StartMachine");
         client.startMachine();
     }
 
     @Override
     public void e_AddModel() {
-        logger.info("e_AddModel");
+        numOfModels++;
         client.loadModel(Paths.get("json/SmallModel.json"));
     }
 
     @Override
     public void e_RestartMachine() {
-        logger.info("e_RestartMachine");
         client.restartMachine();
     }
 
     @Override
     public void e_AddInitialModel() {
-        logger.info("e_AddInitialModel");
+        numOfModels++;
         client.loadModel(Paths.get("json/SmallModel.json"));
     }
 
     @Override
     public void e_Connect() {
-        logger.info("e_Connect");
+        numOfConns = server.getConns().size();
         client.run();
     }
 
     @Override
     public void v_MachineRunning() {
-        logger.info("v_MachineRunning");
+        WebSocket conn = server.getConns().iterator().next();
+        Assert.assertNotNull(server.getMachines().get(conn));
+        Assert.assertThat(server.getContexts().get(conn).size(), is(numOfModels));
     }
 
     @Override
     public void e_HasNext() {
-        logger.info("e_HasNext");
         client.hasNext();
     }
 
     @Override
     public void v_EmptyMachine() {
-        logger.info("v_EmptyMachine");
+        Assert.assertThat("Before we connected, we should have no connections", numOfConns, is(0));
+        Assert.assertThat("We should now haw 1 connection", server.getConns().size(), is(1));
+
+        Assert.assertThat(server.getMachines().size(), is(1));
+        Assert.assertThat(server.getContexts().size(), is(1));
+
+        WebSocket conn = server.getConns().iterator().next();
+        Assert.assertNull(server.getMachines().get(conn));
+        Assert.assertThat(server.getContexts().get(conn).size(), is(0));
     }
 
     @Override
     public void e_GetData() {
-        logger.info("e_GetData");
         client.getData();
     }
 
     @Override
     public void e_GetNext() {
-        logger.info("e_GetNext");
         client.getNext();
     }
 }

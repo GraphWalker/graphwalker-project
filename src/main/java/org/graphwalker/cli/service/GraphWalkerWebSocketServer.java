@@ -228,4 +228,16 @@ public class GraphWalkerWebSocketServer extends WebSocketServer implements Obser
             }
         }
     }
+
+    public Set<WebSocket> getConns() {
+        return conns;
+    }
+
+    public Map<WebSocket, Machine> getMachines() {
+        return machines;
+    }
+
+    public Map<WebSocket, List<Context>> getContexts() {
+        return contexts;
+    }
 }
