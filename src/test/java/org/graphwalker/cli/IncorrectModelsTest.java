@@ -60,10 +60,10 @@ public class IncorrectModelsTest extends CLITestRoot {
      */
     @Test
     public void wrongVertexSyntax() {
-        String args[] = {"offline", "-m", "graphml/Incorrect Models/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
+        String args[] = {"offline", "-m", "graphml/IncorrectModels/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
-            "offline -m graphml/Incorrect Models/wrongVertexSyntax.graphml random(edge_coverage(100))" +
+            "offline -m graphml/IncorrectModels/wrongVertexSyntax.graphml random(edge_coverage(100))" +
             System.lineSeparator() + "no viable alternative at input '1'" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
@@ -73,10 +73,10 @@ public class IncorrectModelsTest extends CLITestRoot {
      */
     @Test
     public void onlyOneVertex() {
-        String args[] = {"offline", "-m", "graphml/Incorrect Models/singleVertex.graphml", "random(edge_coverage(100))"};
+        String args[] = {"offline", "-m", "graphml/IncorrectModels/singleVertex.graphml", "random(edge_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
-            "offline -m graphml/Incorrect Models/singleVertex.graphml random(edge_coverage(100))" +
+            "offline -m graphml/IncorrectModels/singleVertex.graphml random(edge_coverage(100))" +
             System.lineSeparator() + "No in-edges! Vertex: 'v_1'" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
@@ -86,10 +86,10 @@ public class IncorrectModelsTest extends CLITestRoot {
      */
     @Test
     public void singleStartVertex() {
-        String args[] = {"offline", "-m", "graphml/Incorrect Models/singleStartVertex.graphml", "random(edge_coverage(100))"};
+        String args[] = {"offline", "-m", "graphml/IncorrectModels/singleStartVertex.graphml", "random(edge_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
-            "offline -m graphml/Incorrect Models/singleStartVertex.graphml random(edge_coverage(100))" +
+            "offline -m graphml/IncorrectModels/singleStartVertex.graphml random(edge_coverage(100))" +
             System.lineSeparator() + "No start context found" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
