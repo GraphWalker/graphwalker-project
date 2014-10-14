@@ -37,11 +37,11 @@ public class Online {
     public static final String SERVICE_RESTFUL = "RESTFUL";
     public static final String SERVICE_WEBSOCKET = "WEBSOCKET";
 
-    @Parameter(names = {"--verbose", "-o"}, required = false, arity = 1,
+    @Parameter(names = {"--verbose", "-o"}, required = false,
         description = "Will print more details")
     public boolean verbose = false;
 
-    @Parameter(names = {"--unvisited", "-u"}, required = false, arity = 1,
+    @Parameter(names = {"--unvisited", "-u"}, required = false,
         description = "Will also print the remaining unvisited elements in the model.")
     public boolean unvisited = false;
 
@@ -54,9 +54,9 @@ public class Online {
         description = "Selects which kind of service to start. Either websocket [defualt], or restful")
     public String service = SERVICE_WEBSOCKET;
 
-    @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
+    @Parameter(names = {"--json", "-j"}, required = false,
         description = "Returns data formatted as json")
-    public boolean json = true;
+    public boolean json = false;
 
     @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
     public int port = 8887;
