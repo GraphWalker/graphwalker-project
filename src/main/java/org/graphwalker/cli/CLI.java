@@ -227,14 +227,14 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        if ( online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
+        if (online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
             GraphWalkerWebSocketServer GraphWalkerWebSocketServer = new GraphWalkerWebSocketServer(online.port);
             try {
                 GraphWalkerWebSocketServer.startService();
             } catch (Exception e) {
                 logger.error("Something went wrong.", e);
             }
-        } else if ( online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
+        } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
             List<Context> executionContexts = getContextsWithPathGenerators((online.model.iterator()));
             ResourceConfig rc = new DefaultResourceConfig();
             rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));

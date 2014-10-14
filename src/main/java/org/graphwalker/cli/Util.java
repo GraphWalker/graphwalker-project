@@ -61,7 +61,7 @@ public class Util {
             if (showUnvisited) {
                 Context context = machine.getCurrentContext();
                 str.append(" | " + context.getProfiler().getUnvisitedElements(context).size() +
-                        "(" + context.getModel().getElements().size() + ") : ");
+                    "(" + context.getModel().getElements().size() + ") : ");
                 for (Element e : context.getProfiler().getUnvisitedElements(context)) {
                     str.append(e.getName());
                     if (verbose) {
