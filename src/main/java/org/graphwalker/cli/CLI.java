@@ -256,6 +256,7 @@ public class CLI {
         SimpleMachine machine = new SimpleMachine(getContextsOfflineOnline(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
+                machine.getNextStep();
                 if (offline.json) {
                     System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
                 } else {

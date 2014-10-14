@@ -39,51 +39,45 @@ import java.util.Map;
 /**
  * Created by krikar on 9/13/14.
  */
-public class Util {
-    static public String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
-        StringBuilder str = new StringBuilder();
-        try {
-            machine.getNextStep();
-        } catch (MachineException e) {
-            ;
-        } finally {
+public abstract class Util {
+
+    public static String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
+        StringBuilder builder = new StringBuilder();
             if (verbose) {
-                str.append(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()) + " : ");
+                builder.append(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName())).append(" : ");
             }
             if (machine.getCurrentContext().getCurrentElement().hasName()) {
-                str.append(machine.getCurrentContext().getCurrentElement().getName());
+                builder.append(machine.getCurrentContext().getCurrentElement().getName());
                 if (verbose) {
-                    str.append("(" + machine.getCurrentContext().getCurrentElement().getId() + ")");
-                    str.append(":" + machine.getCurrentContext().getKeys());
+                    builder.append("(").append(machine.getCurrentContext().getCurrentElement().getId()).append(")");
+                    builder.append(":").append(machine.getCurrentContext().getKeys());
                 }
             }
 
             if (showUnvisited) {
                 Context context = machine.getCurrentContext();
-                str.append(" | " + context.getProfiler().getUnvisitedElements(context).size() +
-                        "(" + context.getModel().getElements().size() + ") : ");
+                builder.append(" | ").append(context.getProfiler().getUnvisitedElements(context).size())
+                        .append("(").append(context.getModel().getElements().size()).append(") : ");
                 for (Element e : context.getProfiler().getUnvisitedElements(context)) {
-                    str.append(e.getName());
+                    builder.append(e.getName());
                     if (verbose) {
-                        str.append("(" + e.getId() + ")");
+                        builder.append("(").append(e.getId()).append(")");
                     }
-                    str.append(" ");
+                    builder.append(" ");
                 }
             }
-        }
-        return str.toString();
+        return builder.toString();
     }
 
-    static public JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
-        JSONObject obj = new JSONObject();
-        machine.getNextStep();
+    public static JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
+        JSONObject object = new JSONObject();
         if (verbose) {
-            obj.put("ModelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
+            object.put("ModelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
         }
         if (machine.getCurrentContext().getCurrentElement().hasName()) {
-            obj.put("CurrentElementName", machine.getCurrentContext().getCurrentElement().getName());
+            object.put("CurrentElementName", machine.getCurrentContext().getCurrentElement().getName());
             if (verbose) {
-                obj.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
+                object.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
 
                 JSONArray jsonKeys = new JSONArray();
                 for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
@@ -91,26 +85,25 @@ public class Util {
                     jsonKey.put(key.getKey(), key.getValue());
                     jsonKeys.put(jsonKey);
                 }
-                obj.put("Data", jsonKeys);
+                object.put("Data", jsonKeys);
             }
         }
-
         if (showUnvisited) {
             Context context = machine.getCurrentContext();
-            obj.put("NumberOfElements", context.getModel().getElements().size());
-            obj.put("NumberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
+            object.put("NumberOfElements", context.getModel().getElements().size());
+            object.put("NumberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
 
             JSONArray jsonElements = new JSONArray();
-            for (Element e : context.getProfiler().getUnvisitedElements(context)) {
+            for (Element element : context.getProfiler().getUnvisitedElements(context)) {
                 JSONObject jsonElement = new JSONObject();
-                jsonElement.put("ElementName", e.getName());
+                jsonElement.put("ElementName", element.getName());
                 if (verbose) {
-                    jsonElement.put("ElementId", e.getId());
+                    jsonElement.put("ElementId", element.getId());
                 }
                 jsonElements.put(jsonElement);
             }
-            obj.put("UnvisitedElements", jsonElements);
+            object.put("UnvisitedElements", jsonElements);
         }
-        return obj;
+        return object;
     }
 }
