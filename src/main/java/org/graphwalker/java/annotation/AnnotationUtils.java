@@ -52,8 +52,9 @@ public final class AnnotationUtils {
     private AnnotationUtils() {}
 
     private static String getExtension(String path) {
+	final char uriPathSeparator = '/';
         int position = path.lastIndexOf('.');
-        return path.lastIndexOf(File.separator)>position?"":path.substring(position+1);
+        return path.lastIndexOf(uriPathSeparator) > position ? "" : path.substring(position + 1);
     }
 
     private static boolean valid(URL url) {
