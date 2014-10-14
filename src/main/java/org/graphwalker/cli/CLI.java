@@ -239,7 +239,7 @@ public class CLI {
                 + online.port
                 + "/graphwalker/hasNext or http://localhost:"
                 + online.port
-                + " /graphwalker/getNext");
+                + "/graphwalker/getNext");
             System.out.println("Press Control+C to end...");
             try {
                 server.start();
