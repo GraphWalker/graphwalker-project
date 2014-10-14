@@ -34,11 +34,11 @@ import java.util.List;
 @Parameters(commandDescription = "Generate a test sequence offline. The sequence is printed to the standard output")
 public class Offline {
 
-    @Parameter(names = {"--verbose", "-o"}, required = false, arity = 1,
+    @Parameter(names = {"--verbose", "-o"}, required = false,
         description = "Will print more details to stdout")
     public boolean verbose = false;
 
-    @Parameter(names = {"--unvisited", "-u"}, required = false, arity = 1,
+    @Parameter(names = {"--unvisited", "-u"}, required = false,
         description = "Will also print the remaining unvisited elements in the model.")
     public boolean unvisited = false;
 
@@ -47,7 +47,7 @@ public class Offline {
             "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
     public List<String> model = new ArrayList<String>();
 
-    @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
+    @Parameter(names = {"--json", "-j"}, required = false,
         description = "Returns data formatted as json")
-    public boolean json = true;
+    public boolean json = false;
 }

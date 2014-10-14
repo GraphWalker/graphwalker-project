@@ -61,7 +61,7 @@ public class CorrectModelsTest extends CLITestRoot {
      */
     @Test
     public void simplestModel() {
-        String args[] = {"offline", "-j", "false", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
+        String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is(""));
         Assert.assertThat(outMsg, is("e1" + System.lineSeparator() +
@@ -73,7 +73,7 @@ public class CorrectModelsTest extends CLITestRoot {
      */
     @Test
     public void shortestAllPathsVertexCoverage() {
-        String args[] = {"offline", "-j", "false", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
+        String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is(""));
         Assert.assertThat(outMsg, is("e1" + System.lineSeparator() +
