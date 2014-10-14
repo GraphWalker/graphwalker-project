@@ -27,18 +27,14 @@ package org.graphwalker.cli;
  */
 
 import org.graphwalker.cli.service.GraphWalkerWebSocketServer;
-import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.example.GraphWalkerWebSocketClient;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.java_websocket.WebSocket;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.UnknownHostException;
 import java.nio.file.Paths;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -64,7 +60,7 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext implements 
     public void v_ModelLoaded() {
         WebSocket conn = server.getConns().iterator().next();
         Assert.assertNull(server.getMachines().get(conn));
-      //  Assert.assertThat(server.getContexts().get(conn).size(), is(numOfModels));
+        //  Assert.assertThat(server.getContexts().get(conn).size(), is(numOfModels));
     }
 
     @Override
