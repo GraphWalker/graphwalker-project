@@ -28,12 +28,17 @@ package org.graphwalker.cli;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
+import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
+import com.sun.jersey.api.core.DefaultResourceConfig;
+import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
 import org.graphwalker.cli.service.GraphWalkerWebSocketServer;
+import org.graphwalker.cli.service.Restful;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
@@ -222,11 +227,36 @@ public class CLI {
     }
 
     private void RunCommandOnline() throws Exception {
-        GraphWalkerWebSocketServer GraphWalkerWebSocketServer = new GraphWalkerWebSocketServer(online.port);
-        try {
-            GraphWalkerWebSocketServer.startService();
-        } catch (Exception e) {
-            logger.error("Something went wrong.", e);
+        if ( online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
+            GraphWalkerWebSocketServer GraphWalkerWebSocketServer = new GraphWalkerWebSocketServer(online.port);
+            try {
+                GraphWalkerWebSocketServer.startService();
+            } catch (Exception e) {
+                logger.error("Something went wrong.", e);
+            }
+        } else if ( online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
+            List<Context> executionContexts = getContextsWithPathGenerators((online.model.iterator()));
+            ResourceConfig rc = new DefaultResourceConfig();
+            rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
+
+            String url = "http://0.0.0.0:" + online.port;
+
+            HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
+            System.out.println("Try http://localhost:"
+                + online.port
+                + "/graphwalker/hasNext or http://localhost:"
+                + online.port
+                + " /graphwalker/getNext");
+            System.out.println("Press Control+C to end...");
+            try {
+                server.start();
+                Thread.currentThread().join();
+            } catch (Exception e) {
+                logger.error("An error occurred when running command online: ", e);
+            } finally {
+                server.stop();
+            }
+
         }
     }
 

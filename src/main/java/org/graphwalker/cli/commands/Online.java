@@ -33,6 +33,31 @@ import java.util.List;
 
 @Parameters(commandDescription = "Starts GraphWalker as a WebSocket server.")
 public class Online {
+
+    public static final String SERVICE_RESTFUL = "RESTFUL";
+    public static final String SERVICE_WEBSOCKET = "WEBSOCKET";
+
+    @Parameter(names = {"--verbose", "-o"}, required = false, arity = 1,
+        description = "Will print more details")
+    public boolean verbose = false;
+
+    @Parameter(names = {"--unvisited", "-u"}, required = false, arity = 1,
+        description = "Will also print the remaining unvisited elements in the model.")
+    public boolean unvisited = false;
+
+    @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
+        description = "The model, as a graphml file followed by generator with stop condition. " +
+            "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
+    public List<String> model = new ArrayList<String>();
+
+    @Parameter(names = {"--service", "-s"}, required = false, arity = 1,
+        description = "Selects which kind of service to start. Either websocket [defualt], or restful")
+    public String service = SERVICE_WEBSOCKET;
+
+    @Parameter(names = {"--json", "-j"}, required = false, arity = 1,
+        description = "Returns data formatted as json")
+    public boolean json = true;
+
     @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
     public int port = 8887;
 }
