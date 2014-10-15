@@ -246,7 +246,7 @@ public class CLI {
                 + online.port
                 + "/graphwalker/hasNext or http://localhost:"
                 + online.port
-                + " /graphwalker/getNext");
+                + "/graphwalker/getNext");
             System.out.println("Press Control+C to end...");
             try {
                 server.start();
@@ -264,6 +264,7 @@ public class CLI {
         SimpleMachine machine = new SimpleMachine(getContextsWithPathGenerators(offline.model.iterator()));
         while (machine.hasNextStep()) {
             try {
+                machine.getNextStep();
                 if (offline.json) {
                     System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
                 } else {
