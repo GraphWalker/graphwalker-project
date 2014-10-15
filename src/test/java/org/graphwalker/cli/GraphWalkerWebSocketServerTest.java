@@ -32,6 +32,8 @@ import org.graphwalker.example.GraphWalkerWebSocketClient;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.java_websocket.WebSocket;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +53,14 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext implements 
     int numOfConns = 0;
     int numOfModels = 0;
 
-    public GraphWalkerWebSocketServerTest() throws Exception {
+    @Before
+    public void StartServer() throws Exception {
         server = new GraphWalkerWebSocketServer(8887);
         server.start();
+    }
+
+    @Test
+    public void TestRun() throws Exception {
     }
 
     @Override
