@@ -71,7 +71,6 @@ public final class TestExecutor implements Executor {
     public TestExecutor(Context... contexts) {
         this.configuration = new Configuration();
         configureContexts(contexts);
-
         if (0 < contexts.length) {
             this.machines.add(createMachine(contexts));
         }
@@ -115,14 +114,14 @@ public final class TestExecutor implements Executor {
         }
     }
 
-    private void configureContext(Context context) {
+    private void configureContext(final Context context) {
         GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
         if (null != annotation) {
             configureContext(context, annotation);
         }
     }
 
-    private void configureContext(Context context, GraphWalker annotation) {
+    private void configureContext(final Context context, GraphWalker annotation) {
         if (!"".equals(annotation.value())) {
             context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
         } else {
@@ -130,6 +129,12 @@ public final class TestExecutor implements Executor {
         }
         if (!"".equals(annotation.start())) {
             context.setNextElement(getElement(context.getModel(), annotation.start()));
+        }
+        // TODO: support classes with multiple models
+        Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
+        if (!models.isEmpty()) {
+            Path path = Paths.get(models.iterator().next().file());
+            ContextFactoryScanner.get(path).create(path, context);
         }
     }
 
@@ -160,16 +165,9 @@ public final class TestExecutor implements Executor {
 
     private Context createContext(Class<? extends Context> testClass) {
         try {
-            // TODO: support classes with multiple models
-            Set<Model> models = AnnotationUtils.getAnnotations(testClass, Model.class);
-            Context context = testClass.newInstance();
-            if (!models.isEmpty()) {
-                Path path = Paths.get(models.iterator().next().file());
-                context = ContextFactoryScanner.get(path).create(path, context);
-            }
-            return context;
+            return testClass.newInstance();
         } catch (Throwable e) {
-            throw new RuntimeException(e); // TODO: change exception
+            throw new TestExecutionException("Failed to create context");
         }
     }
 

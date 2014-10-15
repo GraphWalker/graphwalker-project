@@ -57,7 +57,8 @@ public final class SourceFile {
         this.inputPath = inputPath;
         this.relativePath = basePath.relativize(inputPath);
         if (null != this.relativePath.getParent()) {
-            this.packageName = this.relativePath.getParent().toString().replace(File.separator, ".");
+            this.packageName = this.relativePath.getParent().toString()
+                    .replace(File.separator, ".").replaceAll(" ", "_");
         } else {
             this.packageName = "";
         }

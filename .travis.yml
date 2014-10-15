@@ -18,5 +18,5 @@ before_install:
   - ../graphwalker-project/tools/clone.sh
   - ../graphwalker-project/tools/build.sh
 
-install:
-  - mvn -q deploy --settings ../graphwalker-project/deploy.xml
+script:
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn -q deploy --settings ../graphwalker-project/deploy.xml || false'

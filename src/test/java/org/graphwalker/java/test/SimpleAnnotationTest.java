@@ -1,4 +1,4 @@
-package org.graphwalker.java.source;
+package org.graphwalker.java.test;
 
 /*
  * #%L
@@ -26,28 +26,26 @@ package org.graphwalker.java.source;
  * #L%
  */
 
-import org.junit.Assert;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.java.annotation.GraphWalker;
 import org.junit.Test;
 
 /**
  * @author Nils Olsson
  */
-public class GenerateTest {
+@GraphWalker
+public class SimpleAnnotationTest extends ExecutionContext implements SimpleModel {
 
-    @Test
-    public void generate() {
-        String source = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
-        Assert.assertTrue(source.contains("edge12"));
-        Assert.assertTrue(source.contains("vertex2"));
-        Assert.assertFalse(source.contains("SHARED"));
+    @Override
+    public void vertex() {
+    }
+
+    @Override
+    public void edge() {
     }
 
     @Test
-    public void generatePathWithSpace() {
-        String source = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
-        Assert.assertTrue(source.contains("edge12"));
-        Assert.assertTrue(source.contains("vertex2"));
-        Assert.assertFalse(source.contains("SHARED"));
-        Assert.assertTrue(source.contains("package org.graphwalker.java.path_with_space;"));
+    public void run() {
+        new TestExecutor(this).execute();
     }
 }
