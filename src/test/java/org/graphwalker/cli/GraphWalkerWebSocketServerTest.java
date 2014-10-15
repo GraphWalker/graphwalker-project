@@ -30,6 +30,7 @@ import org.graphwalker.cli.service.GraphWalkerWebSocketServer;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.example.GraphWalkerWebSocketClient;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,6 +62,7 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext implements 
 
     @Test
     public void TestRun() throws Exception {
+        new TestExecutor(this).execute();
     }
 
     @Override

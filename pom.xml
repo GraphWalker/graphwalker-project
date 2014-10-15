@@ -138,13 +138,6 @@
                             <goal>generate-test-sources</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
