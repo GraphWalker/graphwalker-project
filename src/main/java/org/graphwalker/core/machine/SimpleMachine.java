@@ -78,6 +78,9 @@ public final class SimpleMachine extends MachineBase {
         for (Context context: contexts) {
             this.currentContext = context;
             this.currentContext.setProfiler(getProfiler());
+            if (null == context.getModel()) {
+                throw new MachineException("A context must be associated with a model");
+            }
             execute(context.getModel().getActions());
         }
     }
