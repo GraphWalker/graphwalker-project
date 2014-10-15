@@ -12,11 +12,11 @@ env:
     - secure: "oIzbTtgqnJ2Qw5VQefdu88u8fyUM+jJYbXFJR7jLkId4AzY806JGkL8/IekERSU2cY7arnBcvHpJwXWMlJtiId6xPDr9wkD0bDbleDuP0vmVOVYkFHKp2sIPleu51whueZDj9fEG8PmGDJDFZPXJpKzEatlcvxNpBLxWz/hgTfo="
     - secure: "hTZpLg4KAauMrhK3kEVIshOpnBBmy2j6CK6yj7xVRhqS4vc1oTmdJ0ZESXTQ5O8jCKE1k7si2ZHgH7jJdFL8128SPv7Ji8NWXrnffl+UMB5LPQHP2EQsRL5zLHyUoqjSY58MMz8MC7/WsXHem5157yxtCzPJZ4DDYnlygybQSkE="
 
-before_install:
+install:
   - sudo apt-get update -qq
   - git clone --depth=50 --branch=master git://github.com/GraphWalker/graphwalker-project.git ../graphwalker-project
   - ../graphwalker-project/tools/clone.sh
-  - ../graphwalker-project/tools/build.sh
 
-install:
-  - mvn -q deploy --settings ../graphwalker-project/deploy.xml
+script:
+  - ../graphwalker-project/tools/build.sh
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn -q deploy --settings ../graphwalker-project/deploy.xml || false'
