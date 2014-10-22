@@ -11,11 +11,10 @@ env:
     - secure: "NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI="
     - secure: "fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE="
 
-before_install:
-  - sudo apt-get update -qq
-
 install:
-  - mvn -N -q deploy --settings deploy.xml
+  - sudo apt-get update -qq
+  - ../graphwalker-project/tools/clone.sh
 
 script:
-  - mvn -N test -B
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn -N -q deploy --settings deploy.xml || mvn -N test -B'
+
