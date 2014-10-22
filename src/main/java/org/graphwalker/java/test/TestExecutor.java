@@ -122,6 +122,12 @@ public final class TestExecutor implements Executor {
     }
 
     private void configureContext(final Context context, GraphWalker annotation) {
+        // TODO: support classes with multiple models
+        Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
+        if (!models.isEmpty()) {
+            Path path = Paths.get(models.iterator().next().file());
+            ContextFactoryScanner.get(path).create(path, context);
+        }
         if (!"".equals(annotation.value())) {
             context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
         } else {
@@ -129,12 +135,6 @@ public final class TestExecutor implements Executor {
         }
         if (!"".equals(annotation.start())) {
             context.setNextElement(getElement(context.getModel(), annotation.start()));
-        }
-        // TODO: support classes with multiple models
-        Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
-        if (!models.isEmpty()) {
-            Path path = Paths.get(models.iterator().next().file());
-            ContextFactoryScanner.get(path).create(path, context);
         }
     }
 
