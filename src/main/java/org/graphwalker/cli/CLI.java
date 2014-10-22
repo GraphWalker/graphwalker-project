@@ -45,7 +45,7 @@ import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.utils.LoggerUtil;
+import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
