@@ -25,25 +25,63 @@
  */
 'use strict';
 
-var dashboard = angular.module('dashboard', [
+angular.module('dashboard', [
+    'ngAnimate',
+    'ngCookies',
+    'ngResource',
     'ngRoute',
-    'ui.layout',
-    'dashboardControllers'
-]);
-
-dashboard.config(['$routeProvider',
-    function($routeProvider) {
-        $routeProvider.
-            when('/', {
-                templateUrl: 'templates/execution-list.html',
-                controller: 'ExecutionListController'
-            }).
-            when('/execution/:executionId', {
-                templateUrl: 'templates/execution-detail.html',
-                controller: 'ExecutionDetailController'
-            }).
-            otherwise({
-                redirectTo: '/'
+    'ngSanitize',
+    'ngTouch'
+])
+.config(function($routeProvider) {
+    $routeProvider.
+    when('/', {
+        templateUrl: 'views/welcome.html',
+        controller: 'WelcomeController'
+    }).
+    when('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'WelcomeController',
+        name: 'Dashboard',
+        icon: 'fa-home'
+    }).
+    when('/executions', {
+        templateUrl: 'views/executions.html',
+        controller: 'WelcomeController',
+        name: 'Executions',
+        icon: 'fa-gears'
+    }).
+    when('/reports', {
+        templateUrl: 'views/reports.html',
+        controller: 'WelcomeController',
+        name: 'Reports',
+        icon: 'fa-file-text-o'
+    }).
+    when('/schedule', {
+        templateUrl: 'views/schedule.html',
+        controller: 'WelcomeController',
+        name: 'Schedule',
+        icon: 'fa-calendar'
+    }).
+    otherwise({
+        redirectTo: '/'
+    });
+})
+.controller('DashboardController', function($scope, $route, $location) {
+    $scope.routes = [];
+    angular.forEach($route.routes, function(config, path) {
+        if (config.name) {
+            $scope.routes.push({
+                name:config.name,
+                icon:config.icon,
+                url:path
             });
+        }
+    });
+    $scope.isActive = function(route) {
+        return route.url === $location.path();
     }
-]);
+})
+.controller('WelcomeController', function($scope, $route) {
+
+});

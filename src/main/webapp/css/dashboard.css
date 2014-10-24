@@ -25,68 +25,103 @@
  */
 
 html, body {
-    overflow: hidden;
+    height: 100%;
 }
 
-.master {
-    border-left: 1px solid #c4cbcc;
+body {
+    background-color: rgb(248, 248, 248);
 }
 
-.detail {
-    padding-top: 10px;
-    border-right: 1px solid #c4cbcc;
-    margin-left: 10px;
+.navbar {
+    min-height: 0;
 }
 
-.search-panel {
-    padding: 10px 10px 20px 10px;
-    background: #eee;
-    border-bottom: 1px solid #ddd;
-    height: 65px;
+.wrapper {
+    padding-left: 0;
+    height: 100%;
 }
 
-.search-box {
-    position: relative;
+.page-wrapper {
+    width: 100%;
+    padding: 0;
+    padding-top: 51px;
+    background-color: #fff;
+    height: 100%;
+    border-left: 1px solid #e7e7e7;
 }
 
-.search-box input {
-    padding-right: 30px;
+.navbar-collapse {
+    padding: 0;
 }
 
-.search-box i {
-    position: absolute;
-    right: 0;
-    padding: 10px 12px;
+.side-nav {
+    margin: 0;
 }
 
-.list-group {
-    margin-top: 65px;
-    margin-bottom: 0;
+.side-nav>li {
+    border-bottom: 1px solid #e7e7e7;
 }
 
-.list-group-item {
-    border-width: 1px 0 1px 0;
-    border-color: #ddd;
+.side-nav>li:last-child {
+     border: none;
 }
 
-.list-group-item:first-child {
-    border-top: none;
+.side-nav>li>ul {
+    padding: 0;
 }
 
-.list-group-item:first-child, .list-group-item:last-child {
-    border-radius: 0;
+.side-nav>li>ul>li>a {
+    display: block;
+    padding: 10px 15px 10px 38px;
+    text-decoration: none;
 }
 
-.ui-splitbar {
-    border-left: 1px solid #ddd;
+.side-nav>li>a>span {
+    padding-left: 4px;
+    vertical-align: middle;
 }
 
-.progress {
-    margin-bottom: 0;
-}
+@media(min-width:768px) {
+    .wrapper {
+        padding-left: 111px;
+    }
 
-.content {
-    border-left: 1px solid #ddd;
-    margin-top: 51px;
-    padding: 10px;
+    .page-wrapper {
+        margin-top: 0;
+        padding: 10px;
+        height: 100%;
+    }    
+    
+    .navbar-brand {
+        display: none;
+    }
+    
+    .side-nav {
+        position: fixed;
+        left: 111px;
+        width: 111px;
+        margin-left: -111px;
+        border: none;
+        border-radius: 0;
+        overflow-y: auto;
+    }
+
+    .side-nav>li:last-child {
+        border-bottom: 1px solid #e7e7e7;
+    }    
+    
+    .side-nav>li>a {
+        width: 111px;
+        font-size: 2em;
+        text-align: center;
+    }
+
+    .side-nav>li>a>span {
+        display: none;
+    }
+    
+    .side-nav li a:hover,
+    .side-nav li a:focus {
+        outline: none;
+    }
 }
