@@ -1,0 +1,21 @@
+{
+  "name": "angular-scroll",
+  "version": "0.6.2",
+  "main": "angular-scroll.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "package.json",
+    "src",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "angular": "^1.2.16"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.2.16"
+  }
+}
