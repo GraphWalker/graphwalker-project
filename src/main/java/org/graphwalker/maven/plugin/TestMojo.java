@@ -31,18 +31,13 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.ExecutionStatus;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.java.test.IsolatedClassLoader;
 import org.graphwalker.java.test.*;
 import org.graphwalker.java.report.XMLReportGenerator;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -106,11 +101,11 @@ public final class TestMojo extends DefaultMojoBase {
         return mavenTestSkip || graphwalkerTestSkip || skipTests;
     }
 
-    protected Set<String> getIncludes() {
+    protected Collection<String> getIncludes() {
         return includes;
     }
 
-    protected Set<String> getExcludes() {
+    protected Collection<String> getExcludes() {
         return excludes;
     }
 
@@ -126,22 +121,6 @@ public final class TestMojo extends DefaultMojoBase {
             return System.getProperty("groups");
         }
         return groups;
-    }
-
-    protected ClassLoader createClassLoader() throws MojoExecutionException {
-        try {
-            return new URLClassLoader(convertToURL(getClasspathElements()), getClass().getClassLoader());
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException("Couldn''t create class loader");
-        }
-    }
-
-    private URL[] convertToURL(List<String> elements) throws MalformedURLException {
-        List<URL> urlList = new ArrayList<>();
-        for (String element : elements) {
-            urlList.add(new File(element).toURI().toURL());
-        }
-        return urlList.toArray(new URL[urlList.size()]);
     }
 
     protected ClassLoader switchClassLoader(ClassLoader newClassLoader) {
@@ -168,17 +147,16 @@ public final class TestMojo extends DefaultMojoBase {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!getSkipTests()) {
-            ClassLoader classLoader = switchClassLoader(createClassLoader());
-            Properties properties = switchProperties(createProperties());
             displayHeader();
+            ClassLoader classLoader = new IsolatedClassLoader(classpathElements);
+            Properties properties = switchProperties(createProperties());
             Configuration configuration = createConfiguration();
-            Executor executor = new TestExecutor(configuration);
+            Executor executor = new Reflector(configuration, classLoader);
             displayConfiguration(configuration, executor);
-            executor.execute();
-            displayResult(executor);
+            Result result = executor.execute();
+            displayResult(result);
+            reportResults(result);
             switchProperties(properties);
-            switchClassLoader(classLoader);
-            reportResults(executor);
         }
     }
 
@@ -210,8 +188,8 @@ public final class TestMojo extends DefaultMojoBase {
     private Configuration createConfiguration() {
         Configuration configuration = new Configuration();
         if (StringUtils.isBlank(getTest())) {
-            configuration.addInclude(getIncludes());
-            configuration.addExclude(getExcludes());
+            configuration.setIncludes(getIncludes());
+            configuration.setExcludes(getExcludes());
         } else {
             for (String test: getTest().split(",")) {
                 test = test.trim();
@@ -227,9 +205,6 @@ public final class TestMojo extends DefaultMojoBase {
                 }
             }
         }
-        configuration.setClassesDirectory(getClassesDirectory());
-        configuration.setTestClassesDirectory(getTestClassesDirectory());
-        configuration.setReportsDirectory(getReportsDirectory());
         for (String group: getGroups().split(",")) {
             configuration.addGroup(group.trim());
         }
@@ -244,41 +219,31 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("     Groups = " + configuration.getGroups());
             getLog().info("");
             getLog().info("Tests:");
+            /*
             if (executor.getMachines().isEmpty()) {
                 getLog().info("  No tests found");
             } else {
-                for (Machine machine: executor.getMachines()) {
-                    //getLog().info("  ["+"]");
-                    for (Context context: machine.getContexts()) {
+                for (MachineConfiguration machine: executor.getMachines()) {
+                    for (ContextConfiguration context: machine.getContextConfigurations()) {
                         getLog().info("    "
                             + context.getClass().getSimpleName()+"("
-                            + context.getPathGenerator().getClass().getSimpleName()+", "
-                            + context.getPathGenerator().getStopCondition().getClass().getSimpleName()+", "
-                            + context.getPathGenerator().getStopCondition().getValue()+")");
+                            + context.getPathGeneratorName()+", "
+                            + context.getStopConditionName()+", "
+                            + context.getStopConditionValue()+")");
                     }
                     getLog().info("");
                 }
             }
+            */
             getLog().info("------------------------------------------------------------------------");
         }
     }
 
-    public Machine getFailedMachine(Executor executor) {
-        for (Machine machine: executor.getMachines()) {
-            for (Context context: machine.getContexts()) {
-                if (executor.isFailure(context)) {
-                    return machine;
-                }
-            }
-        }
-        return null;
-    }
-
-    private void displayResult(Executor executor) {
+    private void displayResult(Result result) {
         if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
-            for (MachineException exception: executor.getFailures()) {
-                getLog().error(exception);
-            }
+            //for (MachineException exception: executor.getFailures()) {
+            //    getLog().error(exception);
+            //}
         }
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");
@@ -288,8 +253,9 @@ public final class TestMojo extends DefaultMojoBase {
 
             long tests = 0, completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
             List<Context> failedExecutions = new ArrayList<>();
-            for (Machine machine: executor.getMachines()) {
-                for (Context context: machine.getContexts()) {
+            /*
+            for (MachineConfiguration machine: executor.getMachines()) {
+                for (Context context: machine.getContextConfigurations()) {
                     tests++;
                     switch (context.getExecutionStatus()) {
                         case COMPLETED: {
@@ -311,6 +277,7 @@ public final class TestMojo extends DefaultMojoBase {
                     }
                 }
             }
+            */
             if (!failedExecutions.isEmpty()) {
                 getLog().info("Failed executions: ");
                 for (Context context: failedExecutions) {
@@ -326,18 +293,11 @@ public final class TestMojo extends DefaultMojoBase {
         }
     }
 
-    private void reportResults(Executor executor) throws MojoExecutionException {
+    private void reportResults(Result result) throws MojoExecutionException {
         boolean hasExceptions = false;
-        XMLReportGenerator reporter = new XMLReportGenerator(getReportsDirectory(), getSession().getStartTime(), getSession().getSystemProperties());
-
-        reporter.writeReport(executor);
-
-        for (Machine machine: executor.getMachines()) {
-            for (Context context: machine.getContexts()) {
-                hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
-            }
-        }
-        if (hasExceptions) {
+        XMLReportGenerator reporter = new XMLReportGenerator(getSession().getStartTime(), getSession().getSystemProperties());
+        reporter.writeReport(getReportsDirectory(), result);
+        if (result.hasExceptions()) {
             throw new MojoExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", getReportsDirectory().getAbsolutePath()));
         }
     }
