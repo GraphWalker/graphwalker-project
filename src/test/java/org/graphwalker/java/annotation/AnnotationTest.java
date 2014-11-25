@@ -32,7 +32,6 @@ import org.graphwalker.java.annotation.resources.MyTest;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
 import static org.hamcrest.core.Is.is;

@@ -1,4 +1,4 @@
-package org.graphwalker.java.test;
+package org.graphwalker.java.factory;
 
 /*
  * #%L
@@ -26,32 +26,33 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.graphwalker.core.condition.ReachedStopCondition;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.java.annotation.GraphWalker;
+import org.graphwalker.java.test.TestExecutionException;
 
-import static org.hamcrest.core.Is.is;
+import java.lang.reflect.Constructor;
 
 /**
  * @author Nils Olsson
  */
-public class ConfigurationTest {
+public abstract class PathGeneratorFactory {
 
-    @Test
-    public void configurationTest() {
-        Configuration configuration = new Configuration();
-        configuration.addExclude("exclude");
-        Assert.assertThat(configuration.getExcludes().size(), is(1));
-        configuration.addInclude("include");
-        Assert.assertThat(configuration.getIncludes().size(), is(1));
-        configuration.addGroup("group");
-        Assert.assertThat(configuration.getGroups().size(), is(1));
-    }
-
-    @Test
-    public void minimalConfigurationTest() {
-        Configuration configuration = new Configuration();
-        Assert.assertNotNull(configuration.getExcludes());
-        Assert.assertNotNull(configuration.getIncludes());
-        Assert.assertNotNull(configuration.getGroups());
+    public static PathGenerator create(GraphWalker annotation) {
+        try {
+            Constructor constructor;
+            try {
+                constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
+            } catch (Throwable t) {
+                constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
+            }
+            if (null == constructor) {
+                throw new TestExecutionException("Couldn't find a valid constructor");
+            }
+            return (PathGenerator)constructor.newInstance(StopConditionFactory.create(annotation));
+        } catch (Throwable e) {
+            throw new TestExecutionException(e);
+        }
     }
 }

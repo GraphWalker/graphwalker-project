@@ -34,20 +34,23 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Element;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.annotation.*;
-import org.graphwalker.java.annotation.Model;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
-import java.nio.file.Paths;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -56,77 +59,75 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class TestExecutor implements Executor {
 
+    private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
+          .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
+          .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+
+    private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
+        Reflections.log = null;
+        List<URL> urls = new ArrayList<>(), filteredUrls = new ArrayList<>();
+        urls.addAll(classPath);
+        urls.addAll(classLoader);
+        for (URL url: urls) {
+            if (!filteredUrls.contains(url) && new File(url.getFile()).exists()) {
+                filteredUrls.add(url);
+            }
+        }
+        return filteredUrls;
+    }
+
     private final Configuration configuration;
-    private final Set<Machine> machines = new HashSet<>();
+    private final MachineConfiguration machineConfiguration;
+
     private final Map<Context, MachineException> failures = new HashMap<>();
 
     public TestExecutor(Configuration configuration) {
         this.configuration = configuration;
-        List<Context> contexts = createContexts(AnnotationUtils.findTests());
-        if (!contexts.isEmpty()) {
-            this.machines.add(createMachine(contexts));
-        }
+        this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
     }
 
-    public TestExecutor(Context... contexts) {
+    public TestExecutor(Class<?>... tests) {
         this.configuration = new Configuration();
-        configureContexts(contexts);
-        if (0 < contexts.length) {
-            this.machines.add(createMachine(contexts));
-        }
+        this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
     }
 
-    private Machine createMachine(Context... contexts) {
-        return createMachine(Arrays.asList(contexts));
-    }
-
-    @SuppressWarnings("unchecked")
-    private Machine createMachine(List<Context> contexts) {
-        Machine machine = new SimpleMachine(contexts);
-        for (Context context: contexts) {
-            if (context instanceof Observer) {
-                machine.addObserver((Observer)context);
-            }
-        }
-        return machine;
-    }
-
-    public Set<Machine> getMachines() {
-        return machines;
-    }
-
-    private List<Context> createContexts(Set<Class<? extends Context>> testClasses) {
-        List<Context> contexts = new ArrayList<>();
-        for (Class<? extends Context> testClass: testClasses) {
+    private MachineConfiguration createMachineConfiguration(Collection<Class<?>> testClasses) {
+        MachineConfiguration machineConfiguration = new MachineConfiguration();
+        for (Class<?> testClass: testClasses) {
             GraphWalker annotation = testClass.getAnnotation(GraphWalker.class);
             if (isTestIncluded(annotation, testClass.getName())) {
-                Context context = createContext(testClass);
-                configureContext(context, annotation);
-                contexts.add(context);
+                ContextConfiguration contextConfiguration = new ContextConfiguration();
+                contextConfiguration.setTestClass(testClass);
+                machineConfiguration.addContextConfiguration(contextConfiguration);
             }
+        }
+        return machineConfiguration;
+    }
+
+    private Collection<Context> createContexts(MachineConfiguration machineConfiguration) {
+        Set<Context> contexts = new HashSet<>();
+        for (ContextConfiguration contextConfiguration: machineConfiguration.getContextConfigurations()) {
+            Context context = createContext(contextConfiguration.getTestClass());
+            configureContext(context);
+            contexts.add(context);
         }
         return contexts;
     }
 
-    private void configureContexts(Context... contexts) {
-        for (Context context: contexts) {
-            configureContext(context);
+    private Context createContext(Class<?> testClass) {
+        try {
+            return (Context)testClass.newInstance();
+        } catch (Throwable e) {
+            throw new TestExecutionException("Failed to create context");
         }
     }
 
-    private void configureContext(final Context context) {
-        GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
-        if (null != annotation) {
-            configureContext(context, annotation);
-        }
-    }
-
-    private void configureContext(final Context context, GraphWalker annotation) {
-        // TODO: support classes with multiple models
+    private void configureContext(Context context) {
         Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
+        GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
         if (!models.isEmpty()) {
             Path path = Paths.get(models.iterator().next().file());
-            ContextFactoryScanner.get(path).create(path, context);
+            ContextFactoryScanner.get(reflections, path).create(path, context);
         }
         if (!"".equals(annotation.value())) {
             context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
@@ -136,6 +137,40 @@ public final class TestExecutor implements Executor {
         if (!"".equals(annotation.start())) {
             context.setNextElement(getElement(context.getModel(), annotation.start()));
         }
+    }
+
+    private Machine createMachine(MachineConfiguration machineConfiguration) {
+        Collection<Context> contexts = createContexts(machineConfiguration);
+        Machine machine = new SimpleMachine(contexts);
+        for (Context context: machine.getContexts()) {
+            if (context instanceof Observer) {
+                machine.addObserver((Observer)context);
+            }
+        }
+        return machine;
+    }
+
+    public MachineConfiguration getMachineConfiguration() {
+        return machineConfiguration;
+    }
+
+    public Result execute() {
+        Machine machine = createMachine(getMachineConfiguration());
+        executeAnnotation(BeforeExecution.class, machine);
+        try {
+            Context context = null;
+            while (machine.hasNextStep()) {
+                if (null != context) {
+                    executeAnnotation(BeforeElement.class, context);
+                }
+                context = machine.getNextStep();
+                executeAnnotation(AfterElement.class, context);
+            }
+        } catch (MachineException e) {
+            failures.put(e.getContext(), e);
+        }
+        executeAnnotation(AfterExecution.class, machine);
+        return new Result();
     }
 
     private boolean isTestIncluded(GraphWalker annotation, String name) {
@@ -161,14 +196,6 @@ public final class TestExecutor implements Executor {
             }
         }
         return false;
-    }
-
-    private Context createContext(Class<? extends Context> testClass) {
-        try {
-            return testClass.newInstance();
-        } catch (Throwable e) {
-            throw new TestExecutionException("Failed to create context");
-        }
     }
 
     private PathGenerator createPathGenerator(GraphWalker annotation) {
@@ -237,46 +264,6 @@ public final class TestExecutor implements Executor {
         return elements.get(0);
     }
 
-    public Executor execute() {
-        if (!machines.isEmpty()) {
-            executeAnnotation(BeforeExecution.class, machines);
-            ExecutorService executorService = Executors.newFixedThreadPool(machines.size());
-            for (final Machine machine : machines) {
-                executorService.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Context context = null;
-                            while (machine.hasNextStep()) {
-                                if (null != context) {
-                                    executeAnnotation(BeforeElement.class, context);
-                                }
-                                context = machine.getNextStep();
-                                executeAnnotation(AfterElement.class, context);
-                            }
-                        } catch (MachineException e) {
-                            failures.put(e.getContext(), e);
-                        }
-                    }
-                });
-            }
-            executorService.shutdown();
-            try {
-                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-            } catch (InterruptedException e) {
-                // ignore
-            }
-            executeAnnotation(AfterExecution.class, machines);
-        }
-        return this;
-    }
-
-    private void executeAnnotation(Class<? extends Annotation> annotation, Set<Machine> machines) {
-        for (Machine machine: machines) {
-            executeAnnotation(annotation, machine);
-        }
-    }
-
     private void executeAnnotation(Class<? extends Annotation> annotation, Machine machine) {
         for (Context context: machine.getContexts()) {
             executeAnnotation(annotation, context);
@@ -285,17 +272,5 @@ public final class TestExecutor implements Executor {
 
     private void executeAnnotation(Class<? extends Annotation> annotation, Context context) {
         AnnotationUtils.execute(annotation, context);
-    }
-
-    public boolean isFailure(Context context) {
-        return failures.containsKey(context);
-    }
-
-    public MachineException getFailure(Context context) {
-        return failures.get(context);
-    }
-
-    public Collection<MachineException> getFailures() {
-        return failures.values();
     }
 }

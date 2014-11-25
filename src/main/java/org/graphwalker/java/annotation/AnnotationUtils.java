@@ -28,75 +28,43 @@ package org.graphwalker.java.annotation;
 
 import org.graphwalker.core.machine.Context;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Nils Olsson
  */
-public final class AnnotationUtils {
+public abstract class AnnotationUtils {
 
-    private AnnotationUtils() {}
-
-    private static String getExtension(String path) {
-	final char uriPathSeparator = '/';
-        int position = path.lastIndexOf('.');
-        return path.lastIndexOf(uriPathSeparator) > position ? "" : path.substring(position + 1);
+    public static Set<Class<?>> findTests(Reflections reflections) {
+        return find(reflections, Context.class, GraphWalker.class);
     }
 
-    private static boolean valid(URL url) {
-        String extension = getExtension(url.getPath());
-        if ("".equals(extension)) {
-            try {
-                return Paths.get(url.toURI()).toFile().exists();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
-        return "jar".equals(extension);
-    }
-
-    private static Collection<URL> getUrls() {
-        Set<URL> filteredUrls = new HashSet<>();
-        Set<URL> urls = new HashSet<>();
-        urls.addAll(ClasspathHelper.forClassLoader());
-        urls.addAll(ClasspathHelper.forJavaClassPath());
-        for (URL url: urls) {
-            if (valid(url)) {
-                filteredUrls.add(url);
-            }
-        }
-        return filteredUrls;
-    }
-
-    private static Reflections reflections = new Reflections(new ConfigurationBuilder()
-            .addUrls(getUrls())
-            .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
-
-    public static Set<Class<? extends Context>> findTests() {
-        return find(Context.class, GraphWalker.class);
-    }
-
-    public static <T> Set<Class<? extends T>> find(Class<T> type, Class<? extends Annotation> annotation) {
-        Set<Class<? extends T>> classes = new HashSet<>();
-        for (Class<? extends T> subType: reflections.getSubTypesOf(type)) {
-            if (subType.isAnnotationPresent(annotation)) {
+    public static Set<Class<?>> find(Reflections reflections, Class<?> type, Class<? extends Annotation> annotation) {
+        Set<Class<?>> classes = new HashSet<>();
+        for (Class<?> subType: reflections.getTypesAnnotatedWith(annotation)) {
+            if (type.isAssignableFrom(subType)) {
                 classes.add(subType);
             }
         }
         return classes;
+    }
+
+    private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation) {
+        return isAnnotationPresent(type, annotation, Thread.currentThread().getContextClassLoader());
+    }
+
+    private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation, ClassLoader classLoader) {
+        try {
+            Class<? extends Annotation> a = (Class<? extends Annotation>)classLoader.loadClass(annotation.getName());
+            return type.isAnnotationPresent(a);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException();
+        }
     }
 
     public static <T extends Annotation> Set<T> getAnnotations(final Class<?> clazz, final Class<T> annotation) {
