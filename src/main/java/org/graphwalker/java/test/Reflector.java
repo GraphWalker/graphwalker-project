@@ -33,7 +33,7 @@ import java.util.Collection;
 /**
  * @author Nils Olsson
  */
-public final class Reflector implements Executor {
+public final class Reflector {
 
     private final ClassLoader classLoader;
     private final Class<?> collectionClass;
@@ -108,7 +108,6 @@ public final class Reflector implements Executor {
         return contextClassLoader;
     }
 
-    @Override
     public Result execute() {
         ClassLoader contextClassLoader = switchClassLoader(classLoader);
         Result result = createResult(Reflections.invoke(executor, execute));
@@ -138,5 +137,16 @@ public final class Reflector implements Executor {
         }
         switchClassLoader(contextClassLoader);
         return newMachineConfiguration;
+    }
+
+    public void reportResults() {
+        /*
+                boolean hasExceptions = false;
+        XMLReportGenerator reporter = new XMLReportGenerator(getSession().getStartTime(), getSession().getSystemProperties());
+        reporter.writeReport(getReportsDirectory(), result);
+        if (result.hasExceptions()) {
+            throw new MojoExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", getReportsDirectory().getAbsolutePath()));
+        }
+         */
     }
 }
