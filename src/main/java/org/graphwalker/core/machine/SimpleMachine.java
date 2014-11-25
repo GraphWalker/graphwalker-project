@@ -56,15 +56,11 @@ public final class SimpleMachine extends MachineBase {
     private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
     private Element lastElement;
 
-    public SimpleMachine(Context context) {
-        this(Arrays.asList(context));
+    public SimpleMachine(Context... contexts) {
+        this(Arrays.asList(contexts));
     }
 
-    public SimpleMachine(Context... context) {
-        this(Arrays.asList(context));
-    }
-
-    public SimpleMachine(List<Context> contexts) {
+    public SimpleMachine(Collection<Context> contexts) {
         this.contexts.addAll(contexts);
         executeInitActions(contexts);
         this.currentContext = chooseStartContext(contexts);
@@ -74,7 +70,7 @@ public final class SimpleMachine extends MachineBase {
         return profiler;
     }
 
-    private void executeInitActions(List<Context> contexts) {
+    private void executeInitActions(Collection<Context> contexts) {
         for (Context context: contexts) {
             this.currentContext = context;
             this.currentContext.setProfiler(getProfiler());
@@ -85,7 +81,7 @@ public final class SimpleMachine extends MachineBase {
         }
     }
 
-    private Context chooseStartContext(List<Context> contexts) {
+    private Context chooseStartContext(Collection<Context> contexts) {
         for (Context context: contexts) {
             if (null != context.getCurrentElement() || null != context.getNextElement()) {
                 return context;
