@@ -26,10 +26,20 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
+
+import java.util.Collection;
+
 /**
  * @author Nils Olsson
  */
 public interface Executor {
     Result execute();
     MachineConfiguration getMachineConfiguration();
+    Machine getMachine();
+    boolean isFailure(Context context);
+    MachineException getFailure(Context context);
+    Collection<MachineException> getFailures();
 }

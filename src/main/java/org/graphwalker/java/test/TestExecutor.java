@@ -26,10 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.condition.ReachedStopCondition;
-import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.event.Observer;
-import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
@@ -47,7 +44,6 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -79,8 +75,8 @@ public final class TestExecutor implements Executor {
 
     private final Configuration configuration;
     private final MachineConfiguration machineConfiguration;
-
     private final Map<Context, MachineException> failures = new HashMap<>();
+    private Machine machine;
 
     public TestExecutor(Configuration configuration) {
         this.configuration = configuration;
@@ -90,6 +86,11 @@ public final class TestExecutor implements Executor {
     public TestExecutor(Class<?>... tests) {
         this.configuration = new Configuration();
         this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
+    }
+
+    @Override
+    public Machine getMachine() {
+        return machine;
     }
 
     private MachineConfiguration createMachineConfiguration(Collection<Class<?>> testClasses) {
@@ -142,7 +143,7 @@ public final class TestExecutor implements Executor {
 
     private Machine createMachine(MachineConfiguration machineConfiguration) {
         Collection<Context> contexts = createContexts(machineConfiguration);
-        Machine machine = new SimpleMachine(contexts);
+        machine = new SimpleMachine(contexts);
         for (Context context: machine.getContexts()) {
             if (context instanceof Observer) {
                 machine.addObserver((Observer)context);
@@ -218,5 +219,17 @@ public final class TestExecutor implements Executor {
 
     private void executeAnnotation(Class<? extends Annotation> annotation, Context context) {
         AnnotationUtils.execute(annotation, context);
+    }
+
+    public boolean isFailure(Context context) {
+        return failures.containsKey(context);
+    }
+
+    public MachineException getFailure(Context context) {
+        return failures.get(context);
+    }
+
+    public Collection<MachineException> getFailures() {
+        return failures.values();
     }
 }

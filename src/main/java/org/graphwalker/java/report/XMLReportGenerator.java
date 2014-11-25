@@ -28,7 +28,7 @@ package org.graphwalker.java.report;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.java.test.Result;
+import org.graphwalker.java.test.Executor;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -39,7 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,74 +50,60 @@ public class XMLReportGenerator {
     private static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
 
-    private final Properties systemProperties;
+    private final java.util.Properties systemProperties;
     private final Date startTime;
 
-    public XMLReportGenerator(Date startTime, Properties systemProperties) {
+    public XMLReportGenerator(Date startTime, java.util.Properties systemProperties) {
         this.startTime = startTime;
         this.systemProperties = systemProperties;
     }
 
-    public void writeReport(File reportDirectory, Result result) {
-        Testsuites testsuites = new Testsuites();
-
-
-    /*
+    public void writeReport(File reportDirectory, Executor executor) {
         Testsuites testsuites = new Testsuites();
         List<Report> reports = new ArrayList<>();
-        for (Machine machine: executor.getMachines()) {
-            Report report = new Report(machine, startTime);
-            Testsuite testsuite = new Testsuite();
-            List<String> keys = new ArrayList<>(systemProperties.stringPropertyNames());
-            Collections.sort(keys);
-            Properties properties = new Properties();
-            for (String name: keys) {
-                Property property = new Property();
-                property.setName(name);
-                property.setValue(systemProperties.getProperty(name));
-                properties.getProperty().add(property);
-            }
-            testsuite.setProperties(properties);
-            testsuite.setTests(report.getTestsAsString());
-            testsuite.setFailures(report.getFailuresAsString());
-            testsuite.setErrors(report.getErrorsAsString());
-            testsuite.setTime(report.getTimeAsString());
-            testsuite.setTimestamp(report.getTimestamp());
-            for (Context context: machine.getContextConfigurations()) {
-                Testcase testcase = new Testcase();
-                testcase.setName(context.getClass().getSimpleName());
-                testcase.setClassname(context.getClass().getName());
-                testcase.setTime(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS)));
-                if (executor.isFailure(context)) {
-                    Throwable throwable = executor.getFailure(context).getCause();
-                    Error error = new Error();
-                    error.setType(throwable.getClass().getName());
-                    error.setMessage(throwable.getMessage());
-                    error.setContent(getStackTrace(throwable));
-                    testcase.getError().add(error);
-                } else if (report.isFailure(context)) {
-                    Failure failure = new Failure();
-                    failure.setType("Not fulfilled");
-                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
-                    failure.setMessage(String.valueOf(Math.round(100*fulfilment)));
-                    testcase.getFailure().add(failure);
-                }
-                testsuite.getTestcase().add(testcase);
-            }
-            testsuites.getTestsuite().add(testsuite);
-            reports.add(report);
+        Machine machine = executor.getMachine();
+        Report report = new Report(machine, startTime);
+        Testsuite testsuite = new Testsuite();
+        List<String> keys = new ArrayList<>(systemProperties.stringPropertyNames());
+        Collections.sort(keys);
+        Properties properties = new Properties();
+        for (String name: keys) {
+            Property property = new Property();
+            property.setName(name);
+            property.setValue(systemProperties.getProperty(name));
+            properties.getProperty().add(property);
         }
+        testsuite.setProperties(properties);
+        testsuite.setTests(report.getTestsAsString());
+        testsuite.setFailures(report.getFailuresAsString());
+        testsuite.setErrors(report.getErrorsAsString());
+        testsuite.setTime(report.getTimeAsString());
+        testsuite.setTimestamp(report.getTimestamp());
+        for (Context context: machine.getContexts()) {
+            Testcase testcase = new Testcase();
+            testcase.setName(context.getClass().getSimpleName());
+            testcase.setClassname(context.getClass().getName());
+            testcase.setTime(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS)));
+            if (executor.isFailure(context)) {
+                Throwable throwable = executor.getFailure(context).getCause();
+                Error error = new Error();
+                error.setType(throwable.getClass().getName());
+                error.setMessage(throwable.getMessage());
+                error.setContent(getStackTrace(throwable));
+                testcase.getError().add(error);
+            } else if (report.isFailure(context)) {
+                Failure failure = new Failure();
+                failure.setType("Not fulfilled");
+                double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
+                failure.setMessage(String.valueOf(Math.round(100*fulfilment)));
+                testcase.getFailure().add(failure);
+            }
+            testsuite.getTestcase().add(testcase);
+        }
+        testsuites.getTestsuite().add(testsuite);
+        reports.add(report);
         consolidate(testsuites, reports);
-        try {
-            JAXBContext context = JAXBContext.newInstance("org.graphwalker.java.report");
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(testsuites, getOutputStream(reportDirectory, getName()));
-        } catch (JAXBException e) {
-            throw new XMLReportException(e);
-        }
-    */
+        writeReport(reportDirectory, testsuites);
     }
 
     private void writeReport(File reportDirectory, Testsuites testsuites) {

@@ -133,10 +133,9 @@ public class TestExecutorTest {
         urls.addAll(Arrays.asList(((URLClassLoader) getClass().getClassLoader()).getURLs()));
         Configuration configuration = new Configuration();
         configuration.addInclude("*MyOtherTest*");
-        Executor executor = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
-        MachineConfiguration mc = executor.getMachineConfiguration();
-        Result result = executor.execute();
+        Reflector reflector = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
+        MachineConfiguration mc = reflector.getMachineConfiguration();
+        Result result = reflector.execute();
         //Assert.assertThat(result.getValue(), is(666));
-
     }
 }
