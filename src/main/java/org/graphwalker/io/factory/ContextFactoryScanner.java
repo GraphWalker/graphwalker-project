@@ -41,6 +41,10 @@ import java.util.*;
  */
 public final class ContextFactoryScanner {
 
+    static {
+        Reflections.log = null;
+    }
+
     private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
 
     private static String getExtension(String path) {
@@ -66,11 +70,11 @@ public final class ContextFactoryScanner {
         return filteredUrls;
     }
 
-    private static Reflections reflections = new Reflections(new ConfigurationBuilder()
-            .addUrls(getUrls())
-            .addScanners(new SubTypesScanner()));
-
     public static ContextFactory get(Path path) {
+        return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).addScanners(new SubTypesScanner())), path);
+    }
+
+    public static ContextFactory get(Reflections reflections, Path path) {
         for (Class<? extends ContextFactory> factoryClass: reflections.getSubTypesOf(ContextFactory.class)) {
             ContextFactory factory = create(factoryClass);
             if (null != factory && factory.accept(path)) {
