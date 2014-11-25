@@ -123,12 +123,6 @@ public final class TestMojo extends DefaultMojoBase {
         return groups;
     }
 
-    protected ClassLoader switchClassLoader(ClassLoader newClassLoader) {
-        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(newClassLoader);
-        return oldClassLoader;
-    }
-
     protected Properties createProperties() {
         Properties properties = (Properties) System.getProperties().clone();
         properties.putAll((Properties) getMavenProject().getProperties().clone());
@@ -151,11 +145,11 @@ public final class TestMojo extends DefaultMojoBase {
             ClassLoader classLoader = new IsolatedClassLoader(classpathElements);
             Properties properties = switchProperties(createProperties());
             Configuration configuration = createConfiguration();
-            Executor executor = new Reflector(configuration, classLoader);
-            displayConfiguration(configuration, executor);
-            Result result = executor.execute();
+            Reflector reflector = new Reflector(configuration, classLoader);
+            displayConfiguration(configuration, reflector);
+            Result result = reflector.execute();
             displayResult(result);
-            reportResults(result);
+            reflector.reportResults();
             switchProperties(properties);
         }
     }
@@ -211,7 +205,7 @@ public final class TestMojo extends DefaultMojoBase {
         return configuration;
     }
 
-    private void displayConfiguration(Configuration configuration, Executor executor) {
+    private void displayConfiguration(Configuration configuration, Reflector reflector) {
         if (getLog().isInfoEnabled()) {
             getLog().info("Configuration:");
             getLog().info("    Include = " + configuration.getIncludes());
@@ -220,19 +214,17 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("");
             getLog().info("Tests:");
             /*
-            if (executor.getMachines().isEmpty()) {
+            if (null == reflector.getMachineConfiguration() || reflector.getMachineConfiguration().getContextConfigurations().isEmpty()) {
                 getLog().info("  No tests found");
             } else {
-                for (MachineConfiguration machine: executor.getMachines()) {
-                    for (ContextConfiguration context: machine.getContextConfigurations()) {
-                        getLog().info("    "
-                            + context.getClass().getSimpleName()+"("
-                            + context.getPathGeneratorName()+", "
-                            + context.getStopConditionName()+", "
-                            + context.getStopConditionValue()+")");
-                    }
-                    getLog().info("");
+                for (ContextConfiguration context: reflector.getMachineConfiguration().getContextConfigurations()) {
+                    getLog().info("    "
+                        + context.getClass().getSimpleName()+"("
+                        + context.getPathGeneratorName()+", "
+                        + context.getStopConditionName()+", "
+                        + context.getStopConditionValue()+")");
                 }
+                getLog().info("");
             }
             */
             getLog().info("------------------------------------------------------------------------");
@@ -290,15 +282,6 @@ public final class TestMojo extends DefaultMojoBase {
             }
             getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}", tests, completed, incomplete, failed, notExecuted));
             getLog().info("");
-        }
-    }
-
-    private void reportResults(Result result) throws MojoExecutionException {
-        boolean hasExceptions = false;
-        XMLReportGenerator reporter = new XMLReportGenerator(getSession().getStartTime(), getSession().getSystemProperties());
-        reporter.writeReport(getReportsDirectory(), result);
-        if (result.hasExceptions()) {
-            throw new MojoExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", getReportsDirectory().getAbsolutePath()));
         }
     }
 }
