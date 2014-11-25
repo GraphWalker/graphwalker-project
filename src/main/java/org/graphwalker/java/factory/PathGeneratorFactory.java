@@ -39,7 +39,7 @@ import java.lang.reflect.Constructor;
  */
 public abstract class PathGeneratorFactory {
 
-    public static PathGenerator create(GraphWalker annotation) {
+    public static PathGenerator createPathGenerator(GraphWalker annotation) {
         try {
             Constructor constructor;
             try {
@@ -50,7 +50,7 @@ public abstract class PathGeneratorFactory {
             if (null == constructor) {
                 throw new TestExecutionException("Couldn't find a valid constructor");
             }
-            return (PathGenerator)constructor.newInstance(StopConditionFactory.create(annotation));
+            return (PathGenerator)constructor.newInstance(StopConditionFactory.createStopCondition(annotation));
         } catch (Throwable e) {
             throw new TestExecutionException(e);
         }

@@ -35,7 +35,7 @@ import org.graphwalker.java.test.TestExecutionException;
  */
 public abstract class StopConditionFactory {
 
-    public static StopCondition create(GraphWalker annotation) {
+    public static StopCondition createStopCondition(GraphWalker annotation) {
         String value = annotation.stopConditionValue();
         Class<? extends StopCondition> stopCondition = annotation.stopCondition();
         if (value.isEmpty()) {
