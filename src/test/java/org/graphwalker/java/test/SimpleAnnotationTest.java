@@ -30,6 +30,14 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
@@ -46,6 +54,6 @@ public class SimpleAnnotationTest extends ExecutionContext implements SimpleMode
 
     @Test
     public void run() {
-        new TestExecutor(this).execute();
+        new TestExecutor(getClass()).execute();
     }
 }

@@ -28,7 +28,7 @@ package org.graphwalker.java.report;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.java.test.Executor;
+import org.graphwalker.java.test.Result;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -36,7 +36,10 @@ import javax.xml.bind.Marshaller;
 import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,17 +50,19 @@ public class XMLReportGenerator {
     private static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
 
-    private final File reportDirectory;
-    private final java.util.Properties systemProperties;
+    private final Properties systemProperties;
     private final Date startTime;
 
-    public XMLReportGenerator(File reportDirectory, Date startTime, java.util.Properties systemProperties) {
-        this.reportDirectory = reportDirectory;
+    public XMLReportGenerator(Date startTime, Properties systemProperties) {
         this.startTime = startTime;
         this.systemProperties = systemProperties;
     }
 
-    public void writeReport(Executor executor) {
+    public void writeReport(File reportDirectory, Result result) {
+        Testsuites testsuites = new Testsuites();
+
+
+    /*
         Testsuites testsuites = new Testsuites();
         List<Report> reports = new ArrayList<>();
         for (Machine machine: executor.getMachines()) {
@@ -78,7 +83,7 @@ public class XMLReportGenerator {
             testsuite.setErrors(report.getErrorsAsString());
             testsuite.setTime(report.getTimeAsString());
             testsuite.setTimestamp(report.getTimestamp());
-            for (Context context: machine.getContexts()) {
+            for (Context context: machine.getContextConfigurations()) {
                 Testcase testcase = new Testcase();
                 testcase.setName(context.getClass().getSimpleName());
                 testcase.setClassname(context.getClass().getName());
@@ -103,6 +108,19 @@ public class XMLReportGenerator {
             reports.add(report);
         }
         consolidate(testsuites, reports);
+        try {
+            JAXBContext context = JAXBContext.newInstance("org.graphwalker.java.report");
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(testsuites, getOutputStream(reportDirectory, getName()));
+        } catch (JAXBException e) {
+            throw new XMLReportException(e);
+        }
+    */
+    }
+
+    private void writeReport(File reportDirectory, Testsuites testsuites) {
         try {
             JAXBContext context = JAXBContext.newInstance("org.graphwalker.java.report");
             Marshaller marshaller = context.createMarshaller();

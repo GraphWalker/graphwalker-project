@@ -26,32 +26,35 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public class ConfigurationTest {
+public final class IsolatedClassLoader extends URLClassLoader {
 
-    @Test
-    public void configurationTest() {
-        Configuration configuration = new Configuration();
-        configuration.addExclude("exclude");
-        Assert.assertThat(configuration.getExcludes().size(), is(1));
-        configuration.addInclude("include");
-        Assert.assertThat(configuration.getIncludes().size(), is(1));
-        configuration.addGroup("group");
-        Assert.assertThat(configuration.getGroups().size(), is(1));
+    public IsolatedClassLoader(List<String> urls) {
+        this(convert(urls));
     }
 
-    @Test
-    public void minimalConfigurationTest() {
-        Configuration configuration = new Configuration();
-        Assert.assertNotNull(configuration.getExcludes());
-        Assert.assertNotNull(configuration.getIncludes());
-        Assert.assertNotNull(configuration.getGroups());
+    public IsolatedClassLoader(URL[] urls) {
+        super(urls, ClassLoader.getSystemClassLoader().getParent());
+    }
+
+    private static URL[] convert(List<String> urls) {
+        List<URL> urlList = new ArrayList<>();
+        for (String url : urls) {
+            try {
+                urlList.add(new File(url).toURI().toURL());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return urlList.toArray(new URL[urlList.size()]);
     }
 }

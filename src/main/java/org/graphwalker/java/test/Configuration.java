@@ -26,11 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Nils Olsson
@@ -39,15 +35,18 @@ public final class Configuration {
 
     private final static Set<String> DEFAULT = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("*")));
 
-    private Set<String> includes = new HashSet<>();
-    private Set<String> excludes = new HashSet<>();
-    private File testClassesDirectory = new File("target/test-classes");
-    private File classesDirectory = new File("target/classes");
-    private File reportsDirectory = new File("target/graphwalker-reports");
-    private Set<String> groups = new HashSet<>();
+    private final Set<String> includes = new HashSet<>();
+    private final Set<String> excludes = new HashSet<>();
+    private final Set<String> groups = new HashSet<>();
 
     public Set<String> getIncludes() {
-        return includes.isEmpty()?DEFAULT:Collections.unmodifiableSet(includes);
+        return includes.isEmpty()?DEFAULT:includes;
+    }
+
+    public Configuration setIncludes(Collection<String> includes) {
+        this.includes.clear();
+        this.includes.addAll(includes);
+        return this;
     }
 
     public Configuration addInclude(String include) {
@@ -55,13 +54,14 @@ public final class Configuration {
         return this;
     }
 
-    public Configuration addInclude(Set<String> include) {
-        includes.addAll(include);
-        return this;
+    public Set<String> getExcludes() {
+        return excludes;
     }
 
-    public Set<String> getExcludes() {
-        return Collections.unmodifiableSet(excludes);
+    public Configuration setExcludes(Collection<String> excludes) {
+        this.excludes.clear();
+        this.excludes.addAll(excludes);
+        return this;
     }
 
     public Configuration addExclude(String exclude) {
@@ -69,40 +69,14 @@ public final class Configuration {
         return this;
     }
 
-    public Configuration addExclude(Set<String> exclude) {
-        excludes.addAll(exclude);
-        return this;
-    }
-
-    public File getTestClassesDirectory() {
-        return testClassesDirectory;
-    }
-
-    public Configuration setTestClassesDirectory(File testClassesDirectory) {
-        this.testClassesDirectory = testClassesDirectory;
-        return this;
-    }
-
-    public File getClassesDirectory() {
-        return classesDirectory;
-    }
-
-    public Configuration setClassesDirectory(File classesDirectory) {
-        this.classesDirectory = classesDirectory;
-        return this;
-    }
-
-    public File getReportsDirectory() {
-        return reportsDirectory;
-    }
-
-    public Configuration setReportsDirectory(File reportsDirectory) {
-        this.reportsDirectory = reportsDirectory;
-        return this;
-    }
-
     public Set<String> getGroups() {
-        return groups.isEmpty()?DEFAULT:Collections.unmodifiableSet(groups);
+        return groups.isEmpty()?DEFAULT:groups;
+    }
+
+    public Configuration setGroups(Collection<String> groups) {
+        this.groups.clear();
+        this.groups.addAll(groups);
+        return this;
     }
 
     public Configuration addGroup(String group) {

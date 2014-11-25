@@ -26,32 +26,29 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Nils Olsson
  */
-public class ConfigurationTest {
+public final class Result {
 
-    @Test
-    public void configurationTest() {
-        Configuration configuration = new Configuration();
-        configuration.addExclude("exclude");
-        Assert.assertThat(configuration.getExcludes().size(), is(1));
-        configuration.addInclude("include");
-        Assert.assertThat(configuration.getIncludes().size(), is(1));
-        configuration.addGroup("group");
-        Assert.assertThat(configuration.getGroups().size(), is(1));
+    public int value;
+
+    public int getValue() {
+        return value;
     }
 
-    @Test
-    public void minimalConfigurationTest() {
-        Configuration configuration = new Configuration();
-        Assert.assertNotNull(configuration.getExcludes());
-        Assert.assertNotNull(configuration.getIncludes());
-        Assert.assertNotNull(configuration.getGroups());
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public boolean hasExceptions() {
+        /*
+        for (MachineConfiguration machine: executor.getMachines()) {
+            for (Context context: machine.getContextConfigurations()) {
+                hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
+            }
+        }
+        */
+        return false;
     }
 }

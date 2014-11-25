@@ -35,7 +35,7 @@ import static org.graphwalker.java.test.SelectorUtils.match;
  * @author Nils Olsson
  */
 public class SelectorUtilsTest {
-
+/*
     @Test
     public void testMatch() {
         Assert.assertTrue(match("foo", "foo"));
@@ -50,4 +50,5 @@ public class SelectorUtilsTest {
         Assert.assertTrue(match("1*3", "12.3"));
         Assert.assertFalse(match("foo", "FOO"));
     }
+  */
 }

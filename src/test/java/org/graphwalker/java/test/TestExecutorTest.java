@@ -27,11 +27,23 @@ package org.graphwalker.java.test;
  */
 
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -39,7 +51,7 @@ import org.junit.Test;
 public class TestExecutorTest {
 
     @GraphWalker(start = "myStartElement")
-    public class MultipleStartElements extends ExecutionContext {
+    public static class MultipleStartElements extends ExecutionContext {
         public MultipleStartElements() {
             Vertex vertex = new Vertex();
             Model model = new Model()
@@ -52,12 +64,12 @@ public class TestExecutorTest {
 
     @Test(expected = TestExecutionException.class)
     public void multipleStartElements() {
-        Executor executor = new TestExecutor(new MultipleStartElements());
+        Executor executor = new TestExecutor(MultipleStartElements.class);
         executor.execute();
     }
 
     @GraphWalker(start = "myOnlyStartElement")
-    public class SingleStartElements extends ExecutionContext {
+    public static class SingleStartElements extends ExecutionContext {
         public SingleStartElements() {
             Vertex vertex = new Vertex().setName("myOnlyStartElement");
             Model model = new Model()
@@ -69,12 +81,12 @@ public class TestExecutorTest {
 
     @Test
     public void singleStartElements() {
-        Executor executor = new TestExecutor(new SingleStartElements());
+        Executor executor = new TestExecutor(SingleStartElements.class);
         executor.execute();
     }
 
     @GraphWalker(start = "nonExistingStartElement")
-    public class NonExistingStartElement extends ExecutionContext {
+    public static class NonExistingStartElement extends ExecutionContext {
         public NonExistingStartElement() {
             Vertex vertex = new Vertex();
             Model model = new Model()
@@ -86,18 +98,18 @@ public class TestExecutorTest {
 
     @Test(expected = TestExecutionException.class)
     public void nonExistingStartElement() {
-        Executor executor = new TestExecutor(new NonExistingStartElement());
+        Executor executor = new TestExecutor(NonExistingStartElement.class);
         executor.execute();
     }
 
-    @Test
+    @Test(expected = MachineException.class)
     public void noContext() {
         Executor executor = new TestExecutor();
         executor.execute();
     }
 
     @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
-    public class DSLConfiguredTest extends ExecutionContext {
+    public static class DSLConfiguredTest extends ExecutionContext {
         public DSLConfiguredTest() {
             Vertex vertex = new Vertex().setName("myStartElement");
             Model model = new Model()
@@ -109,7 +121,22 @@ public class TestExecutorTest {
 
     @Test
     public void dslTest() {
-        new TestExecutor(new DSLConfiguredTest()).execute();
+        new TestExecutor(DSLConfiguredTest.class).execute();
     }
 
+    @Test
+    public void isolation() throws MalformedURLException {
+        List<URL> urls = new ArrayList<>();
+        urls.add(new File(new File("."), "target/test-classes").toURI().toURL());
+        urls.add(new File(new File("."), "target/classes").toURI().toURL());
+        urls.add(new File("/Users/nilols/.m2/repository/org/graphwalker/graphwalker-io/3.2.0-SNAPSHOT/graphwalker-io-3.2.0-SNAPSHOT.jar").toURI().toURL());
+        urls.addAll(Arrays.asList(((URLClassLoader) getClass().getClassLoader()).getURLs()));
+        Configuration configuration = new Configuration();
+        configuration.addInclude("*MyOtherTest*");
+        Executor executor = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
+        MachineConfiguration mc = executor.getMachineConfiguration();
+        Result result = executor.execute();
+        //Assert.assertThat(result.getValue(), is(666));
+
+    }
 }

@@ -57,5 +57,4 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
             .setPathGenerator(new RandomPath(new VertexCoverage(100)))
             .setStart("vertex").execute();
     }
-
 }

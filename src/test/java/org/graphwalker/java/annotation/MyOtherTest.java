@@ -26,14 +26,18 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
+import org.graphwalker.core.event.EventType;
+import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Element;
 import org.graphwalker.java.annotation.resources.MyModel;
 
 /**
  * @author Nils Olsson
  */
-@GraphWalker
-public class MyOtherTest extends ExecutionContext implements MyModel {
+@GraphWalker(start = "vertex1")
+public class MyOtherTest extends ExecutionContext implements MyModel, Observer {
 
     @Override
     public void vertex1() {
@@ -45,5 +49,9 @@ public class MyOtherTest extends ExecutionContext implements MyModel {
 
     @Override
     public void edge12() {
+    }
+
+    @Override
+    public void update(Machine machine, Element element, EventType type) {
     }
 }
