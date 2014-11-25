@@ -38,6 +38,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.annotation.*;
+import org.graphwalker.java.factory.PathGeneratorFactory;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -132,7 +133,7 @@ public final class TestExecutor implements Executor {
         if (!"".equals(annotation.value())) {
             context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
         } else {
-            context.setPathGenerator(createPathGenerator(annotation));
+            context.setPathGenerator(PathGeneratorFactory.createPathGenerator(annotation));
         }
         if (!"".equals(annotation.start())) {
             context.setNextElement(getElement(context.getModel(), annotation.start()));
@@ -196,61 +197,6 @@ public final class TestExecutor implements Executor {
             }
         }
         return false;
-    }
-
-    private PathGenerator createPathGenerator(GraphWalker annotation) {
-        try {
-            Constructor constructor = null;
-            try {
-                constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
-            } catch (Throwable t) {
-                constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
-            }
-            if (null == constructor) {
-                throw new TestExecutionException("Couldn't find a valid constructor");
-            }
-            return (PathGenerator)constructor.newInstance(createStopCondition(annotation));
-        } catch (Throwable e) {
-            throw new TestExecutionException(e);
-        }
-    }
-
-    private StopCondition createStopCondition(GraphWalker annotation) {
-        String value = annotation.stopConditionValue();
-        Class<? extends StopCondition> stopCondition = annotation.stopCondition();
-        if (value.isEmpty()) {
-            try {
-                return stopCondition.newInstance();
-            } catch (Throwable e) {
-                // ignore
-            }
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{String.class}).newInstance(value);
-        } catch (Throwable e) {
-            // ignore
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Long.TYPE}).newInstance(Long.parseLong(value));
-        } catch (Throwable e) {
-            // ignore
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Integer.TYPE}).newInstance(Integer.parseInt(value));
-        } catch (Throwable e) {
-            // ignore
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Double.TYPE}).newInstance(Double.parseDouble(value));
-        } catch (Throwable e) {
-            // ignore
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Float.TYPE}).newInstance(Float.parseFloat(value));
-        } catch (Throwable e) {
-            // ignore
-        }
-        throw new TestExecutionException();
     }
 
     private Element getElement(RuntimeModel model, String name) {
