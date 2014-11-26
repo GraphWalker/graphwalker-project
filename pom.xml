@@ -70,16 +70,13 @@
     </properties>
 
     <modules>
-        <module>../graphwalker-core</module>
-        <module>../graphwalker-java</module>
-        <module>../graphwalker-dsl</module>
-        <module>../graphwalker-io</module>
-        <module>../graphwalker-maven-plugin</module>
-        <module>../graphwalker-maven-archetype</module>
-        <module>../graphwalker-example</module>
-        <module>../graphwalker-cli</module>
-        <module>../graphwalker-gradle-plugin</module>
-        <module>../graphwalker-dashboard</module>
+        <module>graphwalker-core</module>
+        <module>graphwalker-java</module>
+        <module>graphwalker-dsl</module>
+        <module>graphwalker-io</module>
+        <module>graphwalker-maven-plugin</module>
+        <module>graphwalker-maven-archetype</module>
+        <module>graphwalker-cli</module>
     </modules>
 
     <dependencies>
