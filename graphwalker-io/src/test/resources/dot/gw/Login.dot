@@ -1,0 +1,11 @@
+digraph Login {
+  Start -> v_AppNotRunning [label="e_Init"];
+  v_AppNotRunning -> v_LoginDialog [label="e_Start"];
+  v_AppNotRunning -> v_MainView [label="e_Start"];
+  v_MainView -> v_AppNotRunning [label="e_Exit"];
+  v_MainView -> v_LoginDialog [label="e_Logout"];
+  v_LoginDialog -> v_AppNotRunning [label="e_Close"];
+  v_LoginDialog -> v_LoginDialog [label="e_ToggleRememberMe"];
+  v_LoginDialog -> v_LoginDialog [label="e_InvalidCredentials"];
+  v_LoginDialog -> v_MainView [label="e_ValidCredentials"];
+}
