@@ -1,0 +1,96 @@
+/*
+ * #%L
+ * GraphWalker Dashboard
+ * %%
+ * Copyright (C) 2011 - 2014 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
+{
+  "name": "es5-shim",
+  "version": "4.0.3",
+  "description": "ECMAScript 5 compatibility shims for legacy JavaScript engines",
+  "homepage": "http://github.com/es-shims/es5-shim/",
+  "contributors": [
+    "Kris Kowal <kris@cixar.com> (http://github.com/kriskowal/)",
+    "Sami Samhuri <sami.samhuri@gmail.com> (http://samhuri.net/)",
+    "Florian Schäfer <florian.schaefer@gmail.com> (http://github.com/fschaefer)",
+    "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com)",
+    "Kit Cambridge <kitcambridge@gmail.com> (http://kitcambridge.github.com)",
+    "Jordan Harband <ljharb@gmail.com> (https://github.com/ljharb/)"
+  ],
+  "bugs": {
+    "mail": "ljharb@gmail.com",
+    "url": "http://github.com/es-shims/es5-shim/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/es-shims/es5-shim/raw/master/LICENSE"
+    }
+  ],
+  "main": "es5-shim.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/es-shims/es5-shim.git"
+  },
+  "scripts": {
+    "minify": "npm run minify-shim && npm run minify-sham",
+    "minify-shim": "uglifyjs es5-shim.js --comments --source-map=es5-shim.map -m -b ascii_only=true,beautify=false > es5-shim.min.js",
+    "minify-sham": "uglifyjs es5-sham.js --comments --source-map=es5-sham.map -m -b ascii_only=true,beautify=false > es5-sham.min.js",
+    "test": "npm run lint && jasmine-node --matchall ./ tests/spec/",
+    "test-native": "jasmine-node --matchall tests/spec/",
+    "lint": "jscs tests/helpers/*.js tests/spec/*.js es5-shim.js es5-sham.js"
+  },
+  "devDependencies": {
+    "jasmine-node": "~1.14.5",
+    "jscs": "~1.5.8",
+    "uglify-js": "~2.4.14"
+  },
+  "engines": {
+    "node": ">=0.4.0"
+  },
+  "testling": {
+    "browsers": [
+      "iexplore/6.0..latest",
+      "firefox/3.0..6.0",
+      "firefox/18.0..latest",
+      "firefox/nightly",
+      "chrome/4.0..10.0",
+      "chrome/25.0..latest",
+      "chrome/canary",
+      "opera/10.0..latest",
+      "opera/next",
+      "safari/4.0..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest",
+      "android-browser/4.2"
+    ]
+  },
+  "keywords": [
+    "shim",
+    "es5",
+    "es5 shim",
+    "javascript",
+    "ecmascript",
+    "polyfill"
+  ]
+}
+
