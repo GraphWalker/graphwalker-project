@@ -1,0 +1,6 @@
+digraph SimpleGraph{
+    n0 [label="Start"]
+    n1 [label="v1"]
+
+    n0->n1 [label="e1"]
+}
