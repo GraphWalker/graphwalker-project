@@ -11,6 +11,10 @@
 *.iws
 .idea/
 
+# Temp stuff #
+##############
+doc/.~lock.*
+
 # Build and unit tests stuff #
 #############################
 logs/
@@ -18,6 +22,7 @@ target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.next
+dependency-reduced-pom.xml
 release.properties
 work/
 amps-standalone/
