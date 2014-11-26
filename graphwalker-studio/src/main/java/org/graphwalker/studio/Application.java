@@ -1,4 +1,4 @@
-package org.graphwalker.dashboard;
+package org.graphwalker.studio;
 
 /*
  * #%L

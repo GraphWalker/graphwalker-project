@@ -78,7 +78,7 @@
         <module>graphwalker-maven-archetype</module>
         <module>graphwalker-cli</module>
         <module>graphwalker-gradle-plugin</module>
-        <module>graphwalker-dashboard</module>
+        <module>graphwalker-studio</module>
     </modules>
 
     <dependencies>

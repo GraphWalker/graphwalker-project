@@ -10,15 +10,14 @@
         <version>3.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>graphwalker-dashboard</artifactId>
-    <name>GraphWalker Dashboard</name>
-    <description>A dashboard that show the result from executed tests and the progress of running tests</description>
+    <artifactId>graphwalker-studio</artifactId>
+    <name>GraphWalker Studio</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.version>1.1.5.RELEASE</spring.version>
-        <start-class>org.graphwalker.dashboard.Application</start-class>
+        <start-class>org.graphwalker.studio.Application</start-class>
     </properties>
 
     <dependencies>
