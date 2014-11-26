@@ -1,0 +1,54 @@
+package org.graphwalker.java.test;
+
+/*
+ * #%L
+ * GraphWalker Java
+ * %%
+ * Copyright (C) 2011 - 2014 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.graphwalker.java.test.SelectorUtils.match;
+
+/**
+ * @author Nils Olsson
+ */
+public class SelectorUtilsTest {
+/*
+    @Test
+    public void testMatch() {
+        Assert.assertTrue(match("foo", "foo"));
+        Assert.assertTrue(match("fo*", "foo"));
+        Assert.assertFalse(match("fo*", "bar"));
+        Assert.assertTrue(match("org.graphwalker.*", "org.graphwalker.java.test"));
+        Assert.assertFalse(match("org.graphwalker.*", "graphwalker"));
+        Assert.assertTrue(match("*", "graphwalker"));
+        Assert.assertTrue(match("*", "123"));
+        Assert.assertFalse(match("*2", "123"));
+        Assert.assertTrue(match("1*3", "123"));
+        Assert.assertTrue(match("1*3", "12.3"));
+        Assert.assertFalse(match("foo", "FOO"));
+    }
+  */
+}
