@@ -12,7 +12,6 @@
 
     <artifactId>graphwalker-cli</artifactId>
     <name>GraphWalker Command Line Interface</name>
-    <inceptionYear>2011</inceptionYear>
 
     <dependencies>
         <dependency>

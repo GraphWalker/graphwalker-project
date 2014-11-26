@@ -12,7 +12,6 @@
 
     <artifactId>graphwalker-java</artifactId>
     <name>GraphWalker Java</name>
-    <inceptionYear>2011</inceptionYear>
 
     <dependencies>
         <dependency>

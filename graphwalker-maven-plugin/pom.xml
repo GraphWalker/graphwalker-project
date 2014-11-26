@@ -12,7 +12,6 @@
 
     <artifactId>graphwalker-maven-plugin</artifactId>
     <name>GraphWalker Maven Plugin</name>
-    <inceptionYear>2011</inceptionYear>
     <packaging>maven-plugin</packaging>
 
     <properties>
