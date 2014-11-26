@@ -447,7 +447,7 @@ function hue2rgb( p, q, h ) {
  * #%L
  * GraphWalker Dashboard
  * %%
- * Copyright (C) 2011 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2014 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

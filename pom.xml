@@ -11,7 +11,7 @@
     <name>GraphWalker Project</name>
     <description>Model-Based Testing Tool</description>
     <url>http://graphwalker.org</url>
-    <inceptionYear>2011</inceptionYear>
+    <inceptionYear>2005</inceptionYear>
 
     <licenses>
         <license>
@@ -272,10 +272,10 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>update-license</id>
+                        <id>check-license</id>
                         <phase>process-sources</phase>
                         <goals>
-                            <goal>update-file-header</goal>
+                            <goal>check-file-header</goal>
                         </goals>
                     </execution>
                 </executions>
