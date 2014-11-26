@@ -1,0 +1,91 @@
+/*
+ * #%L
+ * GraphWalker Dashboard
+ * %%
+ * Copyright (C) 2011 - 2014 GraphWalker
+ * %%
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ * #L%
+ */
+{
+	"name": "jquery-ui",
+	"title": "jQuery UI",
+	"description": "A curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library.",
+	"version": "1.10.4",
+	"homepage": "http://jqueryui.com",
+	"author": {
+		"name": "jQuery Foundation and other contributors",
+		"url": "https://github.com/jquery/jquery-ui/blob/1.10.0/AUTHORS.txt"
+	},
+	"maintainers": [
+		{
+			"name": "Scott González",
+			"email": "scott.gonzalez@gmail.com",
+			"url": "http://scottgonzalez.com"
+		},
+		{
+			"name": "Jörn Zaefferer",
+			"email": "joern.zaefferer@gmail.com",
+			"url": "http://bassistance.de"
+		},
+		{
+			"name": "Kris Borchers",
+			"email": "kris.borchers@gmail.com",
+			"url": "http://krisborchers.com"
+		},
+		{
+			"name": "Corey Frang",
+			"email": "gnarf37@gmail.com",
+			"url": "http://gnarf.net"
+		},
+		{
+			"name": "Mike Sherov",
+			"email": "mike.sherov@gmail.com",
+			"url": "http://mike.sherov.com"
+		},
+		{
+			"name": "TJ VanToll",
+			"email": "tj.vantoll@gmail.com",
+			"url": "http://tjvantoll.com"
+		}
+	],
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/jquery/jquery-ui.git"
+	},
+	"bugs": "http://bugs.jqueryui.com/",
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "https://github.com/jquery/jquery-ui/blob/1.10.0/MIT-LICENSE.txt"
+		}
+	],
+	"dependencies": {},
+	"devDependencies": {
+		"grunt": "~0.3.17",
+		"grunt-css": "0.2.0",
+		"grunt-compare-size": "0.1.4",
+		"grunt-html": "0.1.1",
+		"grunt-junit": "0.1.5",
+		"grunt-git-authors": "1.0.0",
+		"rimraf": "2.0.1",
+		"testswarm": "0.3.0"
+	},
+	"keywords": []
+}
