@@ -1,0 +1,66 @@
+{
+    "type": "loadModel",
+    "model": {
+        "name": "Small model",
+        "generator": "random(edge_coverage(100))",
+        "vertices": [
+            {
+                "name": "v_VerifySomeAction",
+                "id": "n0"
+            },
+            {
+                "name": "v_VerifySomeOtherAction",
+                "id": "n1"
+            }
+        ],
+        "edges": [
+            {
+                "name": "e_FirstAction",
+                "id": "e0",
+                "dstVertexId": "n0",
+                "startElement": "true",
+                "actions": [
+                    {
+                        "action": "x=0;"
+                    },
+                    {
+                        "action": "y=0;"
+                    }
+                ]
+            },
+            {
+                "name": "e_AnotherAction",
+                "id": "e1",
+                "srcVertexId": "n0",
+                "dstVertexId": "n1",
+                "actions": [
+                    {
+                        "action": "y+=1;"
+                    }
+                ]
+            },
+            {
+                "name": "e_SomeOtherAction",
+                "id": "e2",
+                "srcVertexId": "n1",
+                "dstVertexId": "n1",
+                "actions": [
+                    {
+                        "action": "x+=1;"
+                    }
+                ]
+            },
+            {
+                "name": "e_SomeOtherAction",
+                "id": "e3",
+                "srcVertexId": "n1",
+                "dstVertexId": "n0",
+                "actions": [
+                    {
+                        "action": "y+=1;"
+                    }
+                ]
+            }
+        ]
+    }
+}
