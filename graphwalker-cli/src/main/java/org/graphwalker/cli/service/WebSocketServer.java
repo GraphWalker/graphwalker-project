@@ -35,7 +35,6 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
-import org.java_websocket.server.WebSocketServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,22 +48,22 @@ import java.util.*;
 /**
  * A WebSocketServer implementation.
  */
-public class GraphWalkerWebSocketServer extends WebSocketServer implements Observer {
+public class WebSocketServer extends org.java_websocket.server.WebSocketServer implements Observer {
 
-    private static final Logger logger = LoggerFactory.getLogger(GraphWalkerWebSocketServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
 
     private Set<WebSocket> conns;
     private Map<WebSocket, Machine> machines;
     private Map<WebSocket, List<Context>> contexts;
 
-    public GraphWalkerWebSocketServer(int port) throws UnknownHostException {
+    public WebSocketServer(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
         conns = new HashSet<>();
         machines = new HashMap<>();
         contexts = new HashMap<>();
     }
 
-    public GraphWalkerWebSocketServer(InetSocketAddress address) {
+    public WebSocketServer(InetSocketAddress address) {
         super(address);
         conns = new HashSet<>();
         machines = new HashMap<>();
