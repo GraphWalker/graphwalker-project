@@ -58,6 +58,7 @@ public abstract class AnnotationUtils {
         return isAnnotationPresent(type, annotation, Thread.currentThread().getContextClassLoader());
     }
 
+    @SuppressWarnings("unchecked")
     private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation, ClassLoader classLoader) {
         try {
             Class<? extends Annotation> a = (Class<? extends Annotation>)classLoader.loadClass(annotation.getName());
