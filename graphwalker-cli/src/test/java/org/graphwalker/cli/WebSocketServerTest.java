@@ -26,9 +26,9 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import org.graphwalker.cli.service.GraphWalkerWebSocketServer;
+import org.graphwalker.cli.service.WebSocketClient;
+import org.graphwalker.cli.service.WebSocketServer;
 import org.graphwalker.core.machine.ExecutionContext;
-//import org.graphwalker.example.GraphWalkerWebSocketClient;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
@@ -46,30 +46,31 @@ import static org.hamcrest.CoreMatchers.is;
  * Created by krikar on 10/10/14.
  */
 @GraphWalker(value = "random(edge_coverage(100))", start = "e_Connect")
-public class GraphWalkerWebSocketServerTest extends ExecutionContext { //implements WebSocketFlow {
-/*
-    private static final Logger logger = LoggerFactory.getLogger(GraphWalkerWebSocketServerTest.class);
-    //GraphWalkerWebSocketClient client = new GraphWalkerWebSocketClient();
-    GraphWalkerWebSocketServer server;
-    int numOfConns = 0;
-    int numOfModels = 0;
+public class WebSocketServerTest extends ExecutionContext implements WebSocketFlow {
+
+    private static final Logger logger = LoggerFactory.getLogger(WebSocketServerTest.class);
+
+    WebSocketClient client = new WebSocketClient();
+    WebSocketServer server;
+    int numberOfConnections = 0;
+    int numberOfModels = 0;
 
     @Before
     public void StartServer() throws Exception {
-        server = new GraphWalkerWebSocketServer(8887);
+        server = new WebSocketServer(8887);
         server.start();
     }
 
     @Test
     public void TestRun() throws Exception {
-        new TestExecutor(this).execute();
+        new TestExecutor(getClass()).execute();
     }
 
     @Override
     public void v_ModelLoaded() {
         WebSocket conn = server.getConns().iterator().next();
         Assert.assertNull(server.getMachines().get(conn));
-        //  Assert.assertThat(server.getContextConfigurations().get(conn).size(), is(numOfModels));
+        //  Assert.assertThat(server.getContextConfigurations().get(conn).size(), is(numberOfModels));
     }
 
     @Override
@@ -79,7 +80,7 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext { //impleme
 
     @Override
     public void e_AddModel() {
-        numOfModels++;
+        numberOfModels++;
         client.loadModel(Paths.get("json/SmallModel.json"));
     }
 
@@ -90,13 +91,13 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext { //impleme
 
     @Override
     public void e_AddInitialModel() {
-        numOfModels++;
+        numberOfModels++;
         client.loadModel(Paths.get("json/SmallModel.json"));
     }
 
     @Override
     public void e_Connect() {
-        numOfConns = server.getConns().size();
+        numberOfConnections = server.getConns().size();
         client.run();
     }
 
@@ -104,7 +105,7 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext { //impleme
     public void v_MachineRunning() {
         WebSocket conn = server.getConns().iterator().next();
         Assert.assertNotNull(server.getMachines().get(conn));
-        Assert.assertThat(server.getContexts().get(conn).size(), is(numOfModels));
+        Assert.assertThat(server.getContexts().get(conn).size(), is(numberOfModels));
     }
 
     @Override
@@ -114,7 +115,7 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext { //impleme
 
     @Override
     public void v_EmptyMachine() {
-        Assert.assertThat("Before we connected, we should have no connections", numOfConns, is(0));
+        Assert.assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
         Assert.assertThat("We should now haw 1 connection", server.getConns().size(), is(1));
 
         Assert.assertThat(server.getMachines().size(), is(1));
@@ -134,5 +135,4 @@ public class GraphWalkerWebSocketServerTest extends ExecutionContext { //impleme
     public void e_GetNext() {
         client.getNext();
     }
-    */
 }
