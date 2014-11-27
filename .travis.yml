@@ -13,7 +13,6 @@ env:
 
 install:
   - sudo apt-get update -qq
-  - ../graphwalker-project/tools/clone.sh
 
 script:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn -N -q deploy --settings deploy.xml || mvn -N test -B'

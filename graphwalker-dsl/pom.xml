@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>graphwalker-dsl</artifactId>
-    <name>GraphWalker text parser</name>
+    <name>GraphWalker DSL</name>
 
     <dependencies>
         <dependency>
