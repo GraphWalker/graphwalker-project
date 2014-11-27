@@ -52,41 +52,41 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketServer.class);
 
-    private Set<WebSocket> conns;
+    private Set<WebSocket> sockets;
     private Map<WebSocket, Machine> machines;
     private Map<WebSocket, List<Context>> contexts;
 
     public WebSocketServer(int port) throws UnknownHostException {
         super(new InetSocketAddress(port));
-        conns = new HashSet<>();
+        sockets = new HashSet<>();
         machines = new HashMap<>();
         contexts = new HashMap<>();
     }
 
     public WebSocketServer(InetSocketAddress address) {
         super(address);
-        conns = new HashSet<>();
+        sockets = new HashSet<>();
         machines = new HashMap<>();
     }
 
     @Override
-    public void onOpen(WebSocket conn, ClientHandshake handshake) {
-        conns.add(conn);
-        machines.put(conn, null);
-        contexts.put(conn, new ArrayList<Context>());
-        logger.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
+    public void onOpen(WebSocket socket, ClientHandshake handshake) {
+        sockets.add(socket);
+        machines.put(socket, null);
+        contexts.put(socket, new ArrayList<Context>());
+        logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
     }
 
     @Override
-    public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-        conns.remove(conn);
-        machines.remove(conn);
-        logger.info(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " has disconnected");
+    public void onClose(WebSocket socket, int code, String reason, boolean remote) {
+        sockets.remove(socket);
+        machines.remove(socket);
+        logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " has disconnected");
     }
 
     @Override
-    public void onMessage(WebSocket conn, String message) {
-        logger.debug(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " sent msg: " + message);
+    public void onMessage(WebSocket socket, String message) {
+        logger.debug(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " sent msg: " + message);
         JSONObject response = new JSONObject();
         JSONObject root = null;
         try {
@@ -94,7 +94,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         } catch (JSONException e) {
             response.put("message", "Unknown command: " + e.getMessage());
             response.put("success", false);
-            conn.send(response.toString());
+            socket.send(response.toString());
             return;
         }
 
@@ -103,7 +103,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             response.put("type", "loadModel");
             try {
                 Context context = new JsonContextFactory().create(root.getJSONObject("model").toString());
-                List<Context> executionContexts = contexts.get(conn);
+                List<Context> executionContexts = contexts.get(socket);
                 executionContexts.add(context);
                 response.put("success", true);
             } catch (JSONException e) {
@@ -112,15 +112,15 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
 
         } else if (type.equals("START")) {
-            List<Context> executionContexts = contexts.get(conn);
+            List<Context> executionContexts = contexts.get(socket);
             Machine machine = new SimpleMachine(executionContexts);
             machine.addObserver(this);
-            machines.put(conn, machine);
+            machines.put(socket, machine);
             response.put("type", "start");
             response.put("success", true);
 
         } else if (type.equals("GETNEXT")) {
-            Machine machine = machines.get(conn);
+            Machine machine = machines.get(socket);
             response.put("type", "getNext");
             if (machine != null) {
                 machine.getNextStep();
@@ -131,7 +131,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
 
         } else if (type.equals("HASNEXT")) {
-            Machine machine = machines.get(conn);
+            Machine machine = machines.get(socket);
             response.put("type", "hasNext");
             if (machine == null) {
                 response.put("success", false);
@@ -145,15 +145,15 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
 
         } else if (type.equals("RESTART")) {
-            machines.put(conn, null);
-            contexts.put(conn, null);
-            contexts.put(conn, new ArrayList<Context>());
+            machines.put(socket, null);
+            contexts.put(socket, null);
+            contexts.put(socket, new ArrayList<Context>());
             response.put("type", "restart");
             response.put("success", true);
 
         } else if (type.equals("GETDATA")) {
             response.put("type", "getData");
-            Machine machine = machines.get(conn);
+            Machine machine = machines.get(socket);
             if (machine != null) {
                 JSONArray jsonKeys = new JSONArray();
                 for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
@@ -172,13 +172,13 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             response.put("message", "Unknown command");
             response.put("success", false);
         }
-        conn.send(response.toString());
+        socket.send(response.toString());
     }
 
     @Override
-    public void onError(WebSocket conn, Exception ex) {
+    public void onError(WebSocket socket, Exception ex) {
         ex.printStackTrace();
-        if (conn != null) {
+        if (socket != null) {
             // some errors like port binding failed may not be assignable to a specific websocket
         }
     }
@@ -221,15 +221,15 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
         while (true) {
             try {
-                Thread.currentThread().sleep(10);
+                Thread.sleep(10);
             } catch (InterruptedException i) {
                 break;
             }
         }
     }
 
-    public Set<WebSocket> getConns() {
-        return conns;
+    public Set<WebSocket> getSockets() {
+        return sockets;
     }
 
     public Map<WebSocket, Machine> getMachines() {

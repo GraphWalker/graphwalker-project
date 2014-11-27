@@ -172,6 +172,9 @@ public final class TestExecutor implements Executor {
             failures.put(e.getContext(), e);
         }
         executeAnnotation(AfterExecution.class, machine);
+        if (!failures.isEmpty()) {
+            throw new TestExecutionException("Test execution contains failures");
+        }
         return new Result();
     }
 

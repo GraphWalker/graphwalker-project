@@ -138,4 +138,25 @@ public class TestExecutorTest {
         Result result = reflector.execute();
         //Assert.assertThat(result.getValue(), is(666));
     }
+
+    @GraphWalker(start = "throwException")
+    public static class ThrowExceptionTest extends ExecutionContext {
+        public ThrowExceptionTest() {
+            Vertex vertex = new Vertex().setName("throwException");
+            Model model = new Model()
+                  .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+                  .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+            setModel(model.build());
+        }
+
+        public void throwException() {
+            throw new RuntimeException();
+        }
+    }
+
+    @Test(expected = TestExecutionException.class)
+    public void ThrowExceptionExecutor() {
+        Executor executor = new TestExecutor(ThrowExceptionTest.class);
+        executor.execute();
+    }
 }

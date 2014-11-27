@@ -29,11 +29,11 @@ package org.graphwalker.cli;
 import org.graphwalker.cli.service.WebSocketClient;
 import org.graphwalker.cli.service.WebSocketServer;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     int numberOfConnections = 0;
     int numberOfModels = 0;
 
-    @Before
+    @BeforeExecution
     public void StartServer() throws Exception {
         server = new WebSocketServer(8887);
         server.start();
@@ -68,9 +68,9 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
     @Override
     public void v_ModelLoaded() {
-        WebSocket conn = server.getConns().iterator().next();
-        Assert.assertNull(server.getMachines().get(conn));
-        //  Assert.assertThat(server.getContextConfigurations().get(conn).size(), is(numberOfModels));
+        WebSocket socket = server.getSockets().iterator().next();
+        Assert.assertNull(server.getMachines().get(socket));
+        //  Assert.assertThat(server.getContextConfigurations().get(socket).size(), is(numberOfModels));
     }
 
     @Override
@@ -86,6 +86,7 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
     @Override
     public void e_RestartMachine() {
+        numberOfModels = 0;
         client.restartMachine();
     }
 
@@ -97,15 +98,15 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
     @Override
     public void e_Connect() {
-        numberOfConnections = server.getConns().size();
+        numberOfConnections = server.getSockets().size();
         client.run();
     }
 
     @Override
     public void v_MachineRunning() {
-        WebSocket conn = server.getConns().iterator().next();
-        Assert.assertNotNull(server.getMachines().get(conn));
-        Assert.assertThat(server.getContexts().get(conn).size(), is(numberOfModels));
+        WebSocket socket = server.getSockets().iterator().next();
+        Assert.assertNotNull(server.getMachines().get(socket));
+        Assert.assertThat(server.getContexts().get(socket).size(), is(numberOfModels));
     }
 
     @Override
@@ -116,14 +117,14 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     @Override
     public void v_EmptyMachine() {
         Assert.assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
-        Assert.assertThat("We should now haw 1 connection", server.getConns().size(), is(1));
+        Assert.assertThat("We should now haw 1 connection", server.getSockets().size(), is(1));
 
         Assert.assertThat(server.getMachines().size(), is(1));
         Assert.assertThat(server.getContexts().size(), is(1));
 
-        WebSocket conn = server.getConns().iterator().next();
-        Assert.assertNull(server.getMachines().get(conn));
-        Assert.assertThat(server.getContexts().get(conn).size(), is(0));
+        WebSocket socket = server.getSockets().iterator().next();
+        Assert.assertNull(server.getMachines().get(socket));
+        Assert.assertThat(server.getContexts().get(socket).size(), is(0));
     }
 
     @Override
