@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>graphwalker-dsl</artifactId>
-    <name>GraphWalker DSL</name>
+    <name>GraphWalker Domain-Specific Language</name>
 
     <dependencies>
         <dependency>
