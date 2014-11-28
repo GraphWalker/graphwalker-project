@@ -157,7 +157,9 @@ public final class TestExecutor implements Executor {
     }
 
     public Result execute() {
-        Machine machine = createMachine(getMachineConfiguration());
+        MachineConfiguration configuration = getMachineConfiguration();
+        Result result = new Result(configuration.getContextConfigurations().size());
+        Machine machine = createMachine(configuration);
         executeAnnotation(BeforeExecution.class, machine);
         try {
             Context context = null;
@@ -170,12 +172,41 @@ public final class TestExecutor implements Executor {
             }
         } catch (MachineException e) {
             failures.put(e.getContext(), e);
+
         }
         executeAnnotation(AfterExecution.class, machine);
+        updateResult(result, machine);
         if (!failures.isEmpty()) {
             throw new TestExecutionException("Test execution contains failures");
         }
-        return new Result();
+        return result;
+    }
+
+    private void updateResult(Result result, Machine machine) {
+        int completed = 0, failed = 0, notExecuted = 0, incomplete = 0;
+        for (Context context: machine.getContexts()) {
+            switch (context.getExecutionStatus()) {
+                case COMPLETED: {
+                    completed++;
+                }
+                break;
+                case FAILED: {
+                    failed++;
+                }
+                break;
+                case NOT_EXECUTED: {
+                    notExecuted++;
+                }
+                break;
+                case EXECUTING: {
+                    incomplete++;
+                }
+            }
+        }
+        result.setCompletedCount(completed);
+        result.setFailedCount(failed);
+        result.setNotExecutedCount(notExecuted);
+        result.setIncompleteCount(incomplete);
     }
 
     private boolean isTestIncluded(GraphWalker annotation, String name) {
