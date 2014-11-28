@@ -34,6 +34,7 @@ import org.graphwalker.java.annotation.GraphWalker;
 public class ContextConfiguration {
 
     private Class<?> testClass;
+    private String testClassName;
     private String pathGeneratorName;
     private String stopConditionName;
     private String stopConditionValue;
@@ -42,10 +43,6 @@ public class ContextConfiguration {
 
     public ContextConfiguration(Class<?> testClass) {
         setTestClass(testClass);
-        GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
-        setPathGeneratorName(configuration.pathGenerator().getSimpleName());
-        setStopConditionName(configuration.stopCondition().getSimpleName());
-        setStopConditionValue(configuration.stopConditionValue());
     }
 
     public Class<?> getTestClass() {
@@ -54,6 +51,19 @@ public class ContextConfiguration {
 
     public void setTestClass(Class<?> testClass) {
         this.testClass = testClass;
+        GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
+        setTestClassName(testClass.getSimpleName());
+        setPathGeneratorName(configuration.pathGenerator().getSimpleName());
+        setStopConditionName(configuration.stopCondition().getSimpleName());
+        setStopConditionValue(configuration.stopConditionValue());
+    }
+
+    public String getTestClassName() {
+        return testClassName;
+    }
+
+    public void setTestClassName(String testClassName) {
+        this.testClassName = testClassName;
     }
 
     public String getPathGeneratorName() {
