@@ -241,8 +241,8 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("Result :");
             getLog().info("");
 
-            long tests = 0, completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
-            List<Context> failedExecutions = new ArrayList<>();
+            //long tests = 0, completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
+            //List<Context> failedExecutions = new ArrayList<>();
             /*
             for (MachineConfiguration machine: executor.getMachines()) {
                 for (Context context: machine.getContextConfigurations()) {
@@ -268,6 +268,7 @@ public final class TestMojo extends DefaultMojoBase {
                 }
             }
             */
+            /*
             if (!failedExecutions.isEmpty()) {
                 getLog().info("Failed executions: ");
                 for (Context context: failedExecutions) {
@@ -278,7 +279,13 @@ public final class TestMojo extends DefaultMojoBase {
                 }
                 getLog().info("");
             }
-            getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}", tests, completed, incomplete, failed, notExecuted));
+            */
+            getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}"
+                  , result.getTestCount()
+                  , result.getCompletedCount()
+                  , result.getIncompleteCount()
+                  , result.getFailedCount()
+                  , result.getNotExecutedCount()));
             getLog().info("");
         }
     }

@@ -31,14 +31,57 @@ package org.graphwalker.java.test;
  */
 public final class Result {
 
-    public int value;
+    public int testCount;
+    public int completedCount;
+    public int incompleteCount;
+    public int failedCount;
+    public int notExecutedCount;
 
-    public int getValue() {
-        return value;
+    public Result() {
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public Result(int testCount) {
+        this.testCount = testCount;
+    }
+
+    public int getTestCount() {
+        return testCount;
+    }
+
+    public void setTestCount(int testCount) {
+        this.testCount = testCount;
+    }
+
+    public int getCompletedCount() {
+        return completedCount;
+    }
+
+    public void setCompletedCount(int completedCount) {
+        this.completedCount = completedCount;
+    }
+
+    public int getIncompleteCount() {
+        return incompleteCount;
+    }
+
+    public void setIncompleteCount(int incompleteCount) {
+        this.incompleteCount = incompleteCount;
+    }
+
+    public int getFailedCount() {
+        return failedCount;
+    }
+
+    public void setFailedCount(int failedCount) {
+        this.failedCount = failedCount;
+    }
+
+    public int getNotExecutedCount() {
+        return notExecutedCount;
+    }
+
+    public void setNotExecutedCount(int notExecutedCount) {
+        this.notExecutedCount = notExecutedCount;
     }
 
     public boolean hasExceptions() {
