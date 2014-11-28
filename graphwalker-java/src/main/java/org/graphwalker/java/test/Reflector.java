@@ -28,6 +28,8 @@ package org.graphwalker.java.test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -50,11 +52,11 @@ public final class Reflector {
     private final Method setValue;
     private final Method getMachineConfiguration;
     private final Method getContextConfigurations;
-    private final Method getTestClass;
+    private final Method getTestClassName;
     private final Method getPathGeneratorName;
     private final Method getStopConditionName;
     private final Method getStopConditionValue;
-    private final Method setTestClass;
+    private final Method setTestClassName;
     private final Method setPathGeneratorName;
     private final Method setStopConditionName;
     private final Method setStopConditionValue;
@@ -77,11 +79,11 @@ public final class Reflector {
         this.setValue = Reflections.getMethod(Result.class, "setValue", Integer.TYPE);
         this.getMachineConfiguration = Reflections.getMethod(executorClass, "getMachineConfiguration");
         this.getContextConfigurations = Reflections.getMethod(machineConfigurationClass, "getContextConfigurations");
-        this.getTestClass = Reflections.getMethod(contextConfigurationClass, "getTestClass");
+        this.getTestClassName = Reflections.getMethod(contextConfigurationClass, "getTestClassName");
         this.getPathGeneratorName = Reflections.getMethod(contextConfigurationClass, "getPathGeneratorName");
         this.getStopConditionName = Reflections.getMethod(contextConfigurationClass, "getStopConditionName");
         this.getStopConditionValue = Reflections.getMethod(contextConfigurationClass, "getStopConditionValue");
-        this.setTestClass = Reflections.getMethod(ContextConfiguration.class, "setTestClass", Class.class);
+        this.setTestClassName = Reflections.getMethod(ContextConfiguration.class, "setTestClassName", String.class);
         this.setPathGeneratorName = Reflections.getMethod(ContextConfiguration.class, "setPathGeneratorName", String.class);
         this.setStopConditionName = Reflections.getMethod(ContextConfiguration.class, "setStopConditionName", String.class);
         this.setStopConditionValue = Reflections.getMethod(ContextConfiguration.class, "setStopConditionValue", String.class);
@@ -128,8 +130,7 @@ public final class Reflector {
         Object machineConfiguration = Reflections.invoke(executor, getMachineConfiguration);
         for (Object contextConfiguration: (Collection<Object>)Reflections.invoke(machineConfiguration, getContextConfigurations)) {
             ContextConfiguration newContextConfiguration = new ContextConfiguration();
-            Class<?> testClass = (Class<?>)Reflections.invoke(contextConfiguration, getTestClass);
-            Reflections.invoke(newContextConfiguration, setTestClass, Reflections.loadClass(contextClassLoader, testClass));
+            Reflections.invoke(newContextConfiguration, setTestClassName, Reflections.invoke(contextConfiguration, getTestClassName));
             Reflections.invoke(newContextConfiguration, setPathGeneratorName, Reflections.invoke(contextConfiguration, getPathGeneratorName));
             Reflections.invoke(newContextConfiguration, setStopConditionName, Reflections.invoke(contextConfiguration, getStopConditionName));
             Reflections.invoke(newContextConfiguration, setStopConditionValue, Reflections.invoke(contextConfiguration, getStopConditionValue));

@@ -213,20 +213,18 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("     Groups = " + configuration.getGroups());
             getLog().info("");
             getLog().info("Tests:");
-            /*
             if (null == reflector.getMachineConfiguration() || reflector.getMachineConfiguration().getContextConfigurations().isEmpty()) {
                 getLog().info("  No tests found");
             } else {
                 for (ContextConfiguration context: reflector.getMachineConfiguration().getContextConfigurations()) {
                     getLog().info("    "
-                        + context.getClass().getSimpleName()+"("
+                        + context.getTestClassName()+"("
                         + context.getPathGeneratorName()+", "
                         + context.getStopConditionName()+", "
                         + context.getStopConditionValue()+")");
                 }
                 getLog().info("");
             }
-            */
             getLog().info("------------------------------------------------------------------------");
         }
     }
