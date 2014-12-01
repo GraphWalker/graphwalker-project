@@ -11,6 +11,4 @@ graphwalker-project [![Build Status](https://travis-ci.org/GraphWalker/graphwalk
 |[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-maven-plugin.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-maven-plugin) |[graphwalker-maven-plugin](https://github.com/GraphWalker/graphwalker-maven-plugin)|
 |[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-maven-archetype.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-maven-archetype) |[graphwalker-maven-archetype](https://github.com/GraphWalker/graphwalker-maven-archetype)|
 |[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-gradle-plugin.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-gradle-plugin) |[graphwalker-gradle-plugin](https://github.com/GraphWalker/graphwalker-gradle-plugin)|
-|[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-dashboard.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-dashboard)|[graphwalker-dashboard](https://github.com/GraphWalker/graphwalker-dashboard)|
-|[![Build Status](https://travis-ci.org/GraphWalker/graphwalker-example.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-example)|[graphwalker-example](https://github.com/GraphWalker/graphwalker-example)|
-        
+
