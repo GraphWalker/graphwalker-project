@@ -29,6 +29,7 @@ package org.graphwalker.java.report;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.Executor;
+import org.graphwalker.java.test.Result;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -62,6 +63,7 @@ public class XMLReportGenerator {
         Testsuites testsuites = new Testsuites();
         List<Report> reports = new ArrayList<>();
         Machine machine = executor.getMachine();
+
         Report report = new Report(machine, startTime);
         Testsuite testsuite = new Testsuite();
         List<String> keys = new ArrayList<>(systemProperties.stringPropertyNames());

@@ -26,11 +26,14 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * @author Nils Olsson
@@ -48,6 +51,7 @@ public final class Reflector {
     private final Method setExcludes;
     private final Method setGroups;
     private final Method execute;
+    private final Method reportResults;
     private final Method setTestCount;
     private final Method getTestCount;
     private final Method setCompletedCount;
@@ -83,6 +87,7 @@ public final class Reflector {
         this.setExcludes = Reflections.getMethod(configurationClass, "setExcludes", collectionClass);
         this.setGroups = Reflections.getMethod(configurationClass, "setGroups", collectionClass);
         this.execute = Reflections.getMethod(executorClass, "execute");
+        this.reportResults = Reflections.getMethod(executorClass, "reportResults", File.class, Date.class, Properties.class);
         this.setTestCount = Reflections.getMethod(Result.class, "setTestCount", Integer.TYPE);
         this.getTestCount = Reflections.getMethod(resultClass, "getTestCount");
         this.setCompletedCount = Reflections.getMethod(Result.class, "setCompletedCount", Integer.TYPE);
@@ -160,14 +165,9 @@ public final class Reflector {
         return newMachineConfiguration;
     }
 
-    public void reportResults() {
-        /*
-                boolean hasExceptions = false;
-        XMLReportGenerator reporter = new XMLReportGenerator(getSession().getStartTime(), getSession().getSystemProperties());
-        reporter.writeReport(getReportsDirectory(), result);
-        if (result.hasExceptions()) {
-            throw new MojoExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", getReportsDirectory().getAbsolutePath()));
-        }
-         */
+    public void reportResults(File file, Date startTime, Properties properties) {
+        ClassLoader contextClassLoader = switchClassLoader(classLoader);
+        Reflections.invoke(executor, reportResults, file, startTime, properties);
+        switchClassLoader(contextClassLoader);
     }
 }
