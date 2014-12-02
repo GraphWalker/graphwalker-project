@@ -149,7 +149,7 @@ public final class TestMojo extends DefaultMojoBase {
             displayConfiguration(configuration, reflector);
             Result result = reflector.execute();
             displayResult(result);
-            reflector.reportResults();
+            reflector.reportResults(getReportsDirectory(), getSession().getStartTime(), getSession().getSystemProperties());
             switchProperties(properties);
         }
     }
@@ -240,46 +240,6 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("");
             getLog().info("Result :");
             getLog().info("");
-
-            //long tests = 0, completed = 0, incomplete = 0, failed = 0, notExecuted = 0;
-            //List<Context> failedExecutions = new ArrayList<>();
-            /*
-            for (MachineConfiguration machine: executor.getMachines()) {
-                for (Context context: machine.getContextConfigurations()) {
-                    tests++;
-                    switch (context.getExecutionStatus()) {
-                        case COMPLETED: {
-                            completed++;
-                        }
-                        break;
-                        case FAILED: {
-                            failed++;
-                            failedExecutions.add(context);
-                        }
-                        break;
-                        case NOT_EXECUTED: {
-                            notExecuted++;
-                        }
-                        break;
-                        case EXECUTING: {
-                            incomplete++;
-                        }
-                    }
-                }
-            }
-            */
-            /*
-            if (!failedExecutions.isEmpty()) {
-                getLog().info("Failed executions: ");
-                for (Context context: failedExecutions) {
-                    double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
-                    String pathGenerator = context.getPathGenerator().getClass().getSimpleName();
-                    String stopCondition = context.getPathGenerator().getStopCondition().getClass().getSimpleName();
-                    getLog().info(MessageFormat.format("  {0}({1}, {2}): {3}%", context.getClass().getSimpleName(), pathGenerator, stopCondition, Math.round(100*fulfilment)));
-                }
-                getLog().info("");
-            }
-            */
             getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}"
                   , result.getTestCount()
                   , result.getCompletedCount()

@@ -36,6 +36,7 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.factory.PathGeneratorFactory;
+import org.graphwalker.java.report.XMLReportGenerator;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
@@ -47,6 +48,7 @@ import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.*;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
@@ -77,6 +79,7 @@ public final class TestExecutor implements Executor {
     private final MachineConfiguration machineConfiguration;
     private final Map<Context, MachineException> failures = new HashMap<>();
     private Machine machine;
+    private Result result;
 
     public TestExecutor(Configuration configuration) {
         this.configuration = configuration;
@@ -158,7 +161,7 @@ public final class TestExecutor implements Executor {
 
     public Result execute() {
         MachineConfiguration configuration = getMachineConfiguration();
-        Result result = new Result(configuration.getContextConfigurations().size());
+        result = new Result(configuration.getContextConfigurations().size());
         Machine machine = createMachine(configuration);
         executeAnnotation(BeforeExecution.class, machine);
         try {
@@ -265,5 +268,12 @@ public final class TestExecutor implements Executor {
 
     public Collection<MachineException> getFailures() {
         return failures.values();
+    }
+
+    public void reportResults(File file, Date startTime, Properties properties) {
+        new XMLReportGenerator(startTime, properties).writeReport(file, this);
+        if (0<getFailures().size()) {
+            throw new TestExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
+        }
     }
 }

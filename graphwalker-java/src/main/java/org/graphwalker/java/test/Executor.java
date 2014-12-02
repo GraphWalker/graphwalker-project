@@ -30,7 +30,10 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Properties;
 
 /**
  * @author Nils Olsson
@@ -42,4 +45,5 @@ public interface Executor {
     boolean isFailure(Context context);
     MachineException getFailure(Context context);
     Collection<MachineException> getFailures();
+    void reportResults(File file, Date startTime, Properties properties);
 }
