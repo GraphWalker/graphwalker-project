@@ -35,6 +35,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
@@ -66,8 +67,8 @@ public final class WatchMojo extends AbstractMojo {
     @Component
     private MavenProject mavenProject;
 
-    @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
-    private String sourceEncoding;
+    @Parameter(defaultValue = "${project.build.sourceEncoding}")
+    private String encoding;
 
     @Parameter(defaultValue = "${project.build.directory}/generated-sources/graphwalker")
     private File sourcesDirectory;
@@ -84,6 +85,10 @@ public final class WatchMojo extends AbstractMojo {
     private final CodeGenerator codeGenerator = new CodeGenerator();
     private final Map<Path, File> resourceMap = new HashMap<>();
     private final Map<WatchKey, Path> watchKeyMap = new HashMap<>();
+
+    private String getEncoding() {
+        return StringUtils.isEmpty(encoding)? ReaderFactory.FILE_ENCODING: encoding;
+    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -180,8 +185,8 @@ public final class WatchMojo extends AbstractMojo {
             RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
             String source = codeGenerator.generate(sourceFile, model);
             if (Files.exists(sourceFile.getOutputPath())) {
-                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
-                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
+                String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
+                if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
                     return;
                 }
             }
@@ -190,7 +195,7 @@ public final class WatchMojo extends AbstractMojo {
             }
             FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
             FileUtils.fileDelete(outputFile.getAbsolutePath());
-            FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
+            FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
         } catch (Throwable t) {
             if (getLog().isInfoEnabled()) {
                 getLog().info("Error: Generate: " + sourceFile.getOutputPath());

@@ -29,6 +29,7 @@ package org.graphwalker.maven.plugin;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
@@ -46,13 +47,13 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public abstract class GenerateMojoBase extends DefaultMojoBase {
 
-    @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
-    private String sourceEncoding;
+    @Parameter(defaultValue = "${project.build.sourceEncoding}")
+    private String encoding;
 
     private CodeGenerator codeGenerator = new CodeGenerator();
 
-    protected String getSourceEncoding() {
-        return sourceEncoding;
+    protected String getEncoding() {
+        return StringUtils.isEmpty(encoding)? ReaderFactory.FILE_ENCODING: encoding;
     }
 
     protected abstract File getGeneratedSourcesDirectory();
@@ -82,8 +83,8 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
                 RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
                 String source = codeGenerator.generate(sourceFile, model);
                 if (Files.exists(sourceFile.getOutputPath())) {
-                    String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, sourceEncoding));
-                    if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), sourceEncoding)))) {
+                    String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
+                    if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
                         return;
                     }
                 }
@@ -92,7 +93,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
                 }
                 FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
                 FileUtils.fileDelete(outputFile.getAbsolutePath());
-                FileUtils.fileWrite(outputFile.getAbsolutePath(), sourceEncoding, source);
+                FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
             } catch (Throwable t) {
                 if (getLog().isInfoEnabled()) {
                     getLog().info("Error: Generate " + sourceFile.getInputPath());
