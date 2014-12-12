@@ -28,6 +28,7 @@ package org.graphwalker.io.factory.json;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.dot.DotContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,7 +43,7 @@ import static org.hamcrest.core.Is.is;
 public class JsonContextFactoryTest {
 
     @Test
-    public void SmallModel() {
+    public void smallModel() {
         Context context = new JsonContextFactory().create(Paths.get("json/SmallModel.json"));
         Assert.assertThat(context.getModel().getVertices().size(), is(2));
         Assert.assertThat(context.getModel().getEdges().size(), is(4));
@@ -55,10 +56,22 @@ public class JsonContextFactoryTest {
     }
 
     @Test
-    public void SmallModelSimpleMachine() {
+    public void smallModelSimpleMachine() {
         SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
         while (machine.hasNextStep()) {
             System.out.println(machine.getNextStep().getCurrentElement().getName());
         }
+    }
+
+    @Test
+    public void acceptJsonTest() {
+        ContextFactory factory = new JsonContextFactory();
+        Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
+    }
+
+    @Test
+    public void acceptJsonTestFailure() {
+        ContextFactory factory = new JsonContextFactory();
+        Assert.assertFalse(factory.accept(Paths.get("json/NonModel.json")));
     }
 }
