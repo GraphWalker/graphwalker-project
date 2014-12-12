@@ -26,8 +26,13 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
@@ -41,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -48,6 +54,7 @@ import java.util.*;
  * Created by krikar on 9/24/14.
  */
 public final class JsonContextFactory implements ContextFactory {
+
     private static final Logger logger = LoggerFactory.getLogger(JsonContextFactory.class);
     private static final String FILE_TYPE = "json";
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.json"));
@@ -161,7 +168,14 @@ public final class JsonContextFactory implements ContextFactory {
 
     @Override
     public boolean accept(Path path) {
-        return path.toFile().toString().endsWith(FILE_TYPE);
+        boolean accept = path.toFile().toString().endsWith(FILE_TYPE);
+        if (accept) {
+            Reader reader = new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString()));
+            Gson gson = new GsonBuilder().create();
+            JsonModel model = gson.fromJson(reader, JsonModel.class);
+            accept = model.isModel();
+        }
+        return accept;
     }
 
     @Override
