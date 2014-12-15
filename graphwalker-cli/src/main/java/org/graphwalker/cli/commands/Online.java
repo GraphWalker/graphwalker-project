@@ -31,7 +31,7 @@ import com.beust.jcommander.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-@Parameters(commandDescription = "Starts GraphWalker as a WebSocket server.")
+@Parameters(commandDescription = "Starts GraphWalker as a WebSocket server. See http://graphwalker.org/docs/websocket_api")
 public class Online {
 
     public static final String SERVICE_RESTFUL = "RESTFUL";
@@ -47,11 +47,11 @@ public class Online {
 
     @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
         description = "The model, as a graphml file followed by generator with stop condition. " +
-            "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
+            "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
     public List<String> model = new ArrayList<String>();
 
     @Parameter(names = {"--service", "-s"}, required = false, arity = 1,
-        description = "Selects which kind of service to start. Either websocket [defualt], or restful")
+        description = "Selects which kind of service to start. Either WEBSOCKET [default], or RESTFUL")
     public String service = SERVICE_WEBSOCKET;
 
     @Parameter(names = {"--json", "-j"}, required = false,
