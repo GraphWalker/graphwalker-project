@@ -156,7 +156,7 @@ public class CLI {
 
             // No commands or options were found
             else {
-                throw new MissingCommandException("Missing a command.");
+                throw new MissingCommandException("Missing a command. Add '--help'");
             }
 
         } catch (MissingCommandException e) {
@@ -238,7 +238,12 @@ public class CLI {
         } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
             List<Context> executionContexts = getContextsWithPathGenerators((online.model.iterator()));
             ResourceConfig rc = new DefaultResourceConfig();
-            rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
+            try {
+                rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
+            } catch (MachineException e) {
+                System.err.println("Was the argument --model correctly?");
+                throw e;
+            }
 
             String url = "http://0.0.0.0:" + online.port;
 
@@ -253,11 +258,12 @@ public class CLI {
                 server.start();
                 Thread.currentThread().join();
             } catch (Exception e) {
-                logger.error("An error occurred when running command online: ", e);
+              logger.error("An error occurred when running command online: ", e);
             } finally {
                 server.stop();
             }
-
+        } else {
+          throw new ParameterException("--service expected either WEBSOCKET or RESTFUL");
         }
     }
 

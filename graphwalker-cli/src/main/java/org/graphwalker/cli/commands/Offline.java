@@ -31,7 +31,7 @@ import com.beust.jcommander.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-@Parameters(commandDescription = "Generate a test sequence offline. The sequence is printed to the standard output")
+@Parameters(commandDescription = "Generate a test sequence offline. The sequence is printed to the standard output. See http://graphwalker.org/docs/command_line_syntax")
 public class Offline {
 
     @Parameter(names = {"--verbose", "-o"}, required = false,
@@ -44,7 +44,7 @@ public class Offline {
 
     @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
         description = "The model, as a graphml file followed by generator with stop condition. " +
-            "The format is GENERATOR(STOP_CONDITION) See HTML DOC")
+            "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
     public List<String> model = new ArrayList<String>();
 
     @Parameter(names = {"--json", "-j"}, required = false,
