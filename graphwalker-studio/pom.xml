@@ -33,6 +33,10 @@
             <version>${spring.version}</version>
         </dependency>
         <!-- end::actuator[] -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
