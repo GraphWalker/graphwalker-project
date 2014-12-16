@@ -313,6 +313,16 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public void setAttribute(String name, Object value) {
+        if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
+            Map<String, Object> attributes = (Map<String, Object>)getBindings(ENGINE_SCOPE).get("nashorn.global");
+            attributes.put(name, value);
+        } else {
+            super.setAttribute(name, value, ENGINE_SCOPE);
+        }
+    }
+
     private boolean isVariable(String key, List<String> methods) {
         return !"impl".equals(key) && !methods.contains(key) && !"print".equals(key) && !"println".equals(key) && !"context".equals(key);
     }
