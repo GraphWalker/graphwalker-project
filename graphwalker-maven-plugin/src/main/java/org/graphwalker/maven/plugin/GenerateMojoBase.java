@@ -95,10 +95,9 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
                 FileUtils.fileDelete(outputFile.getAbsolutePath());
                 FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
             } catch (Throwable t) {
-                if (getLog().isInfoEnabled()) {
-                    getLog().info("Error: Generate " + sourceFile.getInputPath());
-                }
-                if (getLog().isDebugEnabled()) {
+                if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
+                    getLog().error("Error: Generate " + sourceFile.getInputPath(), t);
+                } else if (getLog().isDebugEnabled()) {
                     getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
                 }
             }
