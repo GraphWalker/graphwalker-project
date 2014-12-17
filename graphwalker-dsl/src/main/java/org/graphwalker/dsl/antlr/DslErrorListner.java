@@ -39,6 +39,6 @@ import org.antlr.v4.runtime.misc.Nullable;
 public class DslErrorListner extends BaseErrorListener {
     @Override
     public void syntaxError(@NotNull Recognizer<?, ?> recognizer, @Nullable Object offendingSymbol, int line, int charPositionInLine, @NotNull String msg, @Nullable RecognitionException e) {
-        throw new DslException(msg + " -> " + ((CommonToken) offendingSymbol).getInputStream().toString());
+        throw new DslException("The string '" + ((CommonToken) offendingSymbol).getInputStream().toString().trim() + "' did not conform to GraphWalker syntax rules.");
     }
 }

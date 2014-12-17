@@ -27,6 +27,7 @@ package org.graphwalker.dsl.antlr.yed;
  */
 
 import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.graphwalker.dsl.antlr.DslException;
@@ -44,7 +45,7 @@ public class YEdDescriptiveErrorListener extends BaseErrorListener {
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
                             int line, int charPositionInLine,
                             String msg, RecognitionException e) {
-        logger.error(msg);
-        throw new DslException(msg);
+        logger.error(msg + ", in string '" + ((CommonToken) offendingSymbol).getInputStream().toString().trim() + "'");
+        throw new DslException("The string '" + ((CommonToken) offendingSymbol).getInputStream().toString().trim() + "' did not conform to GraphWalker syntax rules.");
     }
 }
