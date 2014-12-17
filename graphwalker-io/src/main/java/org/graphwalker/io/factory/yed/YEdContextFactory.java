@@ -214,7 +214,11 @@ public final class YEdContextFactory implements ContextFactory {
                             for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
                                 label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
                             }
-                            YEdEdgeParser.ParseContext parseContext = new YEdEdgeParser(getTokenStream(label.toString())).parse();
+                            YEdEdgeParser parser = new YEdEdgeParser(getTokenStream(label.toString()));
+                            parser.removeErrorListeners();
+                            parser.addErrorListener(new YEdDescriptiveErrorListener());
+                            YEdEdgeParser.ParseContext parseContext = parser.parse();
+
                             Edge edge = new Edge();
                             if (null != elements.get(edgeType.getSource())) {
                                 edge.setSourceVertex(elements.get(edgeType.getSource()));

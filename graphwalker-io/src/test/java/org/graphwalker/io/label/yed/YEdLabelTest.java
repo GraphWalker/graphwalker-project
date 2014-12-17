@@ -92,18 +92,18 @@ public class YEdLabelTest {
         Assert.assertNotNull(context.start());
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void badVertexLabel() {
         YEdVertexParser parser = new YEdVertexParser(getTokens("1name"));
         YEdVertexParser.ParseContext context = parser.parse();
-        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(1));
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void badEdgeLabel() {
         YEdEdgeParser parser = new YEdEdgeParser(getTokens("1name"));
         YEdEdgeParser.ParseContext context = parser.parse();
-        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(1));
     }
 
     @Test
