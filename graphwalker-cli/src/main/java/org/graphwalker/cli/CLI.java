@@ -47,6 +47,7 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.cli.util.LoggerUtil;
+import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
@@ -283,24 +284,36 @@ public class CLI {
         }
     }
 
-    private List<Context> getContextsWithPathGenerators(Iterator itr) {
+    private List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
             ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
-            Context context = factory.create(Paths.get(modelFileName));
+            Context context = null;
+            try {
+                context = factory.create(Paths.get(modelFileName));
+            } catch (DslException e) {
+                System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
+                throw new Exception("Model syntax error");
+            }
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
             executionContexts.add(context);
         }
         return executionContexts;
     }
 
-    private List<Context> getContexts(Iterator itr) {
+    private List<Context> getContexts(Iterator itr) throws Exception {
         List<Context> executionContexts = new ArrayList<>();
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
             ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
-            Context context = factory.create(Paths.get(modelFileName));
+            Context context = null;
+            try {
+                context = factory.create(Paths.get(modelFileName));
+            } catch (DslException e) {
+                System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
+                throw new Exception("Model syntax error");
+            }
             executionContexts.add(context);
         }
         return executionContexts;
