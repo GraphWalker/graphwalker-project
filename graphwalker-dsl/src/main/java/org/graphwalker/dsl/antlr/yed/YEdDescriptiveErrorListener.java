@@ -38,14 +38,14 @@ import org.slf4j.LoggerFactory;
  * Created by krikar on 8/20/14.
  */
 public class YEdDescriptiveErrorListener extends BaseErrorListener {
-    private static final Logger logger = LoggerFactory.getLogger(YEdDescriptiveErrorListener.class);
-    public static YEdDescriptiveErrorListener INSTANCE = new YEdDescriptiveErrorListener();
+
+    public static final YEdDescriptiveErrorListener INSTANCE = new YEdDescriptiveErrorListener();
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
                             int line, int charPositionInLine,
                             String msg, RecognitionException e) {
-        logger.error(msg + ", in string '" + ((CommonToken) offendingSymbol).getInputStream().toString().trim() + "'");
-        throw new DslException("The string '" + ((CommonToken) offendingSymbol).getInputStream().toString().trim() + "' did not conform to GraphWalker syntax rules.");
+        String message = ((CommonToken) offendingSymbol).getInputStream().toString().trim();
+        throw new DslException("The string '" + message + "' did not conform to GraphWalker syntax rules.");
     }
 }

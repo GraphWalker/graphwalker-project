@@ -135,7 +135,7 @@ public final class YEdContextFactory implements ContextFactory {
                                 }
                                 YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
                                 parser.removeErrorListeners();
-                                parser.addErrorListener(new YEdDescriptiveErrorListener());
+                                parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
                                 YEdVertexParser.ParseContext parseContext = parser.parse();
                                 Vertex vertex = new Vertex();
                                 boolean blocked = false;
@@ -216,7 +216,7 @@ public final class YEdContextFactory implements ContextFactory {
                             }
                             YEdEdgeParser parser = new YEdEdgeParser(getTokenStream(label.toString()));
                             parser.removeErrorListeners();
-                            parser.addErrorListener(new YEdDescriptiveErrorListener());
+                            parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
                             YEdEdgeParser.ParseContext parseContext = parser.parse();
 
                             Edge edge = new Edge();
@@ -329,7 +329,7 @@ public final class YEdContextFactory implements ContextFactory {
         ANTLRInputStream inputStream = new ANTLRInputStream(label);
         YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
         lexer.removeErrorListeners();
-        lexer.addErrorListener(new YEdDescriptiveErrorListener());
+        lexer.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
         return new CommonTokenStream(lexer);
     }
 
