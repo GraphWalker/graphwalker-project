@@ -44,6 +44,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.cli.util.LoggerUtil;
@@ -286,6 +287,7 @@ public class CLI {
 
     private List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
         List<Context> executionContexts = new ArrayList<>();
+        boolean triggerOnce = true;
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
             ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
@@ -297,6 +299,18 @@ public class CLI {
                 throw new Exception("Model syntax error");
             }
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
+
+            if (triggerOnce && offline != null && !offline.startElement.isEmpty()) {
+                triggerOnce = false;
+                List<Element> elements = context.getModel().findElements(offline.startElement);
+                if  (elements == null) {
+                    throw new ParameterException("--start-element Did not find matching element in the model: " + modelFileName);
+                } else if (elements.size() > 1 ) {
+                    throw new ParameterException("--start-element There are more than one matching element in the model: " + modelFileName);
+                }
+                context.setCurrentElement(elements.get(0));
+            }
+
             executionContexts.add(context);
         }
         return executionContexts;

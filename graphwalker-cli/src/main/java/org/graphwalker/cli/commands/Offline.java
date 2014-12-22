@@ -48,6 +48,10 @@ public class Offline {
     public List<String> model = new ArrayList<String>();
 
     @Parameter(names = {"--json", "-j"}, required = false,
-        description = "Returns data formatted as json")
+            description = "Returns data formatted as json")
     public boolean json = false;
+
+    @Parameter(names = {"--start-element", "-s"}, required = false,
+            description = "Sets the starting element in the [first] model.")
+    public String startElement = "";
 }
