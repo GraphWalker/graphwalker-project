@@ -70,6 +70,8 @@ public class CLI {
     Online online;
     Methods methods;
     Requirements requirements;
+    enum Command {NONE, OFFLINE, ONLINE, METHODS, REQUIREMENTS};
+    Command command = Command.NONE;
 
     public static void main(String[] args) {
         CLI cli = new CLI();
@@ -146,12 +148,16 @@ public class CLI {
             // Parse for commands
             if (jc.getParsedCommand() != null) {
                 if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
+                    command = Command.OFFLINE;
                     RunCommandOffline();
                 } else if (jc.getParsedCommand().equalsIgnoreCase("online")) {
+                    command = Command.ONLINE;
                     RunCommandOnline();
                 } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
+                    command = Command.METHODS;
                     RunCommandMethods();
                 } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
+                    command = Command.REQUIREMENTS;
                     RunCommandRequirements();
                 }
             }
@@ -300,9 +306,18 @@ public class CLI {
             }
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
-            if (triggerOnce && offline != null && !offline.startElement.isEmpty()) {
+            if (triggerOnce &&
+                (!offline.startElement.isEmpty() ||
+                (!online.startElement.isEmpty()))) {
                 triggerOnce = false;
-                List<Element> elements = context.getModel().findElements(offline.startElement);
+
+                List<Element> elements = null;
+                if (command == Command.OFFLINE) {
+                    elements = context.getModel().findElements(offline.startElement);
+                } else if (command == Command.ONLINE) {
+                    elements = context.getModel().findElements(online.startElement);
+                }
+
                 if  (elements == null) {
                     throw new ParameterException("--start-element Did not find matching element in the model: " + modelFileName);
                 } else if (elements.size() > 1 ) {
