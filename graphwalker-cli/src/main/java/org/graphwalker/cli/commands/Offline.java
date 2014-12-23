@@ -51,7 +51,7 @@ public class Offline {
             description = "Returns data formatted as json")
     public boolean json = false;
 
-    @Parameter(names = {"--start-element", "-s"}, required = false,
+    @Parameter(names = {"--start-element", "-e"}, required = false,
             description = "Sets the starting element in the [first] model.")
     public String startElement = "";
 }

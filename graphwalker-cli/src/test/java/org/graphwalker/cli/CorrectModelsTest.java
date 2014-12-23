@@ -93,7 +93,7 @@ public class CorrectModelsTest extends CLITestRoot {
      */
     @Test
     public void noStartVertex() {
-        String args[] = {"offline", "-s", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
+        String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
         runCommand(args);
         Assert.assertThat(errMsg, is(""));
         Assert.assertThat(outMsg, is("v1" + System.lineSeparator() +

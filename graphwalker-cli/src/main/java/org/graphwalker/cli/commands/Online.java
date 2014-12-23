@@ -60,4 +60,8 @@ public class Online {
 
     @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
     public int port = 8887;
+
+    @Parameter(names = {"--start-element", "-e"}, required = false,
+      description = "Sets the starting element in the [first] model.")
+    public String startElement = "";
 }
