@@ -308,7 +308,7 @@ public class CLI {
                 } else if (elements.size() > 1 ) {
                     throw new ParameterException("--start-element There are more than one matching element in the model: " + modelFileName);
                 }
-                context.setCurrentElement(elements.get(0));
+                context.setNextElement(elements.get(0));
             }
 
             executionContexts.add(context);

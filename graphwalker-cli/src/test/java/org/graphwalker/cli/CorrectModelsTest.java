@@ -87,4 +87,18 @@ public class CorrectModelsTest extends CLITestRoot {
             "e3" + System.lineSeparator() +
             "v3" + System.lineSeparator()));
     }
+
+    /**
+     * No start vertex
+     */
+    @Test
+    public void noStartVertex() {
+        String args[] = {"offline", "-s", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
+        runCommand(args);
+        Assert.assertThat(errMsg, is(""));
+        Assert.assertThat(outMsg, is("v1" + System.lineSeparator() +
+          "e2" + System.lineSeparator() +
+          "v2" + System.lineSeparator() +
+          "e4" + System.lineSeparator()));
+    }
 }
