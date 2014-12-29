@@ -29,6 +29,7 @@ package org.graphwalker.java.test;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.file.Path;
@@ -51,10 +52,11 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
 
     @Test
     public void run() {
-        new TestBuilder()
+        Result result = new TestBuilder()
             .setModel(MODEL_PATH)
             .setContext(new SimpleTest())
             .setPathGenerator(new RandomPath(new VertexCoverage(100)))
             .setStart("vertex").execute();
+        Assert.assertNotNull(result);
     }
 }
