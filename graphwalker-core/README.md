@@ -1,4 +1,4 @@
-GraphWalker Core [![Build Status](https://travis-ci.org/GraphWalker/graphwalker-core.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-core)
+GraphWalker Core 
 =======
 This is the GraphWalker major version 3. For earlier versions of GraphWalker, see: [GraphWalker 2].
 
