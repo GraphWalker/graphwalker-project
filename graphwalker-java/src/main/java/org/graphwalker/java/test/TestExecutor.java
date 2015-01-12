@@ -78,17 +78,25 @@ public final class TestExecutor implements Executor {
     private final Configuration configuration;
     private final MachineConfiguration machineConfiguration;
     private final Map<Context, MachineException> failures = new HashMap<>();
-    private Machine machine;
+    private final Machine machine;
     private Result result;
 
     public TestExecutor(Configuration configuration) {
         this.configuration = configuration;
         this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
+        this.machine = createMachine(machineConfiguration);
     }
 
     public TestExecutor(Class<?>... tests) {
         this.configuration = new Configuration();
         this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
+        this.machine = createMachine(machineConfiguration);
+    }
+
+    public TestExecutor(Context... contexts) {
+        this.configuration = new Configuration();
+        this.machineConfiguration = new MachineConfiguration();
+        this.machine = new SimpleMachine(contexts);
     }
 
     @Override
@@ -146,7 +154,7 @@ public final class TestExecutor implements Executor {
 
     private Machine createMachine(MachineConfiguration machineConfiguration) {
         Collection<Context> contexts = createContexts(machineConfiguration);
-        machine = new SimpleMachine(contexts);
+        Machine machine = new SimpleMachine(contexts);
         for (Context context: machine.getContexts()) {
             if (context instanceof Observer) {
                 machine.addObserver((Observer)context);
@@ -160,9 +168,7 @@ public final class TestExecutor implements Executor {
     }
 
     public Result execute() {
-        MachineConfiguration configuration = getMachineConfiguration();
-        result = new Result(configuration.getContextConfigurations().size());
-        Machine machine = createMachine(configuration);
+        result = new Result(machine.getContexts().size());
         executeAnnotation(BeforeExecution.class, machine);
         try {
             Context context = null;

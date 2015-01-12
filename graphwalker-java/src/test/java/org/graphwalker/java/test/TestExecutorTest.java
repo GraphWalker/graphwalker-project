@@ -102,12 +102,6 @@ public class TestExecutorTest {
         executor.execute();
     }
 
-    @Test(expected = MachineException.class)
-    public void noContext() {
-        Executor executor = new TestExecutor();
-        executor.execute();
-    }
-
     @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
     public static class DSLConfiguredTest extends ExecutionContext {
         public DSLConfiguredTest() {
