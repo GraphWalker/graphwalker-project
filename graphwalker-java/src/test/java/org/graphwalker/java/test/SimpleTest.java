@@ -29,10 +29,13 @@ package org.graphwalker.java.test;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -41,20 +44,26 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
 
     public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/SimpleModel.graphml");
 
+    public int count = 0;
+
     @Override
     public void vertex() {
+        count++;
     }
 
     @Override
     public void edge() {
+        count++;
     }
 
     @Test
     public void run() {
+        SimpleTest context = new SimpleTest();
         new TestBuilder()
             .setModel(MODEL_PATH)
-            .setContext(new SimpleTest())
+            .setContext(context)
             .setPathGenerator(new RandomPath(new VertexCoverage(100)))
-            .setStart("vertex").execute();
+            .setStart("edge").execute();
+        Assert.assertThat(context.count, is(2));
     }
 }

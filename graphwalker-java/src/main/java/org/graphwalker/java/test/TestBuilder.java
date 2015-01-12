@@ -81,7 +81,7 @@ public final class TestBuilder {
     }
 
     public Result execute() {
-        return null; //new TestExecutor(build()).execute();
+        return new TestExecutor(build()).execute();
     }
 
 }
