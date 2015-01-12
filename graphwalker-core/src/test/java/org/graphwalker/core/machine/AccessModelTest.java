@@ -19,7 +19,15 @@ public class AccessModelTest {
     @Test
     public void read() {
         ExecutionContext context = createContext();
-        Assert.assertThat((Double)context.getAttribute("x"), is(1.0));
+        Assert.assertThat(round(context.getAttribute("x")), is(1));
+    }
+
+    private int round(Object value) {
+        if (value instanceof Double) {
+            return (int) Math.round((Double) value);
+        } else {
+            return (Integer) value;
+        }
     }
 
     @Test
