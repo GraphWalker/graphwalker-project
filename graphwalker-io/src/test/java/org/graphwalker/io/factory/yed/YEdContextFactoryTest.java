@@ -26,7 +26,9 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.*;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
@@ -185,5 +187,25 @@ public class YEdContextFactoryTest {
     @Test(expected = ContextFactoryException.class)
     public void blockedVertex3() {
         new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
+    }
+
+    @Test
+    public void dryRun() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
+        context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+    }
+
+    @Test
+    public void dryRunContext() {
+        Context context = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
+        context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(new DryRunContext(context));
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
     }
 }
