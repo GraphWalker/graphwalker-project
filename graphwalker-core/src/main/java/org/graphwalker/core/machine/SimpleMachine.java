@@ -241,6 +241,9 @@ public final class SimpleMachine extends MachineBase {
         if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
             return false;
         }
+        if (null == context.getPathGenerator()) {
+            throw new MachineException("No path generator is defined");
+        }
         boolean hasMoreSteps = context.getPathGenerator().hasNextStep();
         if (!hasMoreSteps) {
             context.setExecutionStatus(ExecutionStatus.COMPLETED);
