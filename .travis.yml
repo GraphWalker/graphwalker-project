@@ -17,5 +17,5 @@ install:
   - sudo apt-get update -qq
 
 script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn -N -q deploy --settings deploy.xml || mvn -N test -B'
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn deploy --settings deploy.xml || mvn test'
 
