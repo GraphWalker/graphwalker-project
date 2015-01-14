@@ -28,18 +28,31 @@ package org.graphwalker.cli;
 
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.core.machine.RequirementStatus;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Requirement;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by krikar on 9/13/14.
  */
 public abstract class Util {
+
+    public enum Statistics {
+        TOTAL_NUMBER_OF_VERTICES,
+        TOTAL_NUMBER_OF_UNVISITED_VERTICES,
+        TOTAL_NUMBER_OF_EDGES,
+        TOTAL_NUMBER_OF_UNVISITED_EDGES,
+        TOTAL_NUMBER_OF_REQUIREMENTS,
+        TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED,
+        TOTAL_NUMBER_OF_REQUIREMENTS_PASSED,
+        TOTAL_NUMBER_OF_REQUIREMENTS_FAILED
+    };
 
     public static String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
         StringBuilder builder = new StringBuilder();
@@ -105,5 +118,116 @@ public abstract class Util {
             object.put("UnvisitedElements", jsonElements);
         }
         return object;
+    }
+
+    public static String getStatisticsAsString(SimpleMachine machine) {
+        HashMap<Statistics,Integer> map = getStatistics(machine.getCurrentContext());
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("Coverage Edges: ")
+                .append(map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES))
+                .append("/")
+                .append(map.get(Statistics.TOTAL_NUMBER_OF_EDGES))
+                .append(" => ")
+                .append(100*(map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES))/map.get(Statistics.TOTAL_NUMBER_OF_EDGES))
+                .append("%")
+                .append(System.lineSeparator());
+        builder.append("Coverage Vertices: ")
+                .append(map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES))
+                .append("/")
+                .append(map.get(Statistics.TOTAL_NUMBER_OF_VERTICES))
+                .append(" => ")
+                .append(100*(map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES))/map.get(Statistics.TOTAL_NUMBER_OF_VERTICES))
+                .append("%")
+                .append(System.lineSeparator());
+        if (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS)>0) {
+            builder.append("Coverage Requirements: ")
+                    .append(map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED))
+                    .append("/")
+                    .append(map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS))
+                    .append(" => ")
+                    .append(100*(map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED))/map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS))
+                    .append("%")
+                    .append(System.lineSeparator());
+
+            builder.append("Requirements not covered:").append(System.lineSeparator());
+            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.NOT_COVERED) ) {
+                builder.append("  ")
+                        .append(r.getKey())
+                        .append(System.lineSeparator());
+            }
+            builder.append("Requirements passed:").append(System.lineSeparator());
+            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.PASSED) ) {
+                builder.append("  ")
+                        .append(r.getKey())
+                        .append(System.lineSeparator());
+            }
+            builder.append("Requirements failed:").append(System.lineSeparator());
+            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.FAILED) ) {
+                builder.append("  ")
+                        .append(r.getKey())
+                        .append(System.lineSeparator());
+            }
+        }
+        return builder.toString();
+    }
+
+    public static JSONObject getStatisticsAsJSON(SimpleMachine machine) {
+        HashMap<Statistics,Integer> map = getStatistics(machine.getCurrentContext());
+        JSONObject object = new JSONObject();
+        object.put("TotalNumberOfEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
+        object.put("TotalNumberOfUnvisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
+        object.put("TotalNumberOfVisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
+        object.put("EdgeCoverage", 100*(map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES))/map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
+        object.put("TotalNumberOfVertices", map.get(Statistics.TOTAL_NUMBER_OF_VERTICES));
+        object.put("TotalNumberOfUnvisitedVertices", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES));
+        object.put("TotalNumberOfVisitedVertices", map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES));
+        object.put("VertexCoverage", 100*(map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES))/map.get(Statistics.TOTAL_NUMBER_OF_VERTICES));
+
+        if (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS)>0) {
+            object.put("TotalNumberOfRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS));
+            object.put("TotalNumberOfUncoveredRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED));
+            object.put("TotalNumberOfPassedRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_PASSED));
+            object.put("TotalNumberOfFailedRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_FAILED));
+            object.put("RequirementCoverage", 100*(map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED))/map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS));
+
+            JSONArray jsonElements = new JSONArray();
+            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.NOT_COVERED) ) {
+                JSONObject jsonElement = new JSONObject();
+                jsonElement.put("RequirementKey", r.getKey());
+                jsonElements.put(jsonElement);
+            }
+            object.put("RequirementsNotCovered", jsonElements);
+
+            jsonElements = new JSONArray();
+            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.PASSED) ) {
+                JSONObject jsonElement = new JSONObject();
+                jsonElement.put("RequirementKey", r.getKey());
+                jsonElements.put(jsonElement);
+            }
+            object.put("RequirementsPassed", jsonElements);
+
+            jsonElements = new JSONArray();
+            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.FAILED) ) {
+                JSONObject jsonElement = new JSONObject();
+                jsonElement.put("RequirementKey", r.getKey());
+                jsonElements.put(jsonElement);
+            }
+            object.put("RequirementsFailed", jsonElements);
+        }
+        return object;
+    }
+
+    public static HashMap<Statistics,Integer> getStatistics(Context context) {
+        HashMap<Statistics, Integer> map = new HashMap<>();
+        map.put(Statistics.TOTAL_NUMBER_OF_VERTICES, context.getModel().getAllVertices().size());
+        map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES, context.getProfiler().getUnvisitedVertices(context).size());
+        map.put(Statistics.TOTAL_NUMBER_OF_EDGES, context.getModel().getEdges().size());
+        map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES, context.getProfiler().getUnvisitedEdges(context).size());
+        map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS, context.getRequirements().size());
+        map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED, context.getRequirements(RequirementStatus.NOT_COVERED).size());
+        map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_PASSED, context.getRequirements(RequirementStatus.PASSED).size());
+        map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_FAILED, context.getRequirements(RequirementStatus.FAILED).size());
+        return map;
     }
 }

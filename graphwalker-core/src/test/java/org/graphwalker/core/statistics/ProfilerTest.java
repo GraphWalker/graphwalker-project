@@ -62,6 +62,8 @@ public final class ProfilerTest {
         Assert.assertThat(profiler.getTotalVisitCount(), is(1l));
         Assert.assertThat(profiler.getVisitCount(start.build()), is(1l));
         Assert.assertThat(profiler.getUnvisitedElements(context).size(), is(2));
+        Assert.assertThat(profiler.getUnvisitedEdges(context).size(), is(1));
+        Assert.assertThat(profiler.getUnvisitedVertices(context).size(), is(1));
         Assert.assertThat(profiler.getPath().size(), is(1));
     }
 

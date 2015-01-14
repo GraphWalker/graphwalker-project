@@ -26,8 +26,9 @@ package org.graphwalker.cli.service;
  * #L%
  */
 
+import org.graphwalker.cli.CLI;
 import org.graphwalker.cli.Util;
-import org.graphwalker.cli.commands.Online;
+import org.graphwalker.core.machine.FailFastStrategy;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Action;
@@ -37,18 +38,19 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import java.util.Iterator;
 
 /**
  * Created by krikar on 5/30/14.
  */
 @Path("graphwalker")
 public class Restful {
+    CLI cli;
     private SimpleMachine machine;
-    private Online online;
 
-    public Restful(SimpleMachine machine, Online online) {
-        this.machine = machine;
-        this.online = online;
+    public Restful(CLI cli, Iterator itr) throws Exception {
+        this.cli = cli;
+        this.machine = new SimpleMachine(cli.getContextsWithPathGenerators(itr));
     }
 
     @GET
@@ -56,14 +58,14 @@ public class Restful {
     @Path("hasNext")
     public String hasNext() {
         if (machine.hasNextStep()) {
-            if (online.json) {
+            if (cli.getOnline().json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("HasNext", "true").toString();
             } else {
                 return "true";
             }
         } else {
-            if (online.json) {
+            if (cli.getOnline().json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("HasNext", "false").toString();
             } else {
@@ -78,10 +80,10 @@ public class Restful {
     public String getNext() {
         try {
             machine.getNextStep();
-            if (online.json) {
-                return Util.getStepAsJSON(machine, online.verbose, online.unvisited).toString();
+            if (cli.getOnline().json) {
+                return Util.getStepAsJSON(machine, cli.getOnline().verbose, cli.getOnline().unvisited).toString();
             } else {
-                return Util.getStepAsString(machine, online.verbose, online.unvisited);
+                return Util.getStepAsString(machine, cli.getOnline().verbose, cli.getOnline().unvisited);
             }
         } catch (MachineException e) {
             throw e;
@@ -93,7 +95,7 @@ public class Restful {
     @Path("getData")
     public String getData(@QueryParam("key") String key) {
         String value = machine.getCurrentContext().getKeys().get(key);
-        if (online.json) {
+        if (cli.getOnline().json) {
             JSONObject obj = new JSONObject();
             return obj.put("Value", value).toString();
         } else {
@@ -107,19 +109,61 @@ public class Restful {
     public String setData(@QueryParam("script") String script) {
         try {
             machine.getCurrentContext().execute(new Action(script));
-            if (online.json) {
+            if (cli.getOnline().json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("Result", "Ok").toString();
             } else {
                 return "Ok";
             }
         } catch (Exception e) {
-            if (online.json) {
+            if (cli.getOnline().json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("Result", e.getMessage()).toString();
             } else {
                 return e.getMessage();
             }
+        }
+    }
+
+    @GET
+    @Produces("text/plain")
+    @Path("restart")
+    public String restart() throws Exception {
+        machine = new SimpleMachine(cli.getContextsWithPathGenerators(cli.getOnline().model.iterator()));
+        if (cli.getOnline().json) {
+            JSONObject obj = new JSONObject();
+            return obj.put("Restart", "Ok").toString();
+        } else {
+            return "Ok";
+        }
+    }
+
+    @GET
+    @Produces("text/plain")
+    @Path("fail")
+    public String fail() {
+        try {
+            FailFastStrategy failFastStrategy = new FailFastStrategy();
+            failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable()));
+        } catch (Throwable e) {
+            ;
+        }
+        if (cli.getOnline().json) {
+            JSONObject obj = new JSONObject();
+            return obj.put("Fail", "Ok").toString();
+        } else {
+            return "Ok";
+        }
+    }
+
+    @GET
+    @Produces("text/plain")
+    @Path("getStatistics")
+    public String getStatistics() {
+        if (cli.getOnline().json) {
+            return Util.getStatisticsAsJSON(machine).toString();
+        } else {
+            return Util.getStatisticsAsString(machine);
         }
     }
 }

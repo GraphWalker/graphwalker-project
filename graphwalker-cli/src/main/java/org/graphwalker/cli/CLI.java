@@ -244,10 +244,9 @@ public class CLI {
                 logger.error("Something went wrong.", e);
             }
         } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
-            List<Context> executionContexts = getContextsWithPathGenerators((online.model.iterator()));
             ResourceConfig rc = new DefaultResourceConfig();
             try {
-                rc.getSingletons().add(new Restful(new SimpleMachine(executionContexts), online));
+                rc.getSingletons().add(new Restful(this, online.model.iterator()));
             } catch (MachineException e) {
                 System.err.println("Was the argument --model correctly?");
                 throw e;
@@ -291,7 +290,7 @@ public class CLI {
         }
     }
 
-    private List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
+    public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
         List<Context> executionContexts = new ArrayList<>();
         boolean triggerOnce = true;
         while (itr.hasNext()) {
@@ -398,5 +397,9 @@ public class CLI {
             System.out.println("Type 'java -jar graphwalker.jar help " + module + "' for help.");
         }
         return condition;
+    }
+
+    public Online getOnline() {
+        return online;
     }
 }
