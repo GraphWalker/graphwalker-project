@@ -14,10 +14,10 @@ package org.graphwalker.core.generator;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,10 +32,12 @@ import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.statistics.Profiler;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author Kristian Karl
@@ -45,8 +47,7 @@ import java.util.Random;
  */
 public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
-    private final Random random = new Random(System.nanoTime());
-    private final List<Element> unvisitedElements = new ArrayList<>();
+    private final List<Element> elements = new ArrayList<>();
     private Element target = null;
 
     public QuickRandomPath(StopCondition stopCondition) {
@@ -56,20 +57,34 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
     @Override
     public Context getNextStep() {
         Context context = getContext();
-        if (unvisitedElements.isEmpty()) {
-            unvisitedElements.addAll(context.getModel().getElements());
-            unvisitedElements.remove(context.getCurrentElement());
+        if (elements.isEmpty()) {
+            elements.addAll(context.getModel().getElements());
+            elements.remove(context.getCurrentElement());
+            Collections.shuffle(elements);
         }
         if (null == target || target.equals(context.getCurrentElement())) {
-            if (unvisitedElements.isEmpty()) {
+            if (elements.isEmpty()) {
                 throw new NoPathFoundException();
             } else {
-                target = unvisitedElements.get(random.nextInt(unvisitedElements.size()));
+                orderElementsUnvisitedFirst(elements);
+                target = elements.get(0);
             }
         }
         Element nextElement = context.getAlgorithm(AStar.class).getNextElement(context.getCurrentElement(), target);
-        unvisitedElements.remove(nextElement);
+        elements.remove(nextElement);
         return context.setCurrentElement(nextElement);
+    }
+
+    private void orderElementsUnvisitedFirst(List<Element> elements) {
+        final Profiler profiler = getContext().getProfiler();
+        if (profiler != null) {
+            Collections.sort(elements, new Comparator<Element>() {
+                @Override
+                public int compare(Element a, Element b) {
+                    return Boolean.compare(profiler.isVisited(a), profiler.isVisited(b));
+                }
+            });
+        }
     }
 
     @Override
