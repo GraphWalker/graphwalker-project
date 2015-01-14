@@ -1,2 +1,2 @@
-graphwalker-dashboard
+graphwalker-studio
 ==================
