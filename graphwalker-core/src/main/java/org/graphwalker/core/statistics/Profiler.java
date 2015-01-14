@@ -28,8 +28,10 @@ package org.graphwalker.core.statistics;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,6 +74,26 @@ public final class Profiler {
         List<Element> elementList = new ArrayList<>();
         for (Element e : context.getModel().getElements()) {
             if (!isVisited(e)) {
+                elementList.add(e);
+            }
+        }
+        return elementList;
+    }
+
+    public List<Element> getUnvisitedEdges(Context context) {
+        List<Element> elementList = new ArrayList<>();
+        for (Element e : context.getModel().getElements()) {
+            if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
+                elementList.add(e);
+            }
+        }
+        return elementList;
+    }
+
+    public List<Element> getUnvisitedVertices(Context context) {
+        List<Element> elementList = new ArrayList<>();
+        for (Element e : context.getModel().getElements()) {
+            if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
                 elementList.add(e);
             }
         }
