@@ -1,4 +1,4 @@
-graphwalker-maven-archetype [![Build Status](https://travis-ci.org/GraphWalker/graphwalker-maven-archetype.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-maven-archetype)
+graphwalker-maven-archetype
 ================
 
 A GraphWalker maven archetype. To help create boilerplate GraphWalker maven projects.
