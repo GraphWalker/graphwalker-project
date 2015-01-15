@@ -91,6 +91,8 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
 
         if (ctx.getChild(0).getText().equalsIgnoreCase("random")) {
             pathGenerators.add(new RandomPath(stopCondition));
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("weighted_random")) {
+            pathGenerators.add(new WeightedRandomPath(stopCondition));
         } else if (ctx.getChild(0).getText().equalsIgnoreCase("quick_random")) {
             pathGenerators.add(new QuickRandomPath(stopCondition));
         } else if (ctx.getChild(0).getText().equalsIgnoreCase("a_star")) {

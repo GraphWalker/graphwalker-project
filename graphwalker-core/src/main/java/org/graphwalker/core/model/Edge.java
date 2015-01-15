@@ -42,7 +42,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     private Guard guard;
     private final List<Action> actions = new ArrayList<>();
     private final Set<Requirement> requirements = new HashSet<>();
-    private Double weight = 1.0;
+    private Double weight = 0.0;
 
     public Edge setId(String id) {
         this.id = id;

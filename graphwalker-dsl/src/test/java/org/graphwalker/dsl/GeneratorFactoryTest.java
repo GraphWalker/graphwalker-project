@@ -27,10 +27,7 @@ package org.graphwalker.dsl;
  */
 
 import org.graphwalker.core.condition.*;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.CombinedPath;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -150,5 +147,13 @@ public class GeneratorFactoryTest {
         Assert.assertThat(((ReachedVertex) condition.getStopConditions().get(0)).getValue(), is("Some_vertex"));
         Assert.assertThat(condition.getStopConditions().get(1), instanceOf(ReachedEdge.class));
         Assert.assertThat(((ReachedEdge) condition.getStopConditions().get(1)).getValue(), is("Some_edge"));
+    }
+
+    @Test // Single stop condition using weighted random path generator
+    public void test12() {
+        PathGenerator generator = GeneratorFactory.parse("weighted_random(edge_coverage(100))");
+        Assert.assertThat(generator, instanceOf(WeightedRandomPath.class));
+        Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+        Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
     }
 }
