@@ -38,12 +38,16 @@ LetterOrDigit
    {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
  ;
 
-WHITESPACE
- : [ \t\r\n\u000C]+ -> skip
- ;
-
 COMMENT
  : '/*' .*? '*/' -> skip
+ ;
+
+LINE_COMMENT
+ :   '//' ~[\r\n]* -> skip
+ ;
+
+WHITESPACE
+ : [ \t\r\n\u000C]+ -> skip
  ;
 
 ANY

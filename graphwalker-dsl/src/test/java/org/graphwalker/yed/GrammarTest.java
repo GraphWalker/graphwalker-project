@@ -61,7 +61,9 @@ public class GrammarTest {
             "word1.word2;word3",
             "word1;word2.word3",
             "word1.word2.word3",
-            "word1.word2.word3;word1.word2.word3;word1.word2.word3"
+            "word1.word2.word3;word1.word2.word3;word1.word2.word3",
+            "word1 // comment",
+            "word1\n// my one line comment\nBLOCKED"
     );
 
     private List<String> edges = Arrays.asList(
@@ -77,7 +79,9 @@ public class GrammarTest {
             "word1.word2;word3",
             "word1;word2.word3",
             "word1.word2.word3",
-            "word1.word2.word3;word1.word2.word3;word1.word2.word3"
+            "word1.word2.word3;word1.word2.word3;word1.word2.word3",
+            "word1 // comment",
+            "word1\n// my one line comment\n[x>y]"
     );
 
     @Test
