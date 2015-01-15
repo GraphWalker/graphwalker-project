@@ -45,6 +45,8 @@ import static org.hamcrest.core.Is.is;
 public class GrammarTest {
 
     private List<String> vertices = Arrays.asList(
+            "",
+            " ",
             "word1",
             "word1 BLOCKED",
             "word1\nBLOCKED",
@@ -63,10 +65,19 @@ public class GrammarTest {
             "word1.word2.word3",
             "word1.word2.word3;word1.word2.word3;word1.word2.word3",
             "word1 // comment",
-            "word1\n// my one line comment\nBLOCKED"
+            "word1\n// my one line comment\nBLOCKED",
+            "SHARED:A1",
+            "SHARED :A2",
+            "SHARED : A3",
+            " SHARED: A4",
+            "REQTAG=R1",
+            "REQTAG = R1",
+            "REQTAG= R1,R2 , R3, R4"
     );
 
     private List<String> edges = Arrays.asList(
+            "",
+            " ",
             "word1",
             "word1[x=>y]",
             "word1\n[x=>y]",
@@ -81,7 +92,22 @@ public class GrammarTest {
             "word1.word2.word3",
             "word1.word2.word3;word1.word2.word3;word1.word2.word3",
             "word1 // comment",
-            "word1\n// my one line comment\n[x>y]"
+            "word1\n// my one line comment\n[x>y]",
+            "word1 / value = \"ett tu tre\";",
+            "weight = 1",
+            "word1 weight=0.1 // test this too",
+            "word1 weight=1.0",
+            "REQTAG=R1",
+            "REQTAG = R1",
+            "REQTAG= R1,R2 , R3, R4",
+            "word1 weight=0.3",
+            "word1\nweight=0.3",
+            "word1\nweight=0.33333",
+            "word1\nweight=.3",
+            "word1\nweight=0",
+            "WORD1\nweight=1",
+            "word1[x=>y]/x=y;\nweight=0.3",
+            "word1\nWEIGHT=0.33333"
     );
 
     @Test

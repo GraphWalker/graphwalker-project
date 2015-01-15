@@ -15,6 +15,8 @@ field
  | {!$parse::fields.contains("actions")}? actions {$parse::fields.add("actions");}
  | {!$parse::fields.contains("blocked")}? blocked {$parse::fields.add("blocked");}
  | {!$parse::fields.contains("reqtags")}? reqtags {$parse::fields.add("reqtags");}
+ | {!$parse::fields.contains("weight")}? weight {$parse::fields.add("weight");}
+ | WHITESPACE
  ;
 
 actions
@@ -26,11 +28,11 @@ action
  ;
 
 reqtags
- : REQTAG (COLON | ASSIGN) reqtagList
+ : REQTAG WHITESPACE* (COLON | ASSIGN) WHITESPACE* reqtagList
  ;
 
 reqtagList
- : (reqtag COMMA)* reqtag
+ : (reqtag WHITESPACE* COMMA WHITESPACE*)* reqtag
  ;
 
 reqtag
@@ -51,4 +53,8 @@ names
 
 name
  : Identifier (DOT Identifier)*
+ ;
+
+weight
+ : WEIGHT WHITESPACE* ASSIGN WHITESPACE* Value
  ;
