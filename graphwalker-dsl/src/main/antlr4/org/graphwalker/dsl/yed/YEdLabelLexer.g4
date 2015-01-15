@@ -11,6 +11,7 @@ SHARED    : 'SHARED';
 INIT      : 'INIT';
 START     : [Ss][Tt][Aa][Rr][Tt];
 REQTAG    : 'REQTAG';
+WEIGHT    : [Ww][Ee][Ii][Gg][Hh][Tt];
 
 NestedBrackets
  :  '[' ( ~('[' | ']') | NestedBrackets )* ']'
@@ -18,6 +19,31 @@ NestedBrackets
 
 Identifier
  : Letter LetterOrDigit*
+ ;
+
+String
+ : '"' ~["] '"'
+ ;
+
+Value
+ : Integer? ('.' Digit+)?
+ ;
+
+fragment
+Integer
+ : '0'
+ | NonZeroDigit Digit*
+ ;
+
+fragment
+Digit
+ : '0'
+ | NonZeroDigit
+ ;
+
+fragment
+NonZeroDigit
+ : [1-9]
  ;
 
 fragment
@@ -47,7 +73,7 @@ LINE_COMMENT
  ;
 
 WHITESPACE
- : [ \t\r\n\u000C]+ -> skip
+ : [ \t\r\n\u000C]+
  ;
 
 ANY

@@ -16,14 +16,15 @@ field
  | {!$parse::fields.contains("blocked")}? blocked {$parse::fields.add("blocked");}
  | {!$parse::fields.contains("actions")}? actions {$parse::fields.add("actions");}
  | {!$parse::fields.contains("reqtags")}? reqtags {$parse::fields.add("reqtags");}
+ | WHITESPACE
  ;
 
 start
- : START
+ : WHITESPACE* (START) WHITESPACE*
  ;
 
 shared
- : SHARED COLON Identifier
+ : SHARED WHITESPACE* COLON WHITESPACE* Identifier
  ;
 
 names
@@ -39,19 +40,19 @@ blocked
  ;
 
 actions
- : INIT COLON (action)+
+ : INIT WHITESPACE* COLON WHITESPACE* (action)+
  ;
 
 action
- : ~(SEMICOLON)* SEMICOLON
+ : ~(SEMICOLON)+ SEMICOLON
  ;
 
 reqtags
- : REQTAG (COLON | ASSIGN) reqtagList
+ : REQTAG WHITESPACE* (COLON | ASSIGN) WHITESPACE* reqtagList
  ;
 
 reqtagList
- : (reqtag COMMA)* reqtag
+ : (reqtag WHITESPACE* COMMA WHITESPACE*)* reqtag
  ;
 
 reqtag
