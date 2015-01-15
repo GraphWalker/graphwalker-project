@@ -141,10 +141,10 @@ public class Restful {
     @GET
     @Produces("text/plain")
     @Path("fail")
-    public String fail() {
+    public String fail(@QueryParam("reason") String reason) {
         try {
             FailFastStrategy failFastStrategy = new FailFastStrategy();
-            failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable()));
+            failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
         } catch (Throwable e) {
             ;
         }
