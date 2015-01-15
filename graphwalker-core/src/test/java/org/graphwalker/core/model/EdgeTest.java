@@ -47,7 +47,7 @@ public class EdgeTest {
                 .setTargetVertex(new Vertex())
                 .addAction(new Action("action1"))
                 .addActions(Arrays.asList(new Action("action2"), new Action("action3")))
-                .setWeight(2.0);
+                .setWeight(.5);
         Assert.assertNotNull(edge);
         Assert.assertEquals("name", edge.getName());
         Assert.assertEquals("name", edge.build().getName());
@@ -60,9 +60,9 @@ public class EdgeTest {
         Assert.assertEquals(edge.getGuard(), edge.build().getGuard());
         Assert.assertNotNull(edge.getActions());
         Assert.assertThat(edge.getActions().size(), is(3));
-        Assert.assertThat(edge.getWeight(), is(2.0));
+        Assert.assertThat(edge.getWeight(), is(.5));
         Assert.assertNotNull(edge.build().getActions());
         Assert.assertThat(edge.build().getActions().size(), is(3));
-        Assert.assertThat(edge.build().getWeight(), is(2.0));
+        Assert.assertThat(edge.build().getWeight(), is(.5));
     }
 }

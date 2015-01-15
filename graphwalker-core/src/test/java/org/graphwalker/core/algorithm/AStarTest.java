@@ -55,21 +55,9 @@ public class AStarTest {
 
     @Test
     public void astar() {
-        // set the weight
-        e1.setWeight(1.0);
         AStar aStar = new AStar(new TestExecutionContext().setModel(model.build()));
         Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
         Assert.assertNotNull(path);
         Assert.assertThat(path.size(), is(5));
-    }
-
-    @Test
-    public void astarWeighted() {
-        // set the weight so that we will take the road with more jumps
-        e1.setWeight(100.0);
-        AStar aStar = new AStar(new TestExecutionContext().setModel(model.build()));
-        Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
-        Assert.assertNotNull(path);
-        Assert.assertThat(path.size(), is(7));
     }
 }

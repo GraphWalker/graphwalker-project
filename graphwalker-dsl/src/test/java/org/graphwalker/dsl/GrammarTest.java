@@ -46,6 +46,8 @@ public class GrammarTest {
     private List<String> generators = Arrays.asList(
         "random(never)",
         "a_star(never)",
+        "quick_random(never)",
+        "weighted_random(vertex_coverage(100))",
         "random(vertex_coverage(100))",
         "random(edge_coverage(100))",
         "random(reached_vertex(v_SomeVertex))",
