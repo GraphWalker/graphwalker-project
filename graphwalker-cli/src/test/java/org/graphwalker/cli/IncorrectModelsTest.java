@@ -62,10 +62,12 @@ public class IncorrectModelsTest extends CLITestRoot {
     public void wrongVertexSyntax() {
         String args[] = {"offline", "-m", "graphml/IncorrectModels/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
         runCommand(args);
-        Assert.assertThat(errMsg, is("When parsing model: 'graphml/IncorrectModels/wrongVertexSyntax.graphml' The string '1' did not conform to GraphWalker syntax rules.\n" +
-          "\n" +
-          "An error occurred when running command: offline -m graphml/IncorrectModels/wrongVertexSyntax.graphml random(edge_coverage(100))\n" +
-          "Model syntax error" + System.lineSeparator() + System.lineSeparator()));
+        Assert.assertThat(errMsg, is("When parsing model: 'graphml/IncorrectModels/wrongVertexSyntax.graphml' The string '1' did not conform to GraphWalker syntax rules."
+                + System.lineSeparator()
+                + System.lineSeparator()
+                + "An error occurred when running command: offline -m graphml/IncorrectModels/wrongVertexSyntax.graphml random(edge_coverage(100))"
+                + System.lineSeparator()
+                + "Model syntax error" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 
@@ -102,10 +104,12 @@ public class IncorrectModelsTest extends CLITestRoot {
     public void badEdgeName() {
         String args[] = {"offline", "-m", "graphml/IncorrectModels/badEdgeName.graphml", "random(edge_coverage(100))"};
         runCommand(args);
-        Assert.assertThat(errMsg, is("When parsing model: 'graphml/IncorrectModels/badEdgeName.graphml' The string '1_badName' did not conform to GraphWalker syntax rules.\n" +
-          "\n" +
-          "An error occurred when running command: offline -m graphml/IncorrectModels/badEdgeName.graphml random(edge_coverage(100))\n" +
-          "Model syntax error" + System.lineSeparator() + System.lineSeparator()));
+        Assert.assertThat(errMsg, is("When parsing model: 'graphml/IncorrectModels/badEdgeName.graphml' The string '1_badName' did not conform to GraphWalker syntax rules."
+                + System.lineSeparator()
+                + System.lineSeparator()
+                + "An error occurred when running command: offline -m graphml/IncorrectModels/badEdgeName.graphml random(edge_coverage(100))"
+                + System.lineSeparator()
+                + "Model syntax error" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 
@@ -116,10 +120,12 @@ public class IncorrectModelsTest extends CLITestRoot {
     public void badVertexName() {
         String args[] = {"offline", "-m", "graphml/IncorrectModels/badVertexName.graphml", "random(edge_coverage(100))"};
         runCommand(args);
-        Assert.assertThat(errMsg, is("When parsing model: 'graphml/IncorrectModels/badVertexName.graphml' The string '1_badName' did not conform to GraphWalker syntax rules.\n" +
-          "\n" +
-          "An error occurred when running command: offline -m graphml/IncorrectModels/badVertexName.graphml random(edge_coverage(100))\n" +
-          "Model syntax error" + System.lineSeparator() + System.lineSeparator()));
+        Assert.assertThat(errMsg, is("When parsing model: 'graphml/IncorrectModels/badVertexName.graphml' The string '1_badName' did not conform to GraphWalker syntax rules."
+                + System.lineSeparator()
+                + System.lineSeparator()
+                + "An error occurred when running command: offline -m graphml/IncorrectModels/badVertexName.graphml random(edge_coverage(100))"
+                + System.lineSeparator()
+                + "Model syntax error" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 }
