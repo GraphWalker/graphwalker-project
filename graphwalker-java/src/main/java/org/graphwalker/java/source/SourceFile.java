@@ -26,6 +26,8 @@ package org.graphwalker.java.source;
  * #L%
  */
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -87,28 +89,11 @@ public final class SourceFile {
 
 
     private String removeExtension(final String filename) {
-        String ext = extension(filename);
+        String ext = FilenameUtils.getExtension(filename);
         if ("".equals(ext)) {
             return filename;
         }
         final int index = filename.lastIndexOf(ext) - 1;
         return filename.substring(0, index);
-    }
-
-    private String extension(String filename) {
-        int lastSep = filename.lastIndexOf(File.separatorChar);
-        int lastDot;
-        if (lastSep < 0) {
-            lastDot = filename.lastIndexOf('.');
-        } else {
-            lastDot = filename.substring(lastSep + 1).lastIndexOf('.');
-            if (lastDot >= 0) {
-                lastDot += lastSep + 1;
-            }
-        }
-        if (lastDot >= 0 && lastDot > lastSep) {
-            return filename.substring(lastDot + 1);
-        }
-        return "";
     }
 }
