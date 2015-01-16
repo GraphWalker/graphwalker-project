@@ -26,6 +26,7 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import org.apache.commons.io.FilenameUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -47,13 +48,8 @@ public final class ContextFactoryScanner {
 
     private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
 
-    private static String getExtension(String path) {
-        int position = path.lastIndexOf('.');
-        return path.lastIndexOf(File.separator)>position?"":path.substring(position+1);
-    }
-
     private static boolean valid(URL url) {
-        String extension = getExtension(url.getPath());
+        String extension = FilenameUtils.getExtension(url.getPath());
         return "".equals(extension) || "jar".equals(extension);
     }
 
