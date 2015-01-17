@@ -30,6 +30,7 @@ import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.io.factory.json.JsonContextFactory;
@@ -86,7 +87,11 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     @Override
     public void onMessage(WebSocket socket, String message) {
-        logger.debug(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " sent msg: " + message);
+        logger.debug("Received message from: "
+                + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                + " : "
+                + message);
+
         JSONObject response = new JSONObject();
         JSONObject root = null;
         try {
@@ -113,18 +118,26 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
         } else if (type.equals("START")) {
             List<Context> executionContexts = contexts.get(socket);
-            Machine machine = new SimpleMachine(executionContexts);
-            machine.addObserver(this);
-            machines.put(socket, machine);
-            response.put("type", "start");
-            response.put("success", true);
-
+            Machine machine = null;
+            try {
+                machine = new SimpleMachine(executionContexts);
+                machine.addObserver(this);
+                machines.put(socket, machine);
+                response.put("type", "start");
+                response.put("success", true);
+            } catch (MachineException e) {
+                response.put("type", "start");
+                response.put("success", false);
+                response.put("message", e.getMessage());
+            }
         } else if (type.equals("GETNEXT")) {
             Machine machine = machines.get(socket);
             response.put("type", "getNext");
             if (machine != null) {
                 machine.getNextStep();
                 response.put("success", true);
+                response.put("id", machine.getCurrentContext().getCurrentElement().getId());
+                response.put("name", machine.getCurrentContext().getCurrentElement().getName());
             } else {
                 response.put("success", false);
                 response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
@@ -172,6 +185,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             response.put("message", "Unknown command");
             response.put("success", false);
         }
+        logger.debug("Sending response to: "
+                + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                + " : "
+                + response.toString());
         socket.send(response.toString());
     }
 
