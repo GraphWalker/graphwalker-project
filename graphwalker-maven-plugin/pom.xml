@@ -21,8 +21,8 @@
     </scm>
 
     <properties>
-        <maven.version>3.0.3</maven.version>
-        <maven.plugin.version>3.2</maven.plugin.version>
+        <maven.version>3.2.5</maven.version>
+        <maven.plugin.version>3.4</maven.plugin.version>
     </properties>
 
     <prerequisites>
