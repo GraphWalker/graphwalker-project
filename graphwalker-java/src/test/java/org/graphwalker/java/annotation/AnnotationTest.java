@@ -46,9 +46,9 @@ public class AnnotationTest {
         Set<GraphWalker> annotations = AnnotationUtils.getAnnotations(MyTest.class, GraphWalker.class);
         Assert.assertThat(annotations.size(), is(1));
         Assert.assertTrue(annotations.toArray()[0] instanceof GraphWalker);
-        GraphWalker annotation = (GraphWalker)annotations.toArray()[0];
+        GraphWalker annotation = (GraphWalker) annotations.toArray()[0];
         Assert.assertThat(annotation.start(), is("vertex1"));
-        Assert.assertThat(annotation.groups(), is(new String[] {"MyTests"}));
+        Assert.assertThat(annotation.groups(), is(new String[]{"MyTests"}));
         Assert.assertTrue(RandomPath.class.isAssignableFrom(annotation.pathGenerator()));
         Assert.assertTrue(VertexCoverage.class.isAssignableFrom(annotation.stopCondition()));
         Assert.assertThat(annotation.stopConditionValue(), is("100"));

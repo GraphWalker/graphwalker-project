@@ -78,7 +78,7 @@ public final class WatchMojo extends AbstractMojo {
 
     @SuppressWarnings("unchecked")
     private static <T> WatchEvent<T> cast(WatchEvent<?> event) {
-        return (WatchEvent<T>)event;
+        return (WatchEvent<T>) event;
     }
 
     private WatchService watchService;
@@ -87,7 +87,7 @@ public final class WatchMojo extends AbstractMojo {
     private final Map<WatchKey, Path> watchKeyMap = new HashMap<>();
 
     private String getEncoding() {
-        return StringUtils.isEmpty(encoding)? ReaderFactory.FILE_ENCODING: encoding;
+        return StringUtils.isEmpty(encoding) ? ReaderFactory.FILE_ENCODING : encoding;
     }
 
     @Override
@@ -97,13 +97,13 @@ public final class WatchMojo extends AbstractMojo {
             addResources(mavenProject.getTestResources(), testSourcesDirectory);
             watch(resourceMap.keySet());
             //noinspection InfiniteLoopStatement
-            for (;;) {
+            for (; ; ) {
                 WatchKey watchKey = getWatchService().take();
                 Path path = watchKeyMap.get(watchKey);
                 if (null == path) {
                     continue;
                 }
-                for (WatchEvent<?> event: watchKey.pollEvents()) {
+                for (WatchEvent<?> event : watchKey.pollEvents()) {
                     WatchEvent.Kind<?> kind = event.kind();
                     if (kind == OVERFLOW) {
                         continue;
@@ -125,7 +125,7 @@ public final class WatchMojo extends AbstractMojo {
     }
 
     private void addResources(List<Resource> resources, File outputDirectory) {
-        for (Resource resource: resources) {
+        for (Resource resource : resources) {
             resourceMap.put(FileSystems.getDefault().getPath(resource.getDirectory()), outputDirectory);
         }
     }
@@ -138,7 +138,7 @@ public final class WatchMojo extends AbstractMojo {
     }
 
     private void watch(Set<Path> paths) throws IOException {
-        for (Path path: paths) {
+        for (Path path : paths) {
             watch(path);
         }
     }
@@ -161,7 +161,7 @@ public final class WatchMojo extends AbstractMojo {
     }
 
     private Path getRootPath(Path path) throws MojoExecutionException {
-        for (Path rootPath: resourceMap.keySet()) {
+        for (Path rootPath : resourceMap.keySet()) {
             if (path.startsWith(rootPath)) {
                 return rootPath;
             }

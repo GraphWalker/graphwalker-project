@@ -56,7 +56,7 @@ public final class FloydWarshall implements Algorithm {
         for (int[] row : distances) {
             Arrays.fill(row, Integer.MAX_VALUE);
         }
-        for (Element element: elements) {
+        for (Element element : elements) {
             if (element instanceof RuntimeEdge) {
                 RuntimeEdge edge = (RuntimeEdge) element;
                 RuntimeVertex target = edge.getTargetVertex();

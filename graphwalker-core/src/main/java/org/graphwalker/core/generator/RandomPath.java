@@ -49,7 +49,7 @@ public final class RandomPath extends PathGeneratorBase<StopCondition> {
         Context context = getContext();
         Element currentElement = context.getCurrentElement();
         if (null == currentElement) {
-          throw new NoPathFoundException("Execution context has no current element set");
+            throw new NoPathFoundException("Execution context has no current element set");
         }
         List<Element> elements = context.filter(context.getModel().getElements(currentElement));
         if (elements.isEmpty()) {

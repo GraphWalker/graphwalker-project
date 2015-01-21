@@ -29,8 +29,6 @@ package org.graphwalker.java.test;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
@@ -153,7 +151,7 @@ public final class Reflector {
         ClassLoader contextClassLoader = switchClassLoader(classLoader);
         MachineConfiguration newMachineConfiguration = new MachineConfiguration();
         Object machineConfiguration = Reflections.invoke(executor, getMachineConfiguration);
-        for (Object contextConfiguration: (Collection<Object>)Reflections.invoke(machineConfiguration, getContextConfigurations)) {
+        for (Object contextConfiguration : (Collection<Object>) Reflections.invoke(machineConfiguration, getContextConfigurations)) {
             ContextConfiguration newContextConfiguration = new ContextConfiguration();
             Reflections.invoke(newContextConfiguration, setTestClassName, Reflections.invoke(contextConfiguration, getTestClassName));
             Reflections.invoke(newContextConfiguration, setPathGeneratorName, Reflections.invoke(contextConfiguration, getPathGeneratorName));

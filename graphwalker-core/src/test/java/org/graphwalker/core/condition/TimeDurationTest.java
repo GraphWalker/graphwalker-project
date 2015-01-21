@@ -64,7 +64,7 @@ public class TimeDurationTest {
             machine.getNextStep();
         }
         long stop = System.nanoTime();
-        Assert.assertEquals(1000, (stop-start)/1000000, 200);
+        Assert.assertEquals(1000, (stop - start) / 1000000, 200);
     }
 
     @Test

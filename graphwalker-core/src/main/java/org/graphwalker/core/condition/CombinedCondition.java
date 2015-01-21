@@ -52,7 +52,7 @@ public final class CombinedCondition extends StopConditionBase {
     @Override
     public void setContext(Context context) {
         super.setContext(context);
-        for (StopCondition condition: conditions) {
+        for (StopCondition condition : conditions) {
             condition.setContext(context);
         }
     }

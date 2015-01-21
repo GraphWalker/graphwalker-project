@@ -38,6 +38,6 @@ public class ActionTest {
     public void create() {
         Action action = new Action("int i = 0;");
         Assert.assertNotNull(action);
-        Assert.assertEquals( "int i = 0;", action.getScript());
+        Assert.assertEquals("int i = 0;", action.getScript());
     }
 }

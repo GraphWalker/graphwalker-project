@@ -68,10 +68,10 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
         engine.setContext(this);
         String script = "";
-        Compilable compiler = (Compilable)engine;
-        for (Method method: getClass().getMethods()) {
+        Compilable compiler = (Compilable) engine;
+        for (Method method : getClass().getMethods()) {
             if (0 == method.getParameterTypes().length) {
-                script += "function "+method.getName()+"() { return impl."+method.getName()+"();};";
+                script += "function " + method.getName() + "() { return impl." + method.getName() + "();};";
             }
         }
         try {
@@ -93,7 +93,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         this();
         setModel(model);
         setPathGenerator(pathGenerator);
-        for (RuntimeEdge edge: this.model.getEdges()) {
+        for (RuntimeEdge edge : this.model.getEdges()) {
             if (null == edge.getName() && null != edge.getSourceVertex() && null != edge.getTargetVertex() && edge.getSourceVertex().equals(edge.getTargetVertex())) {
                 // TODO: Refactor we probably want to have multiple rules checked, not only loop edges
                 // TODO: Implement a rule framework so that organisations and projects can create their own rule set (think model based code convention)
@@ -118,11 +118,11 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     private void addRequirements(RuntimeModel model) {
         requirements.clear();
-        for (Requirement requirement: model.getRequirements()) {
+        for (Requirement requirement : model.getRequirements()) {
             requirements.put(requirement, RequirementStatus.NOT_COVERED);
         }
-        for (Element element: model.getElements()) {
-            for (Requirement requirement: element.getRequirements()) {
+        for (Element element : model.getElements()) {
+            for (Requirement requirement : element.getRequirements()) {
                 requirements.put(requirement, RequirementStatus.NOT_COVERED);
             }
         }
@@ -199,7 +199,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
     public List<Requirement> getRequirements(RequirementStatus status) {
         List<Requirement> filteredRequirements = new ArrayList<>();
-        for (Requirement requirement: requirements.keySet()) {
+        for (Requirement requirement : requirements.keySet()) {
             if (status.equals(requirements.get(requirement))) {
                 filteredRequirements.add(requirement);
             }
@@ -217,7 +217,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
                 throw new MachineException(this, e);
             }
         }
-        return (A)algorithms.get(clazz);
+        return (A) algorithms.get(clazz);
     }
 
     public <E> List<E> filter(Collection<E> elements) {
@@ -241,7 +241,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         if (null != edge.getGuard()) {
             logger.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
             try {
-                return (Boolean)getScriptEngine().eval(edge.getGuard().getScript());
+                return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());
             } catch (ScriptException e) {
                 throw new MachineException(this, e);
             }
@@ -262,7 +262,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         logger.debug("Execute {}", name);
         try {
             getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
-            getScriptEngine().eval(name+"()");
+            getScriptEngine().eval(name + "()");
         } catch (NoSuchMethodException e) {
             // ignore, method is not defined in the execution context
         } catch (Throwable t) {
@@ -274,26 +274,26 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     public Map<String, String> getKeys() {
         Map<String, String> keys = new HashMap<>();
         List<String> methods = new ArrayList<>();
-        for (Method method: getClass().getMethods()) {
+        for (Method method : getClass().getMethods()) {
             methods.add(method.getName());
         }
         if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
-            Map<String, Object> global = (Map<String, Object>)getBindings(ENGINE_SCOPE).get("nashorn.global");
-            for (String key: global.keySet()) {
+            Map<String, Object> global = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
+            for (String key : global.keySet()) {
                 if (isVariable(key, methods)) {
                     if (global.get(key) instanceof Double) {
-                        keys.put(key, ""+Math.round((double)global.get(key)));
+                        keys.put(key, "" + Math.round((double) global.get(key)));
                     } else {
                         keys.put(key, global.get(key).toString());
                     }
                 }
             }
         } else {
-            for (String key: getBindings(ENGINE_SCOPE).keySet()) {
+            for (String key : getBindings(ENGINE_SCOPE).keySet()) {
                 if (isVariable(key, methods)) {
                     Object value = getBindings(ENGINE_SCOPE).get(key);
                     if (value instanceof Double) {
-                        keys.put(key, ""+Math.round((double)value));
+                        keys.put(key, "" + Math.round((double) value));
                     } else {
                         keys.put(key, value.toString());
                     }
@@ -306,7 +306,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     @SuppressWarnings("unchecked")
     public Object getAttribute(String name) {
         if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
-            Map<String, Object> attributes = (Map<String, Object>)getBindings(ENGINE_SCOPE).get("nashorn.global");
+            Map<String, Object> attributes = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
             return attributes.get(name);
         } else {
             return super.getAttribute(name);
@@ -316,7 +316,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     @SuppressWarnings("unchecked")
     public void setAttribute(String name, Object value) {
         if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
-            Map<String, Object> attributes = (Map<String, Object>)getBindings(ENGINE_SCOPE).get("nashorn.global");
+            Map<String, Object> attributes = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
             attributes.put(name, value);
         } else {
             super.setAttribute(name, value, ENGINE_SCOPE);

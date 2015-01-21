@@ -35,10 +35,16 @@ import org.graphwalker.core.machine.Context;
 public interface PathGenerator<T extends StopCondition> {
 
     Context getContext();
+
     void setContext(Context context);
+
     T getStopCondition();
+
     void setStopCondition(T stopCondition);
+
     Context getNextStep();
+
     boolean hasNextStep();
+
     StringBuilder toString(StringBuilder builder);
 }

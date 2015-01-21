@@ -39,10 +39,10 @@ public class VertexTest {
     @Test
     public void create() {
         Vertex vertex = new Vertex()
-            .setName("vertex")
-            .setSharedState("MY_STATE")
-            .addRequirement(new Requirement("REQ1"))
-            .addRequirement(new Requirement("REQ2"));
+                .setName("vertex")
+                .setSharedState("MY_STATE")
+                .addRequirement(new Requirement("REQ1"))
+                .addRequirement(new Requirement("REQ2"));
         Assert.assertNotNull(vertex);
         Assert.assertNotNull(vertex.getName());
         Assert.assertEquals(vertex.getName(), "vertex");

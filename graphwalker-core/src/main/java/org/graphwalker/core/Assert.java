@@ -292,7 +292,7 @@ public final class Assert<T> {
             }
 
             String getMessage(boolean inverted) {
-                return inverted?invertedMessage:standardMessage;
+                return inverted ? invertedMessage : standardMessage;
             }
         }
     }

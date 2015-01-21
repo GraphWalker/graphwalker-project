@@ -60,10 +60,10 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
     public void run() {
         SimpleTest context = new SimpleTest();
         new TestBuilder()
-            .setModel(MODEL_PATH)
-            .setContext(context)
-            .setPathGenerator(new RandomPath(new VertexCoverage(100)))
-            .setStart("edge").execute();
+                .setModel(MODEL_PATH)
+                .setContext(context)
+                .setPathGenerator(new RandomPath(new VertexCoverage(100)))
+                .setStart("edge").execute();
         Assert.assertThat(context.count, is(2));
     }
 }

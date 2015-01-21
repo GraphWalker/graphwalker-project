@@ -51,7 +51,7 @@ public final class DepthFirstSearch implements Algorithm {
 
     private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
         Map<Element, ElementStatus> elementStatusMap = new HashMap<>();
-        for (Element element: elements) {
+        for (Element element : elements) {
             elementStatusMap.put(element, ElementStatus.UNREACHABLE);
         }
         return elementStatusMap;
@@ -67,12 +67,12 @@ public final class DepthFirstSearch implements Algorithm {
                 connectedComponent.add(element);
                 elementStatusMap.put(element, ElementStatus.REACHABLE);
                 if (element instanceof RuntimeVertex) {
-                    RuntimeVertex vertex = (RuntimeVertex)element;
-                    for (RuntimeEdge edge: context.getModel().getOutEdges(vertex)) {
+                    RuntimeVertex vertex = (RuntimeVertex) element;
+                    for (RuntimeEdge edge : context.getModel().getOutEdges(vertex)) {
                         stack.push(edge);
                     }
                 } else if (element instanceof RuntimeEdge) {
-                    RuntimeEdge edge = (RuntimeEdge)element;
+                    RuntimeEdge edge = (RuntimeEdge) element;
                     stack.push(edge.getTargetVertex());
                 }
             }

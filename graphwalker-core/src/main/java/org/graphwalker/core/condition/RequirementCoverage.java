@@ -38,11 +38,11 @@ public final class RequirementCoverage extends StopConditionBase {
 
     public RequirementCoverage(int percent) {
         super(String.valueOf(percent));
-        this.percent = (double)percent/100;
+        this.percent = (double) percent / 100;
     }
 
     public int getPercent() {
-        return (int)(percent * 100);
+        return (int) (percent * 100);
     }
 
     @Override
@@ -59,6 +59,6 @@ public final class RequirementCoverage extends StopConditionBase {
         }
         double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
         double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount+failedCount) / totalCount) / percent;
+        return ((passedCount + failedCount) / totalCount) / percent;
     }
 }

@@ -34,7 +34,7 @@ public class AccessModelTest {
     public void write() {
         ExecutionContext context = createContext();
         context.setAttribute("y", 2);
-        Assert.assertThat((Integer)context.getAttribute("y"), is(2));
+        Assert.assertThat((Integer) context.getAttribute("y"), is(2));
     }
 
     private ExecutionContext createContext() {

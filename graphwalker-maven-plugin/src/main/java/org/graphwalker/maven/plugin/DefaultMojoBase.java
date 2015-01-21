@@ -72,8 +72,8 @@ public abstract class DefaultMojoBase extends AbstractMojo {
         for (File directory : directories) {
             if (directory.exists()) {
                 try {
-                    for (Object filename: FileUtils.getFileNames(directory, includes, excludes, true, true)) {
-                        files.add(new File((String)filename));
+                    for (Object filename : FileUtils.getFileNames(directory, includes, excludes, true, true)) {
+                        files.add(new File((String) filename));
                     }
                 } catch (Throwable t) {
                     getLog().debug(t);

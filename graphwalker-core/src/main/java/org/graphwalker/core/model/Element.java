@@ -33,10 +33,16 @@ import java.util.Set;
  */
 public interface Element {
     String getId();
+
     boolean hasId();
+
     String getName();
+
     boolean hasName();
+
     Set<Requirement> getRequirements();
+
     boolean hasRequirements();
+
     void accept(ElementVisitor visitor);
 }
