@@ -364,7 +364,7 @@ public class CLI {
 
         version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
         version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
-        version += "For a complete list of this package software dependencies, see TO BE DEFINED" + System.getProperty("line.separator");
+        version += "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.getProperty("line.separator");
 
         return version;
     }
