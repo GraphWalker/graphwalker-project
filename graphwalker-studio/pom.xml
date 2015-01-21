@@ -22,7 +22,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring.version>1.1.5.RELEASE</spring.version>
+        <spring.version>1.2.1.RELEASE</spring.version>
         <start-class>org.graphwalker.studio.Application</start-class>
     </properties>
 
