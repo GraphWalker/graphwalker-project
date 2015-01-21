@@ -79,26 +79,28 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
         ContextFactory contextFactory = getContextFactory(sourceFile);
         if (null != contextFactory) {
             File outputFile = sourceFile.getOutputPath().toFile();
-            try {
-                RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
-                String source = codeGenerator.generate(sourceFile, model);
-                if (Files.exists(sourceFile.getOutputPath())) {
-                    String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
-                    if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
-                        return;
+            if (!outputFile.exists() || outputFile.lastModified() < sourceFile.getInputPath().toFile().lastModified()) {
+                try {
+                    RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
+                    String source = codeGenerator.generate(sourceFile, model);
+                    if (Files.exists(sourceFile.getOutputPath())) {
+                        String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
+                        if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
+                            return;
+                        }
                     }
-                }
-                if (getLog().isInfoEnabled()) {
-                    getLog().info("Generate " + sourceFile.getInputPath());
-                }
-                FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
-                FileUtils.fileDelete(outputFile.getAbsolutePath());
-                FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
-            } catch (Throwable t) {
-                if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
-                    getLog().error("Error: Generate " + sourceFile.getInputPath(), t);
-                } else if (getLog().isDebugEnabled()) {
-                    getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
+                    if (getLog().isInfoEnabled()) {
+                        getLog().info("Generate " + sourceFile.getInputPath());
+                    }
+                    FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+                    FileUtils.fileDelete(outputFile.getAbsolutePath());
+                    FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
+                } catch (Throwable t) {
+                    if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
+                        getLog().error("Error: Generate " + sourceFile.getInputPath(), t);
+                    } else if (getLog().isDebugEnabled()) {
+                        getLog().debug("Error: Generate " + sourceFile.getInputPath(), t);
+                    }
                 }
             }
         }
