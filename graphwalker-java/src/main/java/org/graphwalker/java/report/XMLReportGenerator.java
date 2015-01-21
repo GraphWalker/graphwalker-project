@@ -29,7 +29,6 @@ package org.graphwalker.java.report;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.Executor;
-import org.graphwalker.java.test.Result;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -38,9 +37,9 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -69,7 +68,7 @@ public class XMLReportGenerator {
         List<String> keys = new ArrayList<>(systemProperties.stringPropertyNames());
         Collections.sort(keys);
         Properties properties = new Properties();
-        for (String name: keys) {
+        for (String name : keys) {
             Property property = new Property();
             property.setName(name);
             property.setValue(systemProperties.getProperty(name));
@@ -81,7 +80,7 @@ public class XMLReportGenerator {
         testsuite.setErrors(report.getErrorsAsString());
         testsuite.setTime(report.getTimeAsString());
         testsuite.setTimestamp(report.getTimestamp());
-        for (Context context: machine.getContexts()) {
+        for (Context context : machine.getContexts()) {
             Testcase testcase = new Testcase();
             testcase.setName(context.getClass().getSimpleName());
             testcase.setClassname(context.getClass().getName());
@@ -97,7 +96,7 @@ public class XMLReportGenerator {
                 Failure failure = new Failure();
                 failure.setType("Not fulfilled");
                 double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
-                failure.setMessage(String.valueOf(Math.round(100*fulfilment)));
+                failure.setMessage(String.valueOf(Math.round(100 * fulfilment)));
                 testcase.getFailure().add(failure);
             }
             testsuite.getTestcase().add(testcase);
@@ -125,7 +124,7 @@ public class XMLReportGenerator {
         long failures = 0;
         long errors = 0;
         double time = Double.MAX_VALUE;
-        for (Report report: reports) {
+        for (Report report : reports) {
             tests += report.getTests();
             failures += report.getFailures();
             errors += report.getErrors();
@@ -141,7 +140,7 @@ public class XMLReportGenerator {
 
     private String getName() {
         DateFormat formatter = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS");
-        return "TEST-GraphWalker-"+formatter.format(startTime)+".xml";
+        return "TEST-GraphWalker-" + formatter.format(startTime) + ".xml";
     }
 
     public static String getStackTrace(final Throwable throwable) {
@@ -149,14 +148,14 @@ public class XMLReportGenerator {
         final PrintWriter printWriter = new PrintWriter(stringWriter, true);
         throwable.printStackTrace(printWriter);
         StringBuffer buffer = new StringBuffer().append(NEWLINE);
-        for (String line: stringWriter.getBuffer().toString().split(NEWLINE)) {
+        for (String line : stringWriter.getBuffer().toString().split(NEWLINE)) {
             buffer.append(INDENT).append(INDENT).append(INDENT).append(INDENT).append(line).append(NEWLINE);
         }
         return buffer.toString();
     }
 
     private String getSeconds(long milliseconds) {
-        return String.valueOf((double)milliseconds / 1000.0);
+        return String.valueOf((double) milliseconds / 1000.0);
     }
 
     private OutputStream getOutputStream(File directory, String reportName) {
@@ -182,7 +181,7 @@ public class XMLReportGenerator {
         Report(Machine machine, Date startTime) {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             timestamp = formatter.format(startTime);
-            for (Context context: machine.getContexts()) {
+            for (Context context : machine.getContexts()) {
                 tests++;
                 switch (context.getExecutionStatus()) {
                     case FAILED: {
@@ -228,7 +227,7 @@ public class XMLReportGenerator {
         }
 
         public double getTime() {
-            return (double)time / 1000.0;
+            return (double) time / 1000.0;
         }
 
         public String getTimeAsString() {

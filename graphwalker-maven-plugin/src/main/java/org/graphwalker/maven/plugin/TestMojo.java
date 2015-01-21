@@ -30,16 +30,16 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.java.test.IsolatedClassLoader;
 import org.graphwalker.java.test.*;
-import org.graphwalker.java.report.XMLReportGenerator;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
@@ -51,16 +51,16 @@ public final class TestMojo extends DefaultMojoBase {
     @Parameter(property = "project.testClasspathElements")
     private List<String> classpathElements;
 
-    @Parameter(defaultValue="${project.build.testOutputDirectory}")
+    @Parameter(defaultValue = "${project.build.testOutputDirectory}")
     private File testClassesDirectory;
 
-    @Parameter(defaultValue="${project.build.outputDirectory}")
+    @Parameter(defaultValue = "${project.build.outputDirectory}")
     private File classesDirectory;
 
     @Parameter(defaultValue = "${project.build.directory}/graphwalker-reports")
     private File reportsDirectory;
 
-    @Parameter(property = "maven.test.skip", defaultValue="false")
+    @Parameter(property = "maven.test.skip", defaultValue = "false")
     private boolean mavenTestSkip;
 
     @Parameter(property = "skipTests", defaultValue = "false")
@@ -161,7 +161,7 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info(" |   __|___ ___ ___| |_| | | |___| | |_ ___ ___                         ");
             getLog().info(" |  |  |  _| .'| . |   | | | | .'| | '_| -_|  _|                        ");
             getLog().info(" |_____|_| |__,|  _|_|_|_____|__,|_|_,_|___|_|                          ");
-            getLog().info("               |_|         ("+getVersion()+")                            ");
+            getLog().info("               |_|         (" + getVersion() + ")                            ");
             getLog().info("------------------------------------------------------------------------");
         }
     }
@@ -185,7 +185,7 @@ public final class TestMojo extends DefaultMojoBase {
             configuration.setIncludes(getIncludes());
             configuration.setExcludes(getExcludes());
         } else {
-            for (String test: getTest().split(",")) {
+            for (String test : getTest().split(",")) {
                 test = test.trim();
                 if (StringUtils.isNotBlank(test)) {
                     if (test.startsWith("!")) {
@@ -199,7 +199,7 @@ public final class TestMojo extends DefaultMojoBase {
                 }
             }
         }
-        for (String group: getGroups().split(",")) {
+        for (String group : getGroups().split(",")) {
             configuration.addGroup(group.trim());
         }
         return configuration;
@@ -216,12 +216,12 @@ public final class TestMojo extends DefaultMojoBase {
             if (null == reflector.getMachineConfiguration() || reflector.getMachineConfiguration().getContextConfigurations().isEmpty()) {
                 getLog().info("  No tests found");
             } else {
-                for (ContextConfiguration context: reflector.getMachineConfiguration().getContextConfigurations()) {
+                for (ContextConfiguration context : reflector.getMachineConfiguration().getContextConfigurations()) {
                     getLog().info("    "
-                        + context.getTestClassName()+"("
-                        + context.getPathGeneratorName()+", "
-                        + context.getStopConditionName()+", "
-                        + context.getStopConditionValue()+")");
+                            + context.getTestClassName() + "("
+                            + context.getPathGeneratorName() + ", "
+                            + context.getStopConditionName() + ", "
+                            + context.getStopConditionValue() + ")");
                 }
                 getLog().info("");
             }
@@ -241,11 +241,11 @@ public final class TestMojo extends DefaultMojoBase {
             getLog().info("Result :");
             getLog().info("");
             getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}"
-                  , result.getTestCount()
-                  , result.getCompletedCount()
-                  , result.getIncompleteCount()
-                  , result.getFailedCount()
-                  , result.getNotExecutedCount()));
+                    , result.getTestCount()
+                    , result.getCompletedCount()
+                    , result.getIncompleteCount()
+                    , result.getFailedCount()
+                    , result.getNotExecutedCount()));
             getLog().info("");
         }
     }

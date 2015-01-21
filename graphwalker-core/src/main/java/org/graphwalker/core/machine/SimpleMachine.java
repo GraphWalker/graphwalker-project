@@ -71,7 +71,7 @@ public final class SimpleMachine extends MachineBase {
     }
 
     private void executeInitActions(Collection<Context> contexts) {
-        for (Context context: contexts) {
+        for (Context context : contexts) {
             this.currentContext = context;
             this.currentContext.setProfiler(getProfiler());
             if (null == context.getModel()) {
@@ -82,7 +82,7 @@ public final class SimpleMachine extends MachineBase {
     }
 
     private Context chooseStartContext(Collection<Context> contexts) {
-        for (Context context: contexts) {
+        for (Context context : contexts) {
             if (null != context.getCurrentElement() || null != context.getNextElement()) {
                 return context;
             }
@@ -114,7 +114,7 @@ public final class SimpleMachine extends MachineBase {
 
     private void updateRequirements(Context context, Element element) {
         if (element.hasRequirements()) {
-            for (Requirement requirement: element.getRequirements()) {
+            for (Requirement requirement : element.getRequirements()) {
                 context.setRequirementStatus(requirement, RequirementStatus.PASSED);
             }
         }
@@ -155,7 +155,7 @@ public final class SimpleMachine extends MachineBase {
 
     private Context findStartContext() {
         Context startContext = null;
-        for (Context context: contexts) {
+        for (Context context : contexts) {
             if (hasNextStep(context) && (null != context.getCurrentElement() || null != context.getNextElement())) {
                 startContext = context;
                 break;
@@ -205,12 +205,12 @@ public final class SimpleMachine extends MachineBase {
 
     private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
         List<SharedStateTuple> sharedStates = new ArrayList<>();
-        for (Context context: contexts) {
+        for (Context context : contexts) {
             if (currentContext.equals(context) && hasOutEdges(context)) {
-                sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex)currentContext.getCurrentElement()));
+                sharedStates.add(new SharedStateTuple(currentContext, (RuntimeVertex) currentContext.getCurrentElement()));
             } else if (!currentContext.equals(context) && context.getModel().hasSharedState(sharedState)) {
                 for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-                    if ((!vertex.equals(lastElement) || currentContext.getModel().getOutEdges((RuntimeVertex)currentContext.getCurrentElement()).isEmpty()) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
+                    if ((!vertex.equals(lastElement) || currentContext.getModel().getOutEdges((RuntimeVertex) currentContext.getCurrentElement()).isEmpty()) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
                         sharedStates.add(new SharedStateTuple(context, vertex));
                     }
                 }
@@ -221,14 +221,14 @@ public final class SimpleMachine extends MachineBase {
 
     private boolean hasOutEdges(Context context) {
         return null != context.getCurrentElement()
-            && context.getCurrentElement() instanceof RuntimeVertex
-            && !context.getModel().getOutEdges((RuntimeVertex)context.getCurrentElement()).isEmpty();
+                && context.getCurrentElement() instanceof RuntimeVertex
+                && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
     }
 
     @Override
     public boolean hasNextStep() {
         MDC.put("trace", UUID.randomUUID().toString());
-        for (Context context: contexts) {
+        for (Context context : contexts) {
             if (hasNextStep(context)) {
                 return true;
             }
@@ -272,14 +272,14 @@ public final class SimpleMachine extends MachineBase {
     }
 
     private void execute(List<Action> actions) {
-        for (Action action: actions) {
+        for (Action action : actions) {
             currentContext.execute(action);
         }
     }
 
     private void execute(RuntimeVertex vertex) {
         if (vertex.hasName()) {
-             currentContext.execute(vertex.getName());
+            currentContext.execute(vertex.getName());
         }
     }
 

@@ -115,7 +115,7 @@ public final class DotContextFactory implements ContextFactory {
         }
         for (Edge edge : listener.edges) {
             if (edge.getSourceVertex().getName() != null &&
-                edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
+                    edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
                 edge.setSourceVertex(null);
                 startEdge = edge;
             }
@@ -127,7 +127,7 @@ public final class DotContextFactory implements ContextFactory {
         if (null != startEdge) {
             context.setNextElement(startEdge);
         } else {
-            for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
+            for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
                 if (context.getModel().getOutEdges(vertex).isEmpty()) {
                     context.setNextElement(vertex);
                 }

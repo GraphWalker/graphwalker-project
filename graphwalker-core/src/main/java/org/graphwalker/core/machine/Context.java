@@ -28,14 +28,16 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Builder;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.statistics.Profiler;
 
 import javax.script.ScriptEngine;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
@@ -45,28 +47,51 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public interface Context {
     ExecutionStatus getExecutionStatus();
+
     Context setExecutionStatus(ExecutionStatus executionStatus);
+
     ScriptEngine getScriptEngine();
+
     RuntimeModel getModel();
+
     Context setModel(RuntimeModel model);
+
     Profiler getProfiler();
+
     Context setProfiler(Profiler profiler);
+
     PathGenerator getPathGenerator();
+
     Context setPathGenerator(PathGenerator pathGenerator);
+
     Element getLastElement();
+
     Element getCurrentElement();
+
     Context setCurrentElement(Element element);
+
     Element getNextElement();
-    Context setNextElement(Builder<? extends Element> nextElement) ;
+
+    Context setNextElement(Builder<? extends Element> nextElement);
+
     Context setNextElement(Element nextElement);
+
     List<Requirement> getRequirements();
+
     List<Requirement> getRequirements(RequirementStatus status);
+
     Context setRequirementStatus(Requirement requirement, RequirementStatus requirementStatus);
+
     @SuppressWarnings("unchecked")
     public <A extends Algorithm> A getAlgorithm(Class<A> clazz);
+
     <E> List<E> filter(Collection<E> elements);
+
     boolean isAvailable(RuntimeEdge edge);
+
     void execute(Action action);
+
     void execute(String name);
+
     Map<String, String> getKeys();
 }

@@ -39,11 +39,11 @@ public final class EdgeCoverage extends StopConditionBase {
 
     public EdgeCoverage(int percent) {
         super(String.valueOf(percent));
-        this.percent = (double)percent/100;
+        this.percent = (double) percent / 100;
     }
 
     public int getPercent() {
-        return (int)(percent * 100);
+        return (int) (percent * 100);
     }
 
     @Override
@@ -56,11 +56,11 @@ public final class EdgeCoverage extends StopConditionBase {
         Context context = getContext();
         long totalEdgesCount = context.getModel().getEdges().size();
         long visitedEdgesCount = 0;
-        for (RuntimeEdge edge: context.getModel().getEdges()) {
+        for (RuntimeEdge edge : context.getModel().getEdges()) {
             if (context.getProfiler().isVisited(edge)) {
                 visitedEdgesCount++;
             }
         }
-        return ((double)visitedEdgesCount / totalEdgesCount) / percent;
+        return ((double) visitedEdgesCount / totalEdgesCount) / percent;
     }
 }

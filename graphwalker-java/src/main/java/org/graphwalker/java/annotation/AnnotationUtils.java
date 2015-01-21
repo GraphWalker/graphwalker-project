@@ -46,7 +46,7 @@ public abstract class AnnotationUtils {
 
     public static Set<Class<?>> find(Reflections reflections, Class<?> type, Class<? extends Annotation> annotation) {
         Set<Class<?>> classes = new HashSet<>();
-        for (Class<?> subType: reflections.getTypesAnnotatedWith(annotation)) {
+        for (Class<?> subType : reflections.getTypesAnnotatedWith(annotation)) {
             if (type.isAssignableFrom(subType)) {
                 classes.add(subType);
             }
@@ -61,7 +61,7 @@ public abstract class AnnotationUtils {
     @SuppressWarnings("unchecked")
     private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation, ClassLoader classLoader) {
         try {
-            Class<? extends Annotation> a = (Class<? extends Annotation>)classLoader.loadClass(annotation.getName());
+            Class<? extends Annotation> a = (Class<? extends Annotation>) classLoader.loadClass(annotation.getName());
             return type.isAnnotationPresent(a);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException();
@@ -73,7 +73,7 @@ public abstract class AnnotationUtils {
         Class<?> queryClass = clazz;
         while (null != queryClass) {
             addAnnotation(queryClass, annotations, annotation);
-            for (Class<?> interfaceClass: queryClass.getInterfaces()) {
+            for (Class<?> interfaceClass : queryClass.getInterfaces()) {
                 addAnnotation(interfaceClass, annotations, annotation);
             }
             queryClass = queryClass.getSuperclass();
@@ -88,7 +88,7 @@ public abstract class AnnotationUtils {
     }
 
     public static void execute(Class<? extends Annotation> annotation, Object implementation) {
-        for (Method method: implementation.getClass().getMethods()) {
+        for (Method method : implementation.getClass().getMethods()) {
             if (method.isAnnotationPresent(annotation)) {
                 try {
                     method.invoke(implementation);

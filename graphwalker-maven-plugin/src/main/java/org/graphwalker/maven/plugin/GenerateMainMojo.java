@@ -39,7 +39,7 @@ import java.io.File;
  * @author Nils Olsson
  */
 @Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
-public final class GenerateMainMojo extends GenerateMojoBase  {
+public final class GenerateMainMojo extends GenerateMojoBase {
 
     @Parameter(property = "graphwalker.generate.directory", defaultValue = "${project.build.directory}/generated-sources/graphwalker")
     private File generatedSourcesDirectory;

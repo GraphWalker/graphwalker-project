@@ -51,7 +51,7 @@ public abstract class MachineBase implements Machine {
 
     @Override
     public void notifyObservers(Element element, EventType type) {
-        for (Observer observer: observers) {
+        for (Observer observer : observers) {
             observer.update(this, element, type);
         }
     }

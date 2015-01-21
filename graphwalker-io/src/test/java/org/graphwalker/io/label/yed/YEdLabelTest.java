@@ -68,7 +68,7 @@ public class YEdLabelTest {
 
     @Test
     public void testVertexLabels() {
-        for (String label: vertexLabels) {
+        for (String label : vertexLabels) {
             YEdVertexParser parser = new YEdVertexParser(getTokens(label));
             YEdVertexParser.ParseContext context = parser.parse();
             Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
@@ -77,7 +77,7 @@ public class YEdLabelTest {
 
     @Test
     public void testEdgeLabels() {
-        for (String label: edgeLabels) {
+        for (String label : edgeLabels) {
             YEdEdgeParser parser = new YEdEdgeParser(getTokens(label));
             YEdEdgeParser.ParseContext context = parser.parse();
             Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));

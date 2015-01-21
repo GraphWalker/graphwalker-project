@@ -26,11 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.graphwalker.java.test.SelectorUtils.match;
-
 /**
  * @author Nils Olsson
  */

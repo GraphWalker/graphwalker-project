@@ -29,14 +29,7 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.*;
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-
-import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson

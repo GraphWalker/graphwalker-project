@@ -85,7 +85,7 @@ public final class Fleury implements Algorithm {
 
     private RuntimeEdge getNextEdge(RuntimeModel model, Set<Element> visitedEdges, RuntimeVertex vertex) {
         List<RuntimeEdge> bridges = new ArrayList<>();
-        for (RuntimeEdge edge: model.getOutEdges(vertex)) {
+        for (RuntimeEdge edge : model.getOutEdges(vertex)) {
             if (!visitedEdges.contains(edge)) {
                 if (!isBridge(model, visitedEdges, edge)) {
                     return edge;
@@ -136,15 +136,15 @@ public final class Fleury implements Algorithm {
         public void visit(Element element) {
             visitedElements.add(element);
             if (element instanceof RuntimeVertex) {
-                RuntimeVertex vertex = (RuntimeVertex)element;
+                RuntimeVertex vertex = (RuntimeVertex) element;
                 count++;
-                for (RuntimeEdge edge: model.getOutEdges(vertex)) {
+                for (RuntimeEdge edge : model.getOutEdges(vertex)) {
                     if (!isVisited(edge)) {
                         edge.accept(this);
                     }
                 }
             } else if (element instanceof RuntimeEdge) {
-                RuntimeEdge edge = (RuntimeEdge)element;
+                RuntimeEdge edge = (RuntimeEdge) element;
                 if (!isVisited(edge.getTargetVertex())) {
                     edge.getTargetVertex().accept(this);
                 }

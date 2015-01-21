@@ -28,7 +28,10 @@ package org.graphwalker.io.factory.yed;
 
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.*;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.DryRunContext;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
@@ -55,7 +58,7 @@ public class YEdContextFactoryTest {
         Assert.assertNotNull(sharedAContext);
         Assert.assertThat(sharedAContext.getModel().getVertices().size(), is(2));
         Assert.assertThat(sharedAContext.getModel().getEdges().size(), is(6));
-        
+
         Context sharedBContext = new YEdContextFactory().create(Paths.get("graphml/SharedB.graphml"));
         Assert.assertNotNull(sharedBContext);
         Assert.assertThat(sharedBContext.getModel().getVertices().size(), is(2));
@@ -154,7 +157,7 @@ public class YEdContextFactoryTest {
         ContextFactory factory = new YEdContextFactory();
         Context login = factory.create(Paths.get("graphml/shared_state/Login.graphml"));
         Context crash = factory.create(Paths.get("graphml/shared_state/Crash.graphml"));
-        for (RuntimeEdge edge: crash.getModel().getEdges()) {
+        for (RuntimeEdge edge : crash.getModel().getEdges()) {
             Assert.assertNotNull(edge.getSourceVertex());
             Assert.assertNotNull(edge.getTargetVertex());
         }

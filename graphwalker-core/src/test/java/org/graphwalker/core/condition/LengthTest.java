@@ -56,10 +56,10 @@ public class LengthTest {
         Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
         context.setProfiler(new Profiler());
         for (int i = 0; i <= 100; i++) {
-            Assert.assertThat(condition.getFulfilment(), is((double)i/100));
+            Assert.assertThat(condition.getFulfilment(), is((double) i / 100));
             context.getProfiler().start(context);
             context.getProfiler().stop(context);
-            Assert.assertThat(condition.getFulfilment(), is((double)(i+1)/100));
+            Assert.assertThat(condition.getFulfilment(), is((double) (i + 1) / 100));
         }
     }
 

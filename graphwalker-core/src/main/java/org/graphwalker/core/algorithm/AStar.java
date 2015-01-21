@@ -52,7 +52,7 @@ public final class AStar implements Algorithm {
         openSet.put(origin, sourceNode);
         queue.add(sourceNode);
         AStarNode node = queue.poll();
-        if(node.getElement().equals(destination)){
+        if (node.getElement().equals(destination)) {
             return node.getElement();
         } else {
             closeSet.put(node.getElement(), node);
@@ -90,13 +90,13 @@ public final class AStar implements Algorithm {
         openSet.put(origin, sourceNode);
         queue.add(sourceNode);
         AStarNode targetNode = null;
-        while(openSet.size() > 0) {
+        while (openSet.size() > 0) {
             AStarNode node = queue.poll();
             openSet.remove(node.getElement());
-            if(node.getElement().equals(destination)){
+            if (node.getElement().equals(destination)) {
                 targetNode = node;
                 break;
-            }else{
+            } else {
                 closeSet.put(node.getElement(), node);
                 List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
                 for (Element neighbor : neighbors) {
@@ -122,7 +122,7 @@ public final class AStar implements Algorithm {
             List<Element> path = new ArrayList<>();
             path.add(targetNode.getElement());
             AStarNode node = targetNode.getParent();
-            while(null != node) {
+            while (null != node) {
                 path.add(node.getElement());
                 node = node.getParent();
             }
@@ -170,16 +170,16 @@ public final class AStar implements Algorithm {
         }
 
         public double getF() {
-            return g+h;
+            return g + h;
         }
     }
 
     private class AStarNodeComparator implements Comparator<AStarNode> {
 
         public int compare(AStarNode first, AStarNode second) {
-            if (first.getF() < second.getF()){
+            if (first.getF() < second.getF()) {
                 return -1;
-            } else if(first.getF() > second.getF()) {
+            } else if (first.getF() > second.getF()) {
                 return 1;
             } else {
                 return 0;

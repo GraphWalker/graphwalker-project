@@ -58,7 +58,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
 
     public long getTotalExecutionCount(Class<? extends Element> type) {
         long count = 0;
-        for (Element element: keySet()) {
+        for (Element element : keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
                 count += get(element).getExecutionCount();
             }
@@ -68,7 +68,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
 
     public long getTotalExecutionCount(Element element) {
         long count = 0;
-        for (Element e: keySet()) {
+        for (Element e : keySet()) {
             if (element == e) {
                 count += get(e).getExecutionCount();
             }
@@ -86,7 +86,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
 
     public long getTotalExecutionTime(Class<?> type, TimeUnit unit) {
         long executionTime = 0;
-        for (Element element: keySet()) {
+        for (Element element : keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
                 executionTime += get(element).getTotalExecutionTime();
             }
@@ -108,7 +108,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
 
     public long getFirstExecutionTime(Class<? extends Element> type, TimeUnit unit) {
         long time = Long.MAX_VALUE;
-        for (Element element: keySet()) {
+        for (Element element : keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
                 long firstExecutionTime = get(element).getFirstExecutionTime();
                 if (time > firstExecutionTime) {
@@ -129,7 +129,7 @@ public final class Profile extends HashMap<Element, ProfileUnit> {
 
     public long getLastExecutionTime(Class<? extends Element> type, TimeUnit unit) {
         long time = Long.MIN_VALUE;
-        for (Element element: keySet()) {
+        for (Element element : keySet()) {
             if (type.isAssignableFrom(element.getClass())) {
                 long lastExecutionTime = get(element).getLastExecutionTime();
                 if (time < lastExecutionTime) {

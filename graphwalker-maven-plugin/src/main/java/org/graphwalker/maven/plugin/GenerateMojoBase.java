@@ -53,20 +53,20 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     private CodeGenerator codeGenerator = new CodeGenerator();
 
     protected String getEncoding() {
-        return StringUtils.isEmpty(encoding)? ReaderFactory.FILE_ENCODING: encoding;
+        return StringUtils.isEmpty(encoding) ? ReaderFactory.FILE_ENCODING : encoding;
     }
 
     protected abstract File getGeneratedSourcesDirectory();
 
     protected void generate(List<Resource> resources) {
-        for (Resource resource: resources) {
+        for (Resource resource : resources) {
             generate(resource);
         }
     }
 
     private void generate(Resource resource) {
         File baseDirectory = new File(resource.getDirectory());
-        for (File file: findFiles("**/*.*", null, baseDirectory)) {
+        for (File file : findFiles("**/*.*", null, baseDirectory)) {
             generate(file, baseDirectory, getGeneratedSourcesDirectory());
         }
     }
