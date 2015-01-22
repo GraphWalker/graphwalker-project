@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Helper class to create output in different formats, like JSON or plain text.
  * Created by krikar on 9/13/14.
  */
 public abstract class Util {
@@ -54,6 +55,14 @@ public abstract class Util {
         TOTAL_NUMBER_OF_REQUIREMENTS_FAILED
     };
 
+    /**
+     * Will create a plain text formatted string representing the current step. The step
+     * is the current element, which can be either a vertex orn an edge.
+     * @param machine
+     * @param verbose Print more details if true
+     * @param showUnvisited Print all unvisited elements if true
+     * @return The plain text string representing the current step.
+     */
     public static String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
         StringBuilder builder = new StringBuilder();
         if (verbose) {
@@ -82,6 +91,14 @@ public abstract class Util {
         return builder.toString();
     }
 
+    /**
+     * Will create a JSON formatted string representing the current step. The step
+     * is the current element, which can be either a vertex orn an edge.
+     * @param machine
+     * @param verbose Print more details if true
+     * @param showUnvisited Print all unvisited elements if true
+     * @return The JSON string representing the current step.
+     */
     public static JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
         JSONObject object = new JSONObject();
         if (verbose) {
@@ -120,6 +137,12 @@ public abstract class Util {
         return object;
     }
 
+    /**
+     * Will create a plain text string representing the statistics of the current
+     * execution of the machine.
+     * @param machine
+     * @return The execution statistics in plain text.
+     */
     public static String getStatisticsAsString(SimpleMachine machine) {
         HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
 
@@ -172,6 +195,12 @@ public abstract class Util {
         return builder.toString();
     }
 
+    /**
+     * Will create a JSON formatted string representing the statistics of the current
+     * execution of the machine.
+     * @param machine
+     * @return The execution statistics in JSON format.
+     */
     public static JSONObject getStatisticsAsJSON(SimpleMachine machine) {
         HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
         JSONObject object = new JSONObject();
@@ -218,7 +247,7 @@ public abstract class Util {
         return object;
     }
 
-    public static HashMap<Statistics, Integer> getStatistics(Context context) {
+    private static HashMap<Statistics, Integer> getStatistics(Context context) {
         HashMap<Statistics, Integer> map = new HashMap<>();
         map.put(Statistics.TOTAL_NUMBER_OF_VERTICES, context.getModel().getAllVertices().size());
         map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES, context.getProfiler().getUnvisitedVertices(context).size());
