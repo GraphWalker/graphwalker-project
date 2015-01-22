@@ -27,11 +27,9 @@ package org.graphwalker.core.machine;
  */
 
 import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.ReachedEdge;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.model.*;
@@ -115,15 +113,15 @@ public class SimpleMachineTest {
         Vertex vertex1 = new Vertex();
         Vertex vertex2 = new Vertex();
         Model model = new Model()
-          .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-          .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+                .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+                .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
         model.addAction(new Action("var i = 1;"));
         Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
         context.setNextElement(vertex1);
         Machine machine = new SimpleMachine(context);
         while (machine.hasNextStep()) {
-          machine.getNextStep();
-          Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+            machine.getNextStep();
+            Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
         Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5l));
@@ -151,7 +149,7 @@ public class SimpleMachineTest {
         Vertex shared1 = new Vertex().setSharedState("MyState");
         Edge edge1 = new Edge().setSourceVertex(start).setTargetVertex(shared1);
         Vertex shared2 = new Vertex().setSharedState("MyState");
-        Vertex stop  = new Vertex();
+        Vertex stop = new Vertex();
         Edge edge2 = new Edge().setSourceVertex(shared2).setTargetVertex(stop);
         Model model1 = new Model().addEdge(edge1);
         Model model2 = new Model().addEdge(edge2);
@@ -173,7 +171,7 @@ public class SimpleMachineTest {
         Vertex shared1 = new Vertex().setSharedState("MyState1");
         Edge edge1 = new Edge().setSourceVertex(start).setTargetVertex(shared1);
         Vertex shared2 = new Vertex().setSharedState("MyState2");
-        Vertex stop  = new Vertex();
+        Vertex stop = new Vertex();
         Edge edge2 = new Edge().setSourceVertex(shared2).setTargetVertex(stop);
         Model model1 = new Model().addEdge(edge1);
         Model model2 = new Model().addEdge(edge2);
@@ -251,17 +249,17 @@ public class SimpleMachineTest {
             machine.getNextStep();
         }
         List<Element> expectedPath = Arrays.<Element>asList(
-            start.build(),
-            e1.build(),
-            v1.build(),
-            e2.build(),
-            v2.build(),
-            e4.build(),
-            v4.build(),
-            e6.build(),
-            v1.build(),
-            e3.build(),
-            v3.build());
+                start.build(),
+                e1.build(),
+                v1.build(),
+                e2.build(),
+                v2.build(),
+                e4.build(),
+                v4.build(),
+                e6.build(),
+                v1.build(),
+                e3.build(),
+                v3.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
@@ -325,9 +323,9 @@ public class SimpleMachineTest {
         }
         // We should start at "Second Start" and then walk the path to the end
         List<Element> expectedPath = Arrays.<Element>asList(
-            secondStartVertex.build(),
-            e2.build(),
-            endVertex.build());
+                secondStartVertex.build(),
+                e2.build(),
+                endVertex.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
         Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));

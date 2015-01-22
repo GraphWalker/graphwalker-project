@@ -50,7 +50,7 @@ public class AssertTest {
 
     @Test
     public void testArraySize() {
-        int[] array = new int[]{1,2,3};
+        int[] array = new int[]{1, 2, 3};
         expect(array).to.have.size(3);
     }
 
@@ -136,15 +136,15 @@ public class AssertTest {
 
     @Test
     public void testEqual5() {
-        int[] array1 = new int[]{1,2,3};
-        int[] array2 = new int[]{1,2,3};
+        int[] array1 = new int[]{1, 2, 3};
+        int[] array2 = new int[]{1, 2, 3};
         expect(array1).to.equal(array2);
     }
 
     @Test
     public void testEqual6() {
-        List<Integer> list1 = Arrays.asList(1,2,3);
-        List<Integer> list2 = Arrays.asList(1,2,3);
+        List<Integer> list1 = Arrays.asList(1, 2, 3);
+        List<Integer> list2 = Arrays.asList(1, 2, 3);
         expect(list1).to.equal(list2);
     }
 
@@ -175,29 +175,29 @@ public class AssertTest {
 
     @Test(expected = AssertionError.class)
     public void testEqualFailure5a() {
-        int[] array1 = new int[]{1,2,3};
-        int[] array2 = new int[]{1,2};
+        int[] array1 = new int[]{1, 2, 3};
+        int[] array2 = new int[]{1, 2};
         expect(array1).to.equal(array2);
     }
 
     @Test(expected = AssertionError.class)
     public void testEqualFailure5b() {
-        int[] array1 = new int[]{1,2,3};
-        int[] array2 = new int[]{1,2,3,4};
+        int[] array1 = new int[]{1, 2, 3};
+        int[] array2 = new int[]{1, 2, 3, 4};
         expect(array1).to.equal(array2);
     }
 
     @Test(expected = AssertionError.class)
     public void testEqualFailure6a() {
-        List<Integer> list1 = Arrays.asList(1,2,3);
-        List<Integer> list2 = Arrays.asList(1,2);
+        List<Integer> list1 = Arrays.asList(1, 2, 3);
+        List<Integer> list2 = Arrays.asList(1, 2);
         expect(list1).to.equal(list2);
     }
 
     @Test(expected = AssertionError.class)
     public void testEqualFailure6b() {
-        List<Integer> list1 = Arrays.asList(1,2,3);
-        List<Integer> list2 = Arrays.asList(1,2,3,4);
+        List<Integer> list1 = Arrays.asList(1, 2, 3);
+        List<Integer> list2 = Arrays.asList(1, 2, 3, 4);
         expect(list1).to.equal(list2);
     }
 
@@ -284,17 +284,17 @@ public class AssertTest {
     @Test
     public void testChain() {
         expect(1).to.be.of.type(Integer.class)
-            .and.not.of.type(Long.class, null)
-            .and.have.a.property("MAX_VALUE").that.is(0x7fffffff)
-            .and.not(0x80000000);
+                .and.not.of.type(Long.class, null)
+                .and.have.a.property("MAX_VALUE").that.is(0x7fffffff)
+                .and.not(0x80000000);
     }
 
     @Test(expected = AssertionError.class)
     public void testChainFailure() {
         expect(1).to.be.of.type(Integer.class)
-            .and.not.of.type(Long.class, "wrong type")
-            .and.have.a.property("MAX_VALUE").that.is.not(0x80000000)
-            .and.is(0x7ffffffe);
+                .and.not.of.type(Long.class, "wrong type")
+                .and.have.a.property("MAX_VALUE").that.is.not(0x80000000)
+                .and.is(0x7ffffffe);
     }
 
     @Test(expected = AssertionError.class)

@@ -26,7 +26,8 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Olsson

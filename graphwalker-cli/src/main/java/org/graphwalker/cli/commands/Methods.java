@@ -34,6 +34,6 @@ import java.util.List;
 @Parameters(commandDescription = "Generates a list of unique names of vertices and edges in the model. See http://graphwalker.org/docs/command_line_syntax")
 public class Methods {
     @Parameter(names = {"--model", "-m"}, required = true,
-        description = "The model(s)")
+            description = "The model(s)")
     public List<String> model = new ArrayList<String>();
 }

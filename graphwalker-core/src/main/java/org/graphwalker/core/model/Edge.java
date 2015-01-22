@@ -26,7 +26,10 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -161,7 +164,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         }
 
         private <T> T build(Builder<T> builder) {
-            return (null!=builder?builder.build():null);
+            return (null != builder ? builder.build() : null);
         }
 
         public RuntimeVertex getSourceVertex() {

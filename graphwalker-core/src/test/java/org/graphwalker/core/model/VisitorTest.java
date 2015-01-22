@@ -43,13 +43,13 @@ import static org.hamcrest.core.Is.is;
 public class VisitorTest {
 
     RuntimeModel model = new Model().addEdge(
-        new Edge()
-            .setName("edge1")
-            .setSourceVertex(new Vertex()
-                    .setName("vertex1"))
-            .setTargetVertex(new Vertex()
-                    .setName("vertex2")))
-        .build();
+            new Edge()
+                    .setName("edge1")
+                    .setSourceVertex(new Vertex()
+                            .setName("vertex1"))
+                    .setTargetVertex(new Vertex()
+                            .setName("vertex2")))
+            .build();
 
     @Test
     public void visitVertex() {
@@ -123,9 +123,9 @@ public class VisitorTest {
         @Override
         public void visit(Element element) {
             if (element instanceof RuntimeModel) {
-                RuntimeModel model = (RuntimeModel)element;
+                RuntimeModel model = (RuntimeModel) element;
                 // We don't need to visit() all edges to count the vertices with names, it's just PoC (we could just loop over them)
-                for (Element childElement: model.getElements()) {
+                for (Element childElement : model.getElements()) {
                     childElement.accept(this);
                 }
             } else if (element instanceof RuntimeVertex && element.hasName()) {
@@ -141,7 +141,7 @@ public class VisitorTest {
         @Override
         public void visit(Element element) {
             if (element instanceof RuntimeModel) {
-                RuntimeModel model = (RuntimeModel)element;
+                RuntimeModel model = (RuntimeModel) element;
                 for (RuntimeEdge edge : model.getEdges()) {
                     if (edge.getSourceVertex().equals(edge.getTargetVertex())) {
                         count++;
@@ -179,15 +179,15 @@ public class VisitorTest {
         public void visit(Element element) {
             visited.add(element);
             if (element instanceof RuntimeVertex) {
-                visit((RuntimeVertex)element);
+                visit((RuntimeVertex) element);
             } else if (element instanceof RuntimeEdge) {
-                visit((RuntimeEdge)element);
+                visit((RuntimeEdge) element);
             }
         }
 
         private void visit(RuntimeVertex vertex) {
             count++;
-            for (RuntimeEdge edge: model.getOutEdges(vertex)) {
+            for (RuntimeEdge edge : model.getOutEdges(vertex)) {
                 if (!isVisited(edge)) {
                     edge.accept(this);
                 }

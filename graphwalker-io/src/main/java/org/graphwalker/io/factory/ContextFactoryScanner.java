@@ -32,7 +32,6 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -58,7 +57,7 @@ public final class ContextFactoryScanner {
         Set<URL> urls = new HashSet<>();
         urls.addAll(ClasspathHelper.forClassLoader());
         urls.addAll(ClasspathHelper.forJavaClassPath());
-        for (URL url: urls) {
+        for (URL url : urls) {
             if (valid(url)) {
                 filteredUrls.add(url);
             }
@@ -71,7 +70,7 @@ public final class ContextFactoryScanner {
     }
 
     public static ContextFactory get(Reflections reflections, Path path) {
-        for (Class<? extends ContextFactory> factoryClass: reflections.getSubTypesOf(ContextFactory.class)) {
+        for (Class<? extends ContextFactory> factoryClass : reflections.getSubTypesOf(ContextFactory.class)) {
             ContextFactory factory = create(factoryClass);
             if (null != factory && factory.accept(path)) {
                 return factory;

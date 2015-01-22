@@ -40,7 +40,7 @@ public final class BuilderFactory {
 
     public static <T> List<T> build(List<? extends Builder<T>> builders) {
         List<T> objects = new ArrayList<>();
-        for (Builder<T> builder: builders) {
+        for (Builder<T> builder : builders) {
             objects.add(builder.build());
         }
         return Collections.unmodifiableList(objects);

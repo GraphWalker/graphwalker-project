@@ -49,7 +49,7 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
     @Override
     public void setContext(Context context) {
         super.setContext(context);
-        for (PathGenerator generator: generators) {
+        for (PathGenerator generator : generators) {
             generator.setContext(context);
         }
     }

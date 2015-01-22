@@ -41,11 +41,11 @@ public final class VertexCoverage extends StopConditionBase {
 
     public VertexCoverage(int percent) {
         super(String.valueOf(percent));
-        this.percent = (double)percent/100;
+        this.percent = (double) percent / 100;
     }
 
     public int getPercent() {
-        return (int)(percent * 100);
+        return (int) (percent * 100);
     }
 
     @Override
@@ -58,7 +58,7 @@ public final class VertexCoverage extends StopConditionBase {
         Context context = getContext();
         List<RuntimeVertex> vertices = context.getModel().getVertices();
         double visitedVertexCount = 0.0;
-        for (RuntimeVertex vertex: vertices) {
+        for (RuntimeVertex vertex : vertices) {
             if (context.getProfiler().isVisited(vertex)) {
                 visitedVertexCount++;
             }

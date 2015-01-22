@@ -38,8 +38,9 @@ import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
-import org.graphwalker.cli.service.WebSocketServer;
 import org.graphwalker.cli.service.Restful;
+import org.graphwalker.cli.service.WebSocketServer;
+import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
@@ -47,7 +48,6 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
@@ -70,7 +70,15 @@ public class CLI {
     Online online;
     Methods methods;
     Requirements requirements;
-    enum Command {NONE, OFFLINE, ONLINE, METHODS, REQUIREMENTS};
+
+    enum Command {
+        NONE,
+        OFFLINE,
+        ONLINE,
+        METHODS,
+        REQUIREMENTS
+    };
+
     Command command = Command.NONE;
 
     public static void main(String[] args) {
@@ -256,21 +264,21 @@ public class CLI {
 
             HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
             System.out.println("Try http://localhost:"
-                + online.port
-                + "/graphwalker/hasNext or http://localhost:"
-                + online.port
-                + "/graphwalker/getNext");
+                    + online.port
+                    + "/graphwalker/hasNext or http://localhost:"
+                    + online.port
+                    + "/graphwalker/getNext");
             System.out.println("Press Control+C to end...");
             try {
                 server.start();
                 Thread.currentThread().join();
             } catch (Exception e) {
-              logger.error("An error occurred when running command online: ", e);
+                logger.error("An error occurred when running command online: ", e);
             } finally {
                 server.stop();
             }
         } else {
-          throw new ParameterException("--service expected either WEBSOCKET or RESTFUL");
+            throw new ParameterException("--service expected either WEBSOCKET or RESTFUL");
         }
     }
 
@@ -306,8 +314,8 @@ public class CLI {
             context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
             if (triggerOnce &&
-                (!offline.startElement.isEmpty() ||
-                (!online.startElement.isEmpty()))) {
+                    (!offline.startElement.isEmpty() ||
+                            (!online.startElement.isEmpty()))) {
                 triggerOnce = false;
 
                 List<Element> elements = null;
@@ -317,9 +325,9 @@ public class CLI {
                     elements = context.getModel().findElements(online.startElement);
                 }
 
-                if  (elements == null) {
+                if (elements == null) {
                     throw new ParameterException("--start-element Did not find matching element in the model: " + modelFileName);
-                } else if (elements.size() > 1 ) {
+                } else if (elements.size() > 1) {
                     throw new ParameterException("--start-element There are more than one matching element in the model: " + modelFileName);
                 }
                 context.setNextElement(elements.get(0));

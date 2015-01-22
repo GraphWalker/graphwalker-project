@@ -79,8 +79,8 @@ public class IncorrectModelsTest extends CLITestRoot {
         String args[] = {"offline", "-m", "graphml/IncorrectModels/singleVertex.graphml", "random(edge_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
-            "offline -m graphml/IncorrectModels/singleVertex.graphml random(edge_coverage(100))" +
-            System.lineSeparator() + "No in-edges! Vertex: 'v_1'" + System.lineSeparator() + System.lineSeparator()));
+                "offline -m graphml/IncorrectModels/singleVertex.graphml random(edge_coverage(100))" +
+                System.lineSeparator() + "No in-edges! Vertex: 'v_1'" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 
@@ -92,8 +92,8 @@ public class IncorrectModelsTest extends CLITestRoot {
         String args[] = {"offline", "-m", "graphml/IncorrectModels/singleStartVertex.graphml", "random(edge_coverage(100))"};
         runCommand(args);
         Assert.assertThat(errMsg, is("An error occurred when running command: " +
-          "offline -m graphml/IncorrectModels/singleStartVertex.graphml random(edge_coverage(100))" +
-          System.lineSeparator() + "No start context found" + System.lineSeparator() + System.lineSeparator()));
+                "offline -m graphml/IncorrectModels/singleStartVertex.graphml random(edge_coverage(100))" +
+                System.lineSeparator() + "No start context found" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(outMsg, is(""));
     }
 

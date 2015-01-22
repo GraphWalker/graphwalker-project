@@ -62,7 +62,7 @@ public final class ChangeContext {
 
     private Set<String> extractMethodNames(RuntimeModel model) {
         Set<String> methodNames = new HashSet<>();
-        for (Element element: model.getElements()) {
+        for (Element element : model.getElements()) {
             // TODO: do we need to ignore Start!?
             if (element.hasName() && !"Start".equalsIgnoreCase(element.getName())) {
                 methodNames.add(element.getName());

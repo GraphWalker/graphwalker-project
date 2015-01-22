@@ -82,7 +82,7 @@ public class ObserverTest implements Observer {
             machine.getNextStep();
         }
         Assert.assertArrayEquals(new Object[]{
-                  BEFORE_ELEMENT, AFTER_ELEMENT
+                BEFORE_ELEMENT, AFTER_ELEMENT
                 , BEFORE_ELEMENT, AFTER_ELEMENT
                 , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
     }

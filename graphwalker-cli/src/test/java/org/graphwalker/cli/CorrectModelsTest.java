@@ -65,7 +65,7 @@ public class CorrectModelsTest extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, is(""));
         Assert.assertThat(outMsg, is("e1" + System.lineSeparator() +
-            "v1" + System.lineSeparator()));
+                "v1" + System.lineSeparator()));
     }
 
     /**
@@ -77,15 +77,15 @@ public class CorrectModelsTest extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, is(""));
         Assert.assertThat(outMsg, is("e1" + System.lineSeparator() +
-            "v1" + System.lineSeparator() +
-            "e2" + System.lineSeparator() +
-            "v2" + System.lineSeparator() +
-            "e4" + System.lineSeparator() +
-            "v4" + System.lineSeparator() +
-            "e6" + System.lineSeparator() +
-            "v1" + System.lineSeparator() +
-            "e3" + System.lineSeparator() +
-            "v3" + System.lineSeparator()));
+                "v1" + System.lineSeparator() +
+                "e2" + System.lineSeparator() +
+                "v2" + System.lineSeparator() +
+                "e4" + System.lineSeparator() +
+                "v4" + System.lineSeparator() +
+                "e6" + System.lineSeparator() +
+                "v1" + System.lineSeparator() +
+                "e3" + System.lineSeparator() +
+                "v3" + System.lineSeparator()));
     }
 
     /**
@@ -97,8 +97,8 @@ public class CorrectModelsTest extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, is(""));
         Assert.assertThat(outMsg, is("v1" + System.lineSeparator() +
-          "e2" + System.lineSeparator() +
-          "v2" + System.lineSeparator() +
-          "e4" + System.lineSeparator()));
+                "e2" + System.lineSeparator() +
+                "v2" + System.lineSeparator() +
+                "e4" + System.lineSeparator()));
     }
 }

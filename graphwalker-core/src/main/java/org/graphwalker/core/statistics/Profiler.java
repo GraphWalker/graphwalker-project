@@ -27,16 +27,13 @@ package org.graphwalker.core.statistics;
  */
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 
 /**
