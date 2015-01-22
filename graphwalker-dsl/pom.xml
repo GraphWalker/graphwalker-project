@@ -13,6 +13,12 @@
     <artifactId>graphwalker-dsl</artifactId>
     <name>GraphWalker Domain-Specific Language</name>
 
+    <scm>
+        <url>https://github.com/GraphWalker/graphwalker-project</url>
+        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>

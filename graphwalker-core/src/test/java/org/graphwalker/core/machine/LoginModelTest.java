@@ -28,7 +28,6 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.QuickRandomPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.model.*;
@@ -42,7 +41,7 @@ import java.util.List;
 /**
  * This is a programatic implementaion of the loginModel:
  * https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Login.graphml
- *
+ * <p/>
  * Created by krikar on 8/20/14.
  */
 public class LoginModelTest {
@@ -61,15 +60,15 @@ public class LoginModelTest {
     Edge e_ValidPremiumCredentials = new Edge().setName("e_ValidPremiumCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_Browse).addAction(new Action("validLogin=true"));
 
     Model model = new Model().addEdge(e_Close)
-        .addEdge(e_Exit)
-        .addEdge(e_InvalidCredentials)
-        .addEdge(e_Logout)
-        .addEdge(e_StartClient_1)
-        .addEdge(e_StartClient_2)
-        .addEdge(e_ToggleRememberMe)
-        .addEdge(e_ValidPremiumCredentials)
-        .addAction(new Action("validLogin=false"))
-        .addAction(new Action("rememberMe=false"));
+            .addEdge(e_Exit)
+            .addEdge(e_InvalidCredentials)
+            .addEdge(e_Logout)
+            .addEdge(e_StartClient_1)
+            .addEdge(e_StartClient_2)
+            .addEdge(e_ToggleRememberMe)
+            .addEdge(e_ValidPremiumCredentials)
+            .addAction(new Action("validLogin=false"))
+            .addAction(new Action("rememberMe=false"));
 
     //@Test
     public void ShortestAllPathEdgeCoverage() {
@@ -119,12 +118,12 @@ public class LoginModelTest {
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
-            v_ClientNotRunning.build(),
-            e_StartClient_1.build(),
-            v_LoginPrompted.build(),
-            e_ValidPremiumCredentials.build(),
-            v_Browse.build(),
-            e_Exit.build());
+                v_ClientNotRunning.build(),
+                e_StartClient_1.build(),
+                v_LoginPrompted.build(),
+                e_ValidPremiumCredentials.build(),
+                v_Browse.build(),
+                e_Exit.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
@@ -139,12 +138,12 @@ public class LoginModelTest {
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
-            v_ClientNotRunning.build(),
-            e_StartClient_1.build(),
-            v_LoginPrompted.build(),
-            e_ValidPremiumCredentials.build(),
-            v_Browse.build(),
-            e_Exit.build());
+                v_ClientNotRunning.build(),
+                e_StartClient_1.build(),
+                v_LoginPrompted.build(),
+                e_ValidPremiumCredentials.build(),
+                v_Browse.build(),
+                e_Exit.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }
@@ -159,11 +158,11 @@ public class LoginModelTest {
         }
 
         List<Element> expectedPath = Arrays.<Element>asList(
-            v_ClientNotRunning.build(),
-            e_StartClient_1.build(),
-            v_LoginPrompted.build(),
-            e_ValidPremiumCredentials.build(),
-            v_Browse.build());
+                v_ClientNotRunning.build(),
+                e_StartClient_1.build(),
+                v_LoginPrompted.build(),
+                e_ValidPremiumCredentials.build(),
+                v_Browse.build());
         Collections.reverse(expectedPath);
         Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     }

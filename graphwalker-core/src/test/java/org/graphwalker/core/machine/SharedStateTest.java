@@ -82,7 +82,7 @@ public class SharedStateTest {
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(context3).isEmpty(), is(true));
         List<String> names = new ArrayList<>();
-        for (Element element: machine.getProfiler().getPath()) {
+        for (Element element : machine.getProfiler().getPath()) {
             names.add(element.getName());
         }
         Assert.assertArrayEquals(names.toArray(), Arrays.asList("A", "I", "H", "G", "F", "E", "D", "C", "B", "A").toArray());

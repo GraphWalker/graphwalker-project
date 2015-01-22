@@ -29,7 +29,6 @@ package org.graphwalker.io.factory.json;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.dot.DotContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

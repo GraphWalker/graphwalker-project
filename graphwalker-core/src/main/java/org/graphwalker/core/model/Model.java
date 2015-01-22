@@ -149,7 +149,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
 
         /**
-         *
          * @return a list of non-start vertices
          */
         public List<RuntimeVertex> getVertices() {
@@ -223,7 +222,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         @SuppressWarnings("unchecked")
         private List<Element> cast(List<? extends Element> list) {
-            return (List<Element>)list;
+            return (List<Element>) list;
         }
 
         private Map<String, List<Element>> createElementsByNameCache() {
@@ -295,7 +294,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         private Map<String, List<RuntimeVertex>> createSharedStateCache() {
             Map<String, List<RuntimeVertex>> sharedStateCache = new HashMap<>();
-            for (RuntimeVertex vertex: vertices) {
+            for (RuntimeVertex vertex : vertices) {
                 if (vertex.hasSharedState()) {
                     if (!sharedStateCache.containsKey(vertex.getSharedState())) {
                         sharedStateCache.put(vertex.getSharedState(), new ArrayList<RuntimeVertex>());

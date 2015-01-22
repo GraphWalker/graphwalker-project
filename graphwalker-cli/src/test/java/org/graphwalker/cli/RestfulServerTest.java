@@ -26,22 +26,7 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import org.graphwalker.cli.service.WebSocketClient;
-import org.graphwalker.cli.service.WebSocketServer;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.BeforeExecution;
-import org.graphwalker.java.annotation.GraphWalker;
-import org.graphwalker.java.test.TestExecutor;
-import org.hamcrest.core.Is;
-import org.java_websocket.WebSocket;
-import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.nio.file.Paths;
-
-import static org.hamcrest.CoreMatchers.is;
 
 /**
  * Created by krikar on 10/10/14.
@@ -58,5 +43,6 @@ public class RestfulServerTest extends CLITestRoot {
         runCommand(args);
         Assert.assertThat(errMsg, Is.is(""));
         Assert.assertThat(outMsg, Is.is("Press Control+C to end..." ));
-    */}
+    */
+    }
 }

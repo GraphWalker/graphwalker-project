@@ -30,11 +30,11 @@ import japa.parser.ASTHelper;
 import japa.parser.JavaParser;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.ImportDeclaration;
-import japa.parser.ast.LineComment;
 import japa.parser.ast.PackageDeclaration;
 import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.body.ModifierSet;
+import japa.parser.ast.comments.LineComment;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.io.factory.ContextFactory;
@@ -104,15 +104,15 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     }
 
     private void removeMethods(CompilationUnit compilationUnit, ChangeContext changeContext) {
-        if (0<changeContext.getMethodDeclarations().size()) {
-            ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
+        if (0 < changeContext.getMethodDeclarations().size()) {
+            ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration) compilationUnit.getTypes().get(0);
             body.getMembers().removeAll(changeContext.getMethodDeclarations());
         }
     }
 
     private void generateMethods(CompilationUnit compilationUnit, ChangeContext changeContext) {
-        ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration)compilationUnit.getTypes().get(0);
-        for (String methodName: changeContext.getMethodNames()) {
+        ClassOrInterfaceDeclaration body = (ClassOrInterfaceDeclaration) compilationUnit.getTypes().get(0);
+        for (String methodName : changeContext.getMethodNames()) {
             if (isValidName(methodName)) {
                 MethodDeclaration method = new MethodDeclaration(Modifier.INTERFACE, ASTHelper.VOID_TYPE, methodName);
                 List<AnnotationExpr> annotations = new ArrayList<>();
@@ -159,7 +159,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     private ClassOrInterfaceDeclaration getInterfaceName(SourceFile sourceFile) {
         ClassOrInterfaceDeclaration classOrInterfaceDeclaration = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, sourceFile.getFileName());
         List<MemberValuePair> memberValuePairs = new ArrayList<>();
-        memberValuePairs.add( new MemberValuePair("file", new StringLiteralExpr(sourceFile.getRelativePath().toString().replace(File.separator, "/"))));
+        memberValuePairs.add(new MemberValuePair("file", new StringLiteralExpr(sourceFile.getRelativePath().toString().replace(File.separator, "/"))));
         List<AnnotationExpr> annotations = new ArrayList<>();
         annotations.add(new NormalAnnotationExpr(ASTHelper.createNameExpr("Model"), memberValuePairs));
         classOrInterfaceDeclaration.setAnnotations(annotations);

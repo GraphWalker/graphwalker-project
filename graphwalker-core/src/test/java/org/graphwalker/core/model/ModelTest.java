@@ -166,10 +166,10 @@ public class ModelTest {
         final long startTime = System.nanoTime();
         final Random random = new Random(System.nanoTime());
         final Model model = new Model();
-        for (int i = 0; i<50000; i++) {
+        for (int i = 0; i < 50000; i++) {
             model.addVertex(new Vertex());
         }
-        for (int i = 0; i<50000; i++) {
+        for (int i = 0; i < 50000; i++) {
             int source = random.nextInt(model.getVertices().size());
             int target = random.nextInt(model.getVertices().size());
             model.addEdge(new Edge()
@@ -182,6 +182,6 @@ public class ModelTest {
         Assert.assertThat(model.getEdges().size(), is(50000));
         Assert.assertThat(runtimeModel.getVertices().size(), is(50000));
         Assert.assertThat(runtimeModel.getEdges().size(), is(50000));
-        Assert.assertTrue(TimeUnit.MILLISECONDS.convert(stopTime-startTime, TimeUnit.NANOSECONDS) < 10000);
+        Assert.assertTrue(TimeUnit.MILLISECONDS.convert(stopTime - startTime, TimeUnit.NANOSECONDS) < 10000);
     }
 }

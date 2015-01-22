@@ -49,7 +49,7 @@ public final class FailFastStrategy implements ExceptionStrategy {
 
     private void fail(Context context, Element element) {
         if (element.hasRequirements()) {
-            for (Requirement requirement: element.getRequirements()) {
+            for (Requirement requirement : element.getRequirements()) {
                 context.setRequirementStatus(requirement, RequirementStatus.FAILED);
             }
         }

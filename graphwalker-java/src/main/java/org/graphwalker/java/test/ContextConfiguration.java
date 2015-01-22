@@ -39,7 +39,8 @@ public class ContextConfiguration {
     private String stopConditionName;
     private String stopConditionValue;
 
-    public ContextConfiguration() {}
+    public ContextConfiguration() {
+    }
 
     public ContextConfiguration(Class<?> testClass) {
         setTestClass(testClass);

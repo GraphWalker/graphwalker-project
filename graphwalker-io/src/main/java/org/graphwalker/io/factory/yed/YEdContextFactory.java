@@ -104,9 +104,9 @@ public final class YEdContextFactory implements ContextFactory {
             context.setNextElement(startEdge);
         }
 
-        for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
+        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
             if (0 == context.getModel().getInEdges(vertex).size() && !vertex.equals(context.getNextElement()) && !vertex.hasSharedState()) {
-                throw new ContextFactoryException("No in-edges! Vertex: '"+(vertex.hasName()?vertex.getName():vertex.getId())+"'");
+                throw new ContextFactoryException("No in-edges! Vertex: '" + (vertex.hasName() ? vertex.getName() : vertex.getId()) + "'");
             }
         }
 
@@ -116,17 +116,17 @@ public final class YEdContextFactory implements ContextFactory {
     private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
         Vertex startVertex = null;
         Deque<XmlObject> workQueue = new ArrayDeque<>();
-        workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:node")));
+        workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
         while (!workQueue.isEmpty()) {
             XmlObject object = workQueue.pop();
             if (object instanceof NodeType) {
-                NodeType node = (NodeType)object;
+                NodeType node = (NodeType) object;
                 if (0 < node.getGraphArray().length) {
-                    for (GraphType subgraph: node.getGraphArray()) {
+                    for (GraphType subgraph : node.getGraphArray()) {
                         workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
                     }
                 } else {
-                    for (DataType data: node.getDataArray()) {
+                    for (DataType data : node.getDataArray()) {
                         if (0 < data.getDomNode().getChildNodes().getLength()) {
                             if (isSupportedNode(data.xmlText())) {
                                 StringBuilder label = new StringBuilder();
@@ -178,11 +178,11 @@ public final class YEdContextFactory implements ContextFactory {
 
     private boolean isSupportedNode(String xml) {
         return xml.contains("GenericNode")
-            || xml .contains("ShapeNode")
-            || xml.contains("GenericGroupNode")
-            || xml.contains("GroupNode")
-            || xml.contains("ImageNode")
-            || xml.contains("TableNode");
+                || xml.contains("ShapeNode")
+                || xml.contains("GenericGroupNode")
+                || xml.contains("GroupNode")
+                || xml.contains("ImageNode")
+                || xml.contains("TableNode");
     }
 
     private com.yworks.xml.graphml.NodeType getSupportedNode(String xml) throws XmlException {
@@ -199,15 +199,15 @@ public final class YEdContextFactory implements ContextFactory {
         } else if (xml.contains("TableNode")) {
             return TableNodeDocument.Factory.parse(xml).getTableNode();
         }
-        throw new ContextFactoryException("Unsupported node type: "+xml);
+        throw new ContextFactoryException("Unsupported node type: " + xml);
     }
 
     private Edge addEdges(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
         Edge startEdge = null;
-        for (XmlObject object: document.selectPath(NAMESPACE+"$this/xq:graphml/xq:graph/xq:edge")) {
+        for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
             if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
-                org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType)object;
-                for (DataType data: edgeType.getDataArray()) {
+                org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType) object;
+                for (DataType data : edgeType.getDataArray()) {
                     if (0 < data.getDomNode().getChildNodes().getLength()) {
                         if (isSupportedEdge(data.xmlText())) {
                             StringBuilder label = new StringBuilder();
@@ -227,7 +227,7 @@ public final class YEdContextFactory implements ContextFactory {
                                 edge.setTargetVertex(elements.get(edgeType.getTarget()));
                             }
                             boolean blocked = false;
-                            for (YEdEdgeParser.FieldContext field: parseContext.field()) {
+                            for (YEdEdgeParser.FieldContext field : parseContext.field()) {
                                 if (null != field.names()) {
                                     edge.setName(field.names().getText());
                                 }
@@ -247,7 +247,7 @@ public final class YEdContextFactory implements ContextFactory {
                                 }
                             }
                             if (!blocked) {
-                                if (null != edge.getTargetVertex() ) {
+                                if (null != edge.getTargetVertex()) {
                                     if (null != startVertex && edgeType.getSource().equals(startVertex.getId())) {
                                         edge.setSourceVertex(null);
                                         edge.setId(edgeType.getId());
@@ -269,11 +269,11 @@ public final class YEdContextFactory implements ContextFactory {
 
     private boolean isSupportedEdge(String xml) {
         return xml.contains("PolyLineEdge")
-            || xml.contains("GenericEdge")
-            || xml.contains("ArcEdge")
-            || xml.contains("QuadCurveEdge")
-            || xml.contains("SplineEdge")
-            || xml.contains("BezierEdge");
+                || xml.contains("GenericEdge")
+                || xml.contains("ArcEdge")
+                || xml.contains("QuadCurveEdge")
+                || xml.contains("SplineEdge")
+                || xml.contains("BezierEdge");
     }
 
     private com.yworks.xml.graphml.EdgeType getSupportedEdge(String xml) throws XmlException {
@@ -290,12 +290,12 @@ public final class YEdContextFactory implements ContextFactory {
         } else if (xml.contains("BezierEdge")) {
             return BezierEdgeDocument.Factory.parse(xml).getBezierEdge();
         }
-        throw new ContextFactoryException("Unsupported edge type: "+xml);
+        throw new ContextFactoryException("Unsupported edge type: " + xml);
     }
 
     private List<Action> convertEdgeAction(List<YEdEdgeParser.ActionContext> actionContexts) {
         List<Action> actions = new ArrayList<>();
-        for (YEdEdgeParser.ActionContext actionContext: actionContexts) {
+        for (YEdEdgeParser.ActionContext actionContext : actionContexts) {
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
@@ -303,7 +303,7 @@ public final class YEdContextFactory implements ContextFactory {
 
     private List<Action> convertVertexAction(List<YEdVertexParser.ActionContext> actionContexts) {
         List<Action> actions = new ArrayList<>();
-        for (YEdVertexParser.ActionContext actionContext: actionContexts) {
+        for (YEdVertexParser.ActionContext actionContext : actionContexts) {
             actions.add(new Action(actionContext.getText()));
         }
         return actions;
@@ -311,7 +311,7 @@ public final class YEdContextFactory implements ContextFactory {
 
     private Set<Requirement> convertEdgeRequirement(List<YEdEdgeParser.ReqtagContext> reqtagContexts) {
         Set<Requirement> requirements = new HashSet<>();
-        for (YEdEdgeParser.ReqtagContext reqtagContext: reqtagContexts) {
+        for (YEdEdgeParser.ReqtagContext reqtagContext : reqtagContexts) {
             requirements.add(new Requirement(reqtagContext.getText()));
         }
         return requirements;
@@ -319,7 +319,7 @@ public final class YEdContextFactory implements ContextFactory {
 
     private Set<Requirement> convertVertexRequirement(List<YEdVertexParser.ReqtagContext> reqtagContexts) {
         Set<Requirement> requirements = new HashSet<>();
-        for (YEdVertexParser.ReqtagContext reqtagContext: reqtagContexts) {
+        for (YEdVertexParser.ReqtagContext reqtagContext : reqtagContexts) {
             requirements.add(new Requirement(reqtagContext.getText()));
         }
         return requirements;

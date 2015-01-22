@@ -45,7 +45,7 @@ public final class InternalState extends StopConditionBase {
         try {
             Object value = getContext().getScriptEngine().eval(script);
             if (value instanceof Boolean) {
-                return (Boolean)value;
+                return (Boolean) value;
             } else {
                 throw new StopConditionException("Wrong type of expression");
             }
@@ -56,6 +56,6 @@ public final class InternalState extends StopConditionBase {
 
     @Override
     public double getFulfilment() {
-        return isFulfilled()?1.0:0.0;
+        return isFulfilled() ? 1.0 : 0.0;
     }
 }

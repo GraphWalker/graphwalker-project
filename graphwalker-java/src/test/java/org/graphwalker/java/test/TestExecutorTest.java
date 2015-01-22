@@ -27,12 +27,10 @@ package org.graphwalker.java.test;
  */
 
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.java.annotation.GraphWalker;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -42,8 +40,6 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -138,8 +134,8 @@ public class TestExecutorTest {
         public ThrowExceptionTest() {
             Vertex vertex = new Vertex().setName("throwException");
             Model model = new Model()
-                  .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-                  .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
             setModel(model.build());
         }
 

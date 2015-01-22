@@ -70,7 +70,6 @@ public class DotContextFactoryTest {
         Assert.assertThat(context.getModel().getEdges().size(), is(2));
 
 
-
         Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
         Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
 

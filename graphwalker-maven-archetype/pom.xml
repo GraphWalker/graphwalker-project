@@ -14,6 +14,12 @@
     <artifactId>graphwalker-maven-archetype</artifactId>
     <packaging>maven-archetype</packaging>
 
+    <scm>
+        <url>https://github.com/GraphWalker/graphwalker-project</url>
+        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+    </scm>
+
     <build>
         <extensions>
             <extension>

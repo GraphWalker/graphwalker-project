@@ -40,7 +40,7 @@ public final class Configuration {
     private final Set<String> groups = new HashSet<>();
 
     public Set<String> getIncludes() {
-        return includes.isEmpty()?DEFAULT:includes;
+        return includes.isEmpty() ? DEFAULT : includes;
     }
 
     public Configuration setIncludes(Collection<String> includes) {
@@ -70,7 +70,7 @@ public final class Configuration {
     }
 
     public Set<String> getGroups() {
-        return groups.isEmpty()?DEFAULT:groups;
+        return groups.isEmpty() ? DEFAULT : groups;
     }
 
     public Configuration setGroups(Collection<String> groups) {

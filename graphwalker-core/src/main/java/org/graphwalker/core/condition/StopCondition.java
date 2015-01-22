@@ -36,9 +36,14 @@ public interface StopCondition {
     double FULFILLMENT_LEVEL = 0.999999;
 
     Context getContext();
+
     void setContext(Context context);
+
     boolean isFulfilled();
+
     double getFulfilment();
+
     String getValue();
+
     StringBuilder toString(StringBuilder builder);
 }

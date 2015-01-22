@@ -59,15 +59,15 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 public final class TestExecutor implements Executor {
 
     private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
-          .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
-          .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+            .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
+            .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
 
     private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
         Reflections.log = null;
         List<URL> urls = new ArrayList<>(), filteredUrls = new ArrayList<>();
         urls.addAll(classPath);
         urls.addAll(classLoader);
-        for (URL url: urls) {
+        for (URL url : urls) {
             if (!filteredUrls.contains(url) && new File(url.getFile()).exists()) {
                 filteredUrls.add(url);
             }
@@ -106,7 +106,7 @@ public final class TestExecutor implements Executor {
 
     private MachineConfiguration createMachineConfiguration(Collection<Class<?>> testClasses) {
         MachineConfiguration machineConfiguration = new MachineConfiguration();
-        for (Class<?> testClass: testClasses) {
+        for (Class<?> testClass : testClasses) {
             GraphWalker annotation = testClass.getAnnotation(GraphWalker.class);
             if (isTestIncluded(annotation, testClass.getName())) {
                 ContextConfiguration contextConfiguration = new ContextConfiguration();
@@ -119,7 +119,7 @@ public final class TestExecutor implements Executor {
 
     private Collection<Context> createContexts(MachineConfiguration machineConfiguration) {
         Set<Context> contexts = new HashSet<>();
-        for (ContextConfiguration contextConfiguration: machineConfiguration.getContextConfigurations()) {
+        for (ContextConfiguration contextConfiguration : machineConfiguration.getContextConfigurations()) {
             Context context = createContext(contextConfiguration.getTestClass());
             configureContext(context);
             contexts.add(context);
@@ -129,7 +129,7 @@ public final class TestExecutor implements Executor {
 
     private Context createContext(Class<?> testClass) {
         try {
-            return (Context)testClass.newInstance();
+            return (Context) testClass.newInstance();
         } catch (Throwable e) {
             throw new TestExecutionException("Failed to create context");
         }
@@ -155,9 +155,9 @@ public final class TestExecutor implements Executor {
     private Machine createMachine(MachineConfiguration machineConfiguration) {
         Collection<Context> contexts = createContexts(machineConfiguration);
         Machine machine = new SimpleMachine(contexts);
-        for (Context context: machine.getContexts()) {
+        for (Context context : machine.getContexts()) {
             if (context instanceof Observer) {
-                machine.addObserver((Observer)context);
+                machine.addObserver((Observer) context);
             }
         }
         return machine;
@@ -193,7 +193,7 @@ public final class TestExecutor implements Executor {
 
     private void updateResult(Result result, Machine machine) {
         int completed = 0, failed = 0, notExecuted = 0, incomplete = 0;
-        for (Context context: machine.getContexts()) {
+        for (Context context : machine.getContexts()) {
             switch (context.getExecutionStatus()) {
                 case COMPLETED: {
                     completed++;
@@ -220,8 +220,8 @@ public final class TestExecutor implements Executor {
 
     private boolean isTestIncluded(GraphWalker annotation, String name) {
         boolean belongsToGroup = false;
-        for (String group: annotation.groups()) {
-            for (String definedGroups: configuration.getGroups()) {
+        for (String group : annotation.groups()) {
+            for (String definedGroups : configuration.getGroups()) {
                 if (SelectorUtils.match(definedGroups, group)) {
                     belongsToGroup = true;
                     break;
@@ -255,7 +255,7 @@ public final class TestExecutor implements Executor {
     }
 
     private void executeAnnotation(Class<? extends Annotation> annotation, Machine machine) {
-        for (Context context: machine.getContexts()) {
+        for (Context context : machine.getContexts()) {
             executeAnnotation(annotation, context);
         }
     }
@@ -278,7 +278,7 @@ public final class TestExecutor implements Executor {
 
     public void reportResults(File file, Date startTime, Properties properties) {
         new XMLReportGenerator(startTime, properties).writeReport(file, this);
-        if (0<getFailures().size()) {
+        if (0 < getFailures().size()) {
             throw new TestExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
         }
     }

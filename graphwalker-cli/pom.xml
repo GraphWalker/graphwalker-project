@@ -13,6 +13,12 @@
     <artifactId>graphwalker-cli</artifactId>
     <name>GraphWalker Command Line Interface</name>
 
+    <scm>
+        <url>https://github.com/GraphWalker/graphwalker-project</url>
+        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
@@ -59,11 +65,6 @@
             <artifactId>graphwalker-java</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--dependency>
-            <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-maven-plugin</artifactId>
-            <scope>test</scope>
-        </dependency-->
     </dependencies>
 
     <build>

@@ -115,7 +115,7 @@ public class WebSocketClient {
 
                 @Override
                 public void onMessage(String message) {
-                    logger.debug("Got message: " + message );
+                    logger.debug("Got message: " + message);
                     JSONObject root;
                     try {
                         root = new JSONObject(message);
@@ -170,7 +170,7 @@ public class WebSocketClient {
 
                 @Override
                 public void onOpen(ServerHandshake handshake) {
-                    logger.info("Connected to: " + getURI() );
+                    logger.info("Connected to: " + getURI());
                     connected = true;
                 }
 
@@ -226,7 +226,7 @@ public class WebSocketClient {
      * Several models can be loaded. Every model which is loaded, will have it's own
      * context in the machine.
      *
-     * @param path  a JSON formatted GraphWalker model as a file
+     * @param path a JSON formatted GraphWalker model as a file
      */
     public void loadModel(Path path) {
         logger.debug("Loading model file: " + path.toString());

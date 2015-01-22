@@ -40,10 +40,16 @@ import java.util.Properties;
  */
 public interface Executor {
     Result execute();
+
     MachineConfiguration getMachineConfiguration();
+
     Machine getMachine();
+
     boolean isFailure(Context context);
+
     MachineException getFailure(Context context);
+
     Collection<MachineException> getFailures();
+
     void reportResults(File file, Date startTime, Properties properties);
 }
