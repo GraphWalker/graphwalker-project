@@ -35,9 +35,13 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.CodeGenerator;
 import org.graphwalker.java.source.SourceFile;
+import org.graphwalker.maven.plugin.generate.Cache;
+import org.graphwalker.maven.plugin.generate.CacheEntry;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
@@ -50,7 +54,13 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
     @Parameter(defaultValue = "${project.build.sourceEncoding}")
     private String encoding;
 
+    private Cache cache = new Cache();
+
     private CodeGenerator codeGenerator = new CodeGenerator();
+
+    public GenerateMojoBase() {
+
+    }
 
     protected String getEncoding() {
         return StringUtils.isEmpty(encoding)? ReaderFactory.FILE_ENCODING: encoding;
@@ -62,6 +72,7 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
         for (Resource resource: resources) {
             generate(resource);
         }
+        cache.save();
     }
 
     private void generate(Resource resource) {
@@ -75,11 +86,24 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
         generate(new SourceFile(file, baseDirectory, outputDirectory));
     }
 
+    private boolean isCached(SourceFile sourceFile) {
+        Path path = sourceFile.getInputPath();
+        if (cache.containsKey(path)) {
+            CacheEntry entry = cache.get(path);
+            try {
+                return Files.getLastModifiedTime(path).equals(entry.getLastModifiedTime());
+            } catch (IOException e) {
+                //
+            }
+        }
+        return false;
+    }
+
     private void generate(SourceFile sourceFile) {
-        ContextFactory contextFactory = getContextFactory(sourceFile);
-        if (null != contextFactory) {
-            File outputFile = sourceFile.getOutputPath().toFile();
-            if (!outputFile.exists() || outputFile.lastModified() < sourceFile.getInputPath().toFile().lastModified()) {
+        File outputFile = sourceFile.getOutputPath().toFile();
+        if (!isCached(sourceFile) && (!outputFile.exists() || outputFile.lastModified() < sourceFile.getInputPath().toFile().lastModified())) {
+            ContextFactory contextFactory = getContextFactory(sourceFile);
+            if (null != contextFactory) {
                 try {
                     RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
                     String source = codeGenerator.generate(sourceFile, model);
@@ -96,6 +120,8 @@ public abstract class GenerateMojoBase extends DefaultMojoBase {
                     FileUtils.fileDelete(outputFile.getAbsolutePath());
                     FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
                 } catch (Throwable t) {
+                    CacheEntry entry = new CacheEntry(sourceFile.getInputPath().toFile().lastModified());
+                    cache.put(sourceFile.getInputPath(), entry);
                     if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
                         getLog().error("Error: Generate " + sourceFile.getInputPath(), t);
                     } else if (getLog().isDebugEnabled()) {
