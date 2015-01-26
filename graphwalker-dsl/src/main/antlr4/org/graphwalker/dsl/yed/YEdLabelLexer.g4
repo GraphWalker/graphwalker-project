@@ -69,7 +69,7 @@ COMMENT
  ;
 
 LINE_COMMENT
- :   '//' ~[\r\n]* -> skip
+ :   WHITESPACE '//' ~[\r\n]* -> skip
  ;
 
 WHITESPACE
