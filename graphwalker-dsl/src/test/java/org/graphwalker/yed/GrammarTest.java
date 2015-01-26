@@ -107,7 +107,8 @@ public class GrammarTest {
             "word1\nweight=0",
             "WORD1\nweight=1",
             "word1[x=>y]/x=y;\nweight=0.3",
-            "word1\nWEIGHT=0.33333"
+            "word1\nWEIGHT=0.33333",
+            "e_Init / DropUrl=\"https://a.b.c.org/x/y/z/items.aspx\";urlInfo=\"http://data/node\";REST=true;"
     );
 
     @Test
