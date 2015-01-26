@@ -41,6 +41,7 @@ import javax.ws.rs.QueryParam;
 import java.util.Iterator;
 
 /**
+ * JAX-RS (Java API for RESTful Services (JAX-RS)) service implementation.
  * Created by krikar on 5/30/14.
  */
 @Path("graphwalker")
@@ -53,6 +54,12 @@ public class Restful {
         this.machine = new SimpleMachine(cli.getContextsWithPathGenerators(itr));
     }
 
+    /**
+     * Returns the next step (element) to be executed on the model. An element can
+     * be either a vertex or an edge,
+     * @return The label of the next step as a plain or a JSON formatted string. If the label is empty or
+     * non-existent, the label of the step is an empty string.
+     */
     @GET
     @Produces("text/plain")
     @Path("hasNext")
@@ -74,6 +81,12 @@ public class Restful {
         }
     }
 
+    /**
+     * Gets the next step (element) to be executed on the model. An element can
+     * be either a vertex or an edge,
+     * @return The label of the next step as a plain or a JSON formatted string. If the label is empty or
+     * non-existent, the label of the step is an empty string.
+     */
     @GET
     @Produces("text/plain")
     @Path("getNext")
