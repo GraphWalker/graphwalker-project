@@ -28,6 +28,10 @@ package org.graphwalker.gradle.plugin;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.graphwalker.gradle.plugin.task.ExecuteTests;
+import org.graphwalker.gradle.plugin.task.GenerateSources;
+import org.graphwalker.gradle.plugin.task.ValidateModels;
+import org.graphwalker.gradle.plugin.task.Watch;
 
 /**
  * @author Nils Olsson

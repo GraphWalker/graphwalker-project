@@ -39,15 +39,16 @@ import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.graphwalker.java.source.cache.CacheEntry;
+import org.graphwalker.java.source.cache.SimpleCache;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -55,6 +56,55 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  * @author Nils Olsson
  */
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
+
+    private static CodeGenerator generator = new CodeGenerator();
+
+    public static void generate(final Path input, final Path output) {
+        final SimpleCache cache = new SimpleCache(output);
+        try {
+            Files.walkFileTree(input, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
+                    if (!cache.contains(file) || isModified(file)) {
+                        try {
+                            write(new SourceFile(file, input, output));
+                            cache.add(file, new CacheEntry(file.toFile().lastModified(), true));
+                        } catch (Throwable t) {
+                            cache.add(file, new CacheEntry(file.toFile().lastModified(), false));
+                        }
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                private boolean isModified(Path file) throws IOException {
+                    return !Files.getLastModifiedTime(file).equals(cache.get(file).getLastModifiedTime());
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    cache.add(file, new CacheEntry(file.toFile().lastModified(), false));
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            throw new CodeGeneratorException(e);
+        }
+    }
+
+    private static void write(SourceFile file) {
+        try {
+            Path path = file.getInputPath();
+            ContextFactory factory = ContextFactoryScanner.get(path);
+            RuntimeModel model = factory.create(path).getModel();
+            String source = generator.generate(file, model);
+            Files.createDirectories(file.getOutputPath().getParent());
+            Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))
+                , StandardOpenOption.CREATE
+                , StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (Throwable t) {
+            throw new CodeGeneratorException(t);
+        }
+    }
 
     public String generate(String file) {
         return generate(Paths.get(file));
