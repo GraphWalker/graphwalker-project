@@ -220,6 +220,11 @@
                 <artifactId>Java-WebSocket</artifactId>
                 <version>1.3.0</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.3.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

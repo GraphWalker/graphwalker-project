@@ -1,4 +1,4 @@
-package org.graphwalker.gradle.plugin;
+package org.graphwalker.gradle.plugin.task;
 
 /*
  * #%L
@@ -32,10 +32,10 @@ import org.gradle.api.tasks.TaskAction;
 /**
  * @author Nils Olsson
  */
-public class Watch extends DefaultTask {
+public class ValidateModels extends DefaultTask {
 
     @TaskAction
     public void executeTask() {
-        System.out.println("Watch called");
+        System.out.println("ValidateModels called");
     }
 }

@@ -1,4 +1,4 @@
-package org.graphwalker.gradle.plugin;
+package org.graphwalker.gradle.plugin.task;
 
 /*
  * #%L
@@ -27,15 +27,26 @@ package org.graphwalker.gradle.plugin;
  */
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
+import org.graphwalker.java.source.CodeGenerator;
+
+import java.io.File;
 
 /**
  * @author Nils Olsson
  */
-public class ExecuteTests extends DefaultTask {
+public class GenerateSources extends DefaultTask {
+
+    @InputDirectory
+    private File resources = new File("src/main/resources");
+
+    @OutputDirectory
+    private File generatedSources = new File(getProject().getBuildDir(), "generated-sources/graphwalker");
 
     @TaskAction
     public void executeTask() {
-        System.out.println("ExecuteTests called");
+        CodeGenerator.generate(resources.toPath(), generatedSources.toPath());
     }
 }
