@@ -53,16 +53,6 @@
         <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
     </scm>
 
-    <repositories>
-        <repository>
-            <id>springsource</id>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <url>http://repo.springsource.org/libs-release-remote</url>
-        </repository>
-    </repositories>
-
     <distributionManagement>
         <site>
             <id>${project.artifactId}-site</id>
@@ -213,6 +203,11 @@
             <dependency>
                 <groupId>org.gradle</groupId>
                 <artifactId>gradle-base-services-groovy</artifactId>
+                <version>2.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gradle</groupId>
+                <artifactId>gradle-plugins</artifactId>
                 <version>2.2.1</version>
             </dependency>
             <dependency>

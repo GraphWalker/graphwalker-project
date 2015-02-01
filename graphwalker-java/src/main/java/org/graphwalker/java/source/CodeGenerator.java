@@ -67,7 +67,9 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
                     if (!cache.contains(file) || isModified(file)) {
                         try {
-                            write(new SourceFile(file, input, output));
+                            SourceFile sourceFile = new SourceFile(file, input, output);
+                            ContextFactory factory = ContextFactoryScanner.get(sourceFile.getInputPath());
+                            write(factory, sourceFile);
                             cache.add(file, new CacheEntry(file.toFile().lastModified(), true));
                         } catch (Throwable t) {
                             cache.add(file, new CacheEntry(file.toFile().lastModified(), false));
@@ -91,11 +93,9 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
         }
     }
 
-    private static void write(SourceFile file) {
+    private static void write(ContextFactory factory, SourceFile file) {
         try {
-            Path path = file.getInputPath();
-            ContextFactory factory = ContextFactoryScanner.get(path);
-            RuntimeModel model = factory.create(path).getModel();
+            RuntimeModel model = factory.create(file.getInputPath()).getModel();
             String source = generator.generate(file, model);
             Files.createDirectories(file.getOutputPath().getParent());
             Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))

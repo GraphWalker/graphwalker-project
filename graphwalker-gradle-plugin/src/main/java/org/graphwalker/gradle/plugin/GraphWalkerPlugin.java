@@ -25,13 +25,15 @@ package org.graphwalker.gradle.plugin;
  * THE SOFTWARE.
  * #L%
  */
-
+import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.graphwalker.gradle.plugin.task.ExecuteTests;
-import org.graphwalker.gradle.plugin.task.GenerateSources;
-import org.graphwalker.gradle.plugin.task.ValidateModels;
-import org.graphwalker.gradle.plugin.task.Watch;
+import org.gradle.api.Task;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.SourceSetContainer;
+import org.graphwalker.gradle.plugin.task.*;
+
+import java.io.File;
 
 /**
  * @author Nils Olsson
@@ -40,9 +42,51 @@ public class GraphWalkerPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
-        project.getTasks().create("validateModels", ValidateModels.class);
-        project.getTasks().create("generateSources", GenerateSources.class);
-        project.getTasks().create("executeTests", ExecuteTests.class);
-        project.getTasks().create("watch", Watch.class);
+        GraphWalkerExtension extension = project.getExtensions().create("graphwalker", GraphWalkerExtension.class);
+        configure(project, extension);
+    }
+
+    private void configure(final Project project, final GraphWalkerExtension extension) {
+
+        final ValidateModels validateModels = project.getTasks().create("validateModels", ValidateModels.class);
+        validateModels.setGroup("graphwalker");
+        validateModels.setDescription("");
+
+        final ValidateTestModels validateTestModels = project.getTasks().create("validateTestModels", ValidateTestModels.class);
+        validateTestModels.setGroup("graphwalker");
+        validateTestModels.setDescription("");
+
+        final GenerateSources generateSources = project.getTasks().create("generateSources", GenerateSources.class);
+        generateSources.setGroup("graphwalker");
+        generateSources.setDescription("");
+
+        final GenerateTestSources generateTestSources = project.getTasks().create("generateTestSources", GenerateTestSources.class);
+        generateTestSources.setGroup("graphwalker");
+        generateTestSources.setDescription("");
+
+        final ExecuteTests executeTests = project.getTasks().create("executeTests", ExecuteTests.class);
+        executeTests.setGroup("graphwalker");
+        executeTests.setDescription("");
+
+        final Watch watch = project.getTasks().create("watch", Watch.class);
+        watch.setGroup("graphwalker");
+        watch.setDescription("");
+
+        final Clean clean = project.getTasks().create("gwClean", Clean.class);
+        clean.setGroup("graphwalker");
+        clean.setDescription("");
+
+
+        project.getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
+
+            @Override
+            public void execute(JavaPlugin plugin) {
+                final SourceSetContainer sourceSets = (SourceSetContainer)project.getProperties().get("sourceSets");
+                sourceSets.getByName("main").getJava().srcDir(generateSources.getGeneratedSources());
+                final Task processResources = project.getTasks().getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME);
+                processResources.dependsOn(generateSources);
+
+            }
+        });
     }
 }

@@ -35,7 +35,7 @@ import org.gradle.api.tasks.TaskAction;
 public class ExecuteTests extends DefaultTask {
 
     @TaskAction
-    public void executeTask() {
+    public void executeTests() {
         System.out.println("ExecuteTests called");
     }
 }

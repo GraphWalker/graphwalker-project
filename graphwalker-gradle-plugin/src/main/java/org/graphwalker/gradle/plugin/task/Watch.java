@@ -35,7 +35,7 @@ import org.gradle.api.tasks.TaskAction;
 public class Watch extends DefaultTask {
 
     @TaskAction
-    public void executeTask() {
+    public void watch() {
         System.out.println("Watch called");
     }
 }

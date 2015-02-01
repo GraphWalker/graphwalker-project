@@ -35,7 +35,7 @@ import org.gradle.api.tasks.TaskAction;
 public class ValidateModels extends DefaultTask {
 
     @TaskAction
-    public void executeTask() {
+    public void validateModels() {
         System.out.println("ValidateModels called");
     }
 }
