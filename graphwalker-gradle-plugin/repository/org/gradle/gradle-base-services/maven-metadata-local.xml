@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.gradle</groupId>
+  <artifactId>gradle-base-services</artifactId>
+  <versioning>
+    <release>2.2.1</release>
+    <versions>
+      <version>2.2.1</version>
+    </versions>
+    <lastUpdated>20150131211455</lastUpdated>
+  </versioning>
+</metadata>

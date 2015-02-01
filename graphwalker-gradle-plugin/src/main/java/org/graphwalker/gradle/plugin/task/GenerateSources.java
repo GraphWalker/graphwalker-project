@@ -43,10 +43,14 @@ public class GenerateSources extends DefaultTask {
     private File resources = new File("src/main/resources");
 
     @OutputDirectory
-    private File generatedSources = new File(getProject().getBuildDir(), "generated-sources/graphwalker");
+    private File generatedSources = new File(getProject().getProjectDir(), "generated-sources/graphwalker");
 
     @TaskAction
-    public void executeTask() {
+    public void generateSources() {
         CodeGenerator.generate(resources.toPath(), generatedSources.toPath());
+    }
+
+    public File getGeneratedSources() {
+        return generatedSources;
     }
 }

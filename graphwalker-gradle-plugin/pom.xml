@@ -19,6 +19,13 @@
         <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
     </scm>
 
+    <repositories>
+        <repository>
+            <id>local-dependencies</id>
+            <url>file://${basedir}/repository</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.graphwalker</groupId>
@@ -41,9 +48,8 @@
             <artifactId>gradle-base-services-groovy</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-utils</artifactId>
-            <version>3.0.20</version>
+            <groupId>org.gradle</groupId>
+            <artifactId>gradle-plugins</artifactId>
         </dependency>
     </dependencies>
 
