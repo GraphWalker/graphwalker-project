@@ -29,11 +29,10 @@ import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.plugins.BasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.graphwalker.gradle.plugin.task.*;
-
-import java.io.File;
 
 /**
  * @author Nils Olsson
@@ -42,6 +41,7 @@ public class GraphWalkerPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
+        project.getPlugins().apply(BasePlugin.class);
         GraphWalkerExtension extension = project.getExtensions().create("graphwalker", GraphWalkerExtension.class);
         configure(project, extension);
     }
@@ -76,7 +76,6 @@ public class GraphWalkerPlugin implements Plugin<Project> {
         clean.setGroup("graphwalker");
         clean.setDescription("");
 
-
         project.getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
 
             @Override
@@ -85,6 +84,9 @@ public class GraphWalkerPlugin implements Plugin<Project> {
                 sourceSets.getByName("main").getJava().srcDir(generateSources.getGeneratedSources());
                 final Task processResources = project.getTasks().getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME);
                 processResources.dependsOn(generateSources);
+
+                final Task cleanTast = project.getTasks().getByName(BasePlugin.CLEAN_TASK_NAME);
+                cleanTast.dependsOn(clean);
 
             }
         });
