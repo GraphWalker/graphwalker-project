@@ -87,4 +87,45 @@ public class SharedStateTest {
         }
         Assert.assertArrayEquals(names.toArray(), Arrays.asList("A", "I", "H", "G", "F", "E", "D", "C", "B", "A").toArray());
     }
+
+    @Test
+    public void issue7() {
+        Vertex v_HomePage = new Vertex().setName("v_HomePage").setSharedState("HomePage");
+        Vertex v_FindOwners = new Vertex().setName("v_FindOwners").setSharedState("FindOwners");
+        Vertex v_Veterinarians = new Vertex().setName("v_Veterinarians").setSharedState("Veterinarians");
+
+        Model modelPetClinic = new Model()
+                .addVertex(v_HomePage)
+                .addVertex(v_FindOwners)
+                .addVertex(v_Veterinarians)
+                .addEdge(new Edge().setName("e_HomePage").setSourceVertex(v_FindOwners).setTargetVertex(v_HomePage))
+                .addEdge(new Edge().setName("e_HomePage").setSourceVertex(v_Veterinarians).setTargetVertex(v_HomePage))
+                .addEdge(new Edge().setName("e_FindOwners").setSourceVertex(v_HomePage).setTargetVertex(v_FindOwners))
+                .addEdge(new Edge().setName("e_FindOwners").setSourceVertex(v_Veterinarians).setTargetVertex(v_FindOwners))
+                .addEdge(new Edge().setName("e_Veterinarians").setSourceVertex(v_HomePage).setTargetVertex(v_Veterinarians))
+                .addEdge(new Edge().setName("e_Veterinarians").setSourceVertex(v_FindOwners).setTargetVertex(v_Veterinarians));
+
+
+
+        Vertex v_Veterinarians_ = new Vertex().setName("v_Veterinarians").setSharedState("Veterinarians");
+        Vertex v_SearchResult = new Vertex().setName("v_SearchResult");
+
+        Model modelVeterinarians = new Model()
+                .addVertex(v_Veterinarians_)
+                .addVertex(v_SearchResult)
+                .addEdge(new Edge().setName("e_Search").setSourceVertex(v_Veterinarians_).setTargetVertex(v_SearchResult))
+                .addEdge(new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_Veterinarians_));
+
+
+        Context contextPetClinic = new TestExecutionContext(modelPetClinic, new RandomPath(new EdgeCoverage(100))).setNextElement(v_HomePage);
+        Context contextVeterinarians = new TestExecutionContext(modelVeterinarians, new RandomPath(new EdgeCoverage(100)));
+
+        Machine machine = new SimpleMachine(contextPetClinic, contextVeterinarians);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(contextPetClinic).isEmpty(), is(true));
+        Assert.assertThat(machine.getProfiler().getUnvisitedElements(contextVeterinarians).isEmpty(), is(true));
+
+    }
 }

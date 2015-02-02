@@ -231,7 +231,7 @@ public final class TestMojo extends DefaultMojoBase {
     }
 
     private void displayResult(Result result) {
-        if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
+        if (getLog().isErrorEnabled()) {
             if (result.hasErrors()) {
                 getLog().info("------------------------------------------------------------------------");
                 for (String error : result.getErrors()) {
