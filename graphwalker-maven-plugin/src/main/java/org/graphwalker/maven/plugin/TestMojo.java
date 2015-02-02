@@ -30,6 +30,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.codehaus.plexus.util.StringUtils;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.java.test.*;
 
 import java.io.File;
@@ -231,9 +232,12 @@ public final class TestMojo extends DefaultMojoBase {
 
     private void displayResult(Result result) {
         if (getSession().getRequest().isShowErrors() && getLog().isErrorEnabled()) {
-            //for (MachineException exception: executor.getFailures()) {
-            //    getLog().error(exception);
-            //}
+            if (result.hasErrors()) {
+                getLog().info("------------------------------------------------------------------------");
+                for (String error : result.getErrors()) {
+                    getLog().error(error);
+                }
+            }
         }
         if (getLog().isInfoEnabled()) {
             getLog().info("------------------------------------------------------------------------");

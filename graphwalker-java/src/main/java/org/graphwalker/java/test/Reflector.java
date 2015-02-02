@@ -31,6 +31,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -60,6 +61,8 @@ public final class Reflector {
     private final Method getFailedCount;
     private final Method setNotExecutedCount;
     private final Method getNotExecutedCount;
+    private final Method setErrors;
+    private final Method getErrors;
     private final Method getMachineConfiguration;
     private final Method getContextConfigurations;
     private final Method getTestClassName;
@@ -84,7 +87,7 @@ public final class Reflector {
         this.setIncludes = Reflections.getMethod(configurationClass, "setIncludes", collectionClass);
         this.setExcludes = Reflections.getMethod(configurationClass, "setExcludes", collectionClass);
         this.setGroups = Reflections.getMethod(configurationClass, "setGroups", collectionClass);
-        this.execute = Reflections.getMethod(executorClass, "execute");
+        this.execute = Reflections.getMethod(executorClass, "execute", Boolean.TYPE);
         this.reportResults = Reflections.getMethod(executorClass, "reportResults", File.class, Date.class, Properties.class);
         this.setTestCount = Reflections.getMethod(Result.class, "setTestCount", Integer.TYPE);
         this.getTestCount = Reflections.getMethod(resultClass, "getTestCount");
@@ -96,6 +99,8 @@ public final class Reflector {
         this.getFailedCount = Reflections.getMethod(resultClass, "getFailedCount");
         this.setNotExecutedCount = Reflections.getMethod(Result.class, "setNotExecutedCount", Integer.TYPE);
         this.getNotExecutedCount = Reflections.getMethod(resultClass, "getNotExecutedCount");
+        this.setErrors = Reflections.getMethod(Result.class, "setErrors", List.class);
+        this.getErrors = Reflections.getMethod(resultClass, "getErrors");
         this.getMachineConfiguration = Reflections.getMethod(executorClass, "getMachineConfiguration");
         this.getContextConfigurations = Reflections.getMethod(machineConfigurationClass, "getContextConfigurations");
         this.getTestClassName = Reflections.getMethod(contextConfigurationClass, "getTestClassName");
@@ -131,7 +136,7 @@ public final class Reflector {
 
     public Result execute() {
         ClassLoader contextClassLoader = switchClassLoader(classLoader);
-        Result result = createResult(Reflections.invoke(executor, execute));
+        Result result = createResult(Reflections.invoke(executor, execute, true));
         switchClassLoader(contextClassLoader);
         return result;
     }
@@ -143,6 +148,7 @@ public final class Reflector {
         Reflections.invoke(newResult, setIncompleteCount, Reflections.invoke(result, getIncompleteCount));
         Reflections.invoke(newResult, setFailedCount, Reflections.invoke(result, getFailedCount));
         Reflections.invoke(newResult, setNotExecutedCount, Reflections.invoke(result, getNotExecutedCount));
+        Reflections.invoke(newResult, setErrors, Reflections.invoke(result, getErrors));
         return newResult;
     }
 
