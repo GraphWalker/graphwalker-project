@@ -191,6 +191,8 @@ public final class SimpleMachine extends MachineBase {
         if (!candidate.getVertex().equals(context.getCurrentElement())) {
             candidate.context.setNextElement(candidate.getVertex());
             context = switchContext(candidate.context);
+        } else {
+            lastElement = null;
         }
         return context;
     }
