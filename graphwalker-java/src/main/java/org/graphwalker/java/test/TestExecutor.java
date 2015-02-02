@@ -44,6 +44,8 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.file.Path;
@@ -163,11 +165,18 @@ public final class TestExecutor implements Executor {
         return machine;
     }
 
+    @Override
     public MachineConfiguration getMachineConfiguration() {
         return machineConfiguration;
     }
 
+    @Override
     public Result execute() {
+        return execute(false);
+    }
+
+    @Override
+    public Result execute(boolean ignoreErrors) {
         result = new Result(machine.getContexts().size());
         executeAnnotation(BeforeExecution.class, machine);
         try {
@@ -181,13 +190,17 @@ public final class TestExecutor implements Executor {
             }
         } catch (MachineException e) {
             failures.put(e.getContext(), e);
-
         }
         executeAnnotation(AfterExecution.class, machine);
         updateResult(result, machine);
-        if (!failures.isEmpty()) {
+        if (!ignoreErrors && !failures.isEmpty()) {
             throw new TestExecutionException("Test execution contains failures");
         }
+        return result;
+    }
+
+    @Override
+    public Result getResult() {
         return result;
     }
 
@@ -216,6 +229,15 @@ public final class TestExecutor implements Executor {
         result.setFailedCount(failed);
         result.setNotExecutedCount(notExecuted);
         result.setIncompleteCount(incomplete);
+        for (MachineException exception: getFailures()) {
+            result.addError(getStackTrace(exception.getCause()));
+        }
+    }
+
+    private String getStackTrace(Throwable throwable) {
+        StringWriter writer = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(writer, true));
+        return writer.getBuffer().toString();
     }
 
     private boolean isTestIncluded(GraphWalker annotation, String name) {
@@ -264,14 +286,17 @@ public final class TestExecutor implements Executor {
         AnnotationUtils.execute(annotation, context);
     }
 
+    @Override
     public boolean isFailure(Context context) {
         return failures.containsKey(context);
     }
 
+    @Override
     public MachineException getFailure(Context context) {
         return failures.get(context);
     }
 
+    @Override
     public Collection<MachineException> getFailures() {
         return failures.values();
     }

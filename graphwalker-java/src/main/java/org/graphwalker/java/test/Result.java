@@ -26,22 +26,26 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
 public final class Result {
 
-    public int testCount;
-    public int completedCount;
-    public int incompleteCount;
-    public int failedCount;
-    public int notExecutedCount;
+    private int testCount;
+    private int completedCount;
+    private int incompleteCount;
+    private int failedCount;
+    private int notExecutedCount;
+    private List<String> errors = new ArrayList<>();
 
     public Result() {
     }
 
     public Result(int testCount) {
-        this.testCount = testCount;
+        setTestCount(testCount);
     }
 
     public int getTestCount() {
@@ -84,14 +88,19 @@ public final class Result {
         this.notExecutedCount = notExecutedCount;
     }
 
-    public boolean hasExceptions() {
-        /*
-        for (MachineConfiguration machine: executor.getMachines()) {
-            for (Context context: machine.getContextConfigurations()) {
-                hasExceptions |= ExecutionStatus.FAILED.equals(context.getExecutionStatus());
-            }
-        }
-        */
-        return false;
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
+    }
+
+    public void addError(String error) {
+        this.errors.add(error);
+    }
+
+    public boolean hasErrors() {
+        return !getErrors().isEmpty();
     }
 }
