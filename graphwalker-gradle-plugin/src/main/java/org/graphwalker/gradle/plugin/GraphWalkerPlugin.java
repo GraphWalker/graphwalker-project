@@ -25,13 +25,10 @@ package org.graphwalker.gradle.plugin;
  * THE SOFTWARE.
  * #L%
  */
-import org.gradle.api.Action;
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
-import org.gradle.api.Task;
+import org.gradle.api.*;
 import org.gradle.api.plugins.BasePlugin;
+import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
-import org.gradle.api.tasks.SourceSetContainer;
 import org.graphwalker.gradle.plugin.task.*;
 
 /**
@@ -42,52 +39,36 @@ public class GraphWalkerPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getPlugins().apply(BasePlugin.class);
-        GraphWalkerExtension extension = project.getExtensions().create("graphwalker", GraphWalkerExtension.class);
-        configure(project, extension);
+        project.getPlugins().apply(JavaBasePlugin.class);
+        configure(project, project.getExtensions().create("graphwalker", GraphWalkerExtension.class));
+    }
+
+    private <T extends TaskBase> T create(Project project, Class<T> type, String name, String description) {
+        T task = project.getTasks().create(name, type);
+        task.setGroup("graphwalker");
+        task.setDescription(description);
+        return task;
     }
 
     private void configure(final Project project, final GraphWalkerExtension extension) {
-
-        final ValidateModels validateModels = project.getTasks().create("validateModels", ValidateModels.class);
-        validateModels.setGroup("graphwalker");
-        validateModels.setDescription("");
-
-        final ValidateTestModels validateTestModels = project.getTasks().create("validateTestModels", ValidateTestModels.class);
-        validateTestModels.setGroup("graphwalker");
-        validateTestModels.setDescription("");
-
-        final GenerateSources generateSources = project.getTasks().create("generateSources", GenerateSources.class);
-        generateSources.setGroup("graphwalker");
-        generateSources.setDescription("");
-
-        final GenerateTestSources generateTestSources = project.getTasks().create("generateTestSources", GenerateTestSources.class);
-        generateTestSources.setGroup("graphwalker");
-        generateTestSources.setDescription("");
-
-        final ExecuteTests executeTests = project.getTasks().create("executeTests", ExecuteTests.class);
-        executeTests.setGroup("graphwalker");
-        executeTests.setDescription("");
-
-        final Watch watch = project.getTasks().create("watch", Watch.class);
-        watch.setGroup("graphwalker");
-        watch.setDescription("");
-
-        final Clean clean = project.getTasks().create("gwClean", Clean.class);
-        clean.setGroup("graphwalker");
-        clean.setDescription("");
-
+        //create(project, ValidateModels.class, "validateModels", "");
+        //create(project, ValidateTestModels.class, "validateTestModels", "");
+        final Task generateSources = create(project, GenerateSources.class, "generateSources", "").configure();
+        final Task generateTestSources = create(project, GenerateTestSources.class, "generateTestSources", "").configure();
+        //create(project, ExecuteTests.class, "executeTests", "");
+        //create(project, Watch.class, "watch", "");
+        final Task clean = create(project, Clean.class, "gwClean", "").configure();
+        project.getPlugins().withType(BasePlugin.class, new Action<BasePlugin>() {
+            @Override
+            public void execute(BasePlugin plugin) {
+                project.getTasks().getByName(BasePlugin.CLEAN_TASK_NAME).dependsOn(clean);
+            }
+        });
         project.getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
-
             @Override
             public void execute(JavaPlugin plugin) {
-                final SourceSetContainer sourceSets = (SourceSetContainer)project.getProperties().get("sourceSets");
-                sourceSets.getByName("main").getJava().srcDir(generateSources.getGeneratedSources());
-                final Task processResources = project.getTasks().getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME);
-                processResources.dependsOn(generateSources);
-
-                final Task cleanTast = project.getTasks().getByName(BasePlugin.CLEAN_TASK_NAME);
-                cleanTast.dependsOn(clean);
-
+                project.getTasks().getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).dependsOn(generateSources);
+                project.getTasks().getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME).dependsOn(generateTestSources);
             }
         });
     }
