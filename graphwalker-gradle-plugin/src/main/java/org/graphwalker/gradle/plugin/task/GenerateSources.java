@@ -26,9 +26,12 @@ package org.graphwalker.gradle.plugin.task;
  * #L%
  */
 
+import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
+import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskAction;
 import org.graphwalker.java.source.CodeGenerator;
 
@@ -39,15 +42,20 @@ import java.io.File;
  */
 public class GenerateSources extends DefaultTask {
 
-    @InputDirectory
-    private File resources = new File("src/main/resources");
-
     @OutputDirectory
     private File generatedSources = new File(getProject().getProjectDir(), "generated-sources/graphwalker");
 
     @TaskAction
     public void generateSources() {
-        CodeGenerator.generate(resources.toPath(), generatedSources.toPath());
+        getProject().getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
+            @Override
+            public void execute(JavaPlugin javaPlugin) {
+                SourceSetContainer sourceSets = (SourceSetContainer)getProject().getProperties().get("sourceSets");
+                for (File resource: sourceSets.getByName("main").getResources().getSrcDirs()) {
+                    CodeGenerator.generate(resource.toPath(), generatedSources.toPath());
+                }
+            }
+        });
     }
 
     public File getGeneratedSources() {
