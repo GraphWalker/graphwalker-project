@@ -23,6 +23,9 @@
         <repository>
             <id>local-dependencies</id>
             <url>file://${basedir}/repository</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
         </repository>
     </repositories>
 

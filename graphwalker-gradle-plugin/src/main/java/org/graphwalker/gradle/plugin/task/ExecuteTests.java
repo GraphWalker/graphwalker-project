@@ -26,16 +26,59 @@ package org.graphwalker.gradle.plugin.task;
  * #L%
  */
 
-import org.gradle.api.DefaultTask;
+import org.gradle.api.Action;
+import org.gradle.api.Task;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskAction;
+import org.graphwalker.java.test.Configuration;
+import org.graphwalker.java.test.IsolatedClassLoader;
+import org.graphwalker.java.test.Reflector;
+import org.graphwalker.java.test.Result;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
-public class ExecuteTests extends DefaultTask {
+public class ExecuteTests extends TaskBase {
+
+    @Override
+    public Task configure() {
+        return this;
+    }
 
     @TaskAction
     public void executeTests() {
-        System.out.println("ExecuteTests called");
+
+        ClassLoader classLoader = new IsolatedClassLoader(getClasspathElements());
+        Configuration configuration = createConfiguration();
+        Reflector reflector = new Reflector(configuration, classLoader);
+        Result result = reflector.execute();
+
+        System.out.println("Result: "+result.getCompletedCount());
+    }
+
+    private Configuration createConfiguration() {
+        Configuration configuration = new Configuration();
+        return configuration;
+    }
+
+    private List<String> getClasspathElements() {
+        final List<String> elements = new ArrayList<>();
+        getProject().getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
+            @Override
+            public void execute(JavaPlugin plugin) {
+                SourceSetContainer sourceSets = (SourceSetContainer)getProject().getProperties().get("sourceSets");
+                SourceSet sourceSet = sourceSets.getByName("test");
+                for (File file: sourceSet.getRuntimeClasspath().getFiles()) {
+                    elements.add(file.getAbsolutePath());
+                }
+            }
+        });
+        return elements;
     }
 }
