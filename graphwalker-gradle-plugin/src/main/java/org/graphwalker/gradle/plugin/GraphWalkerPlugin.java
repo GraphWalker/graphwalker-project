@@ -25,10 +25,14 @@ package org.graphwalker.gradle.plugin;
  * THE SOFTWARE.
  * #L%
  */
-import org.gradle.api.*;
+
+import org.gradle.api.Action;
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.plugins.BasePlugin;
-import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.TaskContainer;
 import org.graphwalker.gradle.plugin.task.*;
 
 /**
@@ -39,7 +43,6 @@ public class GraphWalkerPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getPlugins().apply(BasePlugin.class);
-        project.getPlugins().apply(JavaBasePlugin.class);
         configure(project, project.getExtensions().create("graphwalker", GraphWalkerExtension.class));
     }
 
@@ -55,7 +58,7 @@ public class GraphWalkerPlugin implements Plugin<Project> {
         //create(project, ValidateTestModels.class, "validateTestModels", "");
         final Task generateSources = create(project, GenerateSources.class, "generateSources", "").configure();
         final Task generateTestSources = create(project, GenerateTestSources.class, "generateTestSources", "").configure();
-        //create(project, ExecuteTests.class, "executeTests", "");
+        final Task executeTests = create(project, ExecuteTests.class, "executeTests", "").configure();
         //create(project, Watch.class, "watch", "");
         final Task clean = create(project, Clean.class, "gwClean", "").configure();
         project.getPlugins().withType(BasePlugin.class, new Action<BasePlugin>() {
@@ -67,8 +70,14 @@ public class GraphWalkerPlugin implements Plugin<Project> {
         project.getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
             @Override
             public void execute(JavaPlugin plugin) {
-                project.getTasks().getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).dependsOn(generateSources);
-                project.getTasks().getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME).dependsOn(generateTestSources);
+                TaskContainer tasks = project.getTasks();
+                tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME).dependsOn(generateSources);
+                tasks.getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME).dependsOn(generateTestSources);
+                executeTests.dependsOn(tasks.getByName(JavaPlugin.PROCESS_RESOURCES_TASK_NAME));
+                executeTests.dependsOn(tasks.getByName(JavaPlugin.PROCESS_TEST_RESOURCES_TASK_NAME));
+                executeTests.dependsOn(tasks.getByName(JavaPlugin.COMPILE_JAVA_TASK_NAME));
+                executeTests.dependsOn(tasks.getByName(JavaPlugin.COMPILE_TEST_JAVA_TASK_NAME));
+                tasks.getByName(JavaPlugin.TEST_TASK_NAME).dependsOn(executeTests);
             }
         });
     }
