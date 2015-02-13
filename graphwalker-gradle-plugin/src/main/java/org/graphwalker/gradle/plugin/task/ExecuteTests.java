@@ -29,6 +29,7 @@ package org.graphwalker.gradle.plugin.task;
 import org.gradle.api.Action;
 import org.gradle.api.Task;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskAction;
@@ -48,6 +49,12 @@ public class ExecuteTests extends TaskBase {
 
     @Override
     public Task configure() {
+        getOutputs().upToDateWhen(new Spec<Task>() {
+            @Override
+            public boolean isSatisfiedBy(Task element) {
+                return false;
+            }
+        });
         return this;
     }
 
@@ -58,8 +65,11 @@ public class ExecuteTests extends TaskBase {
         Configuration configuration = createConfiguration();
         Reflector reflector = new Reflector(configuration, classLoader);
         Result result = reflector.execute();
+        for (String error: result.getErrors()) {
+            System.out.println(error);
+        }
+        System.out.println("Result: ["+result.getCompletedCount() +", " +result.getFailedCount()+"]");
 
-        System.out.println("Result: "+result.getCompletedCount());
     }
 
     private Configuration createConfiguration() {
