@@ -21,10 +21,10 @@ public class Clean extends TaskBase {
 
     @Override
     public Task configure() {
-        onlyIf(new Spec<Task>() {
+        getOutputs().upToDateWhen(new Spec<Task>() {
             @Override
-            public boolean isSatisfiedBy(Task task) {
-                return outputDirectory.exists();
+            public boolean isSatisfiedBy(Task element) {
+                return !outputDirectory.exists();
             }
         });
         return this;
