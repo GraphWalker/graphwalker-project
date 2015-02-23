@@ -52,7 +52,7 @@ public final class Fleury implements Algorithm {
     }
 
     public Path<Element> getTrail(RuntimeEdge edge) {
-        Set<Element> visitedEdges = new HashSet<>();
+        Set<RuntimeEdge> visitedEdges = new HashSet<>();
         visitedEdges.add(edge);
         Path<Element> path = getTrail(edge.getTargetVertex(), visitedEdges);
         path.addFirst(edge.getTargetVertex());
@@ -60,10 +60,10 @@ public final class Fleury implements Algorithm {
     }
 
     public Path<Element> getTrail(RuntimeVertex vertex) {
-        return getTrail(vertex, new HashSet<Element>());
+        return getTrail(vertex, new HashSet<RuntimeEdge>());
     }
 
-    private Path<Element> getTrail(RuntimeVertex vertex, Set<Element> visitedEdges) {
+    private Path<Element> getTrail(RuntimeVertex vertex, Set<RuntimeEdge> visitedEdges) {
         // Step 1
         Path<Element> trail = new Path<>();
         RuntimeVertex currentVertex = vertex;
@@ -83,7 +83,7 @@ public final class Fleury implements Algorithm {
         return trail;
     }
 
-    private RuntimeEdge getNextEdge(RuntimeModel model, Set<Element> visitedEdges, RuntimeVertex vertex) {
+    private RuntimeEdge getNextEdge(RuntimeModel model, Set<RuntimeEdge> visitedEdges, RuntimeVertex vertex) {
         List<RuntimeEdge> bridges = new ArrayList<>();
         for (RuntimeEdge edge : model.getOutEdges(vertex)) {
             if (!visitedEdges.contains(edge)) {
@@ -100,7 +100,7 @@ public final class Fleury implements Algorithm {
         throw new AlgorithmException();
     }
 
-    private boolean isBridge(RuntimeModel model, Set<Element> visitedElements, RuntimeEdge edge) {
+    private boolean isBridge(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
         VertexCounter counter1 = new VertexCounter(model, visitedElements, edge);
         VertexCounter counter2 = new VertexCounter(model);
         edge.getSourceVertex().accept(counter1);
@@ -118,7 +118,7 @@ public final class Fleury implements Algorithm {
             this.model = model;
         }
 
-        public VertexCounter(RuntimeModel model, Set<Element> visitedElements, RuntimeEdge edge) {
+        public VertexCounter(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
             this.model = model;
             visitedElements.addAll(visitedElements);
             visitedElements.add(edge);
