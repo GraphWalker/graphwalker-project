@@ -43,6 +43,8 @@ public interface Machine extends Observable {
 
     Context getCurrentContext();
 
+    ExceptionStrategy getExceptionStrategy();
+
     void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
 
     Profiler getProfiler();

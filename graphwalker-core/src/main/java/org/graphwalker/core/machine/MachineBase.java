@@ -29,8 +29,10 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.statistics.Profiler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +40,17 @@ import java.util.List;
  */
 public abstract class MachineBase implements Machine {
 
+    private final List<Context> contexts = new ArrayList<>();
     private final List<Observer> observers = new ArrayList<>();
+    private final Profiler profiler = new Profiler();
+
+    private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
+    private Context currentContext;
+
+    @Override
+    public List<Context> getContexts() {
+        return contexts;
+    }
 
     @Override
     public void addObserver(Observer observer) {
@@ -64,6 +76,30 @@ public abstract class MachineBase implements Machine {
     @Override
     public void deleteObservers() {
         observers.clear();
+    }
+
+    @Override
+    public Profiler getProfiler() {
+        return profiler;
+    }
+
+    @Override
+    public Context getCurrentContext() {
+        return currentContext;
+    }
+
+    protected void setCurrentContext(Context currentContext) {
+        this.currentContext = currentContext;
+    }
+
+    @Override
+    public ExceptionStrategy getExceptionStrategy() {
+        return exceptionStrategy;
+    }
+
+    @Override
+    public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
+        this.exceptionStrategy = exceptionStrategy;
     }
 
 }
