@@ -29,6 +29,7 @@ public final class ReplayMachine extends SimpleMachine {
         for (Context context: profiler.getContexts()) {
             try {
                 Context newContext = context.getClass().newInstance();
+                newContext.setModel(context.getModel());
                 newContext.setNextElement(profiler.getPath().getFirst());
                 contexts.add(newContext);
             } catch (InstantiationException | IllegalAccessException e) {
