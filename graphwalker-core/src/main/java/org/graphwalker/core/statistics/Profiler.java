@@ -32,8 +32,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -44,7 +43,19 @@ public final class Profiler {
     private final Profile profile = new Profile();
     private long startTime = 0;
 
+    private Map<Element, Context> elementContextMap = new HashMap<>();
+    private Set<Context> contexts = new HashSet<>();
+
+    public Context getContext(Element element) {
+        return elementContextMap.get(element);
+    }
+
+    public Set<Context> getContexts() {
+        return contexts;
+    }
+
     public void start(Context context) {
+        contexts.add(context);
         startTime = System.nanoTime();
     }
 
@@ -52,6 +63,7 @@ public final class Profiler {
         Element element = context.getCurrentElement();
         if (null != element) {
             profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
+            elementContextMap.put(element, context);
         }
     }
 
