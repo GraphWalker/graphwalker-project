@@ -106,7 +106,6 @@ public class SharedStateTest {
                 .addEdge(new Edge().setName("e_Veterinarians").setSourceVertex(v_FindOwners).setTargetVertex(v_Veterinarians));
 
 
-
         Vertex v_Veterinarians_ = new Vertex().setName("v_Veterinarians").setSharedState("Veterinarians");
         Vertex v_SearchResult = new Vertex().setName("v_SearchResult");
 

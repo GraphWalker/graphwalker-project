@@ -34,6 +34,12 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * <h1>RandomPath</h1>
+ * The RandomPath generator will generate a random path through a model.
+ * <p/>
+ * RandomPath is used when a random, unpredictable path  is to be generated.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class RandomPath extends PathGeneratorBase<StopCondition> {

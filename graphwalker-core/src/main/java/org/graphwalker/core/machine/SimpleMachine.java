@@ -41,6 +41,14 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
+ * <h1>SimpleMachine</h1>
+ * SimpleMachine is working implementation of the MachineBase.
+ * <p/>
+ * The SimpleMachine is the Finite State Machine which executes one or more contexts. Running the machine
+ * is done by calling {@link SimpleMachine#getNextStep()}. Before calling
+ * getNextStep check {@link SimpleMachine#hasNextStep()} if the machine has more steps to be executed or not.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public class SimpleMachine extends MachineBase {
@@ -49,7 +57,8 @@ public class SimpleMachine extends MachineBase {
 
     private Element lastElement;
 
-    public SimpleMachine() {}
+    public SimpleMachine() {
+    }
 
     public SimpleMachine(Context... contexts) {
         this(Arrays.asList(contexts));

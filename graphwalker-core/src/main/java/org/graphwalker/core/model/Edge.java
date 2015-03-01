@@ -34,6 +34,17 @@ import java.util.Set;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
+ * <h1>Edge</h1>
+ * The  Edge holds the information for a transition in a model.
+ * <p/>
+ * The edge represents an action taken by the test, which takes the system
+ * under test, from a state to another.
+ * The edge has a source and target vertex. If the vertices are identical, the
+ * edge is a self loop. The source vertex is not mandatory, but in a model,
+ * there should be only one such instance. Also, the target vertex is not
+ * mandatory, but again, in a model, there should be only one such instance.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
@@ -133,6 +144,13 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return weight;
     }
 
+    /**
+     * The weight is used as probability when using the {@link org.graphwalker.core.generator.WeightedRandomPath}.
+     * Weight means the probability for the edge to be selected.
+     *
+     * @param weight a double between 0 and 1
+     * @return
+     */
     public Edge setWeight(Double weight) {
         this.weight = weight;
         invalidateCache();
@@ -148,6 +166,14 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return new RuntimeEdge(this);
     }
 
+    /**
+     * <h1>RuntimeEdge</h1>
+     * Immutable class for Edge
+     * <p/>
+     * This class is used in models. It guarantees that that the internal states of
+     * the instance will not change after it's construction.
+     * <p/>
+     */
     public static final class RuntimeEdge extends ElementBase {
 
         private final RuntimeVertex sourceVertex;

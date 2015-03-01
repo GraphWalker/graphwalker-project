@@ -33,6 +33,13 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * <h1>CombinedCondition</h1>
+ * The CombinedCondition evaluates to fulfilled if all of its conditions are fulfilled.
+ * <p/>
+ * The CombinedCondition holds a list of stop conditions. Only if all its conditions in its
+ * list is fulfilled, the CombinedCondition is fulfilled.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class CombinedCondition extends StopConditionBase {

@@ -32,6 +32,14 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
+ * <h1>Model</h1>
+ * The Model is a collection of edges and vertices,
+ * <p/>
+ * The model should represent a description of the expected behavior of
+ * a system under test. It holds the edges and vertices, which creates
+ * a directed graph.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class Model implements Builder<Model.RuntimeModel> {
