@@ -30,6 +30,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * <h1>Vertex</h1>
+ * The  Vertex holds the information for a state in a model.
+ * <p/>
+ * The vertex is the verification point for a test. It's here where the test asserts
+ * that the system under test is in the expected state.
+ * The vertex is uniquely identified by its id.
+ * The source vertex is not mandatory, but in a model, there should be only one
+ * such instance. Also, the target vertex is not mandatory, but again, in a model,
+ * there should be only one such instance.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
@@ -94,6 +105,14 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return new RuntimeVertex(this);
     }
 
+    /**
+     * <h1>RuntimeVertex</h1>
+     * Immutable class for Vertex
+     * <p/>
+     * This class is used in models. It guarantees that that the internal states of
+     * the instance will not change after it's construction.
+     * <p/>
+     */
     public static final class RuntimeVertex extends ElementBase {
 
         private final String sharedState;

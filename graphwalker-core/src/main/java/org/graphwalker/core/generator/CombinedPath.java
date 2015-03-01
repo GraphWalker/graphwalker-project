@@ -34,6 +34,14 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * <h1>CombinedPath</h1>
+ * The CombinedPath generator holds a list of generators that will execute in order.
+ * <p/>
+ * CombinedPath is used for concatenating path generators. When executing, a
+ * {@link org.graphwalker.core.machine.ExecutionContext} will exhaust the generators in
+ * the list one by one.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class CombinedPath extends PathGeneratorBase<StopCondition> {

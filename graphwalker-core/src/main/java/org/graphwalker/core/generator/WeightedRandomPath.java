@@ -39,6 +39,15 @@ import java.util.Map;
 import java.util.Random;
 
 /**
+ * <h1>WeightedRandomPath</h1>
+ * The WeightedRandomPath generator will generate a random path through a model, but will select
+ * out-edges according to probabilities.
+ * <p/>
+ * WeightedRandomPath generates a random path, but will take into account {@link Edge#setWeight} as
+ * a probability. When selecting an edge from the list of all out-edges from a current vertex, the weights
+ * of those edges are considered. For example, an edge with the weight 0.5 is given 50% chance of being selected.
+ * <p/>
+ *
  * @author Kristian Karl
  */
 public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {

@@ -27,6 +27,10 @@ package org.graphwalker.core.condition;
  */
 
 /**
+ * <h1>Never</h1>
+ * The Never stop condition is never fulfilled.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public final class Never extends StopConditionBase {

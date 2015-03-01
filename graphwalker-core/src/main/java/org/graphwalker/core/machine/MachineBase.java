@@ -32,10 +32,15 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
+ * <h1>MachineBase</h1>
+ * MachineBase represents the Finite State Machine.
+ * <p/>
+ * The MachineBase keeps lists of Contexts and Observers, a Profiler and the exception strategy.
+ * <p/>
+ *
  * @author Nils Olsson
  */
 public abstract class MachineBase implements Machine {
