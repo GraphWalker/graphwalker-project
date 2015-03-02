@@ -37,7 +37,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  * <h1>Edge</h1>
  * The  Edge holds the information for a transition in a model.
  * <p/>
- * The edge represents an action taken by the test, which takes the system
+ * The edge represents an action performed by a test, which takes the system
  * under test, from a state to another.
  * The edge has a source and target vertex. If the vertices are identical, the
  * edge is a self loop. The source vertex is not mandatory, but in a model,
@@ -58,88 +58,210 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     private final Set<Requirement> requirements = new HashSet<>();
     private Double weight = 0.0;
 
+    /**
+     * Sets the unique identifier of the edge. Even though several edges in the
+     * same model can share the same name, all identifiers must be unique.
+     *
+     * @param id A String that uniquely identifies this edge.
+     * @return The edge.
+     */
     public Edge setId(String id) {
         this.id = id;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the unique identifier of the edge,
+     *
+     * @return The unique identifier as a string.
+     * @see Edge#setId
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets the name of the edge. The name of an edge can be shared by other edges, it
+     * does not have to be unique.
+     *
+     * @param name The name as a string.
+     * @return The edge.
+     */
     public Edge setName(String name) {
         this.name = name;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the name of the edge.
+     *
+     * @return The name as a string.
+     * @see Edge#setName
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Adds a requirement.
+     * The requirement is used by the target vertex. It will never be used by the edge itself.
+     * In some cases, the requirement being verified by some vertex is dependent on which in-edge
+     * has been traversed.
+     * </p>
+     * In the example below, the vertex <strong>v_MainView</strong> does not have any requirements associated
+     * to it. The requirement that is going to be verified is decided by the in-edge.<br>
+     * So, for example, if we walking over the <strong>v_LoginDialog</strong>, the requirement that is going to be
+     * verified in <strong>v_MainView</strong>, will be <strong>UC 2.1.1</strong>.
+     * </p>
+     * <img src="doc-files/org.graphwalker.core.model.Edge.addRequirement.png">
+     * </p>
+     *
+     * @param requirement The requirement.
+     * @return The Edge
+     */
     public Edge addRequirement(Requirement requirement) {
         this.requirements.add(requirement);
         invalidateCache();
         return this;
     }
 
+    /**
+     * Adds a list of requirements.
+     *
+     * @param requirements The list of requirements.
+     * @return The edge.
+     * @see Edge#addRequirement
+     */
     public Edge addRequirements(Set<Requirement> requirements) {
         this.requirements.addAll(requirements);
         invalidateCache();
         return this;
     }
 
+    /**
+     * Sets the source vertex of the edge.
+     *
+     * @param vertex The source vertex.
+     * @return The edge.
+     */
     public Edge setSourceVertex(Vertex vertex) {
         this.sourceVertex = vertex;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the source vertex.
+     *
+     * @return The source vertex.
+     * @see Edge#setSourceVertex
+     */
     public Vertex getSourceVertex() {
         return sourceVertex;
     }
 
+    /**
+     * Sets the target vertex of the edge.
+     *
+     * @param vertex The target vertex.
+     * @return The edge.
+     */
     public Edge setTargetVertex(Vertex vertex) {
         this.targetVertex = vertex;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the target vertex of the edge.
+     *
+     * @return The vertex.
+     * @see Edge#setTargetVertex
+     */
     public Vertex getTargetVertex() {
         return targetVertex;
     }
 
+    /**
+     * Sets the guard of the edge. The code in the guard is by default interpreted as javascript.
+     * The guard works like an 'if-statement'. It controls the accessibility of the edge.
+     * During execution, the guard evaluates to a boolean expression.
+     * If true, the edge is accessible, else it's not.
+     *
+     * @param guard The guard.
+     * @return The edge.
+     */
     public Edge setGuard(Guard guard) {
         this.guard = guard;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the guard of the edge.
+     *
+     * @return The guard.
+     * @see Edge#setGuard
+     */
     public Guard getGuard() {
         return guard;
     }
 
+    /**
+     * Gets the list of requirements.
+     *
+     * @return The list of requirements.
+     * @see Edge#addRequirement
+     */
     public Set<Requirement> getRequirements() {
         return requirements;
     }
 
+    /**
+     * Adds an action to the edge, which represents a piece of code that will be executed
+     * each time the edge is being traversed. The code is by default interpreted as javascript.
+     *
+     * @param action The action.
+     * @return The edge.
+     */
     public Edge addAction(Action action) {
         this.actions.add(action);
         invalidateCache();
         return this;
     }
 
+    /**
+     * Adds a list of actions to the edge, which represents a pieces of code that will be executed
+     * each time the edge is being traversed. The code snippets is by default interpreted as javascript.
+     *
+     * @param actions The actions.
+     * @return The edge.
+     * @see Edge#addAction
+     */
     public Edge addActions(List<Action> actions) {
         this.actions.addAll(actions);
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the lists of actions of the edge.
+     *
+     * @return The actions
+     * @see Edge#addActions
+     */
     public List<Action> getActions() {
         return actions;
     }
 
+    /**
+     * Gets the weight of the edge.
+     *
+     * @return The weight as double.
+     * @see Edge#setWeight
+     */
     public Double getWeight() {
         return weight;
     }
@@ -149,7 +271,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
      * Weight means the probability for the edge to be selected.
      *
      * @param weight a double between 0 and 1
-     * @return
+     * @return The edge
      */
     public Edge setWeight(Double weight) {
         this.weight = weight;
@@ -157,10 +279,20 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         return this;
     }
 
+    /**
+     * Creates a representation of the edge as a string.
+     *
+     * @return The edge as a string.
+     */
     public String toString() {
         return "{ id: " + getId() + ", name: " + getName() + "}";
     }
 
+    /**
+     * Creates an immutable edge from this edge.
+     *
+     * @return An immutable edge as a RuntimeEdge
+     */
     @Override
     protected RuntimeEdge createCache() {
         return new RuntimeEdge(this);
@@ -193,22 +325,49 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
             return (null != builder ? builder.build() : null);
         }
 
+        /**
+         * Gets the source vertex.
+         *
+         * @return The source vertex.
+         * @see Edge#setSourceVertex
+         */
         public RuntimeVertex getSourceVertex() {
             return sourceVertex;
         }
 
+        /**
+         * Gets the target vertex of the edge.
+         *
+         * @return The vertex.
+         * @see Edge#setTargetVertex
+         */
         public RuntimeVertex getTargetVertex() {
             return targetVertex;
         }
 
+        /**
+         * Gets the guard of the edge.
+         *
+         * @return The guard.
+         * @see Edge#setGuard
+         */
         public Guard getGuard() {
             return guard;
         }
 
+        /**
+         * Gets the weight of the edge.
+         *
+         * @return The weight as double.
+         * @see Edge#setWeight
+         */
         public Double getWeight() {
             return weight;
         }
 
+        /**
+         * @param visitor
+         */
         @Override
         public void accept(ElementVisitor visitor) {
             visitor.visit(this);

@@ -28,11 +28,11 @@ package org.graphwalker.core.model;
 
 /**
  * <h1>Requirement</h1>
- * The Requirement is attached to a vertex. It keeps track of which requirement is
- * verified if the assertions,or tests, in the vertex are successful.
+ * The Requirement is attached to an element in the model.
  * <p/>
- * If you need to keep track of which requirements are passed or failed by your
- * testing, this class keeps track of them.
+ * Each requirement is individual tracked during execution with the help of
+ * {@link org.graphwalker.core.machine.RequirementStatus}. After the test the status of each requirement
+ * can be checked.
  * <p/>
  *
  * @author Nils Olsson
@@ -41,10 +41,20 @@ public final class Requirement {
 
     private final String key;
 
+    /**
+     * Creates a requirement, and associates it with key.
+     *
+     * @param key The requirement as a string.
+     */
     public Requirement(String key) {
         this.key = key;
     }
 
+    /**
+     * Gets the requirement.
+     *
+     * @return The requirement as string.
+     */
     public String getKey() {
         return key;
     }
