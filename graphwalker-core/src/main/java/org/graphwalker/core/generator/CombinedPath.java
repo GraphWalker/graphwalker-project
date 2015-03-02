@@ -41,6 +41,15 @@ import java.util.List;
  * {@link org.graphwalker.core.machine.ExecutionContext} will exhaust the generators in
  * the list one by one.
  * <p/>
+ * Below is an example of how to use the CombinedPath generator.
+ * <pre>
+ * {@code
+ * CombinedPath generator = new CombinedPath();
+ * generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
+ * generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
+ * Context context = new TestExecutionContext(model, generator);
+ * }
+ * </pre>
  *
  * @author Nils Olsson
  */
