@@ -115,7 +115,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
      * So, for example, if we walking over the <strong>v_LoginDialog</strong>, the requirement that is going to be
      * verified in <strong>v_MainView</strong>, will be <strong>UC 2.1.1</strong>.
      * </p>
-     * <img src="doc-files/org.graphwalker.core.model.Edge.addRequirement.png">
+     * <img src="doc-files/Edge.addRequirement.png">
      * </p>
      *
      * @param requirement The requirement.
