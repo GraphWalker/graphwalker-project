@@ -37,7 +37,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * <h1>ReachedVertex</h1>
  * The ReachedVertex stop condition is fulfilled when the traversing of the model reaches the named vertex..
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

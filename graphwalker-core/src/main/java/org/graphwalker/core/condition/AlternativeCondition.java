@@ -35,10 +35,10 @@ import java.util.List;
 /**
  * <h1>AlternativeCondition</h1>
  * The AlternativeCondition evaluates to fulfilled if one of its conditions are fulfilled.
- * <p/>
+ * </p>
  * The AlternativeCondition holds a list of stop conditions. If one of the conditions in the
  * list is fulfilled, the AlternativeCondition is fulfilled.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

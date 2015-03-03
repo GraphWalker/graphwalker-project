@@ -37,10 +37,10 @@ import java.util.List;
 /**
  * <h1>AStarPath</h1>
  * The AStarPath generator will find the shortest path between 2 elements.
- * <p/>
+ * </p>
  * Given the current element in the execution context and the {@link ReachedStopCondition}
  * the generator will create the shortest path between the 2 elements.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

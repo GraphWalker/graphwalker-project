@@ -34,7 +34,7 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
  * <h1>EdgeCoverage</h1>
  * The EdgeCoverage stop condition is fulfilled when the percentage of visited edges in the
  * model is greater than, or equal, to the percentage given as a parameter to the constructor.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

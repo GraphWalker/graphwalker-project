@@ -11,13 +11,13 @@ import java.util.List;
 /**
  * <h1>ReplayMachine</h1>
  * ReplayMachine can re-run an previous executed path..
- * <p/>
+ * </p>
  * The ReplayMachine takes a Profiler from a previous execution and will re-run that execution
  * in the same order. The edges and vertices will called exactly the same order.
- * <p/>
+ * </p>
  * A typical use case could be a test that encountered a failure, and now you
  * want to execute that test and see iff it can reproduce that failure.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

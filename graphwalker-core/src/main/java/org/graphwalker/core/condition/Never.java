@@ -29,7 +29,7 @@ package org.graphwalker.core.condition;
 /**
  * <h1>Never</h1>
  * The Never stop condition is never fulfilled.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

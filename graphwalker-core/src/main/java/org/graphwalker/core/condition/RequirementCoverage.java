@@ -33,7 +33,7 @@ import org.graphwalker.core.machine.RequirementStatus;
  * <h1>RequirementCoverage</h1>
  * The RequirementCoverage stop condition is fulfilled when the percentage of visited requirements in the
  * model is greater than, or equal, to the percentage given as a parameter to the constructor.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

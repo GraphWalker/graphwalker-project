@@ -32,14 +32,14 @@ import java.util.Set;
 /**
  * <h1>Vertex</h1>
  * The  Vertex holds the information for a state in a model.
- * <p/>
+ * </p>
  * The vertex is the verification point for a test. It's here where the test asserts
  * that the system under test is in the expected state.
  * The vertex is uniquely identified by its id.
  * The source vertex is not mandatory, but in a model, there should be only one
  * such instance. Also, the target vertex is not mandatory, but again, in a model,
  * there should be only one such instance.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */
@@ -50,56 +50,139 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
     private String sharedState;
     private final Set<Requirement> requirements = new HashSet<>();
 
+    /**
+     * Sets the name of the vertex. The name of a vertex can be shared by other vertices, it
+     * does not have to be unique.
+     *
+     * @param name The name as a string.
+     * @return The edge.
+     */
     public Vertex setName(String name) {
         this.name = name;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the name of the vertex.
+     *
+     * @return The name as a string.
+     * @see Vertex#setName
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the name of the shared state.
+     *
+     * @return The name as a string.
+     * @see Vertex#setSharedState
+     */
     public String getSharedState() {
         return sharedState;
     }
 
+    /**
+     * Sets the name of the shared state of this vertex.
+     * If the vertex is to act as a shared state, the name of the shared state needs to be set to a non-empty
+     * string.
+     * </p>
+     * The shared state is portal to other shared states in other models. It creates a 'virtual edge'
+     * between to vertices sharing the same name in their shared state.
+     * </p>
+     * <img src="doc-files/Vertex.setSharedState.png">
+     * </p>
+     * In the 2 models above, GraphWalker will create virtual edges, the dotted arrows. These edges will
+     * allow passages between the 2 models.
+     * </p>
+     *
+     * @param sharedState The name of the shared state.
+     * @return The vertex
+     */
     public Vertex setSharedState(String sharedState) {
         this.sharedState = sharedState;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the unique identifier of the vertex,
+     *
+     * @return The unique identifier as a string.
+     * @see Vertex#setId
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets the unique identifier of the vertex. Even though several vertices in the
+     * same model can share the same name, all identifiers must be unique.
+     *
+     * @param id A String that uniquely identifies this edge.
+     * @return The vertex.
+     */
     public Vertex setId(String id) {
         this.id = id;
         invalidateCache();
         return this;
     }
 
+    /**
+     * Adds a requirement.
+     * </p>
+     * The requirement is associated with the vertex. Whenever a test traverses the vertex, its associated
+     * requirement(s) are set to either {@link org.graphwalker.core.machine.RequirementStatus FAILED} or
+     * {@link org.graphwalker.core.machine.RequirementStatus PASSED}. The default value for the status of a
+     * requirement, before a vertex is traversed is {@link org.graphwalker.core.machine.RequirementStatus NOT_COVERED}
+     *
+     * @param requirement The requirement.
+     * @return The Vertex
+     */
     public Vertex addRequirement(Requirement requirement) {
         this.requirements.add(requirement);
         invalidateCache();
         return this;
     }
 
+    /**
+     * Adds a list of requirements.
+     *
+     * @param requirements The list of requirements.
+     * @return The vertex.
+     * @see Vertex#addRequirement
+     */
     public Vertex addRequirements(Set<Requirement> requirements) {
         this.requirements.addAll(requirements);
         invalidateCache();
         return this;
     }
 
+    /**
+     * Gets the list of requirements.
+     *
+     * @return The list of requirements.
+     * @see Vertex#addRequirement
+     */
     public Set<Requirement> getRequirements() {
         return requirements;
     }
 
+    /**
+     * Creates a representation of the vertex as a string.
+     *
+     * @return The vertex as a string.
+     */
     public String toString() {
         return "{ id: " + getId() + ", name: " + getName() + "}";
     }
 
+    /**
+     * Creates an immutable vertex from this vertex.
+     *
+     * @return An immutable vertex as a RuntimeVertex
+     */
     @Override
     protected RuntimeVertex createCache() {
         return new RuntimeVertex(this);
@@ -108,10 +191,9 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
     /**
      * <h1>RuntimeVertex</h1>
      * Immutable class for Vertex
-     * <p/>
+     * </p>
      * This class is used in models. It guarantees that that the internal states of
      * the instance will not change after it's construction.
-     * <p/>
      */
     public static final class RuntimeVertex extends ElementBase {
 
@@ -122,14 +204,30 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
             this.sharedState = vertex.getSharedState();
         }
 
+        /**
+         * Gets the name of the shared state.
+         *
+         * @return The name as a string.
+         * @see Vertex#setSharedState
+         */
         public String getSharedState() {
             return sharedState;
         }
 
+        /**
+         * Returns true if the vertex has a valid shared state.
+         *
+         * @return True if the vertex has a shared state.
+         */
         public boolean hasSharedState() {
             return null != sharedState && !"".equals(sharedState);
         }
 
+        /**
+         * TODO Needs documentation
+         *
+         * @param visitor
+         */
         @Override
         public void accept(ElementVisitor visitor) {
             visitor.visit(this);

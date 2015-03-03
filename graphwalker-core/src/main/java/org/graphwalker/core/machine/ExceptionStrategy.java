@@ -29,11 +29,11 @@ package org.graphwalker.core.machine;
 /**
  * <h1>ExceptionStrategy</h1>
  * The ExceptionStrategy handles the way GraphWalker handles failures during test execution.
- * <p/>
+ * </p>
  * Implementing this interface, allows a developer to handle failures during testing. The default
  * way for GraphWalker, is to bail out immediately, see {FailFastStrategy}. Another way could
  * be to implement some recovery strategy.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

@@ -37,9 +37,9 @@ import java.util.List;
 /**
  * <h1>MachineBase</h1>
  * MachineBase represents the Finite State Machine.
- * <p/>
+ * </p>
  * The MachineBase keeps lists of Contexts and Observers, a Profiler and the exception strategy.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

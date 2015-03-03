@@ -36,7 +36,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  * <h1>VertexCoverage</h1>
  * The VertexCoverage stop condition is fulfilled when the percentage of visited vertices in the
  * model is greater than, or equal, to the percentage given as a parameter to the constructor.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

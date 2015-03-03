@@ -34,10 +34,10 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 /**
  * <h1>FailFastStrategy</h1>
  * The FailFastStrategy handles the way GraphWalker handles failures during test execution.
- * <p/>
+ * </p>
  * The default way of handling a failure when executing a test, is to stop the test run and bail out.
  * That is what this class does.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

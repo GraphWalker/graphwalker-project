@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * <h1>ReachedEdge</h1>
  * The ReachedEdge stop condition is fulfilled when the traversing of the model reaches the named edge.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */
