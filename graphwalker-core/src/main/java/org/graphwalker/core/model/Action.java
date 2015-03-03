@@ -29,10 +29,10 @@ package org.graphwalker.core.model;
 /**
  * <h1>Action</h1>
  * The  Action is a script of code executed after an edge has been run.
- * <p/>
+ * </p>
  * The action script contains any code and data that is used by guards to make
- * edges accessible.
- * <p/>
+ * edges accessible. By default the code is interpreted as JavaScript.
+ * </p>
  *
  * @author Nils Olsson
  */

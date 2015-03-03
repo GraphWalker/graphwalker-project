@@ -33,12 +33,14 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * <h1>Model</h1>
- * The Model is a collection of edges and vertices,
- * <p/>
- * The model should represent a description of the expected behavior of
- * a system under test. It holds the edges and vertices, which creates
+ * The Model,or graph, is a collection of edges and vertices,
+ * </p>
+ * <img src="doc-files/Model.png">
+ * </p>
+ * The model is a description of the expected behavior of
+ * a system under test. It contains lists of edges and vertices, which creates
  * a directed graph.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */
@@ -51,29 +53,71 @@ public final class Model implements Builder<Model.RuntimeModel> {
     private final List<Action> actions = new ArrayList<>();
     private final Set<Requirement> requirements = new HashSet<>();
 
+    /**
+     * Sets the unique identifier of the model. Even though several models in the
+     * same test can share the same name, all identifiers must be unique.
+     *
+     * @param id A String that uniquely identifies this model.
+     * @return The model
+     */
     public Model setId(String id) {
         this.id = id;
         return this;
     }
 
+    /**
+     * Gets the unique identifier of the model.
+     *
+     * @return The unique identifier as a string.
+     * @see Model#setId
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets the name of the model. The name of a model can be the same as others, it
+     * does not have to be unique.
+     *
+     * @param name The name as a string.
+     * @return The model.
+     */
     public Model setName(String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Gets the name of the model.
+     *
+     * @return The name as a string.
+     * @see Model#setName
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Adds a vertex to the model.
+     *
+     * @param vertex The vertex to be added.
+     * @return The model
+     */
     public Model addVertex(Vertex vertex) {
         vertices.add(vertex);
         return this;
     }
 
+    /**
+     * Adds an edge to the model.
+     * </p>
+     * If either the source or target vertex of the edge is not in the model,
+     * they will be automatically added as well.
+     * </p>
+     *
+     * @param edge The edge to be added.
+     * @return The model.
+     */
     public Model addEdge(Edge edge) {
         edges.add(edge);
         if (null != edge.getSourceVertex() && !vertices.contains(edge.getSourceVertex())) {
@@ -85,46 +129,115 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return this;
     }
 
+    /**
+     * Adds an action to the model.
+     * </p>
+     * Before a model is being traversed, it will execute all its actions. This is typically
+     * needed to initiate variables and data.
+     *
+     * @param action The action to be added.
+     * @return The model
+     */
     public Model addAction(Action action) {
         return addActions(Arrays.asList(action));
     }
 
+    /**
+     * Adds a list of actions to the model.
+     *
+     * @param actions A list of actions
+     * @return The model
+     * @see Model#addAction
+     */
     public Model addActions(List<Action> actions) {
         this.actions.addAll(actions);
         return this;
     }
 
+    /**
+     * Gets the list of actions associated with the model.
+     *
+     * @return List of actions
+     * @see Model#addAction
+     */
     public List<Action> getActions() {
         return actions;
     }
 
+    /**
+     * Gets the list of vertices of the model.
+     *
+     * @return The list of vertices
+     */
     public List<Vertex> getVertices() {
         return vertices;
     }
 
+    /**
+     * Gets the list of edges of the model.
+     *
+     * @return List of edges
+     */
     public List<Edge> getEdges() {
         return edges;
     }
 
+    /**
+     * Adds a requirement.
+     * </p>
+     * The requirement is associated with the whole model. Whenever a test fails any vertex in the model,
+     * the requirement will be set to {@link org.graphwalker.core.machine.RequirementStatus FAILED}.
+     * </p>
+     * Please note that the requirements associated with the model, are not the same as the ones associated
+     * with edges and vertices.
+     *
+     * @param requirement The requirement
+     * @return The model
+     */
     public Model addRequirement(Requirement requirement) {
         this.requirements.add(requirement);
         return this;
     }
 
+    /**
+     * Adds a list of requirements.
+     *
+     * @param requirements The list of requirements
+     * @return The model
+     * @see Model#addRequirement
+     */
     public Model addRequirements(Set<Requirement> requirements) {
         this.requirements.addAll(requirements);
         return this;
     }
 
+    /**
+     * Gets the list of requirement associated with the model.
+     *
+     * @return The list of requirement
+     * @see Model#addRequirement
+     */
     public Set<Requirement> getRequirements() {
         return requirements;
     }
 
+    /**
+     * Creates an immutable model from this model.
+     *
+     * @return An immutable vertex as a RuntimeModel
+     */
     @Override
     public RuntimeModel build() {
         return new RuntimeModel(this);
     }
 
+    /**
+     * <h1>RuntimeModel</h1>
+     * Immutable class for Model
+     * </p>
+     * An immutable model guarantees that that the internal states of
+     * the instance will not change after it's construction.
+     */
     public static class RuntimeModel extends ElementBase {
 
         private final List<RuntimeVertex> vertices;
@@ -152,12 +265,21 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.sharedStateCache = createSharedStateCache();
         }
 
+        /**
+         * Gets the list of vertices of the model.
+         *
+         * @return The list of vertices
+         * @see Model#getVertices
+         */
         public List<RuntimeVertex> getAllVertices() {
             return vertices;
         }
 
         /**
-         * @return a list of non-start vertices
+         * Gets the list of vertices of the model.
+         *
+         * @return The list of vertices
+         * @see Model#getVertices
          */
         public List<RuntimeVertex> getVertices() {
             return vertices;

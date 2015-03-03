@@ -30,7 +30,7 @@ package org.graphwalker.core.machine;
  * <h1>RequirementStatus</h1>
  * Each requirement is associated with a RequirementStatus which keeps track of its status.
  * The default status is NOT_COVERED.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

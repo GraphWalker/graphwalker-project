@@ -43,11 +43,11 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * <h1>SimpleMachine</h1>
  * SimpleMachine is working implementation of the MachineBase.
- * <p/>
+ * </p>
  * The SimpleMachine is the Finite State Machine which executes one or more contexts. Running the machine
  * is done by calling {@link SimpleMachine#getNextStep()}. Before calling
  * getNextStep check {@link SimpleMachine#hasNextStep()} if the machine has more steps to be executed or not.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

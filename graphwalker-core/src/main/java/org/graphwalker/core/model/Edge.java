@@ -36,14 +36,14 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 /**
  * <h1>Edge</h1>
  * The  Edge holds the information for a transition in a model.
- * <p/>
+ * </p>
  * The edge represents an action performed by a test, which takes the system
  * under test, from a state to another.
  * The edge has a source and target vertex. If the vertices are identical, the
  * edge is a self loop. The source vertex is not mandatory, but in a model,
  * there should be only one such instance. Also, the target vertex is not
  * mandatory, but again, in a model, there should be only one such instance.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */
@@ -72,7 +72,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     }
 
     /**
-     * Gets the unique identifier of the edge,
+     * Gets the unique identifier of the edge.
      *
      * @return The unique identifier as a string.
      * @see Edge#setId
@@ -301,10 +301,10 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     /**
      * <h1>RuntimeEdge</h1>
      * Immutable class for Edge
-     * <p/>
+     * </p>
      * This class is used in models. It guarantees that that the internal states of
      * the instance will not change after it's construction.
-     * <p/>
+     * </p>
      */
     public static final class RuntimeEdge extends ElementBase {
 
@@ -366,6 +366,8 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         }
 
         /**
+         * TODO Needs documentation
+         *
          * @param visitor
          */
         @Override

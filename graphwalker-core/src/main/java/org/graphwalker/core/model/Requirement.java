@@ -29,11 +29,11 @@ package org.graphwalker.core.model;
 /**
  * <h1>Requirement</h1>
  * The Requirement is attached to an element in the model.
- * <p/>
+ * </p>
  * Each requirement is individual tracked during execution with the help of
  * {@link org.graphwalker.core.machine.RequirementStatus}. After the test the status of each requirement
  * can be checked.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

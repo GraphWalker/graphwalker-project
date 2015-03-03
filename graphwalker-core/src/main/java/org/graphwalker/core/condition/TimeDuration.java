@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * <h1>TimeDuration</h1>
  * The TimeDuration stop condition is fulfilled when the executed time of the test has exceeded the
  * time given as a parameter in the constructor.
- * <p/>
+ * </p>
  *
  * @author Nils Olsson
  */

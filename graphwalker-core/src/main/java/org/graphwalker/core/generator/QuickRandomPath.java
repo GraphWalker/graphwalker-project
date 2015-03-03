@@ -43,11 +43,11 @@ import java.util.List;
  * <h1>QuickRandomPath</h1>
  * The QuickRandomPath generator will generate a random path through a model, but will try to cover
  * the unvisited elements first.
- * <p/>
+ * </p>
  * QuickRandomPath generates a random path, but tries to reach unvisited elements first.
  * This is quite effective for FSM, but for a EFSM this may not work since edges
  * can be inaccessible.
- * <p/>
+ * </p>
  *
  * @author Kristian Karl
  */
