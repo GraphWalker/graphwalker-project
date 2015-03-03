@@ -271,16 +271,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
          * @return The list of vertices
          * @see Model#getVertices
          */
-        public List<RuntimeVertex> getAllVertices() {
-            return vertices;
-        }
-
-        /**
-         * Gets the list of vertices of the model.
-         *
-         * @return The list of vertices
-         * @see Model#getVertices
-         */
         public List<RuntimeVertex> getVertices() {
             return vertices;
         }
