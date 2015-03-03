@@ -43,7 +43,6 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  * edge is a self loop. The source vertex is not mandatory, but in a model,
  * there should be only one such instance. Also, the target vertex is not
  * mandatory, but again, in a model, there should be only one such instance.
- * </p>
  *
  * @author Nils Olsson
  */
