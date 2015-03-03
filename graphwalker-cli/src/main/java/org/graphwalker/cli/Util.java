@@ -249,7 +249,7 @@ public abstract class Util {
 
     private static HashMap<Statistics, Integer> getStatistics(Context context) {
         HashMap<Statistics, Integer> map = new HashMap<>();
-        map.put(Statistics.TOTAL_NUMBER_OF_VERTICES, context.getModel().getAllVertices().size());
+        map.put(Statistics.TOTAL_NUMBER_OF_VERTICES, context.getModel().getVertices().size());
         map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES, context.getProfiler().getUnvisitedVertices(context).size());
         map.put(Statistics.TOTAL_NUMBER_OF_EDGES, context.getModel().getEdges().size());
         map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES, context.getProfiler().getUnvisitedEdges(context).size());
