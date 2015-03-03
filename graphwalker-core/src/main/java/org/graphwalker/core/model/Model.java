@@ -41,6 +41,8 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  * a system under test. It contains lists of edges and vertices, which creates
  * a directed graph.
  * </p>
+ * In a model, the edges represents the actions during a test, and the vertices are where
+ * the verifications are performed.
  *
  * @author Nils Olsson
  */
@@ -275,46 +277,126 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return vertices;
         }
 
+        /**
+         * Gets the list of vertices that matches a shared state name.
+         *
+         * @param sharedState The shared state name too be matched.
+         * @return The list of matching sheared states.
+         * @see Vertex#setSharedState
+         */
         public List<RuntimeVertex> getSharedStates(String sharedState) {
             return sharedStateCache.get(sharedState);
         }
 
+        /**
+         * Will search in the model if there is a vertex that has a shared state name that matches
+         * the given name.
+         *
+         * @param sharedState The shared state name too be matched.
+         * @return True if the model has a matching shared state.
+         * @see Vertex#setSharedState
+         */
         public boolean hasSharedState(String sharedState) {
             return sharedStateCache.containsKey(sharedState);
         }
 
+        /**
+         * Will search the model for vertices that has shared states. If any is found, then true will
+         * be returned.
+         *
+         * @return True if the models has any vertex with a shared state.
+         * @see Vertex#setSharedState
+         */
         public boolean hasSharedStates() {
             return !sharedStateCache.isEmpty();
         }
 
+        /**
+         * Searches the model vertices that matches search string.
+         *
+         * @param name The name of the vertex as a string.
+         * @return The list of matching vertices.
+         * @see Vertex#setName
+         */
         public List<RuntimeVertex> findVertices(String name) {
             return verticesByNameCache.get(name);
         }
 
+        /**
+         * For the given vertex, all in-edges will be returned.
+         * </p>
+         * Any edge that has a target vertex that is identical to vertex, will be returned.
+         *
+         * @param vertex The vertex to match
+         * @return List of matching in-edges.
+         */
         public List<RuntimeEdge> getInEdges(RuntimeVertex vertex) {
             return inEdgesByVertexCache.get(vertex);
         }
 
+        /**
+         * Gets the all edges in the model.
+         * @return A list of edges.
+         */
         public List<RuntimeEdge> getEdges() {
             return edges;
         }
 
+        /**
+         * For the given vertex, all out-edges will be returned.
+         * </p>
+         * Any edge that has a source vertex that is identical to vertex, will be returned.
+         *
+         * @param vertex The vertex to match
+         * @return List of matching out-edges.
+         */
         public List<RuntimeEdge> getOutEdges(RuntimeVertex vertex) {
             return outEdgesByVertexCache.get(vertex);
         }
 
+        /**
+         * Searches the model for edges matching the search string.
+         * </p>
+         * Any edge that has a matching name, will be returned.
+         *
+         * @param name The name of edges to be matched.
+         * @return The list of matching edges.
+         * @see Edge#setName
+         */
         public List<RuntimeEdge> findEdges(String name) {
             return edgesByNameCache.get(name);
         }
 
+        /**
+         * Searches the model for any element matching the search string.
+         * </p>
+         * Any element that has a matching name, will be returned. An element can be either an edge
+         * or a vertex.
+         *
+         * @param name The name of elements to be matched.
+         * @return The list of matching elements.
+         * @see Element#getName
+         */
         public List<Element> findElements(String name) {
             return elementsByNameCache.get(name);
         }
 
+        /**
+         * Will return a list of all elements in a model.
+         * </p>
+         * The list will contain all edges and vertices in the model.
+         *
+         * @return The list of all elements in the model.
+         */
         public List<Element> getElements() {
             return elementsCache;
         }
 
+        /**
+         * TODO: Add doc
+         * @param element
+         * @return
+         */
         public List<Element> getElements(Element element) {
             return elementsByElementCache.get(element);
         }
@@ -433,6 +515,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Collections.unmodifiableMap(map);
         }
 
+        /**
+         * TODO: Doc...
+         * @param visitor
+         */
         @Override
         public void accept(ElementVisitor visitor) {
             visitor.visit(this);
