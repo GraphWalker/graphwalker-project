@@ -39,7 +39,6 @@ import java.util.Set;
  * The source vertex is not mandatory, but in a model, there should be only one
  * such instance. Also, the target vertex is not mandatory, but again, in a model,
  * there should be only one such instance.
- * </p>
  *
  * @author Nils Olsson
  */
@@ -95,7 +94,6 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
      * </p>
      * In the 2 models above, GraphWalker will create virtual edges, the dotted arrows. These edges will
      * allow passages between the 2 models.
-     * </p>
      *
      * @param sharedState The name of the shared state.
      * @return The vertex
