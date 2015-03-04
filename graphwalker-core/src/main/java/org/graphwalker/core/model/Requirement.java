@@ -33,7 +33,6 @@ package org.graphwalker.core.model;
  * Each requirement is individual tracked during execution with the help of
  * {@link org.graphwalker.core.machine.RequirementStatus}. After the test the status of each requirement
  * can be checked.
- * </p>
  *
  * @author Nils Olsson
  */
@@ -42,7 +41,7 @@ public final class Requirement {
     private final String key;
 
     /**
-     * Creates a requirement, and associates it with key.
+     * Creates a requirement, and stores it as string key.
      *
      * @param key The requirement as a string.
      */

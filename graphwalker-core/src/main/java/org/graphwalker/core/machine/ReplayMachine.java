@@ -15,9 +15,11 @@ import java.util.List;
  * The ReplayMachine takes a Profiler from a previous execution and will re-run that execution
  * in the same order. The edges and vertices will called exactly the same order.
  * </p>
+ * If the last element of the execution is an edge, the ReplayMachine will execute the target
+ * vertex as well.
+ * </p>
  * A typical use case could be a test that encountered a failure, and now you
  * want to execute that test and see iff it can reproduce that failure.
- * </p>
  *
  * @author Nils Olsson
  */

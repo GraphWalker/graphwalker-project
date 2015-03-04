@@ -47,7 +47,6 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  * The SimpleMachine is the Finite State Machine which executes one or more contexts. Running the machine
  * is done by calling {@link SimpleMachine#getNextStep()}. Before calling
  * getNextStep check {@link SimpleMachine#hasNextStep()} if the machine has more steps to be executed or not.
- * </p>
  *
  * @author Nils Olsson
  */

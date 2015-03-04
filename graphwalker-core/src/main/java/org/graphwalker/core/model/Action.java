@@ -32,7 +32,6 @@ package org.graphwalker.core.model;
  * </p>
  * The action script contains any code and data that is used by guards to make
  * edges accessible. By default the code is interpreted as JavaScript.
- * </p>
  *
  * @author Nils Olsson
  */

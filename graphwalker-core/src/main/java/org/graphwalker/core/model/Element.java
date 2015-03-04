@@ -30,8 +30,7 @@ import java.util.Set;
 
 /**
  * <h1>Element</h1>
- * The  Element is the interface for edges and vertices..
- * </p>
+ * The  Element is the interface for items in a model. Typical edges and vertices..
  *
  * @author Nils Olsson
  */
