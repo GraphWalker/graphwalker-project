@@ -28,6 +28,7 @@ package org.graphwalker.java.test;
 
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.graphwalker.io.factory.ContextFactoryScanner;
@@ -53,21 +54,21 @@ public final class TestBuilder {
 		return this;
 	}
 
-	public TestBuilder addModel(String model, PathGenerator generator) {
-		return addModel(Paths.get(model), generator);
+	public TestBuilder addModel(String model, PathGenerator pathGenerator) {
+		return addModel(Paths.get(model), pathGenerator);
 	}
 
-	public TestBuilder addModel(Path model, PathGenerator generator) {
-		contexts.add(createContext(model, null, generator, null));
+	public TestBuilder addModel(Path model, PathGenerator pathGenerator) {
+		contexts.add(createContext(model, null, pathGenerator, null));
 		return this;
 	}
 
-	public TestBuilder addModel(String model, PathGenerator generator, String start) {
-		return addModel(Paths.get(model), generator, start);
+	public TestBuilder addModel(String model, PathGenerator pathGenerator, String start) {
+		return addModel(Paths.get(model), pathGenerator, start);
 	}
 
-	public TestBuilder addModel(Path model, PathGenerator generator, String start) {
-		contexts.add(createContext(model, null, generator, start));
+	public TestBuilder addModel(Path model, PathGenerator pathGenerator, String start) {
+		contexts.add(createContext(model, null, pathGenerator, start));
 		return this;
 	}
 
@@ -80,7 +81,7 @@ public final class TestBuilder {
 		return this;
 	}
 
-	private Context createContext(Path model, Context context, PathGenerator generator, String start) {
+	private Context createContext(Path model, Context context, PathGenerator pathGenerator, String start) {
 		ContextFactory factory = ContextFactoryScanner.get(model);
 		Context newContext;
 		try {
@@ -89,8 +90,8 @@ public final class TestBuilder {
 			} else {
 				newContext = factory.create(model);
 			}
-			if (null != generator) {
-				newContext.setPathGenerator(generator);
+			if (null != pathGenerator) {
+				newContext.setPathGenerator(pathGenerator);
 			}
 			if (null != start) {
 				newContext.setNextElement(newContext.getModel().findElements(start).get(0));
@@ -108,6 +109,17 @@ public final class TestBuilder {
 
 	public TestBuilder addClass(Class<? extends Context> testClass) {
 		contexts.add(createContext(testClass));
+		return this;
+	}
+
+	public TestBuilder addClass(Class<? extends Context> testClass, String pathGenerator) {
+		return addClass(testClass, GeneratorFactory.parse(pathGenerator));
+	}
+
+	public TestBuilder addClass(Class<? extends Context> testClass, PathGenerator pathGenerator) {
+		Context context = createContext(testClass);
+		context.setPathGenerator(pathGenerator);
+		contexts.add(context);
 		return this;
 	}
 
