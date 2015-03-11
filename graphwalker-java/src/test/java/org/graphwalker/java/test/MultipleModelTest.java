@@ -44,9 +44,14 @@ public class MultipleModelTest {
 
     @Test
     public void run() {
+        MultipleModel_1 model_1 = new MultipleModel_1();
+        MultipleModel_2 model_2 = new MultipleModel_2();
+
         new TestBuilder()
-                .addModel(MODEL_PATH_1, new MultipleModel_1().setPathGenerator(new RandomPath(new EdgeCoverage(100))))
-                .addModel(MODEL_PATH_2, new MultipleModel_2().setPathGenerator(new RandomPath(new EdgeCoverage(100))))
+                .addModel(MODEL_PATH_1, model_1.setPathGenerator(new RandomPath(new EdgeCoverage(100))))
+                .addModel(MODEL_PATH_2, model_2.setPathGenerator(new RandomPath(new EdgeCoverage(100))))
                 .execute();
+        Assert.assertTrue(model_1.count >= 4);
+        Assert.assertTrue(model_2.count >= 3);
     }
 }
