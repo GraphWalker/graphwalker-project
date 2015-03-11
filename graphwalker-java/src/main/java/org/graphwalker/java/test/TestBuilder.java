@@ -34,41 +34,121 @@ import org.graphwalker.io.factory.ContextFactoryScanner;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Nils Olsson
  */
 public final class TestBuilder {
 
-    private Path model;
-    private Context context;
-    private PathGenerator generator;
-    private String start;
+	private List<Context> contexts = new ArrayList<>();
 
+	public TestBuilder addModel(String model) {
+		return addModel(Paths.get(model));
+	}
+
+	public TestBuilder addModel(Path model) {
+		contexts.add(createContext(model, null, null, null));
+		return this;
+	}
+
+	public TestBuilder addModel(String model, PathGenerator generator) {
+		return addModel(Paths.get(model), generator);
+	}
+
+	public TestBuilder addModel(Path model, PathGenerator generator) {
+		contexts.add(createContext(model, null, generator, null));
+		return this;
+	}
+
+	public TestBuilder addModel(String model, PathGenerator generator, String start) {
+		return addModel(Paths.get(model), generator, start);
+	}
+
+	public TestBuilder addModel(Path model, PathGenerator generator, String start) {
+		contexts.add(createContext(model, null, generator, start));
+		return this;
+	}
+
+	public TestBuilder addModel(String model, Context context) {
+		return addModel(Paths.get(model), context);
+	}
+
+	public TestBuilder addModel(Path model, Context context) {
+		contexts.add(createContext(model, context, null, null));
+		return this;
+	}
+
+	private Context createContext(Path model, Context context, PathGenerator generator, String start) {
+		ContextFactory factory = ContextFactoryScanner.get(model);
+		Context newContext;
+		try {
+			if (null != context) {
+				newContext = factory.create(model, context);
+			} else {
+				newContext = factory.create(model);
+			}
+			if (null != generator) {
+				newContext.setPathGenerator(generator);
+			}
+			if (null != start) {
+				newContext.setNextElement(newContext.getModel().findElements(start).get(0));
+			}
+		} catch (Throwable t) {
+			throw new ContextFactoryException("Failed to create context", t);
+		}
+		return newContext;
+	}
+
+	public TestBuilder addContext(Context context) {
+		contexts.add(context);
+		return this;
+	}
+
+	public Result execute() {
+		if (contexts.isEmpty()) {
+			return new TestExecutor(build()).execute();
+		} else {
+			return new TestExecutor(contexts).execute();
+		}
+	}
+
+	@Deprecated private Path model;
+	@Deprecated private Context context;
+	@Deprecated private PathGenerator generator;
+	@Deprecated private String start;
+
+	@Deprecated
     public TestBuilder setModel(String model) {
         return setModel(Paths.get(model));
     }
 
+	@Deprecated
     public TestBuilder setModel(Path model) {
         this.model = model;
         return this;
     }
 
+	@Deprecated
     public TestBuilder setContext(Context context) {
         this.context = context;
         return this;
     }
 
+	@Deprecated
     public TestBuilder setPathGenerator(PathGenerator generator) {
         this.generator = generator;
         return this;
     }
 
+	@Deprecated
     public TestBuilder setStart(String start) {
         this.start = start;
         return this;
     }
 
+	@Deprecated
     public Context build() {
         ContextFactory factory = ContextFactoryScanner.get(model);
         try {
@@ -78,10 +158,6 @@ public final class TestBuilder {
         } catch (Throwable t) {
             throw new ContextFactoryException("Failed to create context", t);
         }
-    }
-
-    public Result execute() {
-        return new TestExecutor(build()).execute();
     }
 
 }

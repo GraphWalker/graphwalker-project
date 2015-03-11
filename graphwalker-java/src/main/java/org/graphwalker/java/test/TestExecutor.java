@@ -101,6 +101,12 @@ public final class TestExecutor implements Executor {
         this.machine = new SimpleMachine(contexts);
     }
 
+	public TestExecutor(Collection<Context> contexts) {
+		this.configuration = new Configuration();
+		this.machineConfiguration = new MachineConfiguration();
+		this.machine = new SimpleMachine(contexts);
+	}
+
     @Override
     public Machine getMachine() {
         return machine;
