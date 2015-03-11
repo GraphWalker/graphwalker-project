@@ -9,6 +9,18 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * <h1>ReplayMachine</h1>
+ * ReplayMachine can re-run an previous executed path..
+ * </p>
+ * The ReplayMachine takes a Profiler from a previous execution and will re-run that execution
+ * in the same order. The edges and vertices will called exactly the same order.
+ * </p>
+ * If the last element of the execution is an edge, the ReplayMachine will execute the target
+ * vertex as well.
+ * </p>
+ * A typical use case could be a test that encountered a failure, and now you
+ * want to execute that test and see iff it can reproduce that failure.
+ *
  * @author Nils Olsson
  */
 public final class ReplayMachine extends SimpleMachine {
@@ -26,7 +38,7 @@ public final class ReplayMachine extends SimpleMachine {
 
     private Collection<Context> createContexts(Profiler profiler) {
         List<Context> contexts = new ArrayList<>();
-        for (Context context: profiler.getContexts()) {
+        for (Context context : profiler.getContexts()) {
             try {
                 Context newContext = context.getClass().newInstance();
                 newContext.setModel(context.getModel());

@@ -35,6 +35,13 @@ import org.graphwalker.core.model.Element;
 import java.util.List;
 
 /**
+ * <h1>AStarPath</h1>
+ * The AStarPath generator will find the shortest path between 2 elements.
+ * </p>
+ * Given the current element in the execution context and the {@link ReachedStopCondition}
+ * the generator will create the shortest path between the 2 elements.
+ * </p>
+ *
  * @author Nils Olsson
  */
 public final class AStarPath extends PathGeneratorBase<ReachedStopCondition> {

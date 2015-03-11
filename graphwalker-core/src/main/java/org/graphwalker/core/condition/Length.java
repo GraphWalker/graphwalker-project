@@ -27,6 +27,11 @@ package org.graphwalker.core.condition;
  */
 
 /**
+ * <h1>Length</h1>
+ * The Length stop condition is fulfilled when the total number visited edges and vertices in the
+ * model is greater than, or equal, to the length given as a parameter to the constructor.
+ * </p>
+ *
  * @author Nils Olsson
  */
 public final class Length extends StopConditionBase {

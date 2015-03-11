@@ -29,6 +29,9 @@ package org.graphwalker.core.model;
 import java.util.Set;
 
 /**
+ * <h1>Element</h1>
+ * The  Element is the interface for items in a model. Typical edges and vertices..
+ *
  * @author Nils Olsson
  */
 public interface Element {
@@ -36,8 +39,22 @@ public interface Element {
 
     boolean hasId();
 
+    /**
+     * Gets the name of the element..
+     *
+     * @return The name as a string.
+     * @see Vertex#setName
+     * @see Edge#setName
+     */
     String getName();
 
+    /**
+     * Returns true if the element has a name.
+     * </p>
+     * A valid name is anon empty string.
+     *
+     * @return True if the element has a valid name.
+     */
     boolean hasName();
 
     Set<Requirement> getRequirements();

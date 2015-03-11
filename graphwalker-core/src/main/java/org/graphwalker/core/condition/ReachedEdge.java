@@ -32,6 +32,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * <h1>ReachedEdge</h1>
+ * The ReachedEdge stop condition is fulfilled when the traversing of the model reaches the named edge.
+ * </p>
+ *
  * @author Nils Olsson
  */
 public final class ReachedEdge extends ReachedStopConditionBase {

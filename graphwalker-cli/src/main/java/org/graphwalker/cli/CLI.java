@@ -357,7 +357,7 @@ public class CLI {
 
     private void verifyModel(RuntimeModel model) {
         // Verify that the model has more than 1 vertex
-        if (model.getAllVertices().size() < 1) {
+        if (model.getVertices().size() < 1) {
             throw new RuntimeException("Model has less than 1 vertices. [Excluding the Start vertex]");
         }
         // Verify that the model has more than 0 edges

@@ -32,6 +32,18 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
+ * <h1>Model</h1>
+ * The Model,or graph, is a collection of edges and vertices,
+ * </p>
+ * <img src="doc-files/Model.png">
+ * </p>
+ * The model is a description of the expected behavior of
+ * a system under test. It contains lists of edges and vertices, which creates
+ * a directed graph.
+ * </p>
+ * In a model, the edges represents the actions during a test, and the vertices are where
+ * the verifications are performed.
+ *
  * @author Nils Olsson
  */
 public final class Model implements Builder<Model.RuntimeModel> {
@@ -43,29 +55,71 @@ public final class Model implements Builder<Model.RuntimeModel> {
     private final List<Action> actions = new ArrayList<>();
     private final Set<Requirement> requirements = new HashSet<>();
 
+    /**
+     * Sets the unique identifier of the model. Even though several models in the
+     * same test can share the same name, all identifiers must be unique.
+     *
+     * @param id A String that uniquely identifies this model.
+     * @return The model
+     */
     public Model setId(String id) {
         this.id = id;
         return this;
     }
 
+    /**
+     * Gets the unique identifier of the model.
+     *
+     * @return The unique identifier as a string.
+     * @see Model#setId
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets the name of the model. The name of a model can be the same as others, it
+     * does not have to be unique.
+     *
+     * @param name The name as a string.
+     * @return The model.
+     */
     public Model setName(String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Gets the name of the model.
+     *
+     * @return The name as a string.
+     * @see Model#setName
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Adds a vertex to the model.
+     *
+     * @param vertex The vertex to be added.
+     * @return The model
+     */
     public Model addVertex(Vertex vertex) {
         vertices.add(vertex);
         return this;
     }
 
+    /**
+     * Adds an edge to the model.
+     * </p>
+     * If either the source or target vertex of the edge is not in the model,
+     * they will be automatically added as well.
+     * </p>
+     *
+     * @param edge The edge to be added.
+     * @return The model.
+     */
     public Model addEdge(Edge edge) {
         edges.add(edge);
         if (null != edge.getSourceVertex() && !vertices.contains(edge.getSourceVertex())) {
@@ -77,46 +131,115 @@ public final class Model implements Builder<Model.RuntimeModel> {
         return this;
     }
 
+    /**
+     * Adds an action to the model.
+     * </p>
+     * Before a model is being traversed, it will execute all its actions. This is typically
+     * needed to initiate variables and data.
+     *
+     * @param action The action to be added.
+     * @return The model
+     */
     public Model addAction(Action action) {
         return addActions(Arrays.asList(action));
     }
 
+    /**
+     * Adds a list of actions to the model.
+     *
+     * @param actions A list of actions
+     * @return The model
+     * @see Model#addAction
+     */
     public Model addActions(List<Action> actions) {
         this.actions.addAll(actions);
         return this;
     }
 
+    /**
+     * Gets the list of actions associated with the model.
+     *
+     * @return List of actions
+     * @see Model#addAction
+     */
     public List<Action> getActions() {
         return actions;
     }
 
+    /**
+     * Gets the list of vertices of the model.
+     *
+     * @return The list of vertices
+     */
     public List<Vertex> getVertices() {
         return vertices;
     }
 
+    /**
+     * Gets the list of edges of the model.
+     *
+     * @return List of edges
+     */
     public List<Edge> getEdges() {
         return edges;
     }
 
+    /**
+     * Adds a requirement.
+     * </p>
+     * The requirement is associated with the whole model. Whenever a test fails any vertex in the model,
+     * the requirement will be set to {@link org.graphwalker.core.machine.RequirementStatus FAILED}.
+     * </p>
+     * Please note that the requirements associated with the model, are not the same as the ones associated
+     * with edges and vertices.
+     *
+     * @param requirement The requirement
+     * @return The model
+     */
     public Model addRequirement(Requirement requirement) {
         this.requirements.add(requirement);
         return this;
     }
 
+    /**
+     * Adds a list of requirements.
+     *
+     * @param requirements The list of requirements
+     * @return The model
+     * @see Model#addRequirement
+     */
     public Model addRequirements(Set<Requirement> requirements) {
         this.requirements.addAll(requirements);
         return this;
     }
 
+    /**
+     * Gets the list of requirement associated with the model.
+     *
+     * @return The list of requirement
+     * @see Model#addRequirement
+     */
     public Set<Requirement> getRequirements() {
         return requirements;
     }
 
+    /**
+     * Creates an immutable model from this model.
+     *
+     * @return An immutable vertex as a RuntimeModel
+     */
     @Override
     public RuntimeModel build() {
         return new RuntimeModel(this);
     }
 
+    /**
+     * <h1>RuntimeModel</h1>
+     * Immutable class for Model
+     * </p>
+     * An immutable model guarantees that that the internal states of
+     * the instance will not change after it's construction.
+     */
     public static class RuntimeModel extends ElementBase {
 
         private final List<RuntimeVertex> vertices;
@@ -144,57 +267,136 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.sharedStateCache = createSharedStateCache();
         }
 
-        public List<RuntimeVertex> getAllVertices() {
-            return vertices;
-        }
-
         /**
-         * @return a list of non-start vertices
+         * Gets the list of vertices of the model.
+         *
+         * @return The list of vertices
+         * @see Model#getVertices
          */
         public List<RuntimeVertex> getVertices() {
             return vertices;
         }
 
+        /**
+         * Gets the list of vertices that matches a shared state name.
+         *
+         * @param sharedState The shared state name too be matched.
+         * @return The list of matching sheared states.
+         * @see Vertex#setSharedState
+         */
         public List<RuntimeVertex> getSharedStates(String sharedState) {
             return sharedStateCache.get(sharedState);
         }
 
+        /**
+         * Will search in the model if there is a vertex that has a shared state name that matches
+         * the given name.
+         *
+         * @param sharedState The shared state name too be matched.
+         * @return True if the model has a matching shared state.
+         * @see Vertex#setSharedState
+         */
         public boolean hasSharedState(String sharedState) {
             return sharedStateCache.containsKey(sharedState);
         }
 
+        /**
+         * Will search the model for vertices that has shared states. If any is found, then true will
+         * be returned.
+         *
+         * @return True if the models has any vertex with a shared state.
+         * @see Vertex#setSharedState
+         */
         public boolean hasSharedStates() {
             return !sharedStateCache.isEmpty();
         }
 
+        /**
+         * Searches the model vertices that matches search string.
+         *
+         * @param name The name of the vertex as a string.
+         * @return The list of matching vertices.
+         * @see Vertex#setName
+         */
         public List<RuntimeVertex> findVertices(String name) {
             return verticesByNameCache.get(name);
         }
 
+        /**
+         * For the given vertex, all in-edges will be returned.
+         * </p>
+         * Any edge that has a target vertex that is identical to vertex, will be returned.
+         *
+         * @param vertex The vertex to match
+         * @return List of matching in-edges.
+         */
         public List<RuntimeEdge> getInEdges(RuntimeVertex vertex) {
             return inEdgesByVertexCache.get(vertex);
         }
 
+        /**
+         * Gets the all edges in the model.
+         * @return A list of edges.
+         */
         public List<RuntimeEdge> getEdges() {
             return edges;
         }
 
+        /**
+         * For the given vertex, all out-edges will be returned.
+         * </p>
+         * Any edge that has a source vertex that is identical to vertex, will be returned.
+         *
+         * @param vertex The vertex to match
+         * @return List of matching out-edges.
+         */
         public List<RuntimeEdge> getOutEdges(RuntimeVertex vertex) {
             return outEdgesByVertexCache.get(vertex);
         }
 
+        /**
+         * Searches the model for edges matching the search string.
+         * </p>
+         * Any edge that has a matching name, will be returned.
+         *
+         * @param name The name of edges to be matched.
+         * @return The list of matching edges.
+         * @see Edge#setName
+         */
         public List<RuntimeEdge> findEdges(String name) {
             return edgesByNameCache.get(name);
         }
 
+        /**
+         * Searches the model for any element matching the search string.
+         * </p>
+         * Any element that has a matching name, will be returned. An element can be either an edge
+         * or a vertex.
+         *
+         * @param name The name of elements to be matched.
+         * @return The list of matching elements.
+         * @see Element#getName
+         */
         public List<Element> findElements(String name) {
             return elementsByNameCache.get(name);
         }
 
+        /**
+         * Will return a list of all elements in a model.
+         * </p>
+         * The list will contain all edges and vertices in the model.
+         *
+         * @return The list of all elements in the model.
+         */
         public List<Element> getElements() {
             return elementsCache;
         }
 
+        /**
+         * TODO: Add doc
+         * @param element
+         * @return
+         */
         public List<Element> getElements(Element element) {
             return elementsByElementCache.get(element);
         }
@@ -313,6 +515,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Collections.unmodifiableMap(map);
         }
 
+        /**
+         * TODO: Doc...
+         * @param visitor
+         */
         @Override
         public void accept(ElementVisitor visitor) {
             visitor.visit(this);
