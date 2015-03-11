@@ -106,6 +106,19 @@ public final class TestBuilder {
 		return this;
 	}
 
+	public TestBuilder addClass(Class<? extends Context> testClass) {
+		contexts.add(createContext(testClass));
+		return this;
+	}
+
+	private Context createContext(Class<? extends Context> testClass) {
+		try {
+			return testClass.newInstance();
+		} catch (Throwable t) {
+			throw new ContextFactoryException("Failed to create context", t);
+		}
+	}
+
 	public Result execute() {
 		if (contexts.isEmpty()) {
 			return new TestExecutor(build()).execute();
