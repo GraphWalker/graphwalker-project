@@ -35,6 +35,10 @@ import java.util.Set;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
+ * <h1>ReachedVertex</h1>
+ * The ReachedVertex stop condition is fulfilled when the traversing of the model reaches the named vertex..
+ * </p>
+ *
  * @author Nils Olsson
  */
 public final class ReachedVertex extends ReachedStopConditionBase {

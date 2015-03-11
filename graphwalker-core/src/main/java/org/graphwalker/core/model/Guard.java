@@ -27,6 +27,11 @@ package org.graphwalker.core.model;
  */
 
 /**
+ * <h1>Guard</h1>
+ * The Guard enables or disables accessibility to an edge.
+ * </p>
+ * The script in the guard should evaluate to a boolean expression.
+ *
  * @author Nils Olsson
  */
 public final class Guard {

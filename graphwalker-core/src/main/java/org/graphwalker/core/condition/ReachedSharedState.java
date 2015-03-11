@@ -32,6 +32,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * <h1>ReachedSharedState</h1>
+ * The ReachedSharedState stop condition is fulfilled when the traversing of the model
+ * reaches the vertex with the named sharedState.
+ * </p>
+ *
  * @author Nils Olsson
  */
 public final class ReachedSharedState extends ReachedStopConditionBase {

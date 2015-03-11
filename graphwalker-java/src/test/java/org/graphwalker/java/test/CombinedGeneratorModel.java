@@ -1,8 +1,8 @@
-package org.graphwalker.core.condition;
+package org.graphwalker.java.test;
 
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker Java
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,26 +26,30 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.java.annotation.Edge;
+import org.graphwalker.java.annotation.Model;
+
 /**
- * <h1>Never</h1>
- * The Never stop condition is never fulfilled.
- * </p>
- *
  * @author Nils Olsson
  */
-public final class Never extends StopConditionBase {
+@Model(file = "org/graphwalker/java/test/SimpleModel.graphml")
+public interface CombinedGeneratorModel {
 
-    public Never() {
-        super("");
-    }
+    @Edge()
+    void e_1();
 
-    @Override
-    public boolean isFulfilled() {
-        return false;
-    }
+    @Edge()
+    void e_2();
 
-    @Override
-    public double getFulfilment() {
-        return 0;
-    }
+    @Edge()
+    void e_3();
+
+    @Edge()
+    void e_4();
+
+    @Edge()
+    void v_1();
+
+    @Edge()
+    void v_2();
 }

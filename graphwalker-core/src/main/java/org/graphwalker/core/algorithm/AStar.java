@@ -33,6 +33,12 @@ import org.graphwalker.core.model.Path;
 import java.util.*;
 
 /**
+ * <h1>AStar</h1>
+ * The AStar implements the <a href="http://en.wikipedia.org/wiki/A*_search_algorithm">A* algorithm</a>.
+ * </p>
+ * The algo calculates the shortest path between two elements.
+ * </p>
+ *
  * @author Nils Olsson
  */
 public final class AStar implements Algorithm {

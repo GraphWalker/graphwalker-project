@@ -43,6 +43,14 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
+ * <h1>ExecutionContext</h1>
+ * The ExecutionContext ties a model and a path generator together.
+ * </p>
+ * The context not only connects a model with a path generator, it also keeps track of
+ * the execution of the model when traversing it, and it's history. Also, the model has an
+ * internal code and data scoop, which the context also is responsible for running,
+ * </p>
+ *
  * @author Nils Olsson
  */
 public abstract class ExecutionContext extends SimpleScriptContext implements Context {
