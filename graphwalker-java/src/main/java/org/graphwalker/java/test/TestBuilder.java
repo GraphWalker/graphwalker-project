@@ -131,12 +131,16 @@ public final class TestBuilder {
 		}
 	}
 
-	public Result execute() {
+	public Result execute(boolean ignoreError) {
 		if (contexts.isEmpty()) {
-			return new TestExecutor(build()).execute();
+			return new TestExecutor(build()).execute(ignoreError);
 		} else {
-			return new TestExecutor(contexts).execute();
+			return new TestExecutor(contexts).execute(ignoreError);
 		}
+	}
+
+	public Result execute() {
+		return execute(false);
 	}
 
 	@Deprecated private Path model;
