@@ -182,6 +182,6 @@ public class ModelTest {
         Assert.assertThat(model.getEdges().size(), is(50000));
         Assert.assertThat(runtimeModel.getVertices().size(), is(50000));
         Assert.assertThat(runtimeModel.getEdges().size(), is(50000));
-        Assert.assertTrue(TimeUnit.MILLISECONDS.convert(stopTime - startTime, TimeUnit.NANOSECONDS) < 10000);
+        Assert.assertTrue(TimeUnit.MILLISECONDS.convert(stopTime - startTime, TimeUnit.NANOSECONDS) < 30000);
     }
 }
