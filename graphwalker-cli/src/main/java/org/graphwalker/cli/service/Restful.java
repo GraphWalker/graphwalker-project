@@ -61,7 +61,7 @@ public class Restful {
      * non-existent, the label of the step is an empty string.
      */
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("hasNext")
     public String hasNext() {
         if (machine.hasNextStep()) {
@@ -88,7 +88,7 @@ public class Restful {
      * non-existent, the label of the step is an empty string.
      */
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("getNext")
     public String getNext() {
         try {
@@ -104,7 +104,7 @@ public class Restful {
     }
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("getData")
     public String getData(@QueryParam("key") String key) {
         String value = machine.getCurrentContext().getKeys().get(key);
@@ -117,7 +117,7 @@ public class Restful {
     }
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("setData")
     public String setData(@QueryParam("script") String script) {
         try {
@@ -139,7 +139,7 @@ public class Restful {
     }
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("restart")
     public String restart() throws Exception {
         machine = new SimpleMachine(cli.getContextsWithPathGenerators(cli.getOnline().model.iterator()));
@@ -152,7 +152,7 @@ public class Restful {
     }
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("fail")
     public String fail(@QueryParam("reason") String reason) {
         try {
@@ -170,7 +170,7 @@ public class Restful {
     }
 
     @GET
-    @Produces("text/plain")
+    @Produces("text/plain;charset=UTF-8")
     @Path("getStatistics")
     public String getStatistics() {
         if (cli.getOnline().json) {
