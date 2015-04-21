@@ -29,8 +29,10 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
@@ -126,5 +128,34 @@ public class SharedStateTest {
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(contextPetClinic).isEmpty(), is(true));
         Assert.assertThat(machine.getProfiler().getUnvisitedElements(contextVeterinarians).isEmpty(), is(true));
 
+    }
+
+    @Test
+    public void accessAttribute() {
+        Vertex shared1 = new Vertex().setName("A");
+        Vertex shared2 = new Vertex().setName("B");
+        Model model1 = new Model()
+                .addVertex(shared1)
+                .addEdge(new Edge()
+                        .setName("I")
+                        .addAction(new Action("global.myVariable = 1"))
+                        .setSourceVertex(shared1)
+                        .setTargetVertex(new Vertex()
+                                .setName("H")
+                                .setSharedState("SHARED1")));
+        Model model2 = new Model()
+                .addVertex(shared2.setSharedState("SHARED1"))
+                .addEdge(new Edge()
+                        .setName("C")
+                        .setGuard(new Guard("global['myVariable'] === 1"))
+                        .setSourceVertex(shared2)
+                        .setTargetVertex(new Vertex()
+                                .setName("D")));
+        Context context1 = new TestExecutionContext(model1, new RandomPath(new EdgeCoverage(100))).setNextElement(shared1);
+        Context context2 = new TestExecutionContext(model2, new RandomPath(new VertexCoverage(100)));
+        Machine machine = new SimpleMachine(context1, context2);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+        }
     }
 }
