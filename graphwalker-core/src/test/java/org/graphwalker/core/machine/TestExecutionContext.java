@@ -29,6 +29,9 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Model;
 
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
@@ -36,15 +39,20 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class TestExecutionContext extends ExecutionContext {
 
+    private static final Bindings bindings = new SimpleBindings();
+
     public TestExecutionContext() {
         super();
+        getScriptEngine().put("global", bindings);
     }
 
     public TestExecutionContext(Model model, PathGenerator generator) {
         super(model, generator);
+        getScriptEngine().put("global", bindings);
     }
 
     public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
         super(model, generator);
+        getScriptEngine().put("global", bindings);
     }
 }
