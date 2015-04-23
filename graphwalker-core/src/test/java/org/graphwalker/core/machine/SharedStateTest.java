@@ -138,7 +138,7 @@ public class SharedStateTest {
                 .addVertex(shared1)
                 .addEdge(new Edge()
                         .setName("I")
-                        .addAction(new Action("global.myVariable = 1"))
+                        .addAction(new Action("global.put('myVariable', true)"))
                         .setSourceVertex(shared1)
                         .setTargetVertex(new Vertex()
                                 .setName("H")
@@ -147,7 +147,7 @@ public class SharedStateTest {
                 .addVertex(shared2.setSharedState("SHARED1"))
                 .addEdge(new Edge()
                         .setName("C")
-                        .setGuard(new Guard("global['myVariable'] === 1"))
+                        .setGuard(new Guard("global.get('myVariable')"))
                         .setSourceVertex(shared2)
                         .setTargetVertex(new Vertex()
                                 .setName("D")));
