@@ -102,7 +102,7 @@ Are used by path generators. The [algorithm] provides the generators the logic f
 * [Depth-first Search]
 * [Eulerian]
 * [Fleury]
-* [Floyd-Marshall]
+* [Floyd-Warshall]
 
 ### Stop conditions
 Used by path generators to determine when to stop generating a path. Stop conditions can be logically AND'ed and OR'ed. When a stop condition (or a combination of several) evaluates to true, the generator stops. Examples are:
@@ -157,7 +157,7 @@ GrapWalker is using the [MIT license].
 [Depth-first Search]:http://en.wikipedia.org/wiki/Depth-first_search
 [Eulerian]:http://en.wikipedia.org/wiki/Eulerian_path
 [Fleury]:http://en.wikipedia.org/wiki/Eulerian_path#Fleury.27s_algorithm
-[Floyd-Marshall]:http://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
+[Floyd-Warshall]:http://en.wikipedia.org/wiki/Floyd%E2%80%93Warshall_algorithm
 [Observer pattern]:http://en.wikipedia.org/wiki/Observer_pattern
 [SimpleMachine]:https://github.com/GraphWalker/graphwalker-core/blob/master/src/main/java/org/graphwalker/core/machine/SimpleMachine.java#L44
 [SimpleMachine.walk]:https://github.com/GraphWalker/graphwalker-core/blob/master/src/main/java/org/graphwalker/core/machine/SimpleMachine.java#L75
