@@ -85,7 +85,7 @@ public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
     private Element getWeightedEdge(List<Element> elements, Element currentElement) {
 
-        Map<Edge.RuntimeEdge, Double> probabilities = new HashMap<Edge.RuntimeEdge, Double>();
+        Map<Edge.RuntimeEdge, Double> probabilities = new HashMap<>();
         int numberOfZeros = 0;
         double sum = 0;
 

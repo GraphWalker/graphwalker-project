@@ -82,8 +82,7 @@ public interface Context {
 
     Context setRequirementStatus(Requirement requirement, RequirementStatus requirementStatus);
 
-    @SuppressWarnings("unchecked")
-    public <A extends Algorithm> A getAlgorithm(Class<A> clazz);
+    <A extends Algorithm> A getAlgorithm(Class<A> clazz);
 
     <E> List<E> filter(Collection<E> elements);
 

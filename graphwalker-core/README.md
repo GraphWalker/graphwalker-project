@@ -94,7 +94,7 @@ public class SimpleTest {
 
 
 ### Model data structure
-The model represents a finite state diagram. It consists of vertices (nodes or states) and edges (transistions).
+The model represents a finite state diagram. It consists of vertices (nodes or states) and edges (transitions).
 
 ### Algorithms
 Are used by path generators. The [algorithm] provides the generators the logic for how to traverse a model. Examples of algorithms are:
@@ -124,15 +124,15 @@ An implementation of the [Observer pattern]. For instance, the [SimpleMachine] i
 ### Generators
 A generator used an algorithm to decide how to traverse a model. Different generators will generate different test sequences, and they will navigate them in different ways.
 
-* **AStarPath** - Navigate through the model in a completly random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
+* **AStarPath** - Navigate through the model in a completely random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
 * **QuickRandomPath** - Tries to run the shortest path through a model, but in a fast fashion. This is how the algorithm works:
    1. Choose an edge not yet visited by random.
    1. Select the shortest path to that edge using the A Star algorithm
    1. Walk that path, and mark all those edges being executed as visited.
    1. When reaching the selected edge in step 1, start all over, repeating steps 1->4.
 
-   The algorithm works well an very large models, and generates reasonably short sequences. The downside is when useed in conjunction with ESFM, the algorithm can choose a path which is blocked by a guard.
-* **RandomPath** - Navigate through the model in a completly random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
+   The algorithm works well an very large models, and generates reasonably short sequences. The downside is when used in conjunction with EFSM, the algorithm can choose a path which is blocked by a guard.
+* **RandomPath** - Navigate through the model in a completely random manor. Also called "Drunkard’s walk", or "Random walk". This algorithm selects an out-edge from a vertex by random, and repeats the process in the next vertex.
 
 
 ### Machines
@@ -148,7 +148,7 @@ Keeps track of the metrics, such as which parts of the model has been executed.
 
 
 ### License
-GrapWalker is using the [MIT license].
+GraphWalker is using the [MIT license].
 
 
 [GraphWalker 2]:https://github.com/KristianKarl/GraphWalker
