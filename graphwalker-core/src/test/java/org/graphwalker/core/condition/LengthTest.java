@@ -48,6 +48,11 @@ public class LengthTest {
         Assert.assertThat(length.getLength(), is(333l));
     }
 
+    @Test(expected = StopConditionException.class)
+    public void testNegativeLength() {
+        new Length(-55);
+    }
+
     @Test
     public void testFulfilment() {
         Vertex vertex = new Vertex();

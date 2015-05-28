@@ -38,17 +38,10 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
  *
  * @author Nils Olsson
  */
-public final class EdgeCoverage extends StopConditionBase {
-
-    private final double percent;
+public final class EdgeCoverage extends CoverageStopConditionBase {
 
     public EdgeCoverage(int percent) {
-        super(String.valueOf(percent));
-        this.percent = (double) percent / 100;
-    }
-
-    public int getPercent() {
-        return (int) (percent * 100);
+        super(percent);
     }
 
     @Override
@@ -66,6 +59,6 @@ public final class EdgeCoverage extends StopConditionBase {
                 visitedEdgesCount++;
             }
         }
-        return ((double) visitedEdgesCount / totalEdgesCount) / percent;
+        return ((double) visitedEdgesCount / totalEdgesCount) / getPercentAsDouble();
     }
 }

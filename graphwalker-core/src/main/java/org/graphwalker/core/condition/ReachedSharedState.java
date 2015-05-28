@@ -26,6 +26,7 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 import java.util.HashSet;
@@ -49,5 +50,12 @@ public final class ReachedSharedState extends ReachedStopConditionBase {
         Set<Element> elements = new HashSet<>();
         elements.addAll(getContext().getModel().getSharedStates(getValue()));
         return elements;
+    }
+
+    @Override
+    protected void validate(Context context) {
+        if (null != context && null == context.getModel().getSharedStates(getValue())) {
+            throw new StopConditionException("Shared state not found");
+        }
     }
 }

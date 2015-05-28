@@ -27,6 +27,7 @@ package org.graphwalker.core.generator;
  */
 
 import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.condition.StopConditionException;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.*;
 import org.junit.Test;
@@ -67,7 +68,7 @@ public class AStarPathTest {
         }
     }
 
-    @Test(expected = NoPathFoundException.class)
+    @Test(expected = StopConditionException.class)
     public void failTest2() {
         Context context = new TestExecutionContext(new Model().addEdge(e1), new AStarPath(new ReachedVertex("end")));
         context.setNextElement(v1);

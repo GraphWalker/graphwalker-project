@@ -41,10 +41,13 @@ public final class TimeDuration extends StopConditionBase {
     private final long duration;
     private final long timestamp;
 
-    public TimeDuration(long time, TimeUnit unit) {
-        super(String.valueOf(time));
+    public TimeDuration(long duration, TimeUnit unit) {
+        super(String.valueOf(duration));
+        if (0 > duration) {
+            throw new StopConditionException("A duration cannot be negative");
+        }
         this.timestamp = System.nanoTime();
-        this.duration = TimeUnit.NANOSECONDS.convert(time, unit);
+        this.duration = TimeUnit.NANOSECONDS.convert(duration, unit);
     }
 
     public long getDuration() {

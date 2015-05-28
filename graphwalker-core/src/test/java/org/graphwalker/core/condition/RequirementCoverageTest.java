@@ -48,6 +48,11 @@ public class RequirementCoverageTest {
         Assert.assertThat(requirementCoverage.getPercent(), is(66));
     }
 
+    @Test(expected = StopConditionException.class)
+    public void testNegativePercent() {
+        new RequirementCoverage(-55);
+    }
+
     @Test
     public void testFulfilment() {
         Vertex vertex = new Vertex().addRequirement(new Requirement("1"));

@@ -40,6 +40,18 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
     }
 
     @Override
+    public void setContext(Context context) {
+        super.setContext(context);
+        validate(context);
+    }
+
+    protected void validate(Context context) {
+        if (null != context && null == context.getModel().findElements(getValue())) {
+            throw new StopConditionException("Element not found");
+        }
+    }
+
+    @Override
     public boolean isFulfilled() {
         return getFulfilment() >= FULFILLMENT_LEVEL;
     }

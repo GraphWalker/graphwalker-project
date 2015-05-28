@@ -52,6 +52,11 @@ public class TimeDurationTest {
         Assert.assertThat(timeDuration.getDuration(), is(100l));
     }
 
+    @Test(expected = StopConditionException.class)
+    public void testNegativeTime() {
+        new TimeDuration(-100, TimeUnit.SECONDS);
+    }
+
     @Test
     public void testFulfilment() {
         Vertex vertex = new Vertex();
@@ -80,4 +85,5 @@ public class TimeDurationTest {
         }
         Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
     }
+
 }
