@@ -26,6 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.condition.TimeDuration;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
@@ -34,6 +35,7 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
 
@@ -57,7 +59,7 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
     }
 
     @Test
-    public void run() {
+    public void run2() {
         SimpleTest context = new SimpleTest();
         new TestBuilder()
                 .setModel(MODEL_PATH)
@@ -65,5 +67,12 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
                 .setPathGenerator(new RandomPath(new VertexCoverage(100)))
                 .setStart("edge").execute();
         Assert.assertThat(context.count, is(2));
+    }
+
+    @Test
+    public void run() {
+        Result result = new TestBuilder().addModel(MODEL_PATH
+                , new SimpleTest().setPathGenerator(new RandomPath(new VertexCoverage(100)))).execute();
+        Assert.assertThat(result.getCompletedCount(), is(1));
     }
 }
