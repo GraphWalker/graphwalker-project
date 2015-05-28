@@ -26,7 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.condition.TimeDuration;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
@@ -35,7 +34,6 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
 
