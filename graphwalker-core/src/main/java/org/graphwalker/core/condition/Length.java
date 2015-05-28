@@ -40,6 +40,9 @@ public final class Length extends StopConditionBase {
 
     public Length(long length) {
         super(String.valueOf(length));
+        if (0 > length) {
+            throw new StopConditionException("The length of the test, cannot be negative");
+        }
         this.length = length;
     }
 

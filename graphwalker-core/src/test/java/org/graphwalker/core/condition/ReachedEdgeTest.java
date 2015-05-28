@@ -42,6 +42,17 @@ import static org.hamcrest.core.Is.is;
  */
 public class ReachedEdgeTest {
 
+    @Test(expected = StopConditionException.class)
+    public void testMissingEdge() {
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
+        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setName("e2");
+        Model model = new Model().addEdge(e1).addEdge(e2);
+        StopCondition condition = new ReachedEdge("NOT_FOUND");
+        new TestExecutionContext(model, new RandomPath(condition));
+    }
+
     @Test
     public void testFulfilment() {
         Vertex v1 = new Vertex();

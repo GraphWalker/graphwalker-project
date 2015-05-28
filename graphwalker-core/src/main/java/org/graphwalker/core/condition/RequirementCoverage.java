@@ -37,17 +37,10 @@ import org.graphwalker.core.machine.RequirementStatus;
  *
  * @author Nils Olsson
  */
-public final class RequirementCoverage extends StopConditionBase {
-
-    private final double percent;
+public final class RequirementCoverage extends CoverageStopConditionBase {
 
     public RequirementCoverage(int percent) {
-        super(String.valueOf(percent));
-        this.percent = (double) percent / 100;
-    }
-
-    public int getPercent() {
-        return (int) (percent * 100);
+        super(percent);
     }
 
     @Override
@@ -64,6 +57,6 @@ public final class RequirementCoverage extends StopConditionBase {
         }
         double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
         double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount + failedCount) / totalCount) / percent;
+        return ((passedCount + failedCount) / totalCount) / getPercentAsDouble();
     }
 }

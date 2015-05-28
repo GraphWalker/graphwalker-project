@@ -40,17 +40,10 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  *
  * @author Nils Olsson
  */
-public final class VertexCoverage extends StopConditionBase {
-
-    private final double percent;
+public final class VertexCoverage extends CoverageStopConditionBase {
 
     public VertexCoverage(int percent) {
-        super(String.valueOf(percent));
-        this.percent = (double) percent / 100;
-    }
-
-    public int getPercent() {
-        return (int) (percent * 100);
+        super(percent);
     }
 
     @Override
@@ -68,6 +61,6 @@ public final class VertexCoverage extends StopConditionBase {
                 visitedVertexCount++;
             }
         }
-        return (visitedVertexCount / vertices.size()) / percent;
+        return (visitedVertexCount / vertices.size()) / getPercentAsDouble();
     }
 }

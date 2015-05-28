@@ -49,6 +49,11 @@ public class VertexCoverageTest {
         Assert.assertThat(vertexCoverage.getPercent(), is(55));
     }
 
+    @Test(expected = StopConditionException.class)
+    public void testNegativePercent() {
+        new VertexCoverage(-55);
+    }
+
     @Test
     public void testFulfilment() {
         Vertex v1 = new Vertex();

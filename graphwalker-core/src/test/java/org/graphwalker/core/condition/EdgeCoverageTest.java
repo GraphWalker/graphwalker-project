@@ -49,6 +49,11 @@ public class EdgeCoverageTest {
         Assert.assertThat(edgeCoverage.getPercent(), is(200));
     }
 
+    @Test(expected = StopConditionException.class)
+    public void testNegativePercent() {
+        new EdgeCoverage(-55);
+    }
+
     @Test
     public void testFulfilment() {
         Vertex v1 = new Vertex();
