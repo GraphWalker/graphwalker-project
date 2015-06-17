@@ -26,7 +26,7 @@ String
  ;
 
 Value
- : Integer? ('.' Digit+)?
+ : Integer | Integer? ('.' Digit+)
  ;
 
 fragment
