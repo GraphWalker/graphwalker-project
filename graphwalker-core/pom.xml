@@ -19,4 +19,17 @@
         <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
     </scm>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <parallel>classes</parallel>
+                    <useUnlimitedThreads>true</useUnlimitedThreads>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
