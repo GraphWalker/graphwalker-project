@@ -120,16 +120,16 @@ public final class Fleury implements Algorithm {
 
         public VertexCounter(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
             this.model = model;
-            visitedElements.addAll(visitedElements);
-            visitedElements.add(edge);
+            this.visitedElements.addAll(visitedElements);
+            this.visitedElements.add(edge);
         }
 
         public int getCount() {
             return count;
         }
 
-        private boolean isVisited(Element element) {
-            return visitedElements.contains(element);
+        private boolean isNotVisited(Element element) {
+            return !visitedElements.contains(element);
         }
 
         @Override
@@ -139,13 +139,13 @@ public final class Fleury implements Algorithm {
                 RuntimeVertex vertex = (RuntimeVertex) element;
                 count++;
                 for (RuntimeEdge edge : model.getOutEdges(vertex)) {
-                    if (!isVisited(edge)) {
+                    if (isNotVisited(edge)) {
                         edge.accept(this);
                     }
                 }
             } else if (element instanceof RuntimeEdge) {
                 RuntimeEdge edge = (RuntimeEdge) element;
-                if (!isVisited(edge.getTargetVertex())) {
+                if (isNotVisited(edge.getTargetVertex())) {
                     edge.getTargetVertex().accept(this);
                 }
             }

@@ -43,12 +43,11 @@ public final class FloydWarshall implements Algorithm {
 
     private final RuntimeModel model;
     private final int[][] distances;
-    private final Element[][] predecessors;
 
     public FloydWarshall(Context context) {
         this.model = context.getModel();
         this.distances = createDistanceMatrix(model, model.getElements());
-        this.predecessors = createPredecessorMatrix(model.getElements(), distances);
+        createPredecessorMatrix(model.getElements(), distances);
     }
 
     private int[][] createDistanceMatrix(RuntimeModel model, List<Element> elements) {
