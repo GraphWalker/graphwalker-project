@@ -58,21 +58,6 @@ public class TimeDurationTest {
     }
 
     @Test
-    public void testFulfilment() {
-        Vertex vertex = new Vertex();
-        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-        long start = System.nanoTime();
-        Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));
-        context.setNextElement(vertex);
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        long stop = System.nanoTime();
-        Assert.assertEquals(1000, (stop - start) / 1000000, 200);
-    }
-
-    @Test
     public void testIsFulfilled() {
         Vertex vertex = new Vertex();
         Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
