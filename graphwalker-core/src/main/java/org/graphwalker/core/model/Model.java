@@ -26,7 +26,13 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
@@ -141,7 +147,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
      * @return The model
      */
     public Model addAction(Action action) {
-        return addActions(Arrays.asList(action));
+        return addActions(Collections.singletonList(action));
     }
 
     /**
@@ -413,7 +419,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             for (Element element : elements) {
                 if (element instanceof RuntimeEdge) {
                     RuntimeEdge edge = (RuntimeEdge) element;
-                    elementsByElementCache.put(element, Arrays.<Element>asList(edge.getTargetVertex()));
+                    elementsByElementCache.put(element, Collections.<Element>singletonList(edge.getTargetVertex()));
                 } else if (element instanceof RuntimeVertex) {
                     RuntimeVertex vertex = (RuntimeVertex) element;
                     elementsByElementCache.put(element, cast(outEdges.get(vertex)));
