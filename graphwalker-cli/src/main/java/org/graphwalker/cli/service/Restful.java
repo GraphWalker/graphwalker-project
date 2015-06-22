@@ -29,16 +29,18 @@ package org.graphwalker.cli.service;
 import org.graphwalker.cli.CLI;
 import org.graphwalker.cli.Util;
 import org.graphwalker.core.machine.FailFastStrategy;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Action;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import java.util.Iterator;
 
 /**
  * JAX-RS (Java API for RESTful Services (JAX-RS)) service implementation.
@@ -46,8 +48,9 @@ import java.util.Iterator;
  */
 @Path("graphwalker")
 public class Restful {
+
     CLI cli;
-    private SimpleMachine machine;
+    private Machine machine;
 
     public Restful(CLI cli, Iterator itr) throws Exception {
         this.cli = cli;

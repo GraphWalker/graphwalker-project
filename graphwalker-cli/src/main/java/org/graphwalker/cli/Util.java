@@ -28,8 +28,8 @@ package org.graphwalker.cli;
 
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.RequirementStatus;
-import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.json.JSONArray;
@@ -63,7 +63,7 @@ public abstract class Util {
      * @param showUnvisited Print all unvisited elements if true
      * @return The plain text string representing the current step.
      */
-    public static String getStepAsString(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
+    public static String getStepAsString(Machine machine, boolean verbose, boolean showUnvisited) {
         StringBuilder builder = new StringBuilder();
         if (verbose) {
             builder.append(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName())).append(" : ");
@@ -99,7 +99,7 @@ public abstract class Util {
      * @param showUnvisited Print all unvisited elements if true
      * @return The JSON string representing the current step.
      */
-    public static JSONObject getStepAsJSON(SimpleMachine machine, boolean verbose, boolean showUnvisited) {
+    public static JSONObject getStepAsJSON(Machine machine, boolean verbose, boolean showUnvisited) {
         JSONObject object = new JSONObject();
         if (verbose) {
             object.put("ModelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
@@ -143,7 +143,7 @@ public abstract class Util {
      * @param machine
      * @return The execution statistics in plain text.
      */
-    public static String getStatisticsAsString(SimpleMachine machine) {
+    public static String getStatisticsAsString(Machine machine) {
         HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
 
         StringBuilder builder = new StringBuilder();
@@ -201,7 +201,7 @@ public abstract class Util {
      * @param machine
      * @return The execution statistics in JSON format.
      */
-    public static JSONObject getStatisticsAsJSON(SimpleMachine machine) {
+    public static JSONObject getStatisticsAsJSON(Machine machine) {
         HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
         JSONObject object = new JSONObject();
         object.put("TotalNumberOfEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
