@@ -55,7 +55,7 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CLITestRoot {
+public abstract class CLITestRoot {
 
     private static Logger logger = Logger.getAnonymousLogger();
 
