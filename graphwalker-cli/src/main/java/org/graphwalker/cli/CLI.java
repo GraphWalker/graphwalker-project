@@ -72,13 +72,13 @@ import java.util.TreeSet;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 public class CLI {
+
     private static final Logger logger = LoggerFactory.getLogger(CLI.class);
-    JCommander jc;
-    Options options;
-    Offline offline;
-    Online online;
-    Methods methods;
-    Requirements requirements;
+
+    private Offline offline;
+    private Online online;
+    private Methods methods;
+    private Requirements requirements;
 
     enum Command {
         NONE,
@@ -86,9 +86,9 @@ public class CLI {
         ONLINE,
         METHODS,
         REQUIREMENTS
-    };
+    }
 
-    Command command = Command.NONE;
+    private Command command = Command.NONE;
 
     public static void main(String[] args) {
         CLI cli = new CLI();
@@ -108,13 +108,13 @@ public class CLI {
      * @param args
      */
     private void run(String[] args) {
-        options = new Options();
-        jc = new JCommander(options);
+        Options options = new Options();
+        JCommander jc = new JCommander(options);
         jc.setProgramName("java -jar graphwalker.jar");
         try {
             jc.parseWithoutValidation(args);
         } catch (Exception e) {
-            ;
+            // ignore
         }
 
         try {

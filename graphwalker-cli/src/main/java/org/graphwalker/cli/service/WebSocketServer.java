@@ -43,8 +43,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A WebSocketServer implementation.
@@ -57,7 +62,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     private Map<WebSocket, Machine> machines;
     private Map<WebSocket, List<Context>> contexts;
 
-    public WebSocketServer(int port) throws UnknownHostException {
+    public WebSocketServer(int port) {
         super(new InetSocketAddress(port));
         sockets = new HashSet<>();
         machines = new HashMap<>();

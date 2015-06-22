@@ -29,6 +29,7 @@ package org.graphwalker.cli;
 import com.beust.jcommander.Parameter;
 
 public class Options {
+
     @Parameter(names = {"--help", "-h"}, description = "Prints help text")
     public boolean help = false;
 
