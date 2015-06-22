@@ -32,6 +32,7 @@ import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.commands.Methods;
@@ -41,9 +42,11 @@ import org.graphwalker.cli.commands.Requirements;
 import org.graphwalker.cli.service.Restful;
 import org.graphwalker.cli.service.WebSocketServer;
 import org.graphwalker.cli.util.LoggerUtil;
+import org.graphwalker.core.event.EventType;
+import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
-import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
@@ -52,13 +55,19 @@ import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.graphwalker.java.test.TestExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -283,19 +292,20 @@ public class CLI {
     }
 
     private void RunCommandOffline() throws Exception {
-        SimpleMachine machine = new SimpleMachine(getContextsWithPathGenerators(offline.model.iterator()));
-        while (machine.hasNextStep()) {
-            try {
-                machine.getNextStep();
-                if (offline.json) {
-                    System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
-                } else {
-                    System.out.println(Util.getStepAsString(machine, offline.verbose, offline.unvisited));
+        TestExecutor executor = new TestExecutor(getContextsWithPathGenerators(offline.model.iterator()));
+        executor.getMachine().addObserver(new Observer() {
+            @Override
+            public void update(Machine machine, Element element, EventType type) {
+                if (EventType.BEFORE_ELEMENT.equals(type)) {
+                    if (offline.json) {
+                        System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
+                    } else {
+                        System.out.println(Util.getStepAsString(machine, offline.verbose, offline.unvisited));
+                    }
                 }
-            } catch (MachineException e) {
-                throw e;
             }
-        }
+        });
+        executor.execute();
     }
 
     public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {

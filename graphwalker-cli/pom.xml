@@ -63,7 +63,6 @@
         <dependency>
             <groupId>org.graphwalker</groupId>
             <artifactId>graphwalker-java</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
