@@ -62,9 +62,9 @@ public class CorrectModelsTest extends CLITestRoot {
     @Test
     public void simplestModel() {
         String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
-        runCommand(args);
-        Assert.assertThat(getErrMsg(), is(""));
-        Assert.assertThat(getOutMsg(), is("e1" + System.lineSeparator() +
+        Result result = runCommand(args);
+        Assert.assertThat(result.getError(), is(""));
+        Assert.assertThat(result.getOutput(), is("e1" + System.lineSeparator() +
                 "v1" + System.lineSeparator()));
     }
 
@@ -74,9 +74,9 @@ public class CorrectModelsTest extends CLITestRoot {
     @Test
     public void shortestAllPathsVertexCoverage() {
         String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
-        runCommand(args);
-        Assert.assertThat(getErrMsg(), is(""));
-        Assert.assertThat(getOutMsg(), is("e1" + System.lineSeparator() +
+        Result result = runCommand(args);
+        Assert.assertThat(result.getError(), is(""));
+        Assert.assertThat(result.getOutput(), is("e1" + System.lineSeparator() +
                 "v1" + System.lineSeparator() +
                 "e2" + System.lineSeparator() +
                 "v2" + System.lineSeparator() +
@@ -94,9 +94,9 @@ public class CorrectModelsTest extends CLITestRoot {
     @Test
     public void noStartVertex() {
         String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
-        runCommand(args);
-        Assert.assertThat(getErrMsg(), is(""));
-        Assert.assertThat(getOutMsg(), is("v1" + System.lineSeparator() +
+        Result result = runCommand(args);
+        Assert.assertThat(result.getError(), is(""));
+        Assert.assertThat(result.getOutput(), is("v1" + System.lineSeparator() +
                 "e2" + System.lineSeparator() +
                 "v2" + System.lineSeparator() +
                 "e4" + System.lineSeparator()));

@@ -1,3 +1,5 @@
+package org.graphwalker.cli;
+
 /*
  * #%L
  * GraphWalker Command Line Interface
@@ -23,36 +25,11 @@
  * THE SOFTWARE.
  * #L%
  */
-// This file is part of the GraphWalker java package
-// The MIT License
-//
-// Copyright (c) 2010 graphwalker.org
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-package org.graphwalker.cli;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -60,73 +37,62 @@ public abstract class CLITestRoot {
 
     private static Logger logger = LoggerFactory.getLogger(CLITestRoot.class);
 
-    private StringBuffer stdOutput;
-    private StringBuffer errOutput;
-    private String outMsg;
-    private String errMsg;
-    private CLI commandLineInterface;
+    protected Result runCommand(String args[]) {
+        RedirectStream stdOutput = new RedirectStream();
+        RedirectStream errOutput = new RedirectStream();
 
-    public String getOutMsg() {
-        return outMsg;
-    }
-
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    private OutputStream redirectOut() {
-        return new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-                stdOutput.append(Character.toString((char) b));
-            }
-        };
-    }
-
-    private OutputStream redirectErr() {
-        return new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-                errOutput.append(Character.toString((char) b));
-            }
-        };
-    }
-
-    private InputStream redirectIn() {
-        return new InputStream() {
-            @Override
-            public int read() throws IOException {
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    logger.info("Unit testing was interrupted", e.getStackTrace());
-                }
-                return '0';
-            }
-        };
-    }
-
-    protected void runCommand(String args[]) {
-        stdOutput = new StringBuffer();
-        errOutput = new StringBuffer();
-
-        PrintStream outStream = new PrintStream(redirectOut());
+        PrintStream outStream = new PrintStream(stdOutput);
         PrintStream oldOutStream = System.out; // backup
-        PrintStream errStream = new PrintStream(redirectErr());
+        PrintStream errStream = new PrintStream(errOutput);
         PrintStream oldErrStream = System.err; // backup
 
         System.setOut(outStream);
         System.setErr(errStream);
 
-        commandLineInterface = new CLI();
-        commandLineInterface.main(args);
+        CLI.main(args);
 
         System.setOut(oldOutStream);
         System.setErr(oldErrStream);
 
-        outMsg = stdOutput.toString();
-        errMsg = errOutput.toString();
+        String outMsg = stdOutput.toString();
+        String errMsg = errOutput.toString();
         logger.info("stdout: " + outMsg);
         logger.info("stderr: " + errMsg);
+
+        return new Result(outMsg, errMsg);
+    }
+
+    public class RedirectStream extends OutputStream {
+
+        private final StringBuffer buffer = new StringBuffer();
+
+        @Override
+        public void write(int b) throws IOException {
+            buffer.append(Character.toString((char)b));
+        }
+
+        @Override
+        public String toString() {
+            return buffer.toString();
+        }
+    }
+
+    public class Result {
+
+        private final String output;
+        private final String error;
+
+        public Result(String output, String error) {
+            this.output = output;
+            this.error = error;
+        }
+
+        public String getOutput() {
+            return output;
+        }
+
+        public String getError() {
+            return error;
+        }
     }
 }
