@@ -63,8 +63,8 @@ public class CorrectModelsTest extends CLITestRoot {
     public void simplestModel() {
         String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
         runCommand(args);
-        Assert.assertThat(errMsg, is(""));
-        Assert.assertThat(outMsg, is("e1" + System.lineSeparator() +
+        Assert.assertThat(getErrMsg(), is(""));
+        Assert.assertThat(getOutMsg(), is("e1" + System.lineSeparator() +
                 "v1" + System.lineSeparator()));
     }
 
@@ -75,8 +75,8 @@ public class CorrectModelsTest extends CLITestRoot {
     public void shortestAllPathsVertexCoverage() {
         String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
         runCommand(args);
-        Assert.assertThat(errMsg, is(""));
-        Assert.assertThat(outMsg, is("e1" + System.lineSeparator() +
+        Assert.assertThat(getErrMsg(), is(""));
+        Assert.assertThat(getOutMsg(), is("e1" + System.lineSeparator() +
                 "v1" + System.lineSeparator() +
                 "e2" + System.lineSeparator() +
                 "v2" + System.lineSeparator() +
@@ -95,8 +95,8 @@ public class CorrectModelsTest extends CLITestRoot {
     public void noStartVertex() {
         String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
         runCommand(args);
-        Assert.assertThat(errMsg, is(""));
-        Assert.assertThat(outMsg, is("v1" + System.lineSeparator() +
+        Assert.assertThat(getErrMsg(), is(""));
+        Assert.assertThat(getOutMsg(), is("v1" + System.lineSeparator() +
                 "e2" + System.lineSeparator() +
                 "v2" + System.lineSeparator() +
                 "e4" + System.lineSeparator()));
