@@ -50,10 +50,10 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
     private static final Logger logger = LoggerFactory.getLogger(WebSocketServerTest.class);
 
-    WebSocketClient client = new WebSocketClient();
-    WebSocketServer server;
-    int numberOfConnections = 0;
-    int numberOfModels = 0;
+    private WebSocketClient client = new WebSocketClient();
+    private WebSocketServer server;
+    private int numberOfConnections = 0;
+    private int numberOfModels = 0;
 
     @BeforeExecution
     public void StartServer() throws Exception {

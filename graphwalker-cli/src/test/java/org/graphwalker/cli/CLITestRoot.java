@@ -55,16 +55,23 @@ import java.io.PrintStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class CLITestRoot {
 
-    StringBuffer stdOutput;
-    StringBuffer errOutput;
-    String outMsg;
-    String errMsg;
+    private static Logger logger = Logger.getAnonymousLogger();
 
-    static Logger logger = Logger.getAnonymousLogger();
+    private StringBuffer stdOutput;
+    private StringBuffer errOutput;
+    private String outMsg;
+    private String errMsg;
     private CLI commandLineInterface;
+
+    public String getOutMsg() {
+        return outMsg;
+    }
+
+    public String getErrMsg() {
+        return errMsg;
+    }
 
     private OutputStream redirectOut() {
         return new OutputStream() {
