@@ -1,3 +1,5 @@
+package org.graphwalker.cli.commands;
+
 /*
  * #%L
  * GraphWalker Command Line Interface
@@ -23,7 +25,6 @@
  * THE SOFTWARE.
  * #L%
  */
-package org.graphwalker.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
