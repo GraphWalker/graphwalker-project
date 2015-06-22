@@ -49,7 +49,7 @@ import javax.ws.rs.QueryParam;
 @Path("graphwalker")
 public class Restful {
 
-    CLI cli;
+    private CLI cli;
     private Machine machine;
 
     public Restful(CLI cli, Iterator itr) throws Exception {
@@ -162,7 +162,7 @@ public class Restful {
             FailFastStrategy failFastStrategy = new FailFastStrategy();
             failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
         } catch (Throwable e) {
-            ;
+            // ignore
         }
         if (cli.getOnline().json) {
             JSONObject obj = new JSONObject();

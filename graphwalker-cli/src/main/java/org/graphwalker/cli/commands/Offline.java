@@ -45,7 +45,7 @@ public class Offline {
     @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
             description = "The model, as a graphml file followed by generator with stop condition. " +
                     "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
-    public List<String> model = new ArrayList<String>();
+    public List<String> model = new ArrayList<>();
 
     @Parameter(names = {"--json", "-j"}, required = false,
             description = "Returns data formatted as json")

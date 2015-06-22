@@ -53,7 +53,7 @@ public abstract class Util {
         TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED,
         TOTAL_NUMBER_OF_REQUIREMENTS_PASSED,
         TOTAL_NUMBER_OF_REQUIREMENTS_FAILED
-    };
+    }
 
     /**
      * Will create a plain text formatted string representing the current step. The step

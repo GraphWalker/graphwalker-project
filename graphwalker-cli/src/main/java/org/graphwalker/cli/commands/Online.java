@@ -48,7 +48,7 @@ public class Online {
     @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
             description = "The model, as a graphml file followed by generator with stop condition. " +
                     "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
-    public List<String> model = new ArrayList<String>();
+    public List<String> model = new ArrayList<>();
 
     @Parameter(names = {"--service", "-s"}, required = false, arity = 1,
             description = "Selects which kind of service to start. Either WEBSOCKET [default], or RESTFUL")
