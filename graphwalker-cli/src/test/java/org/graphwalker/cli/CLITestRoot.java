@@ -48,16 +48,17 @@
 
 package org.graphwalker.cli;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class CLITestRoot {
 
-    private static Logger logger = Logger.getAnonymousLogger();
+    private static Logger logger = LoggerFactory.getLogger(CLITestRoot.class);
 
     private StringBuffer stdOutput;
     private StringBuffer errOutput;
@@ -98,7 +99,7 @@ public abstract class CLITestRoot {
                 try {
                     Thread.sleep(300);
                 } catch (InterruptedException e) {
-                    logger.log(Level.ALL, "Unit testing was interrupted", e.getStackTrace());
+                    logger.info("Unit testing was interrupted", e.getStackTrace());
                 }
                 return '0';
             }
@@ -125,7 +126,7 @@ public abstract class CLITestRoot {
 
         outMsg = stdOutput.toString();
         errMsg = errOutput.toString();
-        logger.log(Level.FINER, "stdout: " + outMsg);
-        logger.log(Level.FINER, "stderr: " + errMsg);
+        logger.info("stdout: " + outMsg);
+        logger.info("stderr: " + errMsg);
     }
 }
