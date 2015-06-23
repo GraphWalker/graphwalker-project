@@ -94,15 +94,11 @@ public class Restful {
     @Produces("text/plain;charset=UTF-8")
     @Path("getNext")
     public String getNext() {
-        try {
-            machine.getNextStep();
-            if (cli.getOnline().json) {
-                return Util.getStepAsJSON(machine, cli.getOnline().verbose, cli.getOnline().unvisited).toString();
-            } else {
-                return Util.getStepAsString(machine, cli.getOnline().verbose, cli.getOnline().unvisited);
-            }
-        } catch (MachineException e) {
-            throw e;
+        machine.getNextStep();
+        if (cli.getOnline().json) {
+            return Util.getStepAsJSON(machine, cli.getOnline().verbose, cli.getOnline().unvisited).toString();
+        } else {
+            return Util.getStepAsString(machine, cli.getOnline().verbose, cli.getOnline().unvisited);
         }
     }
 

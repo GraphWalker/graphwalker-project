@@ -314,7 +314,7 @@ public class CLI {
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
             ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
-            Context context = null;
+            Context context;
             try {
                 context = factory.create(Paths.get(modelFileName));
             } catch (DslException e) {
@@ -353,7 +353,7 @@ public class CLI {
         while (itr.hasNext()) {
             String modelFileName = (String) itr.next();
             ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
-            Context context = null;
+            Context context;
             try {
                 context = factory.create(Paths.get(modelFileName));
             } catch (DslException e) {
