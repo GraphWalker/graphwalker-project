@@ -98,7 +98,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 + message);
 
         JSONObject response = new JSONObject();
-        JSONObject root = null;
+        JSONObject root;
         try {
             root = new JSONObject(message);
         } catch (JSONException e) {
@@ -109,86 +109,98 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         }
 
         String type = root.getString("type").toUpperCase();
-        if (type.equals("LOADMODEL")) {
-            response.put("type", "loadModel");
-            try {
-                Context context = new JsonContextFactory().create(root.getJSONObject("model").toString());
-                List<Context> executionContexts = contexts.get(socket);
-                executionContexts.add(context);
-                response.put("success", true);
-            } catch (JSONException e) {
-                response.put("success", false);
-                response.put("message", "Could not parse the model: " + e.getMessage());
-            }
-
-        } else if (type.equals("START")) {
-            List<Context> executionContexts = contexts.get(socket);
-            Machine machine = null;
-            try {
-                machine = new SimpleMachine(executionContexts);
-                machine.addObserver(this);
-                machines.put(socket, machine);
-                response.put("type", "start");
-                response.put("success", true);
-            } catch (MachineException e) {
-                response.put("type", "start");
-                response.put("success", false);
-                response.put("message", e.getMessage());
-            }
-        } else if (type.equals("GETNEXT")) {
-            Machine machine = machines.get(socket);
-            response.put("type", "getNext");
-            if (machine != null) {
-                machine.getNextStep();
-                response.put("success", true);
-                response.put("id", machine.getCurrentContext().getCurrentElement().getId());
-                response.put("name", machine.getCurrentContext().getCurrentElement().getName());
-            } else {
-                response.put("success", false);
-                response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
-            }
-
-        } else if (type.equals("HASNEXT")) {
-            Machine machine = machines.get(socket);
-            response.put("type", "hasNext");
-            if (machine == null) {
-                response.put("success", false);
-                response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
-            } else if (machine.hasNextStep()) {
-                response.put("success", true);
-                response.put("hasNext", true);
-            } else {
-                response.put("success", true);
-                response.put("hasNext", false);
-            }
-
-        } else if (type.equals("RESTART")) {
-            machines.put(socket, null);
-            contexts.put(socket, null);
-            contexts.put(socket, new ArrayList<Context>());
-            response.put("type", "restart");
-            response.put("success", true);
-
-        } else if (type.equals("GETDATA")) {
-            response.put("type", "getData");
-            Machine machine = machines.get(socket);
-            if (machine != null) {
-                JSONArray jsonKeys = new JSONArray();
-                for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
-                    JSONObject jsonKey = new JSONObject();
-                    jsonKey.put(key.getKey(), key.getValue());
-                    jsonKeys.put(jsonKey);
+        switch (type) {
+            case "LOADMODEL":
+                response.put("type", "loadModel");
+                try {
+                    Context context = new JsonContextFactory().create(root.getJSONObject("model").toString());
+                    List<Context> executionContexts = contexts.get(socket);
+                    executionContexts.add(context);
+                    response.put("success", true);
+                } catch (JSONException e) {
+                    response.put("success", false);
+                    response.put("message", "Could not parse the model: " + e.getMessage());
                 }
-                response.put("data", jsonKeys);
-                response.put("success", true);
-            } else {
-                response.put("success", false);
-                response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
-            }
 
-        } else {
-            response.put("message", "Unknown command");
-            response.put("success", false);
+                break;
+            case "START": {
+                List<Context> executionContexts = contexts.get(socket);
+                Machine machine;
+                try {
+                    machine = new SimpleMachine(executionContexts);
+                    machine.addObserver(this);
+                    machines.put(socket, machine);
+                    response.put("type", "start");
+                    response.put("success", true);
+                } catch (MachineException e) {
+                    response.put("type", "start");
+                    response.put("success", false);
+                    response.put("message", e.getMessage());
+                }
+                break;
+            }
+            case "GETNEXT": {
+                Machine machine = machines.get(socket);
+                response.put("type", "getNext");
+                if (machine != null) {
+                    machine.getNextStep();
+                    response.put("success", true);
+                    response.put("id", machine.getCurrentContext().getCurrentElement().getId());
+                    response.put("name", machine.getCurrentContext().getCurrentElement().getName());
+                } else {
+                    response.put("success", false);
+                    response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+                }
+
+                break;
+            }
+            case "HASNEXT": {
+                Machine machine = machines.get(socket);
+                response.put("type", "hasNext");
+                if (machine == null) {
+                    response.put("success", false);
+                    response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+                } else if (machine.hasNextStep()) {
+                    response.put("success", true);
+                    response.put("hasNext", true);
+                } else {
+                    response.put("success", true);
+                    response.put("hasNext", false);
+                }
+
+                break;
+            }
+            case "RESTART":
+                machines.put(socket, null);
+                contexts.put(socket, null);
+                contexts.put(socket, new ArrayList<Context>());
+                response.put("type", "restart");
+                response.put("success", true);
+
+                break;
+            case "GETDATA": {
+                response.put("type", "getData");
+                Machine machine = machines.get(socket);
+                if (machine != null) {
+                    JSONArray jsonKeys = new JSONArray();
+                    for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
+                        JSONObject jsonKey = new JSONObject();
+                        jsonKey.put(key.getKey(), key.getValue());
+                        jsonKeys.put(jsonKey);
+                    }
+                    response.put("data", jsonKeys);
+                    response.put("success", true);
+                } else {
+                    response.put("success", false);
+                    response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+                }
+
+                break;
+            }
+            default:
+                response.put("message", "Unknown command");
+                response.put("success", false);
+                break;
         }
         logger.debug("Sending response to: "
                 + socket.getRemoteSocketAddress().getAddress().getHostAddress()
@@ -200,9 +212,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     @Override
     public void onError(WebSocket socket, Exception ex) {
         ex.printStackTrace();
-        if (socket != null) {
-            // some errors like port binding failed may not be assignable to a specific websocket
-        }
     }
 
     @Override
