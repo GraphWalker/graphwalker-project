@@ -62,4 +62,7 @@ public interface Element {
     boolean hasRequirements();
 
     void accept(ElementVisitor visitor);
+
+    Object getProperty(String key);
+    boolean hasProperty(String key);
 }

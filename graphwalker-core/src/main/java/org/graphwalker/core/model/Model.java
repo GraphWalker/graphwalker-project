@@ -54,6 +54,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
     private final List<Edge> edges = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
     private final Set<Requirement> requirements = new HashSet<>();
+    private final Map<String, Object> properties = new HashMap<>();
 
     /**
      * Create a new Model
@@ -136,6 +137,28 @@ public final class Model implements Builder<Model.RuntimeModel> {
      */
     public String getName() {
         return name;
+    }
+
+    public Object getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public boolean hasProperty(String key) {
+        return properties.containsKey(key);
+    }
+
+    public Model setProperty(String key, Object value) {
+        properties.put(key, value);
+        return this;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public Model setProperties(Map<String, Object> properties) {
+        this.properties.putAll(properties);
+        return this;
     }
 
     /**
@@ -279,7 +302,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
      * An immutable model guarantees that that the internal states of
      * the instance will not change after it's construction.
      */
-    public static class RuntimeModel extends ElementBase {
+    public static class RuntimeModel extends RuntimeBase {
 
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
@@ -293,7 +316,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final Map<String, List<RuntimeVertex>> sharedStateCache;
 
         private RuntimeModel(Model model) {
-            super(model.getId(), model.getName(), model.getActions(), model.getRequirements());
+            super(model.getId(), model.getName(), model.getActions(), model.getRequirements(), model.getProperties());
             this.vertices = BuilderFactory.build(model.getVertices());
             this.edges = BuilderFactory.build(model.getEdges());
             this.edgesByNameCache = createEdgesByNameCache();
