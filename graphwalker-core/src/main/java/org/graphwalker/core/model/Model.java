@@ -26,13 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
@@ -60,6 +54,45 @@ public final class Model implements Builder<Model.RuntimeModel> {
     private final List<Edge> edges = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
     private final Set<Requirement> requirements = new HashSet<>();
+
+    /**
+     * Create a new Model
+     */
+    public Model() {
+    }
+
+    /**
+     * Create a new Model, based on a existing {@link org.graphwalker.core.model.Model.RuntimeModel RuntimeModel}
+     * @param model A {@link org.graphwalker.core.model.Model.RuntimeModel RuntimeModel} that the new Model will be based on.
+     */
+    public Model(RuntimeModel model) {
+        this.id = model.getId();
+        this.name = model.getName();
+        Map<RuntimeVertex, Vertex> cache = new HashMap<>();
+        for (RuntimeVertex runtimeVertex: model.getVertices()) {
+            Vertex vertex = new Vertex();
+            vertex.setId(runtimeVertex.getId());
+            vertex.setName(runtimeVertex.getName());
+            vertex.setSharedState(runtimeVertex.getSharedState());
+            vertex.addRequirements(runtimeVertex.getRequirements());
+            this.vertices.add(vertex);
+            cache.put(runtimeVertex, vertex);
+        }
+        for (RuntimeEdge runtimeEdge: model.getEdges()) {
+            Edge edge = new Edge();
+            edge.setId(runtimeEdge.getId());
+            edge.setName(runtimeEdge.getName());
+            edge.setSourceVertex(cache.get(runtimeEdge.getSourceVertex()));
+            edge.setTargetVertex(cache.get(runtimeEdge.getTargetVertex()));
+            edge.setGuard(runtimeEdge.getGuard());
+            edge.addActions(runtimeEdge.getActions());
+            edge.addRequirements(runtimeEdge.getRequirements());
+            edge.setWeight(runtimeEdge.getWeight());
+            this.edges.add(edge);
+        }
+        this.actions.addAll(model.getActions());
+        this.requirements.addAll(model.getRequirements());
+    }
 
     /**
      * Sets the unique identifier of the model. Even though several models in the
