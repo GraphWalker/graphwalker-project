@@ -26,10 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -56,6 +53,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     private final List<Action> actions = new ArrayList<>();
     private final Set<Requirement> requirements = new HashSet<>();
     private Double weight = 0.0;
+    private final Map<String, Object> properties = new HashMap<>();
 
     /**
      * Sets the unique identifier of the edge. Even though several edges in the
@@ -101,6 +99,28 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
      */
     public String getName() {
         return name;
+    }
+
+    public Object getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public boolean hasProperty(String key) {
+        return properties.containsKey(key);
+    }
+
+    public Edge setProperty(String key, Object value) {
+        properties.put(key, value);
+        return this;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public Edge setProperties(Map<String, Object> properties) {
+        this.properties.putAll(properties);
+        return this;
     }
 
     /**
@@ -305,7 +325,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
      * the instance will not change after it's construction.
      * </p>
      */
-    public static final class RuntimeEdge extends ElementBase {
+    public static final class RuntimeEdge extends RuntimeBase {
 
         private final RuntimeVertex sourceVertex;
         private final RuntimeVertex targetVertex;
@@ -313,7 +333,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         private final Double weight;
 
         private RuntimeEdge(Edge edge) {
-            super(edge.getId(), edge.getName(), edge.getActions(), edge.getRequirements());
+            super(edge.getId(), edge.getName(), edge.getActions(), edge.getRequirements(), edge.getProperties());
             this.sourceVertex = build(edge.getSourceVertex());
             this.targetVertex = build(edge.getTargetVertex());
             this.guard = edge.getGuard();

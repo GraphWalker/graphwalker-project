@@ -26,7 +26,9 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,6 +50,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
     private String name;
     private String sharedState;
     private final Set<Requirement> requirements = new HashSet<>();
+    private final Map<String, Object> properties = new HashMap<>();
 
     /**
      * Sets the name of the vertex. The name of a vertex can be shared by other vertices, it
@@ -70,6 +73,28 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
      */
     public String getName() {
         return name;
+    }
+
+    public Object getProperty(String key) {
+        return properties.get(key);
+    }
+
+    public boolean hasProperty(String key) {
+        return properties.containsKey(key);
+    }
+
+    public Vertex setProperty(String key, Object value) {
+        properties.put(key, value);
+        return this;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public Vertex setProperties(Map<String, Object> properties) {
+        this.properties.putAll(properties);
+        return this;
     }
 
     /**
@@ -193,12 +218,12 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
      * This class is used in models. It guarantees that that the internal states of
      * the instance will not change after it's construction.
      */
-    public static final class RuntimeVertex extends ElementBase {
+    public static final class RuntimeVertex extends RuntimeBase {
 
         private final String sharedState;
 
         private RuntimeVertex(Vertex vertex) {
-            super(vertex.getId(), vertex.getName(), vertex.getRequirements());
+            super(vertex.getId(), vertex.getName(), vertex.getRequirements(), vertex.getProperties());
             this.sharedState = vertex.getSharedState();
         }
 

@@ -31,26 +31,32 @@ import java.util.*;
 /**
  * @author Nils Olsson
  */
-public abstract class ElementBase implements Element {
+public abstract class RuntimeBase implements Element {
 
     private final String id;
     private final String name;
     private final List<Action> actions;
     private final Set<Requirement> requirements;
+    private final Map<String, Object> properties;
 
-    protected ElementBase(String id, String name) {
+    protected RuntimeBase(String id, String name) {
         this(id, name, new ArrayList<Action>(), new HashSet<Requirement>());
     }
 
-    protected ElementBase(String id, String name, Set<Requirement> requirements) {
-        this(id, name, new ArrayList<Action>(), requirements);
+    protected RuntimeBase(String id, String name, Set<Requirement> requirements, Map<String, Object> properties) {
+        this(id, name, new ArrayList<Action>(), requirements, properties);
     }
 
-    protected ElementBase(String id, String name, List<Action> actions, Set<Requirement> requirements) {
+    protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements) {
+        this(id, name, actions, requirements, new HashMap<String, Object>());
+    }
+
+    protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements, Map<String, Object> properties) {
         this.id = id;
         this.name = name;
         this.actions = Collections.unmodifiableList(actions);
         this.requirements = Collections.unmodifiableSet(requirements);
+        this.properties = Collections.unmodifiableMap(properties);
     }
 
     @Override
@@ -71,6 +77,16 @@ public abstract class ElementBase implements Element {
     @Override
     public boolean hasName() {
         return name != null && !"".equals(name);
+    }
+
+    @Override
+    public Object getProperty(String key) {
+        return properties.get(key);
+    }
+
+    @Override
+    public boolean hasProperty(String key) {
+        return properties.containsKey(key);
     }
 
     public List<Action> getActions() {

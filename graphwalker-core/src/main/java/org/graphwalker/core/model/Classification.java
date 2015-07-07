@@ -72,7 +72,7 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
         return new RuntimeClassification(this);
     }
 
-    public static final class RuntimeClassification extends ElementBase {
+    public static final class RuntimeClassification extends RuntimeBase {
 
         private final List<RuntimeClassification> classifications;
 

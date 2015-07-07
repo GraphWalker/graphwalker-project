@@ -19,4 +19,12 @@
         <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 </project>
