@@ -1,4 +1,6 @@
-GraphWalker Core 
+GraphWalker Core [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-core)
+===================
+
 =======
 This is the GraphWalker major version 3. For earlier versions of GraphWalker, see: [GraphWalker 2].
 
