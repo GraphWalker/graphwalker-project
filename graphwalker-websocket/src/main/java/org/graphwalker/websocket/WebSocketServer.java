@@ -1,4 +1,4 @@
-package org.graphwalker.cli.service;
+package org.graphwalker.websocket;
 
 /*
  * #%L

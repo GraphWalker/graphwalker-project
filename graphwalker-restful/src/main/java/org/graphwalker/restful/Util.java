@@ -1,4 +1,4 @@
-package org.graphwalker.cli;
+package org.graphwalker.restful;
 
 /*
  * #%L
