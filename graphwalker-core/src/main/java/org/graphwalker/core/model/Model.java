@@ -194,31 +194,51 @@ public final class Model implements Builder<Model.RuntimeModel> {
     }
 
     /**
-     * Delete an element from the model.
+     * Delete an edge from the model.
      * </p>
-     * Will remove from the model and delete the element with
-     * the object corresponding id,
+     * Will remove the edge from the model.
      * </p>
      *
-     * @param id The object id of the element to be deleted.
+     * @param edgeToBeRemoved The edge to be deleted.
      * @return The model.
      */
-    public Model deleteElement(String id) {
+    public Model deleteEdge(Edge edgeToBeRemoved) {
         ListIterator<Edge> e_it = edges.listIterator();
         while (e_it.hasNext()) {
             Edge e = e_it.next();
-            if (e.getSourceVertex() != null && e.getSourceVertex().getId()==id) {
+            if (edgeToBeRemoved == e) {
                 e_it.remove();
-            } else if (e.getTargetVertex() != null && e.getTargetVertex().getId()==id) {
+                break;
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Delete a vertex from the model.
+     * </p>
+     * Will remove a vertex from the model. Any edges that has the vertex
+     * as either source or target, will also be deleted from the model.
+     * </p>
+     *
+     * @param vertexToBeRemoved The vertex to be deleted.
+     * @return The model.
+     */
+    public Model deleteVertex(Vertex vertexToBeRemoved) {
+        ListIterator<Edge> e_it = edges.listIterator();
+        while (e_it.hasNext()) {
+            Edge e = e_it.next();
+            if (e.getSourceVertex() == vertexToBeRemoved) {
                 e_it.remove();
-            } else if (e.getId()==id) {
+            }
+            if (e.getTargetVertex() == vertexToBeRemoved) {
                 e_it.remove();
             }
         }
         ListIterator<Vertex> v_it = vertices.listIterator();
         while (v_it.hasNext()) {
             Vertex v = v_it.next();
-            if (v.getId()==id) {
+            if (v == vertexToBeRemoved) {
                 v_it.remove();
             }
         }

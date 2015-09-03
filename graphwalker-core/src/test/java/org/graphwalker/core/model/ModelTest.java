@@ -81,22 +81,22 @@ public class ModelTest {
 
     @Test
     public void deleteElement() {
-        Vertex v1 = new Vertex().setId("v1");
-        Vertex v2 = new Vertex().setId("v2");
-        Edge e1 = new Edge().setId("e1");
-        Edge e2 = new Edge().setId("e2");
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge();
+        Edge e2 = new Edge();
         Model model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
                                  .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2));
         Assert.assertThat(model, notNullValue());
         Assert.assertThat(model.getEdges().size(), is(2));
         Assert.assertThat(model.getVertices().size(), is(2));
 
-        model.deleteElement("e1");
+        model.deleteEdge(e1);
         Assert.assertThat(model, notNullValue());
         Assert.assertThat(model.getEdges().size(), is(1));
         Assert.assertThat(model.getVertices().size(), is(2));
 
-        model.deleteElement("v2");
+        model.deleteVertex(v2);
         Assert.assertThat(model, notNullValue());
         Assert.assertThat(model.getEdges().size(), is(0));
         Assert.assertThat(model.getVertices().size(), is(1));

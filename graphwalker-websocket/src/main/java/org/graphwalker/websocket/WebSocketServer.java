@@ -134,6 +134,21 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 }
 
                 break;
+            case "GETMODEL":
+                response.put("type", "getModel");
+                try {
+                    List<Model> modelsList = models.get(socket);
+                    Model model = getModelById(modelsList, root.getString("modelId"));
+
+                    response.put("modelId", model.getId());
+                    response.put("model", new Gson().toJson(model));
+                    response.put("success", true);
+                } catch (JSONException e) {
+                    response.put("success", false);
+                    response.put("message", "Could not parse the model: " + e.getMessage());
+                }
+
+                break;
             case "START": {
                 List<Context> executionContexts = contexts.get(socket);
                 Machine machine;
@@ -267,7 +282,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 if (model != null) {
                     Vertex vertex = new Gson().fromJson(root.getJSONObject("vertex").toString(), Vertex.class);
                     for (Vertex v : modelsList.get(0).getVertices()) {
-                        if (v.getId() == new JSONObject(message).getString("vertexId")) {
+                        if (v.getId().equals(new JSONObject(message).getString("vertexId"))) {
                             v = vertex;
                         }
                     }
@@ -291,7 +306,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 if (model != null) {
                     Edge edge = new Gson().fromJson(root.getJSONObject("edge").toString(), Edge.class);
                     for (Edge e : modelsList.get(0).getEdges()) {
-                        if (e.getId() == new JSONObject(message).getString("edgeId")) {
+                        if (e.getId().equals(new JSONObject(message).getString("edgeId"))) {
                             e = edge;
                         }
                     }
@@ -307,14 +322,37 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
                 break;
             }
-            case "DELETEELEMENT": {
-                response.put("command", "deleteElement");
+            case "DELETEVERTEX": {
+                response.put("command", "deleteVertex");
                 List<Model> modelsList = models.get(socket);
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    model.deleteElement(new JSONObject(message).getString("id"));
+                    for (Vertex v : modelsList.get(0).getVertices()) {
+                        if (v.getId().equals( new JSONObject(message).getString("vertexId"))) {
+                            model.deleteVertex(v);
+                        }
+                    }
                     response.put("success", true);
+
+                } else {
+                    response.put("success", false);
+                    response.put("message", "No models. You need to call newModel first.");
+                }
+
+                break;
+            }
+            case "DELETEEDGE": {
+                response.put("command", "deleteEdge");
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("modelId"));
+
+                if (model != null) {
+                    for (Edge e : modelsList.get(0).getEdges()) {
+                        if (e.getId().equals(new JSONObject(message).getString("edgeId"))) {
+                            model.deleteEdge(e);
+                        }
+                    }
 
                 } else {
                     response.put("success", false);
