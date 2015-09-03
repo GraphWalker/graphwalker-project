@@ -203,14 +203,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
      * @return The model.
      */
     public Model deleteEdge(Edge edgeToBeRemoved) {
-        ListIterator<Edge> e_it = edges.listIterator();
-        while (e_it.hasNext()) {
-            Edge e = e_it.next();
-            if (edgeToBeRemoved == e) {
-                e_it.remove();
-                break;
-            }
-        }
+        edges.remove(edgeToBeRemoved);
         return this;
     }
 
@@ -235,13 +228,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
                 e_it.remove();
             }
         }
-        ListIterator<Vertex> v_it = vertices.listIterator();
-        while (v_it.hasNext()) {
-            Vertex v = v_it.next();
-            if (v == vertexToBeRemoved) {
-                v_it.remove();
-            }
-        }
+        vertices.remove(vertexToBeRemoved);
         return this;
     }
 
