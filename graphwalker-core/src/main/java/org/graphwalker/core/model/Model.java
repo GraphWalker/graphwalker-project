@@ -194,6 +194,38 @@ public final class Model implements Builder<Model.RuntimeModel> {
     }
 
     /**
+     * Delete an element from the model.
+     * </p>
+     * Will remove from the model and delete the element with
+     * the object corresponding id,
+     * </p>
+     *
+     * @param id The object id of the element to be deleted.
+     * @return The model.
+     */
+    public Model deleteElement(String id) {
+        ListIterator<Edge> e_it = edges.listIterator();
+        while (e_it.hasNext()) {
+            Edge e = e_it.next();
+            if (e.getSourceVertex() != null && e.getSourceVertex().getId()==id) {
+                e_it.remove();
+            } else if (e.getTargetVertex() != null && e.getTargetVertex().getId()==id) {
+                e_it.remove();
+            } else if (e.getId()==id) {
+                e_it.remove();
+            }
+        }
+        ListIterator<Vertex> v_it = vertices.listIterator();
+        while (v_it.hasNext()) {
+            Vertex v = v_it.next();
+            if (v.getId()==id) {
+                v_it.remove();
+            }
+        }
+        return this;
+    }
+
+    /**
      * Adds an action to the model.
      * </p>
      * Before a model is being traversed, it will execute all its actions. This is typically
