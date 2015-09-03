@@ -80,6 +80,29 @@ public class ModelTest {
     }
 
     @Test
+    public void deleteElement() {
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Edge e1 = new Edge();
+        Edge e2 = new Edge();
+        Model model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
+                                 .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2));
+        Assert.assertThat(model, notNullValue());
+        Assert.assertThat(model.getEdges().size(), is(2));
+        Assert.assertThat(model.getVertices().size(), is(2));
+
+        model.deleteEdge(e1);
+        Assert.assertThat(model, notNullValue());
+        Assert.assertThat(model.getEdges().size(), is(1));
+        Assert.assertThat(model.getVertices().size(), is(2));
+
+        model.deleteVertex(v2);
+        Assert.assertThat(model, notNullValue());
+        Assert.assertThat(model.getEdges().size(), is(0));
+        Assert.assertThat(model.getVertices().size(), is(1));
+    }
+
+    @Test
     public void recreateModel() {
         Model model1 = new Model().addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
         Model model2 = new Model(model1.build());
