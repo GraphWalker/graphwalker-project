@@ -26,13 +26,17 @@ package org.graphwalker.websocket;
  * #L%
  */
 
+import com.google.gson.Gson;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -61,18 +65,22 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     private Set<WebSocket> sockets;
     private Map<WebSocket, Machine> machines;
     private Map<WebSocket, List<Context>> contexts;
+    private Map<org.java_websocket.WebSocket, List<Model>> models;
 
     public WebSocketServer(int port) {
         super(new InetSocketAddress(port));
         sockets = new HashSet<>();
         machines = new HashMap<>();
         contexts = new HashMap<>();
+        models = new HashMap<>();
     }
 
     public WebSocketServer(InetSocketAddress address) {
         super(address);
         sockets = new HashSet<>();
         machines = new HashMap<>();
+        contexts = new HashMap<>();
+        models = new HashMap<>();
     }
 
     @Override
@@ -80,6 +88,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         sockets.add(socket);
         machines.put(socket, null);
         contexts.put(socket, new ArrayList<Context>());
+        models.put(socket, new ArrayList<Model>());
         logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
     }
 
@@ -87,6 +96,8 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     public void onClose(WebSocket socket, int code, String reason, boolean remote) {
         sockets.remove(socket);
         machines.remove(socket);
+        contexts.remove(socket);
+        models.remove(socket);
         logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " has disconnected");
     }
 
@@ -197,6 +208,121 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
                 break;
             }
+            case "NEWMODEL": {
+                response.put("command", "newModel");
+                Model model = new Gson().fromJson(root.getJSONObject("model").toString(), Model.class);
+                List<Model> modelsList = models.get(socket);
+                modelsList.add(model);
+                response.put("modelId", model.getId());
+                response.put("model", new Gson().toJson(model));
+                response.put("success", true);
+
+                break;
+            }
+            case "ADDVERTEX": {
+                response.put("command", "addVertex");
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("modelId"));
+
+                if (model != null) {
+                    Vertex vertex = new Gson().fromJson(root.getJSONObject("vertex").toString(), Vertex.class);
+                    modelsList.get(0).addVertex(vertex);
+                    response.put("modelId", model.getId());
+                    response.put("vertexId", vertex.getId());
+                    response.put("vertex", new Gson().toJson(vertex));
+                    response.put("success", true);
+
+                } else {
+                    response.put("success", false);
+                    response.put("message", "No models. You need to call newModel first.");
+                }
+
+                break;
+            }
+            case "ADDEDGE": {
+                response.put("command", "addEdge");
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("modelId"));
+
+                if (model != null) {
+                    Edge edge = new Gson().fromJson(root.getJSONObject("edge").toString(), Edge.class);
+                    modelsList.get(0).addEdge(edge);
+                    response.put("modelId", model.getId());
+                    response.put("edgeId", edge.getId());
+                    response.put("edge", new Gson().toJson(edge));
+                    response.put("success", true);
+
+                } else {
+                    response.put("success", false);
+                    response.put("message", "No models. You need to call newModel first.");
+                }
+
+                break;
+            }
+            case "UPDATEVERTEX": {
+                response.put("command", "updateVertex");
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("modelId"));
+
+                if (model != null) {
+                    Vertex vertex = new Gson().fromJson(root.getJSONObject("vertex").toString(), Vertex.class);
+                    for (Vertex v : modelsList.get(0).getVertices()) {
+                        if (v.getId() == new JSONObject(message).getString("vertexId")) {
+                            v = vertex;
+                        }
+                    }
+                    response.put("modelId", model.getId());
+                    response.put("vertexId", new JSONObject(message).getString("vertexId"));
+                    response.put("vertex", new Gson().toJson(vertex));
+                    response.put("success", true);
+
+                } else {
+                    response.put("success", false);
+                    response.put("message", "No models. You need to call newModel first.");
+                }
+
+                break;
+            }
+            case "UPDATEEDGE": {
+                response.put("command", "updateEdge");
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("modelId"));
+
+                if (model != null) {
+                    Edge edge = new Gson().fromJson(root.getJSONObject("edge").toString(), Edge.class);
+                    for (Edge e : modelsList.get(0).getEdges()) {
+                        if (e.getId() == new JSONObject(message).getString("edgeId")) {
+                            e = edge;
+                        }
+                    }
+                    response.put("modelId", model.getId());
+                    response.put("edgeId", new JSONObject(message).getString("edgeId"));
+                    response.put("edge", new Gson().toJson(edge));
+                    response.put("success", true);
+
+                } else {
+                    response.put("success", false);
+                    response.put("message", "No models. You need to call newModel first.");
+                }
+
+                break;
+            }
+            case "DELETEELEMENT": {
+                response.put("command", "deleteElement");
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("modelId"));
+
+                if (model != null) {
+                    model.deleteElement(new JSONObject(message).getString("id"));
+                    response.put("success", true);
+
+                } else {
+                    response.put("success", false);
+                    response.put("message", "No models. You need to call newModel first.");
+                }
+
+                break;
+            }
             default:
                 response.put("message", "Unknown command");
                 response.put("success", false);
@@ -207,6 +333,15 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 + " : "
                 + response.toString());
         socket.send(response.toString());
+    }
+
+    private Model getModelById(List<Model> modelsList, String id) {
+        for (Model m : modelsList) {
+            if (m.getId() == id) {
+                return m;
+            }
+        }
+        return null;
     }
 
     @Override
