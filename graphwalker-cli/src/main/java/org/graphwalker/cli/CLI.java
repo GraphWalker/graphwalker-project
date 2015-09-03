@@ -32,15 +32,12 @@ import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
-
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.commands.Methods;
 import org.graphwalker.cli.commands.Offline;
 import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
-import org.graphwalker.cli.service.Restful;
-import org.graphwalker.cli.service.WebSocketServer;
 import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
@@ -56,18 +53,16 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.test.TestExecutor;
+import org.graphwalker.restful.Restful;
+import org.graphwalker.restful.Util;
+import org.graphwalker.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -263,7 +258,7 @@ public class CLI {
         } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
             ResourceConfig rc = new DefaultResourceConfig();
             try {
-                rc.getSingletons().add(new Restful(this, online.model.iterator()));
+                rc.getSingletons().add(new Restful(getContextsWithPathGenerators(online.model.iterator()), online.json, online.verbose, online.unvisited));
             } catch (MachineException e) {
                 System.err.println("Was the argument --model correctly?");
                 throw e;

@@ -194,6 +194,45 @@ public final class Model implements Builder<Model.RuntimeModel> {
     }
 
     /**
+     * Delete an edge from the model.
+     * </p>
+     * Will remove the edge from the model.
+     * </p>
+     *
+     * @param edgeToBeRemoved The edge to be deleted.
+     * @return The model.
+     */
+    public Model deleteEdge(Edge edgeToBeRemoved) {
+        edges.remove(edgeToBeRemoved);
+        return this;
+    }
+
+    /**
+     * Delete a vertex from the model.
+     * </p>
+     * Will remove a vertex from the model. Any edges that has the vertex
+     * as either source or target, will also be deleted from the model.
+     * </p>
+     *
+     * @param vertexToBeRemoved The vertex to be deleted.
+     * @return The model.
+     */
+    public Model deleteVertex(Vertex vertexToBeRemoved) {
+        ListIterator<Edge> e_it = edges.listIterator();
+        while (e_it.hasNext()) {
+            Edge e = e_it.next();
+            if (e.getSourceVertex() == vertexToBeRemoved) {
+                e_it.remove();
+            }
+            if (e.getTargetVertex() == vertexToBeRemoved) {
+                e_it.remove();
+            }
+        }
+        vertices.remove(vertexToBeRemoved);
+        return this;
+    }
+
+    /**
      * Adds an action to the model.
      * </p>
      * Before a model is being traversed, it will execute all its actions. This is typically

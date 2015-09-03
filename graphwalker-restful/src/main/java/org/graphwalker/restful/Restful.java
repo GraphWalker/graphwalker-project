@@ -1,4 +1,4 @@
-package org.graphwalker.cli.service;
+package org.graphwalker.restful;
 
 /*
  * #%L
@@ -26,21 +26,15 @@ package org.graphwalker.cli.service;
  * #L%
  */
 
-import org.graphwalker.cli.CLI;
-import org.graphwalker.cli.Util;
-import org.graphwalker.core.machine.FailFastStrategy;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
-import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Action;
 import org.json.JSONObject;
-
-import java.util.Iterator;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import java.util.List;
 
 /**
  * JAX-RS (Java API for RESTful Services (JAX-RS)) service implementation.
@@ -49,12 +43,18 @@ import javax.ws.rs.QueryParam;
 @Path("graphwalker")
 public class Restful {
 
-    private CLI cli;
+    private List<Context> contexts;
     private Machine machine;
+    private Boolean json;
+    private Boolean verbose;
+    private Boolean unvisited;
 
-    public Restful(CLI cli, Iterator itr) throws Exception {
-        this.cli = cli;
-        this.machine = new SimpleMachine(cli.getContextsWithPathGenerators(itr));
+    public Restful(List<Context> contexts, Boolean json, Boolean verbose, Boolean unvisited) throws Exception {
+        this.contexts = contexts;
+        this.machine = new SimpleMachine(this.contexts);
+        this.json = json;
+        this.verbose = verbose;
+        this.unvisited = unvisited;
     }
 
     /**
@@ -68,14 +68,14 @@ public class Restful {
     @Path("hasNext")
     public String hasNext() {
         if (machine.hasNextStep()) {
-            if (cli.getOnline().json) {
+            if (json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("HasNext", "true").toString();
             } else {
                 return "true";
             }
         } else {
-            if (cli.getOnline().json) {
+            if (json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("HasNext", "false").toString();
             } else {
@@ -95,10 +95,10 @@ public class Restful {
     @Path("getNext")
     public String getNext() {
         machine.getNextStep();
-        if (cli.getOnline().json) {
-            return Util.getStepAsJSON(machine, cli.getOnline().verbose, cli.getOnline().unvisited).toString();
+        if (json) {
+            return Util.getStepAsJSON(machine, verbose, unvisited).toString();
         } else {
-            return Util.getStepAsString(machine, cli.getOnline().verbose, cli.getOnline().unvisited);
+            return Util.getStepAsString(machine, verbose, unvisited);
         }
     }
 
@@ -107,7 +107,7 @@ public class Restful {
     @Path("getData")
     public String getData(@QueryParam("key") String key) {
         String value = machine.getCurrentContext().getKeys().get(key);
-        if (cli.getOnline().json) {
+        if (json) {
             JSONObject obj = new JSONObject();
             return obj.put("Value", value).toString();
         } else {
@@ -121,14 +121,14 @@ public class Restful {
     public String setData(@QueryParam("script") String script) {
         try {
             machine.getCurrentContext().execute(new Action(script));
-            if (cli.getOnline().json) {
+            if (json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("Result", "Ok").toString();
             } else {
                 return "Ok";
             }
         } catch (Exception e) {
-            if (cli.getOnline().json) {
+            if (json) {
                 JSONObject obj = new JSONObject();
                 return obj.put("Result", e.getMessage()).toString();
             } else {
@@ -141,8 +141,8 @@ public class Restful {
     @Produces("text/plain;charset=UTF-8")
     @Path("restart")
     public String restart() throws Exception {
-        machine = new SimpleMachine(cli.getContextsWithPathGenerators(cli.getOnline().model.iterator()));
-        if (cli.getOnline().json) {
+        machine = new SimpleMachine(contexts);
+        if (json) {
             JSONObject obj = new JSONObject();
             return obj.put("Restart", "Ok").toString();
         } else {
@@ -160,7 +160,7 @@ public class Restful {
         } catch (Throwable e) {
             // ignore
         }
-        if (cli.getOnline().json) {
+        if (json) {
             JSONObject obj = new JSONObject();
             return obj.put("Fail", "Ok").toString();
         } else {
@@ -172,7 +172,7 @@ public class Restful {
     @Produces("text/plain;charset=UTF-8")
     @Path("getStatistics")
     public String getStatistics() {
-        if (cli.getOnline().json) {
+        if (json) {
             return Util.getStatisticsAsJSON(machine).toString();
         } else {
             return Util.getStatisticsAsString(machine);

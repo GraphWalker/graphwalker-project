@@ -78,6 +78,8 @@
         <module>graphwalker-dsl</module>
         <module>graphwalker-io</module>
         <module>graphwalker-java</module>
+        <module>graphwalker-restful</module>
+        <module>graphwalker-websocket</module>
         <module>graphwalker-maven-plugin</module>
         <module>graphwalker-maven-archetype</module>
         <module>graphwalker-cli</module>
@@ -123,6 +125,16 @@
             <dependency>
                 <groupId>org.graphwalker</groupId>
                 <artifactId>graphwalker-java</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-websocket</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.graphwalker</groupId>
+                <artifactId>graphwalker-restful</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

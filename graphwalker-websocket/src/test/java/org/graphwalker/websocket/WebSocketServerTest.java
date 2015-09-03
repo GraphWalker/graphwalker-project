@@ -1,4 +1,4 @@
-package org.graphwalker.cli;
+package org.graphwalker.websocket;
 
 /*
  * #%L
@@ -26,8 +26,6 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import org.graphwalker.cli.service.WebSocketClient;
-import org.graphwalker.cli.service.WebSocketServer;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
