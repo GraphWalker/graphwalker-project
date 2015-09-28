@@ -1,26 +1,34 @@
 angular-scroll
 ==============
 
-Only dependent on AngularJS (no jQuery). 8K minified or 2K gzipped.
+Angular is only dependency (no jQuery). 8K minified or 2K gzipped.
 
 Example
 -------
-Check out [the live demo](http://durated.github.io/angular-scroll/) or the [source code](https://github.com/durated/angular-scroll/blob/master/example/index.html).
+Check out [the live demo](http://oblador.github.io/angular-scroll/) or the [source code](https://github.com/oblador/angular-scroll/blob/master/example/index.html).
 
 Install
 -------
-With bower:
+
+#### With bower:
 
     $ bower install angular-scroll
 
-Or download the [production version](https://raw.github.com/durated/angular-scroll/master/angular-scroll.min.js) or the [development version](https://raw.github.com/durated/angular-scroll/master/angular-scroll.js). 
+#### With npm (for use with browserify):
+
+    $ npm install angular-scroll
+
+You can also download the [production version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.min.js)or the [development version](https://raw.github.com/oblador/angular-scroll/master/angular-scroll.js).
+
+If you prefer a CDN hosted version (which might speed up your load times), check out [cdnjs.com/libraries/angular-scroll](https://cdnjs.com/libraries/angular-scroll).
+
 
 Don't forget to add `duScroll` to your module dependencies. 
 
 `angular.element` Scroll API
 ----------------------------
 
-This module extends the `angular.element` object with a few jQuery like functions. Note that `$document` is an `angular.element`, for usage example see below.
+This module extends the `angular.element` object with a few jQuery like functions. Note that `$document` is an `angular.element`, for usage example see below. In case of name collisions existing jQuery or jqlite functions will be preserved, just use the prefixed version: ie `.duScrollTo()` instead of `.scrollTo()`.
 
 #### `.scrollTo( left, top [, duration [, easing ] ] )`
 Scrolls the element/window to the specified left/top position. If `duration` is specified the scrolling is animated for n milliseconds. If `easing` is ommited the animation will default to the `duScrollEasing` function.
@@ -142,7 +150,7 @@ If your links lie outside of the scrollable element, wrap them with the `du-scro
 ```
 
 ### [All in together now](http://www.youtube.com/watch?v=cx4KtTezEFg&feature=kp)
-The directives play well together, try [the demo](http://durated.github.io/angular-scroll/container.html) or inspect its [source code](https://github.com/durated/angular-scroll/blob/master/example/container.html).
+The directives play well together, try [the demo](http://oblador.github.io/angular-scroll/container.html) or inspect its [source code](https://github.com/oblador/angular-scroll/blob/master/example/container.html).
 
 ```html
 <ul du-spy-context du-scroll-container="scroll-container">

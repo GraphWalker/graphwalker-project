@@ -1,109 +1,15 @@
-<!--
-#%L
-GraphWalker Editor
-%%
-Copyright (C) 2011 - 2014 GraphWalker
-%%
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-#L%
--->
-
-<!doctype html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
-        <title>GraphWalker Dashboard</title>
-        <meta name="description" content="GraphWalker Dashboard">
+        <title>GraphWalker Studio</title>
+        <meta name="description" content="GraphWalker Studio">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="components/fontawesome/css/font-awesome.css" />
-        <link rel="stylesheet" href="components/fullcalendar/fullcalendar.css" />
-        <link rel="stylesheet" href="css/dashboard.css">
-    </head>
-
-    <body ng-app="dashboard" class="wrapper" ng-controller="DashboardController">
-        <header>
-            <form role="search">
-                <input type="text" placeholder="Search">
-            </form>
-        </header>
-        <aside>
-            <ul>
-                <li role="button" ng-repeat="route in routes" ng-class="{active: isActive(route)}" ng-click="navigate(route.url)">
-                    <i class="fa fa-fw {{route.icon}}"></i><span>{{route.label}}</span>
-                </li> 
-            </ul>
-        </aside>
-        <article ng-view></article>
-
-
-
-
-
-        <!---nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-<div class="navbar-header">
-<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-<span class="sr-only">Toggle navigation</span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-</button>
-<a class="navbar-brand" href="index.html">GraphWalker</a>
-</div>
-<div class="collapse navbar-collapse navbar-ex1-collapse">               
-<ul class="nav navbar-nav side-nav">                   
-<li ng-repeat="route in routes" ng-class="{active: isActive(route)}">
-<a href="#{{route.url}}"><i class="fa fa-fw {{route.icon}}"></i><span>{{route.label}}</span></a>
-</li>
-</ul>
-</div>
-</nav>   
-<div class="page-wrapper">
-<div id="header" class="row">
-<div class="col-md-6">
-<ol class="breadcrumb">
-<li ng-repeat="breadcrumb in breadcrumbs.get() track by breadcrumb.path" ng-class="{ active: $last }">                           
-<i class="fa fa-fw fa-file-text-o"></i>
-<a ng-if="!$last" ng-href="#{{ breadcrumb.path }}" ng-bind="breadcrumb.label" class="margin-right-xs">
-
-</a>
-<span ng-if="$last" ng-bind="breadcrumb.label"></span>
-</li>
-</ol>
-</div>
-<div class="col-md-6">
-<form class="navbar-form navbar-right" role="search">
-<div class="form-group">
-<input type="text" class="form-control" placeholder="Search">
-</div>
-</form>
-</div>
-</div>
-<div class="row">
-<div ng-view class="col-md-12 content-wrapper"></div>
-</div>        
-</div-->
 
         <!--[if lt IE 9]>
-<script src="components/es5-shim/es5-shim.js"></script>
-<script src="components/json3/lib/json3.js"></script>
-<![endif]-->
+        <script src="components/es5-shim/es5-shim.js"></script>
+        <script src="components/json3/lib/json3.js"></script>
+        <![endif]-->
         <script src="components/jquery/dist/jquery.js"></script>
         <script src="components/angular/angular.js"></script>
         <script src="components/bootstrap/dist/js/bootstrap.js"></script>
@@ -118,6 +24,31 @@ THE SOFTWARE.
         <script src="components/fullcalendar/fullcalendar.js"></script>
         <script src="components/fullcalendar/gcal.js"></script>
         <script src="components/angular-ui-calendar/src/calendar.js"></script>
+        <script src="lib/require.js" data-main="scripts/main" type="text/javascript"></script>
         <script src="scripts/dashboard.js"></script>
+
+        <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="components/fontawesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="components/fullcalendar/fullcalendar.css" />
+        <link rel="stylesheet" href="css/canvas.css" />
+        <link rel="stylesheet" href="css/octicons/octicons.css">
+        <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.css">
+        <link rel="stylesheet" href="css/dashboard.css" />
+    </head>
+
+    <body ng-app="dashboard" class="wrapper" ng-controller="DashboardController">
+        <header>
+            <form role="search">
+                <input type="text" placeholder="Search">
+            </form>
+        </header>
+        <aside>
+            <ul>
+                <li role="button" ng-repeat="route in routes" ng-class="{active: isActive(route)}" ng-click="navigate(route.url)">
+                    <i class="fa fa-fw {{route.icon}}"></i><span>{{route.label}}</span>
+                </li>
+            </ul>
+        </aside>
+        <article ng-view></article>
     </body>
 </html>

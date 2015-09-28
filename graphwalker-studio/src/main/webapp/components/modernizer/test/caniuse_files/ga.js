@@ -1,28 +1,3 @@
-/*
- * #%L
- * GraphWalker Dashboard
- * %%
- * Copyright (C) 2005 - 2014 GraphWalker
- * %%
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- * #L%
- */
 (function(){var k=void 0,aa=encodeURIComponent,l=String,o=Math,ba="push",ca="cookie",p="charAt",q="indexOf",da="getTime",r="toString",t="window",v="length",w="document",x="split",y="location",ea="protocol",fa="href",z="substring",A="join",C="toLowerCase";var ga="_gat",ha="_gaq",ia="4.9.4",ja="_gaUserPrefs",ka="ioo",D="&",E="=",F="__utma=",H="__utmb=",la="__utmc=",ma="__utmk=",I="__utmv=",J="__utmz=",na="__utmx=",oa="GASO=";var pa=function(){var d=this,f=[],b="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";d.set=function(b){f[b]=!0};d.Sc=function(){for(var d=[],e=0;e<f[v];e++)f[e]&&(d[o.floor(e/6)]^=1<<e%6);for(e=0;e<d[v];e++)d[e]=b[p](d[e]||0);return d[A]("")+"~"}},qa=new pa;function K(d){qa.set(d)};var ra=function(d,f){var b=this;b.window=d;b.document=f;b.setTimeout=function(b,e){setTimeout(b,e)};b.Jb=function(b){return navigator.userAgent[q](b)>=0};b.Xc=function(){return b.Jb("Firefox")&&![].reduce};b.Vc=function(){return L[t][ja]};b.Gc=function(){return L[t].external};b.Hc=function(){return L[t].performance||L[t].webkitPerformance};b.Ic=function(){return L[t].top==L[t]};b.Ya=function(b){var e=L[t]&&L[t].gaGlobal;if(b&&!e)e={},L[t].gaGlobal=e;return e};b.ec=function(b){L[w][y].href=b};b.qb=
 function(d){if(!d||!b.Jb("Firefox"))return d;for(var d=d.replace(/\n|\r/g," "),e=0,f=d[v];e<f;++e){var g=d.charCodeAt(e)&255;if(g==10||g==13)d=d[z](0,e)+"?"+d[z](e+1)}return d}},L=new ra(window,document);var sa=function(d){return function(f,b,h){d[f]=function(){K(b);return h.apply(d,arguments)};return h}},ta=function(d,f,b,h){d.addEventListener?d.addEventListener(f,b,!!h):d.attachEvent&&d.attachEvent("on"+f,b)},ua=function(d){return Object.prototype[r].call(Object(d))=="[object Array]"},M=function(d){return k==d||"-"==d||""==d},N=function(d,f,b){var h="-",e;!M(d)&&!M(f)&&!M(b)&&(e=d[q](f),e>-1&&(b=d[q](b,e),b<0&&(b=d[v]),h=d[z](e+f[q](E)+1,b)));return h},xa=function(d){var f=!1,b=0,h,e;if(!M(d)){f=
 !0;for(h=0;h<d[v];h++)e=d[p](h),b+="."==e?1:0,f=f&&b<=1&&(0==h&&"-"==e||".0123456789"[q](e)>-1)}return f},P=function(d,f){var b=aa;return b instanceof Function?f?encodeURI(d):b(d):(K(68),escape(d))},Q=function(d,f){var b=decodeURIComponent,h,d=d[x]("+")[A](" ");if(b instanceof Function)try{h=f?decodeURI(d):b(d)}catch(e){K(17),h=unescape(d)}else K(68),h=unescape(d);return h},R=function(d,f){return d[q](f)>-1};
