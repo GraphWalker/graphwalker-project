@@ -87,8 +87,8 @@ aside>ul>li>span {
 article {
     float: left;
     width: calc(100% - 96px);
-    height: calc(100% - 38px);
-    padding: 8px 8px 4px 8px;
+    height: calc(100% - 42px);
+    padding: 8px 8px 8px 8px;
 }
 
 .calendar {
