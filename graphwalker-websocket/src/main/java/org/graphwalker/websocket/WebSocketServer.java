@@ -27,6 +27,7 @@ package org.graphwalker.websocket;
  */
 
 import com.google.gson.Gson;
+import org.graphdrawing.graphml.xmlns.impl.EdgeTypeImpl;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -223,12 +224,11 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
                 break;
             }
-            case "NEWMODEL": {
-                response.put("command", "newModel");
-                Model model = new Gson().fromJson(root.getJSONObject("model").toString(), Model.class);
+            case "ADDMODEL": {
+                response.put("command", "addModel");
+                Model model = new Model().setId(root.getString("id"));
                 List<Model> modelsList = models.get(socket);
                 modelsList.add(model);
-                response.put("modelId", model.getId());
                 response.put("model", new Gson().toJson(model));
                 response.put("success", true);
 
@@ -240,16 +240,15 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    Vertex vertex = new Gson().fromJson(root.getJSONObject("vertex").toString(), Vertex.class);
-                    modelsList.get(0).addVertex(vertex);
+                    Vertex vertex = new Vertex().setId(root.getString("vertexId"));
+                    model.addVertex(vertex);
                     response.put("modelId", model.getId());
-                    response.put("vertexId", vertex.getId());
                     response.put("vertex", new Gson().toJson(vertex));
                     response.put("success", true);
 
                 } else {
                     response.put("success", false);
-                    response.put("message", "No models. You need to call newModel first.");
+                    response.put("message", "Did not find a model with id: " +  root.getString("modelId"));
                 }
 
                 break;
@@ -260,10 +259,23 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    Edge edge = new Gson().fromJson(root.getJSONObject("edge").toString(), Edge.class);
-                    modelsList.get(0).addEdge(edge);
+                    Edge edge = new Edge().setId(root.getString("edgeId"));
+                    model.addEdge(edge);
+
+                    for (Vertex src : model.getVertices()) {
+                        if (src.getId().equals( new JSONObject(message).getString("sourceVertexId"))) {
+                            edge.setSourceVertex(src);
+                            break;
+                        }
+                    }
+                    for (Vertex dst : model.getVertices()) {
+                        if (dst.getId().equals( new JSONObject(message).getString("targetVertexId"))) {
+                            edge.setTargetVertex(dst);
+                            break;
+                        }
+                    }
+
                     response.put("modelId", model.getId());
-                    response.put("edgeId", edge.getId());
                     response.put("edge", new Gson().toJson(edge));
                     response.put("success", true);
 
@@ -280,20 +292,40 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    Vertex vertex = new Gson().fromJson(root.getJSONObject("vertex").toString(), Vertex.class);
-                    for (Vertex v : modelsList.get(0).getVertices()) {
-                        if (v.getId().equals(new JSONObject(message).getString("vertexId"))) {
-                            v = vertex;
+                    Vertex vertex = null;
+                    for (Vertex v : model.getVertices()) {
+                        if (v.getId().equals(root.getString("vertexId"))) {
+                            vertex = v;
+                            break;
                         }
                     }
-                    response.put("modelId", model.getId());
-                    response.put("vertexId", new JSONObject(message).getString("vertexId"));
-                    response.put("vertex", new Gson().toJson(vertex));
-                    response.put("success", true);
 
+                    if (vertex==null) {
+                        response.put("success", false);
+                        response.put("message", "Did not find a vertex with id: " + root.getString("vertexId"));
+                    } else {
+                        try {
+                            JSONObject object = root.getJSONObject("properties");
+                            String[] keys = JSONObject.getNames(object);
+                            for (String key : keys) {
+                                Object value = object.get(key);
+                                if (key.equals("name")){
+                                    vertex.setName(value.toString());
+                                } else {
+                                    vertex.setProperty(key, value);
+                                }
+                            }
+                        } catch ( JSONException e ) {
+                            logger.debug("Caught exception when parsing vertex: " + vertex.getId() + ", " + e.getMessage());
+                        }
+
+                        response.put("modelId", model.getId());
+                        response.put("vertex", new Gson().toJson(vertex));
+                        response.put("success", true);
+                    }
                 } else {
                     response.put("success", false);
-                    response.put("message", "No models. You need to call newModel first.");
+                    response.put("message", "Did not find a model with id: " +  root.getString("modelId"));
                 }
 
                 break;
@@ -304,20 +336,40 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    Edge edge = new Gson().fromJson(root.getJSONObject("edge").toString(), Edge.class);
-                    for (Edge e : modelsList.get(0).getEdges()) {
-                        if (e.getId().equals(new JSONObject(message).getString("edgeId"))) {
-                            e = edge;
+                    Edge edge = null;
+                    for (Edge e : model.getEdges()) {
+                        if (e.getId().equals(root.getString("edgeId"))) {
+                            edge = e;
+                            break;
                         }
                     }
-                    response.put("modelId", model.getId());
-                    response.put("edgeId", new JSONObject(message).getString("edgeId"));
-                    response.put("edge", new Gson().toJson(edge));
-                    response.put("success", true);
 
+                    if (edge==null) {
+                        response.put("success", false);
+                        response.put("message", "Did not find an edge with id: " + root.getString("egdeId"));
+                    } else {
+                        try {
+                            JSONObject object = root.getJSONObject("properties");
+                            String[] keys = JSONObject.getNames(object);
+                            for (String key : keys) {
+                                Object value = object.get(key);
+                                if (key.equals("name")){
+                                    edge.setName(value.toString());
+                                } else {
+                                    edge.setProperty(key, value);
+                                }
+                            }
+                        } catch ( JSONException e ) {
+                            logger.debug("Caught exception when parsing edge: " + edge.getId() + ", " + e.getMessage());
+                        }
+
+                        response.put("modelId", model.getId());
+                        response.put("edge", new Gson().toJson(edge));
+                        response.put("success", true);
+                    }
                 } else {
                     response.put("success", false);
-                    response.put("message", "No models. You need to call newModel first.");
+                    response.put("message", "Did not find a model with id: " +  root.getString("modelId"));
                 }
 
                 break;
@@ -328,7 +380,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    for (Vertex v : modelsList.get(0).getVertices()) {
+                    for (Vertex v : model.getVertices()) {
                         if (v.getId().equals( new JSONObject(message).getString("vertexId"))) {
                             model.deleteVertex(v);
                         }
@@ -348,7 +400,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
-                    for (Edge e : modelsList.get(0).getEdges()) {
+                    for (Edge e : model.getEdges()) {
                         if (e.getId().equals(new JSONObject(message).getString("edgeId"))) {
                             model.deleteEdge(e);
                         }
@@ -375,7 +427,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     private Model getModelById(List<Model> modelsList, String id) {
         for (Model m : modelsList) {
-            if (m.getId() == id) {
+            if (m.getId().equals(id)) {
                 return m;
             }
         }
