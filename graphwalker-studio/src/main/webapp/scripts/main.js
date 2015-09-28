@@ -3,22 +3,30 @@ window.debug.disableCache = false;
 
 // RequireJS config
 var config = {
-  baseUrl: 'lib',
+  baseUrl: 'components',
   paths: {
-    app      : '../scripts',
-    actions  : '../scripts/actions',
-    constants: '../scripts/constants',
-    store    : '../scripts/stores',
-    tag      : '../scripts/tags/js',
-    tests    : '../scripts/tests',
-    utils    : '../scripts/utils'
+      'riot'      : 'riot/riot',
+      'jquery'    : 'jquery/dist/jquery',
+      'jquery-ui' : 'jquery-ui/jquery-ui',
+      'jsplumb'   : 'jsPlumb/dist/js/jsPlumb-1.7.10',
+      'panzoom'   : 'jquery.panzoom/dist/jquery.panzoom',
+      'keymaster' : 'keymaster/keymaster',
+      'app'       : '../scripts',
+      'actions'   : '../scripts/actions',
+      'constants' : '../scripts/constants',
+      'store'     : '../scripts/stores',
+      'tag'       : '../scripts/tags/js',
+      'tests'     : '../scripts/tests',
+      'utils'     : '../scripts/utils'
   },
+  /*
   map: {
     '*': {
       // 'riot': 'riot_wip', // DEV: use latest Riot version
       'jquery-ui': 'jquery-ui/jquery-ui'
     }
   },
+  */
   shim: {
     // Merge all the tag shims into tag/Studio
     'tag/Studio': (function() {
