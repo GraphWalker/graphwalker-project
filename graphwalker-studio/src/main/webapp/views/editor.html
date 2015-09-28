@@ -1,4 +1,18 @@
 <studio></studio>
 <script>
-    riot.mount("studio");
+    requirejs(['app/StudioApp'], function(StudioApp) {
+        if (window.debug) {
+            window.StudioApp = StudioApp;
+        } else {
+            // disable log output if not in debug mode
+            console.log = function() {};
+        }
+
+        StudioApp.init({
+            autoConnect: {
+                enabled: false,
+                url: 'ws://localhost:9999'
+            }
+        });
+    });
 </script>
