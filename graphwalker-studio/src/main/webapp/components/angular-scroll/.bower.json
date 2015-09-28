@@ -1,32 +1,7 @@
-/*
- * #%L
- * GraphWalker Dashboard
- * %%
- * Copyright (C) 2005 - 2014 GraphWalker
- * %%
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- * #L%
- */
 {
   "name": "angular-scroll",
-  "version": "0.6.2",
-  "main": "angular-scroll.min.js",
+  "version": "0.6.5",
+  "main": "angular-scroll.js",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -43,14 +18,17 @@
   "devDependencies": {
     "angular-mocks": "^1.2.16"
   },
-  "homepage": "https://github.com/durated/angular-scroll",
-  "_release": "0.6.2",
+  "resolutions": {
+    "angular": "^1.2.16"
+  },
+  "homepage": "https://github.com/oblador/angular-scroll",
+  "_release": "0.6.5",
   "_resolution": {
     "type": "version",
-    "tag": "v0.6.2",
-    "commit": "807d7243fe9ff763bd6e8dc47d181c626dd800bf"
+    "tag": "v0.6.5",
+    "commit": "6f9195438b748e52b489b2e8290ddd9ecd1c2b3a"
   },
-  "_source": "git://github.com/durated/angular-scroll.git",
+  "_source": "git://github.com/oblador/angular-scroll.git",
   "_target": "~0.6.2",
   "_originalSource": "angular-scroll"
 }
