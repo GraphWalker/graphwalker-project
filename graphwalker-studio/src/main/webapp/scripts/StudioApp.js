@@ -28,9 +28,9 @@ function(riot, $) {
     var mergedOpts = $.extend(true, {}, defaults, opts);
     riot.mixin('tagUtils', tagUtils);
     return riot.mount('studio', mergedOpts);
-  }
+  };
 
   return {
     init: init
-  }
+  };
 });

@@ -182,4 +182,4 @@ function() {
       _sendRequest({type: METHODS.STOP});
     }
   }
-})
+});

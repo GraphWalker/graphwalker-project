@@ -50,6 +50,6 @@ function() {
           return el.modelId === modelId;
         }));
       })
-    },
+    }
   }
 });

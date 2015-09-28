@@ -11,6 +11,5 @@ define(function() {
       }
       return Object.freeze(constants);
     }
-
   };
 });
