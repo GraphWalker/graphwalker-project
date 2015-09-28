@@ -26,7 +26,7 @@
 
         #canvas-body {
             background: #f9f9f9;
-            background-image: url('grid.png');
+            background-image: url('images/grid.png');
             background-blend-mode: overlay;
             position: absolute;
             -webkit-backface-visibility: initial !important;
