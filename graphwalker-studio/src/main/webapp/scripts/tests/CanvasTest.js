@@ -8,7 +8,7 @@ function(riot, jsp, $) {
     testAddEdge.call(this, m);
     console.timeEnd('testAll');
     console.profileEnd();
-  }
+  };
 
   var testAddVertex = function(n) {
     // Get canvas width & height
@@ -36,7 +36,7 @@ function(riot, jsp, $) {
       }
     }
     if (n > counter) console.log('Mounted', (n - counter), 'less vertices than the request', n, 'due to canvas size');
-  }
+  };
 
   var testAddEdge = function(m) {
     var vertices = $('vertex');
@@ -45,13 +45,13 @@ function(riot, jsp, $) {
       var rand2 = Math.floor(Math.random() * vertices.length);
       this.addEdge(vertices[rand1].id, vertices[rand2].id);
     }
-  }
+  };
 
   return function(canvas) {
     return {
       testAll: testAll.bind(canvas),
       testAddVertex: testAddVertex.bind(canvas),
-      testAddEdge: testAddEdge.bind(canvas),
+      testAddEdge: testAddEdge.bind(canvas)
     }
   };
 });
