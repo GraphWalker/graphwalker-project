@@ -17,6 +17,5 @@ define(['constants/Utils'], function(Utils) {
     'READ'
   ]);
 
-
   return constants;
 });

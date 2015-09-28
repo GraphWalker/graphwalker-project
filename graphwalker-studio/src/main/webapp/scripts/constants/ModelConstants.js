@@ -15,6 +15,5 @@ define(['constants/Utils'], function(Utils) {
     'MODEL_LIST_CHANGED'
   ]);
 
-
   return constants;
 });

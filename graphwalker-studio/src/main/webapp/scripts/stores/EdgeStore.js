@@ -26,7 +26,7 @@ function() {
     var EVENTS = Constants.events;
     var EMIT_CHANGE = EVENTS.EDGE_LIST_CHANGED;
     self.on(CALLS.GET_ALL_EDGES, function(callback) {
-      callback(self.edges)
+      callback(self.edges);
     });
 
     self.on(CALLS.GET_EDGE, function(edgeId, callback) {
@@ -34,8 +34,8 @@ function() {
     });
 
     self.on(CALLS.ADD_EDGE, function(edge) {
-      self.edges.push(edge)
-      self.trigger(EMIT_CHANGE, self.edges)
+      self.edges.push(edge);
+      self.trigger(EMIT_CHANGE, self.edges);
     });
 
     self.on(CALLS.CHANGE_EDGE, function(query, props) {
@@ -54,7 +54,6 @@ function() {
       self.trigger(EMIT_CHANGE, []);
       self.trigger(EMIT_CHANGE, self.edges);
     });
-
   }
 
   return new EdgeStore();

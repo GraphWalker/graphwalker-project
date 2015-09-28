@@ -18,35 +18,35 @@ define(['jquery'], function($) {
       ret.push(el);
     }
     return ret;
-  }
+  };
 
   // Return element whose certain property matches the query
   Array.prototype.getBy = function(prop, query) {
     return this.filter(function(el) {
       return el[prop] === query;
     })
-  }
+  };
 
   // Get last item from array or undefined if empty
   Array.prototype.last = function() {
     return this[this.length - 1];
-  }
+  };
 
   // Remove given element from array
   Array.prototype.remove = function(el) {
     var index = this.indexOf(el);
     if (index != -1) this.splice(index, 1);
-  }
+  };
 
   // Check if element is in array
   Array.prototype.contains = function(el) {
     return this.indexOf(el) != -1;
-  }
+  };
 
   // Empty the array
   Array.prototype.clear = function() {
     this.length = 0;
-  }
+  };
 
   // Removes an element if it exists, otherwise add it
   Array.prototype.toggle = function(el) {
@@ -56,7 +56,7 @@ define(['jquery'], function($) {
     } else {
       this.push(el);
     }
-  }
+  };
 
   // Pluralize known words
   String.prototype.pluralize = function(flag) {
@@ -67,7 +67,7 @@ define(['jquery'], function($) {
       'element' : 'elements'
     };
     return flag ? WORDS[this] : this;
-  }
+  };
 
   // Compare two arrays
   $.fn.isSameAs = function(compareTo) {

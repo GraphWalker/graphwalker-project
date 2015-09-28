@@ -56,7 +56,7 @@ function() {
       if (!idArray || idArray.length === 0) {
         callback([]);
         return;
-      };
+      }
       if (!Array.isArray(idArray)) idArray = [idArray];
       // TODO instead of using a counter, use promises
       var DomIdDictionary = {_counter: 0};

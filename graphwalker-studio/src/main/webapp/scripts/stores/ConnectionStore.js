@@ -16,7 +16,7 @@ function() {
 
     // Register store with RiotControl. All subsequent `trigger` and `on` method calls through
     // RiotControl will be passed on to this store.
-    RiotControl.addStore(self)
+    RiotControl.addStore(self);
 
     self.on(CALLS.GET_WEBSOCKET, function(callback) {
       callback(self.websocket);
@@ -27,7 +27,7 @@ function() {
         self.websocket.send(message)
       } else {
         self.cache.push(message);
-      };
+      }
     });
 
     self.on(CALLS.CONNECT, function(url) {
@@ -53,8 +53,6 @@ function() {
     self.on(CALLS.CLOSE, function() {
       if (self.websocket) self.websocket.close();
     });
-
   }
-
   return new ConnectionStore();
 });
