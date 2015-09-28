@@ -1,0 +1,30 @@
+{
+  "name": "bower-requirejs-auto",
+  "main": "index.js",
+  "version": "0.1.0",
+  "authors": [
+    "Anders D. Johnson"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "~2.1.15"
+  },
+  "homepage": "https://github.com/adjohnson916/bower-requirejs-auto",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "54fdaeebbfcd4ef17dc6c650e1877ae3349932f7"
+  },
+  "_source": "git://github.com/adjohnson916/bower-requirejs-auto.git",
+  "_target": "~0.1.0",
+  "_originalSource": "bower-requirejs-auto",
+  "_direct": true
+}

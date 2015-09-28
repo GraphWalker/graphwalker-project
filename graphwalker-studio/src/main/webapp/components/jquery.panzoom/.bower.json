@@ -1,0 +1,33 @@
+{
+  "name": "jquery.panzoom",
+  "version": "2.0.5",
+  "main": "dist/jquery.panzoom.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "stylesheets",
+    "demo",
+    "images",
+    "test",
+    "*.json",
+    "*.html",
+    "Gruntfile.js"
+  ],
+  "devDependencies": {
+    "chai": "~1.9.0",
+    "jquery-mousewheel": "~3.1.9",
+    "jquery.event.pointertouch": "~0.1.0",
+    "mocha": "~1.17.1"
+  },
+  "homepage": "https://github.com/timmywil/jquery.panzoom",
+  "_release": "2.0.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.0.5",
+    "commit": "544a73a3b3ee1546fccda48e00daf2ad90b4c4ab"
+  },
+  "_source": "git://github.com/timmywil/jquery.panzoom.git",
+  "_target": "~2.0.5",
+  "_originalSource": "jquery.panzoom",
+  "_direct": true
+}
