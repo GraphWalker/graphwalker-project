@@ -1,7 +1,8 @@
 <studio class="studio">
+<!--
     <studio-sidebar selection={ selection } model={ model } options={ opts }
                     vertices={ vertices } edges={ edges } models={ models }/>
-
+-->
     <studio-tabs tabs={ tabs } model={ model }/>
 
     <studio-canvas selection={ selection } model={ model } show={ tabs.length } options={ opts }

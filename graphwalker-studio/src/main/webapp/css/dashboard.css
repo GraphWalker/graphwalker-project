@@ -88,7 +88,6 @@ article {
     float: left;
     width: calc(100% - 96px);
     height: calc(100% - 42px);
-    padding: 8px 8px 8px 8px;
 }
 
 .calendar {

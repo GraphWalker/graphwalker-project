@@ -844,7 +844,7 @@ riot.tag('sidebar-pane', '<h4 onclick="{ toggle(\'expanded\') }"> <span if="{ op
         });
     
 });
-riot.tag('studio', '<studio-sidebar selection="{ selection }" model="{ model }" options="{ opts }" vertices="{ vertices }" edges="{ edges }" models="{ models }"></studio-sidebar> <studio-tabs tabs="{ tabs }" model="{ model }"></studio-tabs> <studio-canvas selection="{ selection }" model="{ model }" show="{ tabs.length }" options="{ opts }" vertices="{ vertices }" edges="{ edges }"></studio-canvas>', 'class="studio"', function(opts) {
+riot.tag('studio', ' <studio-tabs tabs="{ tabs }" model="{ model }"></studio-tabs> <studio-canvas selection="{ selection }" model="{ model }" show="{ tabs.length }" options="{ opts }" vertices="{ vertices }" edges="{ edges }"></studio-canvas>', 'class="studio"', function(opts) {
         var jsp = require('jsplumb');
         var EdgeActions = require('actions/EdgeActions');
         var RiotControl = require('app/RiotControl');
@@ -1003,7 +1003,7 @@ riot.tag('studio', '<studio-sidebar selection="{ selection }" model="{ model }" 
         });
     
 });
-riot.tag('studio-tabs', '<ul> <li each="{ opts.tabs.getObjects() }"> <div onclick="{ selectTab }" class="{ selected: parent.opts.model.id === id}"> { name } <span onclick="{ parent.closeTab }" class="octicon octicon-x"></span> </div> </li> <li> <div id="add">&nbsp;<span onclick="{ openTab }" class="octicon octicon-plus"></span></div> </li> </ul>', 'class="studio-tabs"', function(opts) {
+riot.tag('studio-tabs', '<ul> <li each="{ opts.tabs.getObjects() }"> <div onclick="{ selectTab }" class="{ selected: parent.opts.model.id === id}"> <span class="studio-label">{ name }</span> <span class="studio-icon octicon octicon-x" onclick="{ parent.closeTab }"></span> </div> </li> <li> <div id="add"><span onclick="{ openTab }" class="octicon octicon-plus"></span></div> </li> </ul>', 'class="studio-tabs"', function(opts) {
         var ModelActions = require('actions/ModelActions');
 
         var self = this;

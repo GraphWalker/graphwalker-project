@@ -97,11 +97,9 @@ input[type='text']:focus {
 /* studio-canvas */
 
 .studio-canvas {
-  height: calc(100% - 34px);
+  height: calc(100% - 24px);
   box-sizing: border-box;
   display: block;
-  margin-right: 310px;
-  border: 1px solid #5b8590;
   overflow: hidden;
   position: relative;
 }
@@ -301,10 +299,9 @@ input[name='ws_url'] {
 
 /* studio */
 .studio {
-    height: 98%;
+    height: 100%;
     display: block;
     background-color: #dedede;
-    margin-bottom: 10px;
 }
 
 /* studio tabs */
@@ -324,18 +321,25 @@ input[name='ws_url'] {
     width: 150px;
     border: 1px solid black;
     border-bottom: 0;
-    padding: 5px;
+    padding: 2px 5px 0px 5px:
     text-align: left;
     vertical-align: middle;
     line-height: 20px;
     background-color: #40697e;
     cursor: default;
-    border-radius: 6px 6px 0 0;
 }
 
 .studio-tabs span {
-    float: right;
     color: rgba(0, 0, 0, 0.18)
+}
+
+.studio-tabs span.studio-label {
+    float: left;
+    padding-left: 5px;
+}
+
+.studio-tabs span.studio-icon {
+    float: right;
 }
 
 .studio-tabs span:hover {
@@ -349,18 +353,15 @@ input[name='ws_url'] {
     width: 15px;
     height: 15px;
     text-align: center;
-    padding: 3px;
 }
 
 .studio-tabs div#add {
     border: 0px;
     width: 100%;
-    margin-left: -5px;
     border-top-left-radius: 0;
 }
 
 .studio-tabs div.selected {
-    border-top: 4px solid #5b8590;
     background-color: #f0f0f0;
 }
 

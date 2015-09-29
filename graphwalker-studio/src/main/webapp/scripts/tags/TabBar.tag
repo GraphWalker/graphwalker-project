@@ -2,13 +2,12 @@
     <ul>
         <li each={ opts.tabs.getObjects() }>
             <div onclick={ selectTab } class="{ selected: parent.opts.model.id === id}">
-                { name }
-                <span onclick={ parent.closeTab } class="octicon octicon-x"></span>
+                <span class="studio-label">{ name }</span>
+                <span class="studio-icon octicon octicon-x" onclick={ parent.closeTab }></span>
             </div>
         </li>
-
         <li>
-            <div id="add">&nbsp;<span onclick={ openTab } class="octicon octicon-plus"></span></div>
+            <div id="add"><span onclick={ openTab } class="octicon octicon-plus"></span></div>
         </li>
     </ul>
 
