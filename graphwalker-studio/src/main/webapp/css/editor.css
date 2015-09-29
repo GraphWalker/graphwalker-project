@@ -237,7 +237,7 @@ input[name='ws_url'] {
 }
 
 .models-pane ul.models span.octicon {
-    padding: 5px 0px 0px 10px;
+    padding: 5px 0 0 10px;
 }
 
 .models-pane input[name='searchInput'] {
@@ -310,6 +310,7 @@ input[name='ws_url'] {
     list-style: none;
     padding: 0;
     margin: 0;
+    height: 30px;
 }
 
 .studio-tabs li {
@@ -317,20 +318,13 @@ input[name='ws_url'] {
 }
 
 .studio-tabs div {
-    height: 20px;
+    height: 30px;
     width: 150px;
-    border: 1px solid black;
-    border-bottom: 0;
-    padding: 2px 5px 0px 5px:
+    padding: 5px;
     text-align: left;
     vertical-align: middle;
-    line-height: 20px;
-    background-color: #40697e;
+    background: #f0f0f0;
     cursor: default;
-}
-
-.studio-tabs span {
-    color: rgba(0, 0, 0, 0.18)
 }
 
 .studio-tabs span.studio-label {
@@ -342,7 +336,7 @@ input[name='ws_url'] {
     float: right;
 }
 
-.studio-tabs span:hover {
+.studio-tabs div:hover {
     color: black;
     cursor: default;
     background-color: rgba(0, 0, 0, 0.21);
@@ -350,19 +344,18 @@ input[name='ws_url'] {
 
 .studio-tabs .octicon {
     border-radius: 50%;
-    width: 15px;
-    height: 15px;
+    width: 30px;
+    height: 30px;
     text-align: center;
 }
 
-.studio-tabs div#add {
-    border: 0px;
+.studio-tabs div.studio-add-tab {
+    border: 0;
     width: 100%;
-    border-top-left-radius: 0;
 }
 
 .studio-tabs div.selected {
-    background-color: #f0f0f0;
+    background: #f9f9f9;
 }
 
 /* vertex */

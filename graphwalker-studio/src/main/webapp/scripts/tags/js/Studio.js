@@ -1003,7 +1003,7 @@ riot.tag('studio', ' <studio-tabs tabs="{ tabs }" model="{ model }"></studio-tab
         });
     
 });
-riot.tag('studio-tabs', '<ul> <li each="{ opts.tabs.getObjects() }"> <div onclick="{ selectTab }" class="{ selected: parent.opts.model.id === id}"> <span class="studio-label">{ name }</span> <span class="studio-icon octicon octicon-x" onclick="{ parent.closeTab }"></span> </div> </li> <li> <div id="add"><span onclick="{ openTab }" class="octicon octicon-plus"></span></div> </li> </ul>', 'class="studio-tabs"', function(opts) {
+riot.tag('studio-tabs', '<ul> <li each="{ opts.tabs.getObjects() }"> <div onclick="{ selectTab }" class="{ selected: parent.opts.model.id === id}"> <span class="studio-label">{ name }</span> <span class="studio-icon octicon octicon-x" onclick="{ parent.closeTab }"></span> </div> </li> <li> <div id="add" class="studio-add-tab"><span onclick="{ openTab }" class="studio-icon octicon octicon-plus"></span></div> </li> </ul>', 'class="studio-tabs"', function(opts) {
         var ModelActions = require('actions/ModelActions');
 
         var self = this;
