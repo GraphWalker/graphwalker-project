@@ -7,7 +7,7 @@
     tagger(window.riot);
   }
 })(function(riot) {
-riot.tag('studio-canvas', '<div class="zoom-button" id="zoom-in" class="zoom-in"><span class="octicon octicon-plus"></span></div> <div class="zoom-button" id="zoom-out" class="zoom-out"><span class="octicon octicon-dash"></span></div> <input type="range" id="zoom-range" class="zoom-range" step="0.05" min="0.1" max="3"> <div id="canvas-body" class="canvas-body"> <vertex each="{ filterByModel(opts.vertices) }" selection="{ parent.opts.selection }"></vertex> <edge each="{ filterByModel(opts.edges) }" selection="{ parent.opts.selection }"></edge> </div> <div id="minimap" class="minimap" if="{ opts.options.canvas.minimap }"> <div class="minimap-element" each="{ filterByModel(opts.vertices) }" data-view="{ JSON.stringify(this.view) }" style="display:none;"></div> <div id="viewport" class="viewport"></div> </div>', 'class="studio-canvas { highlight: !selection.length }"', function(opts) {
+riot.tag('studio-canvas', ' <div id="canvas-body" class="canvas-body"> <vertex each="{ filterByModel(opts.vertices) }" selection="{ parent.opts.selection }"></vertex> <edge each="{ filterByModel(opts.edges) }" selection="{ parent.opts.selection }"></edge> </div> ', 'class="studio-canvas { highlight: !selection.length }"', function(opts) {
         var $ = require('jquery');
         var jsp = require('jsplumb');
         var RiotControl = require('app/RiotControl');
@@ -384,12 +384,6 @@ riot.tag('studio-canvas', '<div class="zoom-button" id="zoom-in" class="zoom-in"
                 }).show();
             });
         });
-
-
-
-
-
-
 
     
 });
