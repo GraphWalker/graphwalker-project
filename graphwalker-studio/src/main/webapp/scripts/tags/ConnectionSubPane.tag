@@ -6,24 +6,6 @@
         <li show={showTextarea}><textarea name="output" readonly="true"></textarea></li>
     </ul>
 
-    <style scoped>
-        button.connect {
-            width: 75px;
-        }
-
-        textarea[name='output'] {
-            width: 285px;
-            min-height: 100px;
-            resize: vertical;
-            border: 0;
-            outline: none;
-        }
-
-        input[name='ws_url'] {
-            width: 210px;
-        }
-    </style>
-
     <script>
         var ConnectionActions = require('actions/ConnectionActions');
 

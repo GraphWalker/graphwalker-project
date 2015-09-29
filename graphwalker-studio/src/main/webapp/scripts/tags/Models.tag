@@ -1,4 +1,4 @@
-<models-pane>
+<models-pane class="models-pane">
     <ul>
         <li if={ !opts.models.length }>
             <button onclick={ opts.model.new } class="green">
@@ -39,42 +39,6 @@
             </ul>
         </li>
     </ul>
-
-    <style scoped>
-        a {
-            color: inherit;
-            cursor: pointer;
-        }
-
-        a.active {
-            background-color: rgba(55, 157, 200, 0.4);
-        }
-
-        a.selected {
-            background-color: rgba(55, 157, 200, 0.75);
-        }
-
-        li.active {
-            background-color: rgba(91, 133, 144, 0.2);
-        }
-
-        ul.models {
-            list-style: none;
-            background-color: #f0f0f0;
-            color: black;
-            overflow-y: auto;
-            max-height: 350px;
-            border-radius: 2px;
-        }
-
-        ul.models span.octicon {
-            padding: 5px 0px 0px 10px;
-        }
-
-        input[name='searchInput'] {
-            width: 238px;
-        }
-    </style>
 
     <script>
         var VertexActions = require('actions/VertexActions');

@@ -1,74 +1,8 @@
-<vertex id="{ view.domId }" class="{ selected: selected } { status.toLowerCase() }" tabindex="1"
+<vertex id="{ view.domId }" class="vertex { selected: selected } { status.toLowerCase() }" tabindex="1"
         vertex-id="{ id }">
     <div class="label-div">
         <editable type="text" class="label" off={ !selected } callback={ changeName }>{ name }</editable>
     </div>
-
-    <style>
-        vertex {
-            background-clip: padding-box;
-            border: 1px solid #325262;
-            position: absolute !important;
-            display: table !important;
-            border-radius: 15px;
-            cursor: default;
-            background-color: rgba(192, 215, 221, 0.85);
-            box-sizing: border-box;
-        }
-
-        vertex:focus {
-            outline: none;
-        }
-
-        vertex.selected {
-            border: 2px solid #3db2e3;
-            cursor: move;
-        }
-
-        vertex.rubberband-hover {
-            border: 2px solid #21cfdf;
-        }
-
-        vertex.unverified {
-            border: 1px dashed #325262;
-        }
-
-        vertex.error {
-            background-color: rgba(255, 200, 128, 0.85);
-        }
-
-        .label-div {
-            display: table-cell;
-            vertical-align: middle;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .label {
-            margin: 0;
-            display: inline-block;
-            min-width: 20px;
-            min-height: 10pt;
-        }
-
-        .label:hover, .label:focus {
-            background-color: rgba(210, 245, 248, 0.75);
-            background-clip: content-box;
-            outline: none;
-        }
-
-        .label::selection {
-            background-color: #00c7c0;
-        }
-
-        .jsplumb-drag-hover {
-            border: 1px solid #21cfdf;
-        }
-
-        vertex input {
-            width: 90px;
-        }
-    </style>
 
     <script>
         var $ = require('jquery');
