@@ -7,7 +7,7 @@
             </div>
         </li>
         <li>
-            <div id="add"><span onclick={ openTab } class="octicon octicon-plus"></span></div>
+            <div id="add" class="studio-add-tab"><span onclick={ openTab } class="studio-icon octicon octicon-plus"></span></div>
         </li>
     </ul>
 
