@@ -1,18 +1,20 @@
 <studio-canvas class="studio-canvas { highlight: !selection.length }">
+    <!--
     <div class="zoom-button" id="zoom-in" class="zoom-in"><span class="octicon octicon-plus"></span></div>
     <div class="zoom-button" id="zoom-out" class="zoom-out"><span class="octicon octicon-dash"></span></div>
     <input type="range" id="zoom-range" class="zoom-range" step="0.05" min="0.1" max="3">
-
+    -->
     <div id="canvas-body" class="canvas-body">
         <vertex each={ filterByModel(opts.vertices) } selection={ parent.opts.selection }/>
         <edge each={ filterByModel(opts.edges) } selection={ parent.opts.selection }/>
     </div>
+    <!--
     <div id="minimap" class="minimap" if={ opts.options.canvas.minimap }>
         <div class="minimap-element" each={ filterByModel(opts.vertices) } data-view={ JSON.stringify(this.view) }
              style="display:none;"></div>
         <div id="viewport" class="viewport"></div>
     </div>
-
+    -->
     <script>
         var $ = require('jquery');
         var jsp = require('jsplumb');
