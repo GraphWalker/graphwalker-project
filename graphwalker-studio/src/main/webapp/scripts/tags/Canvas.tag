@@ -408,12 +408,5 @@
             });
         });
 
-        // RUN TEST
-        // self.one('mount', function() {
-        //   var Test = require('tests/CanvasTest')(this);
-        //   ConnectionActions.connect('ws://localhost:9999', function() {
-        //     Test.testAll(26,30);
-        //   });
-        // })
     </script>
 </studio-canvas>

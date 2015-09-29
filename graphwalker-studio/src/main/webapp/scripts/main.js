@@ -19,14 +19,6 @@ var config = {
       'tests'     : '../scripts/tests',
       'utils'     : '../scripts/utils'
   },
-  /*
-  map: {
-    '*': {
-      // 'riot': 'riot_wip', // DEV: use latest Riot version
-      'jquery-ui': 'jquery-ui/jquery-ui'
-    }
-  },
-  */
   shim: {
     // Merge all the tag shims into tag/Studio
     'tag/Studio': (function() {
@@ -58,9 +50,9 @@ var config = {
 
 // Prevent browser caching
 if (window.debug.disableCache) config.urlArgs = "bust=" +  (new Date()).getTime();
-requirejs.config(config);
+require.config(config);
 
-requirejs(['app/StudioApp'], function(StudioApp) {
+require(['app/StudioApp'], function(StudioApp) {
   if (window.debug) {
     window.StudioApp = StudioApp;
   } else {
