@@ -1,4 +1,4 @@
-<studio>
+<studio class="studio">
     <studio-sidebar selection={ selection } model={ model } options={ opts }
                     vertices={ vertices } edges={ edges } models={ models }/>
 
@@ -6,15 +6,6 @@
 
     <studio-canvas selection={ selection } model={ model } show={ tabs.length } options={ opts }
                    vertices={ vertices } edges={ edges }/>
-
-    <style>
-        studio {
-            height: 98%;
-            display: block;
-            background-color: #dedede;
-            margin-bottom: 10px;
-        }
-    </style>
 
     <script>
         var jsp = require('jsplumb');

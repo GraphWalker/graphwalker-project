@@ -19,16 +19,6 @@
         </sidebar-pane>
     </div>
 
-    <style>
-        #sidebar {
-            float: right;
-            width: 310px;
-            height: 100%;
-            background-color: #f0f0f0;
-            overflow-y: overlay;
-        }
-    </style>
-
     <script>
         var ConnectionActions = require('actions/ConnectionActions');
 

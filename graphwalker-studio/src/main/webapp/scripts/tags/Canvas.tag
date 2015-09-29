@@ -1,93 +1,17 @@
-<studio-canvas class="{ highlight: !selection.length }">
-    <div class="zoom-button" id="zoom-in"><span class="octicon octicon-plus"></span></div>
-    <div class="zoom-button" id="zoom-out"><span class="octicon octicon-dash"></span></div>
-    <input type="range" id="zoom-range" step="0.05" min="0.1" max="3">
+<studio-canvas class="studio-canvas { highlight: !selection.length }">
+    <div class="zoom-button" id="zoom-in" class="zoom-in"><span class="octicon octicon-plus"></span></div>
+    <div class="zoom-button" id="zoom-out" class="zoom-out"><span class="octicon octicon-dash"></span></div>
+    <input type="range" id="zoom-range" class="zoom-range" step="0.05" min="0.1" max="3">
 
-    <div id="canvas-body">
+    <div id="canvas-body" class="canvas-body">
         <vertex each={ filterByModel(opts.vertices) } selection={ parent.opts.selection }/>
         <edge each={ filterByModel(opts.edges) } selection={ parent.opts.selection }/>
     </div>
-    <div id="minimap" if={ opts.options.canvas.minimap }>
+    <div id="minimap" class="minimap" if={ opts.options.canvas.minimap }>
         <div class="minimap-element" each={ filterByModel(opts.vertices) } data-view={ JSON.stringify(this.view) }
              style="display:none;"></div>
-        <div id="viewport"></div>
+        <div id="viewport" class="viewport"></div>
     </div>
-
-    <style>
-        studio-canvas {
-            height: calc(100% - 34px);
-            box-sizing: border-box;
-            display: block;
-            margin-right: 310px;
-            border: 1px solid #5b8590;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #canvas-body {
-            background: #f9f9f9;
-            background-image: url('images/grid.png');
-            background-blend-mode: overlay;
-            position: absolute;
-            -webkit-backface-visibility: initial !important;
-            -webkit-transform-origin: 50% 50%;
-        }
-
-        .zoom-button {
-            text-align: center;
-            background-color: #325262;
-            color: white;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            top: 10px;
-            z-index: 1;
-            border-radius: 4px;
-        }
-
-        .zoom-button .octicon {
-            font-size: 11px;
-        }
-
-        #zoom-range {
-            position: absolute;
-            top: 100px;
-            right: -42px;
-            z-index: 1;
-            transform: rotate(270deg);
-            -webkit-transform: rotate(270deg);
-        }
-
-        #zoom-in {
-            right: 5px;
-        }
-
-        #zoom-out {
-            right: 27px;
-        }
-
-        #minimap {
-            border: 1px solid black;
-            position: absolute;
-            right: 5px;
-            bottom: 5px;
-            background-color: rgb(203, 203, 203);
-            opacity: 0.6;
-        }
-
-        #minimap > #viewport {
-            border: 2px solid red;
-            background-color: white;
-            position: absolute;
-            box-sizing: border-box;
-        }
-
-        #minimap > .minimap-element {
-            position: absolute;
-            background-color: #1c4105;
-            z-index: 1;
-        }
-    </style>
 
     <script>
         var $ = require('jquery');

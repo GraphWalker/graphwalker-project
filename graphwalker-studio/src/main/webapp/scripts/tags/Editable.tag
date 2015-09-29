@@ -1,13 +1,7 @@
-<editable onclick={ click }>
+<editable onclick={ click } class="editable">
   <span show={ !editing }>
     <yield/>
   </span>
-
-    <style scoped>
-        span {
-            cursor: pointer;
-        }
-    </style>
 
     <script>
         var ENTER_KEY = 13;
