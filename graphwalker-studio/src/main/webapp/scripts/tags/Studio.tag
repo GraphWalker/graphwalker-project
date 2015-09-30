@@ -167,9 +167,7 @@
 
         // Handle passed in options
         self.on('mount', function () {
-            if (opts.autoConnect && opts.autoConnect.enabled) {
-                ConnectionActions.connect(opts.autoConnect.url);
-            }
+            ConnectionActions.connect("ws://localhost:9999");
         });
 
         RiotControl.on(StudioConstants.calls.CLEAR_SELECTION, function () {
