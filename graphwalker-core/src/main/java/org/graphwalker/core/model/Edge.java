@@ -373,6 +373,9 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         public Guard getGuard() {
             return guard;
         }
+        public String toString() {
+            return "{ id: " + getId() + ", name: " + getName() + "}";
+        }
 
         /**
          * Gets the weight of the edge.

@@ -7,6 +7,32 @@
     tagger(window.riot);
   }
 })(function(riot) {
+riot.tag('canvas-settings-subpane', '<h5>Canvas settings</h5> <ul> <li> Scroll zoom sensitivity<br> <input name="sensitivity" type="range" onchange="{ setSensitivity }"> <span id="sensValue"></span> </li> <li> Show minimap <input name="minimap" type="checkbox" onchange="{ setMinimap }"> </li> </ul>', function(opts) {
+        var self = this;
+
+        self.on('mount', function () {
+            $.extend(self.sensitivity, {
+                max: 1,
+                min: 0.01,
+                step: 0.01,
+                value: opts.options.canvas && opts.options.canvas.scrollIncrement || 0.3
+            });
+            self.setSensitivity();
+
+            self.minimap.checked = self.opts.options.canvas.minimap;
+        });
+
+        self.setSensitivity = function() {
+            var sensValue = self.sensValue.innerHTML = self.sensitivity.value;
+            $.extend(true, self.opts.options, {canvas: {scrollIncrement: sensValue}})
+        };
+
+        self.setMinimap = function() {
+            $.extend(true, self.opts.options, {canvas: {minimap: self.minimap.checked}})
+            riot.update();
+        };
+    
+});
 riot.tag('studio-canvas', ' <div id="canvas-body" class="canvas-body"> <vertex each="{ filterByModel(opts.vertices) }" selection="{ parent.opts.selection }"></vertex> <edge each="{ filterByModel(opts.edges) }" selection="{ parent.opts.selection }"></edge> </div> ', 'class="studio-canvas { highlight: !selection.length }"', function(opts) {
         var $ = require('jquery');
         var jsp = require('jsplumb');
@@ -385,32 +411,6 @@ riot.tag('studio-canvas', ' <div id="canvas-body" class="canvas-body"> <vertex e
             });
         });
 
-    
-});
-riot.tag('canvas-settings-subpane', '<h5>Canvas settings</h5> <ul> <li> Scroll zoom sensitivity<br> <input name="sensitivity" type="range" onchange="{ setSensitivity }"> <span id="sensValue"></span> </li> <li> Show minimap <input name="minimap" type="checkbox" onchange="{ setMinimap }"> </li> </ul>', function(opts) {
-        var self = this;
-
-        self.on('mount', function () {
-            $.extend(self.sensitivity, {
-                max: 1,
-                min: 0.01,
-                step: 0.01,
-                value: opts.options.canvas && opts.options.canvas.scrollIncrement || 0.3
-            });
-            self.setSensitivity();
-
-            self.minimap.checked = self.opts.options.canvas.minimap;
-        });
-
-        self.setSensitivity = function() {
-            var sensValue = self.sensValue.innerHTML = self.sensitivity.value;
-            $.extend(true, self.opts.options, {canvas: {scrollIncrement: sensValue}})
-        };
-
-        self.setMinimap = function() {
-            $.extend(true, self.opts.options, {canvas: {minimap: self.minimap.checked}})
-            riot.update();
-        };
     
 });
 riot.tag('connection-subpane', '<h5>GraphWalker settings</h5> <ul> <li><input name="ws_url" __disabled="{ connected }" type="text"> <li><a href="" onclick="{ toggle(\'showTextarea\') }">{showTextarea ? \'Hide\' : \'Show\'} connection log</a></li> <li show="{showTextarea}"><textarea name="output" readonly="true"></textarea></li> </ul>', function(opts) {
@@ -815,6 +815,18 @@ riot.tag('properties-pane', '<ul> <li if="{!isMultipleSelection && element.error
 riot.tag('settings-pane', '<div class="pane-body"> <connection-subpane></connection-subpane> <canvas-settings-subpane options="{ opts.options }"></canvas-settings-subpane> </div>', function(opts) {
 
 });
+riot.tag('sidebar-pane', '<h4 onclick="{ toggle(\'expanded\') }"> <span if="{ opts.icon }" class="icon octicon octicon-{ opts.icon }"></span> { opts.heading } <span class="minimize octicon octicon-diff-{ expanded ? \'removed\' : \'added\'}"></span> </h4> <div class="pane-body" show="{ expanded }"> <yield></yield> </div>', 'class="sidebar-pane"', function(opts) {
+        var self = this;
+
+        self.mixin('tagUtils');
+
+        self.expanded = true;
+
+        self.one('update', function () {
+            self.expanded = !self.opts.collapsed;
+        });
+    
+});
 riot.tag('studio-sidebar', '<div id="sidebar"> <sidebar-pane heading="Properties" icon="list-unordered" if="{ opts.model.id }"> <properties-pane model="{ parent.opts.model }" selection="{ parent.opts.selection }"></properties-pane> </sidebar-pane> <sidebar-pane heading="Models" icon="file-directory"> <models-pane model="{ parent.opts.model }" selection="{ parent.opts.selection }" vertices="{ parent.opts.vertices }" edges="{ parent.opts.edges }" models="{ parent.opts.models }"></models-pane> </sidebar-pane> <sidebar-pane heading="GraphWalker" icon="git-branch" collapsed="{ true }"> <graphwalker-pane connected="{ parent.connectionOpen }" model="{ parent.opts.model }" selection="{ parent.opts.selection }"></graphwalker-pane> </sidebar-pane> <sidebar-pane heading="Settings" icon="gear" collapsed="{ true }"> <settings-pane options="{ parent.opts.options }"></settings-pane> </sidebar-pane> </div>', function(opts) {
         var ConnectionActions = require('actions/ConnectionActions');
 
@@ -829,18 +841,6 @@ riot.tag('studio-sidebar', '<div id="sidebar"> <sidebar-pane heading="Properties
         ConnectionActions.addConnectionListener({
             onopen: _toggle.bind(null, true),
             onclose: _toggle.bind(null, false)
-        });
-    
-});
-riot.tag('sidebar-pane', '<h4 onclick="{ toggle(\'expanded\') }"> <span if="{ opts.icon }" class="icon octicon octicon-{ opts.icon }"></span> { opts.heading } <span class="minimize octicon octicon-diff-{ expanded ? \'removed\' : \'added\'}"></span> </h4> <div class="pane-body" show="{ expanded }"> <yield></yield> </div>', 'class="sidebar-pane"', function(opts) {
-        var self = this;
-
-        self.mixin('tagUtils');
-
-        self.expanded = true;
-
-        self.one('update', function () {
-            self.expanded = !self.opts.collapsed;
         });
     
 });
@@ -996,6 +996,7 @@ riot.tag('studio', ' <studio-tabs tabs="{ tabs }" model="{ model }"></studio-tab
             if (opts.autoConnect && opts.autoConnect.enabled) {
                 ConnectionActions.connect(opts.autoConnect.url);
             }
+            ConnectionActions.connect("ws://localhost:9999");
         });
 
         RiotControl.on(StudioConstants.calls.CLEAR_SELECTION, function () {

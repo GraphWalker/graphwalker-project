@@ -28,6 +28,7 @@ package org.graphwalker.io.factory.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
@@ -44,6 +45,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -76,6 +78,13 @@ public final class JsonContextFactory implements ContextFactory {
         }
 
         create(out.toString(), context);
+        return context;
+    }
+
+    @Override
+    public <T extends Context> T write(T context, Path path) throws IOException {
+        Gson gson = new Gson();
+        Files.newOutputStream(path).write(String.valueOf(gson.toJson(context.getModel()).toString()).getBytes());
         return context;
     }
 
@@ -165,14 +174,7 @@ public final class JsonContextFactory implements ContextFactory {
 
     @Override
     public boolean accept(Path path) {
-        boolean accept = path.toFile().toString().endsWith(FILE_TYPE);
-        if (accept) {
-            Reader reader = new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString()));
-            Gson gson = new GsonBuilder().create();
-            JsonModel model = gson.fromJson(reader, JsonModel.class);
-            accept = model.isModel();
-        }
-        return accept;
+        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
     }
 
     @Override

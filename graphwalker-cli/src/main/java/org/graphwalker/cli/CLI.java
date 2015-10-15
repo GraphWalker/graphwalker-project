@@ -34,10 +34,7 @@ import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.graphwalker.cli.commands.Methods;
-import org.graphwalker.cli.commands.Offline;
-import org.graphwalker.cli.commands.Online;
-import org.graphwalker.cli.commands.Requirements;
+import org.graphwalker.cli.commands.*;
 import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
@@ -74,13 +71,15 @@ public class CLI {
     private Online online;
     private Methods methods;
     private Requirements requirements;
+    private Convert convert;
 
     enum Command {
         NONE,
         OFFLINE,
         ONLINE,
         METHODS,
-        REQUIREMENTS
+        REQUIREMENTS,
+        CONVERT
     }
 
     private Command command = Command.NONE;
@@ -130,6 +129,9 @@ public class CLI {
                 requirements = new Requirements();
                 jc.addCommand("requirements", requirements);
 
+                convert = new Convert();
+                jc.addCommand("convert", convert);
+
                 jc.parse(args);
                 jc.usage();
                 return;
@@ -155,6 +157,9 @@ public class CLI {
             requirements = new Requirements();
             jc.addCommand("requirements", requirements);
 
+            convert = new Convert();
+            jc.addCommand("convert", convert);
+
             jc.parse(args);
 
             // Parse for commands
@@ -171,6 +176,9 @@ public class CLI {
                 } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
                     command = Command.REQUIREMENTS;
                     RunCommandRequirements();
+                } else if (jc.getParsedCommand().equalsIgnoreCase("convert")) {
+                    command = Command.CONVERT;
+                    RunCommandConvert();
                 }
             }
 
@@ -284,6 +292,23 @@ public class CLI {
         } else {
             throw new ParameterException("--service expected either WEBSOCKET or RESTFUL");
         }
+    }
+
+    private void RunCommandConvert() throws Exception {
+        String inputFileName = (String) convert.input.get(0);
+        String outputFileName = (String) convert.input.get(1);
+
+        ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
+        Context context;
+        try {
+            context = inputFactory.create(Paths.get(inputFileName));
+        } catch (DslException e) {
+            System.err.println("When parsing model: '" + inputFileName + "' " + e.getMessage() + System.lineSeparator());
+            throw new Exception("Model syntax error");
+        }
+
+        ContextFactory outputFactory = ContextFactoryScanner.get(Paths.get(outputFileName));
+        outputFactory.write(context, Paths.get(outputFileName));
     }
 
     private void RunCommandOffline() throws Exception {

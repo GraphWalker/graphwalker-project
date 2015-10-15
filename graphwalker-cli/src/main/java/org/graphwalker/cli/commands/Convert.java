@@ -1,8 +1,8 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.cli.commands;
 
 /*
  * #%L
- * GraphWalker Input/Output
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,23 +26,17 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * @author Nils Olsson
- */
-public interface ContextFactory {
+@Parameters(commandDescription = "Convert a graph in file format, to some other format. See http://graphwalker.org/docs/command_line_syntax")
+public class Convert {
 
-    Context create(Path path);
-
-    <T extends Context> T create(Path path, T context);
-    <T extends Context> T  write(T context, Path path) throws IOException;
-
-    boolean accept(Path path);
-
-    Set<String> getSupportedFileTypes();
+    @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
+            description = "This command requires an input file, and an ouput file. " +
+                    "See http://graphwalker.org/docs/command_line_syntax")
+    public List<String> input = new ArrayList<>();
 }

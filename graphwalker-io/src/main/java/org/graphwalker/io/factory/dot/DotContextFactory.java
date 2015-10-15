@@ -29,6 +29,7 @@ package org.graphwalker.io.factory.dot;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -42,9 +43,8 @@ import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -68,7 +68,7 @@ public final class DotContextFactory implements ContextFactory {
 
     @Override
     public boolean accept(Path path) {
-        return path.toFile().toString().endsWith(FILE_TYPE);
+        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
     }
 
     @Override
@@ -134,6 +134,34 @@ public final class DotContextFactory implements ContextFactory {
             }
 
         }
+        return context;
+    }
+
+    @Override
+    public <T extends Context> T write(T context, Path path) throws IOException {
+        String newLine = System.getProperty("line.separator");
+        StringBuilder str = new StringBuilder();
+
+        str.append("digraph " + FilenameUtils.getBaseName(path.toString())).append(" {").append(newLine);
+        for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+            if (edge.getSourceVertex() != null) {
+                str.append(edge.getSourceVertex().getName());
+            }
+            else {
+                str.append("Start");
+            }
+
+            str.append(" -> ");
+            if (edge.getTargetVertex() != null)
+                str.append(edge.getTargetVertex().getName());
+            str.append(" [label=");
+            str.append(edge.getName());
+            str.append("];").append(newLine);
+        }
+        str.append("}").append(newLine);
+
+        Files.newOutputStream(path).write(String.valueOf(str).getBytes());
+
         return context;
     }
 }
