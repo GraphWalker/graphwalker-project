@@ -29,6 +29,7 @@ package org.graphwalker.io.factory.json;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.io.factory.ContextFactory;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -68,9 +69,10 @@ public class JsonContextFactoryTest {
         Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
     }
 
-    @Test
+    @Test(expected = JSONException.class)
     public void acceptJsonTestFailure() {
         ContextFactory factory = new JsonContextFactory();
-        Assert.assertFalse(factory.accept(Paths.get("json/NonModel.json")));
+        factory.create(Paths.get("json/NonModel.json"));
+        Assert.fail("Expected a JSONException");
     }
 }

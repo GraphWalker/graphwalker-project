@@ -1,8 +1,8 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io;
 
 /*
  * #%L
- * GraphWalker Input/Output
+ * GraphWalker Core
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,23 +26,34 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Model;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Set;
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
  */
-public interface ContextFactory {
+public final class TestExecutionContext extends ExecutionContext {
 
-    Context create(Path path);
+    private static final Bindings bindings = new SimpleBindings();
 
-    <T extends Context> T create(Path path, T context);
-    <T extends Context> T  write(T context, Path path) throws IOException;
+    public TestExecutionContext() {
+        super();
+        getScriptEngine().put("global", bindings);
+    }
 
-    boolean accept(Path path);
+    public TestExecutionContext(Model model, PathGenerator generator) {
+        super(model, generator);
+        getScriptEngine().put("global", bindings);
+    }
 
-    Set<String> getSupportedFileTypes();
+    public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
+        super(model, generator);
+        getScriptEngine().put("global", bindings);
+    }
 }

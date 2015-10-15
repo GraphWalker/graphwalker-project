@@ -37,15 +37,51 @@ import java.io.File;
 public class ContextFactoryScannerTest {
 
     @Test
-    public void dot() {
+    public void validJjson() {
+        File jsonFile = new File(getTestClassesDirectory(), ".json");
+        Assert.assertNotNull(ContextFactoryScanner.get(jsonFile.toPath()));
+    }
+
+    @Test(expected = ContextFactoryException.class)
+    public void invalidJson() {
+        File jsonFile = new File(getTestClassesDirectory(), ".jjson");
+        Assert.assertNotNull(ContextFactoryScanner.get(jsonFile.toPath()));
+    }
+
+    @Test
+    public void validDot() {
         File dotFile = new File(getTestClassesDirectory(), "dot/3v2e.dot");
         Assert.assertNotNull(ContextFactoryScanner.get(dotFile.toPath()));
     }
 
+    @Test(expected = ContextFactoryException.class)
+    public void invalidDot() {
+        File dotFile = new File(getTestClassesDirectory(), "dot/3v2e.Ddot");
+        Assert.assertNotNull(ContextFactoryScanner.get(dotFile.toPath()));
+    }
+
     @Test
-    public void graphml() {
+    public void validGraphml() {
         File graphmlFile = new File(getTestClassesDirectory(), "graphml/UC01.graphml");
         Assert.assertNotNull(ContextFactoryScanner.get(graphmlFile.toPath()));
+    }
+
+    @Test(expected = ContextFactoryException.class)
+    public void invalidGraphml() {
+        File graphmlFile = new File(getTestClassesDirectory(), "graphml/UC01.graphmlgraphml");
+        Assert.assertNotNull(ContextFactoryScanner.get(graphmlFile.toPath()));
+    }
+
+    @Test
+    public void validJava() {
+        File javaFile = new File(getTestClassesDirectory(), "java/UC01.java");
+        Assert.assertNotNull(ContextFactoryScanner.get(javaFile.toPath()));
+    }
+
+    @Test(expected = ContextFactoryException.class)
+    public void invalidJava() {
+        File javaFile = new File(getTestClassesDirectory(), "java/java.javva");
+        Assert.assertNotNull(ContextFactoryScanner.get(javaFile.toPath()));
     }
 
     public File getTestClassesDirectory() {

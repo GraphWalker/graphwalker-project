@@ -31,6 +31,7 @@ import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.graphdrawing.graphml.xmlns.DataType;
@@ -49,6 +50,7 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -68,7 +70,7 @@ public final class YEdContextFactory implements ContextFactory {
 
     @Override
     public boolean accept(java.nio.file.Path path) {
-        return path.toFile().toString().endsWith(FILE_TYPE);
+        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
     }
 
     @Override
@@ -98,7 +100,7 @@ public final class YEdContextFactory implements ContextFactory {
             throw new ContextFactoryException("The file seems not to be of valid yEd format.");
         }
 
-        model.setName(path.toString());
+        model.setName(FilenameUtils.getBaseName(path.toString()));
         context.setModel(model.build());
         if (null != startEdge) {
             context.setNextElement(startEdge);
@@ -106,10 +108,91 @@ public final class YEdContextFactory implements ContextFactory {
 
         for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
             if (0 == context.getModel().getInEdges(vertex).size() && !vertex.equals(context.getNextElement()) && !vertex.hasSharedState()) {
-                throw new ContextFactoryException("No in-edges! Vertex: '" + (vertex.hasName() ? vertex.getName() : vertex.getId()) + "'");
+               throw new ContextFactoryException("No in-edges! Vertex: '" + (vertex.hasName() ? vertex.getName() : vertex.getId()) + "'");
             }
         }
 
+        return context;
+    }
+
+    @Override
+    public <T extends Context> T write(T context, Path path) throws IOException {
+        String newLine = System.getProperty("line.separator");
+        StringBuilder str = new StringBuilder();
+
+        str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);
+        str.append("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+                + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
+                + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
+        str.append("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>").append(newLine);
+        str.append("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>").append(newLine);
+        str.append("  <graph id=\"G\" edgedefault=\"directed\">").append(newLine);
+
+        for (Vertex.RuntimeVertex v : context.getModel().getVertices()) {
+            str.append("    <node id=\"" + v.getId() + "\">").append(newLine);
+            str.append("      <data key=\"d0\" >").append(newLine);
+            str.append("        <y:ShapeNode >").append(newLine);
+            str.append("          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>").append(newLine);
+            str.append("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>").append(newLine);
+            str.append("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
+            str.append("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
+                    + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+                    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
+                    + v.getName());
+
+            str.append("</y:NodeLabel>").append(newLine);
+            str.append("          <y:Shape type=\"rectangle\"/>").append(newLine);
+            str.append("        </y:ShapeNode>").append(newLine);
+            str.append("      </data>").append(newLine);
+            str.append("    </node>").append(newLine);
+        }
+
+        for (Edge.RuntimeEdge e : context.getModel().getEdges()) {
+            Vertex.RuntimeVertex src = e.getSourceVertex();
+            Vertex.RuntimeVertex dest = e.getTargetVertex();
+
+            if (src==null || dest==null) {
+                continue;
+            }
+
+            str.append("    <edge id=\"" + e.getId() + "\" source=\"" + src.getId() + "\" target=\"" + dest.getId() + "\">").append(newLine);
+            str.append("      <data key=\"d1\" >").append(newLine);
+            str.append("        <y:PolyLineEdge >").append(newLine);
+            str.append("          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">").append(newLine);
+            str.append("            <y:Point x=\"273.3125\" y=\"95.0\"/>").append(newLine);
+            str.append("            <y:Point x=\"209.5625\" y=\"95.0\"/>").append(newLine);
+            str.append("            <y:Point x=\"209.5625\" y=\"143.701171875\"/>").append(newLine);
+            str.append("            <y:Point x=\"265.625\" y=\"143.701171875\"/>").append(newLine);
+            str.append("          </y:Path>").append(newLine);
+            str.append("          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
+            str.append("          <y:Arrows source=\"none\" target=\"standard\"/>").append(newLine);
+
+            if (!e.getName().isEmpty()) {
+                String label = e.getName();
+                label = label.replaceAll("&", "&amp;");
+                label = label.replaceAll("<", "&lt;");
+                label = label.replaceAll(">", "&gt;");
+                label = label.replaceAll("'", "&apos;");
+                label = label.replaceAll("\"", "&quot;");
+
+                str.append("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
+                        + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+                        + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
+                        + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
+                str.append("</y:EdgeLabel>").append(newLine);
+            }
+
+            str.append("          <y:BendStyle smoothed=\"false\"/>").append(newLine);
+            str.append("        </y:PolyLineEdge>").append(newLine);
+            str.append("      </data>").append(newLine);
+            str.append("    </edge>").append(newLine);
+
+        }
+
+        str.append("  </graph>").append(newLine);
+        str.append("</graphml>").append(newLine);
+
+        Files.newOutputStream(path).write(String.valueOf(str).getBytes());
         return context;
     }
 
