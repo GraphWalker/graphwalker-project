@@ -43,8 +43,8 @@ public final class Profiler {
     private final Profile profile = new Profile();
     private long startTime = 0;
 
-    private Map<Element, Context> elementContextMap = new HashMap<>();
-    private Set<Context> contexts = new HashSet<>();
+    private final Map<Element, Context> elementContextMap = new HashMap<>();
+    private final Set<Context> contexts = new HashSet<>();
 
     public Context getContext(Element element) {
         return elementContextMap.get(element);
