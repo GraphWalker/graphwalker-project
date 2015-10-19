@@ -625,5 +625,27 @@ public final class Model implements Builder<Model.RuntimeModel> {
             visitor.visit(this);
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            if (!super.equals(o)) return false;
+            RuntimeModel that = (RuntimeModel) o;
+            return Objects.equals(vertices, that.vertices) &&
+                    Objects.equals(edges, that.edges) &&
+                    Objects.equals(elementsCache, that.elementsCache) &&
+                    Objects.equals(elementsByElementCache, that.elementsByElementCache) &&
+                    Objects.equals(elementsByNameCache, that.elementsByNameCache) &&
+                    Objects.equals(edgesByNameCache, that.edgesByNameCache) &&
+                    Objects.equals(verticesByNameCache, that.verticesByNameCache) &&
+                    Objects.equals(inEdgesByVertexCache, that.inEdgesByVertexCache) &&
+                    Objects.equals(outEdgesByVertexCache, that.outEdgesByVertexCache) &&
+                    Objects.equals(sharedStateCache, that.sharedStateCache);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), vertices, edges, elementsCache, elementsByElementCache, elementsByNameCache, edgesByNameCache, verticesByNameCache, inEdgesByVertexCache, outEdgesByVertexCache, sharedStateCache);
+        }
     }
 }

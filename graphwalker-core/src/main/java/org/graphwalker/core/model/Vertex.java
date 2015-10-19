@@ -26,10 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <h1>Vertex</h1>
@@ -254,6 +251,20 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         @Override
         public void accept(ElementVisitor visitor) {
             visitor.visit(this);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            if (!super.equals(o)) return false;
+            RuntimeVertex that = (RuntimeVertex) o;
+            return Objects.equals(sharedState, that.sharedState);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), sharedState);
         }
     }
 }

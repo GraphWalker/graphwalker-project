@@ -32,6 +32,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * @author Nils Olsson
@@ -64,5 +65,19 @@ public class EdgeTest {
         Assert.assertNotNull(edge.build().getActions());
         Assert.assertThat(edge.build().getActions().size(), is(3));
         Assert.assertThat(edge.build().getWeight(), is(.5));
+    }
+
+    @Test
+    public void testEquality() throws Exception {
+        Edge e1 = new Edge().setId("ID1");;
+        Edge e2 = new Edge().setId("ID1");;
+        Assert.assertThat(e1.build(), is(e2.build()));
+    }
+
+    @Test
+    public void testInequality() throws Exception {
+        Edge e1 = new Edge().setId("ID1");
+        Edge e2 = new Edge().setId("ID2");
+        Assert.assertThat(e1.build(), not(e2.build()));
     }
 }

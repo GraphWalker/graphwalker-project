@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 
 /**
  * @author Nils Olsson
@@ -56,5 +57,19 @@ public class VertexTest {
         Assert.assertEquals(vertex.build().getName(), vertex.getName());
         Assert.assertNotNull(vertex.build().getRequirements());
         Assert.assertThat(vertex.build().getRequirements().size(), is(2));
+    }
+
+    @Test
+    public void testEquality() throws Exception {
+        Vertex v1 = new Vertex().setId("n0").setName("SomeName");
+        Vertex v2 = new Vertex().setId("n0").setName("SomeName");
+        Assert.assertThat(v1.build(), is(v2.build()));
+    }
+
+    @Test
+    public void testInequality() throws Exception {
+        Vertex v1 = new Vertex().setId("n0").setName("SomeName");
+        Vertex v2 = new Vertex().setId("n1").setName("SomeName");
+        Assert.assertThat(v1.build(), not(v2.build()));
     }
 }

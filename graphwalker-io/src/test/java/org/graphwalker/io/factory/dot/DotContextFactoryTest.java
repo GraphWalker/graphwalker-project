@@ -51,7 +51,7 @@ public class DotContextFactoryTest {
         Assert.assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
         Assert.assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
 
-        Assert.assertNull(context.getModel().getEdges().get(0).getId());
+        Assert.assertNotNull(context.getModel().getEdges().get(0).getId());
         Assert.assertThat(context.getModel().getEdges().get(0).getSourceVertex().getId(), is("a"));
         Assert.assertThat(context.getModel().getEdges().get(0).getTargetVertex().getId(), is("b"));
     }
@@ -101,10 +101,10 @@ public class DotContextFactoryTest {
         Assert.assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
 
         Assert.assertNull(context.getModel().getEdges().get(0).getName());
-        Assert.assertNull(context.getModel().getEdges().get(0).getId());
+        Assert.assertNotNull(context.getModel().getEdges().get(0).getId());
 
         Assert.assertNull(context.getModel().getEdges().get(1).getName());
-        Assert.assertNull(context.getModel().getEdges().get(1).getId());
+        Assert.assertNotNull(context.getModel().getEdges().get(1).getId());
     }
 
 
