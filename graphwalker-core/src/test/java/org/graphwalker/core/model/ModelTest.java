@@ -104,7 +104,7 @@ public class ModelTest {
 
     @Test
     public void recreateModel() {
-        Model model1 = new Model().addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
+        Model model1 = new Model().setId("m1").addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
         Model model2 = new Model(model1.build());
         Assert.assertEquals(model1.getId(), model2.getId());
         Assert.assertEquals(model1.getName(), model2.getName());

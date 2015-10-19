@@ -52,11 +52,19 @@ public abstract class RuntimeBase implements Element {
     }
 
     protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements, Map<String, Object> properties) {
-        this.id = id;
+        this.id = getIdOrDefault(id);
         this.name = name;
         this.actions = Collections.unmodifiableList(actions);
         this.requirements = Collections.unmodifiableSet(requirements);
         this.properties = Collections.unmodifiableMap(properties);
+    }
+
+    private String getIdOrDefault(String id) {
+        return null != id && !"".equals(id) ? id : createDefault();
+    }
+
+    private String createDefault() {
+        return UUID.randomUUID().toString();
     }
 
     @Override
@@ -103,5 +111,22 @@ public abstract class RuntimeBase implements Element {
 
     public boolean hasRequirements() {
         return !requirements.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RuntimeBase that = (RuntimeBase) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(actions, that.actions) &&
+                Objects.equals(requirements, that.requirements) &&
+                Objects.equals(properties, that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, actions, requirements, properties);
     }
 }

@@ -394,5 +394,21 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
             visitor.visit(this);
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            if (!super.equals(o)) return false;
+            RuntimeEdge that = (RuntimeEdge) o;
+            return Objects.equals(sourceVertex, that.sourceVertex) &&
+                    Objects.equals(targetVertex, that.targetVertex) &&
+                    Objects.equals(guard, that.guard) &&
+                    Objects.equals(weight, that.weight);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), sourceVertex, targetVertex, guard, weight);
+        }
     }
 }
