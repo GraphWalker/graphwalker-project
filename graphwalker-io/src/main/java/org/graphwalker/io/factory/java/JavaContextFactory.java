@@ -28,6 +28,7 @@ package org.graphwalker.io.factory.java;
 
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.ContextFactory;
@@ -122,6 +123,16 @@ public final class JavaContextFactory implements ContextFactory {
             }
             str.append(".setTargetVertex(" + edge.getTargetVertex().getName() + ")");
             str.append(".setName(\"" + edge.getName() + "\")).setId(\"" + id + "\");");
+
+            if (edge.getGuard()!=null) {
+                str.append(".setGuard(new Guard(\"").append(edge.getGuard().getScript()).append("\"));");
+            }
+            if (edge.hasActions()) {
+                for (Action action : edge.getActions()) {
+                    str.append(".addAction(new Action(\"").append(action.getScript()).append("\")));");
+                }
+            }
+
             str.append(newLine);
         }
 
