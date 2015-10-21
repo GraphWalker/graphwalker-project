@@ -31,9 +31,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.dsl.antlr.dot.AntlrDotListener;
 import org.graphwalker.dsl.dot.DOTLexer;
 import org.graphwalker.dsl.dot.DOTParser;
@@ -154,9 +152,18 @@ public final class DotContextFactory implements ContextFactory {
             str.append(" -> ");
             if (edge.getTargetVertex() != null)
                 str.append(edge.getTargetVertex().getName());
-            str.append(" [label=");
+            str.append(" [label=\"");
             str.append(edge.getName());
-            str.append("];").append(newLine);
+            if (edge.getGuard()!=null) {
+                str.append("\\n[").append(edge.getGuard().getScript()).append("]");
+            }
+            if (edge.hasActions()) {
+                str.append("\\n/");
+                for (Action action : edge.getActions()) {
+                    str.append(action.getScript());
+                }
+            }
+            str.append("\"];").append(newLine);
         }
         str.append("}").append(newLine);
 
