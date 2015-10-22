@@ -109,6 +109,13 @@ public class ConvertFilesTest extends CLITestRoot {
         Assert.assertTrue(tempFile.length()>0);
     }
 
+    /**
+     * The java file generated, can be compiled with the cli jar, like:
+     * java -jar graphwalker-cli.jar convert -i UC01.graphml UC01.java
+     * javac -cp graphwalker-cli.jar UC01.java
+     * java -cp .:graphwalker-cli.jar UC01
+     * @throws IOException
+     */
     @Test
     public void convertGraphmlToJava() throws IOException {
         File tempFile = testFolder.newFile("UC01_GW2.java");

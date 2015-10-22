@@ -73,28 +73,48 @@ public final class JavaContextFactory implements ContextFactory {
         return null;
     }
 
+    final String javaCodeTemplate = String.join("\n"
+            , "import org.graphwalker.core.condition.*;"
+            , "import org.graphwalker.core.generator.*;"
+            , "import org.graphwalker.core.machine.*;"
+            , "import org.graphwalker.core.model.*;"
+            , ""
+            , "public class {CLASS_NAME} {"
+            , ""
+            , "  public final class ModelTestContext extends ExecutionContext {"
+            , "  }"
+            , ""
+            , "  public static void main(String... aArgs) {"
+            , "    {CLASS_NAME} modeltest = new {CLASS_NAME}();"
+            , "    modeltest.run();"
+            , "  }"
+            , ""
+            , "  private void run() {"
+            , "    {ADD_VERTICES}"
+            , ""
+            , "    Model model = new Model();"
+            , "    {ADD_EDGES}"
+            , ""
+            , "    Context context = new ModelTestContext();"
+            , "    context.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));"
+            , "    context.setNextElement(context.getModel().findElements(\"{START_ELEMENT_NAME}\").get(0));"
+            , ""
+            , "    Machine machine = new SimpleMachine(context);"
+            , "    while (machine.hasNextStep()) {"
+            , "      machine.getNextStep();"
+            , "      System.out.println(context.getCurrentElement().getName());"
+            , "    }"
+            , "  }"
+            , "}"
+    );
+
     @Override
     public <T extends Context> T write(T context, Path path) throws IOException {
-        String newLine = System.getProperty("line.separator");
-        StringBuilder str = new StringBuilder();
+        String template = javaCodeTemplate;
+        template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));
+
         int index = 0;
-
-        str.append("import org.graphwalker.core.condition.EdgeCoverage;").append(newLine);
-        str.append("import org.graphwalker.core.generator.RandomPath;").append(newLine);
-        str.append("import org.graphwalker.core.machine.Context;").append(newLine);
-        str.append("import org.graphwalker.core.machine.TestExecutionContext;").append(newLine);
-        str.append("import org.graphwalker.core.machine.SimpleMachine;").append(newLine);
-        str.append("import org.graphwalker.core.model.*;").append(newLine);
-        str.append("import org.junit.Assert;").append(newLine);
-        str.append("import org.junit.Test;").append(newLine);
-        str.append(newLine);
-
-        str.append("public class " + FilenameUtils.getBaseName(path.toString()) + " {");
-        str.append(newLine);
-
-        str.append("  @Test").append(newLine);
-        str.append("  public void createModelTest() {").append(newLine);
-
+        String add_vertices = "";
         for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
             String id = "";
             if ( vertex.getId()!=null && !vertex.getId().equals("")) {
@@ -103,13 +123,13 @@ public final class JavaContextFactory implements ContextFactory {
                 id = "n" + String.valueOf(index++);
             }
 
-            str.append("    Vertex " + vertex.getName() + " = new Vertex().setName(\"" + vertex.getName() + "\").setId(\"" + id + "\");");
-            str.append(newLine);
+            add_vertices += "Vertex " + vertex.getName() + " = new Vertex().setName(\"" + vertex.getName() + "\").setId(\"" + id + "\");";
+            add_vertices += "\n";
         }
-        str.append(newLine);
+        template = template.replace("{ADD_VERTICES}", add_vertices);
 
         index = 0;
-        str.append("    Model model = new Model();" + newLine);
+        String add_edges = "";
         for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
             String id;
             if ( edge.getId()!=null && !edge.getId().equals("")) {
@@ -118,48 +138,27 @@ public final class JavaContextFactory implements ContextFactory {
                 id = "n" + String.valueOf(index++);
             }
 
-            str.append("    model.addEdge( new Edge()");
+            add_edges += "model.addEdge( new Edge()";
             if (edge.getSourceVertex() != null) {
-                str.append(".setSourceVertex(" + edge.getSourceVertex().getName() + ")");
+                add_edges += ".setSourceVertex(" + edge.getSourceVertex().getName() + ")";
             }
-            str.append(".setTargetVertex(" + edge.getTargetVertex().getName() + ")");
-            str.append(".setName(\"" + edge.getName() + "\").setId(\"" + id + "\")");
+            add_edges += ".setTargetVertex(" + edge.getTargetVertex().getName() + ")";
+            add_edges += ".setName(\"" + edge.getName() + "\").setId(\"" + id + "\")";
 
             if (edge.getGuard()!=null) {
-                str.append(".setGuard(new Guard(\"").append(edge.getGuard().getScript()).append("\"))");
+                add_edges += ".setGuard(new Guard(\"" + edge.getGuard().getScript() + "\"))";
             }
             if (edge.hasActions()) {
                 for (Action action : edge.getActions()) {
-                    str.append(".addAction(new Action(\"").append(action.getScript()).append("\"))");
+                    add_edges += ".addAction(new Action(\"" + action.getScript() + "\"))";
                 }
             }
-
-            str.append(");" + newLine);
+            add_edges += ");\n";
         }
+        template = template.replace("{ADD_EDGES}", add_edges);
+        template = template.replace("{START_ELEMENT_NAME}", context.getNextElement().getName());
 
-        str.append(newLine);
-
-        str.append("    Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));").append(newLine);
-        str.append(newLine);
-
-        str.append("    Assert.assertEquals(context.getModel().getVertices().size(), " + context.getModel().getVertices().size() + ");").append(newLine);
-        str.append("    Assert.assertEquals(context.getModel().getEdges().size(), " + context.getModel().getEdges().size() + ");").append(newLine);
-        str.append(newLine);
-
-        if (context.getNextElement()!=null) {
-            str.append("    context.setNextElement(context.getModel().findElements(\"" + context.getNextElement().getName() + "\").get(0));").append(newLine);
-            str.append("    Machine machine = new SimpleMachine(context);").append(newLine);
-            str.append("    while (machine.hasNextStep()) {").append(newLine);
-            str.append("      machine.getNextStep();").append(newLine);
-            str.append("      System.out.println(context.getCurrentElement().getName());").append(newLine);
-            str.append("    }").append(newLine);
-        }
-
-        str.append("  }" + newLine);
-        str.append("}" + newLine);
-
-
-        Files.newOutputStream(path).write(String.valueOf(str).getBytes());
+        Files.newOutputStream(path).write(String.valueOf(template).getBytes());
 
         return context;
     }
