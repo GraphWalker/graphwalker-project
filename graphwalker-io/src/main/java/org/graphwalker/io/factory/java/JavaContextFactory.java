@@ -26,7 +26,9 @@ package org.graphwalker.io.factory.java;
  * #L%
  */
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
@@ -73,44 +75,45 @@ public final class JavaContextFactory implements ContextFactory {
         return null;
     }
 
-    final String javaCodeTemplate = String.join("\n"
-            , "import org.graphwalker.core.condition.*;"
-            , "import org.graphwalker.core.generator.*;"
-            , "import org.graphwalker.core.machine.*;"
-            , "import org.graphwalker.core.model.*;"
-            , ""
-            , "public class {CLASS_NAME} {"
-            , ""
-            , "  public final class ModelTestContext extends ExecutionContext {"
-            , "  }"
-            , ""
-            , "  public static void main(String... aArgs) {"
-            , "    {CLASS_NAME} modeltest = new {CLASS_NAME}();"
-            , "    modeltest.run();"
-            , "  }"
-            , ""
-            , "  private void run() {"
-            , "    {ADD_VERTICES}"
-            , ""
-            , "    Model model = new Model();"
-            , "    {ADD_EDGES}"
-            , ""
-            , "    Context context = new ModelTestContext();"
-            , "    context.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));"
-            , "    context.setNextElement(context.getModel().findElements(\"{START_ELEMENT_NAME}\").get(0));"
-            , ""
-            , "    Machine machine = new SimpleMachine(context);"
-            , "    while (machine.hasNextStep()) {"
-            , "      machine.getNextStep();"
-            , "      System.out.println(context.getCurrentElement().getName());"
-            , "    }"
-            , "  }"
-            , "}"
-    );
+
+    public static final List<String>
+            javaCodeTemplate = ImmutableList.of(
+            "import org.graphwalker.core.condition.*;",
+            "import org.graphwalker.core.generator.*;",
+            "import org.graphwalker.core.machine.*;",
+            "import org.graphwalker.core.model.*;",
+            "",
+            "public class {CLASS_NAME} {",
+            "",
+            "  public final class ModelTestContext extends ExecutionContext {",
+            "  }",
+            "",
+            "  public static void main(String... aArgs) {",
+            "    {CLASS_NAME} modeltest = new {CLASS_NAME}();",
+            "    modeltest.run();",
+            "  }",
+            "",
+            "  private void run() {",
+            "    {ADD_VERTICES}",
+            "",
+            "    Model model = new Model();",
+            "    {ADD_EDGES}",
+            "",
+            "    Context context = new ModelTestContext();",
+            "    context.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));",
+            "    context.setNextElement(context.getModel().findElements(\"{START_ELEMENT_NAME}\").get(0));",
+            "",
+            "    Machine machine = new SimpleMachine(context);",
+            "    while (machine.hasNextStep()) {",
+            "      machine.getNextStep();",
+            "      System.out.println(context.getCurrentElement().getName());",
+            "    }",
+            "  }",
+            "}");
 
     @Override
     public <T extends Context> T write(T context, Path path) throws IOException {
-        String template = javaCodeTemplate;
+        String template = StringUtils.join(javaCodeTemplate.toArray(), "\n" );
         template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));
 
         int index = 0;
