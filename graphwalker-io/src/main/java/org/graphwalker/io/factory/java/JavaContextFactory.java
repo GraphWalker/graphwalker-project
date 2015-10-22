@@ -83,6 +83,7 @@ public final class JavaContextFactory implements ContextFactory {
         str.append("import org.graphwalker.core.generator.RandomPath;").append(newLine);
         str.append("import org.graphwalker.core.machine.Context;").append(newLine);
         str.append("import org.graphwalker.core.machine.TestExecutionContext;").append(newLine);
+        str.append("import org.graphwalker.core.machine.SimpleMachine;").append(newLine);
         str.append("import org.graphwalker.core.model.*;").append(newLine);
         str.append("import org.junit.Assert;").append(newLine);
         str.append("import org.junit.Test;").append(newLine);
@@ -110,7 +111,7 @@ public final class JavaContextFactory implements ContextFactory {
         index = 0;
         str.append("    Model model = new Model();" + newLine);
         for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-            String id = "";
+            String id;
             if ( edge.getId()!=null && !edge.getId().equals("")) {
                 id = edge.getId();
             } else {
@@ -122,34 +123,37 @@ public final class JavaContextFactory implements ContextFactory {
                 str.append(".setSourceVertex(" + edge.getSourceVertex().getName() + ")");
             }
             str.append(".setTargetVertex(" + edge.getTargetVertex().getName() + ")");
-            str.append(".setName(\"" + edge.getName() + "\")).setId(\"" + id + "\");");
+            str.append(".setName(\"" + edge.getName() + "\").setId(\"" + id + "\")");
 
             if (edge.getGuard()!=null) {
-                str.append(".setGuard(new Guard(\"").append(edge.getGuard().getScript()).append("\"));");
+                str.append(".setGuard(new Guard(\"").append(edge.getGuard().getScript()).append("\"))");
             }
             if (edge.hasActions()) {
                 for (Action action : edge.getActions()) {
-                    str.append(".addAction(new Action(\"").append(action.getScript()).append("\")));");
+                    str.append(".addAction(new Action(\"").append(action.getScript()).append("\"))");
                 }
             }
 
-            str.append(newLine);
+            str.append(");" + newLine);
         }
 
         str.append(newLine);
 
-        str.append("    Context context = new TestExecutionContext(model, new RandomPaths(new EdgeCoverage(100)));").append(newLine);
-        str.append("    context.setNextElement(" + context.getModel().getEdges().get(0).getName() + ");").append(newLine);
+        str.append("    Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));").append(newLine);
         str.append(newLine);
 
         str.append("    Assert.assertEquals(context.getModel().getVertices().size(), " + context.getModel().getVertices().size() + ");").append(newLine);
         str.append("    Assert.assertEquals(context.getModel().getEdges().size(), " + context.getModel().getEdges().size() + ");").append(newLine);
         str.append(newLine);
 
-        str.append("    while (context.getPathGenerator().hasNextStep()) {").append(newLine);
-        str.append("      context.getPathGenerator().getNextStep();").append(newLine);
-        str.append("      System.out.println(context.getCurrentElement().getName());").append(newLine);
-        str.append("    }").append(newLine);
+        if (context.getNextElement()!=null) {
+            str.append("    context.setNextElement(context.getModel().findElements(\"" + context.getNextElement().getName() + "\").get(0));").append(newLine);
+            str.append("    Machine machine = new SimpleMachine(context);").append(newLine);
+            str.append("    while (machine.hasNextStep()) {").append(newLine);
+            str.append("      machine.getNextStep();").append(newLine);
+            str.append("      System.out.println(context.getCurrentElement().getName());").append(newLine);
+            str.append("    }").append(newLine);
+        }
 
         str.append("  }" + newLine);
         str.append("}" + newLine);
