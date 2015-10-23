@@ -60,15 +60,20 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
 
         if (ctx.getChild(0).getText().equalsIgnoreCase("never")) {
             stopConditions.add(new Never());
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("edge_coverage")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("edge_coverage") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("edgecoverage")) {
             stopConditions.add(new EdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("vertex_coverage")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("vertex_coverage") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("vertexcoverage")) {
             stopConditions.add(new VertexCoverage(Integer.parseInt(ctx.getChild(2).getText())));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("reached_vertex")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("reached_vertex") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("reachedvertex")) {
             stopConditions.add(new ReachedVertex(ctx.getChild(2).getText()));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("reached_edge")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("reached_edge") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("reachededge")) {
             stopConditions.add(new ReachedEdge(ctx.getChild(2).getText()));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("time_duration")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("time_duration") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("timeduration")) {
             stopConditions.add(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
         }
     }
@@ -89,15 +94,20 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
             stopCondition = stopConditions.get(0);
         }
 
-        if (ctx.getChild(0).getText().equalsIgnoreCase("random")) {
+        if (ctx.getChild(0).getText().equalsIgnoreCase("random") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("randompath")) {
             pathGenerators.add(new RandomPath(stopCondition));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("weighted_random")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("weighted_random") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("weightedrandompath")) {
             pathGenerators.add(new WeightedRandomPath(stopCondition));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("quick_random")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("quick_random") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("quickrandompath")) {
             pathGenerators.add(new QuickRandomPath(stopCondition));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("a_star")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("a_star") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("astartpath")) {
             pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
-        } else if (ctx.getChild(0).getText().equalsIgnoreCase("shortest_all_paths")) {
+        } else if (ctx.getChild(0).getText().equalsIgnoreCase("shortest_all_paths") ||
+                ctx.getChild(0).getText().equalsIgnoreCase("shortestallpaths")) {
             pathGenerators.add(new ShortestAllPaths(stopCondition));
         }
         stopConditions.clear();
