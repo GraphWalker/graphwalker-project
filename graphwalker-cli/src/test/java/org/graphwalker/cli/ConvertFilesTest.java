@@ -127,7 +127,16 @@ public class ConvertFilesTest extends CLITestRoot {
 
     @Test
     public void convertGraphmlToDot() throws IOException {
-        File tempFile = testFolder.newFile("UC01_GW2.Dot");
+        File tempFile = testFolder.newFile("UC01_GW2.dot");
+        String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", tempFile.getPath()};
+        Result result = runCommand(args);
+        Assert.assertThat(result.getError(), is(""));
+        Assert.assertTrue(tempFile.length()>0);
+    }
+
+    @Test
+    public void convertGraphmlToJson() throws IOException {
+        File tempFile = testFolder.newFile("UC01_GW2.json");
         String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", tempFile.getPath()};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
@@ -137,6 +146,15 @@ public class ConvertFilesTest extends CLITestRoot {
     @Test
     public void convertDotToDot() throws IOException {
         File tempFile = testFolder.newFile("SimpleGW.dot");
+        String args[] = {"convert", "--input", "dot/SimpleGW.dot", tempFile.getPath()};
+        Result result = runCommand(args);
+        Assert.assertThat(result.getError(), is(""));
+        Assert.assertTrue(tempFile.length()>0);
+    }
+
+    @Test
+    public void convertDotToJava() throws IOException {
+        File tempFile = testFolder.newFile("SimpleGW.java");
         String args[] = {"convert", "--input", "dot/SimpleGW.dot", tempFile.getPath()};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
