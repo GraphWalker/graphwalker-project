@@ -104,6 +104,22 @@ public class JsonContextFactoryTest {
     }
 
     @Test
+    public void actions() throws IOException {
+        Vertex v_BrowserStopped = new Vertex().setName("v_BrowserStopped").setId("n4");
+        Model model = new Model();
+        model.addEdge( new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
+
+        Context writeContext = new TestExecutionContext();
+        writeContext.setModel(model.build());
+        File testFile = testFolder.newFile("actions.json");
+        ContextFactory factory = new JsonContextFactory();
+        factory.write(writeContext, testFile.toPath());
+
+        Context readContext = new JsonContextFactory().create(testFile.toPath());
+        Assert.assertThat(model.getEdges().get(0).getActions().size(), is(readContext.getModel().getEdges().get(0).getActions().size()));
+    }
+
+    @Test
     public void uc01() throws IOException {
         Vertex v_BrowserStarted = new Vertex().setName("v_BrowserStarted").setId("n1");
         Vertex v_BaseURL = new Vertex().setName("v_BaseURL").setId("n2");

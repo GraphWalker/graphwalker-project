@@ -183,7 +183,7 @@ public final class JsonContextFactory implements ContextFactory {
             // Actions (java script) is not mandatory
             try {
                 JSONArray jsonActions = jsonEdge.getJSONArray("actions");
-                for (int actionIndex = 0; actionIndex < jsonVertices.length(); ++actionIndex) {
+                for (int actionIndex = 0; actionIndex < jsonActions.length(); ++actionIndex) {
                     JSONObject jsonAction = jsonActions.getJSONObject(actionIndex);
                     edge.addAction(new Action(jsonAction.getString("action")));
                     logger.debug("  action: " + jsonAction.getString("action"));
