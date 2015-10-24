@@ -84,56 +84,68 @@ public final class JsonContextFactory implements ContextFactory {
         return context;
     }
 
-    public String getJsonFromContext(Context context) {
-        JSONObject jsonGraph = new JSONObject();
-        if (context.getModel().getName() != null) {
-            jsonGraph.put("name", context.getModel().getName());
+    public JSONObject getJsonFromEdge(Edge.RuntimeEdge edge) {
+        JSONObject jsonEdge = new JSONObject();
+        jsonEdge.put("id", edge.getId());
+        jsonEdge.put("name", edge.getName());
+        if (edge.getSourceVertex() != null) {
+            jsonEdge.put("srcVertexId", edge.getSourceVertex().getId());
         }
-        if (context.getPathGenerator() != null) {
-            jsonGraph.put("generator", context.getPathGenerator().toString());
+        if (edge.getTargetVertex() != null) {
+            jsonEdge.put("dstVertexId", edge.getTargetVertex().getId());
+        }
+
+        if (edge.getGuard() != null) {
+            jsonEdge.put("guard", edge.getGuard().getScript());
+        }
+
+        if (edge.getActions().size() > 0) {
+            JSONArray jsonActions = new JSONArray();
+            for (Action action : edge.getActions()) {
+                JSONObject jsonAction = new JSONObject();
+                jsonAction.put("action", action.getScript());
+                jsonActions.put(jsonAction);
+            }
+            jsonEdge.put("actions", jsonActions);
+        }
+        return jsonEdge;
+    }
+
+    public JSONObject getJsonFromVertex(Vertex.RuntimeVertex vertex) {
+        JSONObject jsonVertex = new JSONObject();
+        jsonVertex.put("id", vertex.getId());
+        jsonVertex.put("name", vertex.getName());
+        return jsonVertex;
+    }
+
+    public JSONObject getJsonFromModel(Model.RuntimeModel model) {
+        JSONObject jsonGraph = new JSONObject();
+
+        if (model.getName() != null) {
+            jsonGraph.put("name", model.getName());
         }
 
         JSONArray jsonVertices = new JSONArray();
-        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-            JSONObject jsonVertex = new JSONObject();
-            jsonVertex.put("id", vertex.getId());
-            jsonVertex.put("name", vertex.getName());
-            if (context.getNextElement() == vertex) {
-                jsonVertex.put("startElement", "true");
-            }
-            jsonVertices.put(jsonVertex);
+        for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+            jsonVertices.put(getJsonFromVertex(vertex));
         }
         jsonGraph.put("vertices", jsonVertices);
 
         JSONArray jsonEdges = new JSONArray();
-        for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-            JSONObject jsonEdge = new JSONObject();
-            jsonEdge.put("id", edge.getId());
-            jsonEdge.put("name", edge.getName());
-            if (edge.getSourceVertex() != null) {
-                jsonEdge.put("srcVertexId", edge.getSourceVertex().getId());
-            }
-            if (edge.getTargetVertex() != null) {
-                jsonEdge.put("dstVertexId", edge.getTargetVertex().getId());
-            }
-
-            if (edge.getGuard() != null) {
-                jsonEdge.put("guard", edge.getGuard().getScript());
-            }
-
-            if (edge.hasActions()) {
-                JSONArray jsonActions = new JSONArray();
-                for (Action action : edge.getActions()) {
-                    JSONObject jsonAction = new JSONObject();
-                    jsonAction.put("action", action.getScript());
-                    jsonActions.put(jsonAction);
-                }
-                jsonEdge.put("actions", jsonActions);
-            }
-            jsonEdges.put(jsonEdge);
+        for (Edge.RuntimeEdge edge : model.getEdges()) {
+            jsonEdges.put(getJsonFromEdge(edge));
         }
         jsonGraph.put("edges", jsonEdges);
-        return jsonGraph.toString(2);
+        return jsonGraph;
+    }
+
+    public JSONObject getJsonFromContext(Context context) {
+        JSONObject jsonGraph = getJsonFromModel(context.getModel());
+        if (context.getPathGenerator() != null) {
+            jsonGraph.put("generator", context.getPathGenerator().toString());
+        }
+
+        return jsonGraph;
     }
 
     public <T extends Context> T create(String jsonString, T context) {
