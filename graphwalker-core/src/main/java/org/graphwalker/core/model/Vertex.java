@@ -208,6 +208,10 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         return new RuntimeVertex(this);
     }
 
+    public void addAction(Action action) {
+        addAction(action);
+    }
+
     /**
      * <h1>RuntimeVertex</h1>
      * Immutable class for Vertex

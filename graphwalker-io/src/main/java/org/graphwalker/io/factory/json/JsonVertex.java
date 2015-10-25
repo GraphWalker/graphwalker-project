@@ -26,6 +26,15 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Nils Olsson
  */
@@ -33,4 +42,55 @@ public class JsonVertex {
 
     private String id;
     private String name;
+    private List<String> actions;
+    private List<String> requirements;
+    private Map<String, Object> properties;
+
+    public Vertex getVertex() {
+        Vertex vertex = new Vertex();
+        vertex.setId(id);
+        vertex.setName(name);
+
+        if (actions != null) {
+            for (String action : actions) {
+                vertex.addAction(new Action(action));
+            }
+        }
+
+        if (requirements != null) {
+            for (String requirement : requirements) {
+                vertex.addRequirement(new Requirement(requirement));
+            }
+        }
+
+        if (properties != null) {
+            vertex.setProperties(properties);
+        }
+
+        return vertex;
+    }
+
+    public void setVertex(Vertex.RuntimeVertex vertex) {
+        id = vertex.getId();
+        name = vertex.getName();
+
+        if (vertex.hasActions()) {
+            actions = new ArrayList<>();
+            for (Action action : vertex.getActions()) {
+                actions.add(action.getScript());
+            }
+        }
+
+        if (vertex.hasRequirements()) {
+            requirements = new ArrayList<>();
+            for (Requirement requirement : vertex.getRequirements()) {
+                requirements.add(requirement.getKey());
+            }
+        }
+
+        if (vertex.hasProperties()) {
+            properties = new HashMap<>();
+            properties.putAll(vertex.getProperties());
+        }
+    }
 }

@@ -26,6 +26,7 @@ package org.graphwalker.websocket;
  * #L%
  */
 
+import com.google.gson.Gson;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -133,7 +134,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     List<Context> executionContexts = contexts.get(socket);
                     Context context = getContextById(executionContexts, root.getString("modelId"));
                     response.put("modelId", context.getModel().getId());
-                    response.put("model", new JsonContextFactory().getJsonFromContext(context).toString(2));
+                    response.put("model", new JsonContextFactory().getJsonFromContext(context));
                     response.put("success", true);
                 } catch (JSONException e) {
                     response.put("success", false);
@@ -220,7 +221,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 Model model = new Model().setId(root.getString("id"));
                 List<Model> modelsList = models.get(socket);
                 modelsList.add(model);
-                response.put("model", new JsonContextFactory().getJsonFromModel(model.build()).toString(2));
+                response.put("model", new JsonContextFactory().getJsonFromModel(model));
                 response.put("success", true);
 
                 break;
@@ -234,7 +235,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     Vertex vertex = new Vertex().setId(root.getString("vertexId"));
                     model.addVertex(vertex);
                     response.put("modelId", model.getId());
-                    response.put("vertex", new JsonContextFactory().getJsonFromVertex(vertex.build()).toString(2));
+                    response.put("vertex", new Gson().toJson(vertex.build()));
                     response.put("success", true);
 
                 } else {
@@ -267,7 +268,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     }
 
                     response.put("modelId", model.getId());
-                    response.put("edge", new JsonContextFactory().getJsonFromEdge(edge.build()).toString(2));
+                    response.put("edge", new Gson().toJson(edge.build()));
                     response.put("success", true);
 
                 } else {
@@ -311,7 +312,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         }
 
                         response.put("modelId", model.getId());
-                        response.put("vertex", new JsonContextFactory().getJsonFromVertex(vertex.build()).toString(2));
+                        response.put("vertex", new Gson().toJson(vertex.build()));
                         response.put("success", true);
                     }
                 } else {
@@ -355,7 +356,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         }
 
                         response.put("modelId", model.getId());
-                        response.put("edge", new JsonContextFactory().getJsonFromEdge(edge.build()).toString(2));
+                        response.put("edge", new Gson().toJson(edge.build()));
                         response.put("success", true);
                     }
                 } else {

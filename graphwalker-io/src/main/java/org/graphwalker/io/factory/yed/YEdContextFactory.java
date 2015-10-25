@@ -170,7 +170,7 @@ public final class YEdContextFactory implements ContextFactory {
             if (!e.getName().isEmpty()) {
                 String label = e.getName();
 
-                if (e.getGuard()!=null) {
+                if (e.hasGuard()) {
                     label += newLine + "[" + e.getGuard().getScript() + "]";
                 }
                 if (e.hasActions()) {

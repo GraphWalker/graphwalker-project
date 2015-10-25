@@ -154,7 +154,7 @@ public final class DotContextFactory implements ContextFactory {
                 str.append(edge.getTargetVertex().getName());
             str.append(" [label=\"");
             str.append(edge.getName());
-            if (edge.getGuard()!=null) {
+            if (edge.hasGuard()) {
                 str.append("\\n[").append(edge.getGuard().getScript()).append("]");
             }
             if (edge.hasActions()) {

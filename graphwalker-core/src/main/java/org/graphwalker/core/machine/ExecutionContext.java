@@ -252,7 +252,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     }
 
     public boolean isAvailable(RuntimeEdge edge) {
-        if (null != edge.getGuard()) {
+        if (edge.hasGuard()) {
             logger.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
             try {
                 return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());

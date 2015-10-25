@@ -26,16 +26,15 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import com.google.gson.Gson;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +43,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by krikar on 9/24/14.
@@ -84,167 +85,38 @@ public final class JsonContextFactory implements ContextFactory {
         return context;
     }
 
-    public JSONObject getJsonFromEdge(Edge.RuntimeEdge edge) {
-        JSONObject jsonEdge = new JSONObject();
-        jsonEdge.put("id", edge.getId());
-        jsonEdge.put("name", edge.getName());
-        if (edge.getSourceVertex() != null) {
-            jsonEdge.put("srcVertexId", edge.getSourceVertex().getId());
-        }
-        if (edge.getTargetVertex() != null) {
-            jsonEdge.put("dstVertexId", edge.getTargetVertex().getId());
-        }
-
-        if (edge.getGuard() != null) {
-            jsonEdge.put("guard", edge.getGuard().getScript());
-        }
-
-        if (edge.getActions().size() > 0) {
-            JSONArray jsonActions = new JSONArray();
-            for (Action action : edge.getActions()) {
-                JSONObject jsonAction = new JSONObject();
-                jsonAction.put("action", action.getScript());
-                jsonActions.put(jsonAction);
-            }
-            jsonEdge.put("actions", jsonActions);
-        }
-        return jsonEdge;
+    public String getJsonFromModel(Model model) {
+        return new Gson().toJson(model);
     }
 
-    public JSONObject getJsonFromVertex(Vertex.RuntimeVertex vertex) {
-        JSONObject jsonVertex = new JSONObject();
-        jsonVertex.put("id", vertex.getId());
-        jsonVertex.put("name", vertex.getName());
-        return jsonVertex;
-    }
+    public String getJsonFromContext(Context context) {
+        JsonModel jsonModel = new JsonModel();
+        jsonModel.setModel(context.getModel());
 
-    public JSONObject getJsonFromModel(Model.RuntimeModel model) {
-        JSONObject jsonGraph = new JSONObject();
-
-        if (model.getName() != null) {
-            jsonGraph.put("name", model.getName());
-        }
-
-        JSONArray jsonVertices = new JSONArray();
-        for (Vertex.RuntimeVertex vertex : model.getVertices()) {
-            jsonVertices.put(getJsonFromVertex(vertex));
-        }
-        jsonGraph.put("vertices", jsonVertices);
-
-        JSONArray jsonEdges = new JSONArray();
-        for (Edge.RuntimeEdge edge : model.getEdges()) {
-            jsonEdges.put(getJsonFromEdge(edge));
-        }
-        jsonGraph.put("edges", jsonEdges);
-        return jsonGraph;
-    }
-
-    public JSONObject getJsonFromContext(Context context) {
-        JSONObject jsonGraph = getJsonFromModel(context.getModel());
         if (context.getPathGenerator() != null) {
-            jsonGraph.put("generator", context.getPathGenerator().toString());
+            jsonModel.setGenerator(context.getPathGenerator().toString());
         }
-
-        return jsonGraph;
+        if (context.getNextElement() != null && context.getNextElement().hasId()) {
+            jsonModel.setStartElementId(context.getNextElement().getId());
+        }
+        return new Gson().toJson(jsonModel);
     }
 
     public <T extends Context> T create(String jsonString, T context) {
-        Element startElement = null;
-        Map<String, Vertex> elements = new HashMap<>();
-        Model model = new Model();
-        JSONObject jsonGraph = new JSONObject(jsonString);
-
-        JSONArray jsonVertices = jsonGraph.getJSONArray("vertices");
-        for (int vertexIndex = 0; vertexIndex < jsonVertices.length(); ++vertexIndex) {
-            JSONObject jsonVertex = jsonVertices.getJSONObject(vertexIndex);
-
-            logger.debug("New vertex");
-            Vertex vertex = new Vertex().setId(jsonVertex.getString("id")).setName(jsonVertex.getString("name"));
-            logger.debug("  id: " + jsonVertex.getString("id"));
-            logger.debug("  name: " + jsonVertex.getString("name"));
-
-            model.addVertex(vertex);
-            elements.put(vertex.getId(), vertex);
-            try {
-                if (jsonVertex.getBoolean("startElement")) {
-                    logger.debug("  startElement: " + jsonVertex.getBoolean("startElement"));
-                    startElement = vertex.build();
-                }
-            } catch (JSONException ex) {
-                ;
-            }
-        }
-
-        JSONArray jsonEdges = jsonGraph.getJSONArray("edges");
-        for (int edgeIndex = 0; edgeIndex < jsonEdges.length(); ++edgeIndex) {
-            JSONObject jsonEdge = jsonEdges.getJSONObject(edgeIndex);
-
-            logger.debug("New edge");
-            Edge edge = new Edge().setId(jsonEdge.getString("id")).setName(jsonEdge.getString("name"));
-            logger.debug("  id: " + jsonEdge.getString("id"));
-            logger.debug("  name: " + jsonEdge.getString("name"));
-
-            // The source vertex is not mandatory, since it implies the starting element
-            try {
-                edge.setSourceVertex(elements.get(jsonEdge.getString("srcVertexId")));
-                logger.debug("  srcVertexId: " + jsonEdge.getString("srcVertexId"));
-            } catch (JSONException ex) {
-                logger.debug("No srcVertexId");
-            }
-
-            // Actions (java script) is not mandatory
-            try {
-                JSONArray jsonActions = jsonEdge.getJSONArray("actions");
-                for (int actionIndex = 0; actionIndex < jsonActions.length(); ++actionIndex) {
-                    JSONObject jsonAction = jsonActions.getJSONObject(actionIndex);
-                    edge.addAction(new Action(jsonAction.getString("action")));
-                    logger.debug("  action: " + jsonAction.getString("action"));
-                }
-            } catch (JSONException ex) {
-                logger.debug("No actions");
-            }
-
-            edge.setTargetVertex(elements.get(jsonEdge.getString("dstVertexId")));
-            logger.debug("  dstVertexId: " + jsonEdge.getString("dstVertexId"));
-            model.addEdge(edge);
-
-            try {
-                if (jsonEdge.getBoolean("startElement")) {
-                    logger.debug("  startElement: " + jsonEdge.getBoolean("startElement"));
-                    startElement = edge.build();
-                }
-            } catch (JSONException ex) {
-                ;
-            }
-
-            try {
-                edge.setGuard(new Guard(jsonEdge.getString("guard")));
-                logger.debug("  guard: " + edge.getGuard().getScript());
-            } catch (JSONException ex) {
-                logger.debug("No guard");
-            }
-        }
-
-        try {
-            model.setName(jsonGraph.getString("name"));
-            logger.debug("Model name: " + jsonGraph.getString("name"));
-        } catch (JSONException ex) {
-            logger.debug("No model name");
-        }
+        Gson gson = new Gson();
+        JsonModel jsonModel = gson.fromJson(jsonString, JsonModel.class);
+        Model model = jsonModel.getModel();
 
         context.setModel(model.build());
-
-        try {
-            context.setPathGenerator(GeneratorFactory.parse(jsonGraph.getString("generator")));
-            logger.debug("Generator: " + jsonGraph.getString("generator"));
-        } catch (JSONException ex) {
-            ;
+        if (jsonModel.getGenerator() != null) {
+            context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
         }
-
-        if (startElement != null) {
-            context.setNextElement(startElement);
+        for (Element element : context.getModel().getElements()) {
+            if (element.getId().equals(jsonModel.getStartElementId())) {
+                context.setNextElement(element);
+                break;
+            }
         }
-
         return context;
     }
 

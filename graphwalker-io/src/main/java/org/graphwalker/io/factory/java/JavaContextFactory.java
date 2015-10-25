@@ -148,7 +148,7 @@ public final class JavaContextFactory implements ContextFactory {
             add_edges += ".setTargetVertex(" + edge.getTargetVertex().getName() + ")";
             add_edges += ".setName(\"" + edge.getName() + "\").setId(\"" + id + "\")";
 
-            if (edge.getGuard()!=null) {
+            if (edge.hasGuard()) {
                 add_edges += ".setGuard(new Guard(\"" + edge.getGuard().getScript() + "\"))";
             }
             if (edge.hasActions()) {
