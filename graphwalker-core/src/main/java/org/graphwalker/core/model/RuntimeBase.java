@@ -109,8 +109,20 @@ public abstract class RuntimeBase implements Element {
         return requirements;
     }
 
+    public Map<String,Object> getProperties() {
+        return properties;
+    }
+
     public boolean hasRequirements() {
+        if (requirements == null)
+            return false;
         return !requirements.isEmpty();
+    }
+
+    public boolean hasProperties() {
+        if (properties == null)
+            return false;
+        return !properties.isEmpty();
     }
 
     @Override

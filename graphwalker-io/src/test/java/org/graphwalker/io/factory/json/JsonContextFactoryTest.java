@@ -33,7 +33,6 @@ import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.io.TestExecutionContext;
 import org.graphwalker.io.factory.ContextFactory;
-import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,7 +65,7 @@ public class JsonContextFactoryTest {
     }
 
     @Test
-    public void smallModelSimpleMachine() {
+    public void SmallModelWithSimpleMachine() {
         SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
         while (machine.hasNextStep()) {
             System.out.println(machine.getNextStep().getCurrentElement().getName());
@@ -79,11 +78,10 @@ public class JsonContextFactoryTest {
         Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
     }
 
-    @Test(expected = JSONException.class)
+    @Test
     public void acceptJsonTestFailure() {
         ContextFactory factory = new JsonContextFactory();
         factory.create(Paths.get("json/NonModel.json"));
-        Assert.fail("Expected a JSONException");
     }
 
     @Test
@@ -91,7 +89,7 @@ public class JsonContextFactoryTest {
         Vertex v_BookInformation = new Vertex().setName("v_BookInformation").setId("n5");
         Vertex v_OtherBoughtBooks = new Vertex().setName("v_OtherBoughtBooks").setId("n6");
         Model model = new Model();
-        model.addEdge( new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
+        model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
 
         Context writeContext = new TestExecutionContext();
         writeContext.setModel(model.build());
@@ -107,7 +105,7 @@ public class JsonContextFactoryTest {
     public void actions() throws IOException {
         Vertex v_BrowserStopped = new Vertex().setName("v_BrowserStopped").setId("n4");
         Model model = new Model();
-        model.addEdge( new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
+        model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
 
         Context writeContext = new TestExecutionContext();
         writeContext.setModel(model.build());
@@ -130,18 +128,18 @@ public class JsonContextFactoryTest {
         Vertex v_ShoppingCart = new Vertex().setName("v_ShoppingCart").setId("n7");
 
         Model model = new Model();
-        model.addEdge( new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
-        model.addEdge( new Edge().setSourceVertex(v_BrowserStarted).setTargetVertex(v_BaseURL).setName("e_EnterBaseURL").setId("e1"));
-        model.addEdge( new Edge().setSourceVertex(v_BaseURL).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e2"));
-        model.addEdge( new Edge().setSourceVertex(v_BrowserStopped).setTargetVertex(v_BrowserStarted).setName("e_StartBrowser").setId("e3"));
-        model.addEdge( new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_BookInformation).setName("e_ClickBook").setId("e4"));
-        model.addEdge( new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
-        model.addEdge( new Edge().setSourceVertex(v_OtherBoughtBooks).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e6"));
-        model.addEdge( new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e7"));
-        model.addEdge( new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e8"));
-        model.addEdge( new Edge().setSourceVertex(v_ShoppingCart).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e9"));
-        model.addEdge( new Edge().setSourceVertex(v_OtherBoughtBooks).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e10"));
-        model.addEdge( new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e11"));
+        model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
+        model.addEdge(new Edge().setSourceVertex(v_BrowserStarted).setTargetVertex(v_BaseURL).setName("e_EnterBaseURL").setId("e1"));
+        model.addEdge(new Edge().setSourceVertex(v_BaseURL).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e2"));
+        model.addEdge(new Edge().setSourceVertex(v_BrowserStopped).setTargetVertex(v_BrowserStarted).setName("e_StartBrowser").setId("e3"));
+        model.addEdge(new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_BookInformation).setName("e_ClickBook").setId("e4"));
+        model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
+        model.addEdge(new Edge().setSourceVertex(v_OtherBoughtBooks).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e6"));
+        model.addEdge(new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e7"));
+        model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e8"));
+        model.addEdge(new Edge().setSourceVertex(v_ShoppingCart).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e9"));
+        model.addEdge(new Edge().setSourceVertex(v_OtherBoughtBooks).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e10"));
+        model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e11"));
 
         Context writeContext = new TestExecutionContext();
         writeContext.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));

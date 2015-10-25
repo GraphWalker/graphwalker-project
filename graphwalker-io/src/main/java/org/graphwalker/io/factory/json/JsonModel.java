@@ -26,7 +26,12 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import org.graphwalker.core.model.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Nils Olsson
@@ -34,9 +39,54 @@ import java.util.List;
 public class JsonModel {
 
     private String name;
+    private String id;
     private String generator;
+    private String startElementId;
+    private List<String> actions;
+    private List<String> requirements;
+    private Map<String, Object> properties;
     private List<JsonVertex> vertices;
     private List<JsonEdge> edges;
+
+    public String getId() {
+        return id;
+    }
+
+    public List<String> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<String> actions) {
+        this.actions = actions;
+    }
+
+    public List<String> getRequirements() {
+        return requirements;
+    }
+
+    public void setRequirements(List<String> requirements) {
+        this.requirements = requirements;
+    }
+
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStartElementId() {
+        return startElementId;
+    }
+
+    public void setStartElementId(String startElementId) {
+        this.startElementId = startElementId;
+    }
 
     public String getName() {
         return name;
@@ -72,5 +122,71 @@ public class JsonModel {
 
     public boolean isModel() {
         return !(null == name || null == generator || null == edges || null == vertices);
+    }
+
+    public Model getModel() {
+        Model model = new Model();
+        model.setName(name);
+        model.setId(id);
+
+        if (vertices != null) {
+            for (JsonVertex jsonVertex : getVertices()) {
+                model.addVertex(jsonVertex.getVertex());
+            }
+        }
+
+        if (edges != null) {
+            for (JsonEdge jsonEdge : getEdges()) {
+                Edge edge = jsonEdge.getEdge();
+                for (Vertex vertex : model.getVertices()) {
+                    if (vertex.getId().equals(jsonEdge.getSourceVertexId())) {
+                        edge.setSourceVertex(vertex);
+                    }
+                    if (vertex.getId().equals(jsonEdge.getTargetVertexId())) {
+                        edge.setTargetVertex(vertex);
+                    }
+                }
+                model.addEdge(edge);
+            }
+        }
+        return model;
+    }
+
+    public void setModel(Model.RuntimeModel model) {
+        name = model.getName();
+        id = model.getId();
+
+        if (model.hasActions()) {
+            actions = new ArrayList<>();
+            for (Action action : model.getActions()) {
+                actions.add(action.getScript());
+            }
+        }
+
+        if (model.hasRequirements()) {
+            requirements = new ArrayList<>();
+            for (Requirement requirement : model.getRequirements()) {
+                requirements.add(requirement.getKey());
+            }
+        }
+
+        if (model.hasProperties()) {
+            properties = new HashMap<>();
+            properties.putAll(model.getProperties());
+        }
+
+        vertices = new ArrayList<>();
+        for (Vertex.RuntimeVertex vertex : model.getVertices()) {
+            JsonVertex jsonVertex = new JsonVertex();
+            jsonVertex.setVertex(vertex);
+            vertices.add(jsonVertex);
+        }
+
+        edges = new ArrayList<>();
+        for (Edge.RuntimeEdge edge : model.getEdges()) {
+            JsonEdge jsonEdge = new JsonEdge();
+            jsonEdge.setEdge(edge);
+            edges.add(jsonEdge);
+        }
     }
 }

@@ -3,6 +3,8 @@
     "model": {
         "name": "Small model",
         "generator": "random(edge_coverage(100))",
+        "startElementId": "e0",
+
         "vertices": [
             {
                 "name": "v_VerifySomeAction",
@@ -13,53 +15,30 @@
                 "id": "n1"
             }
         ],
+
         "edges": [
             {
                 "name": "e_FirstAction",
                 "id": "e0",
-                "dstVertexId": "n0",
-                "startElement": "true",
-                "actions": [
-                    {
-                        "action": "x=0;"
-                    },
-                    {
-                        "action": "y=0;"
-                    }
-                ]
+                "targetVertexId": "n0"
             },
             {
                 "name": "e_AnotherAction",
                 "id": "e1",
-                "srcVertexId": "n0",
-                "dstVertexId": "n1",
-                "actions": [
-                    {
-                        "action": "y+=1;"
-                    }
-                ]
+                "sourceVertexId": "n0",
+                "targetVertexId": "n1"
             },
             {
                 "name": "e_SomeOtherAction",
                 "id": "e2",
-                "srcVertexId": "n1",
-                "dstVertexId": "n1",
-                "actions": [
-                    {
-                        "action": "x+=1;"
-                    }
-                ]
+                "sourceVertexId": "n1",
+                "targetVertexId": "n1"
             },
             {
                 "name": "e_SomeOtherAction",
                 "id": "e3",
-                "srcVertexId": "n1",
-                "dstVertexId": "n0",
-                "actions": [
-                    {
-                        "action": "y+=1;"
-                    }
-                ]
+                "sourceVertexId": "n1",
+                "targetVertexId": "n0"
             }
         ]
     }

@@ -93,6 +93,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
         this.actions.addAll(model.getActions());
         this.requirements.addAll(model.getRequirements());
+        this.properties.putAll(model.getProperties());
     }
 
     /**
