@@ -73,6 +73,25 @@ public class JsonContextFactoryTest {
     }
 
     @Test
+    public void requirement() {
+        ContextFactory factory = new JsonContextFactory();
+        Context context = factory.create(Paths.get("json/UC01.json"));
+        Assert.assertThat(context.getModel().findVertices("v_BaseURL").get(0).getRequirements().size(), is(1));
+        Requirement requirement = context.getModel().findVertices("v_BaseURL").get(0).getRequirements().iterator().next();
+        Assert.assertThat(requirement.getKey(), is("UC01 2.2.1"));
+    }
+
+    @Test
+    public void peoperty() {
+        ContextFactory factory = new JsonContextFactory();
+        Context context = factory.create(Paths.get("json/UC01.json"));
+        Assert.assertThat(context.getModel().findVertices("v_BrowserStarted").get(0).getProperties().size(), is(1));
+        String color = (String)context.getModel().findVertices("v_BrowserStarted").get(0).getProperty("color");
+        Assert.assertTrue(color != null);
+        Assert.assertThat(color, is("yellow"));
+    }
+
+    @Test
     public void acceptJsonTest() {
         ContextFactory factory = new JsonContextFactory();
         Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
@@ -119,13 +138,13 @@ public class JsonContextFactoryTest {
 
     @Test
     public void uc01() throws IOException {
-        Vertex v_BrowserStarted = new Vertex().setName("v_BrowserStarted").setId("n1");
-        Vertex v_BaseURL = new Vertex().setName("v_BaseURL").setId("n2");
-        Vertex v_SearchResult = new Vertex().setName("v_SearchResult").setId("n3");
+        Vertex v_BrowserStarted = new Vertex().setName("v_BrowserStarted").setId("n1").setProperty("Color", "yellow");
+        Vertex v_BaseURL = new Vertex().setName("v_BaseURL").setId("n2").addRequirement(new Requirement("UC01 2.2.1"));
+        Vertex v_SearchResult = new Vertex().setName("v_SearchResult").setId("n3").addRequirement(new Requirement("UC01 2.2.2"));
         Vertex v_BrowserStopped = new Vertex().setName("v_BrowserStopped").setId("n4");
-        Vertex v_BookInformation = new Vertex().setName("v_BookInformation").setId("n5");
+        Vertex v_BookInformation = new Vertex().setName("v_BookInformation").setId("n5").addRequirement(new Requirement("UC01 2.2.3"));
         Vertex v_OtherBoughtBooks = new Vertex().setName("v_OtherBoughtBooks").setId("n6");
-        Vertex v_ShoppingCart = new Vertex().setName("v_ShoppingCart").setId("n7");
+        Vertex v_ShoppingCart = new Vertex().setName("v_ShoppingCart").setId("n7").addRequirement(new Requirement("UC01 2.3"));
 
         Model model = new Model();
         model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
