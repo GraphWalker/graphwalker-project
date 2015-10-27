@@ -43,4 +43,12 @@ public class SourceTest extends CLITestRoot {
         Assert.assertThat(result.getError(), is(""));
         Assert.assertThat(result.getOutput().length(), is(1850));
     }
+
+    @Test
+    public void generatePython() throws IOException {
+        String args[] = {"source", "--input", "json/example.json", "template/python.template"};
+        Result result = runCommand(args);
+        Assert.assertThat(result.getError(), is(""));
+        Assert.assertThat(result.getOutput().length(), is(1212));
+    }
 }
