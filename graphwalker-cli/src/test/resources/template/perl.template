@@ -1,0 +1,42 @@
+HEADER<{{
+use strict;
+use warnings;
+
+use SOAP::Lite;
+
+# Connect to the MBT web-service
+my $MBTService = SOAP::Lite->service($ARGV[0]);
+
+# Load MBT with a new xml
+my $arg = SOAP::Data->new(name => 'arg0', value => $ARGV[1]);
+my $res = $MBTService->Load($arg);
+
+if ($res eq "false") {
+  die "Unable to reload MBT, check path to .xml file!\nRemember that the path is relative where mbt is launched.";
+}
+
+# Walk the model
+while ( $MBTService->HasNextStep() eq "true"){
+  # Get next step from MBT
+  my $step = $MBTService->GetNextStep();
+  if ($step ne '') {
+    # Run the step
+    eval( $step ) or die;
+  }
+}
+print "MBT Statistics: \n" . $MBTService->GetStatistics() . "\n";
+
+}}>HEADER
+
+#
+# This sub routine implements the {EDGE_VERTEX} '{LABEL}'
+#
+sub {LABEL}()
+{
+  print "{EDGE_VERTEX}: {LABEL}\n";
+  die "The {EDGE_VERTEX}: {LABEL} is not implemented yet!";
+}
+
+FOOTER<{{
+return 1;
+}}>FOOTER 

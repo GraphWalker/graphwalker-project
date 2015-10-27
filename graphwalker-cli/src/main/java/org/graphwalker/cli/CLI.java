@@ -47,6 +47,7 @@ import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
+import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.test.TestExecutor;
@@ -56,10 +57,14 @@ import org.graphwalker.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -72,6 +77,7 @@ public class CLI {
     private Methods methods;
     private Requirements requirements;
     private Convert convert;
+    private Source source;
 
     enum Command {
         NONE,
@@ -79,7 +85,8 @@ public class CLI {
         ONLINE,
         METHODS,
         REQUIREMENTS,
-        CONVERT
+        CONVERT,
+        SOURCE
     }
 
     private Command command = Command.NONE;
@@ -132,6 +139,9 @@ public class CLI {
                 convert = new Convert();
                 jc.addCommand("convert", convert);
 
+                source = new Source();
+                jc.addCommand("source", source);
+
                 jc.parse(args);
                 jc.usage();
                 return;
@@ -160,6 +170,9 @@ public class CLI {
             convert = new Convert();
             jc.addCommand("convert", convert);
 
+            source = new Source();
+            jc.addCommand("source", source);
+
             jc.parse(args);
 
             // Parse for commands
@@ -179,6 +192,9 @@ public class CLI {
                 } else if (jc.getParsedCommand().equalsIgnoreCase("convert")) {
                     command = Command.CONVERT;
                     RunCommandConvert();
+                } else if (jc.getParsedCommand().equalsIgnoreCase("source")) {
+                    command = Command.SOURCE;
+                    RunCommandSource();
                 }
             }
 
@@ -295,8 +311,8 @@ public class CLI {
     }
 
     private void RunCommandConvert() throws Exception {
-        String inputFileName = (String) convert.input.get(0);
-        String outputFileName = (String) convert.input.get(1);
+        String inputFileName = convert.input.get(0);
+        String outputFileName = convert.input.get(1);
 
         ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
         Context context;
@@ -309,6 +325,55 @@ public class CLI {
 
         ContextFactory outputFactory = ContextFactoryScanner.get(Paths.get(outputFileName));
         outputFactory.write(context, Paths.get(outputFileName));
+    }
+
+    private void RunCommandSource() throws Exception {
+        String modelFileName = source.input.get(0);
+        String templateFileName = source.input.get(1);
+
+        // Read the model
+        ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(modelFileName));
+        Context context;
+        try {
+            context = inputFactory.create(Paths.get(modelFileName));
+        } catch (DslException e) {
+            System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
+            throw new Exception("Model syntax error");
+        }
+
+        // Read the template
+        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(templateFileName)));
+        StringBuilder templateStrBuilder = new StringBuilder();
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                templateStrBuilder.append(line).append("\n");
+            }
+            reader.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not read the file: " + templateFileName);
+        }
+        String templateStr = templateStrBuilder.toString();
+
+        // Apply the template and generate the source code to std out
+        String header = "", body = "", footer = "";
+        Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
+        Matcher m = p.matcher(templateStr);
+        if (m.find()) {
+            header = m.group(1);
+            body = m.group(2);
+            footer = m.group(3);
+        }
+
+        System.out.println(header);
+        for (Element element : context.getModel().getElements()) {
+            if (element.hasName()) {
+                String edge_vertex = element instanceof Vertex.RuntimeVertex ? "vertex" : "edge";
+                System.out.println(body.replaceAll("\\{LABEL\\}", element.getName()).replaceAll("\\{EDGE_VERTEX\\}", edge_vertex));
+            }
+        }
+        System.out.println(footer);
+
     }
 
     private void RunCommandOffline() throws Exception {
