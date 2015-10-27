@@ -82,7 +82,7 @@ public class JsonContextFactoryTest {
     }
 
     @Test
-    public void peoperty() {
+    public void property() {
         ContextFactory factory = new JsonContextFactory();
         Context context = factory.create(Paths.get("json/UC01.json"));
         Assert.assertThat(context.getModel().findVertices("v_BrowserStarted").get(0).getProperties().size(), is(1));
