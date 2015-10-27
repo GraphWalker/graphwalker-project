@@ -2,41 +2,26 @@ HEADER<{{
 use strict;
 use warnings;
 
-use SOAP::Lite;
+use LWP::Simple;
 
-# Connect to the MBT web-service
-my $MBTService = SOAP::Lite->service($ARGV[0]);
+my $host = $ARGV[0];
 
-# Load MBT with a new xml
-my $arg = SOAP::Data->new(name => 'arg0', value => $ARGV[1]);
-my $res = $MBTService->Load($arg);
-
-if ($res eq "false") {
-  die "Unable to reload MBT, check path to .xml file!\nRemember that the path is relative where mbt is launched.";
-}
-
-# Walk the model
-while ( $MBTService->HasNextStep() eq "true"){
-  # Get next step from MBT
-  my $step = $MBTService->GetNextStep();
+while ( get $host."/hasNext" eq "true"){
+  # Get next step from GraphWalker
+  my $step = get $host."/getNext";
   if ($step ne '') {
     # Run the step
     eval( $step ) or die;
   }
 }
-print "MBT Statistics: \n" . $MBTService->GetStatistics() . "\n";
-
 }}>HEADER
-
 #
-# This sub routine implements the {EDGE_VERTEX} '{LABEL}'
+# This sub routine implements: '{LABEL}'
 #
 sub {LABEL}()
 {
-  print "{EDGE_VERTEX}: {LABEL}\n";
-  die "The {EDGE_VERTEX}: {LABEL} is not implemented yet!";
+  print "{LABEL}\n";
 }
-
 FOOTER<{{
-return 1;
+#End of generated source code
 }}>FOOTER 
