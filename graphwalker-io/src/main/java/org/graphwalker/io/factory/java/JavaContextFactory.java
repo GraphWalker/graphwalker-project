@@ -34,6 +34,7 @@ import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,9 +73,8 @@ public final class JavaContextFactory implements ContextFactory {
 
     @Override
     public <T extends Context> T create(Path path, T context) {
-        return null;
+        throw new ContextFactoryException("Creating a model from Java is not supported");
     }
-
 
     public static final List<String>
             javaCodeTemplate = ImmutableList.of(
