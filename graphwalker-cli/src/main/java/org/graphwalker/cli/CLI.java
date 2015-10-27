@@ -340,6 +340,17 @@ public class CLI {
             System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
             throw new Exception("Model syntax error");
         }
+        SortedSet<String> names = new TreeSet<>();
+        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+            if (vertex.hasName()) {
+                names.add(vertex.getName());
+            }
+        }
+        for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+            if (edge.hasName()) {
+                names.add(edge.getName());
+            }
+        }
 
         // Read the template
         BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(templateFileName)));
@@ -366,11 +377,8 @@ public class CLI {
         }
 
         System.out.println(header);
-        for (Element element : context.getModel().getElements()) {
-            if (element.hasName()) {
-                String edge_vertex = element instanceof Vertex.RuntimeVertex ? "vertex" : "edge";
-                System.out.println(body.replaceAll("\\{LABEL\\}", element.getName()).replaceAll("\\{EDGE_VERTEX\\}", edge_vertex));
-            }
+        for (String name : names) {
+            System.out.println(body.replaceAll("\\{LABEL\\}", name));
         }
         System.out.println(footer);
 
