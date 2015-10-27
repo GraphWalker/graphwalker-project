@@ -41,7 +41,7 @@ public class SourceTest extends CLITestRoot {
         String args[] = {"source", "--input", "json/example.json", "template/perl.template"};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
-        Assert.assertThat(result.getOutput().length(), is(1850));
+        Assert.assertTrue(result.getOutput().length() > 1200 && result.getOutput().length() < 1300 );
     }
 
     @Test
@@ -49,6 +49,6 @@ public class SourceTest extends CLITestRoot {
         String args[] = {"source", "--input", "json/example.json", "template/python.template"};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
-        Assert.assertThat(result.getOutput().length(), is(1212));
+        Assert.assertTrue(result.getOutput().length() > 1000 && result.getOutput().length() < 1100);
     }
 }
