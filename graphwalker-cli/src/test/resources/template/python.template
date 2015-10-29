@@ -8,7 +8,7 @@ import requests,json
 ##    java -jar graphwalker-3.4.0-SNAPSHOT.jar online --json --service RESTFUL -m model.graphml "random(edge_coverage(100))"
 ##
 ## 3) Run the per program:
-##    python login.py
+##    python model.py
 ##
 }}>HEADER
 
