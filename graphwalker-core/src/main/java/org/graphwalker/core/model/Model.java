@@ -225,7 +225,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             if (e.getSourceVertex() == vertexToBeRemoved) {
                 e_it.remove();
             }
-            if (e.getTargetVertex() == vertexToBeRemoved) {
+            else if (e.getTargetVertex() == vertexToBeRemoved) {
                 e_it.remove();
             }
         }

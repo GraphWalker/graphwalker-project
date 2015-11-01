@@ -86,7 +86,7 @@ public class ModelTest {
         Edge e1 = new Edge();
         Edge e2 = new Edge();
         Model model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
-                                 .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2));
+                .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2));
         Assert.assertThat(model, notNullValue());
         Assert.assertThat(model.getEdges().size(), is(2));
         Assert.assertThat(model.getVertices().size(), is(2));
@@ -100,6 +100,33 @@ public class ModelTest {
         Assert.assertThat(model, notNullValue());
         Assert.assertThat(model.getEdges().size(), is(0));
         Assert.assertThat(model.getVertices().size(), is(1));
+    }
+
+    @Test
+    public void deleteVertex() {
+        Vertex v1 = new Vertex();
+        Vertex v2 = new Vertex();
+        Vertex v3 = new Vertex();
+        Edge e1 = new Edge();
+        Edge e2 = new Edge();
+        Edge e3 = new Edge();
+        Edge e4 = new Edge();
+        Edge e5 = new Edge();
+        Edge e6 = new Edge();
+        Model model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
+                .addEdge(e2.setSourceVertex(v1).setTargetVertex(v3))
+                .addEdge(e3.setSourceVertex(v1).setTargetVertex(v1))
+                .addEdge(e4.setSourceVertex(v2).setTargetVertex(v2))
+                .addEdge(e5.setSourceVertex(v3).setTargetVertex(v3))
+                .addEdge(e6.setSourceVertex(v3).setTargetVertex(v1));
+        Assert.assertThat(model, notNullValue());
+        Assert.assertThat(model.getVertices().size(), is(3));
+        Assert.assertThat(model.getEdges().size(), is(6));
+
+        model.deleteVertex(v2);
+        Assert.assertThat(model, notNullValue());
+        Assert.assertThat(model.getVertices().size(), is(2));
+        Assert.assertThat(model.getEdges().size(), is(4));
     }
 
     @Test
