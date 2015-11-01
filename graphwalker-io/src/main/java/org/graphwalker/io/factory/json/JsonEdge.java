@@ -116,4 +116,38 @@ public class JsonEdge {
             properties.putAll(edge.getProperties());
         }
     }
+
+    public void setEdge(Edge edge) {
+        setEdge(edge.build());
+    }
+
+    public void copyValues(Edge edge) {
+        if (id != null) {
+            edge.setId(id);
+        }
+
+        if (name != null) {
+            edge.setName(name);
+        }
+
+        if (guard != null) {
+            edge.setGuard(new Guard(guard));
+        }
+
+        if (actions != null) {
+            for (String action : actions) {
+                edge.addAction(new Action(action));
+            }
+        }
+
+        if (requirements != null) {
+            for (String requirement : requirements) {
+                edge.addRequirement(new Requirement(requirement));
+            }
+        }
+
+        if (properties != null) {
+            edge.setProperties(properties);
+        }
+    }
 }

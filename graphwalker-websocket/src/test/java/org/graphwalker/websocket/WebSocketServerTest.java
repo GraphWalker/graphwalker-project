@@ -2,7 +2,7 @@ package org.graphwalker.websocket;
 
 /*
  * #%L
- * GraphWalker Command Line Interface
+ * GraphWalker As A Service
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -29,6 +29,7 @@ package org.graphwalker.websocket;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.graphwalker.java.test.Result;
 import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
 import org.junit.Assert;
@@ -60,8 +61,14 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     }
 
     @Test
-    public void TestRun() throws Exception {
-        new TestExecutor(getClass()).execute();
+    public void TestRun() {
+        Result result = new TestExecutor(getClass()).execute(true);
+        if (result.hasErrors()) {
+            for (String error : result.getErrors()) {
+                System.out.println(error);
+            }
+            Assert.fail("Test run failed.");
+        }
     }
 
     @Override

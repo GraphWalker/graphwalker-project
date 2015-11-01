@@ -1,5 +1,5 @@
 {
-    "type": "loadModel",
+    "command": "loadModel",
     "model": {
         "name": "Small model",
         "generator": "random(edge_coverage(100))",

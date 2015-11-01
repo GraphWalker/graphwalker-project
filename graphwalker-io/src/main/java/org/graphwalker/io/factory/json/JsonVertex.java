@@ -93,4 +93,34 @@ public class JsonVertex {
             properties.putAll(vertex.getProperties());
         }
     }
+
+    public void setVertex(Vertex vertex) {
+        setVertex(vertex.build());
+    }
+
+    public void copyValues(Vertex vertex) {
+        if (id != null) {
+            vertex.setId(id);
+        }
+
+        if (name != null) {
+            vertex.setName(name);
+        }
+
+        if (actions != null) {
+            for (String action : actions) {
+                vertex.addAction(new Action(action));
+            }
+        }
+
+        if (requirements != null) {
+            for (String requirement : requirements) {
+                vertex.addRequirement(new Requirement(requirement));
+            }
+        }
+
+        if (properties != null) {
+            vertex.setProperties(properties);
+        }
+    }
 }

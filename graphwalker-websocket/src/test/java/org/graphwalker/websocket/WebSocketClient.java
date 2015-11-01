@@ -54,14 +54,22 @@ public class WebSocketClient {
         RESTART,
         GETNEXT,
         GETDATA,
-        VISITEDELEMENT
+        VISITEDELEMENT,
+        ADDMODEL,
+        REMOVEMODEL,
+        ADDVERTEX,
+        ADDEDGE,
+        REMOVEVERTEX,
+        REMOVEEDGE,
+        UPDATEVERTEX,
+        UPDATEEDGE;
     }
 
-    private final String START = "{\"type\": \"start\"}";
-    private final String RESTART = "{\"type\": \"restart\"}";
-    private final String GET_NEXT = "{\"type\": \"getNext\"}";
-    private final String HAS_NEXT = "{\"type\": \"hasNext\"}";
-    private final String GET_DATA = "{\"type\": \"getData\"}";
+    private final String START = "{\"command\": \"start\"}";
+    private final String RESTART = "{\"command\": \"restart\"}";
+    private final String GET_NEXT = "{\"command\": \"getNext\"}";
+    private final String HAS_NEXT = "{\"command\": \"hasNext\"}";
+    private final String GET_DATA = "{\"command\": \"getData\"}";
 
     public boolean connected = false;
     public RX_STATE rxState = RX_STATE.NONE;
@@ -126,45 +134,102 @@ public class WebSocketClient {
 
                     rxState = RX_STATE.NONE;
                     cmd = false;
-                    String type = root.getString("type").toUpperCase();
-                    if (type.equals("HASNEXT")) {
-                        hasNext = false;
-                        rxState = RX_STATE.HASNEXT;
-                        if (root.getBoolean("success")) {
-                            cmd = true;
-                            if (root.getBoolean("hasNext")) {
-                                hasNext = true;
+                    String command = root.getString("command").toUpperCase();
+                    switch (command) {
+                        case "HASNEXT":
+                            hasNext = false;
+                            rxState = RX_STATE.HASNEXT;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                                if (root.getBoolean("hasNext")) {
+                                    hasNext = true;
+                                }
                             }
-                        }
-                    } else if (type.equals("LOADMODEL")) {
-                        rxState = RX_STATE.LOADMODEL;
-                        if (root.getBoolean("success")) {
-                            cmd = true;
-                        }
-                    } else if (type.equals("START")) {
-                        rxState = RX_STATE.START;
-                        if (root.getBoolean("success")) {
-                            cmd = true;
-                        }
-                    } else if (type.equals("RESTART")) {
-                        rxState = RX_STATE.RESTART;
-                        if (root.getBoolean("success")) {
-                            cmd = true;
-                        }
-                    } else if (type.equals("GETNEXT")) {
-                        rxState = RX_STATE.GETNEXT;
-                        if (root.getBoolean("success")) {
-                            cmd = true;
-                        }
-                    } else if (type.equals("GETDATA")) {
-                        rxState = RX_STATE.GETDATA;
-                        if (root.getBoolean("success")) {
-                            cmd = true;
-                        }
-                    } else if (type.equals("VISITEDELEMENT")) {
-                        rxState = RX_STATE.VISITEDELEMENT;
-                    } else {
-                        logger.info("Message type is not implemented: " + type);
+                            break;
+                        case "LOADMODEL":
+                            rxState = RX_STATE.LOADMODEL;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "START":
+                            rxState = RX_STATE.START;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "RESTART":
+                            rxState = RX_STATE.RESTART;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "GETNEXT":
+                            rxState = RX_STATE.GETNEXT;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "GETDATA":
+                            rxState = RX_STATE.GETDATA;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "ADDMODEL":
+                            rxState = RX_STATE.ADDMODEL;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "REMOVEMODEL":
+                            rxState = RX_STATE.REMOVEMODEL;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "ADDVERTEX":
+                            rxState = RX_STATE.ADDVERTEX;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "ADDEDGE":
+                            rxState = RX_STATE.ADDEDGE;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "REMOVEVERTEX":
+                            rxState = RX_STATE.REMOVEVERTEX;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "REMOVEEDGE":
+                            rxState = RX_STATE.REMOVEEDGE;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "UPDATEVERTEX":
+                            rxState = RX_STATE.UPDATEVERTEX;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "UPDATEEDGE":
+                            rxState = RX_STATE.UPDATEEDGE;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "VISITEDELEMENT":
+                            rxState = RX_STATE.VISITEDELEMENT;
+                            break;
+                        default:
+                            logger.info("Command is not implemented: " + command);
+                            break;
                     }
                 }
 
@@ -204,6 +269,8 @@ public class WebSocketClient {
         if (!client.cmd) {
             throw new RuntimeException("Failed to execute command");
         }
+        client.cmd = false;
+        client.rxState = RX_STATE.NONE;
     }
 
     /**
@@ -267,7 +334,7 @@ public class WebSocketClient {
     }
 
     /**
-     * Restarts the machine. All previously loaded models will be discared.
+     * Restarts the machine. All previously loaded models will be discarded.
      */
     public void restartMachine() {
         logger.debug("Restart the machine");
@@ -303,5 +370,81 @@ public class WebSocketClient {
         logger.debug("Get data");
         client.wsc.send(GET_DATA);
         wait(client, RX_STATE.GETDATA);
+    }
+
+    /**
+     * Adds a model to the server.
+     *
+     * @param id is the unique id of the model.
+     */
+    public void addModel(String id) {
+        logger.debug("Add a model with id: " + id);
+        client.wsc.send("{\"command\": \"addModel\", \"id\": \"" + id + "\"}");
+        wait(client, RX_STATE.ADDMODEL);
+    }
+
+    /**
+     * Removes model from the server.
+     *
+     * @param id is the unique id of the model to be removed.
+     */
+    public void removeModel(String id) {
+        logger.debug("Remove model with id: " + id);
+        client.wsc.send("{\"command\": \"removeModel\", \"id\": \"" + id + "\"}");
+        wait(client, RX_STATE.REMOVEMODEL);
+    }
+
+    /**
+     * Adds a vertex to the server.
+     */
+    public void addVertex(String modelId, String vertexId) {
+        logger.debug("Add a vertex with id: " + vertexId);
+        client.wsc.send("{\"command\": \"addVertex\", \"modelId\": \"" + modelId + "\", \"vertexId\": \"" + vertexId + "\"}");
+        wait(client, RX_STATE.ADDVERTEX);
+    }
+
+    /**
+     * Adds a edge to the server.
+     */
+    public void addEdge(String modelId, String edgeId, String sourceVertexId, String targetVertexId) {
+        logger.debug("Add a edge with id: " + edgeId);
+        client.wsc.send("{\"command\": \"addEdge\", \"modelId\": \"" + modelId + "\", \"edgeId\": \"" + edgeId + "\", \"sourceVertexId\": \"" + sourceVertexId + "\", \"targetVertexId\": \"" + targetVertexId + "\"}");
+        wait(client, RX_STATE.ADDEDGE);
+    }
+
+    /**
+     * Removes a vertex from the server.
+     */
+    public void removeVertex(String modelId, String vertexId) {
+        logger.debug("Removes vertex with id: " + vertexId);
+        client.wsc.send("{\"command\": \"removeVertex\", \"modelId\": \"" + modelId + "\", \"vertexId\": \"" + vertexId + "\"}");
+        wait(client, RX_STATE.REMOVEVERTEX);
+    }
+
+    /**
+     * Removes an edge from the server.
+     */
+    public void removeEdge(String modelId, String edgeId) {
+        logger.debug("Removes vertex with id: " + edgeId);
+        client.wsc.send("{\"command\": \"removeEdge\", \"modelId\": \"" + modelId + "\", \"edgeId\": \"" + edgeId + "\"}");
+        wait(client, RX_STATE.REMOVEEDGE);
+    }
+
+    /**
+     * Updates a vertex on the server.
+     */
+    public void updateVertex(String modelId, String vertexJsonStr) {
+        logger.debug("Updating vertex");
+        client.wsc.send("{\"command\": \"updateVertex\", \"modelId\": \"" + modelId + "\", \"vertex\":" + vertexJsonStr + "}");
+        wait(client, RX_STATE.UPDATEVERTEX);
+    }
+
+    /**
+     * Updates an edge on the server.
+     */
+    public void updateEdge(String modelId, String edgeJsonStr) {
+        logger.debug("Updating edge");
+        client.wsc.send("{\"command\": \"updateEdge\", \"modelId\": \"" + modelId + "\", \"edge\":" + edgeJsonStr + "}");
+        wait(client, RX_STATE.UPDATEEDGE);
     }
 }
