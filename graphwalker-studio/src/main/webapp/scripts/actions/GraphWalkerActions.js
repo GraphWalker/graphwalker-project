@@ -36,7 +36,7 @@ function() {
   var _getNextElement = function(callback) {
     // Prepare server request
     var request = {
-      type: METHODS.NEXT,
+      command: METHODS.NEXT,
     };
     _sendRequest(request,
       // On success
@@ -59,7 +59,7 @@ function() {
     addModel: function(newModel) {
       // Prepare server request
       var request = {
-        type: METHODS.ADDMODEL,
+        command: METHODS.ADDMODEL,
         id: newModel.id
       };
       modelId = newModel.id;
@@ -77,7 +77,7 @@ function() {
     addVertex: function(newVertex) {
       // Prepare server request
       var request = {
-        type: METHODS.ADDVERTEX,
+        command: METHODS.ADDVERTEX,
         modelId: newVertex.modelId,
         vertexId: newVertex.id
       };
@@ -95,10 +95,13 @@ function() {
     updateVertex: function(vertexId, props) {
       // Prepare server request
       var request = {
-        type: METHODS.UPDATEVERTEX,
-        vertexId: vertexId,
+        command: METHODS.UPDATEVERTEX,
         modelId: modelId,
-        properties: props
+        vertex: {
+          id: vertexId,
+          name: props['name'],
+          properties: props
+        }
       };
       // Mark as unverified
       VertexActions.setProps(vertexId, {status: STATUS.UNVERIFIED});
@@ -114,12 +117,27 @@ function() {
       );
     },
     removeVertex: function(vertexId) {
-      // TODO
+      // Prepare server request
+      var request = {
+        command: METHODS.REMOVEVERTEX,
+        modelId: modelId,
+        vertexId: vertexId
+      };
+      _sendRequest(request,
+          // On success
+          function(response) {
+            VertexActions.setProps(vertexId, {errorMessage: null, status: STATUS.VERIFIED});
+          },
+          // On error
+          function(response) {
+            VertexActions.setProps(vertexId, {errorMessage: response.body.error, status: STATUS.ERROR});
+          }
+      );
     },
     addEdge: function(newEdge) {
       // Prepare server request
       var request = {
-        type: METHODS.ADDEDGE,
+        command: METHODS.ADDEDGE,
         modelId: newEdge.modelId,
         edgeId: newEdge.id,
         sourceVertexId: newEdge.sourceVertexId,
@@ -139,10 +157,13 @@ function() {
     updateEdge: function(edgeId, props) {
       // Prepare server request
       var request = {
-        type: METHODS.UPDATEEDGE,
-        edgeId: edgeId,
+        command: METHODS.UPDATEEDGE,
         modelId: modelId,
-        properties: props
+        edge: {
+          id: edgeId,
+          name: props['name'],
+          properties: props
+        }
       };
       // Mark as unverified
       EdgeActions.setProps(edgeId, {status: STATUS.UNVERIFIED});
@@ -158,12 +179,29 @@ function() {
       );
     },
     removeEdge: function(edgeId) {
-      // TODO
+      // Prepare server request
+      var request = {
+        command: METHODS.REMOVEEDGE,
+        modelId: modelId,
+        edgeId: edgeId
+      };
+      // Mark as unverified
+      EdgeActions.setProps(edgeId, {status: STATUS.UNVERIFIED});
+      _sendRequest(request,
+          // On success
+          function(response) {
+            EdgeActions.setProps(edgeId, {errorMessage: null, status: STATUS.VERIFIED});
+          },
+          // On error
+          function(response) {
+            EdgeActions.setProps(edgeId, {errorMessage: response.body.error, status: STATUS.ERROR});
+          }
+      );
     },
     startRunningModel: function(modelId, callback) {
       // Prepare server request
       var request = {
-        type: METHODS.START,
+        command: METHODS.START,
         id: modelId
       };
       var _this = this;
@@ -179,7 +217,7 @@ function() {
       );
     },
     stopRunningModel: function() {
-      _sendRequest({type: METHODS.STOP});
+      _sendRequest({command: METHODS.STOP});
     }
   }
 });

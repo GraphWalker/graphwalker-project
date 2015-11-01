@@ -1,5 +1,6 @@
-define(function() {
+define(['constants/Utils'], function(Utils) {
 
+  var Enum = Utils.Enum;
   var constants = {};
 
   // Keys might not always be the same as values. Change
@@ -7,8 +8,10 @@ define(function() {
   constants.methods = {
     'ADDMODEL': 'addModel',
     'ADDVERTEX': 'addVertex',
+    'REMOVEVERTEX': 'removeVertex',
     'UPDATEVERTEX': 'updateVertex',
     'ADDEDGE': 'addEdge',
+    'REMOVEEDGE': 'removeEdge',
     'UPDATEEDGE': 'updateEdge',
     'START': 'startRunning',
     'NEXT': 'getNextElement',
