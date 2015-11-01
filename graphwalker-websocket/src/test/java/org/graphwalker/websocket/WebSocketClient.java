@@ -2,7 +2,7 @@ package org.graphwalker.websocket;
 
 /*
  * #%L
- * GraphWalker Command Line Interface
+ * GraphWalker As A Service
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
