@@ -189,4 +189,8 @@ public class JsonModel {
             edges.add(jsonEdge);
         }
     }
+
+    public void setModel(Model model) {
+        setModel(model.build());
+    }
 }

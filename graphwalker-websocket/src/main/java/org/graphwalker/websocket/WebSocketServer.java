@@ -38,6 +38,8 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.json.JsonEdge;
+import org.graphwalker.io.factory.json.JsonVertex;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.json.JSONArray;
@@ -59,7 +61,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     private Set<WebSocket> sockets;
     private Map<WebSocket, Machine> machines;
     private Map<WebSocket, List<Context>> contexts;
-    private Map<org.java_websocket.WebSocket, List<Model>> models;
+    private Map<WebSocket, List<Model>> models;
 
     public WebSocketServer(int port) {
         super(new InetSocketAddress(port));
@@ -113,10 +115,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             return;
         }
 
-        String type = root.getString("type").toUpperCase();
-        switch (type) {
+        String command = root.getString("command").toUpperCase();
+        switch (command) {
             case "LOADMODEL":
-                response.put("type", "loadModel");
+                response.put("command", "loadModel");
                 try {
                     Context context = new JsonContextFactory().create(root.getJSONObject("model").toString());
                     List<Context> executionContexts = contexts.get(socket);
@@ -129,7 +131,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
                 break;
             case "GETMODEL":
-                response.put("type", "getModel");
+                response.put("command", "getModel");
                 try {
                     List<Context> executionContexts = contexts.get(socket);
                     Context context = getContextById(executionContexts, root.getString("modelId"));
@@ -149,10 +151,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     machine = new SimpleMachine(executionContexts);
                     machine.addObserver(this);
                     machines.put(socket, machine);
-                    response.put("type", "start");
+                    response.put("command", "start");
                     response.put("success", true);
                 } catch (MachineException e) {
-                    response.put("type", "start");
+                    response.put("command", "start");
                     response.put("success", false);
                     response.put("message", e.getMessage());
                 }
@@ -160,7 +162,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "GETNEXT": {
                 Machine machine = machines.get(socket);
-                response.put("type", "getNext");
+                response.put("command", "getNext");
                 if (machine != null) {
                     machine.getNextStep();
                     response.put("success", true);
@@ -175,7 +177,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "HASNEXT": {
                 Machine machine = machines.get(socket);
-                response.put("type", "hasNext");
+                response.put("command", "hasNext");
                 if (machine == null) {
                     response.put("success", false);
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
@@ -193,12 +195,12 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 machines.put(socket, null);
                 contexts.put(socket, null);
                 contexts.put(socket, new ArrayList<Context>());
-                response.put("type", "restart");
+                response.put("command", "restart");
                 response.put("success", true);
 
                 break;
             case "GETDATA": {
-                response.put("type", "getData");
+                response.put("command", "getData");
                 Machine machine = machines.get(socket);
                 if (machine != null) {
                     JSONArray jsonKeys = new JSONArray();
@@ -223,6 +225,23 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 modelsList.add(model);
                 response.put("model", new JsonContextFactory().getJsonFromModel(model));
                 response.put("success", true);
+
+                break;
+            }
+            case "REMOVEMODEL": {
+                response.put("command", "removeModel");
+                response.put("success", false);
+                List<Model> modelsList = models.get(socket);
+                Model model = getModelById(modelsList, root.getString("id"));
+
+                if (model != null) {
+                    modelsList.remove(model);
+                    response.put("id", model.getId());
+                    response.put("success", true);
+
+                } else {
+                    response.put("message", "Did not find a model with id: " + root.getString("id"));
+                }
 
                 break;
             }
@@ -280,43 +299,30 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "UPDATEVERTEX": {
                 response.put("command", "updateVertex");
+                response.put("success", false);
                 List<Model> modelsList = models.get(socket);
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
+                    JSONObject vertexJsonObject = root.getJSONObject("vertex");
                     Vertex vertex = null;
                     for (Vertex v : model.getVertices()) {
-                        if (v.getId().equals(root.getString("vertexId"))) {
+                        if (v.getId().equals(vertexJsonObject.getString("id"))) {
                             vertex = v;
                             break;
                         }
                     }
 
                     if (vertex == null) {
-                        response.put("success", false);
                         response.put("message", "Did not find a vertex with id: " + root.getString("vertexId"));
                     } else {
-                        try {
-                            JSONObject object = root.getJSONObject("properties");
-                            String[] keys = JSONObject.getNames(object);
-                            for (String key : keys) {
-                                Object value = object.get(key);
-                                if (key.equals("name")) {
-                                    vertex.setName(value.toString());
-                                } else {
-                                    vertex.setProperty(key, value);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            logger.debug("Caught exception when parsing vertex: " + vertex.getId() + ", " + e.getMessage());
-                        }
-
+                        JsonVertex jsonVertex = new Gson().fromJson(vertexJsonObject.toString(), JsonVertex.class);
+                        jsonVertex.copyValues(vertex);
                         response.put("modelId", model.getId());
-                        response.put("vertex", new Gson().toJson(vertex.build()));
+                        response.put("vertex", jsonVertex);
                         response.put("success", true);
                     }
                 } else {
-                    response.put("success", false);
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
                 }
 
@@ -324,50 +330,38 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "UPDATEEDGE": {
                 response.put("command", "updateEdge");
+                response.put("success", false);
                 List<Model> modelsList = models.get(socket);
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
                 if (model != null) {
+                    JSONObject edgeJsonObject = root.getJSONObject("edge");
                     Edge edge = null;
                     for (Edge e : model.getEdges()) {
-                        if (e.getId().equals(root.getString("edgeId"))) {
+                        if (e.getId().equals(edgeJsonObject.getString("id"))) {
                             edge = e;
                             break;
                         }
                     }
 
                     if (edge == null) {
-                        response.put("success", false);
                         response.put("message", "Did not find an edge with id: " + root.getString("egdeId"));
                     } else {
-                        try {
-                            JSONObject object = root.getJSONObject("properties");
-                            String[] keys = JSONObject.getNames(object);
-                            for (String key : keys) {
-                                Object value = object.get(key);
-                                if (key.equals("name")) {
-                                    edge.setName(value.toString());
-                                } else {
-                                    edge.setProperty(key, value);
-                                }
-                            }
-                        } catch (JSONException e) {
-                            logger.debug("Caught exception when parsing edge: " + edge.getId() + ", " + e.getMessage());
-                        }
-
+                        JsonEdge jsonVertex = new Gson().fromJson(edgeJsonObject.toString(), JsonEdge.class);
+                        jsonVertex.copyValues(edge);
                         response.put("modelId", model.getId());
                         response.put("edge", new Gson().toJson(edge.build()));
                         response.put("success", true);
                     }
                 } else {
-                    response.put("success", false);
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
                 }
 
                 break;
             }
-            case "DELETEVERTEX": {
-                response.put("command", "deleteVertex");
+            case "REMOVEVERTEX": {
+                response.put("command", "removeVertex");
+                response.put("success", false);
                 List<Model> modelsList = models.get(socket);
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
@@ -375,19 +369,20 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     for (Vertex v : model.getVertices()) {
                         if (v.getId().equals(new JSONObject(message).getString("vertexId"))) {
                             model.deleteVertex(v);
+                            response.put("success", true);
+                            break;
                         }
                     }
-                    response.put("success", true);
 
                 } else {
-                    response.put("success", false);
                     response.put("message", "No models. You need to call newModel first.");
                 }
 
                 break;
             }
-            case "DELETEEDGE": {
-                response.put("command", "deleteEdge");
+            case "REMOVEEDGE": {
+                response.put("command", "removeEdge");
+                response.put("success", false);
                 List<Model> modelsList = models.get(socket);
                 Model model = getModelById(modelsList, root.getString("modelId"));
 
@@ -395,11 +390,12 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     for (Edge e : model.getEdges()) {
                         if (e.getId().equals(new JSONObject(message).getString("edgeId"))) {
                             model.deleteEdge(e);
+                            response.put("success", true);
+                            break;
                         }
                     }
 
                 } else {
-                    response.put("success", false);
                     response.put("message", "No models. You need to call newModel first.");
                 }
 
@@ -417,7 +413,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         socket.send(response.toString());
     }
 
-    private Context getContextById(List<Context> contextsList, String id) {
+    public Context getContextById(List<Context> contextsList, String id) {
         for (Context c : contextsList) {
             if (c.getModel().getId().equals(id)) {
                 return c;
@@ -426,7 +422,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         return null;
     }
 
-    private Model getModelById(List<Model> modelsList, String id) {
+    public Model getModelById(List<Model> modelsList, String id) {
         for (Model m : modelsList) {
             if (m.getId().equals(id)) {
                 return m;
@@ -451,7 +447,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 WebSocket conn = (WebSocket) pairs.getKey();
                 if (type == EventType.AFTER_ELEMENT) {
                     JSONObject jsonObject = new JSONObject();
-                    jsonObject.put("type", "visitedElement");
+                    jsonObject.put("command", "visitedElement");
                     jsonObject.put("id", element.getId());
                     jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
                     conn.send(jsonObject.toString());
@@ -495,5 +491,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     public Map<WebSocket, List<Context>> getContexts() {
         return contexts;
+    }
+
+    public Map<WebSocket, List<Model>> getModels() {
+        return models;
     }
 }
