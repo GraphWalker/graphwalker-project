@@ -29,7 +29,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] [%X{trace}] %-5level %logger{20} - %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

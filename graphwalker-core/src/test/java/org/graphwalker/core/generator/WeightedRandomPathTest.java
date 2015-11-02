@@ -33,11 +33,15 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Kristian Karl
  */
 public class WeightedRandomPathTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(WeightedRandomPathTest.class);
 
     private final Vertex source = new Vertex().setName("source");
     private final Vertex target = new Vertex().setName("target");
@@ -62,7 +66,7 @@ public class WeightedRandomPathTest {
         }.setCurrentElement(source.build()));
 
         while (machine.hasNextStep()) {
-            System.out.println(machine.getCurrentContext().getCurrentElement().getName());
+            logger.debug(machine.getCurrentContext().getCurrentElement().getName());
             machine.getNextStep();
         }
     }
