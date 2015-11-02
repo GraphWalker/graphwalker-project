@@ -28,9 +28,7 @@ package org.graphwalker.websocket;
 
 import com.google.gson.Gson;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.io.factory.json.JsonEdge;
 import org.graphwalker.io.factory.json.JsonVertex;
 import org.graphwalker.java.annotation.BeforeExecution;
@@ -43,11 +41,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
+import static org.graphwalker.websocket.EditorTest.ChangeState.*;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -63,6 +59,21 @@ public class EditorTest extends ExecutionContext implements Editor {
     private Model activeModel = null;
     private WebSocket mySessionSocket = null;
     private List<Model> models = new ArrayList<>();
+    private ChangeState changeState = NONE;
+    private Object changedValue = null;
+    private String changedElementId = null;
+    private HashMap<ChangeState, Boolean> edgeChangeData = new HashMap<>();
+    private HashMap<ChangeState, Boolean> vertexChangeData = new HashMap<>();
+
+    public enum ChangeState {
+        NAME,
+        ACTION,
+        REQUIREMENT,
+        POSITION,
+        SHAPE,
+        COLOR,
+        NONE
+    }
 
     @BeforeExecution
     public void StartServer() throws Exception {
@@ -109,8 +120,50 @@ public class EditorTest extends ExecutionContext implements Editor {
         Vertex vertex = activeModel.getVertices().get(random.nextInt(activeModel.getVertices().size()));
         logger.debug("Will change vertex with id: " + vertex.getId());
 
-        // Create change in properties
-        vertex.setName(UUID.randomUUID().toString());
+        // Create some change in some random property.
+        changedValue = UUID.randomUUID().toString();
+        changedElementId = vertex.getId();
+        switch (ChangeState.values()[random.nextInt(values().length)]) {
+            case NAME:
+                changeState = NAME;
+                vertex.setName((String) changedValue);
+                logger.debug("Changing name to: " + changedValue);
+                vertexChangeData.put(NAME, true);
+                break;
+
+            case REQUIREMENT:
+                changeState = REQUIREMENT;
+                vertex.addRequirement(new Requirement((String) changedValue));
+                logger.debug("Adding the requirement: " + changedValue);
+                vertexChangeData.put(REQUIREMENT, true);
+                break;
+
+            case POSITION:
+                changeState = POSITION;
+                vertex.setProperty("position", changedValue);
+                logger.debug("Changing position to: " + changedValue);
+                vertexChangeData.put(POSITION, true);
+                break;
+
+            case SHAPE:
+                changeState = SHAPE;
+                vertex.setProperty("shape", changedValue);
+                logger.debug("Changing shape to: " + changedValue);
+                vertexChangeData.put(SHAPE, true);
+                break;
+
+            case COLOR:
+                changeState = COLOR;
+                vertex.setProperty("color", changedValue);
+                logger.debug("Changing color to: " + changedValue);
+                vertexChangeData.put(COLOR, true);
+                break;
+
+            default:
+                logger.error("This was unexpected...");
+                break;
+        }
+
         JsonVertex jsonVertex = new JsonVertex();
         jsonVertex.setVertex(vertex);
         client.updateVertex(activeModel.getId(), new Gson().toJson(jsonVertex));
@@ -137,29 +190,184 @@ public class EditorTest extends ExecutionContext implements Editor {
         Edge edge = activeModel.getEdges().get(random.nextInt(activeModel.getEdges().size()));
         logger.debug("Will change edge with id: " + edge.getId());
 
-        // Create change in properties
-        edge.setName(UUID.randomUUID().toString());
+        // Create some change in some random property.
+        changedValue = UUID.randomUUID().toString();
+        changedElementId = edge.getId();
+        switch (ChangeState.values()[random.nextInt(values().length)]) {
+            case NAME:
+                changeState = NAME;
+                edge.setName((String) changedValue);
+                logger.debug("Changing name to: " + changedValue);
+                edgeChangeData.put(NAME, true);
+                break;
+
+            case ACTION:
+                changeState = ACTION;
+                edge.addAction(new Action((String) changedValue));
+                logger.debug("Adding the action: " + changedValue);
+                edgeChangeData.put(ACTION, true);
+                break;
+
+            case REQUIREMENT:
+                changeState = REQUIREMENT;
+                edge.addRequirement(new Requirement((String) changedValue));
+                logger.debug("Adding the requirement: " + changedValue);
+                edgeChangeData.put(REQUIREMENT, true);
+                break;
+
+            case POSITION:
+                changeState = POSITION;
+                edge.setProperty("position", changedValue);
+                logger.debug("Changing position to: " + changedValue);
+                edgeChangeData.put(POSITION, true);
+                break;
+
+            case SHAPE:
+                changeState = SHAPE;
+                edge.setProperty("shape", changedValue);
+                logger.debug("Changing shape to: " + changedValue);
+                edgeChangeData.put(SHAPE, true);
+                break;
+
+            case COLOR:
+                changeState = COLOR;
+                edge.setProperty("color", changedValue);
+                logger.debug("Changing color to: " + changedValue);
+                edgeChangeData.put(COLOR, true);
+                break;
+
+            default:
+                logger.error("This was unexpected...");
+                break;
+        }
+
         JsonEdge jsonEdge = new JsonEdge();
         jsonEdge.setEdge(edge);
         client.updateEdge(activeModel.getId(), new Gson().toJson(jsonEdge));
     }
 
+    private RuntimeBase getElement(Model model, String id) {
+        List<Object> elements = new ArrayList<>();
+        elements.addAll(model.getVertices());
+        elements.addAll(model.getEdges());
+        for (Object o : elements) {
+            if (o instanceof Vertex) {
+                Vertex vertex = (Vertex) o;
+                if (vertex.getId().equals(id)) {
+                    return vertex.build();
+                }
+            } else if (o instanceof Edge) {
+                Edge edge = (Edge) o;
+                if (edge.getId().equals(id)) {
+                    return edge.build();
+                }
+            }
+        }
+        return null;
+    }
+
     @Override
     public void v_ActiveModel() {
+        // Verify active model
         logger.debug("Active model: " + activeModel.getId());
         Model serverModel = server.getModelById(server.getModels().get(mySessionSocket), activeModel.getId());
+
         Assert.assertNotNull(serverModel);
         Assert.assertThat(serverModel.getId(), is(activeModel.getId()));
         Assert.assertThat(serverModel.getVertices().size(), is(activeModel.getVertices().size()));
         Assert.assertThat(serverModel.getEdges().size(), is(activeModel.getEdges().size()));
 
+
+        // Verify number of vertices
         int num_of_vertices = ((Double) getAttribute("num_of_vertices")).intValue();
         logger.debug("Number of vertices: " + num_of_vertices);
         Assert.assertThat(serverModel.getVertices().size(), is(num_of_vertices));
 
+
+        // Verify number of edges
         int num_of_edges = ((Double) getAttribute("num_of_edges")).intValue();
         logger.debug("Number of edges: " + num_of_edges);
         Assert.assertThat(serverModel.getEdges().size(), is(num_of_edges));
+
+
+        if (changeState != NONE) {
+            // Verify the change
+            RuntimeBase element = getElement(serverModel, changedElementId);
+            logger.debug("Verifying the element with id: " + element.getId());
+            switch (changeState) {
+                case NAME:
+                    logger.debug("Verifying the name change: " + changedValue);
+                    Assert.assertThat((String) changedValue, is(element.getName()));
+                    break;
+
+                case ACTION:
+                    logger.debug("Verifying the added action: " + changedValue);
+                    Assert.assertTrue(element.hasActions());
+                    Iterator iter = element.getActions().iterator();
+                    boolean foundValue = false;
+                    while (iter.hasNext()) {
+                        Action action = (Action) iter.next();
+                        if (action.getScript().equals(changedValue)) {
+                            foundValue = true;
+                            break;
+                        }
+                    }
+                    Assert.assertTrue(foundValue);
+                    break;
+
+                case REQUIREMENT:
+                    logger.debug("Verifying the added requirement: " + changedValue);
+                    Assert.assertTrue(element.hasRequirements());
+                    iter = element.getRequirements().iterator();
+                    foundValue = false;
+                    while (iter.hasNext()) {
+                        Requirement requirement = (Requirement) iter.next();
+                        if (requirement.getKey().equals(changedValue)) {
+                            foundValue = true;
+                            break;
+                        }
+                    }
+                    Assert.assertTrue(foundValue);
+                    break;
+
+                case POSITION:
+                    logger.debug("Verifying the changed position: " + changedValue);
+                    Assert.assertThat(element.getProperty("position"), is(changedValue));
+                    break;
+
+                case SHAPE:
+                    logger.debug("Verifying the shape change: " + changedValue);
+                    Assert.assertThat(element.getProperty("shape"), is(changedValue));
+                    break;
+
+                case COLOR:
+                    logger.debug("Verifying the color change: " + changedValue);
+                    Assert.assertThat(element.getProperty("color"), is(changedValue));
+                    break;
+
+                case NONE:
+                    break;
+                default:
+                    Assert.fail("Shoot the developer!");
+                    break;
+            }
+            changeState = NONE;
+            changedValue = null;
+            changedElementId = null;
+        }
+
+        // Set the model attribute allDataExhausted to true, if all data for changing
+        // different attributes in edges and vertices has been executed.
+        logger.debug("Data status: " + ((float) (edgeChangeData.size() + vertexChangeData.size()) / 11) * 100 + " % covered.");
+        if (edgeChangeData.size() >= 6 && vertexChangeData.size() >= 5) {
+            setAttribute("allDataExhuasted", true);
+            logger.debug("allDataExhuasted: " + getAttribute("allDataExhuasted"));
+        }
+    }
+
+    @Override
+    public void v_AllChangesDone() {
+        logger.debug("All tests are done!");
     }
 
     @Override
