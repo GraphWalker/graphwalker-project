@@ -102,6 +102,8 @@ public abstract class RuntimeBase implements Element {
     }
 
     public boolean hasActions() {
+        if (actions == null)
+            return false;
         return !actions.isEmpty();
     }
 
@@ -109,7 +111,7 @@ public abstract class RuntimeBase implements Element {
         return requirements;
     }
 
-    public Map<String,Object> getProperties() {
+    public Map<String, Object> getProperties() {
         return properties;
     }
 

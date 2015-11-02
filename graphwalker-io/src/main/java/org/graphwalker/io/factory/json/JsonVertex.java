@@ -51,12 +51,6 @@ public class JsonVertex {
         vertex.setId(id);
         vertex.setName(name);
 
-        if (actions != null) {
-            for (String action : actions) {
-                vertex.addAction(new Action(action));
-            }
-        }
-
         if (requirements != null) {
             for (String requirement : requirements) {
                 vertex.addRequirement(new Requirement(requirement));
@@ -73,13 +67,6 @@ public class JsonVertex {
     public void setVertex(Vertex.RuntimeVertex vertex) {
         id = vertex.getId();
         name = vertex.getName();
-
-        if (vertex.hasActions()) {
-            actions = new ArrayList<>();
-            for (Action action : vertex.getActions()) {
-                actions.add(action.getScript());
-            }
-        }
 
         if (vertex.hasRequirements()) {
             requirements = new ArrayList<>();
@@ -105,12 +92,6 @@ public class JsonVertex {
 
         if (name != null) {
             vertex.setName(name);
-        }
-
-        if (actions != null) {
-            for (String action : actions) {
-                vertex.addAction(new Action(action));
-            }
         }
 
         if (requirements != null) {
