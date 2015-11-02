@@ -37,6 +37,8 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +50,8 @@ import static org.hamcrest.core.Is.is;
  * @author Kristian Karl
  */
 public class JsonContextFactoryTest {
+    private static final Logger logger = LoggerFactory.getLogger(JsonContextFactoryTest.class);
+
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
@@ -68,7 +72,7 @@ public class JsonContextFactoryTest {
     public void SmallModelWithSimpleMachine() {
         SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
         while (machine.hasNextStep()) {
-            System.out.println(machine.getNextStep().getCurrentElement().getName());
+            logger.debug(machine.getNextStep().getCurrentElement().getName());
         }
     }
 
