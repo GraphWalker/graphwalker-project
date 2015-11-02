@@ -21,7 +21,7 @@ function(riot, $) {
         url: ''
       },
       canvas: {
-        scrollIncrement: 1,
+        scrollIncrement: 0.3,
         minimap: true
       }
     };
