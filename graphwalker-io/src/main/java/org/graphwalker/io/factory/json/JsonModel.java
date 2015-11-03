@@ -129,6 +129,12 @@ public class JsonModel {
         model.setName(name);
         model.setId(id);
 
+        if (actions != null) {
+            for (String action : actions) {
+                model.addAction(new Action(action));
+            }
+        }
+
         if (vertices != null) {
             for (JsonVertex jsonVertex : getVertices()) {
                 model.addVertex(jsonVertex.getVertex());

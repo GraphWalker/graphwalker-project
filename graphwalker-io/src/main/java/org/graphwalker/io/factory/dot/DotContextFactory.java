@@ -75,6 +75,11 @@ public final class DotContextFactory implements ContextFactory {
     }
 
     @Override
+    public List<Context> createMultiple(Path path) {
+        return null;
+    }
+
+    @Override
     public <T extends Context> T create(Path path, T context) {
 
         Model model = new Model();

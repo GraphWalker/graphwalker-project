@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory.json;
+package org.graphwalker.io.factory.gw3;
 
 /*
  * #%L
@@ -35,6 +35,10 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
+import org.graphwalker.io.factory.json.JsonContext;
+import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.json.JsonModel;
+import org.graphwalker.io.factory.json.JsonMultimodel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,81 +47,37 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by krikar on 9/24/14.
  */
-public final class JsonContextFactory implements ContextFactory {
+public final class GW3ContextFactory implements ContextFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonContextFactory.class);
-    private static final String FILE_TYPE = "json";
-    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.json"));
+    private static final Logger logger = LoggerFactory.getLogger(GW3ContextFactory.class);
+    private static final String FILE_TYPE = "gw3";
+    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.gw3"));
 
     @Override
     public <T extends Context> T create(Path path, T context) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
-        StringBuilder out = new StringBuilder();
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                out.append(line);
-            }
-        } catch (IOException e) {
-            throw new ContextFactoryException("Could not read the file.");
-        }
-        logger.debug(out.toString());
-        try {
-            reader.close();
-        } catch (IOException e) {
-            throw new ContextFactoryException("Could not read the file.");
-        }
-
-        create(out.toString(), context);
+        new JsonContextFactory().create(path, context);
         return context;
     }
 
+    /*
+     * Reuse JsonContextFactory for single models
+     */
     @Override
     public <T extends Context> T write(T context, Path path) throws IOException {
-        Files.newOutputStream(path).write(String.valueOf(getJsonFromContext(context)).getBytes());
+        Files.newOutputStream(path).write(String.valueOf(new JsonContextFactory().getJsonFromContext(context)).getBytes());
         return context;
     }
 
-    public String getJsonFromModel(Model model) {
-        return new Gson().toJson(model);
-    }
-
-    public String getJsonFromContext(Context context) {
-        JsonModel jsonModel = new JsonModel();
-        jsonModel.setModel(context.getModel());
-
-        if (context.getPathGenerator() != null) {
-            jsonModel.setGenerator(context.getPathGenerator().toString());
-        }
-        if (context.getNextElement() != null && context.getNextElement().hasId()) {
-            jsonModel.setStartElementId(context.getNextElement().getId());
-        }
-        return new Gson().toJson(jsonModel);
-    }
-
+    /*
+     * Reuse JsonContextFactory for single models
+     */
     public <T extends Context> T create(String jsonString, T context) {
-        Gson gson = new Gson();
-        JsonModel jsonModel = gson.fromJson(jsonString, JsonModel.class);
-        Model model = jsonModel.getModel();
-
-        context.setModel(model.build());
-        if (jsonModel.getGenerator() != null) {
-            context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
-        }
-        for (Element element : context.getModel().getElements()) {
-            if (element.getId().equals(jsonModel.getStartElementId())) {
-                context.setNextElement(element);
-                break;
-            }
-        }
+        new JsonContextFactory().create(jsonString, context);
         return context;
     }
 
@@ -138,9 +98,48 @@ public final class JsonContextFactory implements ContextFactory {
 
     @Override
     public List<Context> createMultiple(Path path) {
-        return null;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
+        StringBuilder jsonGraphWalker = new StringBuilder();
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                jsonGraphWalker.append(line);
+            }
+        } catch (IOException e) {
+            throw new ContextFactoryException("Could not read the file.");
+        }
+        logger.debug(jsonGraphWalker.toString());
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new ContextFactoryException("Could not read the file.");
+        }
+
+        List<Context> contexts = new ArrayList<>();
+        JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonGraphWalker.toString(), JsonMultimodel.class);
+        for (JsonModel jsonModel : jsonMultimodel.getModels()) {
+            GW3Context context = new GW3Context();
+            Model model = jsonModel.getModel();
+
+            context.setModel(model.build());
+            if (jsonModel.getGenerator() != null) {
+                context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
+            }
+            for (Element element : context.getModel().getElements()) {
+                if (element.getId().equals(jsonModel.getStartElementId())) {
+                    context.setNextElement(element);
+                    break;
+                }
+            }
+            contexts.add(context);
+        }
+
+        return contexts;
     }
 
+    /*
+     * Reuse JsonContextFactory for single models
+     */
     public Context create(String jsonString) {
         return create(jsonString, new JsonContext());
     }

@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io.factory.json;
 
 /*
  * #%L
@@ -26,25 +26,29 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Set;
 
-/**
- * @author Nils Olsson
- */
-public interface ContextFactory {
+public final class JsonMultimodel {
+    private String name;
+    private List<JsonModel> models;
 
-    Context create(Path path);
-    List<Context> createMultiple(Path path);
+    public String getName() {
+        return name;
+    }
 
-    <T extends Context> T create(Path path, T context);
-    <T extends Context> T  write(T context, Path path) throws IOException;
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    boolean accept(Path path);
+    public List<JsonModel> getModels() {
+        return models;
+    }
 
-    Set<String> getSupportedFileTypes();
+    public void setModels(List<JsonModel> models) {
+        this.models = models;
+    }
+
+    public void add(JsonModel jsonModel) {
+        models.add(jsonModel);
+    }
 }

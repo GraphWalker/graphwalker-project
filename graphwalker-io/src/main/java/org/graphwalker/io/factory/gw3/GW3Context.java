@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io.factory.gw3;
 
 /*
  * #%L
@@ -26,25 +26,11 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
+import org.graphwalker.core.machine.ExecutionContext;
 
 /**
- * @author Nils Olsson
+ * Created by krikar on 9/24/14.
  */
-public interface ContextFactory {
+public final class GW3Context extends ExecutionContext {
 
-    Context create(Path path);
-    List<Context> createMultiple(Path path);
-
-    <T extends Context> T create(Path path, T context);
-    <T extends Context> T  write(T context, Path path) throws IOException;
-
-    boolean accept(Path path);
-
-    Set<String> getSupportedFileTypes();
 }
