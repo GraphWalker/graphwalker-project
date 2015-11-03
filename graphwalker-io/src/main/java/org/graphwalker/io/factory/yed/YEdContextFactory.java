@@ -79,6 +79,11 @@ public final class YEdContextFactory implements ContextFactory {
     }
 
     @Override
+    public List<Context> createMultiple(Path path) {
+        return null;
+    }
+
+    @Override
     public <T extends Context> T create(Path path, T context) {
         Edge startEdge = null;
         Map<String, Vertex> elements = new HashMap<>();

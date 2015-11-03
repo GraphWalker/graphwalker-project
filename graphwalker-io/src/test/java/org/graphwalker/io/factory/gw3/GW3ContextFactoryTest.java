@@ -1,4 +1,4 @@
-package org.graphwalker.io.factory;
+package org.graphwalker.io.factory.gw3;
 
 /*
  * #%L
@@ -27,24 +27,42 @@ package org.graphwalker.io.factory;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Element;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Set;
+
+import static org.hamcrest.core.Is.is;
 
 /**
- * @author Nils Olsson
+ * @author Kristian Karl
  */
-public interface ContextFactory {
+public class GW3ContextFactoryTest {
+    private static final Logger logger = LoggerFactory.getLogger(GW3ContextFactoryTest.class);
 
-    Context create(Path path);
-    List<Context> createMultiple(Path path);
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
-    <T extends Context> T create(Path path, T context);
-    <T extends Context> T  write(T context, Path path) throws IOException;
+    @Test
+    public void PetClinic() {
+        List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3"));
+        Assert.assertNotNull(contexts);
+        Assert.assertThat(contexts.size(), is(5));
+    }
 
-    boolean accept(Path path);
-
-    Set<String> getSupportedFileTypes();
+    @Test
+    public void PetClinicWithSimpleMachine() {
+        SimpleMachine machine = new SimpleMachine(new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3")));
+        while (machine.hasNextStep()) {
+            Element e = machine.getNextStep().getCurrentElement();
+            logger.debug(e.getName());
+        }
+    }
 }

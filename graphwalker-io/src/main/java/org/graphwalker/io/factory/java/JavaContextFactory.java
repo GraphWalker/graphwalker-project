@@ -72,6 +72,11 @@ public final class JavaContextFactory implements ContextFactory {
     }
 
     @Override
+    public List<Context> createMultiple(Path path) {
+        return null;
+    }
+
+    @Override
     public <T extends Context> T create(Path path, T context) {
         throw new ContextFactoryException("Creating a model from Java is not supported");
     }

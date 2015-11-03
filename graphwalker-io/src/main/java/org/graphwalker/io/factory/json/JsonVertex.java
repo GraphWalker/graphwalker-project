@@ -42,6 +42,7 @@ public class JsonVertex {
 
     private String id;
     private String name;
+    private String sharedState;
     private List<String> actions;
     private List<String> requirements;
     private Map<String, Object> properties;
@@ -50,6 +51,7 @@ public class JsonVertex {
         Vertex vertex = new Vertex();
         vertex.setId(id);
         vertex.setName(name);
+        vertex.setSharedState(sharedState);
 
         if (requirements != null) {
             for (String requirement : requirements) {
@@ -67,6 +69,7 @@ public class JsonVertex {
     public void setVertex(Vertex.RuntimeVertex vertex) {
         id = vertex.getId();
         name = vertex.getName();
+        sharedState = vertex.getSharedState();
 
         if (vertex.hasRequirements()) {
             requirements = new ArrayList<>();
@@ -92,6 +95,10 @@ public class JsonVertex {
 
         if (name != null) {
             vertex.setName(name);
+        }
+
+        if (sharedState != null) {
+            vertex.setSharedState(sharedState);
         }
 
         if (requirements != null) {
