@@ -118,14 +118,14 @@ public final class JavaContextFactory implements ContextFactory {
 
     @Override
     public <T extends Context> T write(T context, Path path) throws IOException {
-        String template = StringUtils.join(javaCodeTemplate.toArray(), "\n" );
+        String template = StringUtils.join(javaCodeTemplate.toArray(), "\n");
         template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));
 
         int index = 0;
         String add_vertices = "";
-        for (Vertex.RuntimeVertex vertex: context.getModel().getVertices()) {
+        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
             String id = "";
-            if ( vertex.getId()!=null && !vertex.getId().equals("")) {
+            if (vertex.getId() != null && !vertex.getId().equals("")) {
                 id = vertex.getId();
             } else {
                 id = "n" + String.valueOf(index++);
@@ -140,7 +140,7 @@ public final class JavaContextFactory implements ContextFactory {
         String add_edges = "";
         for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
             String id;
-            if ( edge.getId()!=null && !edge.getId().equals("")) {
+            if (edge.getId() != null && !edge.getId().equals("")) {
                 id = edge.getId();
             } else {
                 id = "n" + String.valueOf(index++);

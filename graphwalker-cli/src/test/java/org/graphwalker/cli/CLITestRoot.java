@@ -68,7 +68,7 @@ public abstract class CLITestRoot {
 
         @Override
         public void write(int b) throws IOException {
-            buffer.append(Character.toString((char)b));
+            buffer.append(Character.toString((char) b));
         }
 
         @Override

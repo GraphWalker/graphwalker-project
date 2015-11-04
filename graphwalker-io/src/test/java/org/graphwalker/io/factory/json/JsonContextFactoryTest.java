@@ -90,7 +90,7 @@ public class JsonContextFactoryTest {
         ContextFactory factory = new JsonContextFactory();
         Context context = factory.create(Paths.get("json/UC01.json"));
         Assert.assertThat(context.getModel().findVertices("v_BrowserStarted").get(0).getProperties().size(), is(1));
-        String color = (String)context.getModel().findVertices("v_BrowserStarted").get(0).getProperty("color");
+        String color = (String) context.getModel().findVertices("v_BrowserStarted").get(0).getProperty("color");
         Assert.assertTrue(color != null);
         Assert.assertThat(color, is("yellow"));
     }

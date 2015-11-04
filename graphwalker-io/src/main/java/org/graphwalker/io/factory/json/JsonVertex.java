@@ -26,7 +26,6 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
-import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 

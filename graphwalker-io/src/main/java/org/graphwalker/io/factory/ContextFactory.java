@@ -39,10 +39,12 @@ import java.util.Set;
 public interface ContextFactory {
 
     Context create(Path path);
+
     List<Context> createMultiple(Path path);
 
     <T extends Context> T create(Path path, T context);
-    <T extends Context> T  write(T context, Path path) throws IOException;
+
+    <T extends Context> T write(T context, Path path) throws IOException;
 
     boolean accept(Path path);
 

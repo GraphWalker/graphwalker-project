@@ -58,8 +58,9 @@ public abstract class Util {
     /**
      * Will create a plain text formatted string representing the current step. The step
      * is the current element, which can be either a vertex orn an edge.
+     *
      * @param machine
-     * @param verbose Print more details if true
+     * @param verbose       Print more details if true
      * @param showUnvisited Print all unvisited elements if true
      * @return The plain text string representing the current step.
      */
@@ -94,8 +95,9 @@ public abstract class Util {
     /**
      * Will create a JSON formatted string representing the current step. The step
      * is the current element, which can be either a vertex orn an edge.
+     *
      * @param machine
-     * @param verbose Print more details if true
+     * @param verbose       Print more details if true
      * @param showUnvisited Print all unvisited elements if true
      * @return The JSON string representing the current step.
      */
@@ -140,6 +142,7 @@ public abstract class Util {
     /**
      * Will create a plain text string representing the statistics of the current
      * execution of the machine.
+     *
      * @param machine
      * @return The execution statistics in plain text.
      */
@@ -198,6 +201,7 @@ public abstract class Util {
     /**
      * Will create a JSON formatted string representing the statistics of the current
      * execution of the machine.
+     *
      * @param machine
      * @return The execution statistics in JSON format.
      */

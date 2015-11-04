@@ -60,6 +60,7 @@ public class Restful {
     /**
      * Returns the next step (element) to be executed on the model. An element can
      * be either a vertex or an edge,
+     *
      * @return The label of the next step as a plain or a JSON formatted string. If the label is empty or
      * non-existent, the label of the step is an empty string.
      */
@@ -87,6 +88,7 @@ public class Restful {
     /**
      * Gets the next step (element) to be executed on the model. An element can
      * be either a vertex or an edge,
+     *
      * @return The label of the next step as a plain or a JSON formatted string. If the label is empty or
      * non-existent, the label of the step is an empty string.
      */

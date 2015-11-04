@@ -28,7 +28,7 @@ public class GenerateTestSources extends GenerateBase {
         getProject().getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
             @Override
             public void execute(JavaPlugin plugin) {
-                SourceSetContainer sourceSets = (SourceSetContainer)getProject().getProperties().get("sourceSets");
+                SourceSetContainer sourceSets = (SourceSetContainer) getProject().getProperties().get("sourceSets");
                 SourceSet sourceSet = sourceSets.getByName("test");
                 sourceSet.getJava().srcDir(getOutputDirectory());
             }
@@ -42,7 +42,7 @@ public class GenerateTestSources extends GenerateBase {
         getProject().getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
             @Override
             public void execute(JavaPlugin plugin) {
-                SourceSetContainer sourceSets = (SourceSetContainer)getProject().getProperties().get("sourceSets");
+                SourceSetContainer sourceSets = (SourceSetContainer) getProject().getProperties().get("sourceSets");
                 SourceSet sourceSet = sourceSets.getByName("test");
                 resources.addAll(sourceSet.getResources().getSrcDirs());
             }

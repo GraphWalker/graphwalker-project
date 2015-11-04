@@ -41,7 +41,7 @@ import java.util.List;
 /**
  * This is a programatic implementaion of the loginModel:
  * https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Login.graphml
- * <p/>
+ * <p>
  * Created by krikar on 8/20/14.
  */
 public class LoginModelTest {

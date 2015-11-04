@@ -113,7 +113,7 @@ public final class YEdContextFactory implements ContextFactory {
 
         for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
             if (0 == context.getModel().getInEdges(vertex).size() && !vertex.equals(context.getNextElement()) && !vertex.hasSharedState()) {
-               throw new ContextFactoryException("No in-edges! Vertex: '" + (vertex.hasName() ? vertex.getName() : vertex.getId()) + "'");
+                throw new ContextFactoryException("No in-edges! Vertex: '" + (vertex.hasName() ? vertex.getName() : vertex.getId()) + "'");
             }
         }
 
@@ -156,7 +156,7 @@ public final class YEdContextFactory implements ContextFactory {
             Vertex.RuntimeVertex src = e.getSourceVertex();
             Vertex.RuntimeVertex dest = e.getTargetVertex();
 
-            if (src==null || dest==null) {
+            if (src == null || dest == null) {
                 continue;
             }
 

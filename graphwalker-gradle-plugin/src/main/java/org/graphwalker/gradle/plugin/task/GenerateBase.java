@@ -17,7 +17,7 @@ public abstract class GenerateBase extends TaskBase {
 
     @TaskAction
     public void generateSources() {
-        for (File resource: getResources()) {
+        for (File resource : getResources()) {
             CodeGenerator.generate(resource.toPath(), getOutputDirectory().toPath());
         }
     }

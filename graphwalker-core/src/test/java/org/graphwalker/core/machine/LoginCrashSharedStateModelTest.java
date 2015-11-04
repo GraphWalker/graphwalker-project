@@ -43,7 +43,7 @@ import java.util.List;
  * This is a programatic implementaion of the models:
  * https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Login.graphml
  * https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Crash.graphml
- * <p/>
+ * <p>
  * Created by krikar on 8/20/14.
  */
 public class LoginCrashSharedStateModelTest {
@@ -72,7 +72,7 @@ public class LoginCrashSharedStateModelTest {
             .addEdge(e_StartClient_2)
             .addEdge(e_ToggleRememberMe)
             .addEdge(e_ValidPremiumCredentials)
-                    //.addAction(new Action("e_Init()"))
+            //.addAction(new Action("e_Init()"))
             .addAction(new Action("validLogin=false"))
             .addAction(new Action("rememberMe=false"));
 
