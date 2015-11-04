@@ -99,24 +99,28 @@ public final class GW3ContextFactory implements ContextFactory {
     @Override
     public List<Context> createMultiple(Path path) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
-        StringBuilder jsonGraphWalker = new StringBuilder();
+        StringBuilder jsonGW3 = new StringBuilder();
         String line;
         try {
             while ((line = reader.readLine()) != null) {
-                jsonGraphWalker.append(line);
+                jsonGW3.append(line);
             }
         } catch (IOException e) {
             throw new ContextFactoryException("Could not read the file.");
         }
-        logger.debug(jsonGraphWalker.toString());
+        logger.debug(jsonGW3.toString());
         try {
             reader.close();
         } catch (IOException e) {
             throw new ContextFactoryException("Could not read the file.");
         }
 
+        return createMultiple(jsonGW3.toString());
+    }
+
+    public List<Context> createMultiple(String jsonGW3) {
         List<Context> contexts = new ArrayList<>();
-        JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonGraphWalker.toString(), JsonMultimodel.class);
+        JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonGW3, JsonMultimodel.class);
         for (JsonModel jsonModel : jsonMultimodel.getModels()) {
             GW3Context context = new GW3Context();
             Model model = jsonModel.getModel();

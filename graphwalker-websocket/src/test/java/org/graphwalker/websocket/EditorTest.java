@@ -27,6 +27,7 @@ package org.graphwalker.websocket;
  */
 
 import com.google.gson.Gson;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.*;
 import org.graphwalker.io.factory.json.JsonEdge;
@@ -246,20 +247,17 @@ public class EditorTest extends ExecutionContext implements Editor {
         client.updateEdge(activeModel.getId(), new Gson().toJson(jsonEdge));
     }
 
-    private RuntimeBase getElement(Model model, String id) {
-        List<Object> elements = new ArrayList<>();
-        elements.addAll(model.getVertices());
-        elements.addAll(model.getEdges());
-        for (Object o : elements) {
-            if (o instanceof Vertex) {
-                Vertex vertex = (Vertex) o;
+    private RuntimeBase getElement(Model.RuntimeModel model, String id) {
+        for (Element element : model.getElements()) {
+            if (element instanceof Vertex.RuntimeVertex) {
+                Vertex.RuntimeVertex vertex = (Vertex.RuntimeVertex) element;
                 if (vertex.getId().equals(id)) {
-                    return vertex.build();
+                    return vertex;
                 }
-            } else if (o instanceof Edge) {
-                Edge edge = (Edge) o;
+            } else if (element instanceof Edge.RuntimeEdge) {
+                Edge.RuntimeEdge edge = (Edge.RuntimeEdge) element;
                 if (edge.getId().equals(id)) {
-                    return edge.build();
+                    return edge;
                 }
             }
         }
@@ -270,9 +268,11 @@ public class EditorTest extends ExecutionContext implements Editor {
     public void v_ActiveModel() {
         // Verify active model
         logger.debug("Active model: " + activeModel.getId());
-        Model serverModel = server.getModelById(server.getModels().get(mySessionSocket), activeModel.getId());
-
+        Context serverContext = server.getContextById(server.getContexts().get(mySessionSocket), activeModel.getId());
+        Assert.assertNotNull(serverContext);
+        Model.RuntimeModel serverModel = serverContext.getModel();
         Assert.assertNotNull(serverModel);
+
         Assert.assertThat(serverModel.getId(), is(activeModel.getId()));
         Assert.assertThat(serverModel.getVertices().size(), is(activeModel.getVertices().size()));
         Assert.assertThat(serverModel.getEdges().size(), is(activeModel.getEdges().size()));
@@ -394,8 +394,7 @@ public class EditorTest extends ExecutionContext implements Editor {
         if (num_of_models == 0) {
             Assert.assertNull(server.getMachines().get(mySessionSocket));
         }
-        Assert.assertThat(server.getContexts().get(mySessionSocket).size(), is(0));
-        Assert.assertThat(server.getModels().get(mySessionSocket).size(), is(num_of_models));
+        Assert.assertThat(server.getContexts().get(mySessionSocket).size(), is(num_of_models));
     }
 
     @Override
