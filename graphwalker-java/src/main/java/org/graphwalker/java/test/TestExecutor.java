@@ -101,11 +101,11 @@ public final class TestExecutor implements Executor {
         this.machine = new SimpleMachine(contexts);
     }
 
-	public TestExecutor(Collection<Context> contexts) {
-		this.configuration = new Configuration();
-		this.machineConfiguration = new MachineConfiguration();
-		this.machine = new SimpleMachine(contexts);
-	}
+    public TestExecutor(Collection<Context> contexts) {
+        this.configuration = new Configuration();
+        this.machineConfiguration = new MachineConfiguration();
+        this.machine = new SimpleMachine(contexts);
+    }
 
     @Override
     public Machine getMachine() {
@@ -235,7 +235,7 @@ public final class TestExecutor implements Executor {
         result.setFailedCount(failed);
         result.setNotExecutedCount(notExecuted);
         result.setIncompleteCount(incomplete);
-        for (MachineException exception: getFailures()) {
+        for (MachineException exception : getFailures()) {
             result.addError(getStackTrace(exception.getCause()));
         }
     }

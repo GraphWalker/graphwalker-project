@@ -2,7 +2,6 @@
   "name": "Small model",
   "generator": "random(edge_coverage(100))",
   "startElementId": "e0",
-
   "vertices": [
     {
       "name": "v_VerifySomeAction",
@@ -14,7 +13,6 @@
       "id": "n1"
     }
   ],
-
   "edges": [
     {
       "name": "e_FirstAction",

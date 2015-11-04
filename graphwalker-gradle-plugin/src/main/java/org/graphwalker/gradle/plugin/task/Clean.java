@@ -41,6 +41,7 @@ public class Clean extends TaskBase {
                         Files.delete(file);
                         return FileVisitResult.CONTINUE;
                     }
+
                     @Override
                     public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
                         Files.delete(dir);

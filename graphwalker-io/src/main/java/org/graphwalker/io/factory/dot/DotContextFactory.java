@@ -31,7 +31,10 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.dsl.antlr.dot.AntlrDotListener;
 import org.graphwalker.dsl.dot.DOTLexer;
 import org.graphwalker.dsl.dot.DOTParser;
@@ -41,7 +44,9 @@ import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -149,8 +154,7 @@ public final class DotContextFactory implements ContextFactory {
         for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
             if (edge.getSourceVertex() != null) {
                 str.append(edge.getSourceVertex().getName());
-            }
-            else {
+            } else {
                 str.append("Start");
             }
 

@@ -78,15 +78,15 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         String script = "";
         Compilable compiler = (Compilable) engine;
         for (Method method : getClass().getMethods()) {
-	        String arguments = "";
-	        for (int i = 0; i < method.getParameterTypes().length; i++) {
-		        if (i > 0) {
-			        arguments += ",";
-		        }
-		        arguments += Character.toChars(65+i)[0];
-	        }
-	        script += "function " + method.getName() + "(" + arguments;
-	        script += ") { return impl." + method.getName() + "("+arguments+");};";
+            String arguments = "";
+            for (int i = 0; i < method.getParameterTypes().length; i++) {
+                if (i > 0) {
+                    arguments += ",";
+                }
+                arguments += Character.toChars(65 + i)[0];
+            }
+            script += "function " + method.getName() + "(" + arguments;
+            script += ") { return impl." + method.getName() + "(" + arguments + ");};";
         }
         try {
             CompiledScript compiledScript = compiler.compile(script);

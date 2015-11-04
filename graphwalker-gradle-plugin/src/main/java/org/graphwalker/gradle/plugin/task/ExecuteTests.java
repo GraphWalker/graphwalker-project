@@ -65,10 +65,10 @@ public class ExecuteTests extends TaskBase {
         Configuration configuration = createConfiguration();
         Reflector reflector = new Reflector(configuration, classLoader);
         Result result = reflector.execute();
-        for (String error: result.getErrors()) {
+        for (String error : result.getErrors()) {
             System.out.println(error);
         }
-        System.out.println("Result: ["+result.getCompletedCount() +", " +result.getFailedCount()+"]");
+        System.out.println("Result: [" + result.getCompletedCount() + ", " + result.getFailedCount() + "]");
 
     }
 
@@ -82,9 +82,9 @@ public class ExecuteTests extends TaskBase {
         getProject().getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
             @Override
             public void execute(JavaPlugin plugin) {
-                SourceSetContainer sourceSets = (SourceSetContainer)getProject().getProperties().get("sourceSets");
+                SourceSetContainer sourceSets = (SourceSetContainer) getProject().getProperties().get("sourceSets");
                 SourceSet sourceSet = sourceSets.getByName("test");
-                for (File file: sourceSet.getRuntimeClasspath().getFiles()) {
+                for (File file : sourceSet.getRuntimeClasspath().getFiles()) {
                     elements.add(file.getAbsolutePath());
                 }
             }

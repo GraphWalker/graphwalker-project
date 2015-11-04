@@ -64,13 +64,14 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
     /**
      * Create a new Model, based on a existing {@link org.graphwalker.core.model.Model.RuntimeModel RuntimeModel}
+     *
      * @param model A {@link org.graphwalker.core.model.Model.RuntimeModel RuntimeModel} that the new Model will be based on.
      */
     public Model(RuntimeModel model) {
         this.id = model.getId();
         this.name = model.getName();
         Map<RuntimeVertex, Vertex> cache = new HashMap<>();
-        for (RuntimeVertex runtimeVertex: model.getVertices()) {
+        for (RuntimeVertex runtimeVertex : model.getVertices()) {
             Vertex vertex = new Vertex();
             vertex.setId(runtimeVertex.getId());
             vertex.setName(runtimeVertex.getName());
@@ -79,7 +80,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.vertices.add(vertex);
             cache.put(runtimeVertex, vertex);
         }
-        for (RuntimeEdge runtimeEdge: model.getEdges()) {
+        for (RuntimeEdge runtimeEdge : model.getEdges()) {
             Edge edge = new Edge();
             edge.setId(runtimeEdge.getId());
             edge.setName(runtimeEdge.getName());
@@ -224,8 +225,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             Edge e = e_it.next();
             if (e.getSourceVertex() == vertexToBeRemoved) {
                 e_it.remove();
-            }
-            else if (e.getTargetVertex() == vertexToBeRemoved) {
+            } else if (e.getTargetVertex() == vertexToBeRemoved) {
                 e_it.remove();
             }
         }
@@ -438,6 +438,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         /**
          * Gets the all edges in the model.
+         *
          * @return A list of edges.
          */
         public List<RuntimeEdge> getEdges() {
@@ -496,6 +497,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         /**
          * TODO: Add doc
+         *
          * @param element
          * @return
          */
@@ -619,6 +621,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
 
         /**
          * TODO: Doc...
+         *
          * @param visitor
          */
         @Override

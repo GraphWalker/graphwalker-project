@@ -48,7 +48,9 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
@@ -99,8 +101,8 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
             String source = generator.generate(file, model);
             Files.createDirectories(file.getOutputPath().getParent());
             Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))
-                , StandardOpenOption.CREATE
-                , StandardOpenOption.TRUNCATE_EXISTING);
+                    , StandardOpenOption.CREATE
+                    , StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Throwable t) {
             throw new CodeGeneratorException(t);
         }

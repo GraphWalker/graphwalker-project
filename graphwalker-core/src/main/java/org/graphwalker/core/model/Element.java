@@ -64,5 +64,6 @@ public interface Element {
     void accept(ElementVisitor visitor);
 
     Object getProperty(String key);
+
     boolean hasProperty(String key);
 }

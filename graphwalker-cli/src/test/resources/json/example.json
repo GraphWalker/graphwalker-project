@@ -18,8 +18,8 @@
       "id": "e0",
       "targetVertexId": "n0",
       "actions": [
-          "x=0;",
-          "y=0;"
+        "x=0;",
+        "y=0;"
       ]
     },
     {
@@ -28,7 +28,7 @@
       "sourceVertexId": "n0",
       "targetVertexId": "n1",
       "actions": [
-          "y+=1;"
+        "y+=1;"
       ]
     },
     {
@@ -37,7 +37,7 @@
       "sourceVertexId": "n1",
       "targetVertexId": "n1",
       "actions": [
-          "x+=1;"
+        "x+=1;"
       ]
     },
     {
@@ -46,7 +46,7 @@
       "sourceVertexId": "n1",
       "targetVertexId": "n0",
       "actions": [
-          "y+=1;"
+        "y+=1;"
       ]
     }
   ]

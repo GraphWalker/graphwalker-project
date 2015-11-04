@@ -69,8 +69,10 @@ public class EdgeTest {
 
     @Test
     public void testEquality() throws Exception {
-        Edge e1 = new Edge().setId("ID1");;
-        Edge e2 = new Edge().setId("ID1");;
+        Edge e1 = new Edge().setId("ID1");
+        ;
+        Edge e2 = new Edge().setId("ID1");
+        ;
         Assert.assertThat(e1.build(), is(e2.build()));
     }
 

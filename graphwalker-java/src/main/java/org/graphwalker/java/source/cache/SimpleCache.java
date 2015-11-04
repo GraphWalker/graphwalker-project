@@ -18,7 +18,8 @@ import java.util.Map;
  */
 public final class SimpleCache implements Cache<Path, CacheEntry> {
 
-    private static final Type type = new TypeToken<HashMap<String, CacheEntry>>() {}.getType();
+    private static final Type type = new TypeToken<HashMap<String, CacheEntry>>() {
+    }.getType();
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     private final Path path;
     private final Map<String, CacheEntry> storage = new HashMap<>();

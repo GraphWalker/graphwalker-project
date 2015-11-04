@@ -35,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -91,7 +90,7 @@ public final class OldAStarPaths extends PathGeneratorBase<StopCondition> {
         logger.debug("Adding: " + currentVertex.getName());
         path.add(currentVertex);
 
-        if (pathFragments.size()==1) {
+        if (pathFragments.size() == 1) {
             for (RuntimeEdge edge : pathFragments.get(0)) {
                 logger.debug("Adding: " + edge.getName());
                 path.add(edge);
