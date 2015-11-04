@@ -77,6 +77,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             vertex.setName(runtimeVertex.getName());
             vertex.setSharedState(runtimeVertex.getSharedState());
             vertex.addRequirements(runtimeVertex.getRequirements());
+            vertex.setProperties(runtimeVertex.getProperties());
             this.vertices.add(vertex);
             cache.put(runtimeVertex, vertex);
         }
@@ -90,6 +91,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             edge.addActions(runtimeEdge.getActions());
             edge.addRequirements(runtimeEdge.getRequirements());
             edge.setWeight(runtimeEdge.getWeight());
+            edge.setProperties(runtimeEdge.getProperties());
             this.edges.add(edge);
         }
         this.actions.addAll(model.getActions());

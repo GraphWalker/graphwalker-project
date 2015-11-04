@@ -37,6 +37,7 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.io.common.Util;
 import org.graphwalker.io.factory.gw3.GW3ContextFactory;
 import org.graphwalker.io.factory.json.JsonContext;
 import org.graphwalker.io.factory.json.JsonContextFactory;
@@ -338,9 +339,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 break;
             case "START": {
                 List<Context> executionContexts = contexts.get(socket);
-                Machine machine;
+                Util.filterBlockedElements(executionContexts);
                 try {
-                    machine = new SimpleMachine(executionContexts);
+                    Machine machine = new SimpleMachine(executionContexts);
                     machine.addObserver(this);
                     machines.put(socket, machine);
                     response.put("command", "start");
