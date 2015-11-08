@@ -265,10 +265,5 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
             RuntimeVertex that = (RuntimeVertex) o;
             return Objects.equals(sharedState, that.sharedState);
         }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(super.hashCode(), sharedState);
-        }
     }
 }

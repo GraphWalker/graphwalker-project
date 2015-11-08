@@ -416,10 +416,5 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
                     Objects.equals(guard, that.guard) &&
                     Objects.equals(weight, that.weight);
         }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(super.hashCode(), sourceVertex, targetVertex, guard, weight);
-        }
     }
 }

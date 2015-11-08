@@ -349,7 +349,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private final List<RuntimeVertex> vertices;
         private final List<RuntimeEdge> edges;
         private final List<Element> elementsCache;
-        private final Map<Element, List<Element>> elementsByElementCache;
+        private final Map<String, List<Element>> elementsByIdCache;
         private final Map<String, List<Element>> elementsByNameCache;
         private final Map<String, List<RuntimeEdge>> edgesByNameCache;
         private final Map<String, List<RuntimeVertex>> verticesByNameCache;
@@ -367,7 +367,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             this.outEdgesByVertexCache = createOutEdgesByVertexCache();
             this.elementsCache = createElementCache();
             this.elementsByNameCache = createElementsByNameCache();
-            this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
+            this.elementsByIdCache = createElementsByIdCache(elementsCache, outEdgesByVertexCache);
             this.sharedStateCache = createSharedStateCache();
         }
 
@@ -504,7 +504,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
          * @return
          */
         public List<Element> getElements(Element element) {
-            return elementsByElementCache.get(element);
+            return elementsByIdCache.get(element.getId());
         }
 
         private List<Element> createElementCache() {
@@ -514,18 +514,18 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Collections.unmodifiableList(elements);
         }
 
-        private Map<Element, List<Element>> createElementsByElementCache(List<Element> elements, Map<RuntimeVertex, List<RuntimeEdge>> outEdges) {
-            Map<Element, List<Element>> elementsByElementCache = new HashMap<>();
+        private Map<String, List<Element>> createElementsByIdCache(List<Element> elements, Map<RuntimeVertex, List<RuntimeEdge>> outEdges) {
+            Map<String, List<Element>> elementsByIdCache = new HashMap<>();
             for (Element element : elements) {
                 if (element instanceof RuntimeEdge) {
                     RuntimeEdge edge = (RuntimeEdge) element;
-                    elementsByElementCache.put(element, Collections.<Element>singletonList(edge.getTargetVertex()));
+                    elementsByIdCache.put(element.getId(), Collections.<Element>singletonList(edge.getTargetVertex()));
                 } else if (element instanceof RuntimeVertex) {
                     RuntimeVertex vertex = (RuntimeVertex) element;
-                    elementsByElementCache.put(element, cast(outEdges.get(vertex)));
+                    elementsByIdCache.put(element.getId(), cast(outEdges.get(vertex)));
                 }
             }
-            return makeImmutable(elementsByElementCache);
+            return makeImmutable(elementsByIdCache);
         }
 
         @SuppressWarnings("unchecked")
@@ -640,18 +640,13 @@ public final class Model implements Builder<Model.RuntimeModel> {
             return Objects.equals(vertices, that.vertices) &&
                     Objects.equals(edges, that.edges) &&
                     Objects.equals(elementsCache, that.elementsCache) &&
-                    Objects.equals(elementsByElementCache, that.elementsByElementCache) &&
+                    Objects.equals(elementsByIdCache, that.elementsByIdCache) &&
                     Objects.equals(elementsByNameCache, that.elementsByNameCache) &&
                     Objects.equals(edgesByNameCache, that.edgesByNameCache) &&
                     Objects.equals(verticesByNameCache, that.verticesByNameCache) &&
                     Objects.equals(inEdgesByVertexCache, that.inEdgesByVertexCache) &&
                     Objects.equals(outEdgesByVertexCache, that.outEdgesByVertexCache) &&
                     Objects.equals(sharedStateCache, that.sharedStateCache);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(super.hashCode(), vertices, edges, elementsCache, elementsByElementCache, elementsByNameCache, edgesByNameCache, verticesByNameCache, inEdgesByVertexCache, outEdgesByVertexCache, sharedStateCache);
         }
     }
 }
