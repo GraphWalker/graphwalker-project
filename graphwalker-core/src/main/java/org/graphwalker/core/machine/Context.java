@@ -93,4 +93,6 @@ public interface Context {
     void execute(String name);
 
     Map<String, String> getKeys();
+
+    void reset();
 }

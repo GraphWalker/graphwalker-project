@@ -91,7 +91,6 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
     @Override
     public void e_RestartMachine() {
-        numberOfModels = 0;
         client.restartMachine();
     }
 
@@ -129,7 +128,6 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
         WebSocket socket = server.getSockets().iterator().next();
         Assert.assertNull(server.getMachines().get(socket));
-        Assert.assertThat(server.getContexts().get(socket).size(), is(0));
     }
 
     @Override
