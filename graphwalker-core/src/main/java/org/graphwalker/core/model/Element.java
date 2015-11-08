@@ -26,6 +26,7 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -60,6 +61,10 @@ public interface Element {
     Set<Requirement> getRequirements();
 
     boolean hasRequirements();
+
+    List<Action> getActions();
+
+    boolean hasActions();
 
     void accept(ElementVisitor visitor);
 

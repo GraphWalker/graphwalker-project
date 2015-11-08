@@ -382,10 +382,20 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
 
         /**
+         * Gets the unique list of shared state names.
+         *
+         * @return The list of shared states.
+         * @see Vertex#setSharedState
+         */
+        public Set<String> getSharedStates() {
+            return sharedStateCache.keySet();
+        }
+
+        /**
          * Gets the list of vertices that matches a shared state name.
          *
          * @param sharedState The shared state name too be matched.
-         * @return The list of matching sheared states.
+         * @return The list of matching shared states.
          * @see Vertex#setSharedState
          */
         public List<RuntimeVertex> getSharedStates(String sharedState) {
