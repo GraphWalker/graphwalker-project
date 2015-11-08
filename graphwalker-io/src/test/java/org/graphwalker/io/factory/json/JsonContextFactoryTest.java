@@ -77,6 +77,14 @@ public class JsonContextFactoryTest {
     }
 
     @Test
+    public void UC01WithSimpleMachine() {
+        SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/UC01.json")));
+        while (machine.hasNextStep()) {
+            logger.debug(machine.getNextStep().getCurrentElement().getName());
+        }
+    }
+
+    @Test
     public void requirement() {
         ContextFactory factory = new JsonContextFactory();
         Context context = factory.create(Paths.get("json/UC01.json"));
