@@ -338,41 +338,40 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
                 break;
             case "START": {
+                response.put("command", "start");
+                response.put("success", false);
                 List<Context> executionContexts = contexts.get(socket);
                 Util.filterBlockedElements(executionContexts);
                 try {
                     Machine machine = new SimpleMachine(executionContexts);
                     machine.addObserver(this);
                     machines.put(socket, machine);
-                    response.put("command", "start");
                     response.put("success", true);
                 } catch (MachineException e) {
-                    response.put("command", "start");
-                    response.put("success", false);
                     response.put("message", e.getMessage());
                 }
                 break;
             }
             case "GETNEXT": {
-                Machine machine = machines.get(socket);
                 response.put("command", "getNext");
+                response.put("success", false);
+                Machine machine = machines.get(socket);
                 if (machine != null) {
                     machine.getNextStep();
                     response.put("success", true);
                     response.put("id", machine.getCurrentContext().getCurrentElement().getId());
                     response.put("name", machine.getCurrentContext().getCurrentElement().getName());
                 } else {
-                    response.put("success", false);
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                 }
 
                 break;
             }
             case "HASNEXT": {
-                Machine machine = machines.get(socket);
                 response.put("command", "hasNext");
+                response.put("success", false);
+                Machine machine = machines.get(socket);
                 if (machine == null) {
-                    response.put("success", false);
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                 } else if (machine.hasNextStep()) {
                     response.put("success", true);
@@ -385,15 +384,19 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 break;
             }
             case "RESTART":
-                machines.put(socket, null);
-                contexts.put(socket, null);
-                contexts.put(socket, new ArrayList<Context>());
                 response.put("command", "restart");
                 response.put("success", true);
+                machines.put(socket, null);
+                List<Context> executionContexts = contexts.get(socket);
+                for (Context context : executionContexts) {
+                    context.reset();
+                }
+
 
                 break;
             case "GETDATA": {
                 response.put("command", "getData");
+                response.put("success", false);
                 Machine machine = machines.get(socket);
                 if (machine != null) {
                     JSONArray jsonKeys = new JSONArray();
@@ -405,7 +408,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     response.put("data", jsonKeys);
                     response.put("success", true);
                 } else {
-                    response.put("success", false);
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                 }
 
@@ -413,9 +415,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "ADDMODEL": {
                 response.put("command", "addModel");
+                response.put("success", false);
                 Model model = new Model().setId(root.getString("id"));
                 Context context = new JsonContext().setModel(model.build());
-                List<Context> executionContexts = contexts.get(socket);
+                executionContexts = contexts.get(socket);
                 executionContexts.add(context);
                 response.put("model", new JsonContextFactory().getJsonFromContext(context));
                 response.put("success", true);
@@ -439,6 +442,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "ADDVERTEX": {
                 response.put("command", "addVertex");
+                response.put("success", false);
                 Context context = getContextById(contexts.get(socket), root.getString("modelId"));
 
                 if (context != null) {
@@ -449,7 +453,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     response.put("success", true);
 
                 } else {
-                    response.put("success", false);
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
                 }
 
@@ -457,6 +460,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             }
             case "ADDEDGE": {
                 response.put("command", "addEdge");
+                response.put("success", false);
                 Context context = getContextById(contexts.get(socket), root.getString("modelId"));
 
                 if (context != null) {
@@ -480,7 +484,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     response.put("success", true);
 
                 } else {
-                    response.put("success", false);
                     response.put("message", "No models. You need to call addModel first.");
                 }
 

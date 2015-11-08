@@ -67,6 +67,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     private Element currentElement;
     private Element nextElement;
     private Element lastElement;
+    private Element originalNextElement;
 
     private final Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
 
@@ -114,6 +115,19 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
                 logger.warn("Vertex " + edge.getSourceVertex() + " have a unnamed loop edge!");
             }
         }
+    }
+
+    public void reset() {
+        setExecutionStatus(ExecutionStatus.NOT_EXECUTED);
+        setNextElement(getOriginalNextElement());
+    }
+
+    public Element getOriginalNextElement() {
+        return originalNextElement;
+    }
+
+    public void setOriginalNextElement(Element originalNextElement) {
+        this.originalNextElement = this.originalNextElement == null ? originalNextElement : this.originalNextElement;
     }
 
     public ScriptEngine getScriptEngine() {
@@ -197,6 +211,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     }
 
     public Context setNextElement(Element nextElement) {
+        setOriginalNextElement(nextElement);
         this.nextElement = nextElement;
         this.currentElement = null;
         return this;
