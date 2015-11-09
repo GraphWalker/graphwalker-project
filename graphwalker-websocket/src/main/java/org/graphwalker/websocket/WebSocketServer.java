@@ -43,6 +43,7 @@ import org.graphwalker.io.factory.json.JsonContext;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.io.factory.json.JsonEdge;
 import org.graphwalker.io.factory.json.JsonVertex;
+import org.graphwalker.modelchecker.ContextChecker;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.json.JSONArray;
@@ -451,7 +452,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     model.addVertex(vertex);
                     context.setModel(model.build());
                     response.put("success", true);
-
+                    sendIssues(socket, context);
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
                 }
@@ -482,7 +483,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     }
                     context.setModel(model.build());
                     response.put("success", true);
-
+                    sendIssues(socket, context);
                 } else {
                     response.put("message", "No models. You need to call addModel first.");
                 }
@@ -512,6 +513,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         jsonVertex.copyValues(vertex);
                         context.setModel(model.build());
                         response.put("success", true);
+                        sendIssues(socket, context);
                     }
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
@@ -542,6 +544,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         jsonEdge.copyValues(edge);
                         context.setModel(model.build());
                         response.put("success", true);
+                        sendIssues(socket, context);
                     }
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
@@ -564,7 +567,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                             break;
                         }
                     }
-
+                    sendIssues(socket, context);
                 } else {
                     response.put("message", "No models. You need to call newModel first.");
                 }
@@ -586,7 +589,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                             break;
                         }
                     }
-
+                    sendIssues(socket, context);
                 } else {
                     response.put("message", "No models. You need to call newModel first.");
                 }
@@ -603,6 +606,34 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 + " : "
                 + response.toString());
         socket.send(response.toString());
+    }
+
+    private void sendIssues(WebSocket socket, Context context){
+        List<String> issues = ContextChecker.hasIssues(context);
+        if (issues.size() > 0) {
+            JSONObject jsonIssue = new JSONObject();
+            jsonIssue.put("command", "issues");
+
+            JSONArray jsonIssues = new JSONArray();
+            for (String issue : issues) {
+                jsonIssues.put(issue);
+            }
+            jsonIssue.put("issues", jsonIssues);
+            logger.debug("Sending response to: "
+                    + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                    + " : "
+                    + jsonIssue.toString());
+            socket.send(jsonIssue.toString());
+        } else {
+            JSONObject jsonIssue = new JSONObject();
+            jsonIssue.put("command", "noIssues");
+            logger.debug("Sending response to: "
+                    + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                    + " : "
+                    + jsonIssue.toString());
+            socket.send(jsonIssue.toString());
+        }
+
     }
 
     public Context getContextById(List<Context> contextsList, String id) {

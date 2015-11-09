@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>graphwalker-model-checker</artifactId>
-    <name>GraphWalker Machine, Context, Model and Element checker</name>
+    <name>GraphWalker Checker</name>
 
     <scm>
         <url>https://github.com/GraphWalker/graphwalker-project</url>
