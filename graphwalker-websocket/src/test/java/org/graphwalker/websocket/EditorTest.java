@@ -405,4 +405,11 @@ public class EditorTest extends ExecutionContext implements Editor {
         activeModel.addEdge(edge);
         client.addEdge(activeModel.getId(), edge.getId(), edge.getSourceVertex().getId(), edge.getTargetVertex().getId());
     }
+
+    @Override
+    public void e_SetNextElement() {
+        Vertex vertex = activeModel.getVertices().get(random.nextInt(activeModel.getVertices().size()));
+        logger.debug("Will update the model. Setting NEXT_ELEMENT id: " + vertex.getId());
+        client.setNextElement(activeModel.getId(), vertex.getId());
+    }
 }

@@ -37,13 +37,12 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.Util;
 import org.graphwalker.io.factory.gw3.GW3ContextFactory;
-import org.graphwalker.io.factory.json.JsonContext;
-import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.graphwalker.io.factory.json.JsonEdge;
-import org.graphwalker.io.factory.json.JsonVertex;
+import org.graphwalker.io.factory.json.*;
 import org.graphwalker.modelchecker.ContextChecker;
+import org.graphwalker.modelchecker.ContextsChecker;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.json.JSONArray;
@@ -305,6 +304,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     List<Context> executionContexts = contexts.get(socket);
                     executionContexts.addAll(gw3Contexts);
                     response.put("success", true);
+                    checkContexts(socket, gw3Contexts);
                 } catch (JSONException e) {
                     response.put("success", false);
                     response.put("message", "Could not parse the model: " + e.getMessage());
@@ -318,6 +318,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     List<Context> executionContexts = contexts.get(socket);
                     executionContexts.add(context);
                     response.put("success", true);
+                    checkContext(socket, context);
                 } catch (JSONException e) {
                     response.put("success", false);
                     response.put("message", "Could not parse the model: " + e.getMessage());
@@ -371,15 +372,20 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             case "HASNEXT": {
                 response.put("command", "hasNext");
                 response.put("success", false);
-                Machine machine = machines.get(socket);
-                if (machine == null) {
-                    response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
-                } else if (machine.hasNextStep()) {
-                    response.put("success", true);
-                    response.put("hasNext", true);
-                } else {
-                    response.put("success", true);
-                    response.put("hasNext", false);
+                try {
+                    Machine machine = machines.get(socket);
+                    if (machine == null) {
+                        response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+                    } else if (machine.hasNextStep()) {
+                        response.put("success", true);
+                        response.put("hasNext", true);
+                    } else {
+                        response.put("success", true);
+                        response.put("hasNext", false);
+                    }
+                } catch (Exception e) {
+                    response.put("success", false);
+                    response.put("message", e.getMessage());
                 }
 
                 break;
@@ -423,6 +429,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 executionContexts.add(context);
                 response.put("model", new JsonContextFactory().getJsonFromContext(context));
                 response.put("success", true);
+                checkContexts(socket, contexts.get(socket));
 
                 break;
             }
@@ -434,9 +441,51 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 if (context != null) {
                     contexts.get(socket).remove(context);
                     response.put("success", true);
-
+                    checkContexts(socket, contexts.get(socket));
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("id"));
+                }
+
+                break;
+            }
+            case "SETGENERATOR": {
+                response.put("command", "setGenerator");
+                response.put("success", false);
+                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
+
+                if (context != null) {
+                    try {
+                        String generatorString = root.getString("generator");
+                        context.setPathGenerator(GeneratorFactory.parse(generatorString));
+                        response.put("success", true);
+                        checkContext(socket, context);
+                    } catch (Exception e) {
+                        response.put("message", "Could not set the path generator: " + e.getMessage());
+                    }
+                } else {
+                    response.put("message", "Did not find a model with id: " + root.getString("id"));
+                }
+
+                break;
+            }
+            case "SETNEXTELEMENT": {
+                response.put("command", "setNextElement");
+                response.put("success", false);
+
+                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
+
+                if (context != null) {
+                    try {
+                        String nextElementString = root.getString("nextElementId");
+                        Element nextElement = context.getModel().getElementById(nextElementString);
+                        context.setNextElement(nextElement);
+                        response.put("success", true);
+                        checkContext(socket, context);
+                    } catch (JSONException e) {
+                        response.put("message", "Could not set the start element: " + e.getMessage());
+                    }
+                } else {
+                    response.put("message", "Did not find a model with id: " + root.getString("modelId"));
                 }
 
                 break;
@@ -452,7 +501,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     model.addVertex(vertex);
                     context.setModel(model.build());
                     response.put("success", true);
-                    sendIssues(socket, context);
+                    checkContext(socket, context);
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
                 }
@@ -483,7 +532,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     }
                     context.setModel(model.build());
                     response.put("success", true);
-                    sendIssues(socket, context);
+                    checkContext(socket, context);
                 } else {
                     response.put("message", "No models. You need to call addModel first.");
                 }
@@ -513,7 +562,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         jsonVertex.copyValues(vertex);
                         context.setModel(model.build());
                         response.put("success", true);
-                        sendIssues(socket, context);
+                        checkContext(socket, context);
                     }
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
@@ -544,7 +593,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         jsonEdge.copyValues(edge);
                         context.setModel(model.build());
                         response.put("success", true);
-                        sendIssues(socket, context);
+                        checkContext(socket, context);
                     }
                 } else {
                     response.put("message", "Did not find a model with id: " + root.getString("modelId"));
@@ -567,7 +616,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                             break;
                         }
                     }
-                    sendIssues(socket, context);
+                    checkContext(socket, context);
                 } else {
                     response.put("message", "No models. You need to call newModel first.");
                 }
@@ -589,7 +638,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                             break;
                         }
                     }
-                    sendIssues(socket, context);
+                    checkContext(socket, context);
                 } else {
                     response.put("message", "No models. You need to call newModel first.");
                 }
@@ -608,8 +657,17 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         socket.send(response.toString());
     }
 
-    private void sendIssues(WebSocket socket, Context context){
+    private void checkContexts(WebSocket socket, List<Context> contexts) {
+        List<String> issues = ContextsChecker.hasIssues(contexts);
+        sendIssues(socket, issues);
+    }
+
+    private void checkContext(WebSocket socket, Context context){
         List<String> issues = ContextChecker.hasIssues(context);
+        sendIssues(socket, issues);
+    }
+
+    private void sendIssues(WebSocket socket, List<String> issues) {
         if (issues.size() > 0) {
             JSONObject jsonIssue = new JSONObject();
             jsonIssue.put("command", "issues");
@@ -633,7 +691,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     + jsonIssue.toString());
             socket.send(jsonIssue.toString());
         }
-
     }
 
     public Context getContextById(List<Context> contextsList, String id) {

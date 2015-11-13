@@ -56,6 +56,7 @@ public class WebSocketClient {
         GETDATA,
         VISITEDELEMENT,
         ADDMODEL,
+        SETNEXTELEMENT,
         REMOVEMODEL,
         ADDVERTEX,
         ADDEDGE,
@@ -177,7 +178,13 @@ public class WebSocketClient {
                             }
                             break;
                         case "ADDMODEL":
-                            rxState = RX_STATE.ADDMODEL;
+                                rxState = RX_STATE.ADDMODEL;
+                            if (root.getBoolean("success")) {
+                                cmd = true;
+                            }
+                            break;
+                        case "SETNEXTELEMENT":
+                            rxState = RX_STATE.SETNEXTELEMENT;
                             if (root.getBoolean("success")) {
                                 cmd = true;
                             }
@@ -446,5 +453,17 @@ public class WebSocketClient {
         logger.debug("Updating edge");
         client.wsc.send("{\"command\": \"updateEdge\", \"modelId\": \"" + modelId + "\", \"edge\":" + edgeJsonStr + "}");
         wait(client, RX_STATE.UPDATEEDGE);
+    }
+
+    /**
+     * Sets the lement with id,to the next element in the context
+     *
+     * @param modelId is the unique id of the model.
+     * @param nextElementId is the unique id of an element in the model.
+     */
+    public void setNextElement(String modelId, String nextElementId) {
+        logger.debug("Setting next element in model with id: " + modelId + ", to element id: " + nextElementId);
+        client.wsc.send("{\"command\": \"setNextElement\", \"modelId\": \"" + modelId + "\", \"nextElementId\": \"" + nextElementId + "\"}");
+        wait(client, RX_STATE.SETNEXTELEMENT);
     }
 }
