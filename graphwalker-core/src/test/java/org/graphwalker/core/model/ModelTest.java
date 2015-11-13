@@ -41,6 +41,18 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class ModelTest {
 
     @Test
+    public void getElementById() {
+        Vertex v1 = new Vertex().setId("ONE");
+        Vertex v2 = new Vertex().setId("TWO");
+        Edge e1 = new Edge().setId("THREE");
+        Edge e2 = new Edge().setId("FOUR");
+        Model.RuntimeModel model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
+                .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2)).build();
+        Element element = model.getElementById("THREE");
+        Assert.assertTrue(element.equals(e1.build()));
+    }
+
+    @Test
     public void buildVertex() {
         Vertex vertex = new Vertex().setName("test");
         Assert.assertThat(vertex, notNullValue());

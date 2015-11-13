@@ -508,6 +508,23 @@ public final class Model implements Builder<Model.RuntimeModel> {
         }
 
         /**
+         * Will return the element with the given id.
+         * </p>
+         *
+         * @param id The id of the element.
+         * @return The element with the given id
+         */
+        public Element getElementById(String id)
+        {
+            for (Element element : elementsCache ){
+                if (element.getId().equals(id)) {
+                    return element;
+                }
+            }
+            return null;
+        }
+
+        /**
          * TODO: Add doc
          *
          * @param element
