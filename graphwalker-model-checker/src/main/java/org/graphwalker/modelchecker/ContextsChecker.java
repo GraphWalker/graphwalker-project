@@ -1,0 +1,45 @@
+package org.graphwalker.modelchecker;
+
+import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Created by krikar on 2015-11-08.
+ */
+public class ContextsChecker {
+
+    /**
+     * Checks the context for problems or any possible errors.
+     * Any findings will be added to a list of strings.
+     * <p>
+     * TODO: Implement a rule framework so that organisations and projects can create their own rule set (think model based code convention)
+     *
+     * @return A list of issues found in the context
+     */
+    static public List<String> hasIssues(List<Context> contexts) {
+        List<String> issues = new ArrayList<>();
+
+        // Check that individual contexts are valid
+        for (Context context : contexts) {
+            issues.addAll(ContextChecker.hasIssues(context));
+        }
+
+        // Check that ids are unique
+        Set<String> ids = new HashSet<>();
+        for (Context context : contexts) {
+            if (!ids.add(context.getModel().getId())) {
+                issues.add("Id of the model is not unique: " + context.getModel().getId());
+            }
+        }
+
+        return issues;
+    }
+}
