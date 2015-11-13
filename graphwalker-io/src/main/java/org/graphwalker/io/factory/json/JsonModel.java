@@ -199,4 +199,31 @@ public class JsonModel {
     public void setModel(Model model) {
         setModel(model.build());
     }
+
+    public void copyValuesTo(Model model) {
+        if (name != null) {
+            model.setName(name);
+        }
+        if (id != null) {
+            model.setId(id);
+        }
+
+        if (actions != null && !actions.isEmpty()) {
+            actions = new ArrayList<>();
+            for (String action : actions) {
+                model.addAction(new Action(action));
+            }
+        }
+
+        if (requirements != null && !requirements.isEmpty()) {
+            requirements = new ArrayList<>();
+            for (String requirement : requirements) {
+                model.addRequirement(new Requirement(requirement));
+            }
+        }
+
+        if (properties != null && !properties.isEmpty()) {
+            model.getProperties().putAll(properties);
+        }
+    }
 }
