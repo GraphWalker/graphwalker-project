@@ -316,6 +316,10 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <configuration>
                     <licenseName>mit</licenseName>
+                    <excludes>
+                        <exclude>**/webapp/components/**/*</exclude>
+                        <exclude>**/webapp/dist/**/*</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>
