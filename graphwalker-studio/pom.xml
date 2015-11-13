@@ -5,10 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <groupId>org.springframework.boot</groupId>
-        <version>1.2.5.RELEASE</version>
-        <relativePath/>
+        <groupId>org.graphwalker</groupId>
+        <artifactId>graphwalker-project</artifactId>
+        <version>3.4.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>graphwalker-studio</artifactId>
@@ -36,16 +35,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>1.2.7.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>1.2.7.RELEASE</version>
             <scope>provided</scope>
         </dependency>
         <!-- tag::actuator[] -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>1.2.7.RELEASE</version>
         </dependency>
         <!-- end::actuator[] -->
         <dependency>
@@ -68,6 +70,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
