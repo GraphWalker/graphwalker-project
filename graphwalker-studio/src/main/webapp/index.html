@@ -781,6 +781,9 @@
                     if (msg.hasNext) {
                         hasNextEvent.fullfilled = msg.hasNext;
                         document.dispatchEvent(hasNextEvent);
+                    } else {
+                        defaultUI();
+                        document.getElementById("runModel").disabled = true;
                     }
                 } else {
                     console.error("Command hasNext failed: " + msg.message);
