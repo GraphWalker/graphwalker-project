@@ -74,7 +74,7 @@
      ************************************************************************
      */
     function onPausePlayExecution(element) {
-        console.log("pausePlayExecution: " + element.value + ", pauseExecution: " + pauseExecution);
+        console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution);
         stepExecution = false;
 
         if (pauseExecution) {
@@ -83,7 +83,7 @@
             document.getElementById("pausePlayExecution").disabled = false;
             document.getElementById("stepExecution").disabled = true;
 
-            element.value = 'Pause';
+            element.innerHTML = 'Pause';
             pauseExecution = false;
 
             var hasNext = {
@@ -96,7 +96,7 @@
             document.getElementById("pausePlayExecution").disabled = false;
             document.getElementById("stepExecution").disabled = false;
 
-            element.value = 'Run';
+            element.innerHTML = 'Run';
             pauseExecution = true;
         }
     }
@@ -890,7 +890,7 @@
         document.getElementById("resetModel").disabled = false;
         document.getElementById("pausePlayExecution").disabled = true;
         document.getElementById("stepExecution").disabled = true;
-        document.getElementById("pausePlayExecution").value="Pause";
+        document.getElementById("pausePlayExecution").innerHTML="Pause";
     }
 
     function generateUUID() {
