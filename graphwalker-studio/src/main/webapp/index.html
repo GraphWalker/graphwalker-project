@@ -25,9 +25,10 @@
         <button onclick="saveGraphAsFile()">Save</button>
         <div id="generator-div"><input type="text" id="generator" onchange="onGeneratorChange(this.value)"></div>
         <div id="issues">No Issues</div>
-        <button type='button' onclick="runModel()">Run model</button>
-        <button type='button' onclick="resetModel()">Reset</button>
-        <div id="currentElement">Current element:</div>
+        <button type='button' id="runModel" onclick="onRunModel()">Run model</button>
+        <button type='button' id="resetModel" onclick="onResetModel()">Reset</button>
+        <button type='button' id="pausePlayExecution" onclick="onPausePlayExecution(this)" value="Pause">Pause</button>
+        <button type='button' id="stepExecution" onclick="onStepExecution()">Step</button>
     </fieldset>
 </form>
 
@@ -52,6 +53,8 @@
     var edges;
     var initialLoading = false;
     var ignoreDataUpdateEvents = false;
+    var pauseExecution = false;
+    var stepExecution = false;
 
 
 
@@ -70,6 +73,49 @@
      * REACT TO SOME UI EVENTS
      ************************************************************************
      */
+    function onPausePlayExecution(element) {
+        console.log("pausePlayExecution: " + element.value + ", pauseExecution: " + pauseExecution);
+        stepExecution = false;
+
+        if (pauseExecution) {
+            document.getElementById("runModel").disabled = true;
+            document.getElementById("resetModel").disabled = true;
+            document.getElementById("pausePlayExecution").disabled = false;
+            document.getElementById("stepExecution").disabled = true;
+
+            element.value = 'Pause';
+            pauseExecution = false;
+
+            var hasNext = {
+                command: "hasNext"
+            };
+            doSend(JSON.stringify(hasNext));
+        } else {
+            document.getElementById("runModel").disabled = true;
+            document.getElementById("resetModel").disabled = false;
+            document.getElementById("pausePlayExecution").disabled = false;
+            document.getElementById("stepExecution").disabled = false;
+
+            element.value = 'Run';
+            pauseExecution = true;
+        }
+    }
+
+    function onStepExecution() {
+        console.log("stepExecution");
+        document.getElementById("runModel").disabled = true;
+        document.getElementById("resetModel").disabled = true;
+        document.getElementById("pausePlayExecution").disabled = false;
+        document.getElementById("stepExecution").disabled = false;
+
+        stepExecution = true;
+
+        var hasNext = {
+            command: "hasNext"
+        };
+        doSend(JSON.stringify(hasNext));
+    }
+
     function onGeneratorChange(generatorText) {
         console.log(onGeneratorChange + ": " + generatorText);
         var generatorText = document.getElementById("generator").value;
@@ -95,6 +141,12 @@
 
     $(document).ready(function(){
         console.log( "ready!" );
+
+        // Set some defaults on the UI
+        defaultUI();
+
+        // React to the s key being pressed.
+        // This mimics the user input of setting a shared state on a node
         $(document).on('keyup', null, 's', function(){
             console.log( "s!" );
             if (contextNode !== undefined) {
@@ -109,12 +161,16 @@
                         }
                     }
                 };
+// Not yet implemented
 //                doSend(JSON.stringify(updateVertex));
 
             } else {
                 console.log("No element selected on the canvas");
             }
         });
+
+        // React to the e key being pressed.
+        // This mimics the user input of setting the next element of execution
         $(document).on('keyup', null, 'e', function(){
             console.log( "e!" );
             var selectedId = getSelectedElement();
@@ -132,13 +188,30 @@
             }
         });
     });
-    function runModel() {
+
+    // Run the execution of the state machine
+    function onRunModel() {
+        document.getElementById("runModel").disabled = true;
+        document.getElementById("resetModel").disabled = true;
+        document.getElementById("pausePlayExecution").disabled = false;
+        document.getElementById("stepExecution").disabled = true;
+
+        stepExecution = false;
+        pauseExecution = false;
+
         var start = {
             command: "start"
         };
         doSend(JSON.stringify(start));
     }
-    function resetModel() {
+
+    // Reset the state machine to it's initial state
+    function onResetModel() {
+        document.getElementById("runModel").disabled = false;
+        document.getElementById("resetModel").disabled = false;
+        document.getElementById("pausePlayExecution").disabled = true;
+        document.getElementById("stepExecution").disabled = true;
+
         options.nodes.color.background = "#97C2FC";
         options.nodes.color.border = "#2A7BE8";
         options.nodes.color.highlight.background = "#D2E5FF";
@@ -199,6 +272,12 @@
         options.edges.color.highlight = "#669966";
         network.setOptions(options);
 
+        // Change some UI elements
+        document.getElementById("runModel").disabled = true;
+        document.getElementById("resetModel").disabled = true;
+        document.getElementById("pausePlayExecution").disabled = false;
+        document.getElementById("stepExecution").disabled = true;
+
         var hasNext = {
             command: "hasNext"
         };
@@ -207,7 +286,12 @@
 
     var hasNextEvent = new CustomEvent("hasNextEvent", {});
     document.addEventListener("hasNextEvent", function (e) {
-        console.log("hasNextEvent");
+        console.log("hasNextEvent pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution);
+        if (pauseExecution) {
+            if (!stepExecution) {
+                return;
+            }
+        }
         var getNext = {
             command: "getNext"
         };
@@ -216,10 +300,13 @@
 
     var getNextEvent = new CustomEvent("getNextEvent", {"id": "", "name": ""});
     document.addEventListener("getNextEvent", function (e) {
-        console.log("getNextEvent: " + e.id + ": " + e.name);
-        //console.log(nodes.get(JSON.parse(e.id)));
-        var edge = console.log(edges.get('e0'));
-        console.log("Will change color on element: " + e.id);
+        console.log("getNextEvent: " + e.id + ": " + e.name + "pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution);
+
+        if (stepExecution) {
+            stepExecution = false;
+            return;
+        }
+
         var hasNext = {
             command: "hasNext"
         };
@@ -673,6 +760,7 @@
                     issues.innerHTML = "Command loadModel failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "getModel":
@@ -684,6 +772,7 @@
                     issues.innerHTML = "Command getModel failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "hasNext":
@@ -698,6 +787,7 @@
                     issues.innerHTML = "Command hasNext failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "getNext":
@@ -709,6 +799,7 @@
                     issues.innerHTML = "Command getNext failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "start":
@@ -720,6 +811,7 @@
                     issues.innerHTML = "Command start failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "issues":
@@ -742,6 +834,7 @@
                     issues.innerHTML = "Command setNextElement failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "setGenerator":
@@ -753,6 +846,7 @@
                     issues.innerHTML = "Command setGenerator failed: " + msg.message;
                     var networkElement = document.getElementById('mynetwork');
                     networkElement.style.backgroundColor = '#FFE9C2';
+                    defaultUI();
                 }
                 break;
             case "visitedElement":
@@ -791,6 +885,14 @@
      * UTILITY FUNCTIONS
      ************************************************************************
      */
+    function defaultUI() {
+        document.getElementById("runModel").disabled = false;
+        document.getElementById("resetModel").disabled = false;
+        document.getElementById("pausePlayExecution").disabled = true;
+        document.getElementById("stepExecution").disabled = true;
+        document.getElementById("pausePlayExecution").value="Pause";
+    }
+
     function generateUUID() {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
