@@ -1,4 +1,3 @@
-
 <html>
 <head>
     <script type="text/javascript" src="dist/vis.js"></script>
@@ -51,21 +50,9 @@
     var modelId = '';
     var nodes;
     var edges;
-    var initialLoading = false;
     var ignoreDataUpdateEvents = false;
     var pauseExecution = false;
     var stepExecution = false;
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -132,23 +119,23 @@
         var selectedElements = network.getSelection();
         if (selectedElements.edges.length === 1) {
             return selectedElements.edges[0];
-        } else if(selectedElements.nodes.length === 1) {
+        } else if (selectedElements.nodes.length === 1) {
             return selectedElements.nodes[0];
         }
         return undefined;
     }
 
 
-    $(document).ready(function(){
-        console.log( "ready!" );
+    $(document).ready(function () {
+        console.log("ready!");
 
         // Set some defaults on the UI
         defaultUI();
 
         // React to the s key being pressed.
         // This mimics the user input of setting a shared state on a node
-        $(document).on('keyup', null, 's', function(){
-            console.log( "s!" );
+        $(document).on('keyup', null, 's', function () {
+            console.log("s!");
             if (contextNode !== undefined) {
                 console.log("Will assign SHARED_STATE to node: " + contextNode);
                 var updateVertex = {
@@ -171,8 +158,8 @@
 
         // React to the e key being pressed.
         // This mimics the user input of setting the next element of execution
-        $(document).on('keyup', null, 'e', function(){
-            console.log( "e!" );
+        $(document).on('keyup', null, 'e', function () {
+            console.log("e!");
             var selectedId = getSelectedElement();
             if (selectedId !== undefined) {
                 console.log("Will assign START_ELEMENT to element: " + selectedId);
@@ -226,25 +213,13 @@
         doSend(JSON.stringify(restart));
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.getIds()[i];
-            nodes.update([{id:node, color:{border:"#2A7BE8", background:"#97C2FC" }}]);
+            nodes.update([{id: node, color: {border: "#2A7BE8", background: "#97C2FC"}}]);
         }
         for (var i = 0; i < edges.length; i++) {
             var edge = edges.getIds()[i];
-            edges.update([{id:edge, color:{color:"#2B7CE9"}}]);
+            edges.update([{id: edge, color: {color: "#2B7CE9"}}]);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -312,22 +287,6 @@
         };
         doSend(JSON.stringify(hasNext));
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -403,8 +362,6 @@
             lines += '}'
 
             var hasModelPositions = true;
-            initialLoading = true;
-            ignoreDataUpdateEvents = true;
 
             var jsonLoadModel = JSON.parse(lines);
             var jsonModel = jsonLoadModel.model;
@@ -458,27 +415,10 @@
                 });
             }
 
-
-            if (!hasModelPositions) {
-                console.log("No positions found in models vertices. We need to do layout.");
-                options.physics.enabled = true;
-                options.layout.hierarchical.enabled = true;
-                options.layout.hierarchical.sortMethod = 'directed';
-                network.setOptions(options);
-                initialLoading = true;
-            }
             network.fit();
             ignoreDataUpdateEvents = false;
         }
     }
-
-
-
-
-
-
-
-
 
 
     /*
@@ -525,13 +465,15 @@
                 roundness: 0.5
             },
             color: {
-                color:'#2B7CE9',
-                highlight:'#2B7CE9',
+                color: '#2B7CE9',
+                highlight: '#2B7CE9',
                 hover: '#2B7CE9'
             }
         },
         physics: {
-            enabled: false
+            barnesHut: {
+                avoidOverlap: 1
+            }
         },
         layout: {
             hierarchical: {
@@ -541,13 +483,11 @@
     };
 
     // initialize your network!
-    var nodesArray = [
-    ];
+    var nodesArray = [];
     nodes = new vis.DataSet(nodesArray);
 
     // create an array with edges
-    edgesArray = [
-    ];
+    edgesArray = [];
     edges = new vis.DataSet(edgesArray);
     var data = {
         nodes: nodes,
@@ -556,15 +496,6 @@
     var network = new vis.Network(container, data, options);
     var contextNode;
     var contextEdge;
-
-
-
-
-
-
-
-
-
 
 
     /*
@@ -580,34 +511,26 @@
         console.log("Node: " + contextNode + ", Edge: " + contextEdge);
     });
     network.on('stabilized', function (params) {
-        if (initialLoading) {
-            initialLoading = false;
-            console.log("Done with initial layout");
-            options.physics.enabled = false;
-            options.layout.hierarchical.enabled = false;
-            network.setOptions(options);
+        console.log("Done with initial layout");
 
-            // Update GW3 about positions
-            positions = network.getPositions();
-            for (var key in positions) {
-                var node = positions[key];
-                var updateVertex = {
-                    command: "updateVertex",
-                    modelId: modelId,
-                    vertex: {
-                        id: key,
-                        properties: {
-                            x: node.x,
-                            y: node.y
-                        }
+        // Update GW3 about positions
+        positions = network.getPositions();
+        for (var key in positions) {
+            var node = positions[key];
+            var updateVertex = {
+                command: "updateVertex",
+                modelId: modelId,
+                vertex: {
+                    id: key,
+                    properties: {
+                        x: node.x,
+                        y: node.y
                     }
-                };
-                doSend(JSON.stringify(updateVertex));
-            }
-            document.dispatchEvent(getModelEvent);
-        } else {
-            console.log("Nothing special");
+                }
+            };
+            doSend(JSON.stringify(updateVertex));
         }
+        document.dispatchEvent(getModelEvent);
     });
     network.on('dragEnd', function (params) {
         for (var i = 0; i < params.nodes.length; i++) {
@@ -697,18 +620,6 @@
     });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     /*
      ************************************************************************
      * WEBSOCKET CLIENT
@@ -748,8 +659,6 @@
         console.log(evt.data);
         var msg = JSON.parse(event.data);
         generator.innerHTML = "No issues";
-        var networkElement = document.getElementById('mynetwork');
-        networkElement.style.backgroundColor = '#dddddd';
 
         switch (msg.command) {
             case "loadModel":
@@ -758,8 +667,6 @@
                 } else {
                     console.error("Command loadModel failed: " + msg.message);
                     issues.innerHTML = "Command loadModel failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
@@ -770,8 +677,6 @@
                 } else {
                     console.error("Command getModel failed: " + msg.message);
                     issues.innerHTML = "Command getModel failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
@@ -788,8 +693,6 @@
                 } else {
                     console.error("Command hasNext failed: " + msg.message);
                     issues.innerHTML = "Command hasNext failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
@@ -800,8 +703,6 @@
                 } else {
                     console.error("Command getNext failed: " + msg.message);
                     issues.innerHTML = "Command getNext failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
@@ -812,21 +713,15 @@
                 } else {
                     console.error("Command start failed: " + msg.message);
                     issues.innerHTML = "Command start failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
             case "issues":
                 issues.innerHTML = msg.issues;
-                var networkElement = document.getElementById('mynetwork');
-                networkElement.style.backgroundColor = '#FFE9C2';
 
                 break;
             case "noIssues":
                 issues.innerHTML = "No issues";
-                var networkElement = document.getElementById('mynetwork');
-                networkElement.style.backgroundColor = '#dddddd';
                 break;
             case "setNextElement":
                 if (msg.success) {
@@ -835,8 +730,6 @@
                 } else {
                     console.error("Command setNextElement failed: " + msg.message);
                     issues.innerHTML = "Command setNextElement failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
@@ -847,8 +740,6 @@
                 } else {
                     console.error("Command setGenerator failed: " + msg.message);
                     issues.innerHTML = "Command setGenerator failed: " + msg.message;
-                    var networkElement = document.getElementById('mynetwork');
-                    networkElement.style.backgroundColor = '#FFE9C2';
                     defaultUI();
                 }
                 break;
@@ -856,10 +747,10 @@
                 console.log("Command visitedElement. Will color green on: " + msg.id);
                 network.unselectAll();
                 if (nodes.get(msg.id) !== null) {
-                    nodes.update([{id:msg.id, color:{border:"#31B404", background:"#00FF00" }}]);
+                    nodes.update([{id: msg.id, color: {border: "#31B404", background: "#00FF00"}}]);
                     network.selectNodes([msg.id], false);
                 } else if (edges.get(msg.id) !== null) {
-                    edges.update([{id:msg.id, color:{color:"#31B404"}}]);
+                    edges.update([{id: msg.id, color: {color: "#31B404"}}]);
                     network.selectEdges([msg.id]);
                 }
                 break;
@@ -874,15 +765,6 @@
     }
 
 
-
-
-
-
-
-
-
-
-
     /*
      ************************************************************************
      * UTILITY FUNCTIONS
@@ -893,7 +775,7 @@
         document.getElementById("resetModel").disabled = false;
         document.getElementById("pausePlayExecution").disabled = true;
         document.getElementById("stepExecution").disabled = true;
-        document.getElementById("pausePlayExecution").innerHTML="Pause";
+        document.getElementById("pausePlayExecution").innerHTML = "Pause";
     }
 
     function generateUUID() {
