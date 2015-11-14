@@ -139,6 +139,14 @@
         doSend(JSON.stringify(start));
     }
     function resetModel() {
+        options.nodes.color.background = "#97C2FC";
+        options.nodes.color.border = "#2A7BE8";
+        options.nodes.color.highlight.background = "#D2E5FF";
+        options.nodes.color.highlight.border = "#2B7CE9";
+        options.edges.color.color = "#2B7CE9";
+        options.edges.color.highlight = "#2B7CE9";
+        network.setOptions(options);
+
         var restart = {
             command: "restart"
         };
@@ -149,7 +157,7 @@
         }
         for (var i = 0; i < edges.length; i++) {
             var edge = edges.getIds()[i];
-            edges.update([{id:edge, color:{border:"#2A7BE8", background:"#97C2FC" }}]);
+            edges.update([{id:edge, color:{color:"#2B7CE9"}}]);
         }
     }
 
@@ -184,6 +192,13 @@
     var startEvent = new CustomEvent("startEvent", {});
     document.addEventListener("startEvent", function (e) {
         console.log("startEvent:");
+
+        // Change default coloring for nodes and edges.
+        options.nodes.color.highlight.background = "#669966";
+        options.nodes.color.highlight.border = "#669900";
+        options.edges.color.highlight = "#669966";
+        network.setOptions(options);
+
         var hasNext = {
             command: "hasNext"
         };
@@ -348,6 +363,7 @@
                 var jsonEdge = jsonEdges[i];
                 console.log(jsonEdge);
                 edges.add({
+                    id: jsonEdge.id,
                     from: jsonEdge.sourceVertexId,
                     to: jsonEdge.targetVertexId,
                     label: jsonEdge.name,
@@ -384,7 +400,6 @@
      ************************************************************************
      */
     var container = document.getElementById('mynetwork');
-
     var options = {
         interaction: {
             multiselect: true,
@@ -395,7 +410,19 @@
         },
         nodes: {
             shape: 'box',
-            shadow: true
+            shadow: true,
+            color: {
+                border: '#2B7CE9',
+                background: '#97C2FC',
+                highlight: {
+                    border: '#2B7CE9',
+                    background: '#D2E5FF'
+                },
+                hover: {
+                    border: '#2B7CE9',
+                    background: '#D2E5FF'
+                }
+            }
         },
         edges: {
             shadow: true,
@@ -410,6 +437,11 @@
                 type: "dynamic",
                 roundness: 0.5
             },
+            color: {
+                color:'#2B7CE9',
+                highlight:'#2B7CE9',
+                hover: '#2B7CE9'
+            }
         },
         physics: {
             enabled: false
@@ -730,7 +762,7 @@
                     nodes.update([{id:msg.id, color:{border:"#31B404", background:"#00FF00" }}]);
                     network.selectNodes([msg.id], false);
                 } else if (edges.get(msg.id) !== null) {
-                    edges.update([{id:msg.id, color:{border:"#31B404", background:"#00FF00" }}]);
+                    edges.update([{id:msg.id, color:{color:"#31B404"}}]);
                     network.selectEdges([msg.id]);
                 }
                 break;
