@@ -49,28 +49,11 @@ public class WebSocketClient {
     private enum RX_STATE {
         NONE,
         HASNEXT,
-        LOADMODEL,
         START,
-        RESTART,
         GETNEXT,
         GETDATA,
-        VISITEDELEMENT,
-        ADDMODEL,
-        SETNEXTELEMENT,
-        REMOVEMODEL,
-        ADDVERTEX,
-        ADDEDGE,
-        REMOVEVERTEX,
-        REMOVEEDGE,
-        UPDATEVERTEX,
-        UPDATEEDGE;
+        VISITEDELEMENT
     }
-
-    private final String START = "{\"command\": \"start\"}";
-    private final String RESTART = "{\"command\": \"restart\"}";
-    private final String GET_NEXT = "{\"command\": \"getNext\"}";
-    private final String HAS_NEXT = "{\"command\": \"hasNext\"}";
-    private final String GET_DATA = "{\"command\": \"getData\"}";
 
     public boolean connected = false;
     public RX_STATE rxState = RX_STATE.NONE;
@@ -147,20 +130,8 @@ public class WebSocketClient {
                                 }
                             }
                             break;
-                        case "LOADMODEL":
-                            rxState = RX_STATE.LOADMODEL;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
                         case "START":
                             rxState = RX_STATE.START;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "RESTART":
-                            rxState = RX_STATE.RESTART;
                             if (root.getBoolean("success")) {
                                 cmd = true;
                             }
@@ -177,65 +148,11 @@ public class WebSocketClient {
                                 cmd = true;
                             }
                             break;
-                        case "ADDMODEL":
-                                rxState = RX_STATE.ADDMODEL;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "SETNEXTELEMENT":
-                            rxState = RX_STATE.SETNEXTELEMENT;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "REMOVEMODEL":
-                            rxState = RX_STATE.REMOVEMODEL;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "ADDVERTEX":
-                            rxState = RX_STATE.ADDVERTEX;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "ADDEDGE":
-                            rxState = RX_STATE.ADDEDGE;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "REMOVEVERTEX":
-                            rxState = RX_STATE.REMOVEVERTEX;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "REMOVEEDGE":
-                            rxState = RX_STATE.REMOVEEDGE;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "UPDATEVERTEX":
-                            rxState = RX_STATE.UPDATEVERTEX;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
-                        case "UPDATEEDGE":
-                            rxState = RX_STATE.UPDATEEDGE;
-                            if (root.getBoolean("success")) {
-                                cmd = true;
-                            }
-                            break;
                         case "VISITEDELEMENT":
                             rxState = RX_STATE.VISITEDELEMENT;
                             break;
                         default:
-                            logger.info("Command is not implemented: " + command);
+                            logger.debug("Command is not implemented: " + command);
                             break;
                     }
                 }
@@ -286,23 +203,9 @@ public class WebSocketClient {
      * Several models can be loaded. Every model which is loaded, will have it's own
      * context in the machine.
      *
-     * @param model a JSON formatted GraphWalker model as a string
-     */
-    public void loadModel(String model) {
-        logger.debug("Loading model: " + model);
-        client.wsc.send(model);
-        wait(client, RX_STATE.LOADMODEL);
-    }
-
-    /**
-     * Loads a model into the GraphWalker machine. The first model loaded, is where
-     * the execution will start.
-     * Several models can be loaded. Every model which is loaded, will have it's own
-     * context in the machine.
-     *
      * @param path a JSON formatted GraphWalker model as a file
      */
-    public void loadModel(Path path) {
+    public String loadModel(Path path) {
         logger.debug("Loading model file: " + path.toString());
         BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
         StringBuilder out = new StringBuilder();
@@ -320,7 +223,7 @@ public class WebSocketClient {
             e.printStackTrace();
         }
 
-        loadModel(out.toString());
+        return out.toString();
     }
 
     /**
@@ -334,19 +237,12 @@ public class WebSocketClient {
     /**
      * Starts the machine. No more loadModel calls are allowed.
      */
-    public void startMachine() {
+    public void startMachine(Path path) {
         logger.debug("Start the machine");
-        client.wsc.send(START);
+        String startCommand = "{ command: \"start\", gw3: ";
+        startCommand += loadModel(path) + "}";
+        client.wsc.send(startCommand);
         wait(client, RX_STATE.START);
-    }
-
-    /**
-     * Restarts the machine. All previously loaded models will be discarded.
-     */
-    public void restartMachine() {
-        logger.debug("Restart the machine");
-        client.wsc.send(RESTART);
-        wait(client, RX_STATE.RESTART);
     }
 
     /**
@@ -354,7 +250,7 @@ public class WebSocketClient {
      */
     public void getNext() {
         logger.debug("Get next step");
-        client.wsc.send(GET_NEXT);
+        client.wsc.send("{ command: \"getNext\"}");
         wait(client, RX_STATE.GETNEXT);
     }
 
@@ -365,7 +261,7 @@ public class WebSocketClient {
      */
     public boolean hasNext() {
         logger.debug("Have next step?");
-        client.wsc.send(HAS_NEXT);
+        client.wsc.send("{ command: \"hasNext\"}");
         wait(client, RX_STATE.HASNEXT);
         return client.hasNext;
     }
@@ -375,95 +271,7 @@ public class WebSocketClient {
      */
     public void getData() {
         logger.debug("Get data");
-        client.wsc.send(GET_DATA);
+        client.wsc.send("{ command: \"getData\"}");
         wait(client, RX_STATE.GETDATA);
-    }
-
-    /**
-     * Adds a model to the server.
-     *
-     * @param id is the unique id of the model.
-     */
-    public void addModel(String id) {
-        logger.debug("Add a model with id: " + id);
-        client.wsc.send("{\"command\": \"addModel\", \"id\": \"" + id + "\"}");
-        wait(client, RX_STATE.ADDMODEL);
-    }
-
-    /**
-     * Removes model from the server.
-     *
-     * @param id is the unique id of the model to be removed.
-     */
-    public void removeModel(String id) {
-        logger.debug("Remove model with id: " + id);
-        client.wsc.send("{\"command\": \"removeModel\", \"id\": \"" + id + "\"}");
-        wait(client, RX_STATE.REMOVEMODEL);
-    }
-
-    /**
-     * Adds a vertex to the server.
-     */
-    public void addVertex(String modelId, String vertexId) {
-        logger.debug("Add a vertex with id: " + vertexId);
-        client.wsc.send("{\"command\": \"addVertex\", \"modelId\": \"" + modelId + "\", \"vertexId\": \"" + vertexId + "\"}");
-        wait(client, RX_STATE.ADDVERTEX);
-    }
-
-    /**
-     * Adds a edge to the server.
-     */
-    public void addEdge(String modelId, String edgeId, String sourceVertexId, String targetVertexId) {
-        logger.debug("Add a edge with id: " + edgeId);
-        client.wsc.send("{\"command\": \"addEdge\", \"modelId\": \"" + modelId + "\", \"edgeId\": \"" + edgeId + "\", \"sourceVertexId\": \"" + sourceVertexId + "\", \"targetVertexId\": \"" + targetVertexId + "\"}");
-        wait(client, RX_STATE.ADDEDGE);
-    }
-
-    /**
-     * Removes a vertex from the server.
-     */
-    public void removeVertex(String modelId, String vertexId) {
-        logger.debug("Removes vertex with id: " + vertexId);
-        client.wsc.send("{\"command\": \"removeVertex\", \"modelId\": \"" + modelId + "\", \"vertexId\": \"" + vertexId + "\"}");
-        wait(client, RX_STATE.REMOVEVERTEX);
-    }
-
-    /**
-     * Removes an edge from the server.
-     */
-    public void removeEdge(String modelId, String edgeId) {
-        logger.debug("Removes vertex with id: " + edgeId);
-        client.wsc.send("{\"command\": \"removeEdge\", \"modelId\": \"" + modelId + "\", \"edgeId\": \"" + edgeId + "\"}");
-        wait(client, RX_STATE.REMOVEEDGE);
-    }
-
-    /**
-     * Updates a vertex on the server.
-     */
-    public void updateVertex(String modelId, String vertexJsonStr) {
-        logger.debug("Updating vertex");
-        client.wsc.send("{\"command\": \"updateVertex\", \"modelId\": \"" + modelId + "\", \"vertex\":" + vertexJsonStr + "}");
-        wait(client, RX_STATE.UPDATEVERTEX);
-    }
-
-    /**
-     * Updates an edge on the server.
-     */
-    public void updateEdge(String modelId, String edgeJsonStr) {
-        logger.debug("Updating edge");
-        client.wsc.send("{\"command\": \"updateEdge\", \"modelId\": \"" + modelId + "\", \"edge\":" + edgeJsonStr + "}");
-        wait(client, RX_STATE.UPDATEEDGE);
-    }
-
-    /**
-     * Sets the lement with id,to the next element in the context
-     *
-     * @param modelId is the unique id of the model.
-     * @param nextElementId is the unique id of an element in the model.
-     */
-    public void setNextElement(String modelId, String nextElementId) {
-        logger.debug("Setting next element in model with id: " + modelId + ", to element id: " + nextElementId);
-        client.wsc.send("{\"command\": \"setNextElement\", \"modelId\": \"" + modelId + "\", \"nextElementId\": \"" + nextElementId + "\"}");
-        wait(client, RX_STATE.SETNEXTELEMENT);
     }
 }

@@ -26,21 +26,13 @@ package org.graphwalker.websocket;
  * #L%
  */
 
-import com.google.gson.Gson;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
-import org.graphwalker.io.common.Util;
 import org.graphwalker.io.factory.gw3.GW3ContextFactory;
-import org.graphwalker.io.factory.json.*;
 import org.graphwalker.modelchecker.ContextChecker;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.java_websocket.WebSocket;
@@ -245,27 +237,23 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     private Set<WebSocket> sockets;
     private Map<WebSocket, Machine> machines;
-    private Map<WebSocket, List<Context>> contexts;
 
     public WebSocketServer(int port) {
         super(new InetSocketAddress(port));
         sockets = new HashSet<>();
         machines = new HashMap<>();
-        contexts = new HashMap<>();
     }
 
     public WebSocketServer(InetSocketAddress address) {
         super(address);
         sockets = new HashSet<>();
         machines = new HashMap<>();
-        contexts = new HashMap<>();
     }
 
     @Override
     public void onOpen(WebSocket socket, ClientHandshake handshake) {
         sockets.add(socket);
         machines.put(socket, null);
-        contexts.put(socket, new ArrayList<Context>());
         logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
     }
 
@@ -273,7 +261,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     public void onClose(WebSocket socket, int code, String reason, boolean remote) {
         sockets.remove(socket);
         machines.remove(socket);
-        contexts.remove(socket);
         logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " has disconnected");
     }
 
@@ -297,63 +284,24 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
         String command = root.getString("command").toUpperCase();
         switch (command) {
-            case "LOADGW3":
-                response.put("command", "loadgw3");
+            case "START":
+                response.put("command", "start");
                 try {
                     List<Context> gw3Contexts = new GW3ContextFactory().createMultiple(root.getJSONObject("gw3").toString());
-                    List<Context> executionContexts = contexts.get(socket);
-                    executionContexts.addAll(gw3Contexts);
                     response.put("success", true);
                     checkContexts(socket, gw3Contexts);
-                } catch (JSONException e) {
-                    response.put("success", false);
-                    response.put("message", "Could not parse the model: " + e.getMessage());
-                }
 
-                break;
-            case "LOADMODEL":
-                response.put("command", "loadModel");
-                try {
-                    Context context = new JsonContextFactory().create(root.getJSONObject("model").toString());
-                    List<Context> executionContexts = contexts.get(socket);
-                    executionContexts.add(context);
-                    response.put("success", true);
-                    checkContext(socket, context);
-                } catch (JSONException e) {
-                    response.put("success", false);
-                    response.put("message", "Could not parse the model: " + e.getMessage());
-                }
-
-                break;
-            case "GETMODEL":
-                response.put("command", "getModel");
-                try {
-                    List<Context> executionContexts = contexts.get(socket);
-                    Context context = getContextById(executionContexts, root.getString("modelId"));
-                    response.put("modelId", context.getModel().getId());
-                    response.put("model", new JsonContextFactory().getJsonFromContext(context));
-                    response.put("success", true);
-                } catch (JSONException e) {
-                    response.put("success", false);
-                    response.put("message", "Could not parse the model: " + e.getMessage());
-                }
-
-                break;
-            case "START": {
-                response.put("command", "start");
-                response.put("success", false);
-                List<Context> executionContexts = contexts.get(socket);
-                Util.filterBlockedElements(executionContexts);
-                try {
-                    Machine machine = new SimpleMachine(executionContexts);
+                    Machine machine = new SimpleMachine(gw3Contexts);
                     machine.addObserver(this);
                     machines.put(socket, machine);
                     response.put("success", true);
-                } catch (MachineException e) {
-                    response.put("message", e.getMessage());
+
+                } catch (JSONException e) {
+                    response.put("success", false);
+                    response.put("message", "Could not parse the model: " + e.getMessage());
                 }
+
                 break;
-            }
             case "GETNEXT": {
                 response.put("command", "getNext");
                 response.put("success", false);
@@ -390,17 +338,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
                 break;
             }
-            case "RESTART":
-                response.put("command", "restart");
-                response.put("success", true);
-                machines.put(socket, null);
-                List<Context> executionContexts = contexts.get(socket);
-                for (Context context : executionContexts) {
-                    context.reset();
-                }
-
-
-                break;
             case "GETDATA": {
                 response.put("command", "getData");
                 response.put("success", false);
@@ -417,232 +354,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 } else {
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                 }
-
-                break;
-            }
-            case "ADDMODEL": {
-                response.put("command", "addModel");
-                response.put("success", false);
-                Model model = new Model().setId(root.getString("id"));
-                Context context = new JsonContext().setModel(model.build());
-                executionContexts = contexts.get(socket);
-                executionContexts.add(context);
-                response.put("model", new JsonContextFactory().getJsonFromContext(context));
-                response.put("success", true);
-                checkContexts(socket, contexts.get(socket));
-
-                break;
-            }
-            case "REMOVEMODEL": {
-                response.put("command", "removeModel");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("id"));
-
-                if (context != null) {
-                    contexts.get(socket).remove(context);
-                    response.put("success", true);
-                    checkContexts(socket, contexts.get(socket));
-                } else {
-                    response.put("message", "Did not find a model with id: " + root.getString("id"));
-                }
-
-                break;
-            }
-            case "SETGENERATOR": {
-                response.put("command", "setGenerator");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    try {
-                        String generatorString = root.getString("generator");
-                        context.setPathGenerator(GeneratorFactory.parse(generatorString));
-                        response.put("success", true);
-                        checkContext(socket, context);
-                    } catch (Exception e) {
-                        response.put("message", "Could not set the path generator: " + e.getMessage());
-                    }
-                } else {
-                    response.put("message", "Did not find a model with id: " + root.getString("id"));
-                }
-
-                break;
-            }
-            case "SETNEXTELEMENT": {
-                response.put("command", "setNextElement");
-                response.put("success", false);
-
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    try {
-                        String nextElementString = root.getString("nextElementId");
-                        Element nextElement = context.getModel().getElementById(nextElementString);
-                        context.setNextElement(nextElement);
-                        response.put("success", true);
-                        checkContext(socket, context);
-                    } catch (JSONException e) {
-                        response.put("message", "Could not set the start element: " + e.getMessage());
-                    }
-                } else {
-                    response.put("message", "Did not find a model with id: " + root.getString("modelId"));
-                }
-
-                break;
-            }
-            case "ADDVERTEX": {
-                response.put("command", "addVertex");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    Vertex vertex = new Vertex().setId(root.getString("vertexId"));
-                    Model model = new Model(context.getModel());
-                    model.addVertex(vertex);
-                    context.setModel(model.build());
-                    response.put("success", true);
-                    checkContext(socket, context);
-                } else {
-                    response.put("message", "Did not find a model with id: " + root.getString("modelId"));
-                }
-
-                break;
-            }
-            case "ADDEDGE": {
-                response.put("command", "addEdge");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    Edge edge = new Edge().setId(root.getString("edgeId"));
-                    Model model = new Model(context.getModel());
-                    model.addEdge(edge);
-
-                    for (Vertex src : model.getVertices()) {
-                        if (src.getId().equals(new JSONObject(message).getString("sourceVertexId"))) {
-                            edge.setSourceVertex(src);
-                            break;
-                        }
-                    }
-                    for (Vertex dst : model.getVertices()) {
-                        if (dst.getId().equals(new JSONObject(message).getString("targetVertexId"))) {
-                            edge.setTargetVertex(dst);
-                            break;
-                        }
-                    }
-                    context.setModel(model.build());
-                    response.put("success", true);
-                    checkContext(socket, context);
-                } else {
-                    response.put("message", "No models. You need to call addModel first.");
-                }
-
-                break;
-            }
-            case "UPDATEVERTEX": {
-                response.put("command", "updateVertex");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    Model model = new Model(context.getModel());
-                    JSONObject vertexJsonObject = root.getJSONObject("vertex");
-                    Vertex vertex = null;
-                    for (Vertex v : model.getVertices()) {
-                        if (v.getId().equals(vertexJsonObject.getString("id"))) {
-                            vertex = v;
-                            break;
-                        }
-                    }
-
-                    if (vertex == null) {
-                        response.put("message", "Did not find a vertex with id: " + root.getString("vertexId"));
-                    } else {
-                        JsonVertex jsonVertex = new Gson().fromJson(vertexJsonObject.toString(), JsonVertex.class);
-                        jsonVertex.copyValues(vertex);
-                        context.setModel(model.build());
-                        response.put("success", true);
-                        checkContext(socket, context);
-                    }
-                } else {
-                    response.put("message", "Did not find a model with id: " + root.getString("modelId"));
-                }
-
-                break;
-            }
-            case "UPDATEEDGE": {
-                response.put("command", "updateEdge");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    Model model = new Model(context.getModel());
-                    JSONObject edgeJsonObject = root.getJSONObject("edge");
-                    Edge edge = null;
-                    for (Edge e : model.getEdges()) {
-                        if (e.getId().equals(edgeJsonObject.getString("id"))) {
-                            edge = e;
-                            break;
-                        }
-                    }
-
-                    if (edge == null) {
-                        response.put("message", "Did not find an edge with id: " + root.getString("egdeId"));
-                    } else {
-                        JsonEdge jsonEdge = new Gson().fromJson(edgeJsonObject.toString(), JsonEdge.class);
-                        jsonEdge.copyValues(edge);
-                        context.setModel(model.build());
-                        response.put("success", true);
-                        checkContext(socket, context);
-                    }
-                } else {
-                    response.put("message", "Did not find a model with id: " + root.getString("modelId"));
-                }
-
-                break;
-            }
-            case "REMOVEVERTEX": {
-                response.put("command", "removeVertex");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    Model model = new Model(context.getModel());
-                    for (Vertex v : model.getVertices()) {
-                        if (v.getId().equals(new JSONObject(message).getString("vertexId"))) {
-                            model.deleteVertex(v);
-                            context.setModel(model.build());
-                            response.put("success", true);
-                            break;
-                        }
-                    }
-                    checkContext(socket, context);
-                } else {
-                    response.put("message", "No models. You need to call newModel first.");
-                }
-
-                break;
-            }
-            case "REMOVEEDGE": {
-                response.put("command", "removeEdge");
-                response.put("success", false);
-                Context context = getContextById(contexts.get(socket), root.getString("modelId"));
-
-                if (context != null) {
-                    Model model = new Model(context.getModel());
-                    for (Edge e : model.getEdges()) {
-                        if (e.getId().equals(new JSONObject(message).getString("edgeId"))) {
-                            model.deleteEdge(e);
-                            context.setModel(model.build());
-                            response.put("success", true);
-                            break;
-                        }
-                    }
-                    checkContext(socket, context);
-                } else {
-                    response.put("message", "No models. You need to call newModel first.");
-                }
-
                 break;
             }
             default:
@@ -662,7 +373,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         sendIssues(socket, issues);
     }
 
-    private void checkContext(WebSocket socket, Context context){
+    private void checkContext(WebSocket socket, Context context) {
         List<String> issues = ContextChecker.hasIssues(context);
         sendIssues(socket, issues);
     }
@@ -691,15 +402,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     + jsonIssue.toString());
             socket.send(jsonIssue.toString());
         }
-    }
-
-    public Context getContextById(List<Context> contextsList, String id) {
-        for (Context c : contextsList) {
-            if (c.getModel().getId().equals(id)) {
-                return c;
-            }
-        }
-        return null;
     }
 
     @Override
@@ -758,9 +460,5 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     public Map<WebSocket, Machine> getMachines() {
         return machines;
-    }
-
-    public Map<WebSocket, List<Context>> getContexts() {
-        return contexts;
     }
 }
