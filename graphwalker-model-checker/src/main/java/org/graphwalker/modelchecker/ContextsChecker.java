@@ -1,10 +1,6 @@
 package org.graphwalker.modelchecker;
 
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
 
 import java.util.ArrayList;
 import java.util.HashSet;

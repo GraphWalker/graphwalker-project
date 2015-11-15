@@ -1,13 +1,7 @@
 package org.graphwalker.modelchecker;
 
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.gw3.GW3ContextFactory;
-import org.graphwalker.io.factory.json.JsonContext;
 import org.junit.Assert;
 import org.junit.Test;
 
