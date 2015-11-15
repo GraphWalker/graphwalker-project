@@ -51,7 +51,6 @@
     var modelId = '';
     var nodes;
     var edges;
-    var ignoreDataUpdateEvents = false;
     var pauseExecution = false;
     var stepExecution = false;
     var startElementId;
@@ -359,30 +358,15 @@
 
         function receivedText(e) {
 
-            if (modelId !== '') {
-                var removeModel = {
-                    command: "removeModel",
-                    id: modelId
-                };
-                doSend(JSON.stringify(removeModel));
-            }
-
-
-            var lines = '{ "command": "loadModel", "model": ';
-            lines += e.target.result;
-            lines += '}';
-
-            var hasModelPositions = true;
-
-            var jsonLoadModel = JSON.parse(lines);
-            var jsonModel = jsonLoadModel.model;
+            var jsonLoadModel = JSON.parse(e.target.result);
+            var jsonModels = jsonLoadModel.models;
+            var jsonModel = jsonModels[0];
             if (jsonModel.hasOwnProperty('id')) {
                 modelId = jsonModel.id;
             } else {
                 modelId = generateUUID();
                 jsonLoadModel.model.id = modelId;
             }
-            doSend(JSON.stringify(jsonLoadModel));
 
             if (jsonModel.hasOwnProperty('generator')) {
                 document.getElementById("generator").value = jsonModel.generator;
@@ -414,7 +398,6 @@
                         id: jsonVertex.id,
                         label: jsonVertex.name
                     });
-                    hasModelPositions = false;
                 }
             }
             var jsonEdges = jsonModel.edges;
@@ -431,7 +414,6 @@
             }
 
             network.fit();
-            ignoreDataUpdateEvents = false;
         }
     }
 
