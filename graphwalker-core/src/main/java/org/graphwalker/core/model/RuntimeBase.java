@@ -78,6 +78,11 @@ public abstract class RuntimeBase implements Element {
     }
 
     @Override
+    public int getInternalId() {
+        return internalId;
+    }
+
+    @Override
     public boolean hasId() {
         return id != null && !"".equals(id);
     }
@@ -142,6 +147,11 @@ public abstract class RuntimeBase implements Element {
                 Objects.equals(actions, that.actions) &&
                 Objects.equals(requirements, that.requirements) &&
                 Objects.equals(properties, that.properties);
+    }
+
+    @Override
+    public String toString() {
+        return "{ internalId: " + getInternalId() + "}";
     }
 
     @Override
