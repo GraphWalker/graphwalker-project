@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -46,6 +47,6 @@ public class ModelCheckerTest {
         model.addVertex(vertex).addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
         List<String> issues = ModelChecker.hasIssues(model.build());
         Assert.assertThat(issues.size(), is(1));
-        Assert.assertThat(issues.get(0), is("Vertex: { id: SomeId, name: SomeName}, have a unnamed self loop edge."));
+        Assert.assertThat(issues.get(0), containsString(", have a unnamed self loop edge."));
     }
 }
