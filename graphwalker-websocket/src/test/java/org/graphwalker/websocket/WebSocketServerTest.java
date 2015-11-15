@@ -52,7 +52,6 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     private WebSocketClient client = new WebSocketClient();
     private WebSocketServer server;
     private int numberOfConnections = 0;
-    private int numberOfModels = 0;
 
     @BeforeExecution
     public void StartServer() throws Exception {
@@ -72,32 +71,8 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     }
 
     @Override
-    public void v_ModelLoaded() {
-        WebSocket socket = server.getSockets().iterator().next();
-        Assert.assertNull(server.getMachines().get(socket));
-        //  Assert.assertThat(server.getContextConfigurations().get(socket).size(), is(numberOfModels));
-    }
-
-    @Override
     public void e_StartMachine() {
-        client.startMachine();
-    }
-
-    @Override
-    public void e_AddModel() {
-        numberOfModels++;
-        client.loadModel(Paths.get("json/SmallModel.json"));
-    }
-
-    @Override
-    public void e_RestartMachine() {
-        client.restartMachine();
-    }
-
-    @Override
-    public void e_AddInitialModel() {
-        numberOfModels++;
-        client.loadModel(Paths.get("json/SmallModel.json"));
+        client.startMachine(Paths.get("json/SmallModel.json"));
     }
 
     @Override
@@ -110,7 +85,6 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     public void v_MachineRunning() {
         WebSocket socket = server.getSockets().iterator().next();
         Assert.assertNotNull(server.getMachines().get(socket));
-        Assert.assertThat(server.getContexts().get(socket).size(), is(numberOfModels));
     }
 
     @Override
@@ -122,10 +96,7 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
     public void v_EmptyMachine() {
         Assert.assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
         Assert.assertThat("We should now haw 1 connection", server.getSockets().size(), is(1));
-
         Assert.assertThat(server.getMachines().size(), is(1));
-        Assert.assertThat(server.getContexts().size(), is(1));
-
         WebSocket socket = server.getSockets().iterator().next();
         Assert.assertNull(server.getMachines().get(socket));
     }

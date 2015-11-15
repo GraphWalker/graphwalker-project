@@ -46,6 +46,7 @@
      * SOME DATA INITIALIZATION, OTHER INIT. EXISTS ELSEWHERE IN CODE...
      ************************************************************************
      */
+    var gw3 = '';
     var modelJson = '';
     var modelId = '';
     var nodes;
@@ -53,7 +54,7 @@
     var ignoreDataUpdateEvents = false;
     var pauseExecution = false;
     var stepExecution = false;
-
+    var startElementId;
 
     /*
      ************************************************************************
@@ -138,19 +139,6 @@
             console.log("s!");
             if (contextNode !== undefined) {
                 console.log("Will assign SHARED_STATE to node: " + contextNode);
-                var updateVertex = {
-                    command: "setNextElement",
-                    modelId: modelId,
-                    vertex: {
-                        id: contextNode,
-                        properties: {
-                            sharedState: "MYSHAREDSTATE"
-                        }
-                    }
-                };
-// Not yet implemented
-//                doSend(JSON.stringify(updateVertex));
-
             } else {
                 console.log("No element selected on the canvas");
             }
@@ -161,6 +149,7 @@
         $(document).on('keyup', null, 'e', function () {
             console.log("e!");
             var selectedId = getSelectedElement();
+            startElementId = selectedId;
             if (selectedId !== undefined) {
                 console.log("Will assign START_ELEMENT to element: " + selectedId);
                 var setNextElement = {
@@ -187,8 +176,44 @@
         pauseExecution = false;
 
         var start = {
-            command: "start"
+            command: "start",
+            gw3: {
+                name: "VISMODEL",
+                models: [
+                    {
+                        name: "model 1",
+                        id: modelId,
+                        vertices: [],
+                        edges: []
+                    }
+                ]
+            }
         };
+        if (document.getElementById("generator").value !== undefined) {
+            start.gw3.models[0].generator = document.getElementById("generator").value;
+        }
+        if (startElementId !== undefined) {
+            start.gw3.models[0].startElementId = startElementId;
+        }
+        for (var i = 0; i < nodes.length; i++) {
+            var n = nodes.getIds()[i];
+            var vertex = {
+                id: nodes.get(n).id,
+                name: nodes.get(n).label
+            };
+            start.gw3.models[0].vertices[i] = vertex;
+        }
+        for (var i = 0; i < edges.length; i++) {
+            var e = edges.getIds()[i];
+            var edge = {
+                id: edges.get(e).id,
+                name: edges.get(e).label,
+                sourceVertexId: edges.get(e).from,
+                targetVertexId: edges.get(e).to
+            };
+            start.gw3.models[0].edges[i] = edge;
+        }
+
         doSend(JSON.stringify(start));
     }
 
@@ -207,10 +232,6 @@
         options.edges.color.highlight = "#2B7CE9";
         network.setOptions(options);
 
-        var restart = {
-            command: "restart"
-        };
-        doSend(JSON.stringify(restart));
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.getIds()[i];
             nodes.update([{id: node, color: {border: "#2A7BE8", background: "#97C2FC"}}]);
@@ -227,16 +248,6 @@
      * CREATE SOME CUSTOM EVENTS THAT HANDLES MODEL EXECUTION
      ************************************************************************
      */
-    var getModelEvent = new CustomEvent("getModelEvent", {});
-    document.addEventListener("getModelEvent", function (e) {
-        console.log("getModelEvent:");
-        var getModel = {
-            command: "getModel",
-            modelId: modelId
-        };
-        doSend(JSON.stringify(getModel));
-    });
-
     var startEvent = new CustomEvent("startEvent", {});
     document.addEventListener("startEvent", function (e) {
         console.log("startEvent:");
@@ -359,7 +370,7 @@
 
             var lines = '{ "command": "loadModel", "model": ';
             lines += e.target.result;
-            lines += '}'
+            lines += '}';
 
             var hasModelPositions = true;
 
@@ -375,6 +386,10 @@
 
             if (jsonModel.hasOwnProperty('generator')) {
                 document.getElementById("generator").value = jsonModel.generator;
+            }
+
+            if (jsonModel.hasOwnProperty('startElementId')) {
+                startElementId = jsonModel.startElementId;
             }
 
             var jsonVertices = jsonModel.vertices;
@@ -512,111 +527,18 @@
     });
     network.on('stabilized', function (params) {
         console.log("Done with initial layout");
-
-        // Update GW3 about positions
-        positions = network.getPositions();
-        for (var key in positions) {
-            var node = positions[key];
-            var updateVertex = {
-                command: "updateVertex",
-                modelId: modelId,
-                vertex: {
-                    id: key,
-                    properties: {
-                        x: node.x,
-                        y: node.y
-                    }
-                }
-            };
-            doSend(JSON.stringify(updateVertex));
-        }
-        document.dispatchEvent(getModelEvent);
     });
     network.on('dragEnd', function (params) {
-        for (var i = 0; i < params.nodes.length; i++) {
-            var node = params.nodes[i];
-            var updateVertex = {
-                command: "updateVertex",
-                modelId: modelId,
-                vertex: {
-                    id: node,
-                    properties: {
-                        x: params.pointer.canvas.x,
-                        y: params.pointer.canvas.y
-                    }
-                }
-            };
-            doSend(JSON.stringify(updateVertex));
-            document.dispatchEvent(getModelEvent);
-        }
+        console.log("dragEnd");
     });
     network.on('doubleClick', function (params) {
-        var uuid = generateUUID();
-        var name = 'v_NewVertex';
-        var addVertex = {
-            command: "addVertex",
-            modelId: modelId,
-            vertexId: uuid
-        };
-        doSend(JSON.stringify(addVertex));
-        ignoreDataUpdateEvents = true;
-        nodes.add({
-            id: uuid,
-            label: 'v_NewVertex',
-            x: params.pointer.canvas.x,
-            y: params.pointer.canvas.y
-        });
-        ignoreDataUpdateEvents = false;
-
-        var updateVertex = {
-            command: "updateVertex",
-            modelId: modelId,
-            vertex: {
-                id: uuid,
-                name: name,
-                properties: {
-                    x: params.pointer.canvas.x,
-                    y: params.pointer.canvas.y
-                }
-            }
-        };
-        doSend(JSON.stringify(updateVertex));
-        document.dispatchEvent(getModelEvent);
+        console.log("doubleClick");
     });
     nodes.on('*', function (event, properties, senderId) {
-        if (ignoreDataUpdateEvents) return;
-
-        switch (event) {
-            case "add":
-                break;
-        }
-
-        console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
+        console.log('nodes data update event:', event, 'properties:', properties, 'senderId:', senderId);
     });
     edges.on('*', function (event, properties, senderId) {
-        if (ignoreDataUpdateEvents) return;
-
-        switch (event) {
-            case "add":
-                for (var i = 0; i < properties.items.length; i++) {
-                    var item = properties.items[i];
-
-                    var edge = edges.get(item);
-                    var addEdge = {
-                        command: "addEdge",
-                        modelId: modelId,
-                        edgeId: item,
-                        sourceVertexId: edge.from,
-                        targetVertexId: edge.to
-                    };
-                    doSend(JSON.stringify(addEdge));
-                }
-                document.dispatchEvent(getModelEvent);
-
-                break;
-        }
-
-        console.log('event:', event, 'properties:', JSON.stringify(properties), 'senderId:', senderId);
+        console.log('edges data update event:', event, 'properties:', JSON.stringify(properties), 'senderId:', senderId);
     });
 
 
@@ -645,15 +567,10 @@
         };
     }
     function onOpen(evt) {
-        modelId = generateUUID();
-        var addModel = {
-            command: "addModel",
-            id: modelId
-        };
-        doSend(JSON.stringify(addModel));
+        console.log('onOpen: ' + evt.data);
     }
     function onClose(evt) {
-        console.log('Closing: ' + evt.data);
+        console.log('onClose: ' + evt.data);
     }
     function onMessage(evt) {
         console.log(evt.data);
@@ -661,25 +578,6 @@
         generator.innerHTML = "No issues";
 
         switch (msg.command) {
-            case "loadModel":
-                if (msg.success) {
-                    console.log("Command loadModel ok");
-                } else {
-                    console.error("Command loadModel failed: " + msg.message);
-                    issues.innerHTML = "Command loadModel failed: " + msg.message;
-                    defaultUI();
-                }
-                break;
-            case "getModel":
-                if (msg.success) {
-                    console.log("Command getModel ok");
-                    modelJson = msg.model;
-                } else {
-                    console.error("Command getModel failed: " + msg.message);
-                    issues.innerHTML = "Command getModel failed: " + msg.message;
-                    defaultUI();
-                }
-                break;
             case "hasNext":
                 if (msg.success) {
                     console.log("Command hasNext: " + msg.hasNext);
@@ -722,26 +620,6 @@
                 break;
             case "noIssues":
                 issues.innerHTML = "No issues";
-                break;
-            case "setNextElement":
-                if (msg.success) {
-                    console.log("Command setNextElement ok");
-                    document.dispatchEvent(getModelEvent);
-                } else {
-                    console.error("Command setNextElement failed: " + msg.message);
-                    issues.innerHTML = "Command setNextElement failed: " + msg.message;
-                    defaultUI();
-                }
-                break;
-            case "setGenerator":
-                if (msg.success) {
-                    console.log("Command setGenerator ok");
-                    document.dispatchEvent(getModelEvent);
-                } else {
-                    console.error("Command setGenerator failed: " + msg.message);
-                    issues.innerHTML = "Command setGenerator failed: " + msg.message;
-                    defaultUI();
-                }
                 break;
             case "visitedElement":
                 console.log("Command visitedElement. Will color green on: " + msg.id);
