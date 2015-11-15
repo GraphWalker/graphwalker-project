@@ -26,13 +26,17 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.*;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.hamcrest.core.Is.is;
 
@@ -40,6 +44,7 @@ import static org.hamcrest.core.Is.is;
  * @author Nils Olsson
  */
 public final class ProfilerTest {
+    private static final Logger logger = LoggerFactory.getLogger(ProfilerTest.class);
 
     private static final Vertex start = new Vertex();
     private static final Context context = new TestExecutionContext()
@@ -67,4 +72,63 @@ public final class ProfilerTest {
         Assert.assertThat(profiler.getPath().size(), is(1));
     }
 
+
+    /**
+     * This test verifies that in a multi model scenario, where 2 models have elements with
+     * the same id's works.
+     * The test generated failure commit 6b5da82638a7f60c751ffcc3f52f275c9a8242a7
+     * The failure was that not all elements actually was visited.
+     * The profiler did not handle elements with the same id in 2 different contexts. This,
+     * in turn, made the profiler method isVisited return a false true.
+     * The failure was intermittent because of the random path generator.
+     */
+    @Test
+    public void multiModel() {
+        Vertex A = new Vertex().setName("A").setId("n1");
+        Vertex B = new Vertex().setName("B").setId("n2").setSharedState("shared_state");
+
+        Model model1 = new Model();
+        model1.addEdge(new Edge().setTargetVertex(A).setName("a").setId("e0").addAction(new Action("a++;")));
+        model1.addEdge(new Edge().setSourceVertex(A).setTargetVertex(B).setName("b1").setId("e1").addAction(new Action("b1++;")));
+        model1.addEdge(new Edge().setSourceVertex(B).setTargetVertex(A).setName("b2").setId("e2").addAction(new Action("b2++;")));
+        model1.addEdge(new Edge().setSourceVertex(B).setTargetVertex(A).setName("b3").setId("e3").addAction(new Action("b3++;")));
+
+        model1.addAction(new Action("a=0;b1=0;b2=0;b3=0;"));
+
+        ExecutionContext context1 = new TestExecutionContext();
+        context1.setModel(model1.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));
+        context1.setNextElement(context1.getModel().findElements("a").get(0));
+
+        Vertex C = new Vertex().setName("C").setId("n1").setSharedState("shared_state");
+        Vertex D = new Vertex().setName("D").setId("n2");
+
+        Model model2 = new Model();
+        model2.addEdge(new Edge().setSourceVertex(C).setTargetVertex(D).setName("d").setId("e1").addAction(new Action("d++;")));
+        model2.addEdge(new Edge().setSourceVertex(D).setTargetVertex(C).setName("c1").setId("e2").addAction(new Action("c1++;")));
+        model2.addEdge(new Edge().setSourceVertex(D).setTargetVertex(C).setName("c2").setId("e3").addAction(new Action("c2++;")));
+
+        model2.addAction(new Action("d=0;c1=0;c2=0;"));
+
+        ExecutionContext context2 = new TestExecutionContext();
+        context2.setModel(model2.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));
+
+        Machine machine = new SimpleMachine(context1, context2);
+        while (machine.hasNextStep()) {
+            machine.getNextStep();
+            logger.debug(machine.getCurrentContext().getCurrentElement().getName());
+        }
+
+        logger.debug("\na: " + context1.getAttribute("a").toString() +
+                "\nb1: " + context1.getAttribute("b1").toString() +
+                "\nb2: " + context1.getAttribute("b2").toString() +
+                "\nd: " + context2.getAttribute("d").toString() +
+                "\nc1: " + context2.getAttribute("c1").toString() +
+                "\nc2: " + context2.getAttribute("c2").toString());
+        Assert.assertTrue(Float.parseFloat(context1.getAttribute("a").toString()) >= 1);
+        Assert.assertTrue(Float.parseFloat(context1.getAttribute("b1").toString()) >= 1);
+        Assert.assertTrue(Float.parseFloat(context1.getAttribute("b2").toString()) >= 1);
+        Assert.assertTrue(Float.parseFloat(context2.getAttribute("d").toString()) >= 1);
+        Assert.assertTrue(Float.parseFloat(context2.getAttribute("c1").toString()) >= 1);
+        Assert.assertTrue(Float.parseFloat(context2.getAttribute("c2").toString()) >= 1);
+    }
 }

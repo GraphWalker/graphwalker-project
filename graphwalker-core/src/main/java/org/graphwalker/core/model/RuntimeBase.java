@@ -27,6 +27,7 @@ package org.graphwalker.core.model;
  */
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Nils Olsson
@@ -34,10 +35,13 @@ import java.util.*;
 public abstract class RuntimeBase implements Element {
 
     private final String id;
+    private final int internalId;
     private final String name;
     private final List<Action> actions;
     private final Set<Requirement> requirements;
     private final Map<String, Object> properties;
+
+    private static final AtomicInteger counter = new AtomicInteger();
 
     protected RuntimeBase(String id, String name) {
         this(id, name, new ArrayList<Action>(), new HashSet<Requirement>());
@@ -53,6 +57,7 @@ public abstract class RuntimeBase implements Element {
 
     protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements, Map<String, Object> properties) {
         this.id = getIdOrDefault(id);
+        this.internalId = counter.getAndIncrement();
         this.name = name;
         this.actions = Collections.unmodifiableList(actions);
         this.requirements = Collections.unmodifiableSet(requirements);
@@ -137,5 +142,10 @@ public abstract class RuntimeBase implements Element {
                 Objects.equals(actions, that.actions) &&
                 Objects.equals(requirements, that.requirements) &&
                 Objects.equals(properties, that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return internalId;
     }
 }
