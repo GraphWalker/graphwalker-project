@@ -234,10 +234,6 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
             return sharedState;
         }
 
-        public String toString() {
-            return "{ id: " + getId() + ", name: " + getName() + "}";
-        }
-
         /**
          * Returns true if the vertex has a valid shared state.
          *
