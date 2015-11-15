@@ -381,10 +381,6 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
             return !guard.getScript().isEmpty();
         }
 
-        public String toString() {
-            return "{ id: " + getId() + ", name: " + getName() + "}";
-        }
-
         /**
          * Gets the weight of the edge.
          *
