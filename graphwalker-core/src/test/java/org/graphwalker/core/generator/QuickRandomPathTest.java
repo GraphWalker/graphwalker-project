@@ -26,6 +26,7 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.algorithm.AlgorithmException;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
@@ -56,13 +57,15 @@ public class QuickRandomPathTest {
         Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
     }
 
-    @Test(expected = NoPathFoundException.class)
+    @Test(expected = AlgorithmException.class)
     public void failTest() {
         Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
-        context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
-        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), source.build());
-        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
-        Assert.assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
+        PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
+        context.setPathGenerator(generator);
+        context.setCurrentElement(source.build());
+        Assert.assertEquals(context.getCurrentElement(), source.build());
+        Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
+        Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
         context.getPathGenerator().getNextStep(); // should fail
     }
 }
