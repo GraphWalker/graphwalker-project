@@ -108,13 +108,6 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         this();
         setModel(model);
         setPathGenerator(pathGenerator);
-        for (RuntimeEdge edge : this.model.getEdges()) {
-            if (null == edge.getName() && null != edge.getSourceVertex() && null != edge.getTargetVertex() && edge.getSourceVertex().equals(edge.getTargetVertex())) {
-                // TODO: Refactor we probably want to have multiple rules checked, not only loop edges
-                // TODO: Implement a rule framework so that organisations and projects can create their own rule set (think model based code convention)
-                logger.warn("Vertex " + edge.getSourceVertex() + " have a unnamed loop edge!");
-            }
-        }
     }
 
     public void reset() {
