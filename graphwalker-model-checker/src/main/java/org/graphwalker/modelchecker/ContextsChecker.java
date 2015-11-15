@@ -1,6 +1,7 @@
 package org.graphwalker.modelchecker;
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +34,19 @@ public class ContextsChecker {
         for (Context context : contexts) {
             if (!ids.add(context.getModel().getId())) {
                 issues.add("Id of the model is not unique: " + context.getModel().getId());
+            }
+        }
+
+        // Check that all internal ids are unique
+        Set<Element> elements = new HashSet<>();
+        for (Context context : contexts) {
+            if (!elements.add(context.getModel())) {
+                issues.add("Internal id of the model is not unique: " + context);
+            }
+            for (Element element : context.getModel().getElements()) {
+                if (!elements.add(element)) {
+                    issues.add("Internal id of the element is not unique: " + element);
+                }
             }
         }
 
