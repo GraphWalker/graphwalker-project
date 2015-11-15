@@ -116,6 +116,7 @@ public class SimpleMachine extends MachineBase {
     }
 
     protected Context getNextStep(Context context) {
+        logger.debug("Context: " + context);
         if (null != context.getNextElement()) {
             context.setCurrentElement(context.getNextElement());
         } else {
