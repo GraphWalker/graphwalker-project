@@ -50,13 +50,10 @@ import static org.graphwalker.core.common.Objects.unmodifiableSet;
 public abstract class RuntimeBase implements Element {
 
     private final String id;
-    private final int internalId;
     private final String name;
     private final List<Action> actions;
     private final Set<Requirement> requirements;
     private final Map<String, Object> properties;
-
-    private static final AtomicInteger counter = new AtomicInteger();
 
     protected RuntimeBase(String id, String name) {
         this(id, name, new ArrayList<Action>(), new HashSet<Requirement>());
@@ -72,7 +69,6 @@ public abstract class RuntimeBase implements Element {
 
     protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements, Map<String, Object> properties) {
         this.id = getIdOrDefault(id);
-        this.internalId = counter.getAndIncrement();
         this.name = name;
         this.actions = unmodifiableList(actions);
         this.requirements = unmodifiableSet(requirements);
@@ -90,11 +86,6 @@ public abstract class RuntimeBase implements Element {
     @Override
     public String getId() {
         return id;
-    }
-
-    @Override
-    public int getInternalId() {
-        return internalId;
     }
 
     @Override
@@ -156,15 +147,5 @@ public abstract class RuntimeBase implements Element {
                 Objects.equals(actions, that.actions) &&
                 Objects.equals(requirements, that.requirements) &&
                 Objects.equals(properties, that.properties);
-    }
-
-    @Override
-    public String toString() {
-        return "{ internalId: " + getInternalId() + "}";
-    }
-
-    @Override
-    public int hashCode() {
-        return internalId;
     }
 }
