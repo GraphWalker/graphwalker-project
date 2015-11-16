@@ -37,9 +37,6 @@ import java.util.Set;
  */
 public interface Element {
     String getId();
-
-    int getInternalId();
-
     boolean hasId();
 
     /**
