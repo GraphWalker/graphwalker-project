@@ -58,6 +58,7 @@ public class EdgeTest {
         Assert.assertNotNull(edge.build().getTargetVertex());
         Assert.assertNotNull(edge.getGuard());
         Assert.assertNotNull(edge.build().getGuard());
+        Assert.assertTrue(edge.build().hasGuard());
         Assert.assertEquals(edge.getGuard(), edge.build().getGuard());
         Assert.assertNotNull(edge.getActions());
         Assert.assertThat(edge.getActions().size(), is(3));
@@ -65,14 +66,14 @@ public class EdgeTest {
         Assert.assertNotNull(edge.build().getActions());
         Assert.assertThat(edge.build().getActions().size(), is(3));
         Assert.assertThat(edge.build().getWeight(), is(.5));
+        Assert.assertFalse(edge.setGuard(null).build().hasGuard());
+        Assert.assertFalse(edge.setGuard(new Guard("")).build().hasGuard());
     }
 
     @Test
     public void testEquality() throws Exception {
         Edge e1 = new Edge().setId("ID1");
-        ;
         Edge e2 = new Edge().setId("ID1");
-        ;
         Assert.assertThat(e1.build(), is(e2.build()));
     }
 
@@ -81,5 +82,16 @@ public class EdgeTest {
         Edge e1 = new Edge().setId("ID1");
         Edge e2 = new Edge().setId("ID2");
         Assert.assertThat(e1.build(), not(e2.build()));
+    }
+
+    @Test
+    public void testProperties() throws Exception {
+        Edge edge = new Edge().setId("ID");
+        Assert.assertFalse(edge.build().hasProperties());
+        Assert.assertTrue(edge.setProperty("x", "y").build().hasProperties());
+        Assert.assertThat((String)edge.getProperty("x"), is("y"));
+        Assert.assertThat((String)edge.build().getProperty("x"), is("y"));
+        //Assert.assertThat((String)edge.remove("x"), is("y"));
+        //Assert.assertFalse(edge.build().hasProperty("x"));
     }
 }

@@ -40,6 +40,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableList;
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
+import static org.graphwalker.core.common.Objects.unmodifiableSet;
 
 /**
  * @author Nils Olsson
@@ -71,9 +74,9 @@ public abstract class RuntimeBase implements Element {
         this.id = getIdOrDefault(id);
         this.internalId = counter.getAndIncrement();
         this.name = name;
-        this.actions = Collections.unmodifiableList(actions);
-        this.requirements = Collections.unmodifiableSet(requirements);
-        this.properties = Collections.unmodifiableMap(properties);
+        this.actions = unmodifiableList(actions);
+        this.requirements = unmodifiableSet(requirements);
+        this.properties = unmodifiableMap(properties);
     }
 
     private String getIdOrDefault(String id) {

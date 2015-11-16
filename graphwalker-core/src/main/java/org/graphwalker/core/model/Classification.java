@@ -48,6 +48,7 @@ public final class Classification extends CachedBuilder<Classification.RuntimeCl
 
     public Classification setId(String id) {
         this.id = id;
+        invalidateCache();
         return this;
     }
 
