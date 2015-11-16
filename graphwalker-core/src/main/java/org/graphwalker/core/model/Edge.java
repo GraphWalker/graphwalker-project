@@ -375,10 +375,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         }
 
         public boolean hasGuard() {
-            if (guard == null || guard.getScript() == null) {
-                return false;
-            }
-            return !guard.getScript().isEmpty();
+            return !(guard == null || guard.getScript() == null) && !guard.getScript().isEmpty();
         }
 
         /**
