@@ -45,6 +45,10 @@
             <artifactId>graphwalker-websocket</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.graphwalker</groupId>
+            <artifactId>graphwalker-model-checker</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.beust</groupId>
             <artifactId>jcommander</artifactId>
         </dependency>

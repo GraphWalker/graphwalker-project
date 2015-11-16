@@ -51,6 +51,7 @@ import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.test.TestExecutor;
+import org.graphwalker.modelchecker.ContextsChecker;
 import org.graphwalker.restful.Restful;
 import org.graphwalker.restful.Util;
 import org.graphwalker.websocket.WebSocketServer;
@@ -78,6 +79,7 @@ public class CLI {
     private Requirements requirements;
     private Convert convert;
     private Source source;
+    private Check check;
 
     enum Command {
         NONE,
@@ -86,7 +88,8 @@ public class CLI {
         METHODS,
         REQUIREMENTS,
         CONVERT,
-        SOURCE
+        SOURCE,
+        CHECK
     }
 
     private Command command = Command.NONE;
@@ -142,6 +145,9 @@ public class CLI {
                 source = new Source();
                 jc.addCommand("source", source);
 
+                check = new Check();
+                jc.addCommand("check", check);
+
                 jc.parse(args);
                 jc.usage();
                 return;
@@ -173,6 +179,9 @@ public class CLI {
             source = new Source();
             jc.addCommand("source", source);
 
+            check = new Check();
+            jc.addCommand("check", check);
+
             jc.parse(args);
 
             // Parse for commands
@@ -195,6 +204,9 @@ public class CLI {
                 } else if (jc.getParsedCommand().equalsIgnoreCase("source")) {
                     command = Command.SOURCE;
                     RunCommandSource();
+                } else if (jc.getParsedCommand().equalsIgnoreCase("check")) {
+                    command = Command.SOURCE;
+                    RunCommandCheck();
                 }
             }
 
@@ -236,6 +248,18 @@ public class CLI {
             LoggerUtil.setLogLevel(LoggerUtil.Level.ALL);
         } else {
             throw new ParameterException("Incorrect argument to --debug");
+        }
+    }
+
+    private void RunCommandCheck() throws Exception {
+        List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
+        List<String> issues = ContextsChecker.hasIssues(contexts);
+        if (issues.size() > 0) {
+            for (String issue : issues) {
+                System.out.println(issue);
+            }
+        } else {
+            System.out.println("No issues found with the model(s).");
         }
     }
 
