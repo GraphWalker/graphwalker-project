@@ -96,7 +96,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
             edge.setSourceVertex(cache.get(runtimeEdge.getSourceVertex()));
             edge.setTargetVertex(cache.get(runtimeEdge.getTargetVertex()));
             edge.setGuard(runtimeEdge.getGuard());
-            edge.addActions(runtimeEdge.getActions());
+            edge.setActions(runtimeEdge.getActions());
             edge.setRequirements(runtimeEdge.getRequirements());
             edge.setWeight(runtimeEdge.getWeight());
             edge.setProperties(runtimeEdge.getProperties());
