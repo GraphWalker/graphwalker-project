@@ -31,8 +31,8 @@ import org.graphwalker.core.common.Objects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -143,11 +143,11 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
      * Will remove the edge from the model.
      * </p>
      *
-     * @param edgeToBeRemoved The edge to be deleted.
+     * @param edge The edge to be deleted.
      * @return The model.
      */
-    public Model deleteEdge(Edge edgeToBeRemoved) {
-        edges.remove(edgeToBeRemoved);
+    public Model deleteEdge(Edge edge) {
+        edges.remove(edge);
         return this;
     }
 
@@ -158,20 +158,18 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
      * as either source or target, will also be deleted from the model.
      * </p>
      *
-     * @param vertexToBeRemoved The vertex to be deleted.
+     * @param vertex The vertex to be deleted.
      * @return The model.
      */
-    public Model deleteVertex(Vertex vertexToBeRemoved) {
-        ListIterator<Edge> e_it = edges.listIterator();
-        while (e_it.hasNext()) {
-            Edge e = e_it.next();
-            if (e.getSourceVertex() == vertexToBeRemoved) {
-                e_it.remove();
-            } else if (e.getTargetVertex() == vertexToBeRemoved) {
-                e_it.remove();
+    public Model deleteVertex(Vertex vertex) {
+        Iterator<Edge> iterator = edges.iterator();
+        while (iterator.hasNext()) {
+            Edge edge = iterator.next();
+            if (vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex())) {
+                iterator.remove();
             }
         }
-        vertices.remove(vertexToBeRemoved);
+        vertices.remove(vertex);
         return this;
     }
 

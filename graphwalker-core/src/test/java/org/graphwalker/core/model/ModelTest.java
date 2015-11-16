@@ -112,6 +112,15 @@ public class ModelTest {
         Assert.assertThat(model, notNullValue());
         Assert.assertThat(model.getEdges().size(), is(0));
         Assert.assertThat(model.getVertices().size(), is(1));
+
+        model.addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v1));
+        model.addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+        model.addEdge(new Edge().setSourceVertex(v2).setTargetVertex(v1));
+        Assert.assertThat(model.getEdges().size(), is(3));
+        Assert.assertThat(model.getVertices().size(), is(2));
+        model.deleteVertex(v2);
+        Assert.assertThat(model.getEdges().size(), is(1));
+        Assert.assertThat(model.getVertices().size(), is(1));
     }
 
     @Test
