@@ -29,6 +29,7 @@ package org.graphwalker.core.generator;
 */
 
 import org.graphwalker.core.algorithm.AStar;
+import org.graphwalker.core.common.Objects;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
@@ -38,6 +39,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>QuickRandomPath</h1>
@@ -68,7 +72,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
             elements.remove(context.getCurrentElement());
             Collections.shuffle(elements);
         }
-        if (null == target || target.equals(context.getCurrentElement())) {
+        if (isNull(target) || target.equals(context.getCurrentElement())) {
             if (elements.isEmpty()) {
                 throw new NoPathFoundException();
             } else {
@@ -83,7 +87,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
     private void orderElementsUnvisitedFirst(List<Element> elements) {
         final Profiler profiler = getContext().getProfiler();
-        if (profiler != null) {
+        if (isNotNull(profiler)) {
             Collections.sort(elements, new Comparator<Element>() {
                 @Override
                 public int compare(Element a, Element b) {

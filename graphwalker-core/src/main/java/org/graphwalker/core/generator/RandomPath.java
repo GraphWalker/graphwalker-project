@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Random;
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * <h1>RandomPath</h1>
  * The RandomPath generator will generate a random path through a model.
@@ -58,7 +60,7 @@ public final class RandomPath extends PathGeneratorBase<StopCondition> {
     public Context getNextStep() {
         Context context = getContext();
         Element currentElement = context.getCurrentElement();
-        if (null == currentElement) {
+        if (isNull(currentElement)) {
             throw new NoPathFoundException("Execution context has no current element set");
         }
         List<Element> elements = context.filter(context.getModel().getElements(currentElement));

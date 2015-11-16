@@ -26,8 +26,19 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import org.graphwalker.core.common.Objects;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -188,10 +199,10 @@ public final class Model implements Builder<Model.RuntimeModel> {
      */
     public Model addEdge(Edge edge) {
         edges.add(edge);
-        if (null != edge.getSourceVertex() && !vertices.contains(edge.getSourceVertex())) {
+        if (isNotNull(edge.getSourceVertex()) && !vertices.contains(edge.getSourceVertex())) {
             vertices.add(edge.getSourceVertex());
         }
-        if (null != edge.getTargetVertex() && !vertices.contains(edge.getTargetVertex())) {
+        if (isNotNull(edge.getTargetVertex()) && !vertices.contains(edge.getTargetVertex())) {
             vertices.add(edge.getTargetVertex());
         }
         return this;
@@ -606,7 +617,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             }
             for (RuntimeEdge edge : edges) {
                 RuntimeVertex vertex = edge.getTargetVertex();
-                if (null != vertex) {
+                if (isNotNull(vertex)) {
                     inEdgesByVertexCache.get(vertex).add(edge);
                 }
             }
@@ -620,7 +631,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             }
             for (RuntimeEdge edge : edges) {
                 RuntimeVertex vertex = edge.getSourceVertex();
-                if (null != vertex) {
+                if (isNotNull(vertex)) {
                     outEdgesByVertexCache.get(vertex).add(edge);
                 }
             }
@@ -661,7 +672,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (isNull(o) || getClass() != o.getClass()) return false;
             if (!super.equals(o)) return false;
             RuntimeModel that = (RuntimeModel) o;
             return Objects.equals(vertices, that.vertices) &&

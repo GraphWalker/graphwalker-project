@@ -26,7 +26,15 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import org.graphwalker.core.common.Objects;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>Vertex</h1>
@@ -240,7 +248,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
          * @return True if the vertex has a shared state.
          */
         public boolean hasSharedState() {
-            return null != sharedState && !"".equals(sharedState);
+            return isNotNullOrEmpty(sharedState);
         }
 
         /**
@@ -256,7 +264,7 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (isNull(o) || getClass() != o.getClass()) return false;
             if (!super.equals(o)) return false;
             RuntimeVertex that = (RuntimeVertex) o;
             return Objects.equals(sharedState, that.sharedState);

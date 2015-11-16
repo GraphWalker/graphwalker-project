@@ -26,6 +26,8 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * @author Nils Olsson
  */
@@ -41,7 +43,7 @@ public abstract class CachedBuilder<T> implements Builder<T> {
 
     @Override
     public T build() {
-        if (null == cache) {
+        if (isNull(cache)) {
             cache = createCache();
         }
         return cache;

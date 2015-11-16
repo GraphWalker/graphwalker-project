@@ -29,6 +29,8 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+
 /**
  * @author Nils Olsson
  */
@@ -43,7 +45,7 @@ public abstract class PathGeneratorBase<T extends StopCondition> implements Path
 
     public void setContext(Context context) {
         this.context = context;
-        if (null != getStopCondition()) {
+        if (isNotNull(getStopCondition())) {
             getStopCondition().setContext(getContext());
         }
     }
@@ -54,7 +56,7 @@ public abstract class PathGeneratorBase<T extends StopCondition> implements Path
 
     public void setStopCondition(T stopCondition) {
         this.stopCondition = stopCondition;
-        if (null != getContext()) {
+        if (isNotNull(getContext())) {
             this.stopCondition.setContext(getContext());
         }
     }

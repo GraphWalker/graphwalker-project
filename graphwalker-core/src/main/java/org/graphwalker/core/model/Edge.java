@@ -26,8 +26,18 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import org.graphwalker.core.common.Objects;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -341,7 +351,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         }
 
         private <T> T build(Builder<T> builder) {
-            return (null != builder ? builder.build() : null);
+            return (isNotNull(builder) ? builder.build() : null);
         }
 
         /**
@@ -375,7 +385,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         }
 
         public boolean hasGuard() {
-            return !(guard == null || guard.getScript() == null) && !guard.getScript().isEmpty();
+            return isNotNull(guard) && isNotNullOrEmpty(guard.getScript());
         }
 
         /**
@@ -401,7 +411,7 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (isNull(o) || getClass() != o.getClass()) return false;
             if (!super.equals(o)) return false;
             RuntimeEdge that = (RuntimeEdge) o;
             return Objects.equals(sourceVertex, that.sourceVertex) &&

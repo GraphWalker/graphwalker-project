@@ -26,11 +26,17 @@ package org.graphwalker.core;
  * #L%
  */
 
+import org.graphwalker.core.common.Objects;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson
@@ -142,11 +148,11 @@ public final class Assert<T> {
     }
 
     public Assert<T> a(Class<?> clazz) {
-        return a(clazz, MessageFactory.build("type", invert, object.getClass().getName(), clazz == null ? "null" : (clazz.getName())));
+        return a(clazz, MessageFactory.build("type", invert, object.getClass().getName(), isNull(clazz) ? "null" : (clazz.getName())));
     }
 
     public Assert<T> a(Class<?> clazz, String message) {
-        if (null == clazz || !clazz.isAssignableFrom(object.getClass())) {
+        if (isNull(clazz) || !clazz.isAssignableFrom(object.getClass())) {
             fail(message);
         } else {
             success(message);
@@ -172,7 +178,7 @@ public final class Assert<T> {
 
     protected void fail(String message) {
         if (!invert) {
-            if (message == null) {
+            if (isNull(message)) {
                 throw new AssertionError();
             }
             throw new AssertionError(message);
@@ -181,7 +187,7 @@ public final class Assert<T> {
 
     protected void success(String message) {
         if (invert) {
-            if (message == null) {
+            if (isNull(message)) {
                 throw new AssertionError();
             }
             throw new AssertionError(message);
@@ -216,21 +222,21 @@ public final class Assert<T> {
 
     private Object invoke(String name) {
         try {
-            return object == null ? "null" : object.getClass().getMethod(name).invoke(object);
+            return isNull(object) ? "null" : object.getClass().getMethod(name).invoke(object);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new AssertionError(e);
         }
     }
 
     private String capitalize(String name) {
-        if (null != name && !"".equals(name)) {
+        if (isNotNullOrEmpty(name)) {
             return name.substring(0, 1).toUpperCase() + name.substring(1);
         }
         return name;
     }
 
     private String format(Object object) {
-        if (null == object) {
+        if (isNull(object)) {
             return "null";
         } else {
             return object.getClass().getName() + "<" + String.valueOf(object) + ">";
@@ -238,9 +244,9 @@ public final class Assert<T> {
     }
 
     private boolean areEqual(Object object1, Object object2) {
-        if (object1 == null) {
-            return object2 == null;
-        } else if (object2 != null && isArray(object1)) {
+        if (isNull(object1)) {
+            return isNull(object2);
+        } else if (isNotNull(object2) && isArray(object1)) {
             return isArray(object2) && areArraysEqual(object1, object2);
         } else {
             return object1.equals(object2);

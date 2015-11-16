@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -50,7 +51,7 @@ public final class ReachedVertex extends ReachedStopConditionBase {
     public Set<Element> getTargetElements() {
         Set<Element> elements = new HashSet<>();
         List<RuntimeVertex> vertices = getContext().getModel().findVertices(getValue());
-        if (null != vertices && !vertices.isEmpty()) {
+        if (isNotNullOrEmpty(vertices)) {
             elements.addAll(vertices);
         }
         return elements;

@@ -26,8 +26,20 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import java.util.*;
+import org.graphwalker.core.common.Objects;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson
@@ -65,7 +77,7 @@ public abstract class RuntimeBase implements Element {
     }
 
     private String getIdOrDefault(String id) {
-        return null != id && !"".equals(id) ? id : createDefault();
+        return isNotNullOrEmpty(id) ? id : createDefault();
     }
 
     private String createDefault() {
@@ -84,7 +96,7 @@ public abstract class RuntimeBase implements Element {
 
     @Override
     public boolean hasId() {
-        return id != null && !"".equals(id);
+        return isNotNullOrEmpty(id);
     }
 
     @Override
@@ -94,7 +106,7 @@ public abstract class RuntimeBase implements Element {
 
     @Override
     public boolean hasName() {
-        return name != null && !"".equals(name);
+        return isNotNullOrEmpty(name);
     }
 
     @Override
@@ -112,29 +124,29 @@ public abstract class RuntimeBase implements Element {
     }
 
     public boolean hasActions() {
-        return actions != null && !actions.isEmpty();
+        return isNotNullOrEmpty(actions);
     }
 
     public Set<Requirement> getRequirements() {
         return requirements;
     }
 
+    public boolean hasRequirements() {
+        return isNotNullOrEmpty(requirements);
+    }
+
     public Map<String, Object> getProperties() {
         return properties;
     }
 
-    public boolean hasRequirements() {
-        return requirements != null && !requirements.isEmpty();
-    }
-
     public boolean hasProperties() {
-        return properties != null && !properties.isEmpty();
+        return isNotNullOrEmpty(properties);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (isNull(o) || getClass() != o.getClass()) return false;
         RuntimeBase that = (RuntimeBase) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&

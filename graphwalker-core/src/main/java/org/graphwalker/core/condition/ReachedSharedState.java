@@ -32,6 +32,9 @@ import org.graphwalker.core.model.Element;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * <h1>ReachedSharedState</h1>
  * The ReachedSharedState stop condition is fulfilled when the traversing of the model
@@ -54,7 +57,7 @@ public final class ReachedSharedState extends ReachedStopConditionBase {
 
     @Override
     protected void validate(Context context) {
-        if (null != context && null == context.getModel().getSharedStates(getValue())) {
+        if (isNotNull(context)&& isNull(context.getModel().getSharedStates(getValue()))) {
             throw new StopConditionException("Shared state not found");
         }
     }

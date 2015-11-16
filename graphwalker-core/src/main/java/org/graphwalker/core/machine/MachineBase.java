@@ -34,6 +34,8 @@ import org.graphwalker.core.statistics.Profiler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+
 /**
  * <h1>MachineBase</h1>
  * MachineBase represents the Finite State Machine.
@@ -59,7 +61,7 @@ public abstract class MachineBase implements Machine {
 
     @Override
     public void addObserver(Observer observer) {
-        if (null != observer) {
+        if (isNotNull(observer)) {
             if (!observers.contains(observer)) {
                 observers.add(observer);
             }
