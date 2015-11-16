@@ -45,7 +45,7 @@ public class LengthTest {
     @Test
     public void testConstructor() {
         Length length = new Length(333);
-        Assert.assertThat(length.getLength(), is(333l));
+        Assert.assertThat(length.getLength(), is(333L));
     }
 
     @Test(expected = StopConditionException.class)

@@ -32,7 +32,13 @@ import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -105,7 +111,7 @@ public class SimpleMachineTest {
             Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5l));
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5L));
     }
 
     @Test
@@ -124,7 +130,7 @@ public class SimpleMachineTest {
             Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
         }
         Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5l));
+        Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5L));
     }
 
     @Test(expected = MachineException.class)
