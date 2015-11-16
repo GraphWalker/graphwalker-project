@@ -28,14 +28,8 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.common.Objects;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.common.Objects.unmodifiableMap;
 
 /**
  * <h1>Vertex</h1>
@@ -50,60 +44,9 @@ import static org.graphwalker.core.common.Objects.unmodifiableMap;
  *
  * @author Nils Olsson
  */
-public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
+public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
 
-    private String id;
-    private String name;
     private String sharedState;
-    private final Set<Requirement> requirements = new HashSet<>();
-    private final Map<String, Object> properties = new HashMap<>();
-
-    /**
-     * Sets the name of the vertex. The name of a vertex can be shared by other vertices, it
-     * does not have to be unique.
-     *
-     * @param name The name as a string.
-     * @return The edge.
-     */
-    public Vertex setName(String name) {
-        this.name = name;
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Gets the name of the vertex.
-     *
-     * @return The name as a string.
-     * @see Vertex#setName
-     */
-    public String getName() {
-        return name;
-    }
-
-    public Object getProperty(String key) {
-        return properties.get(key);
-    }
-
-    public boolean hasProperty(String key) {
-        return properties.containsKey(key);
-    }
-
-    public Vertex setProperty(String key, Object value) {
-        properties.put(key, value);
-        invalidateCache();
-        return this;
-    }
-
-    public Map<String, Object> getProperties() {
-        return unmodifiableMap(properties);
-    }
-
-    public Vertex setProperties(Map<String, Object> properties) {
-        this.properties.putAll(properties);
-        invalidateCache();
-        return this;
-    }
 
     /**
      * Gets the name of the shared state.
@@ -135,78 +78,6 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
         this.sharedState = sharedState;
         invalidateCache();
         return this;
-    }
-
-    /**
-     * Gets the unique identifier of the vertex,
-     *
-     * @return The unique identifier as a string.
-     * @see Vertex#setId
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the unique identifier of the vertex. Even though several vertices in the
-     * same model can share the same name, all identifiers must be unique.
-     *
-     * @param id A String that uniquely identifies this edge.
-     * @return The vertex.
-     */
-    public Vertex setId(String id) {
-        this.id = id;
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Adds a requirement.
-     * </p>
-     * The requirement is associated with the vertex. Whenever a test traverses the vertex, its associated
-     * requirement(s) are set to either {@link org.graphwalker.core.machine.RequirementStatus FAILED} or
-     * {@link org.graphwalker.core.machine.RequirementStatus PASSED}. The default value for the status of a
-     * requirement, before a vertex is traversed is {@link org.graphwalker.core.machine.RequirementStatus NOT_COVERED}
-     *
-     * @param requirement The requirement.
-     * @return The Vertex
-     */
-    public Vertex addRequirement(Requirement requirement) {
-        this.requirements.add(requirement);
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Adds a list of requirements.
-     *
-     * @param requirements The list of requirements.
-     * @return The vertex.
-     * @see Vertex#addRequirement
-     */
-    public Vertex addRequirements(Set<Requirement> requirements) {
-        this.requirements.addAll(requirements);
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Gets the list of requirements.
-     *
-     * @return The list of requirements.
-     * @see Vertex#addRequirement
-     */
-    public Set<Requirement> getRequirements() {
-        return requirements;
-    }
-
-    /**
-     * Creates a representation of the vertex as a string.
-     *
-     * @return The vertex as a string.
-     */
-    public String toString() {
-        return "{ id: " + getId() + ", name: " + getName() + "}";
     }
 
     /**

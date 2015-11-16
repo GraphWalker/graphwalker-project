@@ -36,31 +36,9 @@ import static org.graphwalker.core.common.Objects.isNull;
 /**
  * @author Nils Olsson
  */
-public final class Classification extends CachedBuilder<Classification.RuntimeClassification> {
+public final class Classification extends CachedBuilder<Classification, Classification.RuntimeClassification> {
 
-    private String id;
-    private String name;
     private final List<Classification> classifications = new ArrayList<>();
-
-    public String getId() {
-        return id;
-    }
-
-    public Classification setId(String id) {
-        this.id = id;
-        invalidateCache();
-        return this;
-    }
-
-    public Classification setName(String name) {
-        this.name = name;
-        invalidateCache();
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
 
     public Classification addClassification(Classification classification) {
         this.classifications.add(classification);

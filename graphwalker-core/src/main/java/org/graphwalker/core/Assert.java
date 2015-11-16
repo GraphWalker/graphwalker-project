@@ -26,8 +26,6 @@ package org.graphwalker.core;
  * #L%
  */
 
-import org.graphwalker.core.common.Objects;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;

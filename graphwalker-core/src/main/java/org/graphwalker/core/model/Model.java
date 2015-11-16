@@ -31,7 +31,6 @@ import org.graphwalker.core.common.Objects;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -59,15 +58,11 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  *
  * @author Nils Olsson
  */
-public final class Model implements Builder<Model.RuntimeModel> {
+public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
-    private String id;
-    private String name;
     private final List<Vertex> vertices = new ArrayList<>();
     private final List<Edge> edges = new ArrayList<>();
     private final List<Action> actions = new ArrayList<>();
-    private final Set<Requirement> requirements = new HashSet<>();
-    private final Map<String, Object> properties = new HashMap<>();
 
     /**
      * Create a new Model
@@ -81,15 +76,15 @@ public final class Model implements Builder<Model.RuntimeModel> {
      * @param model A {@link org.graphwalker.core.model.Model.RuntimeModel RuntimeModel} that the new Model will be based on.
      */
     public Model(RuntimeModel model) {
-        this.id = model.getId();
-        this.name = model.getName();
+        setId(model.getId());
+        setName(model.getName());
         Map<RuntimeVertex, Vertex> cache = new HashMap<>();
         for (RuntimeVertex runtimeVertex : model.getVertices()) {
             Vertex vertex = new Vertex();
             vertex.setId(runtimeVertex.getId());
             vertex.setName(runtimeVertex.getName());
             vertex.setSharedState(runtimeVertex.getSharedState());
-            vertex.addRequirements(runtimeVertex.getRequirements());
+            vertex.setRequirements(runtimeVertex.getRequirements());
             vertex.setProperties(runtimeVertex.getProperties());
             this.vertices.add(vertex);
             cache.put(runtimeVertex, vertex);
@@ -102,80 +97,12 @@ public final class Model implements Builder<Model.RuntimeModel> {
             edge.setTargetVertex(cache.get(runtimeEdge.getTargetVertex()));
             edge.setGuard(runtimeEdge.getGuard());
             edge.addActions(runtimeEdge.getActions());
-            edge.addRequirements(runtimeEdge.getRequirements());
+            edge.setRequirements(runtimeEdge.getRequirements());
             edge.setWeight(runtimeEdge.getWeight());
             edge.setProperties(runtimeEdge.getProperties());
             this.edges.add(edge);
         }
         this.actions.addAll(model.getActions());
-        this.requirements.addAll(model.getRequirements());
-        this.properties.putAll(model.getProperties());
-    }
-
-    /**
-     * Sets the unique identifier of the model. Even though several models in the
-     * same test can share the same name, all identifiers must be unique.
-     *
-     * @param id A String that uniquely identifies this model.
-     * @return The model
-     */
-    public Model setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    /**
-     * Gets the unique identifier of the model.
-     *
-     * @return The unique identifier as a string.
-     * @see Model#setId
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the name of the model. The name of a model can be the same as others, it
-     * does not have to be unique.
-     *
-     * @param name The name as a string.
-     * @return The model.
-     */
-    public Model setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    /**
-     * Gets the name of the model.
-     *
-     * @return The name as a string.
-     * @see Model#setName
-     */
-    public String getName() {
-        return name;
-    }
-
-    public Object getProperty(String key) {
-        return properties.get(key);
-    }
-
-    public boolean hasProperty(String key) {
-        return properties.containsKey(key);
-    }
-
-    public Model setProperty(String key, Object value) {
-        properties.put(key, value);
-        return this;
-    }
-
-    public Map<String, Object> getProperties() {
-        return properties;
-    }
-
-    public Model setProperties(Map<String, Object> properties) {
-        this.properties.putAll(properties);
-        return this;
     }
 
     /**
@@ -299,45 +226,6 @@ public final class Model implements Builder<Model.RuntimeModel> {
      */
     public List<Edge> getEdges() {
         return edges;
-    }
-
-    /**
-     * Adds a requirement.
-     * </p>
-     * The requirement is associated with the whole model. Whenever a test fails any vertex in the model,
-     * the requirement will be set to {@link org.graphwalker.core.machine.RequirementStatus FAILED}.
-     * </p>
-     * Please note that the requirements associated with the model, are not the same as the ones associated
-     * with edges and vertices.
-     *
-     * @param requirement The requirement
-     * @return The model
-     */
-    public Model addRequirement(Requirement requirement) {
-        this.requirements.add(requirement);
-        return this;
-    }
-
-    /**
-     * Adds a list of requirements.
-     *
-     * @param requirements The list of requirements
-     * @return The model
-     * @see Model#addRequirement
-     */
-    public Model addRequirements(Set<Requirement> requirements) {
-        this.requirements.addAll(requirements);
-        return this;
-    }
-
-    /**
-     * Gets the list of requirement associated with the model.
-     *
-     * @return The list of requirement
-     * @see Model#addRequirement
-     */
-    public Set<Requirement> getRequirements() {
-        return requirements;
     }
 
     /**
