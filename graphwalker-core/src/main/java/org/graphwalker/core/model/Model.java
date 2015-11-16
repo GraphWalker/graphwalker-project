@@ -39,6 +39,8 @@ import java.util.Set;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableList;
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -549,7 +551,7 @@ public final class Model implements Builder<Model.RuntimeModel> {
             List<Element> elements = new ArrayList<>();
             elements.addAll(vertices);
             elements.addAll(edges);
-            return Collections.unmodifiableList(elements);
+            return unmodifiableList(elements);
         }
 
         private Map<Element, List<Element>> createElementsByElementCache(List<Element> elements, Map<RuntimeVertex, List<RuntimeEdge>> outEdges) {
@@ -654,9 +656,9 @@ public final class Model implements Builder<Model.RuntimeModel> {
         private <K, E> Map<K, List<E>> makeImmutable(Map<K, List<E>> source) {
             Map<K, List<E>> map = new HashMap<>();
             for (K key : source.keySet()) {
-                map.put(key, Collections.unmodifiableList(source.get(key)));
+                map.put(key, unmodifiableList(source.get(key)));
             }
-            return Collections.unmodifiableMap(map);
+            return unmodifiableMap(map);
         }
 
         /**

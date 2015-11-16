@@ -26,6 +26,7 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.common.Objects;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
@@ -37,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.graphwalker.core.common.Objects.unmodifiableList;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -83,7 +85,7 @@ public final class DepthFirstSearch implements Algorithm {
                 }
             }
         }
-        return Collections.unmodifiableList(connectedComponent);
+        return unmodifiableList(connectedComponent);
     }
 
     private enum ElementStatus {

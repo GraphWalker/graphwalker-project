@@ -1,6 +1,10 @@
 package org.graphwalker.core.common;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -56,5 +60,17 @@ public class Objects {
 
     public static int hash(Object... values) {
         return Arrays.hashCode(values);
+    }
+
+    public static <T> List<T> unmodifiableList(List<? extends T> list) {
+        return Collections.unmodifiableList(new ArrayList<>(list));
+    }
+
+    public static <T> Set<T> unmodifiableSet(Set<? extends T> set) {
+        return Collections.unmodifiableSet(new HashSet<>(set));
+    }
+
+    public static <K,V> Map<K,V> unmodifiableMap(Map<? extends K, ? extends V> map) {
+        return Collections.unmodifiableMap(new HashMap<>(map));
     }
 }

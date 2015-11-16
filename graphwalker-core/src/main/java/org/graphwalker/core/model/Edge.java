@@ -38,6 +38,7 @@ import java.util.Set;
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -121,15 +122,17 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
 
     public Edge setProperty(String key, Object value) {
         properties.put(key, value);
+        invalidateCache();
         return this;
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        return unmodifiableMap(properties);
     }
 
     public Edge setProperties(Map<String, Object> properties) {
         this.properties.putAll(properties);
+        invalidateCache();
         return this;
     }
 

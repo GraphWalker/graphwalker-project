@@ -26,9 +26,13 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.graphwalker.core.common.Objects;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.graphwalker.core.common.Objects.unmodifiableList;
 
 /**
  * @author Nils Olsson
@@ -43,6 +47,6 @@ public final class BuilderFactory {
         for (Builder<T> builder : builders) {
             objects.add(builder.build());
         }
-        return Collections.unmodifiableList(objects);
+        return unmodifiableList(objects);
     }
 }

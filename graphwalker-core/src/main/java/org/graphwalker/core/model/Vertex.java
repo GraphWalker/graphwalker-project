@@ -35,6 +35,7 @@ import java.util.Set;
 
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
 
 /**
  * <h1>Vertex</h1>
@@ -90,15 +91,17 @@ public final class Vertex extends CachedBuilder<Vertex.RuntimeVertex> {
 
     public Vertex setProperty(String key, Object value) {
         properties.put(key, value);
+        invalidateCache();
         return this;
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        return unmodifiableMap(properties);
     }
 
     public Vertex setProperties(Map<String, Object> properties) {
         this.properties.putAll(properties);
+        invalidateCache();
         return this;
     }
 
