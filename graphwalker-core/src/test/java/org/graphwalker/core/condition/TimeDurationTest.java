@@ -49,7 +49,7 @@ public class TimeDurationTest {
     @Test
     public void testConstructor() {
         TimeDuration timeDuration = new TimeDuration(100, TimeUnit.SECONDS);
-        Assert.assertThat(timeDuration.getDuration(), is(100l));
+        Assert.assertThat(timeDuration.getDuration(), is(100L));
     }
 
     @Test(expected = StopConditionException.class)
