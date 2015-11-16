@@ -295,7 +295,7 @@
         var hasNext = {
             command: "hasNext"
         };
-        doSend(JSON.stringify(hasNext));
+        setTimeout(function() { doSend(JSON.stringify(hasNext)); }, 1000);
     });
 
 
