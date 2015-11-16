@@ -26,7 +26,20 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
-import com.yworks.xml.graphml.*;
+import com.yworks.xml.graphml.ArcEdgeDocument;
+import com.yworks.xml.graphml.BezierEdgeDocument;
+import com.yworks.xml.graphml.EdgeLabelType;
+import com.yworks.xml.graphml.GenericEdgeDocument;
+import com.yworks.xml.graphml.GenericGroupNodeDocument;
+import com.yworks.xml.graphml.GenericNodeDocument;
+import com.yworks.xml.graphml.GroupNodeDocument;
+import com.yworks.xml.graphml.ImageNodeDocument;
+import com.yworks.xml.graphml.NodeLabelType;
+import com.yworks.xml.graphml.PolyLineEdgeDocument;
+import com.yworks.xml.graphml.QuadCurveEdgeDocument;
+import com.yworks.xml.graphml.ShapeNodeDocument;
+import com.yworks.xml.graphml.SplineEdgeDocument;
+import com.yworks.xml.graphml.TableNodeDocument;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -39,7 +52,12 @@ import org.graphdrawing.graphml.xmlns.GraphType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.dsl.antlr.yed.YEdDescriptiveErrorListener;
 import org.graphwalker.dsl.yed.YEdEdgeParser;
 import org.graphwalker.dsl.yed.YEdLabelLexer;
@@ -52,7 +70,15 @@ import org.graphwalker.io.factory.ContextFactoryException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Nils Olsson
@@ -336,7 +362,7 @@ public final class YEdContextFactory implements ContextFactory {
                                     edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
                                 }
                                 if (null != field.actions()) {
-                                    edge.addActions(convertEdgeAction(field.actions().action()));
+                                    edge.setActions(convertEdgeAction(field.actions().action()));
                                 }
                                 if (null != field.reqtags()) {
                                     edge.setRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));

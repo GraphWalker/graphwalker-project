@@ -46,8 +46,8 @@ public class EdgeTest {
                 .setName("name")
                 .setSourceVertex(new Vertex())
                 .setTargetVertex(new Vertex())
+                .setActions(Arrays.asList(new Action("action2"), new Action("action3")))
                 .addAction(new Action("action1"))
-                .addActions(Arrays.asList(new Action("action2"), new Action("action3")))
                 .setWeight(.5);
         Assert.assertNotNull(edge);
         Assert.assertEquals("name", edge.getName());

@@ -34,6 +34,7 @@ import java.util.List;
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableList;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -54,13 +55,8 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
     private Vertex sourceVertex;
     private Vertex targetVertex;
     private Guard guard;
-    private final List<Action> actions = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
     private Double weight = 0.0;
-
-    @Override
-    public Edge setName(String name) {
-        return (Edge)super.setName(name);
-    }
 
     /**
      * Sets the source vertex of the edge.
@@ -152,8 +148,8 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
      * @return The edge.
      * @see Edge#addAction
      */
-    public Edge addActions(List<Action> actions) {
-        this.actions.addAll(actions);
+    public Edge setActions(List<Action> actions) {
+        this.actions = new ArrayList<>(actions);
         invalidateCache();
         return this;
     }
@@ -162,10 +158,10 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
      * Gets the lists of actions of the edge.
      *
      * @return The actions
-     * @see Edge#addActions
+     * @see Edge#setActions
      */
     public List<Action> getActions() {
-        return actions;
+        return unmodifiableList(actions);
     }
 
     /**

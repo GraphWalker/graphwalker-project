@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
+import static org.graphwalker.core.common.Objects.unmodifiableSet;
+
 public abstract class BuilderBase<B, T> implements Builder<T> {
 
     private String id;
@@ -33,7 +36,7 @@ public abstract class BuilderBase<B, T> implements Builder<T> {
     }
 
     public Set<Requirement> getRequirements() {
-        return requirements;
+        return unmodifiableSet(requirements);
     }
 
     @SuppressWarnings("unchecked")
@@ -53,7 +56,7 @@ public abstract class BuilderBase<B, T> implements Builder<T> {
     }
 
     public Map<String, Object> getProperties() {
-        return properties;
+        return unmodifiableMap(properties);
     }
 
     @SuppressWarnings("unchecked")
