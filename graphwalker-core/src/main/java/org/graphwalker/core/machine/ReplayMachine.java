@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+
 /**
  * <h1>ReplayMachine</h1>
  * ReplayMachine can re-run an previous executed path..
@@ -65,7 +67,7 @@ public final class ReplayMachine extends SimpleMachine {
 
     private Context chooseStartContext(Collection<Context> contexts) {
         for (Context context : contexts) {
-            if (null != context.getCurrentElement() || null != context.getNextElement()) {
+            if (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement())) {
                 return context;
             }
         }

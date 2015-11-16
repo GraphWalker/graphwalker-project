@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * <h1>WeightedRandomPath</h1>
  * The WeightedRandomPath generator will generate a random path through a model, but will select
@@ -62,7 +64,7 @@ public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     public Context getNextStep() {
         Context context = getContext();
         Element currentElement = context.getCurrentElement();
-        if (null == currentElement) {
+        if (isNull(currentElement)) {
             throw new NoPathFoundException("Execution context has no current element set");
         }
         List<Element> elements = context.filter(context.getModel().getElements(currentElement));

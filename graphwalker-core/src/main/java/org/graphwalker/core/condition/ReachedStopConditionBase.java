@@ -30,6 +30,9 @@ import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * @author Nils Olsson
  */
@@ -46,7 +49,7 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
     }
 
     protected void validate(Context context) {
-        if (null != context && null == context.getModel().findElements(getValue())) {
+        if (isNotNull(context) && isNull(context.getModel().findElements(getValue()))) {
             throw new StopConditionException("Element not found");
         }
     }
@@ -60,7 +63,7 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
     public double getFulfilment() {
         Context context = getContext();
         double maxFulfilment = 0;
-        if (null != context.getCurrentElement()) {
+        if (isNotNull(context.getCurrentElement())) {
             FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
             for (Element target : getTargetElements()) {
                 int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), target);

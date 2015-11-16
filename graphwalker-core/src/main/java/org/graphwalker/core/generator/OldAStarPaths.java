@@ -26,6 +26,7 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.common.Objects;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -57,7 +59,7 @@ public final class OldAStarPaths extends PathGeneratorBase<StopCondition> {
 
     @Override
     public Context getNextStep() {
-        if (null == path) {
+        if (isNull(path)) {
             path = getPath();
         }
         getContext().setCurrentElement(path.removeFirst());
@@ -144,7 +146,7 @@ public final class OldAStarPaths extends PathGeneratorBase<StopCondition> {
             if (isAllElementsVisited()) {
                 return;
             }
-            if (fragment == null) {
+            if (isNull(fragment)) {
                 fragment = new Path<>();
                 pathFragments.add(fragment);
             }

@@ -72,4 +72,12 @@ public class VertexTest {
         Vertex v2 = new Vertex().setId("n1").setName("SomeName");
         Assert.assertThat(v1.build(), not(v2.build()));
     }
+
+    @Test
+    public void testProperties() throws Exception {
+        Vertex vertex = new Vertex();
+        Assert.assertFalse(vertex.build().hasProperties());
+        vertex.setProperty("test", "value");
+        Assert.assertTrue(vertex.build().hasProperties());
+    }
 }

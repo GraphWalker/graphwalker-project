@@ -29,7 +29,13 @@ package org.graphwalker.core.algorithm;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;

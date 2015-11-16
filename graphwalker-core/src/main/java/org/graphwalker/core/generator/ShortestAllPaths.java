@@ -32,6 +32,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -49,7 +50,7 @@ public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
     @Override
     public Context getNextStep() {
         Context context = getContext();
-        if (null == path) {
+        if (isNull(path)) {
             path = getPath(context);
         }
         context.setCurrentElement(path.removeFirst());
@@ -58,7 +59,7 @@ public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
 
     private Path<Element> getPath(Context context) {
         Element element = context.getCurrentElement();
-        if (null == element) {
+        if (isNull(element)) {
             element = context.getNextElement();
         }
         if (element instanceof RuntimeVertex) {

@@ -30,7 +30,16 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>AStar</h1>
@@ -65,10 +74,10 @@ public final class AStar implements Algorithm {
             List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
             for (Element neighbor : neighbors) {
                 AStarNode visited = closeSet.get(neighbor);
-                if (visited == null) {
+                if (isNull(visited)) {
                     double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
                     AStarNode neighborNode = openSet.get(neighbor);
-                    if (null == neighborNode) {
+                    if (isNull(neighborNode)) {
                         neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
                         neighborNode.setParent(node);
                         openSet.put(neighbor, neighborNode);
@@ -107,10 +116,10 @@ public final class AStar implements Algorithm {
                 List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
                 for (Element neighbor : neighbors) {
                     AStarNode visited = closeSet.get(neighbor);
-                    if (visited == null) {
+                    if (isNull(visited)) {
                         double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
                         AStarNode neighborNode = openSet.get(neighbor);
-                        if (null == neighborNode) {
+                        if (isNull(neighborNode)) {
                             neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
                             neighborNode.setParent(node);
                             openSet.put(neighbor, neighborNode);
@@ -124,11 +133,11 @@ public final class AStar implements Algorithm {
                 }
             }
         }
-        if (null != targetNode) {
+        if (isNotNull(targetNode)) {
             List<Element> path = new ArrayList<>();
             path.add(targetNode.getElement());
             AStarNode node = targetNode.getParent();
-            while (null != node) {
+            while (isNotNull(node)) {
                 path.add(node.getElement());
                 node = node.getParent();
             }

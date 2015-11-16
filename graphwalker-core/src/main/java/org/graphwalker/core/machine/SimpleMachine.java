@@ -35,8 +35,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -73,7 +80,7 @@ public class SimpleMachine extends MachineBase {
         for (Context context : contexts) {
             setCurrentContext(context);
             getCurrentContext().setProfiler(getProfiler());
-            if (null == context.getModel()) {
+            if (isNull(context.getModel())) {
                 throw new MachineException("A context must be associated with a model");
             }
             execute(context.getModel().getActions());
@@ -82,7 +89,7 @@ public class SimpleMachine extends MachineBase {
 
     private Context chooseStartContext(Collection<Context> contexts) {
         for (Context context : contexts) {
-            if (null != context.getCurrentElement() || null != context.getNextElement()) {
+            if (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement())) {
                 return context;
             }
         }
@@ -117,7 +124,7 @@ public class SimpleMachine extends MachineBase {
 
     protected Context getNextStep(Context context) {
         logger.debug("Context: " + context);
-        if (null != context.getNextElement()) {
+        if (isNotNull(context.getNextElement())) {
             context.setCurrentElement(context.getNextElement());
         } else {
             context.getPathGenerator().getNextStep();
@@ -127,7 +134,7 @@ public class SimpleMachine extends MachineBase {
 
     private void walk(Context context) {
         try {
-            if (null == context.getCurrentElement()) {
+            if (isNull(context.getCurrentElement())) {
                 context = takeFirstStep(context);
             } else {
                 context = takeNextStep(context);
@@ -141,7 +148,7 @@ public class SimpleMachine extends MachineBase {
     }
 
     private Context takeFirstStep(Context context) {
-        if (null != context.getNextElement()) {
+        if (isNotNull(context.getNextElement())) {
             context = getNextStep(context);
         } else {
             context = switchContext(findStartContext());
@@ -152,12 +159,12 @@ public class SimpleMachine extends MachineBase {
     private Context findStartContext() {
         Context startContext = null;
         for (Context context : getContexts()) {
-            if (hasNextStep(context) && (null != context.getCurrentElement() || null != context.getNextElement())) {
+            if (hasNextStep(context) && (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement()))) {
                 startContext = context;
                 break;
             }
         }
-        if (null == startContext) {
+        if (isNull(startContext)) {
             throw new NoPathFoundException("No start element defined");
         }
         return startContext;
@@ -199,7 +206,7 @@ public class SimpleMachine extends MachineBase {
     }
 
     private boolean hasPossibleSharedStates(RuntimeVertex vertex) {
-        return null != vertex.getSharedState() && 0 < getPossibleSharedStates(vertex.getSharedState()).size();
+        return isNotNull(vertex.getSharedState()) && 0 < getPossibleSharedStates(vertex.getSharedState()).size();
     }
 
     private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
@@ -219,7 +226,7 @@ public class SimpleMachine extends MachineBase {
     }
 
     private boolean hasOutEdges(Context context) {
-        return null != context.getCurrentElement()
+        return isNotNull(context.getCurrentElement())
                 && context.getCurrentElement() instanceof RuntimeVertex
                 && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
     }
@@ -240,7 +247,7 @@ public class SimpleMachine extends MachineBase {
         if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
             return false;
         }
-        if (null == context.getPathGenerator()) {
+        if (isNull(context.getPathGenerator())) {
             throw new MachineException("No path generator is defined");
         }
         boolean hasMoreSteps = context.getPathGenerator().hasNextStep();

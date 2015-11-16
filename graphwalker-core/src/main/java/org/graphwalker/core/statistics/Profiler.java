@@ -32,7 +32,14 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
 
 
 /**
@@ -61,7 +68,7 @@ public final class Profiler {
 
     public void stop(Context context) {
         Element element = context.getCurrentElement();
-        if (null != element) {
+        if (isNotNull(element)) {
             profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
             elementContextMap.put(element, context);
         }
