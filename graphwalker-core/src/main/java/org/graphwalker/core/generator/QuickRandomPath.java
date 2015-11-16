@@ -29,7 +29,6 @@ package org.graphwalker.core.generator;
 */
 
 import org.graphwalker.core.algorithm.AStar;
-import org.graphwalker.core.common.Objects;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;

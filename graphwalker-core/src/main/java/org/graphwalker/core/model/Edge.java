@@ -29,16 +29,11 @@ package org.graphwalker.core.model;
 import org.graphwalker.core.common.Objects;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.common.Objects.unmodifiableMap;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
@@ -54,122 +49,17 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  *
  * @author Nils Olsson
  */
-public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
+public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
 
-    private String id;
-    private String name;
     private Vertex sourceVertex;
     private Vertex targetVertex;
     private Guard guard;
     private final List<Action> actions = new ArrayList<>();
-    private final Set<Requirement> requirements = new HashSet<>();
     private Double weight = 0.0;
-    private final Map<String, Object> properties = new HashMap<>();
 
-    /**
-     * Sets the unique identifier of the edge. Even though several edges in the
-     * same model can share the same name, all identifiers must be unique.
-     *
-     * @param id A String that uniquely identifies this edge.
-     * @return The edge.
-     */
-    public Edge setId(String id) {
-        this.id = id;
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Gets the unique identifier of the edge.
-     *
-     * @return The unique identifier as a string.
-     * @see Edge#setId
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Sets the name of the edge. The name of an edge can be shared by other edges, it
-     * does not have to be unique.
-     *
-     * @param name The name as a string.
-     * @return The edge.
-     */
+    @Override
     public Edge setName(String name) {
-        this.name = name;
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Gets the name of the edge.
-     *
-     * @return The name as a string.
-     * @see Edge#setName
-     */
-    public String getName() {
-        return name;
-    }
-
-    public Object getProperty(String key) {
-        return properties.get(key);
-    }
-
-    public boolean hasProperty(String key) {
-        return properties.containsKey(key);
-    }
-
-    public Edge setProperty(String key, Object value) {
-        properties.put(key, value);
-        invalidateCache();
-        return this;
-    }
-
-    public Map<String, Object> getProperties() {
-        return unmodifiableMap(properties);
-    }
-
-    public Edge setProperties(Map<String, Object> properties) {
-        this.properties.putAll(properties);
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Adds a requirement.
-     * The requirement is used by the target vertex. It will never be used by the edge itself.
-     * In some cases, the requirement being verified by some vertex is dependent on which in-edge
-     * has been traversed.
-     * </p>
-     * In the example below, the vertex <strong>v_MainView</strong> does not have any requirements associated
-     * to it. The requirement that is going to be verified is decided by the in-edge.<br>
-     * So, for example, if we walking over the <strong>v_LoginDialog</strong>, the requirement that is going to be
-     * verified in <strong>v_MainView</strong>, will be <strong>UC 2.1.1</strong>.
-     * </p>
-     * <img src="doc-files/Edge.addRequirement.png">
-     * </p>
-     *
-     * @param requirement The requirement.
-     * @return The Edge
-     */
-    public Edge addRequirement(Requirement requirement) {
-        this.requirements.add(requirement);
-        invalidateCache();
-        return this;
-    }
-
-    /**
-     * Adds a list of requirements.
-     *
-     * @param requirements The list of requirements.
-     * @return The edge.
-     * @see Edge#addRequirement
-     */
-    public Edge addRequirements(Set<Requirement> requirements) {
-        this.requirements.addAll(requirements);
-        invalidateCache();
-        return this;
+        return (Edge)super.setName(name);
     }
 
     /**
@@ -242,16 +132,6 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
     }
 
     /**
-     * Gets the list of requirements.
-     *
-     * @return The list of requirements.
-     * @see Edge#addRequirement
-     */
-    public Set<Requirement> getRequirements() {
-        return requirements;
-    }
-
-    /**
      * Adds an action to the edge, which represents a piece of code that will be executed
      * each time the edge is being traversed. The code is by default interpreted as javascript.
      *
@@ -309,15 +189,6 @@ public final class Edge extends CachedBuilder<Edge.RuntimeEdge> {
         this.weight = weight;
         invalidateCache();
         return this;
-    }
-
-    /**
-     * Creates a representation of the edge as a string.
-     *
-     * @return The edge as a string.
-     */
-    public String toString() {
-        return "{ id: " + getId() + ", name: " + getName() + "}";
     }
 
     /**

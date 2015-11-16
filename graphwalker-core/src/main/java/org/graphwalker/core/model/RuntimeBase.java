@@ -29,14 +29,12 @@ package org.graphwalker.core.model;
 import org.graphwalker.core.common.Objects;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;

@@ -26,12 +26,15 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.Map;
+import java.util.Set;
+
 import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson
  */
-public abstract class CachedBuilder<T> implements Builder<T> {
+public abstract class CachedBuilder<B, T> extends BuilderBase<B, T> {
 
     private T cache;
 
@@ -47,5 +50,41 @@ public abstract class CachedBuilder<T> implements Builder<T> {
             cache = createCache();
         }
         return cache;
+    }
+
+    @Override
+    public B setId(String id) {
+        invalidateCache();
+        return super.setId(id);
+    }
+
+    @Override
+    public B setName(String name) {
+        invalidateCache();
+        return super.setName(name);
+    }
+
+    @Override
+    public B addRequirement(Requirement requirement) {
+        invalidateCache();
+        return super.addRequirement(requirement);
+    }
+
+    @Override
+    public B setRequirements(Set<Requirement> requirements) {
+        invalidateCache();
+        return super.setRequirements(requirements);
+    }
+
+    @Override
+    public B setProperties(Map<String, Object> properties) {
+        invalidateCache();
+        return super.setProperties(properties);
+    }
+
+    @Override
+    public B setProperty(String key, Object value) {
+        invalidateCache();
+        return super.setProperty(key, value);
     }
 }
