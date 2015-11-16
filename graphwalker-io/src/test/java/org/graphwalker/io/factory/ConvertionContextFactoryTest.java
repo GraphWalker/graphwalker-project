@@ -27,6 +27,7 @@ package org.graphwalker.io.factory;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.gw3.GW3ContextFactory;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.junit.Assert;
@@ -51,7 +52,6 @@ public class ConvertionContextFactoryTest {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
-
     @Test
     public void PetClinicSharedStateGraphml2Json() throws IOException {
         Context yedContext = new YEdContextFactory().create(Paths.get("graphml/PetClinicSharedState.graphml"));
@@ -64,13 +64,32 @@ public class ConvertionContextFactoryTest {
         Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
         Assert.assertNotNull(jsonReadContext);
 
-
         Assert.assertThat(yedContext.getNextElement().getId(), is(jsonWriteContext.getNextElement().getId()));
         Assert.assertThat(yedContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
         Assert.assertThat(yedContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
         Assert.assertThat(yedContext.getNextElement().getId(), is(jsonReadContext.getNextElement().getId()));
         Assert.assertThat(yedContext.getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
         Assert.assertThat(yedContext.getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
+    }
+
+    @Test
+    public void LoginGraphml2Gw3() throws IOException {
+        Context yedContext = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
+        Assert.assertNotNull(yedContext);
+
+        File testFile = testFolder.newFile("Login.gw3");
+        Context gw3WriteContext = new GW3ContextFactory().write(yedContext, testFile.toPath());
+        Assert.assertNotNull(gw3WriteContext);
+
+        Context gw3ReadContext = new GW3ContextFactory().create(testFile.toPath());
+        Assert.assertNotNull(gw3ReadContext);
+
+        Assert.assertThat(yedContext.getNextElement().getId(), is(gw3WriteContext.getNextElement().getId()));
+        Assert.assertThat(yedContext.getModel().getEdges().size(), is(gw3WriteContext.getModel().getEdges().size()));
+        Assert.assertThat(yedContext.getModel().getVertices().size(), is(gw3WriteContext.getModel().getVertices().size()));
+        Assert.assertThat(yedContext.getNextElement().getId(), is(gw3ReadContext.getNextElement().getId()));
+        Assert.assertThat(yedContext.getModel().getEdges().size(), is(gw3ReadContext.getModel().getEdges().size()));
+        Assert.assertThat(yedContext.getModel().getVertices().size(), is(gw3ReadContext.getModel().getVertices().size()));
     }
 
 }
