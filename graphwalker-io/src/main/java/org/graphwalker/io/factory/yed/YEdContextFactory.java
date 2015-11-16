@@ -280,7 +280,7 @@ public final class YEdContextFactory implements ContextFactory {
                                             vertex.setRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
                                         }
                                         if (null != field.actions()) {
-                                            model.addActions(convertVertexAction(field.actions().action()));
+                                            model.setActions(convertVertexAction(field.actions().action()));
                                         }
                                         if (null != field.blocked()) {
                                             blocked = true;

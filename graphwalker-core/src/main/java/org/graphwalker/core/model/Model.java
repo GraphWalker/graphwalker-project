@@ -60,9 +60,9 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
-    private final List<Vertex> vertices = new ArrayList<>();
-    private final List<Edge> edges = new ArrayList<>();
-    private final List<Action> actions = new ArrayList<>();
+    private List<Vertex> vertices = new ArrayList<>();
+    private List<Edge> edges = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
 
     /**
      * Create a new Model
@@ -183,18 +183,19 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
      * @return The model
      */
     public Model addAction(Action action) {
-        return addActions(Collections.singletonList(action));
+        actions.add(action);
+        return this;
     }
 
     /**
-     * Adds a list of actions to the model.
+     * Assign a list of actions to the model.
      *
      * @param actions A list of actions
      * @return The model
      * @see Model#addAction
      */
-    public Model addActions(List<Action> actions) {
-        this.actions.addAll(actions);
+    public Model setActions(List<Action> actions) {
+        this.actions = new ArrayList<>(actions);
         return this;
     }
 
