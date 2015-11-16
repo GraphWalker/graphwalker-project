@@ -112,9 +112,7 @@ public abstract class RuntimeBase implements Element {
     }
 
     public boolean hasActions() {
-        if (actions == null)
-            return false;
-        return !actions.isEmpty();
+        return actions != null && !actions.isEmpty();
     }
 
     public Set<Requirement> getRequirements() {
@@ -126,15 +124,11 @@ public abstract class RuntimeBase implements Element {
     }
 
     public boolean hasRequirements() {
-        if (requirements == null)
-            return false;
-        return !requirements.isEmpty();
+        return requirements != null && !requirements.isEmpty();
     }
 
     public boolean hasProperties() {
-        if (properties == null)
-            return false;
-        return !properties.isEmpty();
+        return properties != null && !properties.isEmpty();
     }
 
     @Override
