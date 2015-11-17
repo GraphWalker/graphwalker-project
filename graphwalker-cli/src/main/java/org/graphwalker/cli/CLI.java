@@ -306,7 +306,7 @@ public class CLI {
         } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
             ResourceConfig rc = new DefaultResourceConfig();
             try {
-                rc.getSingletons().add(new Restful(getContextsWithPathGenerators(online.model.iterator()), online.json, online.verbose, online.unvisited));
+                rc.getSingletons().add(new Restful(getContextsWithPathGenerators(online.model.iterator()), online.verbose, online.unvisited));
             } catch (MachineException e) {
                 System.err.println("Was the argument --model correctly?");
                 throw e;
@@ -414,11 +414,7 @@ public class CLI {
             @Override
             public void update(Machine machine, Element element, EventType type) {
                 if (EventType.BEFORE_ELEMENT.equals(type)) {
-                    if (offline.json) {
-                        System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
-                    } else {
-                        System.out.println(Util.getStepAsString(machine, offline.verbose, offline.unvisited));
-                    }
+                    System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
                 }
             }
         });

@@ -56,43 +56,6 @@ public abstract class Util {
     }
 
     /**
-     * Will create a plain text formatted string representing the current step. The step
-     * is the current element, which can be either a vertex orn an edge.
-     *
-     * @param machine
-     * @param verbose       Print more details if true
-     * @param showUnvisited Print all unvisited elements if true
-     * @return The plain text string representing the current step.
-     */
-    public static String getStepAsString(Machine machine, boolean verbose, boolean showUnvisited) {
-        StringBuilder builder = new StringBuilder();
-        if (verbose) {
-            builder.append(FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName())).append(" : ");
-        }
-        if (machine.getCurrentContext().getCurrentElement().hasName()) {
-            builder.append(machine.getCurrentContext().getCurrentElement().getName());
-            if (verbose) {
-                builder.append("(").append(machine.getCurrentContext().getCurrentElement().getId()).append(")");
-                builder.append(":").append(machine.getCurrentContext().getKeys());
-            }
-        }
-
-        if (showUnvisited) {
-            Context context = machine.getCurrentContext();
-            builder.append(" | ").append(context.getProfiler().getUnvisitedElements(context).size())
-                    .append("(").append(context.getModel().getElements().size()).append(") : ");
-            for (Element e : context.getProfiler().getUnvisitedElements(context)) {
-                builder.append(e.getName());
-                if (verbose) {
-                    builder.append("(").append(e.getId()).append(")");
-                }
-                builder.append(" ");
-            }
-        }
-        return builder.toString();
-    }
-
-    /**
      * Will create a JSON formatted string representing the current step. The step
      * is the current element, which can be either a vertex orn an edge.
      *
@@ -137,65 +100,6 @@ public abstract class Util {
             object.put("UnvisitedElements", jsonElements);
         }
         return object;
-    }
-
-    /**
-     * Will create a plain text string representing the statistics of the current
-     * execution of the machine.
-     *
-     * @param machine
-     * @return The execution statistics in plain text.
-     */
-    public static String getStatisticsAsString(Machine machine) {
-        HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("Coverage Edges: ")
-                .append(map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES))
-                .append("/")
-                .append(map.get(Statistics.TOTAL_NUMBER_OF_EDGES))
-                .append(" => ")
-                .append(100 * (map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES)) / map.get(Statistics.TOTAL_NUMBER_OF_EDGES))
-                .append("%")
-                .append(System.lineSeparator());
-        builder.append("Coverage Vertices: ")
-                .append(map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES))
-                .append("/")
-                .append(map.get(Statistics.TOTAL_NUMBER_OF_VERTICES))
-                .append(" => ")
-                .append(100 * (map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES)) / map.get(Statistics.TOTAL_NUMBER_OF_VERTICES))
-                .append("%")
-                .append(System.lineSeparator());
-        if (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) > 0) {
-            builder.append("Coverage Requirements: ")
-                    .append(map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED))
-                    .append("/")
-                    .append(map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS))
-                    .append(" => ")
-                    .append(100 * (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED)) / map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS))
-                    .append("%")
-                    .append(System.lineSeparator());
-
-            builder.append("Requirements not covered:").append(System.lineSeparator());
-            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.NOT_COVERED)) {
-                builder.append("  ")
-                        .append(r.getKey())
-                        .append(System.lineSeparator());
-            }
-            builder.append("Requirements passed:").append(System.lineSeparator());
-            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.PASSED)) {
-                builder.append("  ")
-                        .append(r.getKey())
-                        .append(System.lineSeparator());
-            }
-            builder.append("Requirements failed:").append(System.lineSeparator());
-            for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.FAILED)) {
-                builder.append("  ")
-                        .append(r.getKey())
-                        .append(System.lineSeparator());
-            }
-        }
-        return builder.toString();
     }
 
     /**

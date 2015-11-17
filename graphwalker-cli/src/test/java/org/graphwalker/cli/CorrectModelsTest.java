@@ -64,8 +64,8 @@ public class CorrectModelsTest extends CLITestRoot {
         String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
-        Assert.assertThat(result.getOutput(), is("e1" + System.lineSeparator() +
-                "v1" + System.lineSeparator()));
+        Assert.assertThat(result.getOutput(), is("{\"CurrentElementName\":\"e1\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v1\"}" + System.lineSeparator()));
     }
 
     /**
@@ -76,16 +76,16 @@ public class CorrectModelsTest extends CLITestRoot {
         String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
-        Assert.assertThat(result.getOutput(), is("e1" + System.lineSeparator() +
-                "v1" + System.lineSeparator() +
-                "e2" + System.lineSeparator() +
-                "v2" + System.lineSeparator() +
-                "e4" + System.lineSeparator() +
-                "v4" + System.lineSeparator() +
-                "e6" + System.lineSeparator() +
-                "v1" + System.lineSeparator() +
-                "e3" + System.lineSeparator() +
-                "v3" + System.lineSeparator()));
+        Assert.assertThat(result.getOutput(), is("{\"CurrentElementName\":\"e1\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v1\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"e2\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v2\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"e4\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v4\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"e6\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v1\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"e3\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v3\"}" + System.lineSeparator()));
     }
 
     /**
@@ -96,9 +96,9 @@ public class CorrectModelsTest extends CLITestRoot {
         String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
-        Assert.assertThat(result.getOutput(), is("v1" + System.lineSeparator() +
-                "e2" + System.lineSeparator() +
-                "v2" + System.lineSeparator() +
-                "e4" + System.lineSeparator()));
+        Assert.assertThat(result.getOutput(), is("{\"CurrentElementName\":\"v1\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"e2\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"v2\"}" + System.lineSeparator() +
+                "{\"CurrentElementName\":\"e4\"}" + System.lineSeparator()));
     }
 }
