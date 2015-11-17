@@ -280,7 +280,7 @@ public final class YEdContextFactory implements ContextFactory {
                                             vertex.setRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
                                         }
                                         if (null != field.actions()) {
-                                            model.setActions(convertVertexAction(field.actions().action()));
+                                            model.addActions(convertVertexAction(field.actions().action()));
                                         }
                                         if (null != field.blocked()) {
                                             blocked = true;
@@ -362,7 +362,7 @@ public final class YEdContextFactory implements ContextFactory {
                                     edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
                                 }
                                 if (null != field.actions()) {
-                                    edge.setActions(convertEdgeAction(field.actions().action()));
+                                    edge.addActions(convertEdgeAction(field.actions().action()));
                                 }
                                 if (null != field.reqtags()) {
                                     edge.setRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));

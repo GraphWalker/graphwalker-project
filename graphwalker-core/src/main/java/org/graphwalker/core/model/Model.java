@@ -29,6 +29,7 @@ package org.graphwalker.core.model;
 import org.graphwalker.core.common.Objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -184,6 +185,15 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
      */
     public Model addAction(Action action) {
         actions.add(action);
+        return this;
+    }
+
+    public Model addActions(Action... actions) {
+        return addActions(Arrays.asList(actions));
+    }
+
+    public Model addActions(List<Action> actions) {
+        this.actions.addAll(actions);
         return this;
     }
 
