@@ -48,10 +48,6 @@ public class Offline {
                     "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
     public List<String> model = new ArrayList<>();
 
-    @Parameter(names = {"--json", "-j"}, required = false,
-            description = "Returns data formatted as json")
-    public boolean json = false;
-
     @Parameter(names = {"--start-element", "-e"}, required = false,
             description = "Sets the starting element in the [first] model.")
     public String startElement = "";

@@ -49,10 +49,9 @@ public class Restful {
     private Boolean verbose;
     private Boolean unvisited;
 
-    public Restful(List<Context> contexts, Boolean json, Boolean verbose, Boolean unvisited) throws Exception {
+    public Restful(List<Context> contexts, Boolean verbose, Boolean unvisited) throws Exception {
         this.contexts = contexts;
         this.machine = new SimpleMachine(this.contexts);
-        this.json = json;
         this.verbose = verbose;
         this.unvisited = unvisited;
     }
@@ -69,19 +68,11 @@ public class Restful {
     @Path("hasNext")
     public String hasNext() {
         if (machine.hasNextStep()) {
-            if (json) {
-                JSONObject obj = new JSONObject();
-                return obj.put("HasNext", "true").toString();
-            } else {
-                return "true";
-            }
+            JSONObject obj = new JSONObject();
+            return obj.put("HasNext", "true").toString();
         } else {
-            if (json) {
-                JSONObject obj = new JSONObject();
-                return obj.put("HasNext", "false").toString();
-            } else {
-                return "false";
-            }
+            JSONObject obj = new JSONObject();
+            return obj.put("HasNext", "false").toString();
         }
     }
 
@@ -97,11 +88,7 @@ public class Restful {
     @Path("getNext")
     public String getNext() {
         machine.getNextStep();
-        if (json) {
-            return Util.getStepAsJSON(machine, verbose, unvisited).toString();
-        } else {
-            return Util.getStepAsString(machine, verbose, unvisited);
-        }
+        return Util.getStepAsJSON(machine, verbose, unvisited).toString();
     }
 
     @GET
@@ -109,12 +96,8 @@ public class Restful {
     @Path("getData")
     public String getData(@QueryParam("key") String key) {
         String value = machine.getCurrentContext().getKeys().get(key);
-        if (json) {
-            JSONObject obj = new JSONObject();
-            return obj.put("Value", value).toString();
-        } else {
-            return value;
-        }
+        JSONObject obj = new JSONObject();
+        return obj.put("Value", value).toString();
     }
 
     @GET
@@ -123,19 +106,11 @@ public class Restful {
     public String setData(@QueryParam("script") String script) {
         try {
             machine.getCurrentContext().execute(new Action(script));
-            if (json) {
-                JSONObject obj = new JSONObject();
-                return obj.put("Result", "Ok").toString();
-            } else {
-                return "Ok";
-            }
+            JSONObject obj = new JSONObject();
+            return obj.put("Result", "Ok").toString();
         } catch (Exception e) {
-            if (json) {
-                JSONObject obj = new JSONObject();
-                return obj.put("Result", e.getMessage()).toString();
-            } else {
-                return e.getMessage();
-            }
+            JSONObject obj = new JSONObject();
+            return obj.put("Result", e.getMessage()).toString();
         }
     }
 
@@ -144,40 +119,24 @@ public class Restful {
     @Path("restart")
     public String restart() throws Exception {
         machine = new SimpleMachine(contexts);
-        if (json) {
-            JSONObject obj = new JSONObject();
-            return obj.put("Restart", "Ok").toString();
-        } else {
-            return "Ok";
-        }
+        JSONObject obj = new JSONObject();
+        return obj.put("Restart", "Ok").toString();
     }
 
     @GET
     @Produces("text/plain;charset=UTF-8")
     @Path("fail")
     public String fail(@QueryParam("reason") String reason) {
-        try {
-            FailFastStrategy failFastStrategy = new FailFastStrategy();
-            failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
-        } catch (Throwable e) {
-            // ignore
-        }
-        if (json) {
-            JSONObject obj = new JSONObject();
-            return obj.put("Fail", "Ok").toString();
-        } else {
-            return "Ok";
-        }
+        FailFastStrategy failFastStrategy = new FailFastStrategy();
+        failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
+        JSONObject obj = new JSONObject();
+        return obj.put("Fail", "Ok").toString();
     }
 
     @GET
     @Produces("text/plain;charset=UTF-8")
     @Path("getStatistics")
     public String getStatistics() {
-        if (json) {
-            return Util.getStatisticsAsJSON(machine).toString();
-        } else {
-            return Util.getStatisticsAsString(machine);
-        }
+        return Util.getStatisticsAsJSON(machine).toString();
     }
 }
