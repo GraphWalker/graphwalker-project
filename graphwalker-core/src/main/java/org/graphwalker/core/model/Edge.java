@@ -29,6 +29,7 @@ package org.graphwalker.core.model;
 import org.graphwalker.core.common.Objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
@@ -137,6 +138,15 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
     public Edge addAction(Action action) {
         this.actions.add(action);
         invalidateCache();
+        return this;
+    }
+
+    public Edge addActions(Action... actions) {
+        return addActions(Arrays.asList(actions));
+    }
+
+    public Edge addActions(List<Action> actions) {
+        this.actions.addAll(actions);
         return this;
     }
 
