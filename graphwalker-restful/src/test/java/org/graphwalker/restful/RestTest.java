@@ -203,13 +203,13 @@ public class RestTest extends ExecutionContext implements RestFlow {
     public void v_GetNext() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
         String body = getResonseBody();
-        Assert.assertThat(body, matches(".*\"NumberOfElements\":19,.*"));
-        Assert.assertThat(body, matches(".*,\"result\":\"ok\",.*"));
-        Assert.assertThat(body, matches(".*,\"ModelName\":\"UC01_GW2\",.*"));
-        Assert.assertThat(body, matches(".*,\"CurrentElementID\":\"e0\",.*"));
-        Assert.assertThat(body, matches(".*,\"CurrentElementName\":\"e_init\",.*"));
-        Assert.assertThat(body, matches(".*,\"Data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\],.*"));
-        Assert.assertThat(body, matches(".*,\"NumberOfUnvisitedElements\":18}.*"));
+        Assert.assertThat(body, matches(".*\"NumberOfElements\":19.*"));
+        Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
+        Assert.assertThat(body, matches(".*\"ModelName\":\"UC01_GW2\".*"));
+        Assert.assertThat(body, matches(".*\"CurrentElementID\":\"e0\".*"));
+        Assert.assertThat(body, matches(".*\"CurrentElementName\":\"e_init\".*"));
+        Assert.assertThat(body, matches(".*\"Data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\].*"));
+        Assert.assertThat(body, matches(".*\"NumberOfUnvisitedElements\":18.*"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
