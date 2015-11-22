@@ -28,12 +28,12 @@ package org.graphwalker.restful;
 
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Action;
+import org.graphwalker.io.factory.gw3.GW3ContextFactory;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import java.util.List;
 
 /**
@@ -42,18 +42,42 @@ import java.util.List;
  */
 @Path("graphwalker")
 public class Restful {
-
+    private static final Logger logger = LoggerFactory.getLogger(Restful.class);
     private List<Context> contexts;
     private Machine machine;
-    private Boolean json;
     private Boolean verbose;
     private Boolean unvisited;
 
     public Restful(List<Context> contexts, Boolean verbose, Boolean unvisited) throws Exception {
-        this.contexts = contexts;
-        this.machine = new SimpleMachine(this.contexts);
+        if (contexts != null) {
+            setContexts(contexts);
+        }
         this.verbose = verbose;
         this.unvisited = unvisited;
+    }
+
+    public void setContexts(List<Context> contexts) {
+        this.contexts = contexts;
+        machine = new SimpleMachine(this.contexts);
+    }
+
+    @PUT
+    @Consumes("text/plain;charset=UTF-8")
+    @Produces("text/plain;charset=UTF-8")
+    @Path("load")
+    public String load(String jsonGW3) {
+        logger.debug("Received load with gw3: " + jsonGW3);
+        JSONObject obj = new JSONObject();
+        try {
+            List<Context> contexts = new GW3ContextFactory().createMultiple(jsonGW3);
+            setContexts(contexts);
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
+        }
+        return obj.toString();
     }
 
     /**
@@ -67,13 +91,21 @@ public class Restful {
     @Produces("text/plain;charset=UTF-8")
     @Path("hasNext")
     public String hasNext() {
-        if (machine.hasNextStep()) {
-            JSONObject obj = new JSONObject();
-            return obj.put("HasNext", "true").toString();
-        } else {
-            JSONObject obj = new JSONObject();
-            return obj.put("HasNext", "false").toString();
+        logger.debug("Received hasNext");
+        JSONObject obj = new JSONObject();
+        try {
+            if (machine.hasNextStep()) {
+                obj.put("hasNext", "true").toString();
+            } else {
+                obj.put("hasNext", "false").toString();
+            }
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
         }
+        return obj.toString();
     }
 
     /**
@@ -87,56 +119,125 @@ public class Restful {
     @Produces("text/plain;charset=UTF-8")
     @Path("getNext")
     public String getNext() {
-        machine.getNextStep();
-        return Util.getStepAsJSON(machine, verbose, unvisited).toString();
+        logger.debug("Received getNext");
+        JSONObject obj;
+        try {
+            machine.getNextStep();
+            obj = Util.getStepAsJSON(machine, verbose, unvisited);
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj = new JSONObject();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
+        }
+        return obj.toString();
     }
 
     @GET
     @Produces("text/plain;charset=UTF-8")
-    @Path("getData")
-    public String getData(@QueryParam("key") String key) {
-        String value = machine.getCurrentContext().getKeys().get(key);
+    @Consumes("text/plain;charset=UTF-8")
+    @Path("getData/{key}")
+    public String getData(@PathParam("key") String key) {
+        logger.debug("Received getData with key: " + key);
         JSONObject obj = new JSONObject();
-        return obj.put("Value", value).toString();
+        try {
+            String value = machine.getCurrentContext().getKeys().get(key);
+            obj.put("value", value).toString();
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
+        }
+        return obj.toString();
     }
 
-    @GET
+    @PUT
+    @Consumes("text/plain;charset=UTF-8")
     @Produces("text/plain;charset=UTF-8")
-    @Path("setData")
-    public String setData(@QueryParam("script") String script) {
+    @Path("setData/{script}")
+    public String setData(@PathParam("script") String script) {
+        logger.debug("Received setData with script: " + script);
+        JSONObject obj = new JSONObject();
         try {
             machine.getCurrentContext().execute(new Action(script));
-            JSONObject obj = new JSONObject();
-            return obj.put("Result", "Ok").toString();
+            obj.put("result", "ok");
         } catch (Exception e) {
-            JSONObject obj = new JSONObject();
-            return obj.put("Result", e.getMessage()).toString();
+            e.printStackTrace();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
         }
+        return obj.toString();
     }
 
-    @GET
-    @Produces("text/plain;charset=UTF-8")
+    @PUT
     @Path("restart")
-    public String restart() throws Exception {
-        machine = new SimpleMachine(contexts);
+    @Produces("text/plain;charset=UTF-8")
+    public String restart() {
+        logger.debug("Received restart");
         JSONObject obj = new JSONObject();
-        return obj.put("Restart", "Ok").toString();
+        try {
+            machine = new SimpleMachine(contexts);
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
+        }
+        return obj.toString();
     }
 
-    @GET
+    @PUT
+    @Consumes("text/plain;charset=UTF-8")
     @Produces("text/plain;charset=UTF-8")
-    @Path("fail")
-    public String fail(@QueryParam("reason") String reason) {
-        FailFastStrategy failFastStrategy = new FailFastStrategy();
-        failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
+    @Path("fail/{reason}")
+    public String fail(@PathParam("reason") String reason) {
+        logger.debug("Received fail with reason: " + reason);
         JSONObject obj = new JSONObject();
-        return obj.put("Fail", "Ok").toString();
+        try {
+            FailFastStrategy failFastStrategy = new FailFastStrategy();
+            failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
+        }
+        return obj.toString();
     }
 
     @GET
     @Produces("text/plain;charset=UTF-8")
     @Path("getStatistics")
     public String getStatistics() {
-        return Util.getStatisticsAsJSON(machine).toString();
+        logger.debug("Received getStatistics");
+        JSONObject obj = new JSONObject();
+        try {
+            obj = Util.getStatisticsAsJSON(machine);
+            obj.put("result", "ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            obj = new JSONObject();
+            obj.put("result", "nok");
+            obj.put("error", e.getMessage());
+        }
+        return obj.toString();
+    }
+
+    public List<Context> getContexts() {
+        return contexts;
+    }
+
+    public Machine getMachine() {
+        return machine;
+    }
+
+    public Boolean getVerbose() {
+        return verbose;
+    }
+
+    public Boolean getUnvisited() {
+        return unvisited;
     }
 }
