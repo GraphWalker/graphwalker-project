@@ -41,6 +41,8 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.cache.CacheEntry;
 import org.graphwalker.java.source.cache.SimpleCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +61,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
+    private static final Logger logger = LoggerFactory.getLogger(CodeGenerator.class);
     private static CodeGenerator generator = new CodeGenerator();
 
     public static void generate(final Path input, final Path output) {
@@ -74,6 +77,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
                             write(factory, sourceFile);
                             cache.add(file, new CacheEntry(file.toFile().lastModified(), true));
                         } catch (Throwable t) {
+                            logger.error(t.getMessage());
                             cache.add(file, new CacheEntry(file.toFile().lastModified(), false));
                         }
                     }
@@ -104,6 +108,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
                     , StandardOpenOption.CREATE
                     , StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Throwable t) {
+            logger.error(t.getMessage());
             throw new CodeGeneratorException(t);
         }
     }
@@ -137,6 +142,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
             try {
                 compilationUnit = JavaParser.parse(sourceFile.getOutputPath().toFile());
             } catch (Throwable t) {
+                logger.error(t.getMessage());
                 throw new RuntimeException(t);
             }
         } else {
