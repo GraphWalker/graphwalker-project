@@ -58,7 +58,7 @@ public class IncorrectModelsTest extends CLITestRoot {
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is("An error occurred when running command: " +
                 "offline -m graphml/IncorrectModels/singleVertex.graphml random(edge_coverage(100))" +
-                System.lineSeparator() + "No in-edges! Vertex: 'v_1'" + System.lineSeparator() + System.lineSeparator()));
+                System.lineSeparator() + "No start context found" + System.lineSeparator() + System.lineSeparator()));
         Assert.assertThat(result.getOutput(), is(""));
     }
 
