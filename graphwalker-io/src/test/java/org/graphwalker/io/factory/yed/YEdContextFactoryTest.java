@@ -171,9 +171,11 @@ public class YEdContextFactoryTest {
         }
     }
 
-    @Test(expected = ContextFactoryException.class)
+    @Test
     public void blockedBranch1() {
-        new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(3));
+        Assert.assertThat(context.getModel().getEdges().size(), is(3));
     }
 
     @Test
@@ -190,14 +192,18 @@ public class YEdContextFactoryTest {
         Assert.assertThat(context.getModel().getEdges().size(), is(2));
     }
 
-    @Test(expected = ContextFactoryException.class)
+    @Test
     public void blockedVertex2() {
-        new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(2));
+        Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }
 
-    @Test(expected = ContextFactoryException.class)
+    @Test
     public void blockedVertex3() {
-        new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
+        Assert.assertThat(context.getModel().getVertices().size(), is(2));
+        Assert.assertThat(context.getModel().getEdges().size(), is(1));
     }
 
     @Test
