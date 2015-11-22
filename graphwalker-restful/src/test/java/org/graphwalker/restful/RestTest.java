@@ -217,14 +217,16 @@ public class RestTest extends ExecutionContext implements RestFlow {
     @Override
     public void v_GetStatistics() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
-        Assert.assertThat(getResonseBody(), is("{\"result\":\"ok\",\"EdgeCoverage\":8," +
-                "\"TotalNumberOfVisitedEdges\":1," +
-                "\"TotalNumberOfVisitedVertices\":0," +
-                "\"TotalNumberOfVertices\":7," +
-                "\"TotalNumberOfEdges\":12," +
-                "\"TotalNumberOfUnvisitedVertices\":7," +
-                "\"VertexCoverage\":0," +
-                "\"TotalNumberOfUnvisitedEdges\":11}"));
+        String body = getResonseBody();
+        Assert.assertThat(body, matches(".*\"EdgeCoverage\":8.*"));
+        Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
+        Assert.assertThat(body, matches(".*\"TotalNumberOfVisitedEdges\":1.*"));
+        Assert.assertThat(body, matches(".*\"TotalNumberOfVisitedVertices\":0.*"));
+        Assert.assertThat(body, matches(".*\"TotalNumberOfVertices\":7.*"));
+        Assert.assertThat(body, matches(".*\"TotalNumberOfEdges\":12.*"));
+        Assert.assertThat(body, matches(".*\"TotalNumberOfUnvisitedVertices\":7.*"));
+        Assert.assertThat(body, matches(".*\"VertexCoverage\":0.*"));
+        Assert.assertThat(body, matches(".*\"TotalNumberOfUnvisitedEdges\":11.*"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
