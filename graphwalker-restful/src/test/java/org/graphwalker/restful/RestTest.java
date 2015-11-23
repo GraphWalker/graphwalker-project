@@ -154,6 +154,10 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void v_RestRunning() {
+        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        String body = getResonseBody();
+        logger.debug(body);
+        Assert.assertThat(body, is("{\"result\":\"ok\"}"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
@@ -183,7 +187,9 @@ public class RestTest extends ExecutionContext implements RestFlow {
     @Override
     public void v_GetData() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
-        Assert.assertThat(getResonseBody(), is("{\"result\":\"ok\",\"value\":\"0\"}"));
+        String body = getResonseBody();
+        logger.debug(body);
+        Assert.assertThat(body, is("{\"result\":\"ok\",\"value\":\"0\"}"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
@@ -203,6 +209,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
     public void v_GetNext() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
         String body = getResonseBody();
+        logger.debug(body);
         Assert.assertThat(body, matches(".*\"NumberOfElements\":19.*"));
         Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
         Assert.assertThat(body, matches(".*\"ModelName\":\"UC01_GW2\".*"));
@@ -218,6 +225,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
     public void v_GetStatistics() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
         String body = getResonseBody();
+        logger.debug(body);
         Assert.assertThat(body, matches(".*\"EdgeCoverage\":8.*"));
         Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
         Assert.assertThat(body, matches(".*\"TotalNumberOfVisitedEdges\":1.*"));
@@ -234,7 +242,9 @@ public class RestTest extends ExecutionContext implements RestFlow {
     @Override
     public void v_HasNext() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
-        Assert.assertThat(getResonseBody(), is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
+        String body = getResonseBody();
+        logger.debug(body);
+        Assert.assertThat(body, is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
@@ -242,7 +252,9 @@ public class RestTest extends ExecutionContext implements RestFlow {
     @Override
     public void v_SetData() {
         Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
-        Assert.assertThat(getResonseBody(), is("{\"result\":\"ok\"}"));
+        String body = getResonseBody();
+        logger.debug(body);
+        Assert.assertThat(body, is("{\"result\":\"ok\"}"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
