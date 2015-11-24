@@ -89,3 +89,15 @@ tool or programming language that kan do HTTP.
 |**Input example**|Restarts the machine: __curl -i -X PUT http://localhost:8887/graphwalker/restart__|
 |**Output**|A json string with **result: ok**, or an error mesage|
 |**Output example**|__{"result":"ok"}__|
+
+## fail
+
+|||
+|:------------ |:-----|
+|**Name**|fail|
+|**Type**|PUT|
+|**Description**|Fails the execution|
+|**Input**|The reason for the failure as a string|
+|**Input example**|The the service to fail the execution: __curl -i -X PUT http://localhost:8887/graphwalker/fail/asserTionFailed__|
+|**Output**|A json string with **result: ok**, or an error mesage|
+|**Output example**|__{"result":"ok"}__|
