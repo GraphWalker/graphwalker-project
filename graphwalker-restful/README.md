@@ -28,6 +28,19 @@ tool or programming language that kan do HTTP.
 |**Output example**|If the file is loaded ok: __{"result":"ok"}__|
 |**Output example**|If the file failed: __{"result":"nok","error":"java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 4 path $"}__|
 
+## hasNext
+
+|||
+|:------------ |:-----|
+|**Name**|hasData|
+|**Type**|GET|
+|**Description**|Query the service if the execution of the model(s) is done.|
+|**Input**|No indata|
+|**Input example**|Ask the servcie if we have more steps to get: __curl -i  http://localhost:8887/graphwalker/hasNext__|
+|**Output**|A json string with **result: ok** and the value of the attribte, or an error mesage|
+|**Output example**|__{"result":"ok","value":"123"}__|
+|**Output example**|If the attribute is not defined in the context: __{"result":"ok"}__|
+
 ## getData
 
 |||
@@ -37,8 +50,8 @@ tool or programming language that kan do HTTP.
 |**Description**|Gets the value of a specific attribute|
 |**Input**|The name of the attribute (key), placed on the end of the URL|
 |**Input example**|Retrieve value for atrribute x: __curl -i  http://localhost:8887/graphwalker/getData/x__|
-|**Output**|A json string with **result: ok** and the value of the attribte, or an error mesage|
-|**Output example**|__{"result":"ok","value":"123"}__|
+|**Output**|A json string with **result: ok** and hasNext set to either true or false. Or an error message|
+|**Output example**|__{"result":"ok","hasNext":"true"}__|
 |**Output example**|If the attribute is not defined in the context: __{"result":"ok"}__|
 
 ## setData
