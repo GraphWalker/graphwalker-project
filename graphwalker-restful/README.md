@@ -32,14 +32,26 @@ tool or programming language that kan do HTTP.
 
 |||
 |:------------ |:-----|
-|**Name**|hasData|
+|**Name**|hasNext|
 |**Type**|GET|
 |**Description**|Query the service if the execution of the model(s) is done.|
 |**Input**|No indata|
 |**Input example**|Ask the servcie if we have more steps to get: __curl -i  http://localhost:8887/graphwalker/hasNext__|
 |**Output**|A json string with **result: ok** and the value of the attribte, or an error mesage|
-|**Output example**|__{"result":"ok","value":"123"}__|
+|**Output example**|__{"result":"ok","hasNext":"true"}__|
 |**Output example**|If the attribute is not defined in the context: __{"result":"ok"}__|
+
+## getNext
+
+|||
+|:------------ |:-----|
+|**Name**|getNext|
+|**Type**|GET|
+|**Description**|Retrieve the next element to be executed.|
+|**Input**|No indata|
+|**Input example**|Get the next step: __curl -i  http://localhost:8887/graphwalker/getNext__|
+|**Output**|A json string with the next element to execute, or an error message|
+|**Output example**|__{"result":"ok","CurrentElementName":"e_StartBrowser"}__|
 
 ## getData
 
