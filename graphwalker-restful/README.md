@@ -98,6 +98,6 @@ tool or programming language that kan do HTTP.
 |**Type**|PUT|
 |**Description**|Fails the execution|
 |**Input**|The reason for the failure as a string|
-|**Input example**|The the service to fail the execution: __curl -i -X PUT http://localhost:8887/graphwalker/fail/asserTionFailed__|
+|**Input example**|The the service to fail the execution: __curl -i -X PUT http://localhost:8887/graphwalker/fail/assertionFailed__|
 |**Output**|A json string with **result: ok**, or an error mesage|
 |**Output example**|__{"result":"ok"}__|
