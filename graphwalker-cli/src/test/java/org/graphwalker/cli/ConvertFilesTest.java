@@ -42,51 +42,6 @@ public class ConvertFilesTest extends CLITestRoot {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
-    @Test
-    public void convertJsonToJson() throws IOException {
-        File tempFile = testFolder.newFile("example.json");
-        String args[] = {"convert", "--input", "json/example.json", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertJsonToGraphml() throws IOException {
-        File tempFile = testFolder.newFile("example.graphml");
-        String args[] = {"convert", "--input", "json/example.json", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertJsonToJava() throws IOException {
-        File tempFile = testFolder.newFile("example.java");
-        String args[] = {"convert", "--input", "json/example.json", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertJsonToDot() throws IOException {
-        File tempFile = testFolder.newFile("example.dot");
-        String args[] = {"convert", "--input", "json/example.json", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertGraphmlToGraphml() throws IOException {
-        File tempFile = testFolder.newFile("UC01_GW2.graphml");
-        String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
     /**
      * The java file generated, can be compiled with the cli jar, like:
      * java -jar graphwalker-cli.jar convert -i UC01.graphml UC01.java
@@ -102,68 +57,5 @@ public class ConvertFilesTest extends CLITestRoot {
         Result result = runCommand(args);
         Assert.assertThat(result.getError(), is(""));
         Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertGraphmlToDot() throws IOException {
-        File tempFile = testFolder.newFile("UC01_GW2.dot");
-        String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertGraphmlToJson() throws IOException {
-        File tempFile = testFolder.newFile("UC01_GW2.json");
-        String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertDotToDot() throws IOException {
-        File tempFile = testFolder.newFile("SimpleGW.dot");
-        String args[] = {"convert", "--input", "dot/SimpleGW.dot", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertDotToJava() throws IOException {
-        File tempFile = testFolder.newFile("SimpleGW.java");
-        String args[] = {"convert", "--input", "dot/SimpleGW.dot", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertDotToGraphml() throws IOException {
-        File tempFile = testFolder.newFile("SimpleGW.graphml");
-        String args[] = {"convert", "--input", "dot/SimpleGW.dot", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertDotToJson() throws IOException {
-        File tempFile = testFolder.newFile("SimpleGW.json");
-        String args[] = {"convert", "--input", "dot/SimpleGW.dot", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is(""));
-        Assert.assertTrue(tempFile.length() > 0);
-    }
-
-    @Test
-    public void convertJavaToDot() throws IOException {
-        File tempFile = testFolder.newFile("SimpleGW.dot");
-        String args[] = {"convert", "--input", "dot/SimpleGW.java", tempFile.getPath()};
-        Result result = runCommand(args);
-        Assert.assertTrue(result.getError().contains("Creating a model from Java is not supported"));
-        Assert.assertTrue(tempFile.length() == 0);
     }
 }
