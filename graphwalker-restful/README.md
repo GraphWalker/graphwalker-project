@@ -77,3 +77,15 @@ tool or programming language that kan do HTTP.
 |**Input example**|Set the value for atrribute x: __curl -i -X PUT http://localhost:8887/graphwalker/setData/x=123;__|
 |**Output**|A json string with **result: ok**, or an error mesage|
 |**Output example**|__{"result":"ok"}__|
+
+## restart
+
+|||
+|:------------ |:-----|
+|**Name**|restart|
+|**Type**|PUT|
+|**Description**|Restarts the service|
+|**Input**|No indata|
+|**Input example**|Restarts the machine: __curl -i -X PUT http://localhost:8887/graphwalker/restart__|
+|**Output**|A json string with **result: ok**, or an error mesage|
+|**Output example**|__{"result":"ok"}__|
