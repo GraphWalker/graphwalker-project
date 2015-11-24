@@ -101,3 +101,15 @@ tool or programming language that kan do HTTP.
 |**Input example**|The the service to fail the execution: __curl -i -X PUT http://localhost:8887/graphwalker/fail/assertionFailed__|
 |**Output**|A json string with **result: ok**, or an error mesage|
 |**Output example**|__{"result":"ok"}__|
+
+## getStatistics
+
+|||
+|:------------ |:-----|
+|**Name**|getStatistics|
+|**Type**|GET|
+|**Description**|Retreives statistics of the execution|
+|**Input**|No indata|
+|**Input example**|The the service to fail the execution: __curl -i http://localhost:8887/graphwalker/fail/getStatistics__|
+|**Output**|A json string with **result: ok** and the statistics, or an error mesage|
+|**Output example**|__{"result":"ok","EdgeCoverage":0,"TotalNumberOfVisitedEdges":0,"TotalNumberOfVisitedVertices":1,"TotalNumberOfVertices":5,"TotalNumberOfEdges":9,"TotalNumberOfUnvisitedVertices":4,"VertexCoverage":20,"TotalNumberOfUnvisitedEdges":9}__|
