@@ -146,7 +146,7 @@ public class DotContextFactoryTest {
 
     @Test
     public void GW_Login() {
-        Context context = new DotContextFactory().create(Paths.get("dot/gw/Login.dot"));
+        Context context = new DotContextFactory().create(Paths.get("dot/Login.dot"));
         Assert.assertThat(context.getModel().getVertices().size(), is(3));
         Assert.assertThat(context.getModel().getEdges().size(), is(9));
     }
