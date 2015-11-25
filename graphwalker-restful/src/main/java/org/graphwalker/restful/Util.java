@@ -67,12 +67,12 @@ public abstract class Util {
     public static JSONObject getStepAsJSON(Machine machine, boolean verbose, boolean showUnvisited) {
         JSONObject object = new JSONObject();
         if (verbose) {
-            object.put("ModelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
+            object.put("modelName", FilenameUtils.getBaseName(machine.getCurrentContext().getModel().getName()));
         }
         if (machine.getCurrentContext().getCurrentElement().hasName()) {
-            object.put("CurrentElementName", machine.getCurrentContext().getCurrentElement().getName());
+            object.put("currentElementName", machine.getCurrentContext().getCurrentElement().getName());
             if (verbose) {
-                object.put("CurrentElementID", machine.getCurrentContext().getCurrentElement().getId());
+                object.put("currentElementID", machine.getCurrentContext().getCurrentElement().getId());
 
                 JSONArray jsonKeys = new JSONArray();
                 for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
@@ -80,24 +80,24 @@ public abstract class Util {
                     jsonKey.put(key.getKey(), key.getValue());
                     jsonKeys.put(jsonKey);
                 }
-                object.put("Data", jsonKeys);
+                object.put("data", jsonKeys);
             }
         }
         if (showUnvisited) {
             Context context = machine.getCurrentContext();
-            object.put("NumberOfElements", context.getModel().getElements().size());
-            object.put("NumberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
+            object.put("numberOfElements", context.getModel().getElements().size());
+            object.put("numberOfUnvisitedElements", context.getProfiler().getUnvisitedElements(context).size());
 
             JSONArray jsonElements = new JSONArray();
             for (Element element : context.getProfiler().getUnvisitedElements(context)) {
                 JSONObject jsonElement = new JSONObject();
-                jsonElement.put("ElementName", element.getName());
+                jsonElement.put("elementName", element.getName());
                 if (verbose) {
-                    jsonElement.put("ElementId", element.getId());
+                    jsonElement.put("elementId", element.getId());
                 }
                 jsonElements.put(jsonElement);
             }
-            object.put("UnvisitedElements", jsonElements);
+            object.put("unvisitedElements", jsonElements);
         }
         return object;
     }
@@ -112,37 +112,37 @@ public abstract class Util {
     public static JSONObject getStatisticsAsJSON(Machine machine) {
         HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
         JSONObject object = new JSONObject();
-        object.put("TotalNumberOfEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
-        object.put("TotalNumberOfUnvisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
-        object.put("TotalNumberOfVisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
-        object.put("EdgeCoverage", 100 * (map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES)) / map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
-        object.put("TotalNumberOfVertices", map.get(Statistics.TOTAL_NUMBER_OF_VERTICES));
-        object.put("TotalNumberOfUnvisitedVertices", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES));
-        object.put("TotalNumberOfVisitedVertices", map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES));
-        object.put("VertexCoverage", 100 * (map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES)) / map.get(Statistics.TOTAL_NUMBER_OF_VERTICES));
+        object.put("totalNumberOfEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
+        object.put("totalNumberOfUnvisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
+        object.put("totalNumberOfVisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
+        object.put("edgeCoverage", 100 * (map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES)) / map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
+        object.put("totalNumberOfVertices", map.get(Statistics.TOTAL_NUMBER_OF_VERTICES));
+        object.put("totalNumberOfUnvisitedVertices", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES));
+        object.put("totalNumberOfVisitedVertices", map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES));
+        object.put("vertexCoverage", 100 * (map.get(Statistics.TOTAL_NUMBER_OF_VERTICES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES)) / map.get(Statistics.TOTAL_NUMBER_OF_VERTICES));
 
         if (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) > 0) {
-            object.put("TotalNumberOfRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS));
-            object.put("TotalNumberOfUncoveredRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED));
-            object.put("TotalNumberOfPassedRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_PASSED));
-            object.put("TotalNumberOfFailedRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_FAILED));
-            object.put("RequirementCoverage", 100 * (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED)) / map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS));
+            object.put("totalNumberOfRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS));
+            object.put("totalNumberOfUncoveredRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED));
+            object.put("totalNumberOfPassedRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_PASSED));
+            object.put("totalNumberOfFailedRequirement", map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_FAILED));
+            object.put("requirementCoverage", 100 * (map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS) - map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED)) / map.get(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS));
 
             JSONArray jsonElements = new JSONArray();
             for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.NOT_COVERED)) {
                 JSONObject jsonElement = new JSONObject();
-                jsonElement.put("RequirementKey", r.getKey());
+                jsonElement.put("requirementKey", r.getKey());
                 jsonElements.put(jsonElement);
             }
-            object.put("RequirementsNotCovered", jsonElements);
+            object.put("requirementsNotCovered", jsonElements);
 
             jsonElements = new JSONArray();
             for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.PASSED)) {
                 JSONObject jsonElement = new JSONObject();
-                jsonElement.put("RequirementKey", r.getKey());
+                jsonElement.put("requirementKey", r.getKey());
                 jsonElements.put(jsonElement);
             }
-            object.put("RequirementsPassed", jsonElements);
+            object.put("requirementsPassed", jsonElements);
 
             jsonElements = new JSONArray();
             for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.FAILED)) {
@@ -150,7 +150,7 @@ public abstract class Util {
                 jsonElement.put("RequirementKey", r.getKey());
                 jsonElements.put(jsonElement);
             }
-            object.put("RequirementsFailed", jsonElements);
+            object.put("requirementsFailed", jsonElements);
         }
         return object;
     }
