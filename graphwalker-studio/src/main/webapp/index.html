@@ -18,8 +18,7 @@
 <body>
 <form id="jsonFile" name="jsonFile" enctype="multipart/form-data" method="post">
     <fieldset>
-        <input type='file' id='fileinput'>
-        <input type='button' id='btnLoad' value='Load' onclick='loadFile();'>
+        <input type='file' id='files' name="files[]">
         <input id="inputFileNameToSaveAs">
         <button onclick="saveGraphAsFile()">Save</button>
         <div id="generator-div"><input type="text" id="generator" onchange="onGeneratorChange(this.value)"></div>
@@ -128,6 +127,8 @@
 
     $(document).ready(function () {
         console.log("ready!");
+
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
         // Set some defaults on the UI
         defaultUI();
@@ -328,33 +329,17 @@
 
         downloadLink.click();
     }
-    function loadFile() {
-        var input, file, fr;
 
-        if (typeof window.FileReader !== 'function') {
-            alert("The file API isn't supported on this browser yet.");
-            return;
-        }
+    function handleFileSelect(evt) {
+        var fr;
+        var file = evt.target.files[0];
 
-        input = document.getElementById('fileinput');
-        if (!input) {
-            alert("Um, couldn't find the file input element.");
-        }
-        else if (!input.files) {
-            alert("This browser doesn't seem to support the `files` property of file inputs.");
-        }
-        else if (!input.files[0]) {
-            alert("Please select a file before clicking 'Load'");
-        }
-        else {
-            edges.clear();
-            nodes.clear();
-            file = input.files[0];
-            fr = new FileReader();
-            fr.onload = receivedText;
-            fr.readAsText(file);
-            console.log(fr);
-        }
+        edges.clear();
+        nodes.clear();
+        fr = new FileReader();
+        fr.onload = receivedText;
+        fr.readAsText(file);
+        console.log(fr);
 
         function receivedText(e) {
 
