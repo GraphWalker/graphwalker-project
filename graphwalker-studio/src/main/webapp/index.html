@@ -295,7 +295,7 @@
         var hasNext = {
             command: "hasNext"
         };
-        setTimeout(function() { doSend(JSON.stringify(hasNext)); }, 1000);
+        setTimeout(function() { doSend(JSON.stringify(hasNext)); }, 250);
     });
 
 
@@ -458,7 +458,7 @@
             },
             smooth: {
                 enabled: true,
-                type: "dynamic",
+                type: 'diagonalCross',
                 roundness: 0.5
             },
             color: {
@@ -468,6 +468,7 @@
             }
         },
         physics: {
+            enabled: false,
             barnesHut: {
                 avoidOverlap: 1
             }
