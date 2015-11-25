@@ -8,7 +8,7 @@ tool or programming language that kan do HTTP.
 | load          | POST  | Upload model(s) to the service |The format is json, using the GW3 notation |A json string with **result: ok**, or an error mesage|
 | hasNext       | GET  | Query the service if the execution of the model(s) is done. | No indata | A json string with hasNext resturning true or false, or an error message |
 | getNext       | GET  | Retrieve the next element to be executed. | No indata | A json string with the next element to execute, or an error message |
-| getData       | GET  | Get the value of a specific attribute | The name of the attribute (key) | A json string with the value of the attribute |
+| getData       | GET  | Get the data of the current model | No indata | A json string with the all the attributs and their values |
 | setData       | PUT  | Executes a java script statement | The java script statement | A json string returning **result: ok**, or an error message |
 | restart       | PUT  | Restarts the service | No indata | A json string returning **result: ok**, or an error message |
 | fail          | PUT  | Fails the execution | The reason for the failure as a string |A json string returning **result: ok**, or an error message |
@@ -59,12 +59,11 @@ tool or programming language that kan do HTTP.
 |:------------ |:-----|
 |**Name**|getData|
 |**Type**|GET|
-|**Description**|Gets the value of a specific attribute|
-|**Input**|The name of the attribute (key), placed on the end of the URL|
-|**Input example**|Retrieve value for atrribute x: __curl -i  http://localhost:8887/graphwalker/getData/x__|
-|**Output**|A json string with **result: ok** and hasNext set to either true or false. Or an error message|
-|**Output example**|__{"result":"ok","hasNext":"true"}__|
-|**Output example**|If the attribute is not defined in the context: __{"result":"ok"}__|
+|**Description**|Get the values of the current model|
+|**Input**|No indata|
+|**Input example**|Retrieve value for atrribute x: __curl -i  http://localhost:8887/graphwalker/getData__|
+|**Output**|A json string with the all the attributs and their values. Or an error message|
+|**Output example**|__{"result":"ok","data":{"num_of_books":"0","MAX_BOOKS":"5"}}__|
 
 ## setData
 
