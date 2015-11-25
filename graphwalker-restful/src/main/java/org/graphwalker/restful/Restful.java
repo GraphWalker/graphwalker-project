@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * JAX-RS (Java API for RESTful Services (JAX-RS)) service implementation.
@@ -49,11 +50,13 @@ public class Restful {
     private Boolean unvisited;
 
     public Restful(List<Context> contexts, Boolean verbose, Boolean unvisited) throws Exception {
-        if (contexts != null) {
-            setContexts(contexts);
-        }
         this.verbose = verbose;
         this.unvisited = unvisited;
+
+        if (contexts == null || contexts.isEmpty()) {
+            return;
+        }
+        setContexts(contexts);
     }
 
     public void setContexts(List<Context> contexts) {
@@ -61,7 +64,7 @@ public class Restful {
         machine = new SimpleMachine(this.contexts);
     }
 
-    @PUT
+    @POST
     @Consumes("text/plain;charset=UTF-8")
     @Produces("text/plain;charset=UTF-8")
     @Path("load")
@@ -137,13 +140,16 @@ public class Restful {
     @GET
     @Produces("text/plain;charset=UTF-8")
     @Consumes("text/plain;charset=UTF-8")
-    @Path("getData/{key}")
-    public String getData(@PathParam("key") String key) {
-        logger.debug("Received getData with key: " + key);
+    @Path("getData")
+    public String getData() {
+        logger.debug("Received getData");
         JSONObject obj = new JSONObject();
         try {
-            String value = machine.getCurrentContext().getKeys().get(key);
-            obj.put("value", value).toString();
+            JSONObject data = new JSONObject();
+            for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
+                data.put(k.getKey(), k.getValue());
+            }
+            obj.put("data", data);
             obj.put("result", "ok");
         } catch (Exception e) {
             e.printStackTrace();
