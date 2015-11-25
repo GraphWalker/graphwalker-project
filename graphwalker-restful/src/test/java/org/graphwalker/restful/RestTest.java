@@ -32,6 +32,7 @@ import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
@@ -98,7 +99,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void e_GetData() {
-        HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getData/num_of_books");
+        HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getData");
         try {
             response = HttpClientBuilder.create().build().execute(request);
         } catch (IOException e) {
@@ -154,7 +155,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void v_RestRunning() {
-        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         String body = getResonseBody();
         logger.debug(body);
         Assert.assertThat(body, is("{\"result\":\"ok\"}"));
@@ -164,7 +165,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void e_Load() {
-        HttpPut request = new HttpPut("http://localhost:9191/graphwalker/load");
+        HttpPost request = new HttpPost("http://localhost:9191/graphwalker/load");
         FileEntity fileEntity = new FileEntity(ResourceUtils.getResourceAsFile("gw3/UC01.gw3"), ContentType.TEXT_PLAIN);
         request.setEntity(fileEntity);
         try {
@@ -186,10 +187,12 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void v_GetData() {
-        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         String body = getResonseBody();
         logger.debug(body);
-        Assert.assertThat(body, is("{\"result\":\"ok\",\"value\":\"0\"}"));
+        Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
+        Assert.assertThat(body, matches(".*\"num_of_books\":\"0\".*"));
+        Assert.assertThat(body, matches(".*\"MAX_BOOKS\":\"5\".*"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
@@ -207,41 +210,41 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void v_GetNext() {
-        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         String body = getResonseBody();
         logger.debug(body);
-        Assert.assertThat(body, matches(".*\"NumberOfElements\":19.*"));
+        Assert.assertThat(body, matches(".*\"numberOfElements\":19.*"));
         Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-        Assert.assertThat(body, matches(".*\"ModelName\":\"UC01_GW2\".*"));
-        Assert.assertThat(body, matches(".*\"CurrentElementID\":\"e0\".*"));
-        Assert.assertThat(body, matches(".*\"CurrentElementName\":\"e_init\".*"));
-        Assert.assertThat(body, matches(".*\"Data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\].*"));
-        Assert.assertThat(body, matches(".*\"NumberOfUnvisitedElements\":18.*"));
+        Assert.assertThat(body, matches(".*\"modelName\":\"UC01_GW2\".*"));
+        Assert.assertThat(body, matches(".*\"currentElementID\":\"e0\".*"));
+        Assert.assertThat(body, matches(".*\"currentElementName\":\"e_init\".*"));
+        Assert.assertThat(body, matches(".*\"data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\].*"));
+        Assert.assertThat(body, matches(".*\"numberOfUnvisitedElements\":18.*"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
 
     @Override
     public void v_GetStatistics() {
-        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         String body = getResonseBody();
         logger.debug(body);
-        Assert.assertThat(body, matches(".*\"EdgeCoverage\":8.*"));
+        Assert.assertThat(body, matches(".*\"edgeCoverage\":8.*"));
         Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-        Assert.assertThat(body, matches(".*\"TotalNumberOfVisitedEdges\":1.*"));
-        Assert.assertThat(body, matches(".*\"TotalNumberOfVisitedVertices\":0.*"));
-        Assert.assertThat(body, matches(".*\"TotalNumberOfVertices\":7.*"));
-        Assert.assertThat(body, matches(".*\"TotalNumberOfEdges\":12.*"));
-        Assert.assertThat(body, matches(".*\"TotalNumberOfUnvisitedVertices\":7.*"));
-        Assert.assertThat(body, matches(".*\"VertexCoverage\":0.*"));
-        Assert.assertThat(body, matches(".*\"TotalNumberOfUnvisitedEdges\":11.*"));
+        Assert.assertThat(body, matches(".*\"totalNumberOfVisitedEdges\":1.*"));
+        Assert.assertThat(body, matches(".*\"totalNumberOfVisitedVertices\":0.*"));
+        Assert.assertThat(body, matches(".*\"totalNumberOfVertices\":7.*"));
+        Assert.assertThat(body, matches(".*\"totalNumberOfEdges\":12.*"));
+        Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedVertices\":7.*"));
+        Assert.assertThat(body, matches(".*\"vertexCoverage\":0.*"));
+        Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedEdges\":11.*"));
         Assert.assertNotNull(rest.getContexts());
         Assert.assertNotNull(rest.getMachine());
     }
 
     @Override
     public void v_HasNext() {
-        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         String body = getResonseBody();
         logger.debug(body);
         Assert.assertThat(body, is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
@@ -251,7 +254,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
     @Override
     public void v_SetData() {
-        Assert.assertThat(200, is(response.getStatusLine().getStatusCode()));
+        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         String body = getResonseBody();
         logger.debug(body);
         Assert.assertThat(body, is("{\"result\":\"ok\"}"));
