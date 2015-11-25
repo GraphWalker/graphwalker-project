@@ -61,7 +61,7 @@ tool or programming language that kan do HTTP.
 |**Type**|GET|
 |**Description**|Get the values of the current model|
 |**Input**|No indata|
-|**Input example**|Retrieve value for atrribute x: __curl -i  http://localhost:8887/graphwalker/getData__|
+|**Input example**|Retrieves all values atrributes in current model: __curl -i  http://localhost:8887/graphwalker/getData__|
 |**Output**|A json string with the all the attributs and their values. Or an error message|
 |**Output example**|__{"result":"ok","data":{"num_of_books":"0","MAX_BOOKS":"5"}}__|
 
