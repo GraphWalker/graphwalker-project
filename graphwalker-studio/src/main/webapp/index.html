@@ -296,7 +296,9 @@
         var hasNext = {
             command: "hasNext"
         };
-        setTimeout(function() { doSend(JSON.stringify(hasNext)); }, 250);
+        setTimeout(function () {
+            doSend(JSON.stringify(hasNext));
+        }, 250);
     });
 
 
@@ -496,11 +498,39 @@
     network.on('stabilized', function (params) {
         console.log("Done with initial layout");
     });
+
+    var startNode, endNode;
+    network.on('dragStart', function (params) {
+        console.log("dragStart");
+//        startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+//        if (startNode != undefined) {
+//            startNode.allowedToMoveX = false;
+//            startNode.allowedToMoveY = false;
+//        }
+    });
     network.on('dragEnd', function (params) {
         console.log("dragEnd");
+//        endNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+//        if (startNode != undefined) {
+//            startNode.allowedToMoveX = true;
+//            startNode.allowedToMoveY = true;
+//        }
+    });
+    network.on('dragging', function (params) {
+        console.log("dragging");
     });
     network.on('doubleClick', function (params) {
         console.log("doubleClick");
+        var node = network.getNodeAt(params.pointer.DOM);
+        var edge = network.getEdgeAt(params.pointer.DOM);
+        if (node == undefined && edge == undefined) {
+            nodes.add({
+                id: generateUUID(),
+                label: 'v_NewVertex',
+                x: params.pointer.canvas.x,
+                y: params.pointer.canvas.y
+            });
+        }
     });
     nodes.on('*', function (event, properties, senderId) {
         console.log('nodes data update event:', event, 'properties:', properties, 'senderId:', senderId);
@@ -557,8 +587,6 @@
                         document.getElementById("runModel").disabled = true;
                     }
                 } else {
-                    console.error("Command hasNext failed: " + msg.message);
-                    issues.innerHTML = "Command hasNext failed: " + msg.message;
                     defaultUI();
                 }
                 break;
@@ -567,8 +595,6 @@
                     console.log("Command getNext ok");
                     document.dispatchEvent(getNextEvent, msg.id, msg.name);
                 } else {
-                    console.error("Command getNext failed: " + msg.message);
-                    issues.innerHTML = "Command getNext failed: " + msg.message;
                     defaultUI();
                 }
                 break;
@@ -577,14 +603,11 @@
                     console.log("Command start ok");
                     document.dispatchEvent(startEvent);
                 } else {
-                    console.error("Command start failed: " + msg.message);
-                    issues.innerHTML = "Command start failed: " + msg.message;
                     defaultUI();
                 }
                 break;
             case "issues":
                 issues.innerHTML = msg.issues;
-
                 break;
             case "noIssues":
                 issues.innerHTML = "No issues";
