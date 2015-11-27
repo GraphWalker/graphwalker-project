@@ -46,7 +46,6 @@
      ************************************************************************
      */
     var gw3 = '';
-    var modelJson = '';
     var modelId = '';
     var nodes;
     var edges;
@@ -308,8 +307,43 @@
      ************************************************************************
      */
     function saveGraphAsFile() {
-        var graphToWrite = modelJson;
-        var textFileAsBlob = new Blob([graphToWrite], {type: 'application/json'});
+        var graphToWrite = {
+            name: "VISMODEL",
+            models: [
+                {
+                    name: "model 1",
+                    id: modelId,
+                    vertices: [],
+                    edges: []
+                }
+            ]
+        };
+        if (document.getElementById("generator").value !== undefined) {
+            graphToWrite.models[0].generator = document.getElementById("generator").value;
+        }
+        if (startElementId !== undefined) {
+            graphToWrite.models[0].startElementId = startElementId;
+        }
+        for (var i = 0; i < nodes.length; i++) {
+            var n = nodes.getIds()[i];
+            var vertex = {
+                id: nodes.get(n).id,
+                name: nodes.get(n).label
+            };
+            graphToWrite.models[0].vertices[i] = vertex;
+        }
+        for (var i = 0; i < edges.length; i++) {
+            var e = edges.getIds()[i];
+            var edge = {
+                id: edges.get(e).id,
+                name: edges.get(e).label,
+                sourceVertexId: edges.get(e).from,
+                targetVertexId: edges.get(e).to
+            };
+            graphToWrite.models[0].edges[i] = edge;
+        }
+
+        var textFileAsBlob = new Blob([JSON.stringify(graphToWrite)], {type: 'application/json'});
         var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
 
         var downloadLink = document.createElement("a");
