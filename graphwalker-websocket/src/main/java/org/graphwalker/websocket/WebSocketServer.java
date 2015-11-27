@@ -286,19 +286,18 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         switch (command) {
             case "START":
                 response.put("command", "start");
+                response.put("success", false);
+                List<Context> gw3Contexts = null;
                 try {
-                    List<Context> gw3Contexts = new GW3ContextFactory().createMultiple(root.getJSONObject("gw3").toString());
-                    response.put("success", true);
-                    checkContexts(socket, gw3Contexts);
-
+                    gw3Contexts = new GW3ContextFactory().createMultiple(root.getJSONObject("gw3").toString());
                     Machine machine = new SimpleMachine(gw3Contexts);
                     machine.addObserver(this);
                     machines.put(socket, machine);
                     response.put("success", true);
-
-                } catch (JSONException e) {
-                    response.put("success", false);
-                    response.put("message", "Could not parse the model: " + e.getMessage());
+                } catch (Exception e) {
+                    List<String> issues = checkContexts(socket, gw3Contexts);
+                    issues.add(e.getMessage());
+                    sendIssues(socket, issues);
                 }
 
                 break;
@@ -307,10 +306,16 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 response.put("success", false);
                 Machine machine = machines.get(socket);
                 if (machine != null) {
-                    machine.getNextStep();
-                    response.put("success", true);
-                    response.put("id", machine.getCurrentContext().getCurrentElement().getId());
-                    response.put("name", machine.getCurrentContext().getCurrentElement().getName());
+                    try {
+                        machine.getNextStep();
+                        response.put("id", machine.getCurrentContext().getCurrentElement().getId());
+                        response.put("name", machine.getCurrentContext().getCurrentElement().getName());
+                        response.put("success", true);
+                    } catch (Exception e) {
+                        List<String> issues = checkContexts(socket, machine.getContexts());
+                        issues.add(e.getMessage());
+                        sendIssues(socket, issues);
+                    }
                 } else {
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                 }
@@ -320,8 +325,8 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             case "HASNEXT": {
                 response.put("command", "hasNext");
                 response.put("success", false);
+                Machine machine = machines.get(socket);
                 try {
-                    Machine machine = machines.get(socket);
                     if (machine == null) {
                         response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                     } else if (machine.hasNextStep()) {
@@ -332,8 +337,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         response.put("hasNext", false);
                     }
                 } catch (Exception e) {
-                    response.put("success", false);
-                    response.put("message", e.getMessage());
+                    List<String> issues = checkContexts(socket, machine.getContexts());
+                    issues.add(e.getMessage());
+                    sendIssues(socket, issues);
                 }
 
                 break;
@@ -343,14 +349,21 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 response.put("success", false);
                 Machine machine = machines.get(socket);
                 if (machine != null) {
-                    JSONArray jsonKeys = new JSONArray();
-                    for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
-                        JSONObject jsonKey = new JSONObject();
-                        jsonKey.put(key.getKey(), key.getValue());
-                        jsonKeys.put(jsonKey);
+                    JSONObject obj = new JSONObject();
+                    try {
+                        JSONObject data = new JSONObject();
+                        for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
+                            data.put(k.getKey(), k.getValue());
+                        }
+                        obj.put("data", data);
+                        obj.put("result", "ok");
+                        response.put("data", data);
+                        response.put("success", true);
+                    } catch (Exception e) {
+                        List<String> issues = checkContexts(socket, machine.getContexts());
+                        issues.add(e.getMessage());
+                        sendIssues(socket, issues);
                     }
-                    response.put("data", jsonKeys);
-                    response.put("success", true);
                 } else {
                     response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
                 }
@@ -368,14 +381,11 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         socket.send(response.toString());
     }
 
-    private void checkContexts(WebSocket socket, List<Context> contexts) {
-        List<String> issues = ContextsChecker.hasIssues(contexts);
-        sendIssues(socket, issues);
-    }
-
-    private void checkContext(WebSocket socket, Context context) {
-        List<String> issues = ContextChecker.hasIssues(context);
-        sendIssues(socket, issues);
+    private List<String> checkContexts(WebSocket socket, List<Context> contexts) {
+        if (contexts==null) {
+            return new ArrayList<>();
+        }
+        return ContextsChecker.hasIssues(contexts);
     }
 
     private void sendIssues(WebSocket socket, List<String> issues) {
