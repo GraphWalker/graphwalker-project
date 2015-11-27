@@ -454,6 +454,7 @@
             enabled: true
         },
         nodes: {
+            physics: false,
             shape: 'box',
             shadow: true,
             color: {
@@ -477,28 +478,14 @@
                     scaleFactor: 1
                 }
             },
-            smooth: {
-                enabled: true,
-                type: 'diagonalCross',
-                roundness: 0.5
-            },
+            shadow: true,
+            smooth: true,
             color: {
                 color: '#2B7CE9',
                 highlight: '#2B7CE9',
                 hover: '#2B7CE9'
             }
         },
-        physics: {
-            enabled: false,
-            barnesHut: {
-                avoidOverlap: 1
-            }
-        },
-        layout: {
-            hierarchical: {
-                enabled: false
-            }
-        }
     };
 
     // initialize your network!
