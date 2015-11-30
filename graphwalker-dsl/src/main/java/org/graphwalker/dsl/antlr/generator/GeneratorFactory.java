@@ -52,10 +52,14 @@ public class GeneratorFactory {
         GeneratorLoader generatorLoader = new GeneratorLoader();
         walker.walk(generatorLoader, context);
 
-        if (generatorLoader.getGenerator() == null) {
+        PathGenerator generator = generatorLoader.getGenerator();
+        if ( generator == null) {
             throw new DslException("No valid generator found.");
         }
+        if (generator.getStopCondition() == null ) {
+            throw new DslException("No valid stop condition found.");
+        }
 
-        return generatorLoader.getGenerator();
+        return generator;
     }
 }
