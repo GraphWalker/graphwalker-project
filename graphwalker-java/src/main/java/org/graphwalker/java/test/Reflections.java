@@ -26,6 +26,9 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -35,12 +38,15 @@ import java.lang.reflect.Method;
  */
 public abstract class Reflections {
 
+    private static final Logger logger = LoggerFactory.getLogger(Reflections.class);
+
     private static final Class[] NO_ARGS = new Class[]{};
 
     public static Class<?> loadClass(ClassLoader classLoader, Class<?> type) {
         try {
             return classLoader.loadClass(type.getName());
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -49,6 +55,7 @@ public abstract class Reflections {
         try {
             return loadClass(classLoader, type).newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -57,6 +64,7 @@ public abstract class Reflections {
         try {
             return constructor.newInstance(arguments);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -65,6 +73,7 @@ public abstract class Reflections {
         try {
             return method.invoke(object, arguments);
         } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -73,6 +82,7 @@ public abstract class Reflections {
         try {
             return type.getMethod(name, parameters);
         } catch (NoSuchMethodException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -81,6 +91,7 @@ public abstract class Reflections {
         try {
             return loadClass(classLoader, type).getConstructor(parameters);
         } catch (NoSuchMethodException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }

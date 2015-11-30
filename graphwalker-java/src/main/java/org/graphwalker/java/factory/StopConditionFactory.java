@@ -29,11 +29,15 @@ package org.graphwalker.java.factory;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Nils Olsson
  */
 public abstract class StopConditionFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(StopConditionFactory.class);
 
     public static StopCondition createStopCondition(GraphWalker annotation) {
         String value = annotation.stopConditionValue();
@@ -41,34 +45,34 @@ public abstract class StopConditionFactory {
         if (value.isEmpty()) {
             try {
                 return stopCondition.newInstance();
-            } catch (Throwable e) {
-                // ignore
+            } catch (Throwable t) {
+                logger.error(t.getMessage());
             }
         }
         try {
             return stopCondition.getConstructor(new Class[]{String.class}).newInstance(value);
-        } catch (Throwable e) {
-            // ignore
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
         }
         try {
             return stopCondition.getConstructor(new Class[]{Long.TYPE}).newInstance(Long.parseLong(value));
-        } catch (Throwable e) {
-            // ignore
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
         }
         try {
             return stopCondition.getConstructor(new Class[]{Integer.TYPE}).newInstance(Integer.parseInt(value));
-        } catch (Throwable e) {
-            // ignore
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
         }
         try {
             return stopCondition.getConstructor(new Class[]{Double.TYPE}).newInstance(Double.parseDouble(value));
-        } catch (Throwable e) {
-            // ignore
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
         }
         try {
             return stopCondition.getConstructor(new Class[]{Float.TYPE}).newInstance(Float.parseFloat(value));
-        } catch (Throwable e) {
-            // ignore
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
         }
         throw new TestExecutionException();
     }

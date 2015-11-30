@@ -31,6 +31,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.nio.file.Path;
@@ -40,6 +42,8 @@ import java.util.*;
  * @author Nils Olsson
  */
 public final class ContextFactoryScanner {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContextFactoryScanner.class);
 
     static {
         Reflections.log = null;
@@ -84,6 +88,7 @@ public final class ContextFactoryScanner {
             try {
                 factories.put(factoryClass, factoryClass.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
+                logger.error(e.getMessage());
                 return null;
             }
         }

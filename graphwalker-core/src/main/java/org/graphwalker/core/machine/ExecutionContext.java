@@ -111,6 +111,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
             compiledScript.eval(bindings);
             scriptEngine = compiledScript.getEngine();
         } catch (ScriptException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -237,6 +238,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
                 Constructor<? extends Algorithm> constructor = clazz.getConstructor(Context.class);
                 algorithms.put(clazz, constructor.newInstance(this));
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                logger.error(e.getMessage());
                 throw new MachineException(this, e);
             }
         }
@@ -266,6 +268,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
             try {
                 return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());
             } catch (ScriptException e) {
+                logger.error(e.getMessage());
                 throw new MachineException(this, e);
             }
         }
@@ -277,6 +280,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         try {
             getScriptEngine().eval(action.getScript());
         } catch (ScriptException e) {
+            logger.error(e.getMessage());
             throw new MachineException(this, e);
         }
     }
@@ -289,6 +293,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         } catch (NoSuchMethodException e) {
             // ignore, method is not defined in the execution context
         } catch (Throwable t) {
+            logger.error(t.getMessage());
             throw new MachineException(this, t);
         }
     }

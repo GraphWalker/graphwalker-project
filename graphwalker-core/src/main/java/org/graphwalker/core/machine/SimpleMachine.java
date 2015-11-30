@@ -143,6 +143,7 @@ public class SimpleMachine extends MachineBase {
                 context.setExecutionStatus(ExecutionStatus.EXECUTING);
             }
         } catch (Throwable t) {
+            logger.error(t.getMessage());
             getExceptionStrategy().handle(this, new MachineException(context, t));
         }
     }
@@ -266,6 +267,7 @@ public class SimpleMachine extends MachineBase {
                 execute((RuntimeEdge) element);
             }
         } catch (MachineException e) {
+            logger.error(e.getMessage());
             getExceptionStrategy().handle(this, e);
         }
     }

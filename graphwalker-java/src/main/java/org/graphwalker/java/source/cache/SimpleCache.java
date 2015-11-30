@@ -3,6 +3,8 @@ package org.graphwalker.java.source.cache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -18,6 +20,7 @@ import java.util.Map;
  */
 public final class SimpleCache implements Cache<Path, CacheEntry> {
 
+    private static final Logger logger = LoggerFactory.getLogger(SimpleCache.class);
     private static final Type type = new TypeToken<HashMap<String, CacheEntry>>() {
     }.getType();
     private static final Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
@@ -36,6 +39,7 @@ public final class SimpleCache implements Cache<Path, CacheEntry> {
                 Map<String, CacheEntry> data = gson.fromJson(json, type);
                 storage.putAll(data);
             } catch (IOException e) {
+                logger.error(e.getMessage());
                 throw new CacheException(e);
             }
         }
@@ -47,6 +51,7 @@ public final class SimpleCache implements Cache<Path, CacheEntry> {
             Files.createDirectories(path.getParent());
             Files.write(path, json.getBytes(Charset.forName("UTF-8")));
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new CacheException(e);
         }
     }

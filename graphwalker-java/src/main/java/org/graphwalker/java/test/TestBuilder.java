@@ -32,6 +32,8 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,6 +44,8 @@ import java.util.List;
  * @author Nils Olsson
  */
 public final class TestBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestBuilder.class);
 
     private List<Context> contexts = new ArrayList<>();
 
@@ -97,6 +101,7 @@ public final class TestBuilder {
                 newContext.setNextElement(newContext.getModel().findElements(start).get(0));
             }
         } catch (Throwable t) {
+            logger.error(t.getMessage());
             throw new ContextFactoryException("Failed to create context", t);
         }
         return newContext;
@@ -127,6 +132,7 @@ public final class TestBuilder {
         try {
             return testClass.newInstance();
         } catch (Throwable t) {
+            logger.error(t.getMessage());
             throw new ContextFactoryException("Failed to create context", t);
         }
     }
@@ -189,6 +195,7 @@ public final class TestBuilder {
                     .setPathGenerator(generator)
                     .setNextElement(context.getModel().findElements(start).get(0));
         } catch (Throwable t) {
+            logger.error(t.getMessage());
             throw new ContextFactoryException("Failed to create context", t);
         }
     }

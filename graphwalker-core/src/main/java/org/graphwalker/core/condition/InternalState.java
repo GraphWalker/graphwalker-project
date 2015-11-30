@@ -26,6 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.script.ScriptException;
 
 /**
@@ -33,6 +36,7 @@ import javax.script.ScriptException;
  */
 public final class InternalState extends StopConditionBase {
 
+    private static final Logger logger = LoggerFactory.getLogger(InternalState.class);
     private final String script;
 
     public InternalState(String script) {
@@ -50,6 +54,7 @@ public final class InternalState extends StopConditionBase {
                 throw new StopConditionException("Wrong type of expression");
             }
         } catch (ScriptException e) {
+            logger.error(e.getMessage());
             return false;
         }
     }

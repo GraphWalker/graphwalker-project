@@ -106,12 +106,14 @@ public final class GW3ContextFactory implements ContextFactory {
                 jsonGW3.append(line);
             }
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("Could not read the file.");
         }
         logger.debug(jsonGW3.toString());
         try {
             reader.close();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("Could not read the file.");
         }
 

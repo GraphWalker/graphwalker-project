@@ -386,6 +386,7 @@ public class CLI {
             }
             reader.close();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException("Could not read the file: " + templateFileName);
         }
         String templateStr = templateStrBuilder.toString();
