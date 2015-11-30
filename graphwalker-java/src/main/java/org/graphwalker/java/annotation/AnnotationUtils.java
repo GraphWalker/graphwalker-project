@@ -28,6 +28,8 @@ package org.graphwalker.java.annotation;
 
 import org.graphwalker.core.machine.Context;
 import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +41,8 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public abstract class AnnotationUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(AnnotationUtils.class);
 
     public static Set<Class<?>> findTests(Reflections reflections) {
         return find(reflections, Context.class, GraphWalker.class);
@@ -64,6 +68,7 @@ public abstract class AnnotationUtils {
             Class<? extends Annotation> a = (Class<? extends Annotation>) classLoader.loadClass(annotation.getName());
             return type.isAnnotationPresent(a);
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new RuntimeException();
         }
     }

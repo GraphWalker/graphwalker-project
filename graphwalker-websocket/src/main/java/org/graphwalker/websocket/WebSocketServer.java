@@ -276,6 +276,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         try {
             root = new JSONObject(message);
         } catch (JSONException e) {
+            logger.error(e.getMessage());
             response.put("message", "Unknown command: " + e.getMessage());
             response.put("success", false);
             socket.send(response.toString());
@@ -295,6 +296,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     machines.put(socket, machine);
                     response.put("success", true);
                 } catch (Exception e) {
+                    logger.error(e.getMessage());
                     List<String> issues = checkContexts(socket, gw3Contexts);
                     issues.add(e.getMessage());
                     sendIssues(socket, issues);
@@ -312,6 +314,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         response.put("name", machine.getCurrentContext().getCurrentElement().getName());
                         response.put("success", true);
                     } catch (Exception e) {
+                        logger.error(e.getMessage());
                         List<String> issues = checkContexts(socket, machine.getContexts());
                         issues.add(e.getMessage());
                         sendIssues(socket, issues);
@@ -337,6 +340,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         response.put("hasNext", false);
                     }
                 } catch (Exception e) {
+                    logger.error(e.getMessage());
                     List<String> issues = checkContexts(socket, machine.getContexts());
                     issues.add(e.getMessage());
                     sendIssues(socket, issues);
@@ -360,6 +364,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         response.put("data", data);
                         response.put("success", true);
                     } catch (Exception e) {
+                        logger.error(e.getMessage());
                         List<String> issues = checkContexts(socket, machine.getContexts());
                         issues.add(e.getMessage());
                         sendIssues(socket, issues);

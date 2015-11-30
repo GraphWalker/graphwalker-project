@@ -42,6 +42,8 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -59,6 +61,8 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  * @author Nils Olsson
  */
 public final class TestExecutor implements Executor {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestExecutor.class);
 
     private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
             .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
@@ -138,7 +142,8 @@ public final class TestExecutor implements Executor {
     private Context createContext(Class<?> testClass) {
         try {
             return (Context) testClass.newInstance();
-        } catch (Throwable e) {
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
             throw new TestExecutionException("Failed to create context");
         }
     }
@@ -195,6 +200,7 @@ public final class TestExecutor implements Executor {
                 executeAnnotation(AfterElement.class, context);
             }
         } catch (MachineException e) {
+            logger.error(e.getMessage());
             failures.put(e.getContext(), e);
         }
         executeAnnotation(AfterExecution.class, machine);

@@ -26,6 +26,9 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,6 +40,8 @@ import java.util.List;
  * @author Nils Olsson
  */
 public final class IsolatedClassLoader extends URLClassLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(IsolatedClassLoader.class);
 
     public IsolatedClassLoader(List<String> urls) {
         this(convert(urls));
@@ -52,6 +57,7 @@ public final class IsolatedClassLoader extends URLClassLoader {
             try {
                 urlList.add(new File(url).toURI().toURL());
             } catch (MalformedURLException e) {
+                logger.error(e.getMessage());
                 throw new RuntimeException(e);
             }
         }

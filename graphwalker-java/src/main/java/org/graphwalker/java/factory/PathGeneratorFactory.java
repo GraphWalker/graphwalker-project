@@ -31,6 +31,8 @@ import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
 
@@ -39,12 +41,15 @@ import java.lang.reflect.Constructor;
  */
 public abstract class PathGeneratorFactory {
 
+    private static final Logger logger = LoggerFactory.getLogger(PathGeneratorFactory.class);
+
     public static PathGenerator createPathGenerator(GraphWalker annotation) {
         try {
             Constructor constructor;
             try {
                 constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
             } catch (Throwable t) {
+                logger.error(t.getMessage());
                 constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
             }
             if (null == constructor) {
@@ -52,6 +57,7 @@ public abstract class PathGeneratorFactory {
             }
             return (PathGenerator) constructor.newInstance(StopConditionFactory.createStopCondition(annotation));
         } catch (Throwable e) {
+            logger.error(e.getMessage());
             throw new TestExecutionException(e);
         }
     }

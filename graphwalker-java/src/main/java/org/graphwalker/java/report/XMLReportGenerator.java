@@ -29,6 +29,8 @@ package org.graphwalker.java.report;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.java.test.Executor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -46,6 +48,8 @@ import java.util.concurrent.TimeUnit;
  * @author Nils Olsson
  */
 public class XMLReportGenerator {
+
+    private static final Logger logger = LoggerFactory.getLogger(XMLReportGenerator.class);
 
     private static final String NEWLINE = "\n";
     private static final String INDENT = "    ";
@@ -115,6 +119,7 @@ public class XMLReportGenerator {
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(testsuites, getOutputStream(reportDirectory, getName()));
         } catch (JAXBException e) {
+            logger.error(e.getMessage());
             throw new XMLReportException(e);
         }
     }
@@ -164,8 +169,9 @@ public class XMLReportGenerator {
                 directory.mkdirs();
             }
             return new FileOutputStream(new File(directory, reportName));
-        } catch (Throwable e) {
-            throw new XMLReportException(e);
+        } catch (Throwable t) {
+            logger.error(t.getMessage());
+            throw new XMLReportException(t);
         }
     }
 

@@ -67,12 +67,14 @@ public final class JsonContextFactory implements ContextFactory {
                 out.append(line);
             }
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("Could not read the file.");
         }
         logger.debug(out.toString());
         try {
             reader.close();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("Could not read the file.");
         }
 

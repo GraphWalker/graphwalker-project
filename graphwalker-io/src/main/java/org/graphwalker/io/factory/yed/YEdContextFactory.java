@@ -66,6 +66,8 @@ import org.graphwalker.io.common.ResourceNotFoundException;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -85,6 +87,7 @@ import java.util.Set;
  */
 public final class YEdContextFactory implements ContextFactory {
 
+    private static final Logger logger = LoggerFactory.getLogger(YEdContextFactory.class);
     private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
     private static final String FILE_TYPE = "graphml";
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
@@ -118,16 +121,20 @@ public final class YEdContextFactory implements ContextFactory {
         try {
             document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(path.toString()));
         } catch (XmlException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("Could not read the file.");
         } catch (ResourceNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("Could not read the file.");
         }
         try {
             Vertex startVertex = addVertices(model, context, document, elements);
             startEdge = addEdges(model, context, document, elements, startVertex);
         } catch (XmlException e) {
+            logger.error(e.getMessage());
             throw new ContextFactoryException("The file seems not to be of valid yEd format.");
         }
 

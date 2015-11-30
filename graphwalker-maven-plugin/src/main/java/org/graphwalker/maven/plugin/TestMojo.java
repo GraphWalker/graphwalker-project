@@ -31,6 +31,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 import org.codehaus.plexus.util.StringUtils;
 import org.graphwalker.java.test.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +49,8 @@ import java.util.Set;
 @Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 @Execute(phase = LifecyclePhase.TEST_COMPILE, lifecycle = "graphwalker")
 public final class TestMojo extends DefaultMojoBase {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestMojo.class);
 
     @Parameter(property = "project.testClasspathElements")
     private List<String> classpathElements;
@@ -173,6 +177,7 @@ public final class TestMojo extends DefaultMojoBase {
             try {
                 properties.load(inputStream);
             } catch (IOException e) {
+                logger.error(e.getMessage());
                 return "unknown";
             }
         }

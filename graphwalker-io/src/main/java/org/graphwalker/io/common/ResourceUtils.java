@@ -26,6 +26,9 @@ package org.graphwalker.io.common;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,6 +39,8 @@ import java.net.URL;
  * @author Nils Olsson
  */
 public final class ResourceUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 
     private ResourceUtils() {
     }
@@ -62,6 +67,7 @@ public final class ResourceUtils {
             try {
                 return new FileInputStream(file);
             } catch (FileNotFoundException e) {
+                logger.error(e.getMessage());
                 throw new ResourceNotFoundException();
             }
         } else {

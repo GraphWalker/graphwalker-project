@@ -2,6 +2,8 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +29,7 @@ import static org.graphwalker.core.common.Objects.isNotNull;
  */
 public final class ReplayMachine extends SimpleMachine {
 
+    private static final Logger logger = LoggerFactory.getLogger(ReplayMachine.class);
     private final Profiler profiler;
     private final Iterator<Element> iterator;
 
@@ -47,6 +50,7 @@ public final class ReplayMachine extends SimpleMachine {
                 newContext.setNextElement(profiler.getPath().getFirst());
                 contexts.add(newContext);
             } catch (InstantiationException | IllegalAccessException e) {
+                logger.error(e.getMessage());
                 throw new MachineException(context, e);
             }
         }

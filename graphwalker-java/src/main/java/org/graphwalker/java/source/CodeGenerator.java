@@ -95,6 +95,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
                 }
             });
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new CodeGeneratorException(e);
         }
     }
