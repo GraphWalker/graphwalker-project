@@ -16,7 +16,7 @@
 
 
     <link href="dist/vis.min.css" rel="stylesheet" type="text/css"/>
-    <link href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet"/>
+    <link href="dist/jquery-ui.css" type="text/css" rel="stylesheet"/>
 
     <style type="text/css">
         /* Only for the demo */
@@ -559,7 +559,7 @@
                     delegate: ".vis-network",
                     menu: [
                         {title: "Edit name", cmd: "editName"},
-                        {title: "Start element", cmd: "startElement"},
+                        {title: "Start element", cmd: "startElement", },
                         {title: "Blocked", cmd: "blocked"},
                         {title: "Requirement", cmd: "requirement"},
                         {title: "Shared", cmd: "shared"}
@@ -616,6 +616,19 @@
                     select: function (event, ui) {
                         switch (ui.cmd) {
                             case "editName":
+                                $('<div></div>').dialog({
+                                    modal: true,
+                                    title: "Confirmation",
+                                    open: function () {
+                                        var markup = 'Hello World';
+                                        $(this).html(markup);
+                                    },
+                                    buttons: {
+                                        Ok: function () {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
                                 break;
                         }
                     }
