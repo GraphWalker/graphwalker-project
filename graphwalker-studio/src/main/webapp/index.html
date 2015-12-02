@@ -84,6 +84,7 @@
      */
     var gw3 = '';
     var modelId = '';
+    var modelName = 'Some Name';
     var nodes;
     var edges;
     var pauseExecution = false;
@@ -348,7 +349,7 @@
             name: "VISMODEL",
             models: [
                 {
-                    name: "model 1",
+                    name: modelName,
                     id: modelId,
                     vertices: [],
                     edges: []
@@ -554,78 +555,93 @@
         console.log("Node: " + contextNode + ", Edge: " + contextEdge);
 
         if (contextNode != undefined) {
+            var node = nodes.get(contextNode);
             $(function () {
                 $(document).contextmenu({
                     delegate: ".vis-network",
                     menu: [
-                        {title: "Edit name", cmd: "editName"},
-                        {title: "Start element", cmd: "startElement", },
-                        {title: "Blocked", cmd: "blocked"},
-                        {title: "Requirement", cmd: "requirement"},
-                        {title: "Shared", cmd: "shared"}
+                        {title: "Properties", cmd: "Properties"}
                     ],
                     select: function (event, ui) {
                         switch (ui.cmd) {
-                            case "editName":
-                                break;
-                            case "startElement":
-                                break;
-                            case "blocked":
-                                break;
-                            case "requirement":
-                                break;
-                            case "shared":
+                            case "Properties":
+                            case "Properties":
+                                $('<div id="dlg"></div>').dialog({
+                                    modal: true,
+                                    title: "Properties",
+                                    open: function () {
+                                        var markup ='<form>\
+                                           <fieldset>\
+                                             <legend>Vertex Properties:</legend>\
+                                             Start element: <input type="checkbox" id="startElement"><br>\
+                                             Blocked: <input type="checkbox" id="blocked"><br>\
+                                             Name: <input type="text" id="name"><br>\
+                                             Shared: <input type="text" id="shared"><br>\
+                                             Actions: <input type="text" id="actions"><br>\
+                                             Requirements: <input type="text" id="requirements"><br>\
+                                           </fieldset>\
+                                         </form>';
+
+                                        $(this).html(markup);
+                                        $("#name").val(node.label);
+                                    },
+                                    buttons: {
+                                        Ok: function () {
+                                            $(this).dialog("close");
+                                            nodes.update({id: node.id, label: $("#name").val()});
+                                            $("#dlg").remove();
+                                        }
+                                    }
+                                });
                                 break;
                         }
                     }
                 });
-
             });
         } else if (contextEdge != undefined) {
             $(function () {
                 $(document).contextmenu({
                     delegate: ".vis-network",
                     menu: [
-                        {title: "Edit name", cmd: "editName"},
-                        {title: "Blocked", cmd: "blocked"},
-                        {title: "Requirement", cmd: "requirement"},
-                        {title: "Guard", cmd: "guard"}
+                        {title: "Properties", cmd: "Properties"}
                     ],
                     select: function (event, ui) {
                         switch (ui.cmd) {
-                            case "editName":
-                                break;
-                            case "blocked":
-                                break;
-                            case "requirement":
-                                break;
-                            case "guard":
+                            case "Properties":
                                 break;
                         }
                     }
                 });
-
             });
         } else {
             $(function () {
                 $(document).contextmenu({
                     delegate: ".vis-network",
                     menu: [
-                        {title: "Edit model name", cmd: "editName"},
+                        {title: "Properties", cmd: "Properties"}
                     ],
                     select: function (event, ui) {
                         switch (ui.cmd) {
-                            case "editName":
-                                $('<div></div>').dialog({
+                            case "Properties":
+                                $('<div id="dlg"></div>').dialog({
                                     modal: true,
-                                    title: "Confirmation",
+                                    title: "Properties",
                                     open: function () {
-                                        var markup = 'Hello World';
+                                        var markup ='<form>\
+                                           <fieldset>\
+                                             <legend>Model Properties:</legend>\
+                                             Name: <input type="text" id="name"><br>\
+                                           </fieldset>\
+                                         </form>';
+
                                         $(this).html(markup);
+                                        $("#name").val(modelName) ;
                                     },
                                     buttons: {
                                         Ok: function () {
+                                            modelName = $("#name").val();
                                             $(this).dialog("close");
+                                            $("#dlg").remove();
                                         }
                                     }
                                 });
