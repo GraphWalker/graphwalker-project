@@ -58,7 +58,6 @@
         <input type='file' id='files' name="files[]">
         <input id="inputFileNameToSaveAs">
         <button onclick="saveGraphAsFile()">Save</button>
-        <div id="generator-div"><input type="text" id="generator" onchange="onGeneratorChange(this.value)"></div>
         <div id="issues">No Issues</div>
         <button type='button' id="runModel" onclick="onRunModel()">Run model</button>
         <button type='button' id="resetModel" onclick="onResetModel()">Reset</button>
@@ -85,6 +84,7 @@
     var gw3 = '';
     var modelId = '';
     var modelName = 'Some Name';
+    var generator = '';
     var nodes;
     var edges;
     var pauseExecution = false;
@@ -138,18 +138,6 @@
         };
         doSend(JSON.stringify(hasNext));
     }
-
-    function onGeneratorChange(generatorText) {
-        console.log(onGeneratorChange + ": " + generatorText);
-        var generatorText = document.getElementById("generator").value;
-        var setGenerator = {
-            command: "setGenerator",
-            modelId: modelId,
-            generator: generatorText
-        };
-        doSend(JSON.stringify(setGenerator));
-    }
-
 
     function getSelectedElement() {
         var selectedElements = network.getSelection();
@@ -226,9 +214,7 @@
                 ]
             }
         };
-        if (document.getElementById("generator").value !== undefined) {
-            start.gw3.models[0].generator = document.getElementById("generator").value;
-        }
+        start.gw3.models[0].generator = generator;
         if (startElementId !== undefined) {
             start.gw3.models[0].startElementId = startElementId;
         }
@@ -356,9 +342,7 @@
                 }
             ]
         };
-        if (document.getElementById("generator").value !== undefined) {
-            graphToWrite.models[0].generator = document.getElementById("generator").value;
-        }
+        graphToWrite.models[0].generator = generator;
         if (startElementId !== undefined) {
             graphToWrite.models[0].startElementId = startElementId;
         }
@@ -427,9 +411,7 @@
                 jsonLoadModel.model.id = modelId;
             }
 
-            if (jsonModel.hasOwnProperty('generator')) {
-                document.getElementById("generator").value = jsonModel.generator;
-            }
+            generator = jsonModel.generator;
 
             if (jsonModel.hasOwnProperty('startElementId')) {
                 startElementId = jsonModel.startElementId;
@@ -646,16 +628,19 @@
                                            <fieldset>\
                                              <legend>Model Properties:</legend>\
                                              Name: <input type="text" id="name"><br>\
+                                             Generator: <input type="text" id="generator"><br>\
                                            </fieldset>\
                                          </form>';
 
                                         $(this).html(markup);
                                         $("#name").val(modelName) ;
+                                        $("#generator").val(generator) ;
                                     },
                                     buttons: {
                                         Ok: function () {
-                                            modelName = $("#name").val();
                                             $(this).dialog("close");
+                                            modelName = $("#name").val();
+                                            generator = $("#generator").val();
                                             $("#dlg").remove();
                                         }
                                     }
@@ -746,7 +731,7 @@
     function onMessage(evt) {
         console.log(evt.data);
         var msg = JSON.parse(event.data);
-        generator.innerHTML = "No issues";
+        issues.innerHTML = "No issues";
 
         switch (msg.command) {
             case "hasNext":
