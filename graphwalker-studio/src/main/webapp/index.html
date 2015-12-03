@@ -565,7 +565,6 @@
                     select: function (event, ui) {
                         switch (ui.cmd) {
                             case "Properties":
-                            case "Properties":
                                 $('<div id="dlg"></div>').dialog({
                                     modal: true,
                                     title: "Properties",
@@ -599,16 +598,32 @@
                 });
             });
         } else if (contextEdge != undefined) {
+            var edge = edges.get(contextEdge);
             $(function () {
-                $(document).contextmenu({
-                    delegate: ".vis-network",
-                    menu: [
-                        {title: "Properties", cmd: "Properties"}
-                    ],
-                    select: function (event, ui) {
-                        switch (ui.cmd) {
-                            case "Properties":
-                                break;
+                $('<div id="dlg"></div>').dialog({
+                    modal: true,
+                    title: "Properties",
+                    open: function () {
+                        var markup ='<form>\
+                                           <fieldset>\
+                                             <legend>Edge Properties:</legend>\
+                                             Start element: <input type="checkbox" id="startElement"><br>\
+                                             Blocked: <input type="checkbox" id="blocked"><br>\
+                                             Name: <input type="text" id="name"><br>\
+                                             Guard: <input type="text" id="guard"><br>\
+                                             Actions: <input type="text" id="actions"><br>\
+                                             Requirements: <input type="text" id="requirements"><br>\
+                                           </fieldset>\
+                                         </form>';
+
+                        $(this).html(markup);
+                        $("#name").val(edge.label);
+                    },
+                    buttons: {
+                        Ok: function () {
+                            $(this).dialog("close");
+                            edges.update({id: edge.id, label: $("#name").val()});
+                            $("#dlg").remove();
                         }
                     }
                 });
