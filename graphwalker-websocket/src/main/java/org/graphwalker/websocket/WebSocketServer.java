@@ -438,6 +438,14 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                     jsonObject.put("command", "visitedElement");
                     jsonObject.put("id", element.getId());
                     jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
+                    jsonObject.put("stopConditionFulfillment", machine.getCurrentContext().getPathGenerator().getStopCondition().getFulfilment());
+
+                    JSONObject data = new JSONObject();
+                    for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
+                        data.put(k.getKey(), k.getValue());
+                    }
+                    jsonObject.put("data", data);
+
                     conn.send(jsonObject.toString());
                 }
             }

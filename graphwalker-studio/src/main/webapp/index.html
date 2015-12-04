@@ -195,7 +195,11 @@
             var n = nodes.getIds()[i];
             var vertex = {
                 id: nodes.get(n).id,
-                name: nodes.get(n).label
+                name: nodes.get(n).label,
+                sharedState: nodes.get(n).sharedState,
+                actions: edges.get(e).actions,
+                requirements: edges.get(e).requirements,
+                properties: edges.get(e).properties,
             };
             start.gw3.models[0].vertices[i] = vertex;
         }
@@ -204,6 +208,10 @@
             var edge = {
                 id: edges.get(e).id,
                 name: edges.get(e).label,
+                guard: edges.get(e).guard,
+                actions: edges.get(e).actions,
+                requirements: edges.get(e).requirements,
+                properties: edges.get(e).properties,
                 sourceVertexId: edges.get(e).from,
                 targetVertexId: edges.get(e).to
             };
@@ -669,6 +677,7 @@
                                         $(this).html(markup);
                                         $("#name").val(edge.label);
                                         $("#guard").val(edge.guard);
+                                        $("#actions").val(edge.actions);
                                         if (startElementId == edge.id) {
                                             $("#startElement").prop('checked', true);
                                         } else {
@@ -878,6 +887,7 @@
                 break;
             case "visitedElement":
                 console.log("Command visitedElement. Will color green on: " + msg.id);
+                issues.innerHTML = "Done: " + msg.stopConditionFulfillment + "%, data: " + JSON.stringify(msg.data);
                 network.unselectAll();
                 if (nodes.get(msg.id) !== null) {
                     nodes.update([{
