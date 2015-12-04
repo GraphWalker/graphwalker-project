@@ -57,7 +57,7 @@
     <fieldset>
         <input type='file' id='files' name="files[]">
         <input id="inputFileNameToSaveAs">
-        <button onclick="saveGraphAsFile()">Save</button>
+        <button onclick="saveGraphAsFile(); return false;">Save</button>
         <div id="issues">No Issues</div>
         <button type='button' id="runModel" onclick="onRunModel()">Run model</button>
         <button type='button' id="resetModel" onclick="onResetModel()">Reset</button>
@@ -85,6 +85,7 @@
     var modelId = '';
     var modelName = 'Some Name';
     var generator = '';
+    var startElementId = '';
     var nodes;
     var edges;
     var pauseExecution = false;
@@ -350,7 +351,11 @@
             var n = nodes.getIds()[i];
             var vertex = {
                 id: nodes.get(n).id,
-                name: nodes.get(n).label
+                name: nodes.get(n).label,
+                sharedState: nodes.get(n).sharedState,
+                actions: nodes.get(n).actions,
+                requirements: nodes.get(n).requirements,
+                properties: nodes.get(n).properties
             };
             graphToWrite.models[0].vertices[i] = vertex;
         }
@@ -359,6 +364,10 @@
             var edge = {
                 id: edges.get(e).id,
                 name: edges.get(e).label,
+                guard: edges.get(e).guard,
+                actions: edges.get(e).actions,
+                requirements: edges.get(e).requirements,
+                properties: edges.get(e).properties,
                 sourceVertexId: edges.get(e).from,
                 targetVertexId: edges.get(e).to
             };
@@ -421,25 +430,14 @@
             for (var i = 0; i < jsonVertices.length; i++) {
                 var jsonVertex = jsonVertices[i];
                 console.log(jsonVertex);
-
-                var arrayOfKeys = [];
-                for (var key in jsonVertex.properties) {
-                    arrayOfKeys.push(key);
-                }
-
-                if (arrayOfKeys.length > 1) {
-                    nodes.add({
-                        id: jsonVertex.id,
-                        label: jsonVertex.name,
-                        x: jsonVertex.properties['x'],
-                        y: jsonVertex.properties['y']
-                    });
-                } else {
-                    nodes.add({
-                        id: jsonVertex.id,
-                        label: jsonVertex.name
-                    });
-                }
+                nodes.add({
+                    id: jsonVertex.id,
+                    label: jsonVertex.name,
+                    sharedState: jsonVertex.sharedState,
+                    actions: jsonVertex.actions,
+                    requirements: jsonVertex.requirements,
+                    properties: jsonVertex.properties
+                });
             }
             var jsonEdges = jsonModel.edges;
             for (var i = 0; i < jsonEdges.length; i++) {
@@ -447,9 +445,13 @@
                 console.log(jsonEdge);
                 edges.add({
                     id: jsonEdge.id,
+                    label: jsonEdge.name,
+                    guard: jsonEdge.guard,
+                    actions: jsonEdge.actions,
+                    requirements: jsonEdge.requirements,
+                    properties: jsonEdge.properties,
                     from: jsonEdge.sourceVertexId,
                     to: jsonEdge.targetVertexId,
-                    label: jsonEdge.name,
                     arrows: 'to'
                 });
             }
@@ -565,12 +567,41 @@
 
                                         $(this).html(markup);
                                         $("#name").val(node.label);
+                                        $("#shared").val(node.sharedState);
+                                        if (startElementId == node.id) {
+                                            $("#startElement").val(true);
+                                        } else {
+                                            $("#startElement").val(false);
+                                        }
+
+                                        if (node.hasOwnProperty("properties") && node.properties != undefined) {
+                                            if (node.properties["blocked"]) {
+                                                $("#blocked").val(true);
+                                            }
+                                        }
+                                    },
+                                    close : function() {
+                                        $(this).dialog( "close" );
+                                        $(this).remove();
                                     },
                                     buttons: {
-                                        Ok: function () {
-                                            $(this).dialog("close");
-                                            nodes.update({id: node.id, label: $("#name").val()});
-                                            $("#dlg").remove();
+                                        'OK': function () {
+                                            nodes.update(
+                                                    {
+                                                        id: node.id,
+                                                        label: $("#name").val()
+                                                    });
+                                            if ($("#startElement").val()) {
+                                                startElementId = node.id;
+                                            }
+                                            if (node.properties == undefined) {
+                                                node.properties =  [{}];
+                                            }
+                                            node.properties["blocked"] = $("#blocked").val();
+                                            $(this).dialog( "close" );
+                                        },
+                                        'Cancel': function() {
+                                            $(this).dialog( "close" );
                                         }
                                     }
                                 });
@@ -600,12 +631,36 @@
 
                         $(this).html(markup);
                         $("#name").val(edge.label);
+                        $("#guard").val(edge.guard);
+                        if (startElementId == node.id) {
+                            $("#startElement").val(true);
+                        } else {
+                            $("#startElement").val(false);
+                        }
+                    },
+                    close : function() {
+                        $(this).dialog( "close" );
+                        $(this).remove();
                     },
                     buttons: {
-                        Ok: function () {
-                            $(this).dialog("close");
-                            edges.update({id: edge.id, label: $("#name").val()});
-                            $("#dlg").remove();
+                        'OK': function () {
+                            edges.update(
+                                    {
+                                        id: edge.id,
+                                        label: $("#name").val(),
+                                        guard: $("#guard").val()
+                                    });
+                            if ($("#startElement").val()) {
+                                startElementId = node.id;
+                            }
+                            if (node.properties == undefined) {
+                                node.properties =  [{}];
+                            }
+                            node.properties["blocked"] = $("#blocked").val();
+                            $(this).dialog( "close" );
+                        },
+                        'Cancel': function() {
+                            $(this).dialog( "close" );
                         }
                     }
                 });
@@ -633,15 +688,21 @@
                                          </form>';
 
                                         $(this).html(markup);
-                                        $("#name").val(modelName) ;
-                                        $("#generator").val(generator) ;
+                                        $("#name").val(modelName);
+                                        $("#generator").val(generator);
+                                    },
+                                    close : function() {
+                                        $(this).dialog( "close" );
+                                        $(this).remove();
                                     },
                                     buttons: {
-                                        Ok: function () {
-                                            $(this).dialog("close");
+                                        'OK': function () {
                                             modelName = $("#name").val();
                                             generator = $("#generator").val();
-                                            $("#dlg").remove();
+                                            $(this).dialog( "close" );
+                                        },
+                                        'Cancel': function() {
+                                            $(this).dialog( "close" );
                                         }
                                     }
                                 });
