@@ -227,11 +227,19 @@
 
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.getIds()[i];
-            nodes.update([{id: node, color: {border: "#2A7BE8", background: "#97C2FC"}}]);
+            if (node == startElementId) {
+                nodes.update([{id: node, color: {border: "#D7DF01", background: "#FFFF00"}}]);
+            } else {
+                nodes.update([{id: node, color: {border: "#2A7BE8", background: "#97C2FC"}}]);
+            }
         }
         for (var i = 0; i < edges.length; i++) {
             var edge = edges.getIds()[i];
-            edges.update([{id: edge, color: {color: "#2B7CE9"}}]);
+            if (node == startElementId) {
+                edges.update([{id: edge, color: {color: "#D7DF01"}}]);
+            } else {
+                edges.update([{id: edge, color: {color: "#2B7CE9"}}]);
+            }
         }
     }
 
@@ -441,6 +449,7 @@
             }
 
             network.fit();
+            onResetModel();
         }
     }
 
@@ -582,6 +591,7 @@
                                                 startElementId = node.id;
                                             }
                                             $(this).dialog( "close" );
+                                            onResetModel();
                                         },
                                         'Cancel': function() {
                                             $(this).dialog( "close" );
@@ -648,6 +658,7 @@
                                                 startElementId = edge.id;
                                             }
                                             $(this).dialog("close");
+                                            onResetModel();
                                         },
                                         'Cancel': function () {
                                             $(this).dialog("close");
@@ -694,6 +705,7 @@
                                             modelName = $("#name").val();
                                             generator = $("#generator").val();
                                             $(this).dialog( "close" );
+                                            onResetModel();
                                         },
                                         'Cancel': function() {
                                             $(this).dialog( "close" );
@@ -789,7 +801,6 @@
     function onMessage(evt) {
         console.log(evt.data);
         var msg = JSON.parse(event.data);
-        issues.innerHTML = "No issues";
 
         switch (msg.command) {
             case "hasNext":
@@ -816,6 +827,7 @@
                 break;
             case "start":
                 if (msg.success) {
+                    issues.innerHTML = "No issues";
                     console.log("Command start ok");
                     document.dispatchEvent(startEvent);
                 } else {
