@@ -349,13 +349,15 @@
         }
         for (var i = 0; i < nodes.length; i++) {
             var n = nodes.getIds()[i];
+            nodes.get(n).properties["x"] = nodes.get(n).x;
+            nodes.get(n).properties["y"] = nodes.get(n).y;
             var vertex = {
                 id: nodes.get(n).id,
                 name: nodes.get(n).label,
                 sharedState: nodes.get(n).sharedState,
                 actions: nodes.get(n).actions,
                 requirements: nodes.get(n).requirements,
-                properties: nodes.get(n).properties
+                properties: nodes.get(n).properties,
             };
             graphToWrite.models[0].vertices[i] = vertex;
         }
@@ -380,10 +382,10 @@
         var downloadLink = document.createElement("a");
         downloadLink.download = fileNameToSaveAs;
         downloadLink.innerHTML = "Download File";
-        if (window.webkitURL != null) {
+        if (window.URL != null) {
             // Chrome allows the link to be clicked
             // without actually adding it to the DOM.
-            downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
         }
         else {
             // Firefox requires the link to be added to the DOM
@@ -430,13 +432,26 @@
             for (var i = 0; i < jsonVertices.length; i++) {
                 var jsonVertex = jsonVertices[i];
                 console.log(jsonVertex);
+                var x = 0, y = 0;
+                if (jsonVertex.properties != undefined) {
+                    if (jsonVertex.properties["x"] != undefined) {
+                        x = jsonVertex.properties["x"];
+                    }
+                    if (jsonVertex.properties["y"] != undefined) {
+                        y = jsonVertex.properties["y"];
+                    }
+                } else {
+                    jsonVertex.properties = {};
+                }
                 nodes.add({
                     id: jsonVertex.id,
                     label: jsonVertex.name,
                     sharedState: jsonVertex.sharedState,
                     actions: jsonVertex.actions,
                     requirements: jsonVertex.requirements,
-                    properties: jsonVertex.properties
+                    properties: jsonVertex.properties,
+                    x: x,
+                    y: y
                 });
             }
             var jsonEdges = jsonModel.edges;
@@ -594,9 +609,6 @@
                                             if ($("#startElement").val()) {
                                                 startElementId = node.id;
                                             }
-                                            if (node.properties == undefined) {
-                                                node.properties =  [{}];
-                                            }
                                             node.properties["blocked"] = $("#blocked").val();
                                             $(this).dialog( "close" );
                                         },
@@ -652,9 +664,6 @@
                                     });
                             if ($("#startElement").val()) {
                                 startElementId = node.id;
-                            }
-                            if (node.properties == undefined) {
-                                node.properties =  [{}];
                             }
                             node.properties["blocked"] = $("#blocked").val();
                             $(this).dialog( "close" );
@@ -725,16 +734,19 @@
      //            startNode.allowedToMoveX = false;
      //            startNode.allowedToMoveY = false;
      //        }
-     });
+     });*/
      network.on('dragEnd', function (params) {
-     console.log("dragEnd");
-     //        endNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
-     //        if (startNode != undefined) {
-     //            startNode.allowedToMoveX = true;
-     //            startNode.allowedToMoveY = true;
-     //        }
+         console.log("dragEnd");
+         var node = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+         if (node != undefined) {
+             nodes.update({
+                         id: node.id,
+                         x: params.pointer.canvas.x,
+                         y: params.pointer.canvas.y
+                     });
+         }
      });
-     network.on('dragging', function (params) {
+/*     network.on('dragging', function (params) {
      console.log("dragging");
      });
      */
