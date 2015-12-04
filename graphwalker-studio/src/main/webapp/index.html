@@ -625,51 +625,63 @@
         } else if (contextEdge != undefined) {
             var edge = edges.get(contextEdge);
             $(function () {
-                $('<div id="dlg"></div>').dialog({
-                    modal: true,
-                    title: "Properties",
-                    open: function () {
-                        var markup ='<form>\
-                                           <fieldset>\
-                                             <legend>Edge Properties:</legend>\
-                                             Start element: <input type="checkbox" id="startElement"><br>\
-                                             Blocked: <input type="checkbox" id="blocked"><br>\
-                                             Name: <input type="text" id="name"><br>\
-                                             Guard: <input type="text" id="guard"><br>\
-                                             Actions: <input type="text" id="actions"><br>\
-                                             Requirements: <input type="text" id="requirements"><br>\
-                                           </fieldset>\
-                                         </form>';
+                $(document).contextmenu({
+                    delegate: ".vis-network",
+                    menu: [
+                        {title: "Properties", cmd: "Properties"}
+                    ],
+                    select: function (event, ui) {
+                        switch (ui.cmd) {
+                            case "Properties":
+                                $('<div id="dlg"></div>').dialog({
+                                    modal: true,
+                                    title: "Properties",
+                                    open: function () {
+                                        var markup = '<form>\
+                                                           <fieldset>\
+                                                             <legend>Edge Properties:</legend>\
+                                                             Start element: <input type="checkbox" id="startElement"><br>\
+                                                             Blocked: <input type="checkbox" id="blocked"><br>\
+                                                             Name: <input type="text" id="name"><br>\
+                                                             Guard: <input type="text" id="guard"><br>\
+                                                             Actions: <input type="text" id="actions"><br>\
+                                                             Requirements: <input type="text" id="requirements"><br>\
+                                                           </fieldset>\
+                                                         </form>';
 
-                        $(this).html(markup);
-                        $("#name").val(edge.label);
-                        $("#guard").val(edge.guard);
-                        if (startElementId == node.id) {
-                            $("#startElement").val(true);
-                        } else {
-                            $("#startElement").val(false);
-                        }
-                    },
-                    close : function() {
-                        $(this).dialog( "close" );
-                        $(this).remove();
-                    },
-                    buttons: {
-                        'OK': function () {
-                            edges.update(
-                                    {
-                                        id: edge.id,
-                                        label: $("#name").val(),
-                                        guard: $("#guard").val()
-                                    });
-                            if ($("#startElement").val()) {
-                                startElementId = node.id;
-                            }
-                            node.properties["blocked"] = $("#blocked").val();
-                            $(this).dialog( "close" );
-                        },
-                        'Cancel': function() {
-                            $(this).dialog( "close" );
+                                        $(this).html(markup);
+                                        $("#name").val(edge.label);
+                                        $("#guard").val(edge.guard);
+                                        if (startElementId == edge.id) {
+                                            $("#startElement").val(true);
+                                        } else {
+                                            $("#startElement").val(false);
+                                        }
+                                    },
+                                    close: function () {
+                                        $(this).dialog("close");
+                                        $(this).remove();
+                                    },
+                                    buttons: {
+                                        'OK': function () {
+                                            edges.update(
+                                                    {
+                                                        id: edge.id,
+                                                        label: $("#name").val(),
+                                                        guard: $("#guard").val()
+                                                    });
+                                            if ($("#startElement").val()) {
+                                                startElementId = node.id;
+                                            }
+                                            node.properties["blocked"] = $("#blocked").val();
+                                            $(this).dialog("close");
+                                        },
+                                        'Cancel': function () {
+                                            $(this).dialog("close");
+                                        }
+                                    }
+                                });
+                                break;
                         }
                     }
                 });
