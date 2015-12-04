@@ -585,9 +585,9 @@
                                         $("#name").val(node.label);
                                         $("#shared").val(node.sharedState);
                                         if (startElementId == node.id) {
-                                            $("#startElement").val(true);
+                                            $("#startElement").prop('checked', true);
                                         } else {
-                                            $("#startElement").val(false);
+                                            $("#startElement").prop('checked', false);
                                         }
 
                                         if (node.hasOwnProperty("properties") && node.properties != undefined) {
@@ -605,12 +605,14 @@
                                             nodes.update(
                                                     {
                                                         id: node.id,
-                                                        label: $("#name").val()
+                                                        label: $("#name").val(),
+                                                        properties: {
+                                                            blocked: $("#blocked").prop('checked')
+                                                        }
                                                     });
                                             if ($("#startElement").val()) {
                                                 startElementId = node.id;
                                             }
-                                            node.properties["blocked"] = $("#blocked").val();
                                             $(this).dialog( "close" );
                                         },
                                         'Cancel': function() {
@@ -654,9 +656,9 @@
                                         $("#name").val(edge.label);
                                         $("#guard").val(edge.guard);
                                         if (startElementId == edge.id) {
-                                            $("#startElement").val(true);
+                                            $("#startElement").prop('checked', true);
                                         } else {
-                                            $("#startElement").val(false);
+                                            $("#startElement").prop('checked', false);
                                         }
                                     },
                                     close: function () {
@@ -669,12 +671,14 @@
                                                     {
                                                         id: edge.id,
                                                         label: $("#name").val(),
-                                                        guard: $("#guard").val()
+                                                        guard: $("#guard").val(),
+                                                        properties: {
+                                                            blocked: $("#blocked").prop('checked')
+                                                        }
                                                     });
                                             if ($("#startElement").val()) {
-                                                startElementId = node.id;
+                                                startElementId = edge.id;
                                             }
-                                            node.properties["blocked"] = $("#blocked").val();
                                             $(this).dialog("close");
                                         },
                                         'Cancel': function () {
