@@ -90,7 +90,6 @@
     var edges;
     var pauseExecution = false;
     var stepExecution = false;
-    var startElementId;
 
     /*
      ************************************************************************
@@ -157,37 +156,6 @@
 
         // Set some defaults on the UI
         defaultUI();
-
-        // React to the s key being pressed.
-        // This mimics the user input of setting a shared state on a node
-        $(document).on('keyup', null, 's', function () {
-            console.log("s!");
-            if (contextNode !== undefined) {
-                console.log("Will assign SHARED_STATE to node: " + contextNode);
-            } else {
-                console.log("No element selected on the canvas");
-            }
-        });
-
-        // React to the e key being pressed.
-        // This mimics the user input of setting the next element of execution
-        $(document).on('keyup', null, 'e', function () {
-            console.log("e!");
-            var selectedId = getSelectedElement();
-            startElementId = selectedId;
-            if (selectedId !== undefined) {
-                console.log("Will assign START_ELEMENT to element: " + selectedId);
-                var setNextElement = {
-                    command: "setNextElement",
-                    modelId: modelId,
-                    nextElementId: selectedId
-                };
-                doSend(JSON.stringify(setNextElement));
-
-            } else {
-                console.log("No single element selected on the canvas");
-            }
-        });
     });
 
 
@@ -610,7 +578,7 @@
                                                             blocked: $("#blocked").prop('checked')
                                                         }
                                                     });
-                                            if ($("#startElement").val()) {
+                                            if ($("#startElement").prop('checked')) {
                                                 startElementId = node.id;
                                             }
                                             $(this).dialog( "close" );
@@ -676,7 +644,7 @@
                                                             blocked: $("#blocked").prop('checked')
                                                         }
                                                     });
-                                            if ($("#startElement").val()) {
+                                            if ($("#startElement").prop('checked')) {
                                                 startElementId = edge.id;
                                             }
                                             $(this).dialog("close");
