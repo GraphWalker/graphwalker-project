@@ -143,16 +143,6 @@
         doSend(JSON.stringify(hasNext));
     }
 
-    function getSelectedElement() {
-        var selectedElements = network.getSelection();
-        if (selectedElements.edges.length === 1) {
-            return selectedElements.edges[0];
-        } else if (selectedElements.nodes.length === 1) {
-            return selectedElements.nodes[0];
-        }
-        return undefined;
-    }
-
     $(document).ready(function () {
         console.log("ready!");
 
@@ -343,7 +333,7 @@
         };
         setTimeout(function () {
             doSend(JSON.stringify(hasNext));
-        }, 250);
+        }, 0);
     });
 
 
@@ -887,7 +877,7 @@
                 break;
             case "visitedElement":
                 console.log("Command visitedElement. Will color green on: " + msg.id);
-                issues.innerHTML = "Done: " + msg.stopConditionFulfillment + "%, data: " + JSON.stringify(msg.data);
+                issues.innerHTML = "Steps: " + msg.totalCount + ", Done: " + (msg.stopConditionFulfillment * 100).toFixed(0) + "%, data: " + JSON.stringify(msg.data);
                 network.unselectAll();
                 if (nodes.get(msg.id) !== null) {
                     nodes.update([{
