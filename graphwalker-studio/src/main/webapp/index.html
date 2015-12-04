@@ -243,6 +243,7 @@
 
     // Reset the state machine to it's initial state
     function onResetModel() {
+        defaultUI();
         document.getElementById("runModel").disabled = false;
         document.getElementById("resetModel").disabled = false;
         document.getElementById("pausePlayExecution").disabled = true;
