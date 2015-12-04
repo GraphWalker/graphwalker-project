@@ -246,8 +246,8 @@
                         border: "#2A7BE8",
                         background: "#97C2FC",
                         highlight: {
-                            border: "#D2E5FF",
-                            background: "#2B7CE9",
+                            border: "#2B7CE9",
+                            background: "#D2E5FF",
                         }
                     }
                 }]);
@@ -876,10 +876,26 @@
                 console.log("Command visitedElement. Will color green on: " + msg.id);
                 network.unselectAll();
                 if (nodes.get(msg.id) !== null) {
-                    nodes.update([{id: msg.id, color: {border: "#31B404", background: "#00FF00"}}]);
+                    nodes.update([{
+                        id: msg.id,
+                        color: {
+                            border: "#31B404",
+                            background: "#00FF00",
+                            highlight: {
+                                border: "#31B404",
+                                background: "#00FF00",
+                            }
+                        }
+                    }]);
                     network.selectNodes([msg.id], false);
                 } else if (edges.get(msg.id) !== null) {
-                    edges.update([{id: msg.id, color: {color: "#31B404"}}]);
+                    edges.update([{
+                        id: msg.id,
+                        color: {
+                            color: "#31B404",
+                            highlight: "#31B404"
+                        }
+                    }]);
                     network.selectEdges([msg.id]);
                 }
                 break;
