@@ -228,17 +228,49 @@
         for (var i = 0; i < nodes.length; i++) {
             var node = nodes.getIds()[i];
             if (node == startElementId) {
-                nodes.update([{id: node, color: {border: "#D7DF01", background: "#FFFF00"}}]);
+                nodes.update([{
+                    id: node,
+                    color: {
+                        border: "#D7DF01",
+                        background: "#FFFF00",
+                        highlight: {
+                            border: "#D7DFF1",
+                            background: "#FFFFF0",
+                        }
+                    }
+                }]);
             } else {
-                nodes.update([{id: node, color: {border: "#2A7BE8", background: "#97C2FC"}}]);
+                nodes.update([{
+                    id: node,
+                    color: {
+                        border: "#2A7BE8",
+                        background: "#97C2FC",
+                        highlight: {
+                            border: "#D2E5FF",
+                            background: "#2B7CE9",
+                        }
+                    }
+                }]);
             }
         }
         for (var i = 0; i < edges.length; i++) {
             var edge = edges.getIds()[i];
-            if (node == startElementId) {
-                edges.update([{id: edge, color: {color: "#D7DF01"}}]);
+            if (edge == startElementId) {
+                edges.update([{
+                    id: edge,
+                    color: {
+                        color: "#D7DF01",
+                        highlight: "#D7DF01"
+                    }
+                }]);
             } else {
-                edges.update([{id: edge, color: {color: "#2B7CE9"}}]);
+                edges.update([{
+                    id: edge,
+                    color: {
+                        color: "#2B7CE9",
+                        highlight: "#2B7CE9"
+                    }
+                }]);
             }
         }
     }
