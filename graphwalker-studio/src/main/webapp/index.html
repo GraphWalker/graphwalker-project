@@ -185,7 +185,7 @@
             var n = nodes.getIds()[i];
             var vertex = {
                 id: nodes.get(n).id,
-                name: nodes.get(n).label,
+                name: nodes.get(n).name,
                 sharedState: nodes.get(n).sharedState,
                 actions: edges.get(e).actions,
                 requirements: edges.get(e).requirements,
@@ -197,7 +197,7 @@
             var e = edges.getIds()[i];
             var edge = {
                 id: edges.get(e).id,
-                name: edges.get(e).label,
+                name: edges.get(e).name,
                 guard: edges.get(e).guard,
                 actions: edges.get(e).actions,
                 requirements: edges.get(e).requirements,
@@ -333,7 +333,7 @@
         };
         setTimeout(function () {
             doSend(JSON.stringify(hasNext));
-        }, 0);
+        }, 250);
     });
 
 
@@ -364,7 +364,7 @@
             nodes.get(n).properties["y"] = nodes.get(n).y;
             var vertex = {
                 id: nodes.get(n).id,
-                name: nodes.get(n).label,
+                name: nodes.get(n).name,
                 sharedState: nodes.get(n).sharedState,
                 actions: nodes.get(n).actions,
                 requirements: nodes.get(n).requirements,
@@ -376,7 +376,7 @@
             var e = edges.getIds()[i];
             var edge = {
                 id: edges.get(e).id,
-                name: edges.get(e).label,
+                name: edges.get(e).name,
                 guard: edges.get(e).guard,
                 actions: edges.get(e).actions,
                 requirements: edges.get(e).requirements,
@@ -456,7 +456,8 @@
                 }
                 nodes.add({
                     id: jsonVertex.id,
-                    label: jsonVertex.name,
+                    name: jsonVertex.name,
+                    label: jsonVertex.name + "\n" + jsonVertex.actions,
                     sharedState: jsonVertex.sharedState,
                     actions: jsonVertex.actions,
                     requirements: jsonVertex.requirements,
@@ -471,7 +472,8 @@
                 console.log(jsonEdge);
                 edges.add({
                     id: jsonEdge.id,
-                    label: jsonEdge.name,
+                    name: jsonEdge.name,
+                    label: jsonEdge.name + "\n" + jsonEdge.guard + "\n" + jsonEdge.actions,
                     guard: jsonEdge.guard,
                     actions: jsonEdge.actions,
                     requirements: jsonEdge.requirements,
@@ -593,8 +595,10 @@
                                          </form>';
 
                                         $(this).html(markup);
-                                        $("#name").val(node.label);
+                                        $("#name").val(node.name);
                                         $("#shared").val(node.sharedState);
+                                        $("#actions").val(node.actions);
+                                        $("#requirements").val(node.requirements);
                                         if (startElementId == node.id) {
                                             $("#startElement").prop('checked', true);
                                         } else {
@@ -616,7 +620,11 @@
                                             nodes.update(
                                                     {
                                                         id: node.id,
-                                                        label: $("#name").val(),
+                                                        name: $("#name").val(),
+                                                        sharedState: $("#shared").val(),
+                                                        label: $("#name").val() + "\n" + $("#actions").val() + "\n" + $("#requirements").val(),
+                                                        actions: $("#actions").val(),
+                                                        requirements: $("#requirements").val(),
                                                         properties: {
                                                             blocked: $("#blocked").prop('checked')
                                                         }
@@ -665,9 +673,10 @@
                                                          </form>';
 
                                         $(this).html(markup);
-                                        $("#name").val(edge.label);
+                                        $("#name").val(edge.name);
                                         $("#guard").val(edge.guard);
                                         $("#actions").val(edge.actions);
+                                        $("#requirements").val(edge.requirements);
                                         if (startElementId == edge.id) {
                                             $("#startElement").prop('checked', true);
                                         } else {
@@ -683,8 +692,10 @@
                                             edges.update(
                                                     {
                                                         id: edge.id,
-                                                        label: $("#name").val(),
+                                                        name: $("#name").val(),
+                                                        label: $("#name").val() + "\n" + $("#guard").val() + "\n" + $("#actions").val(),
                                                         guard: $("#guard").val(),
+                                                        actions: $("#actions").val(),
                                                         properties: {
                                                             blocked: $("#blocked").prop('checked')
                                                         }
