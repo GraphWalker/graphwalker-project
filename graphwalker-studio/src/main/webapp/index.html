@@ -14,6 +14,9 @@
 
     <script type="text/javascript" src="dist/jquery.hotkeys.js"></script>
 
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
     <link href="dist/vis.min.css" rel="stylesheet" type="text/css"/>
     <link href="dist/jquery-ui.css" type="text/css" rel="stylesheet"/>
@@ -48,6 +51,9 @@
             background-position: 0 0;
         }
 
+        #tabs { margin-top: 1em; }
+        #tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }
+
         #mynetwork {
             width: 100%;
             height: 100%;
@@ -63,14 +69,17 @@
         <input id="inputFileNameToSaveAs">
         <button onclick="saveGraphAsFile(); return false;">Save</button>
         <div id="issues">No Issues</div>
-        <button type='button' id="runModel" onclick="onRunModel()">Run model</button>
-        <button type='button' id="resetModel" onclick="onResetModel()">Reset</button>
-        <button type='button' id="pausePlayExecution" onclick="onPausePlayExecution(this)" value="Pause">Pause</button>
-        <button type='button' id="stepExecution" onclick="onStepExecution()">Step</button>
+        <button id="runModel"">Run model</button>
+        <button id="resetModel">Reset</button>
+        <button id="pausePlayExecution">Pause</button>
+        <button id="stepExecution"">Step</button>
+        <button id="addModel">Add Model</button>
     </fieldset>
 </form>
 
-<div id="mynetwork"></div>
+<div id="tabs">
+    <ul></ul>
+</div>
 
 <script type="text/javascript">
     // Useful links
@@ -100,52 +109,187 @@
      * REACT TO SOME UI EVENTS
      ************************************************************************
      */
-    function onPausePlayExecution(element) {
-        console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution);
-        stepExecution = false;
+    // addTab button: just opens the dialog
+    $( "#addModel" )
+        .button()
+        .click(function() {
+            console.log("addModel clicked");
+            var tabs = $( "#tabs" ).tabs();
+            var ul = tabs.find( "ul" );
+            $( "<li><a href='#mynetwork'>Model 1</a></li>" ).appendTo( ul );
+            $( "<div id='mynetwork'></div>" ).appendTo( tabs );
+            tabs.tabs( "refresh" );
+        });
 
-        if (pauseExecution) {
-            document.getElementById("runModel").disabled = true;
-            document.getElementById("resetModel").disabled = true;
-            document.getElementById("pausePlayExecution").disabled = false;
-            document.getElementById("stepExecution").disabled = true;
+    $( "#pausePlayExecution" )
+        .button()
+        .click(function() {
+            console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution + ", clicked");
+            stepExecution = false;
 
-            element.innerHTML = 'Pause';
-            pauseExecution = false;
+            if (pauseExecution) {
+                defaultUI();
+                pauseExecution = false;
+
+                var hasNext = {
+                    command: "hasNext"
+                };
+                doSend(JSON.stringify(hasNext));
+            } else {
+                $("#runModel").prop("disabled", true);
+                $("#resetModel").prop("disabled", false);
+                $("#pausePlayExecution").prop("disabled", false);
+                $("#stepExecution").prop("disabled", false);
+                $("#pausePlayExecution").prop("innerHTML", "Run");
+                pauseExecution = true;
+            }
+        });
+
+    $( "#stepExecution" )
+        .button()
+        .click(function() {
+            console.log("stepExecution clicked");
+            $("#runModel").prop("disabled", true);
+            $("#resetModel").prop("disabled", true);
+            $("#pausePlayExecution").prop("disabled", false);
+            $("#stepExecution").prop("disabled", false);
+            stepExecution = true;
 
             var hasNext = {
                 command: "hasNext"
             };
             doSend(JSON.stringify(hasNext));
-        } else {
-            document.getElementById("runModel").disabled = true;
-            document.getElementById("resetModel").disabled = false;
-            document.getElementById("pausePlayExecution").disabled = false;
-            document.getElementById("stepExecution").disabled = false;
+        });
 
-            element.innerHTML = 'Run';
-            pauseExecution = true;
-        }
-    }
+    // Run the execution of the state machine
+    $( "#runModel" )
+            .button()
+            .click(function() {
+                console.log("runModel clicked");
+                $("#runModel").prop("disabled", true);
+                $("#resetModel").prop("disabled", true);
+                $("#pausePlayExecution").prop("disabled", false);
+                $("#stepExecution").prop("disabled", false);
+                stepExecution = false;
+                pauseExecution = false;
 
-    function onStepExecution() {
-        console.log("stepExecution");
-        document.getElementById("runModel").disabled = true;
-        document.getElementById("resetModel").disabled = true;
-        document.getElementById("pausePlayExecution").disabled = false;
-        document.getElementById("stepExecution").disabled = false;
+                var start = {
+                    command: "start",
+                    gw3: {
+                        name: "VISMODEL",
+                        models: [
+                            {
+                                name: "model 1",
+                                id: modelId,
+                                vertices: [],
+                                edges: []
+                            }
+                        ]
+                    }
+                };
+                start.gw3.models[0].generator = generator;
+                if (startElementId !== undefined) {
+                    start.gw3.models[0].startElementId = startElementId;
+                }
+                for (var i = 0; i < nodes.length; i++) {
+                    var n = nodes.getIds()[i];
+                    var vertex = {
+                        id: nodes.get(n).id,
+                        name: nodes.get(n).name,
+                        sharedState: nodes.get(n).sharedState,
+                        actions: edges.get(e).actions,
+                        requirements: edges.get(e).requirements,
+                        properties: edges.get(e).properties,
+                    };
+                    start.gw3.models[0].vertices[i] = vertex;
+                }
+                for (var i = 0; i < edges.length; i++) {
+                    var e = edges.getIds()[i];
+                    var edge = {
+                        id: edges.get(e).id,
+                        name: edges.get(e).name,
+                        guard: edges.get(e).guard,
+                        actions: edges.get(e).actions,
+                        requirements: edges.get(e).requirements,
+                        properties: edges.get(e).properties,
+                        sourceVertexId: edges.get(e).from,
+                        targetVertexId: edges.get(e).to
+                    };
+                    start.gw3.models[0].edges[i] = edge;
+                }
 
-        stepExecution = true;
+                doSend(JSON.stringify(start));
+            });
 
-        var hasNext = {
-            command: "hasNext"
-        };
-        doSend(JSON.stringify(hasNext));
-    }
+    // Reset the state machine to it's initial state
+        $("#resetModel")
+            .button()
+            .click(function() {
+                console.log("resetModel clicked");
+                defaultUI();
+
+                options.nodes.color.background = "#97C2FC";
+                options.nodes.color.border = "#2A7BE8";
+                options.nodes.color.highlight.background = "#D2E5FF";
+                options.nodes.color.highlight.border = "#2B7CE9";
+                options.edges.color.color = "#2B7CE9";
+                options.edges.color.highlight = "#2B7CE9";
+                network.setOptions(options);
+
+                for (var i = 0; i < nodes.length; i++) {
+                    var node = nodes.getIds()[i];
+                    if (node == startElementId) {
+                        nodes.update([{
+                            id: node,
+                            color: {
+                                border: "#D7DF01",
+                                background: "#FFFF00",
+                                highlight: {
+                                    border: "#D7DFF1",
+                                    background: "#FFFFF0",
+                                }
+                            }
+                        }]);
+                    } else {
+                        nodes.update([{
+                            id: node,
+                            color: {
+                                border: "#2A7BE8",
+                                background: "#97C2FC",
+                                highlight: {
+                                    border: "#2B7CE9",
+                                    background: "#D2E5FF",
+                                }
+                            }
+                        }]);
+                    }
+                }
+                for (var i = 0; i < edges.length; i++) {
+                    var edge = edges.getIds()[i];
+                    if (edge == startElementId) {
+                        edges.update([{
+                            id: edge,
+                            color: {
+                                color: "#D7DF01",
+                                highlight: "#D7DF01"
+                            }
+                        }]);
+                    } else {
+                        edges.update([{
+                            id: edge,
+                            color: {
+                                color: "#2B7CE9",
+                                highlight: "#2B7CE9"
+                            }
+                        }]);
+                    }
+                }
+            });
+
+
 
     $(document).ready(function () {
         console.log("ready!");
-
         document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
         // Set some defaults on the UI
@@ -153,129 +297,6 @@
     });
 
 
-    // Run the execution of the state machine
-    function onRunModel() {
-        document.getElementById("runModel").disabled = true;
-        document.getElementById("resetModel").disabled = true;
-        document.getElementById("pausePlayExecution").disabled = false;
-        document.getElementById("stepExecution").disabled = true;
-
-        stepExecution = false;
-        pauseExecution = false;
-
-        var start = {
-            command: "start",
-            gw3: {
-                name: "VISMODEL",
-                models: [
-                    {
-                        name: "model 1",
-                        id: modelId,
-                        vertices: [],
-                        edges: []
-                    }
-                ]
-            }
-        };
-        start.gw3.models[0].generator = generator;
-        if (startElementId !== undefined) {
-            start.gw3.models[0].startElementId = startElementId;
-        }
-        for (var i = 0; i < nodes.length; i++) {
-            var n = nodes.getIds()[i];
-            var vertex = {
-                id: nodes.get(n).id,
-                name: nodes.get(n).name,
-                sharedState: nodes.get(n).sharedState,
-                actions: edges.get(e).actions,
-                requirements: edges.get(e).requirements,
-                properties: edges.get(e).properties,
-            };
-            start.gw3.models[0].vertices[i] = vertex;
-        }
-        for (var i = 0; i < edges.length; i++) {
-            var e = edges.getIds()[i];
-            var edge = {
-                id: edges.get(e).id,
-                name: edges.get(e).name,
-                guard: edges.get(e).guard,
-                actions: edges.get(e).actions,
-                requirements: edges.get(e).requirements,
-                properties: edges.get(e).properties,
-                sourceVertexId: edges.get(e).from,
-                targetVertexId: edges.get(e).to
-            };
-            start.gw3.models[0].edges[i] = edge;
-        }
-
-        doSend(JSON.stringify(start));
-    }
-
-    // Reset the state machine to it's initial state
-    function onResetModel() {
-        defaultUI();
-        document.getElementById("runModel").disabled = false;
-        document.getElementById("resetModel").disabled = false;
-        document.getElementById("pausePlayExecution").disabled = true;
-        document.getElementById("stepExecution").disabled = true;
-
-        options.nodes.color.background = "#97C2FC";
-        options.nodes.color.border = "#2A7BE8";
-        options.nodes.color.highlight.background = "#D2E5FF";
-        options.nodes.color.highlight.border = "#2B7CE9";
-        options.edges.color.color = "#2B7CE9";
-        options.edges.color.highlight = "#2B7CE9";
-        network.setOptions(options);
-
-        for (var i = 0; i < nodes.length; i++) {
-            var node = nodes.getIds()[i];
-            if (node == startElementId) {
-                nodes.update([{
-                    id: node,
-                    color: {
-                        border: "#D7DF01",
-                        background: "#FFFF00",
-                        highlight: {
-                            border: "#D7DFF1",
-                            background: "#FFFFF0",
-                        }
-                    }
-                }]);
-            } else {
-                nodes.update([{
-                    id: node,
-                    color: {
-                        border: "#2A7BE8",
-                        background: "#97C2FC",
-                        highlight: {
-                            border: "#2B7CE9",
-                            background: "#D2E5FF",
-                        }
-                    }
-                }]);
-            }
-        }
-        for (var i = 0; i < edges.length; i++) {
-            var edge = edges.getIds()[i];
-            if (edge == startElementId) {
-                edges.update([{
-                    id: edge,
-                    color: {
-                        color: "#D7DF01",
-                        highlight: "#D7DF01"
-                    }
-                }]);
-            } else {
-                edges.update([{
-                    id: edge,
-                    color: {
-                        color: "#2B7CE9",
-                        highlight: "#2B7CE9"
-                    }
-                }]);
-            }
-        }
-    }
 
 
     /*
@@ -294,10 +315,10 @@
         network.setOptions(options);
 
         // Change some UI elements
-        document.getElementById("runModel").disabled = true;
-        document.getElementById("resetModel").disabled = true;
-        document.getElementById("pausePlayExecution").disabled = false;
-        document.getElementById("stepExecution").disabled = true;
+        $("#runModel").prop("disabled", true);
+        $("#resetModel").prop("disabled", true);
+        $("#pausePlayExecution").prop("disabled", false);
+        $("#stepExecution").prop("disabled", false);
 
         var hasNext = {
             command: "hasNext"
@@ -495,6 +516,12 @@
      * VIS NETWORK INITIALIZATION
      ************************************************************************
      */
+    var tabs = $( "#tabs" ).tabs();
+    var ul = tabs.find( "ul" );
+    $( "<li><a href='#mynetwork'>Model 1</a></li>" ).appendTo( ul );
+    $( "<div id='mynetwork'></div>" ).appendTo( tabs );
+    tabs.tabs( "refresh" );
+
     var container = document.getElementById('mynetwork');
     var options = {
         interaction: {
@@ -931,11 +958,11 @@
      ************************************************************************
      */
     function defaultUI() {
-        document.getElementById("runModel").disabled = false;
-        document.getElementById("resetModel").disabled = false;
-        document.getElementById("pausePlayExecution").disabled = true;
-        document.getElementById("stepExecution").disabled = true;
-        document.getElementById("pausePlayExecution").innerHTML = "Pause";
+        $("#runModel").prop("disabled", false);
+        $("#resetModel").prop("disabled", false);
+        $("#pausePlayExecution").prop("disabled", true);
+        $("#stepExecution").prop("disabled", true);
+        $("#pausePlayExecution").prop("innerHTML", "Pause");
     }
 
     function generateUUID() {
