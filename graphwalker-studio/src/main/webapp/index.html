@@ -361,49 +361,56 @@
         console.log("saveGraphAsFile");
         var graphToWrite = {
             name: "VISMODEL",
-            models: [
-                {
-                    name: modelNamesList[currentModelid],
-                    id: currentModelid,
-                    vertices: [],
-                    edges: []
-                }
-            ]
+            models: []
         };
-        graphToWrite.models[0].generator = generatorList[currentModelid];
-        if (startElementIdList[currentModelid] !== undefined) {
-            graphToWrite.models[0].startElementId = startElementIdList[currentModelid];
-        }
-        for (var i = 0; i < nodesList[currentModelid].length; i++) {
-            var nodeId = nodesList.getIds()[i];
-            var n = nodesList[currentModelid].get(nodeId);
-            n.properties["x"] = n.x;
-            n.properties["y"] = n.y;
-            var vertex = {
-                id: n.id,
-                name: n.name,
-                sharedState: n.sharedState,
-                actions: n.actions,
-                requirements: n.requirements,
-                properties: n.properties
+
+        for (var modelId in modelNamesList) {
+            var model = {
+                name: modelNamesList[modelId],
+                id: modelId,
+                generator: generatorList[modelId],
+                actions: modelActionList[modelId],
+                vertices: [],
+                edges: []
             };
-            graphToWrite.models[0].vertices[i] = vertex;
+
+            if (startElementIdList[modelId] !== undefined) {
+                model.startElementId = startElementIdList[modelId];
+            }
+
+            for (var i = 0; i < nodesList[modelId].length; i++) {
+                var nodeId = nodesList[modelId].getIds()[i];
+                var n = nodesList[modelId].get(nodeId);
+                n.properties["x"] = n.x;
+                n.properties["y"] = n.y;
+                var vertex = {
+                    id: n.id,
+                    name: n.name,
+                    sharedState: n.sharedState,
+                    actions: n.actions,
+                    requirements: n.requirements,
+                    properties: n.properties
+                };
+                model.vertices[i] = vertex;
+            }
+            for (i = 0; i < edgesList[modelId].length; i++) {
+                var edgeId = edgesList[modelId].getIds()[i];
+                var e = edgesList[modelId].get(edgeId);
+                var edge = {
+                    id: e.id,
+                    name: e.name,
+                    guard: e.guard,
+                    actions: e.actions,
+                    requirements: e.requirements,
+                    properties: e.properties,
+                    sourceVertexId: e.from,
+                    targetVertexId: e.to
+                };
+                model.edges[i] = edge;
+            }
+            graphToWrite.models.push(model);
         }
-        for (i = 0; i < edgesList[currentModelid].length; i++) {
-            var eedgeId = edgesList[currentModelid].getIds()[i];
-            var e = edgesList[currentModelid].get(e);
-            var edge = {
-                id: e.id,
-                name: e.name,
-                guard: e.guard,
-                actions: e.actions,
-                requirements: e.requirements,
-                properties: e.properties,
-                sourceVertexId: e.from,
-                targetVertexId: e.to
-            };
-            graphToWrite.models[0].edges[i] = edge;
-        }
+
 
         var textFileAsBlob = new Blob([JSON.stringify(graphToWrite)], {type: 'application/json'});
         var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
