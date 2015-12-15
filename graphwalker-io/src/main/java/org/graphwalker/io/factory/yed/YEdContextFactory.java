@@ -264,6 +264,8 @@ public final class YEdContextFactory implements ContextFactory {
                                 parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
                                 YEdVertexParser.ParseContext parseContext = parser.parse();
                                 Vertex vertex = new Vertex();
+                                vertex.setProperty("x", getSupportedNode(data.xmlText()).getGeometry().getX());
+                                vertex.setProperty("y", getSupportedNode(data.xmlText()).getGeometry().getY());
                                 boolean blocked = false;
                                 if (null != parseContext.start()) {
                                     elements.put(node.getId(), vertex);
