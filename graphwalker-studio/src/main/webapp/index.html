@@ -348,13 +348,13 @@
         };
         setTimeout(function () {
             doSend(JSON.stringify(hasNext));
-        }, 250);
+        }, 100);
     });
 
 
     /*
      ************************************************************************
-     * FILE LOADING AND SAVING
+     * Save project to file
      ************************************************************************
      */
     function saveGraphAsFile() {
@@ -428,6 +428,11 @@
         downloadLink.click();
     }
 
+    /*
+     ************************************************************************
+     * Read project from file
+     ************************************************************************
+     */
     function handleFileSelect(evt) {
         console.log("handleFileSelect");
         var fr;
@@ -498,10 +503,17 @@
                     } else {
                         jsonVertex.properties = {};
                     }
+
+                    var label = '';
+                    if (jsonVertex.actions === undefined){
+                        label = jsonVertex.name;
+                    } else{
+                        label = jsonVertex.name + "\n" + jsonVertex.actions;
+                    }
                     nodesList[currentModelid].add({
                         id: jsonVertex.id,
                         name: jsonVertex.name,
-                        label: jsonVertex.name + "\n" + jsonVertex.actions,
+                        label: label,
                         sharedState: jsonVertex.sharedState,
                         actions: jsonVertex.actions,
                         requirements: jsonVertex.requirements,
@@ -514,10 +526,21 @@
                 for (i = 0; i < jsonEdges.length; i++) {
                     var jsonEdge = jsonEdges[i];
                     console.log(jsonEdge);
+
+                    var label = '';
+                    if (jsonEdge.guard === undefined){
+                        label = jsonEdge.name;
+                    } else{
+                        label = jsonEdge.name + "\n" + jsonEdge.guard;
+                    }
+                    if (jsonEdge.actions !== undefined){
+                        label += "\n" + jsonEdge.actions;
+                    }
+
                     edgesList[currentModelid].add({
                         id: jsonEdge.id,
                         name: jsonEdge.name,
-                        label: jsonEdge.name + "\n" + jsonEdge.guard + "\n" + jsonEdge.actions,
+                        label: label,
                         guard: jsonEdge.guard,
                         actions: jsonEdge.actions,
                         requirements: jsonEdge.requirements,
