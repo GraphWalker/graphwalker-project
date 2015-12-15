@@ -310,7 +310,8 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 if (machine != null) {
                     try {
                         machine.getNextStep();
-                        response.put("id", machine.getCurrentContext().getCurrentElement().getId());
+                        response.put("modelId", machine.getCurrentContext().getModel().getId());
+                        response.put("elementId", machine.getCurrentContext().getCurrentElement().getId());
                         response.put("name", machine.getCurrentContext().getCurrentElement().getName());
                         response.put("success", true);
                     } catch (Exception e) {
@@ -359,6 +360,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                         for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
                             data.put(k.getKey(), k.getValue());
                         }
+                        obj.put("modelId", machine.getCurrentContext().getModel().getId());
                         obj.put("data", data);
                         obj.put("result", "ok");
                         response.put("data", data);
@@ -436,7 +438,8 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 if (type == EventType.AFTER_ELEMENT) {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("command", "visitedElement");
-                    jsonObject.put("id", element.getId());
+                    jsonObject.put("modelId", machine.getCurrentContext().getModel().getId());
+                    jsonObject.put("elementId", element.getId());
                     jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
                     jsonObject.put("totalCount", machine.getProfiler().getTotalVisitCount());
                     jsonObject.put("stopConditionFulfillment", machine.getCurrentContext().getPathGenerator().getStopCondition().getFulfilment());
