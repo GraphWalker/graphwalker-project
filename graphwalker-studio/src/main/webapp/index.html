@@ -92,6 +92,7 @@
     var modelNamesList = [];
     var generatorList = [];
     var startElementIdList = [];
+    var modelActionList = [];
     var nodesList = [];
     var edgesList = [];
     var optionsList = [];
@@ -166,6 +167,7 @@
                 name: modelNamesList[modelId],
                 id: modelId,
                 generator: generatorList[modelId],
+                actions: modelActionList[modelId],
                 vertices: [],
                 edges: []
             }
@@ -453,7 +455,6 @@
         optionsList = [];
         visNetworkList = [];
 
-
         fr = new FileReader();
         fr.onload = receivedText;
         fr.readAsText(file);
@@ -464,6 +465,7 @@
             var jsonModels = jsonLoadModel.models;
             for (var modelIndex = 0; modelIndex < jsonModels.length; modelIndex++) {
                 var jsonModel = jsonModels[modelIndex];
+
                 if (jsonModel.hasOwnProperty('id')) {
                     currentModelid = jsonModel.id;
                 } else {
@@ -476,6 +478,9 @@
 
                 if (jsonModel.hasOwnProperty('startElementId')) {
                     startElementIdList[currentModelid] = jsonModel.startElementId;
+                }
+                if (jsonModel.hasOwnProperty('actions')) {
+                    modelActionList[currentModelid] = jsonModel.actions;
                 }
 
                 var jsonVertices = jsonModel.vertices;
