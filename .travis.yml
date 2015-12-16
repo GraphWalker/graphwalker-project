@@ -13,6 +13,14 @@ env:
     - secure: "NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI="
     - secure: "fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE="
 
+# Workaround for bug where hostname longer than 64 chars and running OpenJDK 7
+# http://bugs.java.com/bugdatabase/view_bug.do?bug_id=7089443
+before_install:
+  - cat /etc/hosts # optionally check the content *before*
+  - sudo hostname "$(hostname | cut -c1-63)"
+  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
+  - cat /etc/hosts # optionally check the content *after*
+
 install:
   - sudo apt-get update -qq
 
