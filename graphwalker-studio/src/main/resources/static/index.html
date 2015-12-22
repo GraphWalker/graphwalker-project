@@ -113,7 +113,11 @@
         stepExecution = false;
 
         if (pauseExecution) {
-            defaultUI();
+            document.getElementById("runModel").disabled = true;
+            document.getElementById("resetModel").disabled = true;
+            document.getElementById("pausePlayExecution").disabled = false;
+            document.getElementById("stepExecution").disabled = true;
+            document.getElementById("pausePlayExecution").innerHTML = "Pause";
             pauseExecution = false;
 
             var hasNext = {
@@ -123,8 +127,8 @@
         } else {
             document.getElementById("runModel").disabled = true;
             document.getElementById("resetModel").disabled = false;
-            document.getElementById("pausePlayExecution").disabled = true;
-            document.getElementById("stepExecution").disabled = true;
+            document.getElementById("pausePlayExecution").disabled = false;
+            document.getElementById("stepExecution").disabled = false;
             document.getElementById("pausePlayExecution").innerHTML = "Run";
             pauseExecution = true;
         }
@@ -133,9 +137,9 @@
     function onStepExecution() {
         console.log("stepExecution clicked: modelId " + currentModelid);
         document.getElementById("runModel").disabled = true;
-        document.getElementById("resetModel").disabled = true;
-        document.getElementById("pausePlayExecution").disabled = true;
-        document.getElementById("stepExecution").disabled = true;
+        document.getElementById("resetModel").disabled = false;
+        document.getElementById("pausePlayExecution").disabled = false;
+        document.getElementById("stepExecution").disabled = false;
         stepExecution = true;
 
         var hasNext = {
@@ -149,8 +153,9 @@
         console.log("runModel clicked: modelId " + currentModelid);
         document.getElementById("runModel").disabled = true;
         document.getElementById("resetModel").disabled = true;
-        document.getElementById("pausePlayExecution").disabled = true;
+        document.getElementById("pausePlayExecution").disabled = false;
         document.getElementById("stepExecution").disabled = true;
+        document.getElementById("addVisNetwork").disabled = true;
         stepExecution = false;
         pauseExecution = false;
 
@@ -311,7 +316,7 @@
         // Change some UI elements
         document.getElementById("runModel").disabled = true;
         document.getElementById("resetModel").disabled = true;
-        document.getElementById("pausePlayExecution").disabled = true;
+        document.getElementById("pausePlayExecution").disabled = false;
         document.getElementById("stepExecution").disabled = true;
 
         var hasNext = {
@@ -701,12 +706,14 @@
             document.getElementById("pausePlayExecution").disabled = true;
             document.getElementById("stepExecution").disabled = true;
             document.getElementById("pausePlayExecution").innerHTML = "Pause";
+            document.getElementById("addVisNetwork").disabled = false;
         } else {
             document.getElementById("runModel").disabled = false;
             document.getElementById("resetModel").disabled = false;
             document.getElementById("pausePlayExecution").disabled = false;
             document.getElementById("stepExecution").disabled = false;
             document.getElementById("pausePlayExecution").innerHTML = "Pause";
+            document.getElementById("addVisNetwork").disabled = false;
         }
     }
 
