@@ -292,8 +292,8 @@
 
         // close icon: removing the tab on click
         $( "#tabs" ).delegate( "span.ui-icon-close", "click", function() {
-            var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
-            $( "#0-" + panelId ).remove();
+            var id = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+            $( "#0-" + id ).remove();
             $( "#tabs" ).tabs( "refresh" );
         });
 
