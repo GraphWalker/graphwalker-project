@@ -290,6 +290,13 @@
         console.log("ready!");
         document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
+        // close icon: removing the tab on click
+        $( "#tabs" ).delegate( "span.ui-icon-close", "click", function() {
+            var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+            $( "#0-" + panelId ).remove();
+            $( "#tabs" ).tabs( "refresh" );
+        });
+
         // Set some defaults on the UI
         defaultUI();
     });
@@ -736,7 +743,7 @@
 
         var tabs = $("#tabs").tabs();
         var ul = tabs.find("ul");
-        $("<li><a href='" + href +"'>" + modelNamesList[currentModelid] + "</a></li>").appendTo(ul);
+        $("<li><a href='" + href +"'>" + modelNamesList[currentModelid] + "</a><span class='ui-icon ui-icon-close'></span></li>").appendTo(ul);
         $("<div id='0-" + currentModelid + "'></div>").appendTo(tabs);
         tabs.tabs("refresh");
 
