@@ -749,6 +749,8 @@
                     }").appendTo("head");
 
         addVisNetwork();
+        var index = $('#tabs a[href="#' + currentModelid + '"]').parent().index();
+        $("#tabs").tabs("option", "active", index);
     }
 
 
