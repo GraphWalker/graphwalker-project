@@ -214,60 +214,65 @@
         console.log("resetModel clicked: modelId " + currentModelid);
         defaultUI();
 
-        optionsList[currentModelid].nodes.color.background = "#97C2FC";
-        optionsList[currentModelid].nodes.color.border = "#2A7BE8";
-        optionsList[currentModelid].nodes.color.highlight.background = "#D2E5FF";
-        optionsList[currentModelid].nodes.color.highlight.border = "#2B7CE9";
-        optionsList[currentModelid].edges.color.color = "#2B7CE9";
-        optionsList[currentModelid].edges.color.highlight = "#2B7CE9";
-        visNetworkList[currentModelid].setOptions(optionsList[currentModelid]);
+        for (var modelIndex = 0; modelIndex < modelIdList.length; modelIndex++)
+        {
+            var modelId = modelIdList[modelIndex];
 
-        for (var i = 0; i < nodesList[currentModelid].length; i++) {
-            var node = nodesList[currentModelid].getIds()[i];
-            if (node == startElementIdList[currentModelid]) {
-                nodesList[currentModelid].update([{
-                    id: node,
-                    color: {
-                        border: "#D7DF01",
-                        background: "#FFFF00",
-                        highlight: {
-                            border: "#D7DFF1",
-                            background: "#FFFFF0"
+            optionsList[modelId].nodes.color.background = "#97C2FC";
+            optionsList[modelId].nodes.color.border = "#2A7BE8";
+            optionsList[modelId].nodes.color.highlight.background = "#D2E5FF";
+            optionsList[modelId].nodes.color.highlight.border = "#2B7CE9";
+            optionsList[modelId].edges.color.color = "#2B7CE9";
+            optionsList[modelId].edges.color.highlight = "#2B7CE9";
+            visNetworkList[modelId].setOptions(optionsList[modelId]);
+
+            for (var i = 0; i < nodesList[modelId].length; i++) {
+                var node = nodesList[modelId].getIds()[i];
+                if (node == startElementIdList[modelId]) {
+                    nodesList[modelId].update([{
+                        id: node,
+                        color: {
+                            border: "#D7DF01",
+                            background: "#FFFF00",
+                            highlight: {
+                                border: "#D7DFF1",
+                                background: "#FFFFF0"
+                            }
                         }
-                    }
-                }]);
-            } else {
-                nodesList[currentModelid].update([{
-                    id: node,
-                    color: {
-                        border: "#2A7BE8",
-                        background: "#97C2FC",
-                        highlight: {
-                            border: "#2B7CE9",
-                            background: "#D2E5FF"
+                    }]);
+                } else {
+                    nodesList[modelId].update([{
+                        id: node,
+                        color: {
+                            border: "#2A7BE8",
+                            background: "#97C2FC",
+                            highlight: {
+                                border: "#2B7CE9",
+                                background: "#D2E5FF"
+                            }
                         }
-                    }
-                }]);
+                    }]);
+                }
             }
-        }
-        for (i = 0; i < edgesList[currentModelid].length; i++) {
-            var edge = edgesList[currentModelid].getIds()[i];
-            if (edge == startElementIdList[currentModelid]) {
-                edgesList[currentModelid].update([{
-                    id: edge,
-                    color: {
-                        color: "#D7DF01",
-                        highlight: "#D7DF01"
-                    }
-                }]);
-            } else {
-                edgesList[currentModelid].update([{
-                    id: edge,
-                    color: {
-                        color: "#2B7CE9",
-                        highlight: "#2B7CE9"
-                    }
-                }]);
+            for (i = 0; i < edgesList[modelId].length; i++) {
+                var edge = edgesList[modelId].getIds()[i];
+                if (edge == startElementIdList[modelId]) {
+                    edgesList[modelId].update([{
+                        id: edge,
+                        color: {
+                            color: "#D7DF01",
+                            highlight: "#D7DF01"
+                        }
+                    }]);
+                } else {
+                    edgesList[modelId].update([{
+                        id: edge,
+                        color: {
+                            color: "#2B7CE9",
+                            highlight: "#2B7CE9"
+                        }
+                    }]);
+                }
             }
         }
     };
