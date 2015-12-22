@@ -451,8 +451,8 @@
             nodesList[key].clear();
         }
         for (var i =0; i < modelIdList.length;i++) {
-            var index = $('#tabs a[href="#' + modelIdList[i] + '"]').parent().index();
-            $("#" + modelIdList[i]).remove();
+            var index = $('#tabs a[href="#0-' + modelIdList[i] + '"]').parent().index();
+            $("#0-" + modelIdList[i]).remove();
             $( "#tabs" ).find( ".ui-tabs-nav li:eq(" + index + ")" ).remove();
             $("#tabs").tabs( "refresh" );
         }
@@ -558,7 +558,7 @@
                     });
                 }
 
-                var index = $('#tabs a[href="#' + currentModelid + '"]').parent().index();
+                var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
                 $("#tabs").tabs("option", "active", index);
                 visNetworkList[currentModelid].fit();
             }
@@ -647,7 +647,7 @@
                 visNetworkList[currentModelid].unselectAll();
 
                 currentModelid = msg.modelId;
-                var index = $('#tabs a[href="#' + currentModelid + '"]').parent().index();
+                var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
                 $("#tabs").tabs("option", "active", index);
 
                 if (nodesList[currentModelid].get(msg.elementId) !== null) {
@@ -727,12 +727,12 @@
     function addTab() {
         console.log("addTab");
         modelIdList.push(currentModelid);
-        var href = "#" + currentModelid;
+        var href = "#0-" + currentModelid;
 
         var tabs = $("#tabs").tabs();
         var ul = tabs.find("ul");
         $("<li><a href='" + href +"'>" + modelNamesList[currentModelid] + "</a></li>").appendTo(ul);
-        $("<div id='" + currentModelid + "'></div>").appendTo(tabs);
+        $("<div id='0-" + currentModelid + "'></div>").appendTo(tabs);
         tabs.tabs("refresh");
 
         $("<style>").prop("type", "text/css").html("\
@@ -744,7 +744,7 @@
                     }").appendTo("head");
 
         addVisNetwork();
-        var index = $('#tabs a[href="#' + currentModelid + '"]').parent().index();
+        var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
         $("#tabs").tabs("option", "active", index);
     }
 
@@ -756,7 +756,7 @@
      */
     function addVisNetwork() {
         console.log("addVisNetwork");
-        var container = document.getElementById(currentModelid);
+        var container = document.getElementById('0-' + currentModelid);
         var options = {
             interaction: {
                 multiselect: true,
