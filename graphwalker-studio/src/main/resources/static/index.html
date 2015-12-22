@@ -458,6 +458,7 @@
         }
         for (var i =0; i < modelIdList.length;i++) {
             var index = $('#tabs a[href="#' + modelIdList[i] + '"]').parent().index();
+            $("#" + modelIdList[i]).remove();
             $( "#tabs" ).find( ".ui-tabs-nav li:eq(" + index + ")" ).remove();
             $("#tabs").tabs( "refresh" );
         }
