@@ -295,6 +295,9 @@
             var id = $( this ).closest( "li" ).remove().attr( "aria-controls" );
             $( "#0-" + id ).remove();
             $( "#tabs" ).tabs( "refresh" );
+            if ($("#tabs").find("li").length < 1) {
+                $("#tabs").hide();
+            }
         });
 
         // Set some defaults on the UI
@@ -758,6 +761,7 @@
         addVisNetwork();
         var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
         $("#tabs").tabs("option", "active", index);
+        $("#tabs").show();
     }
 
 
