@@ -300,6 +300,13 @@
             }
         });
 
+        $("#tabs").tabs({
+            beforeActivate: function (event, ui) {
+                currentModelid = ui.newPanel.attr('id').substr(2);
+                console.log("Tab: beforeActivate. Setting current model id to: " + currentModelid);
+            }
+        });
+
         // Set some defaults on the UI
         defaultUI();
     });
@@ -580,6 +587,7 @@
         }
         onResetModel();
     }
+
 
 
 
