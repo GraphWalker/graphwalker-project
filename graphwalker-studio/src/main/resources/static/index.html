@@ -292,12 +292,13 @@
 
         // close icon: removing the tab on click
         $( "#tabs" ).delegate( "span.ui-icon-close", "click", function() {
-            var id = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+            var id = $( this ).closest( "li" ).remove().attr( "aria-controls").substr(2);
             $( "#0-" + id ).remove();
             $( "#tabs" ).tabs( "refresh" );
             if ($("#tabs").find("li").length < 1) {
                 $("#tabs").hide();
             }
+            removeModel(id);
         });
 
         $("#tabs").tabs({
@@ -306,6 +307,8 @@
                 console.log("Tab: beforeActivate. Setting current model id to: " + currentModelid);
             }
         });
+
+        $("#tabs").hide();
 
         // Set some defaults on the UI
         defaultUI();
@@ -372,6 +375,26 @@
         }, 100);
     });
 
+    function removeModel(modelId) {
+        console.log("Remove model with id: " + modelId);
+
+        delete modelNamesList[modelId];
+        delete generatorList[modelId];
+        delete startElementIdList[modelId];
+        delete optionsList[modelId];
+        delete visNetworkList[modelId];
+
+        edgesList[modelId].clear();
+        delete edgesList[modelId];
+
+        nodesList[modelId].clear();
+        delete nodesList[modelId];
+
+        var index = modelIdList.indexOf(modelId);
+        if (index > -1) {
+            modelIdList.splice(index, 1);
+        }
+    }
 
     /*
      ************************************************************************
@@ -466,28 +489,13 @@
         var fr;
         var file = evt.target.files[0];
 
-        for (var key in edgesList) {
-            edgesList[key].clear();
-        }
-        for (key in nodesList) {
-            nodesList[key].clear();
-        }
-        for (var i =0; i < modelIdList.length;i++) {
-            var index = $('#tabs a[href="#0-' + modelIdList[i] + '"]').parent().index();
-            $("#0-" + modelIdList[i]).remove();
+        for (var modelId in edgesList) {
+            removeModel(modelId);
+            var index = $('#tabs a[href="#0-' + modelId + '"]').parent().index();
+            $("#0-" + modelId).remove();
             $( "#tabs" ).find( ".ui-tabs-nav li:eq(" + index + ")" ).remove();
             $("#tabs").tabs( "refresh" );
         }
-
-        currentModelid = '';
-        modelIdList = [];
-        modelNamesList = [];
-        generatorList = [];
-        startElementIdList = [];
-        nodesList = [];
-        edgesList = [];
-        optionsList = [];
-        visNetworkList = [];
 
         fr = new FileReader();
         fr.onload = receivedText;
