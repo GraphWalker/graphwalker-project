@@ -95,6 +95,8 @@
     var stepExecution = false;
     var contextNode;
     var contextEdge;
+    var startNode;
+    var ctrlKeyPressed = false;
 
 
     /*
@@ -309,6 +311,18 @@
         });
 
         $("#tabs").hide();
+
+        $(document).keyup(function(e){
+            console.log("key up!");
+            ctrlKeyPressed = false;
+        });
+
+        $(document).keydown(function(e){
+            if (e.ctrlKey) {
+                console.log("ctrl key down!");
+                ctrlKeyPressed = true;
+            }
+        });
 
         // Set some defaults on the UI
         defaultUI();
@@ -789,6 +803,7 @@
     function addVisNetwork() {
         console.log("addVisNetwork");
         var container = document.getElementById('0-' + currentModelid);
+
         var options = {
             interaction: {
                 multiselect: true,
@@ -1061,15 +1076,51 @@
             }
         });
 
+        network.on('dragStart', function (params) {
+            console.log("dragStart: " + currentModelid);
+            if (ctrlKeyPressed) {
+                startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+                console.log("  startNode: " + startNode);
+            }
+        });
+
+        network.on('dragging', function (params) {
+            console.log("dragging: " + currentModelid);
+            if (ctrlKeyPressed) {
+                preventDefault();
+            }
+        });
+
         network.on('dragEnd', function (params) {
             console.log("dragEnd: " + currentModelid);
             var node = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
-            if (node != undefined) {
-                nodes.update({
-                    id: node.id,
-                    x: params.pointer.canvas.x,
-                    y: params.pointer.canvas.y
-                });
+            if (node !== undefined) {
+                if (ctrlKeyPressed) {
+                    if ( startNode !== undefined) {
+                        edges.add({
+                            id: generateUUID(),
+                            label: "e_NewEdge",
+                            from: startNode.id,
+                            to: node.id,
+                            arrows: 'to'
+                        });
+                    }
+                    //preventDefault();
+                } else {
+                    nodes.update({
+                        id: node.id,
+                        x: params.pointer.canvas.x,
+                        y: params.pointer.canvas.y
+                    });
+                }
+            }
+        });
+
+        network.on('click', function (params) {
+            console.log("click: " + currentModelid);
+            if (ctrlKeyPressed) {
+                startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+                console.log("  startNode: " + startNode);
             }
         });
 
@@ -1086,13 +1137,14 @@
                 });
             }
         });
+
         nodes.on('*', function (event, properties, senderId) {
             console.log('nodes data update event:', event, 'properties:', properties, 'senderId:', senderId);
         });
+
         edges.on('*', function (event, properties, senderId) {
             console.log('edges data update event:', event, 'properties:', JSON.stringify(properties), 'senderId:', senderId);
         });
-        console.log("  Done");
     }
 
 </script>
