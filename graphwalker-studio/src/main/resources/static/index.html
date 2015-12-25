@@ -242,6 +242,18 @@
                             }
                         }
                     }]);
+                } else if (node === "Start") {
+                    nodesList[modelId].update([{
+                        id: node,
+                        color: {
+                            border: "#31B404",
+                            background: "#00FF00",
+                            highlight: {
+                                border: "#31B404",
+                                background: "#00FF00"
+                            }
+                        }
+                    }]);
                 } else {
                     nodesList[modelId].update([{
                         id: node,
@@ -573,6 +585,18 @@
                 for (i = 0; i < jsonEdges.length; i++) {
                     var jsonEdge = jsonEdges[i];
                     console.log(jsonEdge);
+
+                    // If source vertex is undefined, assume start vertex
+                    if (jsonEdge.sourceVertexId === undefined) {
+                        jsonEdge.sourceVertexId = "Start";
+                        nodesList[currentModelid].add({
+                            id: jsonEdge.sourceVertexId,
+                            label: "Start",
+                            x: 0,
+                            y: 0
+                        });
+                    }
+
                     edgesList[currentModelid].add({
                         id: jsonEdge.id,
                         name: jsonEdge.name,
@@ -592,9 +616,9 @@
                 var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
                 $("#tabs").tabs("option", "active", index);
                 visNetworkList[currentModelid].fit();
+                onResetModel();
             }
         }
-        onResetModel();
     }
 
 
