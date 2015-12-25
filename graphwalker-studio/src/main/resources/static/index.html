@@ -555,16 +555,12 @@
                         jsonVertex.properties = {};
                     }
 
-                    var label = '';
-                    if (jsonVertex.actions === undefined){
-                        label = jsonVertex.name;
-                    } else{
-                        label = jsonVertex.name + "\n" + jsonVertex.actions;
-                    }
                     nodesList[currentModelid].add({
                         id: jsonVertex.id,
                         name: jsonVertex.name,
-                        label: label,
+                        label: stripEmptyLines([jsonVertex.name,
+                                                jsonVertex.actions,
+                                                jsonVertex.requirements]),
                         sharedState: jsonVertex.sharedState,
                         actions: jsonVertex.actions,
                         requirements: jsonVertex.requirements,
@@ -577,21 +573,12 @@
                 for (i = 0; i < jsonEdges.length; i++) {
                     var jsonEdge = jsonEdges[i];
                     console.log(jsonEdge);
-
-                    var label = '';
-                    if (jsonEdge.guard === undefined){
-                        label = jsonEdge.name;
-                    } else{
-                        label = jsonEdge.name + "\n" + jsonEdge.guard;
-                    }
-                    if (jsonEdge.actions !== undefined){
-                        label += "\n" + jsonEdge.actions;
-                    }
-
                     edgesList[currentModelid].add({
                         id: jsonEdge.id,
                         name: jsonEdge.name,
-                        label: label,
+                        label: stripEmptyLines([jsonEdge.name,
+                                                jsonEdge.guard,
+                                                jsonEdge.actions]),
                         guard: jsonEdge.guard,
                         actions: jsonEdge.actions,
                         requirements: jsonEdge.requirements,
@@ -755,6 +742,16 @@
             document.getElementById("pausePlayExecution").innerHTML = "Pause";
             document.getElementById("addVisNetwork").disabled = false;
         }
+    }
+
+    function stripEmptyLines(strArrayWithLEmptyLines) {
+        var str = "";
+        for (var i=0; i < strArrayWithLEmptyLines.length; i++) {
+            if (strArrayWithLEmptyLines[i] !== undefined && strArrayWithLEmptyLines[i].length > 0) {
+                str += strArrayWithLEmptyLines[i] + '\n';
+            }
+        }
+        return str.slice(0, -1);
     }
 
     function generateUUID() {
@@ -932,7 +929,9 @@
                                                             id: node.id,
                                                             name: $("#name").val(),
                                                             sharedState: $("#shared").val(),
-                                                            label: $("#name").val() + "\n" + $("#actions").val() + "\n" + $("#requirements").val(),
+                                                            label: stripEmptyLines([$("#name").val(),
+                                                                                    $("#actions").val(),
+                                                                                    $("#requirements").val()]),
                                                             actions: $("#actions").val(),
                                                             requirements: $("#requirements").val(),
                                                             properties: {
@@ -1003,7 +1002,9 @@
                                                         {
                                                             id: edge.id,
                                                             name: $("#name").val(),
-                                                            label: $("#name").val() + "\n" + $("#guard").val() + "\n" + $("#actions").val(),
+                                                            label: stripEmptyLines([$("#name").val(),
+                                                                                    $("#guard").val(),
+                                                                                    $("#actions").val()]),
                                                             guard: $("#guard").val(),
                                                             actions: $("#actions").val(),
                                                             properties: {
@@ -1100,12 +1101,12 @@
                         edges.add({
                             id: generateUUID(),
                             label: "e_NewEdge",
+                            name: "e_NewEdge",
                             from: startNode.id,
                             to: node.id,
                             arrows: 'to'
                         });
                     }
-                    //preventDefault();
                 } else {
                     nodes.update({
                         id: node.id,
@@ -1132,6 +1133,7 @@
                 nodes.add({
                     id: generateUUID(),
                     label: 'v_NewVertex',
+                    name: 'v_NewVertex',
                     x: params.pointer.canvas.x,
                     y: params.pointer.canvas.y
                 });
