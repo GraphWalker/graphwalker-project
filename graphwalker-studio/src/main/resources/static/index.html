@@ -932,8 +932,8 @@
                                                             label: stripEmptyLines([$("#name").val(),
                                                                                     $("#actions").val(),
                                                                                     $("#requirements").val()]),
-                                                            actions: $("#actions").val(),
-                                                            requirements: $("#requirements").val(),
+                                                            actions: $("#actions").val().split(","),
+                                                            requirements: $("#requirements").val().split(","),
                                                             properties: {
                                                                 blocked: $("#blocked").prop('checked')
                                                             }
@@ -1006,7 +1006,8 @@
                                                                                     $("#guard").val(),
                                                                                     $("#actions").val()]),
                                                             guard: $("#guard").val(),
-                                                            actions: $("#actions").val(),
+                                                            actions: $("#actions").val().split(","),
+                                                            requirements: $("#requirements").val().split(","),
                                                             properties: {
                                                                 blocked: $("#blocked").prop('checked')
                                                             }
