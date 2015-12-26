@@ -333,6 +333,17 @@
             if (e.ctrlKey) {
                 console.log("ctrl key down!");
                 ctrlKeyPressed = true;
+            } else if (e.keyCode == 46) {
+                console.log("Delete key down!");
+                if (currentModelid !== undefined) {
+                    var data = visNetworkList[currentModelid].getSelection();
+                    if (data.edges.length > 0) {
+                        edgesList[currentModelid].remove(data.edges);
+                    }
+                    if (data.nodes.length > 0) {
+                        nodesList[currentModelid].remove(data.nodes);
+                    }
+                }
             }
         });
 
@@ -894,6 +905,7 @@
             console.log("oncontext: modelId " + currentModelid);
             params.event.preventDefault();
             console.log(network.getPositions());
+
             contextNode = network.getNodeAt(params.pointer.DOM);
             contextEdge = network.getEdgeAt(params.pointer.DOM);
             console.log("Node: " + contextNode + ", Edge: " + contextEdge);
@@ -904,7 +916,8 @@
                     $(document).contextmenu({
                         delegate: ".vis-network",
                         menu: [
-                            {title: "Properties", cmd: "Properties"}
+                            {title: "Properties", cmd: "Properties"},
+                            {title: "Delete", cmd: "Delete"}
                         ],
                         select: function (event, ui) {
                             switch (ui.cmd) {
@@ -974,6 +987,9 @@
                                         }
                                     });
                                     break;
+                                case "Delete":
+                                    nodes.remove(node.id);
+                                    break;
                             }
                         }
                     });
@@ -984,7 +1000,8 @@
                     $(document).contextmenu({
                         delegate: ".vis-network",
                         menu: [
-                            {title: "Properties", cmd: "Properties"}
+                            {title: "Properties", cmd: "Properties"},
+                            {title: "Delete", cmd: "Delete"}
                         ],
                         select: function (event, ui) {
                             switch (ui.cmd) {
@@ -1047,6 +1064,9 @@
                                             }
                                         }
                                     });
+                                    break;
+                                case "Delete":
+                                    edges.remove(edge.id);
                                     break;
                             }
                         }
