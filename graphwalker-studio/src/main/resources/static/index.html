@@ -96,7 +96,9 @@
     var contextNode;
     var contextEdge;
     var startNode;
-    var ctrlKeyPressed = false;
+    var undoDeck = [];
+    var undoIndex = 0;
+    var keys = {};
 
 
     /*
@@ -297,6 +299,7 @@
         currentModelid = generateUUID();
         modelNamesList[currentModelid] = "New Model"
         addTab();
+        makeUndoCopy();
     };
 
 
@@ -325,14 +328,19 @@
         $("#tabs").hide();
 
         $(document).keyup(function(e){
-            console.log("key up!");
-            ctrlKeyPressed = false;
+            console.log("key up: " + e.which);
+            delete keys[e.which];
         });
 
         $(document).keydown(function(e){
-            if (e.ctrlKey) {
-                console.log("ctrl key down!");
-                ctrlKeyPressed = true;
+            keys[e.which] = true;
+            // ctrl + z - undo is pressed
+            if(keys[17] !== undefined && keys[90] !== undefined ) {
+                makeUndo();
+            }
+            // ctrl + y - redo is pressed
+            else if(keys[17] !== undefined && keys[89] !== undefined ) {
+                makeRedo();
             } else if (e.keyCode == 46) {
                 console.log("Delete key down!");
                 if (currentModelid !== undefined) {
@@ -342,6 +350,9 @@
                     }
                     if (data.nodes.length > 0) {
                         nodesList[currentModelid].remove(data.nodes);
+                    }
+                    if (data.edges.length > 0 || data.nodes.length > 0) {
+                        makeUndoCopy();
                     }
                 }
             }
@@ -628,6 +639,7 @@
                 $("#tabs").tabs("option", "active", index);
                 visNetworkList[currentModelid].fit();
                 onResetModel();
+                makeUndoCopy();
             }
         }
     }
@@ -777,6 +789,49 @@
             document.getElementById("pausePlayExecution").innerHTML = "Pause";
             document.getElementById("addVisNetwork").disabled = false;
         }
+    }
+
+    function makeUndoCopy() {
+        console.log("makeUndoCopy");
+        if (currentModelid === undefined) {
+            return;
+        }
+        var data = {
+            nodes: new vis.DataSet(nodesList[currentModelid].get()),
+            edges: new vis.DataSet(edgesList[currentModelid].get())
+        };
+        if (undoDeck[currentModelid] === undefined) {
+            undoDeck[currentModelid] = [];
+        }
+        var diff = undoDeck[currentModelid].length - undoIndex;
+        if (diff > 1) {
+            //undoDeck[currentModelid].splice(-1, diff - 1);
+        }
+        undoDeck[currentModelid].push(data);
+        undoIndex = undoDeck[currentModelid].length - 1;
+    }
+
+    function makeUndo() {
+        console.log("makeUndo - undoIndex: " + undoIndex + "(" + undoDeck[currentModelid].length + ")");
+        var data = undoDeck[currentModelid][undoIndex - 1];
+        if (data === undefined) {
+            return;
+        }
+        visNetworkList[currentModelid].setData(data);
+        visNetworkList[currentModelid].redraw();
+        undoIndex--;
+    }
+
+    function makeRedo() {
+        console.log("makeRedo - undoIndex: " + undoIndex + "(" + undoDeck[currentModelid].length + ")");
+        undoIndex++;
+        var data = undoDeck[currentModelid][undoIndex];
+        if (data === undefined) {
+            undoIndex--;
+            return;
+        }
+        visNetworkList[currentModelid].setData(data);
+        visNetworkList[currentModelid].redraw();
     }
 
     function stripEmptyLines(strArrayWithLEmptyLines) {
@@ -976,6 +1031,7 @@
                                                                 blocked: $("#blocked").prop('checked')
                                                             }
                                                         });
+                                                makeUndoCopy();
                                                 if ($("#startElement").prop('checked')) {
                                                     startElementIdList[currentModelid] = node.id;
                                                 }
@@ -1054,6 +1110,7 @@
                                                                 blocked: $("#blocked").prop('checked')
                                                             }
                                                         });
+                                                makeUndoCopy();
                                                 if ($("#startElement").prop('checked')) {
                                                     startElementIdList[currentModelid] = edge.id;
                                                 }
@@ -1125,7 +1182,7 @@
 
         network.on('dragStart', function (params) {
             console.log("dragStart: " + currentModelid);
-            if (ctrlKeyPressed) {
+            if(keys[17] !== undefined) {
                 startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
                 console.log("  startNode: " + startNode);
             }
@@ -1133,7 +1190,7 @@
 
         network.on('dragging', function (params) {
             console.log("dragging: " + currentModelid);
-            if (ctrlKeyPressed) {
+            if(keys[17] !== undefined) {
                 preventDefault();
             }
         });
@@ -1142,7 +1199,7 @@
             console.log("dragEnd: " + currentModelid);
             var node = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
             if (node !== undefined) {
-                if (ctrlKeyPressed) {
+                if(keys[17] !== undefined) {
                     if ( startNode !== undefined) {
                         edges.add({
                             id: generateUUID(),
@@ -1160,12 +1217,13 @@
                         y: params.pointer.canvas.y
                     });
                 }
+                makeUndoCopy();
             }
         });
 
         network.on('click', function (params) {
             console.log("click: " + currentModelid);
-            if (ctrlKeyPressed) {
+            if(keys[17] !== undefined) {
                 startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
                 console.log("  startNode: " + startNode);
             }
@@ -1183,6 +1241,7 @@
                     x: params.pointer.canvas.x,
                     y: params.pointer.canvas.y
                 });
+                makeUndoCopy();
             }
         });
 
