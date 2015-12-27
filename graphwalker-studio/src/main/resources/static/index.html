@@ -95,7 +95,7 @@
     var contextNode;
     var contextEdge;
     var startNode;
-    var undoDeck = [];
+    var undoList = [];
     var undoIndex = [];
     var keys = {};
 
@@ -796,25 +796,34 @@
         if (currentModelId === undefined) {
             return;
         }
+
+        // Make a copy of the network data.The copy is stored in the undo list
         var data = {
             nodes: new vis.DataSet($.extend(true, [], dataList[currentModelId].nodes).get()),
             edges: new vis.DataSet($.extend(true, [], dataList[currentModelId].edges).get())
         };
-        if (undoDeck[currentModelId] === undefined) {
-            undoDeck[currentModelId] = [];
+
+        if (undoList[currentModelId] === undefined) {
+            undoList[currentModelId] = [];
         }
-        for (var i = undoDeck[currentModelId].length - undoIndex[currentModelId]; i > 1; i-- ) {
-            undoDeck[currentModelId].pop();
+
+        // If the undo index points to anywhere else than the end of the undo list,
+        // truncate the undo list from that undo index.
+        for (var i = undoList[currentModelId].length - undoIndex[currentModelId]; i > 1; i-- ) {
+            undoList[currentModelId].pop();
         }
-        undoIndex[currentModelId] = undoDeck[currentModelId].push(data) - 1;
+
+        // Put the copy in the undo list.
+        //dataList[currentModelId] = data;
+        undoIndex[currentModelId] = undoList[currentModelId].push(data) - 1;
         visNetworkList[currentModelId].setData(data);
         visNetworkList[currentModelId].redraw();
     }
 
     function makeUndo() {
-        console.log("makeUndo - undoIndex: " + undoIndex[currentModelId] + "(" + undoDeck[currentModelId].length + ")");
+        console.log("makeUndo - undoIndex: " + undoIndex[currentModelId] + "(" + undoList[currentModelId].length + ")");
         undoIndex[currentModelId]--;
-        var data = undoDeck[currentModelId][undoIndex[currentModelId]];
+        var data = undoList[currentModelId][undoIndex[currentModelId]];
         if (data === undefined) {
             undoIndex[currentModelId]++;
             return;
@@ -826,9 +835,9 @@
     }
 
     function makeRedo() {
-        console.log("makeRedo - undoIndex: " + undoIndex[currentModelId] + "(" + undoDeck[currentModelId].length + ")");
+        console.log("makeRedo - undoIndex: " + undoIndex[currentModelId] + "(" + undoList[currentModelId].length + ")");
         undoIndex[currentModelId]++;
-        var data = undoDeck[currentModelId][undoIndex[currentModelId]];
+        var data = undoList[currentModelId][undoIndex[currentModelId]];
         if (data === undefined) {
             undoIndex[currentModelId]--;
             return;
