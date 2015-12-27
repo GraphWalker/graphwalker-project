@@ -81,16 +81,15 @@
      ************************************************************************
      */
     var gw3 = '';
-    var currentModelid = '';
+    var currentModelId = '';
     var modelIdList = [];
     var modelNamesList = [];
     var generatorList = [];
     var startElementIdList = [];
     var modelActionList = [];
-    var nodesList = [];
-    var edgesList = [];
     var optionsList = [];
     var visNetworkList = [];
+    var dataList = [];
     var pauseExecution = false;
     var stepExecution = false;
     var contextNode;
@@ -107,7 +106,7 @@
      ************************************************************************
      */
     function onPausePlayExecution(element) {
-        console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution + ", clicked: modelId " + currentModelid);
+        console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution + ", clicked: modelId " + currentModelId);
         stepExecution = false;
 
         if (pauseExecution) {
@@ -133,7 +132,7 @@
     };
 
     function onStepExecution() {
-        console.log("stepExecution clicked: modelId " + currentModelid);
+        console.log("stepExecution clicked: modelId " + currentModelId);
         document.getElementById("runModel").disabled = true;
         document.getElementById("resetModel").disabled = false;
         document.getElementById("pausePlayExecution").disabled = false;
@@ -148,7 +147,7 @@
 
     // Run the execution of the state machine
     function onRunModel() {
-        console.log("runModel clicked: modelId " + currentModelid);
+        console.log("runModel clicked: modelId " + currentModelId);
         document.getElementById("runModel").disabled = true;
         document.getElementById("resetModel").disabled = true;
         document.getElementById("pausePlayExecution").disabled = false;
@@ -178,9 +177,9 @@
             if (startElementIdList[modelId] !== undefined) {
                 model.startElementId = startElementIdList[modelId];
             }
-            for (var i = 0; i < nodesList[modelId].length; i++) {
-                var nodeId = nodesList[modelId].getIds()[i];
-                var n = nodesList[modelId].get(nodeId);
+            for (var i = 0; i < dataList[modelId].nodes.length; i++) {
+                var nodeId = dataList[modelId].nodes.getIds()[i];
+                var n = dataList[modelId].nodes.get(nodeId);
                 var vertex = {
                     id: n.id,
                     name: n.name,
@@ -191,9 +190,9 @@
                 };
                 model.vertices[i] = vertex;
             }
-            for (i = 0; i < edgesList[modelId].length; i++) {
-                var edgeId = edgesList[modelId].getIds()[i];
-                var e = edgesList[modelId].get(edgeId);
+            for (i = 0; i < dataList[modelId].edges.length; i++) {
+                var edgeId = dataList[modelId].edges.getIds()[i];
+                var e = dataList[modelId].edges.get(edgeId);
                 var edge = {
                     id: e.id,
                     name: e.name,
@@ -215,7 +214,7 @@
 
     // Reset the state machine to it's initial state
     function onResetModel() {
-        console.log("resetModel clicked: modelId " + currentModelid);
+        console.log("resetModel clicked: modelId " + currentModelId);
         defaultUI();
 
         for (var modelIndex = 0; modelIndex < modelIdList.length; modelIndex++)
@@ -230,10 +229,10 @@
             optionsList[modelId].edges.color.highlight = "#2B7CE9";
             visNetworkList[modelId].setOptions(optionsList[modelId]);
 
-            for (var i = 0; i < nodesList[modelId].length; i++) {
-                var node = nodesList[modelId].getIds()[i];
+            for (var i = 0; i < dataList[modelId].nodes.length; i++) {
+                var node = dataList[modelId].nodes.getIds()[i];
                 if (node == startElementIdList[modelId]) {
-                    nodesList[modelId].update([{
+                    dataList[modelId].nodes.update([{
                         id: node,
                         color: {
                             border: "#D7DF01",
@@ -245,7 +244,7 @@
                         }
                     }]);
                 } else if (node === "Start") {
-                    nodesList[modelId].update([{
+                    dataList[modelId].nodes.update([{
                         id: node,
                         color: {
                             border: "#31B404",
@@ -257,7 +256,7 @@
                         }
                     }]);
                 } else {
-                    nodesList[modelId].update([{
+                    dataList[modelId].nodes.update([{
                         id: node,
                         color: {
                             border: "#2A7BE8",
@@ -270,10 +269,10 @@
                     }]);
                 }
             }
-            for (i = 0; i < edgesList[modelId].length; i++) {
-                var edge = edgesList[modelId].getIds()[i];
+            for (i = 0; i < dataList[modelId].edges.length; i++) {
+                var edge = dataList[modelId].edges.getIds()[i];
                 if (edge == startElementIdList[modelId]) {
-                    edgesList[modelId].update([{
+                    dataList[modelId].edges.update([{
                         id: edge,
                         color: {
                             color: "#D7DF01",
@@ -281,7 +280,7 @@
                         }
                     }]);
                 } else {
-                    edgesList[modelId].update([{
+                    dataList[modelId].edges.update([{
                         id: edge,
                         color: {
                             color: "#2B7CE9",
@@ -296,8 +295,8 @@
     // addTab button: just opens the dialog
     function onAddVisNetwork() {
         console.log("onAddVisNetwork clicked");
-        currentModelid = generateUUID();
-        modelNamesList[currentModelid] = "New Model"
+        currentModelId = generateUUID();
+        modelNamesList[currentModelId] = "New Model"
         addTab();
         makeUndoCopy();
     };
@@ -320,8 +319,8 @@
 
         $("#tabs").tabs({
             beforeActivate: function (event, ui) {
-                currentModelid = ui.newPanel.attr('id').substr(2);
-                console.log("Tab: beforeActivate. Setting current model id to: " + currentModelid);
+                currentModelId = ui.newPanel.attr('id').substr(2);
+                console.log("Tab: beforeActivate. Setting current model id to: " + currentModelId);
             }
         });
 
@@ -343,13 +342,13 @@
                 makeRedo();
             } else if (e.keyCode == 46) {
                 console.log("Delete key down!");
-                if (currentModelid !== undefined) {
-                    var data = visNetworkList[currentModelid].getSelection();
+                if (currentModelId !== undefined) {
+                    var data = visNetworkList[currentModelId].getSelection();
                     if (data.edges.length > 0) {
-                        edgesList[currentModelid].remove(data.edges);
+                        dataList[currentModelId].edges.remove(data.edges);
                     }
                     if (data.nodes.length > 0) {
-                        nodesList[currentModelid].remove(data.nodes);
+                        dataList[currentModelId].nodes.remove(data.nodes);
                     }
                     if (data.edges.length > 0 || data.nodes.length > 0) {
                         makeUndoCopy();
@@ -372,13 +371,13 @@
      */
     var startEvent = new CustomEvent("startEvent", {});
     document.addEventListener("startEvent", function (e) {
-        console.log("startEvent: modelId " + currentModelid);
+        console.log("startEvent: modelId " + currentModelId);
 
         // Change default coloring for nodes and edges.
-        optionsList[currentModelid].nodes.color.highlight.background = "#669966";
-        optionsList[currentModelid].nodes.color.highlight.border = "#669900";
-        optionsList[currentModelid].edges.color.highlight = "#669966";
-        visNetworkList[currentModelid].setOptions(optionsList[currentModelid]);
+        optionsList[currentModelId].nodes.color.highlight.background = "#669966";
+        optionsList[currentModelId].nodes.color.highlight.border = "#669900";
+        optionsList[currentModelId].edges.color.highlight = "#669966";
+        visNetworkList[currentModelId].setOptions(optionsList[currentModelId]);
 
         // Change some UI elements
         document.getElementById("runModel").disabled = true;
@@ -394,7 +393,7 @@
 
     var hasNextEvent = new CustomEvent("hasNextEvent", {});
     document.addEventListener("hasNextEvent", function (e) {
-        console.log("hasNextEvent pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution + " : modelId " + currentModelid);
+        console.log("hasNextEvent pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution + " : modelId " + currentModelId);
         if (pauseExecution) {
             if (!stepExecution) {
                 return;
@@ -408,7 +407,7 @@
 
     var getNextEvent = new CustomEvent("getNextEvent", {"modelId": "", "elementId": "", "name": ""});
     document.addEventListener("getNextEvent", function (e) {
-        console.log("getNextEvent: " + e.id + ": " + e.name + "pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution + " : modelId " + currentModelid);
+        console.log("getNextEvent: " + e.id + ": " + e.name + "pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution + " : modelId " + currentModelId);
 
         if (stepExecution) {
             stepExecution = false;
@@ -431,13 +430,13 @@
         delete startElementIdList[modelId];
         delete optionsList[modelId];
         delete visNetworkList[modelId];
-        delete undoIndex[currentModelid];
+        delete undoIndex[currentModelId];
 
-        edgesList[modelId].clear();
-        delete edgesList[modelId];
+        dataList[modelId].edges.clear();
+        delete dataList[modelId].edges;
 
-        nodesList[modelId].clear();
-        delete nodesList[modelId];
+        dataList[modelId].nodes.clear();
+        delete dataList[modelId].nodes;
 
         var index = modelIdList.indexOf(modelId);
         if (index > -1) {
@@ -471,9 +470,9 @@
                 model.startElementId = startElementIdList[modelId];
             }
 
-            for (var i = 0; i < nodesList[modelId].length; i++) {
-                var nodeId = nodesList[modelId].getIds()[i];
-                var n = nodesList[modelId].get(nodeId);
+            for (var i = 0; i < dataList[modelId].nodes.length; i++) {
+                var nodeId = dataList[modelId].nodes.getIds()[i];
+                var n = dataList[modelId].nodes.get(nodeId);
                 n.properties["x"] = n.x;
                 n.properties["y"] = n.y;
                 var vertex = {
@@ -486,9 +485,9 @@
                 };
                 model.vertices[i] = vertex;
             }
-            for (i = 0; i < edgesList[modelId].length; i++) {
-                var edgeId = edgesList[modelId].getIds()[i];
-                var e = edgesList[modelId].get(edgeId);
+            for (i = 0; i < dataList[modelId].edges.length; i++) {
+                var edgeId = dataList[modelId].edges.getIds()[i];
+                var e = dataList[modelId].edges.get(edgeId);
                 var edge = {
                     id: e.id,
                     name: e.name,
@@ -538,7 +537,7 @@
         var fr;
         var file = evt.target.files[0];
 
-        for (var modelId in edgesList) {
+        for (var modelId in dataList) {
             removeModel(modelId);
             var index = $('#tabs a[href="#0-' + modelId + '"]').parent().index();
             $("#0-" + modelId).remove();
@@ -558,20 +557,20 @@
                 var jsonModel = jsonModels[modelIndex];
 
                 if (jsonModel.hasOwnProperty('id')) {
-                    currentModelid = jsonModel.id;
+                    currentModelId = jsonModel.id;
                 } else {
-                    currentModelid = generateUUID();
+                    currentModelId = generateUUID();
                 }
-                modelNamesList[currentModelid] = jsonModel.name;
+                modelNamesList[currentModelId] = jsonModel.name;
                 addTab();
 
-                generatorList[currentModelid] = jsonModel.generator;
+                generatorList[currentModelId] = jsonModel.generator;
 
                 if (jsonModel.hasOwnProperty('startElementId')) {
-                    startElementIdList[currentModelid] = jsonModel.startElementId;
+                    startElementIdList[currentModelId] = jsonModel.startElementId;
                 }
                 if (jsonModel.hasOwnProperty('actions')) {
-                    modelActionList[currentModelid] = jsonModel.actions;
+                    modelActionList[currentModelId] = jsonModel.actions;
                 }
 
                 var jsonVertices = jsonModel.vertices;
@@ -590,7 +589,7 @@
                         jsonVertex.properties = {};
                     }
 
-                    nodesList[currentModelid].add({
+                    dataList[currentModelId].nodes.add({
                         id: jsonVertex.id,
                         name: jsonVertex.name,
                         label: stripEmptyLines([jsonVertex.name,
@@ -612,7 +611,7 @@
                     // If source vertex is undefined, assume start vertex
                     if (jsonEdge.sourceVertexId === undefined) {
                         jsonEdge.sourceVertexId = "Start";
-                        nodesList[currentModelid].add({
+                        dataList[currentModelId].nodes.add({
                             id: jsonEdge.sourceVertexId,
                             label: "Start",
                             x: 0,
@@ -620,7 +619,7 @@
                         });
                     }
 
-                    edgesList[currentModelid].add({
+                    dataList[currentModelId].edges.add({
                         id: jsonEdge.id,
                         name: jsonEdge.name,
                         label: stripEmptyLines([jsonEdge.name,
@@ -636,9 +635,9 @@
                     });
                 }
 
-                var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
+                var index = $('#tabs a[href="#0-' + currentModelId + '"]').parent().index();
                 $("#tabs").tabs("option", "active", index);
-                visNetworkList[currentModelid].fit();
+                visNetworkList[currentModelId].fit();
                 onResetModel();
                 makeUndoCopy();
             }
@@ -724,14 +723,14 @@
             case "visitedElement":
                 console.log("Command visitedElement. Will color green on (modelId, elementId): " + msg.modelId + ", " + msg.elementId);
                 issues.innerHTML = "Steps: " + msg.totalCount + ", Done: " + (msg.stopConditionFulfillment * 100).toFixed(0) + "%, data: " + JSON.stringify(msg.data);
-                visNetworkList[currentModelid].unselectAll();
+                visNetworkList[currentModelId].unselectAll();
 
-                currentModelid = msg.modelId;
-                var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
+                currentModelId = msg.modelId;
+                var index = $('#tabs a[href="#0-' + currentModelId + '"]').parent().index();
                 $("#tabs").tabs("option", "active", index);
 
-                if (nodesList[currentModelid].get(msg.elementId) !== null) {
-                    nodesList[currentModelid].update([{
+                if (dataList[currentModelId].nodes.get(msg.elementId) !== null) {
+                    dataList[currentModelId].nodes.update([{
                         id: msg.elementId,
                         color: {
                             border: "#31B404",
@@ -742,16 +741,16 @@
                             }
                         }
                     }]);
-                    visNetworkList[currentModelid].selectNodes([msg.elementId], false);
-                } else if (edgesList[currentModelid].get(msg.elementId) !== null) {
-                    edgesList[currentModelid].update([{
+                    visNetworkList[currentModelId].selectNodes([msg.elementId], false);
+                } else if (dataList[currentModelId].edges.get(msg.elementId) !== null) {
+                    dataList[currentModelId].edges.update([{
                         id: msg.elementId,
                         color: {
                             color: "#31B404",
                             highlight: "#31B404"
                         }
                     }]);
-                    visNetworkList[currentModelid].selectEdges([msg.elementId]);
+                    visNetworkList[currentModelId].selectEdges([msg.elementId]);
                 }
                 break;
             default:
@@ -775,7 +774,7 @@
     function defaultUI() {
         console.log("defaultUI");
 
-        if (modelIdList.length > 0 && currentModelid != undefined) {
+        if (modelIdList.length > 0 && currentModelId != undefined) {
             document.getElementById("runModel").disabled = false;
             document.getElementById("resetModel").disabled = false;
             document.getElementById("pausePlayExecution").disabled = true;
@@ -793,51 +792,51 @@
     }
 
     function makeUndoCopy() {
-        console.log("makeUndoCopy - undoIndex: " + undoIndex[currentModelid]);
-        if (currentModelid === undefined) {
+        console.log("makeUndoCopy - undoIndex: " + undoIndex[currentModelId]);
+        if (currentModelId === undefined) {
             return;
         }
         var data = {
-            nodes: new vis.DataSet($.extend(true, [], nodesList[currentModelid]).get()),
-            edges: new vis.DataSet($.extend(true, [], edgesList[currentModelid]).get())
+            nodes: new vis.DataSet($.extend(true, [], dataList[currentModelId].nodes).get()),
+            edges: new vis.DataSet($.extend(true, [], dataList[currentModelId].edges).get())
         };
-        if (undoDeck[currentModelid] === undefined) {
-            undoDeck[currentModelid] = [];
+        if (undoDeck[currentModelId] === undefined) {
+            undoDeck[currentModelId] = [];
         }
-        for (var i = undoDeck[currentModelid].length - undoIndex[currentModelid]; i > 1; i-- ) {
-            undoDeck[currentModelid].pop();
+        for (var i = undoDeck[currentModelId].length - undoIndex[currentModelId]; i > 1; i-- ) {
+            undoDeck[currentModelId].pop();
         }
-        undoIndex[currentModelid] = undoDeck[currentModelid].push(data) - 1;
-        visNetworkList[currentModelid].setData(data);
-        visNetworkList[currentModelid].redraw();
+        undoIndex[currentModelId] = undoDeck[currentModelId].push(data) - 1;
+        visNetworkList[currentModelId].setData(data);
+        visNetworkList[currentModelId].redraw();
     }
 
     function makeUndo() {
-        console.log("makeUndo - undoIndex: " + undoIndex[currentModelid] + "(" + undoDeck[currentModelid].length + ")");
-        undoIndex[currentModelid]--;
-        var data = undoDeck[currentModelid][undoIndex[currentModelid]];
+        console.log("makeUndo - undoIndex: " + undoIndex[currentModelId] + "(" + undoDeck[currentModelId].length + ")");
+        undoIndex[currentModelId]--;
+        var data = undoDeck[currentModelId][undoIndex[currentModelId]];
         if (data === undefined) {
-            undoIndex[currentModelid]++;
+            undoIndex[currentModelId]++;
             return;
         }
-        edgesList[currentModelid] = new vis.DataSet($.extend(true, [], data.edges.get()));
-        nodesList[currentModelid] = new vis.DataSet($.extend(true, [], data.nodes.get()));
-        visNetworkList[currentModelid].setData(data);
-        visNetworkList[currentModelid].redraw();
+        dataList[currentModelId].edges = new vis.DataSet($.extend(true, [], data.edges.get()));
+        dataList[currentModelId].nodes = new vis.DataSet($.extend(true, [], data.nodes.get()));
+        visNetworkList[currentModelId].setData(data);
+        visNetworkList[currentModelId].redraw();
     }
 
     function makeRedo() {
-        console.log("makeRedo - undoIndex: " + undoIndex[currentModelid] + "(" + undoDeck[currentModelid].length + ")");
-        undoIndex[currentModelid]++;
-        var data = undoDeck[currentModelid][undoIndex[currentModelid]];
+        console.log("makeRedo - undoIndex: " + undoIndex[currentModelId] + "(" + undoDeck[currentModelId].length + ")");
+        undoIndex[currentModelId]++;
+        var data = undoDeck[currentModelId][undoIndex[currentModelId]];
         if (data === undefined) {
-            undoIndex[currentModelid]--;
+            undoIndex[currentModelId]--;
             return;
         }
-        edgesList[currentModelid] = new vis.DataSet($.extend(true, [], data.edges.get()));
-        nodesList[currentModelid] = new vis.DataSet($.extend(true, [], data.nodes.get()));
-        visNetworkList[currentModelid].setData(data);
-        visNetworkList[currentModelid].redraw();
+        dataList[currentModelId].edges = new vis.DataSet($.extend(true, [], data.edges.get()));
+        dataList[currentModelId].nodes = new vis.DataSet($.extend(true, [], data.nodes.get()));
+        visNetworkList[currentModelId].setData(data);
+        visNetworkList[currentModelId].redraw();
     }
 
     function stripEmptyLines(strArrayWithLEmptyLines) {
@@ -864,13 +863,13 @@
 
     function addTab() {
         console.log("addTab");
-        modelIdList.push(currentModelid);
-        var href = "#0-" + currentModelid;
+        modelIdList.push(currentModelId);
+        var href = "#0-" + currentModelId;
 
         var tabs = $("#tabs").tabs();
         var ul = tabs.find("ul");
-        $("<li><a href='" + href +"'>" + modelNamesList[currentModelid] + "</a><span class='ui-icon ui-icon-close'></span></li>").appendTo(ul);
-        $("<div id='0-" + currentModelid + "'></div>").appendTo(tabs);
+        $("<li><a href='" + href +"'>" + modelNamesList[currentModelId] + "</a><span class='ui-icon ui-icon-close'></span></li>").appendTo(ul);
+        $("<div id='0-" + currentModelId + "'></div>").appendTo(tabs);
         tabs.tabs("refresh");
 
         $("<style>").prop("type", "text/css").html("\
@@ -882,7 +881,7 @@
                     }").appendTo("head");
 
         addVisNetwork();
-        var index = $('#tabs a[href="#0-' + currentModelid + '"]').parent().index();
+        var index = $('#tabs a[href="#0-' + currentModelId + '"]').parent().index();
         $("#tabs").tabs("option", "active", index);
         $("#tabs").show();
     }
@@ -895,7 +894,7 @@
      */
     function addVisNetwork() {
         console.log("addVisNetwork");
-        var container = document.getElementById('0-' + currentModelid);
+        var container = document.getElementById('0-' + currentModelId);
 
         var options = {
             interaction: {
@@ -939,41 +938,32 @@
                 }
             }
         };
-        optionsList[currentModelid] = options;
+        optionsList[currentModelId] = options;
 
-        // initialize your network!
-        var nodesArray = [];
-        var nodes = new vis.DataSet(nodesArray);
-        nodesList[currentModelid] = nodes;
-
-        // create an array with edges
-        var edgesArray = [];
-        var edges = new vis.DataSet(edgesArray);
-        edgesList[currentModelid] = edges;
-        var data = {
-            nodes: nodes,
-            edges: edges
+        dataList[currentModelId] = {
+            nodes: new vis.DataSet([]),
+            edges: new vis.DataSet([])
         };
-        var network = new vis.Network(container, data, options);
-        console.log("  Adding network: " + network);
-        visNetworkList[currentModelid] = network;
+
+        visNetworkList[currentModelId] = new vis.Network(container, dataList[currentModelId], options);
+        console.log("  Adding network: " + visNetworkList[currentModelId]);
 
         /*
          ************************************************************************
          * VIS EVENT HANDLING
          ************************************************************************
          */
-        network.on('oncontext', function (params) {
-            console.log("oncontext: modelId " + currentModelid);
+        visNetworkList[currentModelId].on('oncontext', function (params) {
+            console.log("oncontext: modelId " + currentModelId);
             params.event.preventDefault();
-            console.log(network.getPositions());
+            console.log(visNetworkList[currentModelId].getPositions());
 
-            contextNode = network.getNodeAt(params.pointer.DOM);
-            contextEdge = network.getEdgeAt(params.pointer.DOM);
+            contextNode = visNetworkList[currentModelId].getNodeAt(params.pointer.DOM);
+            contextEdge = visNetworkList[currentModelId].getEdgeAt(params.pointer.DOM);
             console.log("Node: " + contextNode + ", Edge: " + contextEdge);
 
             if (contextNode != undefined) {
-                var node = nodesList[currentModelid].get(contextNode);
+                var node = dataList[currentModelId].nodes.get(contextNode);
                 $(function () {
                     $(document).contextmenu({
                         delegate: ".vis-network",
@@ -1005,7 +995,7 @@
                                             $("#shared").val(node.sharedState);
                                             $("#actions").val(node.actions);
                                             $("#requirements").val(node.requirements);
-                                            if (startElementIdList[currentModelid] == node.id) {
+                                            if (startElementIdList[currentModelId] == node.id) {
                                                 $("#startElement").prop('checked', true);
                                             } else {
                                                 $("#startElement").prop('checked', false);
@@ -1023,7 +1013,7 @@
                                         },
                                         buttons: {
                                             'OK': function () {
-                                                nodesList[currentModelid].update(
+                                                dataList[currentModelId].nodes.update(
                                                         {
                                                             id: node.id,
                                                             name: $("#name").val(),
@@ -1039,7 +1029,7 @@
                                                         });
                                                 makeUndoCopy();
                                                 if ($("#startElement").prop('checked')) {
-                                                    startElementIdList[currentModelid] = node.id;
+                                                    startElementIdList[currentModelId] = node.id;
                                                 }
                                                 $(this).dialog( "close" );
                                                 onResetModel();
@@ -1051,14 +1041,14 @@
                                     });
                                     break;
                                 case "Delete":
-                                    nodesList[currentModelid].remove(node.id);
+                                    dataList[currentModelId].nodes.remove(node.id);
                                     break;
                             }
                         }
                     });
                 });
             } else if (contextEdge != undefined) {
-                var edge = edgesList[currentModelid].get(contextEdge);
+                var edge = dataList[currentModelId].edges.get(contextEdge);
                 $(function () {
                     $(document).contextmenu({
                         delegate: ".vis-network",
@@ -1090,7 +1080,7 @@
                                             $("#guard").val(edge.guard);
                                             $("#actions").val(edge.actions);
                                             $("#requirements").val(edge.requirements);
-                                            if (startElementIdList[currentModelid] == edge.id) {
+                                            if (startElementIdList[currentModelId] == edge.id) {
                                                 $("#startElement").prop('checked', true);
                                             } else {
                                                 $("#startElement").prop('checked', false);
@@ -1102,7 +1092,7 @@
                                         },
                                         buttons: {
                                             'OK': function () {
-                                                edgesList[currentModelid].update(
+                                                dataList[currentModelId].edges.update(
                                                         {
                                                             id: edge.id,
                                                             name: $("#name").val(),
@@ -1118,7 +1108,7 @@
                                                         });
                                                 makeUndoCopy();
                                                 if ($("#startElement").prop('checked')) {
-                                                    startElementIdList[currentModelid] = edge.id;
+                                                    startElementIdList[currentModelId] = edge.id;
                                                 }
                                                 $(this).dialog("close");
                                                 onResetModel();
@@ -1130,7 +1120,7 @@
                                     });
                                     break;
                                 case "Delete":
-                                    edgesList[currentModelid].remove(edge.id);
+                                    dataList[currentModelId].edges.remove(edge.id);
                                     break;
                             }
                         }
@@ -1159,8 +1149,8 @@
                                          </form>';
 
                                             $(this).html(markup);
-                                            $("#name").val(modelNamesList[currentModelid]);
-                                            $("#generator").val(generatorList[currentModelid]);
+                                            $("#name").val(modelNamesList[currentModelId]);
+                                            $("#generator").val(generatorList[currentModelId]);
                                         },
                                         close : function() {
                                             $(this).dialog( "close" );
@@ -1168,8 +1158,8 @@
                                         },
                                         buttons: {
                                             'OK': function () {
-                                                modelNamesList[currentModelid] = $("#name").val();
-                                                generatorList[currentModelid] = $("#generator").val();
+                                                modelNamesList[currentModelId] = $("#name").val();
+                                                generatorList[currentModelId] = $("#generator").val();
                                                 $(this).dialog( "close" );
                                                 onResetModel();
                                             },
@@ -1186,28 +1176,28 @@
             }
         });
 
-        network.on('dragStart', function (params) {
-            console.log("dragStart: " + currentModelid);
+        visNetworkList[currentModelId].on('dragStart', function (params) {
+            console.log("dragStart: " + currentModelId);
             if(keys[17] !== undefined) {
-                startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+                startNode = visNetworkList[currentModelId].findNode(visNetworkList[currentModelId].getNodeAt(params.pointer.DOM))[0];
                 console.log("  startNode: " + startNode);
             }
         });
 
-        network.on('dragging', function (params) {
-            console.log("dragging: " + currentModelid);
+        visNetworkList[currentModelId].on('dragging', function (params) {
+            console.log("dragging: " + currentModelId);
             if(keys[17] !== undefined) {
                 preventDefault();
             }
         });
 
-        network.on('dragEnd', function (params) {
-            console.log("dragEnd: " + currentModelid);
-            var node = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+        visNetworkList[currentModelId].on('dragEnd', function (params) {
+            console.log("dragEnd: " + currentModelId);
+            var node = visNetworkList[currentModelId].findNode(visNetworkList[currentModelId].getNodeAt(params.pointer.DOM))[0];
             if (node !== undefined) {
                 if(keys[17] !== undefined) {
                     if ( startNode !== undefined) {
-                        edgesList[currentModelid].add({
+                        dataList[currentModelId].edges.add({
                             id: generateUUID(),
                             label: "e_NewEdge",
                             name: "e_NewEdge",
@@ -1217,7 +1207,7 @@
                         });
                     }
                 } else {
-                    nodesList[currentModelid].update({
+                    dataList[currentModelId].nodes.update({
                         id: node.id,
                         x: params.pointer.canvas.x,
                         y: params.pointer.canvas.y
@@ -1227,20 +1217,20 @@
             }
         });
 
-        network.on('click', function (params) {
-            console.log("click: " + currentModelid);
+        visNetworkList[currentModelId].on('click', function (params) {
+            console.log("click: " + currentModelId);
             if(keys[17] !== undefined) {
-                startNode = network.findNode(network.getNodeAt(params.pointer.DOM))[0];
+                startNode = visNetworkList[currentModelId].findNode(visNetworkList[currentModelId].getNodeAt(params.pointer.DOM))[0];
                 console.log("  startNode: " + startNode);
             }
         });
 
-        network.on('doubleClick', function (params) {
-            console.log("doubleClick: " + currentModelid);
-            var node = network.getNodeAt(params.pointer.DOM);
-            var edge = network.getEdgeAt(params.pointer.DOM);
+        visNetworkList[currentModelId].on('doubleClick', function (params) {
+            console.log("doubleClick: " + currentModelId);
+            var node = visNetworkList[currentModelId].getNodeAt(params.pointer.DOM);
+            var edge = visNetworkList[currentModelId].getEdgeAt(params.pointer.DOM);
             if (node == undefined && edge == undefined) {
-                nodesList[currentModelid].add({
+                dataList[currentModelId].nodes.add({
                     id: generateUUID(),
                     label: 'v_NewVertex',
                     name: 'v_NewVertex',
@@ -1251,11 +1241,11 @@
             }
         });
 
-        nodesList[currentModelid].on('*', function (event, properties, senderId) {
-            console.log('nodes data update event:', event, 'properties:', properties, 'senderId:', senderId);
+        dataList[currentModelId].nodes.on('*', function (event, properties, senderId) {
+            console.log('nodes data update event:', event, 'properties:', JSON.stringify(properties), 'senderId:', senderId);
         });
 
-        edgesList[currentModelid].on('*', function (event, properties, senderId) {
+        dataList[currentModelId].edges.on('*', function (event, properties, senderId) {
             console.log('edges data update event:', event, 'properties:', JSON.stringify(properties), 'senderId:', senderId);
         });
     }
