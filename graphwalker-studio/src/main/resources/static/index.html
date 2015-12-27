@@ -97,7 +97,7 @@
     var contextEdge;
     var startNode;
     var undoDeck = [];
-    var undoIndex = 0;
+    var undoIndex = [];
     var keys = {};
 
 
@@ -431,6 +431,7 @@
         delete startElementIdList[modelId];
         delete optionsList[modelId];
         delete visNetworkList[modelId];
+        delete undoIndex[currentModelid];
 
         edgesList[modelId].clear();
         delete edgesList[modelId];
@@ -792,44 +793,49 @@
     }
 
     function makeUndoCopy() {
-        console.log("makeUndoCopy");
+        console.log("makeUndoCopy - undoIndex: " + undoIndex[currentModelid]);
         if (currentModelid === undefined) {
             return;
         }
         var data = {
-            nodes: new vis.DataSet(nodesList[currentModelid].get()),
-            edges: new vis.DataSet(edgesList[currentModelid].get())
+            nodes: new vis.DataSet($.extend(true, [], nodesList[currentModelid]).get()),
+            edges: new vis.DataSet($.extend(true, [], edgesList[currentModelid]).get())
         };
         if (undoDeck[currentModelid] === undefined) {
             undoDeck[currentModelid] = [];
         }
-        var diff = undoDeck[currentModelid].length - undoIndex;
-        if (diff > 1) {
-            //undoDeck[currentModelid].splice(-1, diff - 1);
+        for (var i = undoDeck[currentModelid].length - undoIndex[currentModelid]; i > 1; i-- ) {
+            undoDeck[currentModelid].pop();
         }
-        undoDeck[currentModelid].push(data);
-        undoIndex = undoDeck[currentModelid].length - 1;
+        undoIndex[currentModelid] = undoDeck[currentModelid].push(data) - 1;
+        visNetworkList[currentModelid].setData(data);
+        visNetworkList[currentModelid].redraw();
     }
 
     function makeUndo() {
-        console.log("makeUndo - undoIndex: " + undoIndex + "(" + undoDeck[currentModelid].length + ")");
-        var data = undoDeck[currentModelid][undoIndex - 1];
+        console.log("makeUndo - undoIndex: " + undoIndex[currentModelid] + "(" + undoDeck[currentModelid].length + ")");
+        undoIndex[currentModelid]--;
+        var data = undoDeck[currentModelid][undoIndex[currentModelid]];
         if (data === undefined) {
+            undoIndex[currentModelid]++;
             return;
         }
+        edgesList[currentModelid] = new vis.DataSet($.extend(true, [], data.edges.get()));
+        nodesList[currentModelid] = new vis.DataSet($.extend(true, [], data.nodes.get()));
         visNetworkList[currentModelid].setData(data);
         visNetworkList[currentModelid].redraw();
-        undoIndex--;
     }
 
     function makeRedo() {
-        console.log("makeRedo - undoIndex: " + undoIndex + "(" + undoDeck[currentModelid].length + ")");
-        undoIndex++;
-        var data = undoDeck[currentModelid][undoIndex];
+        console.log("makeRedo - undoIndex: " + undoIndex[currentModelid] + "(" + undoDeck[currentModelid].length + ")");
+        undoIndex[currentModelid]++;
+        var data = undoDeck[currentModelid][undoIndex[currentModelid]];
         if (data === undefined) {
-            undoIndex--;
+            undoIndex[currentModelid]--;
             return;
         }
+        edgesList[currentModelid] = new vis.DataSet($.extend(true, [], data.edges.get()));
+        nodesList[currentModelid] = new vis.DataSet($.extend(true, [], data.nodes.get()));
         visNetworkList[currentModelid].setData(data);
         visNetworkList[currentModelid].redraw();
     }
@@ -967,7 +973,7 @@
             console.log("Node: " + contextNode + ", Edge: " + contextEdge);
 
             if (contextNode != undefined) {
-                var node = nodes.get(contextNode);
+                var node = nodesList[currentModelid].get(contextNode);
                 $(function () {
                     $(document).contextmenu({
                         delegate: ".vis-network",
@@ -1017,7 +1023,7 @@
                                         },
                                         buttons: {
                                             'OK': function () {
-                                                nodes.update(
+                                                nodesList[currentModelid].update(
                                                         {
                                                             id: node.id,
                                                             name: $("#name").val(),
@@ -1045,14 +1051,14 @@
                                     });
                                     break;
                                 case "Delete":
-                                    nodes.remove(node.id);
+                                    nodesList[currentModelid].remove(node.id);
                                     break;
                             }
                         }
                     });
                 });
             } else if (contextEdge != undefined) {
-                var edge = edges.get(contextEdge);
+                var edge = edgesList[currentModelid].get(contextEdge);
                 $(function () {
                     $(document).contextmenu({
                         delegate: ".vis-network",
@@ -1096,7 +1102,7 @@
                                         },
                                         buttons: {
                                             'OK': function () {
-                                                edges.update(
+                                                edgesList[currentModelid].update(
                                                         {
                                                             id: edge.id,
                                                             name: $("#name").val(),
@@ -1124,7 +1130,7 @@
                                     });
                                     break;
                                 case "Delete":
-                                    edges.remove(edge.id);
+                                    edgesList[currentModelid].remove(edge.id);
                                     break;
                             }
                         }
@@ -1201,7 +1207,7 @@
             if (node !== undefined) {
                 if(keys[17] !== undefined) {
                     if ( startNode !== undefined) {
-                        edges.add({
+                        edgesList[currentModelid].add({
                             id: generateUUID(),
                             label: "e_NewEdge",
                             name: "e_NewEdge",
@@ -1211,7 +1217,7 @@
                         });
                     }
                 } else {
-                    nodes.update({
+                    nodesList[currentModelid].update({
                         id: node.id,
                         x: params.pointer.canvas.x,
                         y: params.pointer.canvas.y
@@ -1234,7 +1240,7 @@
             var node = network.getNodeAt(params.pointer.DOM);
             var edge = network.getEdgeAt(params.pointer.DOM);
             if (node == undefined && edge == undefined) {
-                nodes.add({
+                nodesList[currentModelid].add({
                     id: generateUUID(),
                     label: 'v_NewVertex',
                     name: 'v_NewVertex',
@@ -1245,11 +1251,11 @@
             }
         });
 
-        nodes.on('*', function (event, properties, senderId) {
+        nodesList[currentModelid].on('*', function (event, properties, senderId) {
             console.log('nodes data update event:', event, 'properties:', properties, 'senderId:', senderId);
         });
 
-        edges.on('*', function (event, properties, senderId) {
+        edgesList[currentModelid].on('*', function (event, properties, senderId) {
             console.log('edges data update event:', event, 'properties:', JSON.stringify(properties), 'senderId:', senderId);
         });
     }
