@@ -797,7 +797,8 @@
             return;
         }
 
-        // Make a copy of the network data.The copy is stored in the undo list
+        // Make a copy of the network data.The copy is stored in the undo list.
+        // Must make deep copy, that's why jquery's extend is used.
         var data = {
             nodes: new vis.DataSet($.extend(true, [], dataList[currentModelId].nodes).get()),
             edges: new vis.DataSet($.extend(true, [], dataList[currentModelId].edges).get())
@@ -814,7 +815,6 @@
         }
 
         // Put the copy in the undo list.
-        //dataList[currentModelId] = data;
         undoIndex[currentModelId] = undoList[currentModelId].push(data) - 1;
         visNetworkList[currentModelId].setData(data);
         visNetworkList[currentModelId].redraw();
