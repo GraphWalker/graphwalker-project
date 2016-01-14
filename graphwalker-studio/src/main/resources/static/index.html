@@ -65,6 +65,15 @@
             if ($("#tabs").find("li").length < 1) {
                 $("#tabs").hide();
             }
+            graphs[id] = undefined;
+        });
+
+        $('#tabs').tabs({
+            activate: function (event, ui) {
+                var modelId = ui.newPanel.attr('id').substr(2);
+                console.log("tabs activate: " + modelId);
+                graphs[modelId].resize();
+            }
         });
 
         // Hide the tab component. It will get visible when the graps are loaded.
@@ -75,8 +84,9 @@
         readGraphsFromFile("PetClinic.gw3");
     });
 
+
     function createTab(modelId, modelName) {
-        console.log("createTab - " + modelId + ", " + modelName);
+        console.log("createTab: " + modelId + ", " + modelName);
 
         var tabs = $("#tabs").tabs();
         var ul = tabs.find("ul");
@@ -95,10 +105,6 @@
                         height:100%;\
                         overflow-y: hidden;\
                     }").appendTo("head");
-
-        var index = $('#tabs a[href="#A-' + modelId + '"]').parent().index();
-        $("#tabs").tabs("option", "active", index);
-        $("#tabs").show();
 
         return createGraph(modelId);
     }
@@ -181,9 +187,14 @@
                 })
                 .always(function () {
                     console.log("readGraphsFromFile: first complete");
+                    $("#tabs").show();
                     for (var key in graphs) {
-                        console.log("readGraphsFromFile: resetting cy: " + key);
-                        graphs[key].reset();
+                        console.log("readGraphsFromFile: resize graph: " + key);
+
+                        var index = $('#tabs a[href="#A-' + key + '"]').parent().index();
+                        $("#tabs").tabs("option", "active", index);
+
+                        graphs[key].resize();
                     }
                 });
     }
