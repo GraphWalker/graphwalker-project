@@ -73,6 +73,10 @@
                 var modelId = ui.newPanel.attr('id').substr(2);
                 console.log("tabs activate: " + modelId);
                 graphs[modelId].resize();
+                if (graphs[modelId].doLayout) {
+                    graphs[modelId].layout();
+                    graphs[modelId].doLayout = false;
+                }
             }
         });
 
@@ -195,6 +199,7 @@
                         $("#tabs").tabs("option", "active", index);
 
                         graphs[key].resize();
+                        graphs[key].doLayout = true;
                     }
                 });
     }
