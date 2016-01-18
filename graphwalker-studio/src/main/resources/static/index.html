@@ -438,6 +438,7 @@
                         graphs[key].resize();
                         graphs[key].doLayout = true;
                     }
+                    defaultUI();
                 });
     }
 
@@ -560,19 +561,19 @@
     function defaultUI() {
         console.log("defaultUI");
 
-        if (graphs.length > 0 && currentModelId != undefined) {
+        if (Object.keys(graphs).length > 0 && currentModelId !== undefined) {
             document.getElementById("runModel").disabled = false;
-            document.getElementById("resetModel").disabled = false;
-            document.getElementById("pausePlayExecution").disabled = true;
+            document.getElementById("resetModel").disabled = true;
             document.getElementById("stepExecution").disabled = true;
             document.getElementById("pausePlayExecution").innerHTML = "Pause";
+            document.getElementById("pausePlayExecution").disabled = true;
             document.getElementById("addModel").disabled = false;
         } else {
             document.getElementById("runModel").disabled = false;
             document.getElementById("resetModel").disabled = false;
-            document.getElementById("pausePlayExecution").disabled = false;
             document.getElementById("stepExecution").disabled = false;
             document.getElementById("pausePlayExecution").innerHTML = "Pause";
+            document.getElementById("pausePlayExecution").disabled = false;
             document.getElementById("addModel").disabled = false;
         }
     }
