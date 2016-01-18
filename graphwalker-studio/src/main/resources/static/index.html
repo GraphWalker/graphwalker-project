@@ -347,7 +347,7 @@
             id: currentModelId,
             container: document.querySelector('#A-' + currentModelId),
 
-            boxSelectionEnabled: true,
+            'boxSelectionEnabled': true,
             'wheelSensitivity': '0', // Values 0, 0.5 and 1 has the same effect...
 
             style: cytoscape.stylesheet()
@@ -365,8 +365,8 @@
                         'width': 'label',
                         'height': 'label',
                         'color': 'black',
-                        'background-color': 'LightSteelBlue',
-                        'line-color': 'LightSteelBlue ',
+                        'background-color': 'data(color)',
+                        'line-color': 'data(color)',
                         'padding-left': '10',
                         'padding-right': '10',
                         'padding-top': '10',
@@ -380,9 +380,9 @@
 //                        'edge-text-rotation': 'autorotate',
                         'target-arrow-shape': 'triangle',
                         'width': '4',
-                        'line-color': 'LightSteelBlue',
-                        'target-arrow-color': 'LightSteelBlue',
-                        'background-color': 'LightSteelBlue'
+                        'line-color': 'data(color)',
+                        'target-arrow-color': 'data(color)',
+                        'background-color': 'data(color)'
                     })
                     .selector(':selected')
                     .css({
@@ -390,6 +390,10 @@
                         'line-color': 'MediumSlateBlue ',
                         'target-arrow-color': 'MediumSlateBlue '
                     })
+        });
+
+        graph.onRender(function(){
+            console.log("onRender");
         });
 
         graph.on("click", function(){
@@ -485,7 +489,8 @@
                         sharedState: jsonVertex.sharedState,
                         actions: jsonVertex.actions,
                         requirements: jsonVertex.requirements,
-                        properties: jsonVertex.properties
+                        properties: jsonVertex.properties,
+                        color: 'LightSteelBlue'
                     },
                     position: {
                         x: x,
@@ -505,14 +510,12 @@
                         group: "nodes",
                         data: {
                             id: jsonEdge.sourceVertexId,
-                            name: "Start"
+                            name: "Start",
+                            color: 'LightGreen'
                         },
                         position: {
                             x: 0,
                             y: 0
-                        },
-                        css: {
-                            'background-color': 'lightgreen'
                         }
                     });
                 }
@@ -530,7 +533,8 @@
                         guard: jsonEdge.guard,
                         actions: jsonEdge.actions,
                         requirements: jsonEdge.requirements,
-                        properties: jsonEdge.properties
+                        properties: jsonEdge.properties,
+                        color: 'LightSteelBlue'
                     }
                 });
             }
@@ -670,10 +674,7 @@
                 var index = $('#tabs a[href="#A-' + currentModelId + '"]').parent().index();
                 $("#tabs").tabs("option", "active", index);
 
-                //graphs[currentModelId].$('#'+msg.elementId).style('background-color', 'lightgreen');
-                //graphs[currentModelId].$('#'+msg.elementId).style('line-color', 'lightgreen');
-                //graphs[currentModelId].$('#'+msg.elementId).style('target-arrow-color', 'lightgreen');
-
+                graphs[currentModelId].$('#'+msg.elementId).data('color', 'lightgreen');
                 graphs[currentModelId].$('#'+msg.elementId).select();
                 break;
             default:
