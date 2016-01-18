@@ -209,8 +209,19 @@
         console.log("onResetModel: " + currentModelId);
         defaultUI();
 
+        issues.innerHTML = "Ready";
+
         for (var modelId in graphs) {
+
+            graphs[modelId].nodes().unselect();
+            graphs[modelId].edges().unselect();
+            graphs[modelId].nodes().data('color', 'LightSteelBlue');
+            graphs[modelId].edges().data('color', 'LightSteelBlue');
+            graphs[modelId].nodes().filterFn(function( ele ){
+                return ele.data('startVertex') == true;
+            }).data('color', 'LightGreen');
         }
+
     };
 
     // addTab button: just opens the dialog
@@ -392,10 +403,6 @@
                     })
         });
 
-        graph.onRender(function(){
-            console.log("onRender");
-        });
-
         graph.on("click", function(){
             graph.resize();
         });
@@ -511,6 +518,7 @@
                         data: {
                             id: jsonEdge.sourceVertexId,
                             name: "Start",
+                            startVertex: true,
                             color: 'LightGreen'
                         },
                         position: {
