@@ -151,6 +151,7 @@
         document.getElementById("resetModel").disabled = true;
         document.getElementById("pausePlayExecution").disabled = false;
         document.getElementById("stepExecution").disabled = true;
+        document.getElementById("addModel").disabled = true;
         stepExecution = false;
         pauseExecution = false;
 
@@ -227,10 +228,22 @@
     // addTab button: just opens the dialog
     function onAddModel() {
         console.log("onAddModel");
-/*        currentModelId = generateUUID();
-        modelNamesList[currentModelId] = "New Model"
-        addTab();
-        makeUndoCopy();*/
+        var id = generateUUID();
+        var graph = createTab(id, "New model");
+        graph.layout({ name: 'dagre',
+            animate: true,
+            minLen: function( edge ) {
+                return 2;
+            }
+        });
+        graphs[graph.id] = graph;
+
+        $("#tabs").show();
+        var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
+        $("#tabs").tabs("option", "active", index);
+
+        graph.resize();
+        graph.doLayout = true;
     };
 
 
@@ -321,13 +334,13 @@
         // Hide the tab component. It will get visible when the graps are loaded.
         $("#tabs").hide();
 
-	/**
-	* Place the gw3 files in:
-	* graphwalker-studio/src/main/resources/static/
-	**/
+        /**
+        * Place the gw3 files in:
+        * graphwalker-studio/src/main/resources/static/
+        **/
         //readGraphsFromFile("Login.gw3");
         //readGraphsFromFile("UC01.gw3");
-        readGraphsFromFile("PetClinic.gw3");
+        //readGraphsFromFile("PetClinic.gw3");
     });
 
 
@@ -357,6 +370,7 @@
 
     function createGraph(currentModelId) {
         console.log("createGraph - " + currentModelId);
+        var mouseX, mouseY;
 
         var graph = cytoscape({
             id: currentModelId,
@@ -407,8 +421,40 @@
                     })
         });
 
-        graph.on("click", function(){
+        graph.on("click", function(event){
+            console.log(graph.id + ": click");
             graph.resize();
+        });
+
+        graph.on("doubleTap", function(event){
+            console.log(graph.id + ": doubleTap");
+            graph.add({
+                group: "nodes",
+                data: {
+                    id: generateUUID(),
+                    label: "New vertex",
+                    name: "New vertex",
+                    color: 'LightSteelBlue'
+                },
+                renderedPosition: {
+                    x: mouseX,
+                    y: mouseY
+                }
+            });
+        });
+
+        var tappedBefore = null;
+        graph.on('tap', function(event) {
+            var tappedNow = event.cyTarget;
+            setTimeout(function(){ tappedBefore = null; }, 300);
+            if(tappedBefore === tappedNow) {
+                mouseX = event.cyRenderedPosition.x;
+                mouseY = event.cyRenderedPosition.y;
+                tappedNow.trigger('doubleTap');
+                tappedBefore = null;
+            } else {
+                tappedBefore = tappedNow;
+            }
         });
 
         graphs[currentModelId] = graph;
@@ -648,6 +694,7 @@
                     } else {
                         defaultUI();
                         document.getElementById("runModel").disabled = true;
+                        document.getElementById("resetModel").disabled = false;
                     }
                 } else {
                     defaultUI();
