@@ -70,13 +70,23 @@
             <li><button type='button' id="runModel" onclick="onRunModel()">Run model</button></li>
             <li>
                 <label for="executionSpeedSlider">Execution speed (ms)</label>
-                <input type="range" name="slider" id="executionSpeedSlider" value="0" min="0" max="500" data-highlight="true" />
+                <input type="range" id="executionSpeedSlider" value="0" min="0" max="500" data-highlight="true" />
             </li>
             <li><button type='button' id="resetModel" onclick="onResetModel()">Reset</button></li>
             <li><button type='button' id="pausePlayExecution" onclick="onPausePlayExecution(this)" value="Pause">Pause</button></li>
             <li><button type='button' id="stepExecution" onclick="onStepExecution()">Step</button></li>
             <li><button type='button' id="addModel" onclick="onAddModel()">Add Model</button></li>
             <li><button type='button' id="doLayout" onclick="onDoLayout()">Do layout</button></li>
+        </ul>
+        <ul data-role="listview" data-theme="a" class="nav-search">
+            <li>
+                <label for="name">Name</label>
+                <input type="text" id="name" value=""  />
+            </li>
+            <li>
+                <input type="checkbox" id="checkboxStartElement" class="custom" />
+                <label for="checkboxStartElement">Start element</label>
+            </li>
         </ul>
     </div>
 
@@ -385,7 +395,7 @@
         **/
         //readGraphsFromFile("Login.gw3");
         //readGraphsFromFile("UC01.gw3");
-        readGraphsFromFile("PetClinic.gw3");
+        //readGraphsFromFile("PetClinic.gw3");
     });
 
 
@@ -526,6 +536,15 @@
                     }
                 });
                 console.log("  Added vertex: " + id);
+            } else {
+                $('#name').val("");
+            }
+        });
+
+        graph.on('tap', 'node', function(event) {
+            $('#name').val(this.data().name);
+            if (graph.startElementId == this.id()) {
+                
             }
         });
 
