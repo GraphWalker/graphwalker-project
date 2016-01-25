@@ -13,6 +13,7 @@
     <script src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
     <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js"></script>
 
+
     <style type="text/css">
         body {
             font: 14px helvetica neue, helvetica, arial, sans-serif;
@@ -71,6 +72,7 @@
             <li><button type='button' id="pausePlayExecution" onclick="onPausePlayExecution(this)" value="Pause">Pause</button></li>
             <li><button type='button' id="stepExecution" onclick="onStepExecution()">Step</button></li>
             <li><button type='button' id="addModel" onclick="onAddModel()">Add Model</button></li>
+            <li><button type='button' id="doLayout" onclick="onDoLayout()">Do layout</button></li>
         </ul>
     </div>
 
@@ -100,7 +102,7 @@
     var currentModelId = undefined;
     var pauseExecution = false;
     var stepExecution = false;
-
+    var keys = {};
 
     function onPausePlayExecution(element) {
         console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution + ", clicked: " + currentModelId);
@@ -151,6 +153,7 @@
         document.getElementById("resetModel").disabled = true;
         document.getElementById("pausePlayExecution").disabled = false;
         document.getElementById("stepExecution").disabled = true;
+        document.getElementById("addModel").disabled = true;
         stepExecution = false;
         pauseExecution = false;
 
@@ -224,13 +227,30 @@
 
     };
 
-    // addTab button: just opens the dialog
     function onAddModel() {
         console.log("onAddModel");
-/*        currentModelId = generateUUID();
-        modelNamesList[currentModelId] = "New Model"
-        addTab();
-        makeUndoCopy();*/
+        var id = generateUUID();
+        var graph = createTab(id, "New model");
+        graphs[graph.id] = graph;
+
+        $("#tabs").show();
+        var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
+        $("#tabs").tabs("option", "active", index);
+    };
+
+    function onDoLayout() {
+        console.log("onDoLayout");
+        if (graphs[currentModelId] !== undefined) {
+            graphs[currentModelId].layout().stop();
+            var layout = graphs[currentModelId].makeLayout({
+                name: 'dagre',
+                animate: true,
+                minLen: function( edge ) {
+                    return 2;
+                }
+            });
+            layout.run();
+        }
     };
 
 
@@ -311,23 +331,53 @@
                 currentModelId = ui.newPanel.attr('id').substr(2);
                 console.log("tabs activate: " + currentModelId);
                 graphs[currentModelId].resize();
-                if (graphs[currentModelId].doLayout) {
-                    graphs[currentModelId].layout();
-                    graphs[currentModelId].doLayout = false;
-                }
             }
         });
 
         // Hide the tab component. It will get visible when the graps are loaded.
         $("#tabs").hide();
 
-	/**
-	* Place the gw3 files in:
-	* graphwalker-studio/src/main/resources/static/
-	**/
+        $(document).keyup(function(e) {
+            console.log("key up: " + e.which);
+            delete keys[e.which];
+        });
+
+        $(document).keydown(function(e) {
+            console.log("key down: " + e.which);
+            keys[e.which] = true;
+
+            if (keys[46]) {  // Delete key is pressed
+                if (graphs[currentModelId] !== undefined) {
+                    graphs[currentModelId].remove(':selected');
+                }
+            }
+        });
+
+        $( ".ui-panel" ).panel({
+            close: function( event, ui ) {
+                if (graphs[currentModelId] !== undefined) {
+                    console.log("Resize the model, beacuse the side panel has been closed");
+                    graphs[currentModelId].resize();
+                }
+            }
+        });
+
+        $( ".ui-panel" ).panel({
+            open: function( event, ui ) {
+                if (graphs[currentModelId] !== undefined) {
+                    console.log("Resize the model, beacuse the side panel has been opened");
+                    graphs[currentModelId].resize();
+                }
+            }
+        });
+
+        /**
+        * Place the gw3 files in:
+        * graphwalker-studio/src/main/resources/static/
+        **/
         //readGraphsFromFile("Login.gw3");
         //readGraphsFromFile("UC01.gw3");
-        readGraphsFromFile("PetClinic.gw3");
+        readGraphsFromFile("petClinic.gw3");
     });
 
 
@@ -357,6 +407,7 @@
 
     function createGraph(currentModelId) {
         console.log("createGraph - " + currentModelId);
+        var mouseX, mouseY;
 
         var graph = cytoscape({
             id: currentModelId,
@@ -365,11 +416,16 @@
             'boxSelectionEnabled': true,
             'wheelSensitivity': '0', // Values 0, 0.5 and 1 has the same effect...
 
+            ready: function(evt) {
+                console.log("Cytoscape is ready...")
+            },
+
             style: cytoscape.stylesheet()
                     .selector('core')
                     .css({
                         //'active-bg-size': 0 // remove the grey circle when panning
                     })
+
                     .selector('node')
                     .css({
                         'content': 'data(name)',
@@ -387,11 +443,12 @@
                         'padding-top': '10',
                         'padding-bottom': '10'
                     })
+
                     .selector('edge')
                     .css({
                         'content': 'data(name)',
                         'text-wrap': 'wrap',
-                        'curve-style' : 'unbundled-bezier',
+//                        'curve-style' : 'unbundled-bezier',
 //                        'edge-text-rotation': 'autorotate',
                         'target-arrow-shape': 'triangle',
                         'width': '4',
@@ -399,16 +456,69 @@
                         'target-arrow-color': 'data(color)',
                         'background-color': 'data(color)'
                     })
+
                     .selector(':selected')
                     .css({
                         'background-color': 'MediumSlateBlue ',
                         'line-color': 'MediumSlateBlue ',
                         'target-arrow-color': 'MediumSlateBlue '
                     })
+
         });
 
-        graph.on("click", function(){
-            graph.resize();
+        var srcNode = null;
+        graph.on("tapstart", 'node', function(event) {
+            if (keys[69]) {  // e key is pressed
+                console.log("tapstart with e key pressed on node: " + this.id());
+                srcNode = this;
+                graph.autoungrabify(true);
+            }
+        });
+
+        var dstNode = null;
+        graph.on("tapend", 'node', function(event) {
+            if (keys[69]) {  // e key is pressed
+                console.log("tapend with e key pressed on node: " + this.id());
+                dstNode = this;
+                graph.autoungrabify(false);
+
+                if (srcNode !== undefined && dstNode !== undefined) {
+                    var id = generateUUID();
+                    graph.add({
+                        group: "edges",
+                        data: {
+                            id: id,
+                            source: srcNode.id(),
+                            target: dstNode.id(),
+                            label: "New edge",
+                            name: "New edge",
+                            color: 'LightSteelBlue'
+                        }
+                    });
+                    console.log("  Added edge: " + id);
+                }
+            }
+        });
+
+        graph.on('tap', function(event) {
+            if (keys[86]) {  // v key is pressed
+                console.log("tap and v key pressed");
+                var id = generateUUID();
+                graph.add({
+                    group: "nodes",
+                    data: {
+                        id: id,
+                        label: "New vertex",
+                        name: "New vertex",
+                        color: 'LightSteelBlue'
+                    },
+                    renderedPosition: {
+                        x: event.cyRenderedPosition.x,
+                        y: event.cyRenderedPosition.y
+                    }
+                });
+                console.log("  Added vertex: " + id);
+            }
         });
 
         graphs[currentModelId] = graph;
@@ -438,9 +548,8 @@
 
                         var index = $('#tabs a[href="#A-' + key + '"]').parent().index();
                         $("#tabs").tabs("option", "active", index);
-
                         graphs[key].resize();
-                        graphs[key].doLayout = true;
+                        graphs[key].fit();
                     }
                     defaultUI();
                 });
@@ -551,12 +660,7 @@
                     }
                 });
             }
-            graph.layout({ name: 'dagre',
-                animate: true,
-                minLen: function( edge ) {
-                    return 2;
-                }
-            });
+
             graphs[graph.id] = graph;
         }
         return graphs;
@@ -648,6 +752,7 @@
                     } else {
                         defaultUI();
                         document.getElementById("runModel").disabled = true;
+                        document.getElementById("resetModel").disabled = false;
                     }
                 } else {
                     defaultUI();
