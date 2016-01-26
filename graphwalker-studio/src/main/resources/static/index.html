@@ -80,8 +80,12 @@
         </ul>
         <ul data-role="listview" data-theme="a" class="nav-search">
             <li>
+                <label for="generator">Generator</label>
+                <input type="text" id="generator" value=""/>
+            </li>
+            <li>
                 <label for="name">Name</label>
-                <input type="text" id="name" value=""  />
+                <input type="text" id="name" value=""/>
             </li>
             <li>
                 <input type="checkbox" id="checkboxStartElement" class="custom" />
@@ -370,6 +374,12 @@
                 }
             }
         });
+        
+        $('#generator').on('input',function(e){
+            if (graphs[currentModelId] !== undefined) {
+                graphs[currentModelId].generator = $('#generator').val();
+            }
+        });
 
         $( ".ui-panel" ).panel({
             close: function( event, ui ) {
@@ -537,14 +547,24 @@
                 });
                 console.log("  Added vertex: " + id);
             } else {
-                $('#name').val("");
+                if (currentNode != null) {
+                    currentNode.data().name = $('#name').val();
+                    $('#name').val("");
+
+                    if ($('#checkboxStartElement').val()) {
+                        graph.startElementId = currentNode.id();
+                    }
+                    currentNode = null;
+                }
             }
         });
 
+	var currentNode = null;
         graph.on('tap', 'node', function(event) {
+            currentNode = this;
             $('#name').val(this.data().name);
             if (graph.startElementId == this.id()) {
-                
+                $('#checkboxStartElement').val(true);
             }
         });
 
