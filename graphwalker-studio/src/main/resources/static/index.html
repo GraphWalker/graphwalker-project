@@ -13,6 +13,7 @@
     <script src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
     <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js"></script>
 
+
     <style type="text/css">
         body {
             font: 14px helvetica neue, helvetica, arial, sans-serif;
@@ -67,10 +68,29 @@
         <ul data-role="listview" data-theme="a" class="nav-search">
             <li data-icon="delete"><a href="#" data-rel="close">Close menu</a></li>
             <li><button type='button' id="runModel" onclick="onRunModel()">Run model</button></li>
+            <li>
+                <label for="executionSpeedSlider">Execution speed (ms)</label>
+                <input type="range" id="executionSpeedSlider" value="0" min="0" max="500" data-highlight="true" />
+            </li>
             <li><button type='button' id="resetModel" onclick="onResetModel()">Reset</button></li>
             <li><button type='button' id="pausePlayExecution" onclick="onPausePlayExecution(this)" value="Pause">Pause</button></li>
             <li><button type='button' id="stepExecution" onclick="onStepExecution()">Step</button></li>
             <li><button type='button' id="addModel" onclick="onAddModel()">Add Model</button></li>
+            <li><button type='button' id="doLayout" onclick="onDoLayout()">Do layout</button></li>
+        </ul>
+        <ul data-role="listview" data-theme="a" class="nav-search">
+            <li>
+                <label for="generator">Generator</label>
+                <input type="text" id="generator" value=""/>
+            </li>
+            <li>
+                <label for="name">Name</label>
+                <input type="text" id="name" value=""/>
+            </li>
+            <li>
+                <input type="checkbox" id="checkboxStartElement" class="custom" />
+                <label for="checkboxStartElement">Start element</label>
+            </li>
         </ul>
     </div>
 
@@ -92,6 +112,8 @@
         </form>
     </div>
 </div>
+
+
 </body>
 
 <script>
@@ -100,6 +122,8 @@
     var currentModelId = undefined;
     var pauseExecution = false;
     var stepExecution = false;
+    var keys = {};
+    var executionSpeed = 0;
 
 
     function onPausePlayExecution(element) {
@@ -163,6 +187,10 @@
             }
         };
         for (var modelId in graphs) {
+            if (!graphs.hasOwnProperty(modelId)) {
+                continue;
+            }
+
             var model = {
                 name: graphs[modelId].name,
                 id: modelId,
@@ -213,6 +241,9 @@
         issues.innerHTML = "Ready";
 
         for (var modelId in graphs) {
+            if (!graphs.hasOwnProperty(modelId)) {
+                continue;
+            }
 
             graphs[modelId].nodes().unselect();
             graphs[modelId].edges().unselect();
@@ -225,25 +256,29 @@
 
     };
 
-    // addTab button: just opens the dialog
     function onAddModel() {
         console.log("onAddModel");
         var id = generateUUID();
-        var graph = createTab(id, "New model");
-        graph.layout({ name: 'dagre',
-            animate: true,
-            minLen: function( edge ) {
-                return 2;
-            }
-        });
-        graphs[graph.id] = graph;
+        createTab(id, "New model");
 
         $("#tabs").show();
         var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
         $("#tabs").tabs("option", "active", index);
+    };
 
-        graph.resize();
-        graph.doLayout = true;
+    function onDoLayout() {
+        console.log("onDoLayout");
+        if (graphs[currentModelId] !== undefined) {
+            graphs[currentModelId].layout().stop();
+            var layout = graphs[currentModelId].makeLayout({
+                name: 'dagre',
+                animate: true,
+                minLen: function( edge ) {
+                    return 2;
+                }
+            });
+            layout.run();
+        }
     };
 
 
@@ -297,7 +332,7 @@
         };
         setTimeout(function () {
             doSend(JSON.stringify(hasNext));
-        }, 100);
+        }, $('#executionSpeedSlider').val());
     });
 
     function removeModel(modelId) {
@@ -324,15 +359,28 @@
                 currentModelId = ui.newPanel.attr('id').substr(2);
                 console.log("tabs activate: " + currentModelId);
                 graphs[currentModelId].resize();
-                if (graphs[currentModelId].doLayout) {
-                    graphs[currentModelId].layout();
-                    graphs[currentModelId].doLayout = false;
-                }
             }
         });
 
         // Hide the tab component. It will get visible when the graps are loaded.
         $("#tabs").hide();
+
+        $(document).keyup(function(e) {
+            console.log("key up: " + e.which);
+            delete keys[e.which];
+        });
+
+        $(document).keydown(function(e) {
+            console.log("key down: " + e.which);
+            keys[e.which] = true;
+
+            if (keys[46]) {  // Delete key is pressed
+                if (graphs[currentModelId] !== undefined) {
+                    graphs[currentModelId].remove(':selected');
+                }
+            }
+        });
+        
 
         /**
         * Place the gw3 files in:
@@ -379,11 +427,16 @@
             'boxSelectionEnabled': true,
             'wheelSensitivity': '0', // Values 0, 0.5 and 1 has the same effect...
 
+            ready: function(evt) {
+                console.log("Cytoscape is ready...")
+            },
+
             style: cytoscape.stylesheet()
                     .selector('core')
                     .css({
                         //'active-bg-size': 0 // remove the grey circle when panning
                     })
+
                     .selector('node')
                     .css({
                         'content': 'data(name)',
@@ -401,11 +454,12 @@
                         'padding-top': '10',
                         'padding-bottom': '10'
                     })
+
                     .selector('edge')
                     .css({
                         'content': 'data(name)',
                         'text-wrap': 'wrap',
-                        'curve-style' : 'unbundled-bezier',
+//                        'curve-style' : 'unbundled-bezier',
 //                        'edge-text-rotation': 'autorotate',
                         'target-arrow-shape': 'triangle',
                         'width': '4',
@@ -413,47 +467,154 @@
                         'target-arrow-color': 'data(color)',
                         'background-color': 'data(color)'
                     })
+
                     .selector(':selected')
                     .css({
                         'background-color': 'MediumSlateBlue ',
                         'line-color': 'MediumSlateBlue ',
                         'target-arrow-color': 'MediumSlateBlue '
                     })
+
         });
 
-        graph.on("click", function(event){
-            console.log(graph.id + ": click");
-            graph.resize();
+        var srcNode = null;
+        graph.on("tapstart", 'node', function(event) {
+            if (keys[69]) {  // e key is pressed
+                console.log("tapstart with e key pressed on node: " + this.id());
+                srcNode = this;
+                graph.autoungrabify(true);
+            }
         });
 
-        graph.on("doubleTap", function(event){
-            console.log(graph.id + ": doubleTap");
-            graph.add({
-                group: "nodes",
-                data: {
-                    id: generateUUID(),
-                    label: "New vertex",
-                    name: "New vertex",
-                    color: 'LightSteelBlue'
-                },
-                renderedPosition: {
-                    x: mouseX,
-                    y: mouseY
+        var dstNode = null;
+        graph.on("tapend", 'node', function(event) {
+            if (keys[69]) {  // e key is pressed
+                console.log("tapend with e key pressed on node: " + this.id());
+                dstNode = this;
+                graph.autoungrabify(false);
+
+                if (srcNode !== undefined && dstNode !== undefined) {
+                    var id = generateUUID();
+                    graph.add({
+                        group: "edges",
+                        data: {
+                            id: id,
+                            source: srcNode.id(),
+                            target: dstNode.id(),
+                            label: "e_NewEdge",
+                            name: "e_NewEdge",
+                            color: 'LightSteelBlue'
+                        }
+                    });
+                    console.log("  Added edge: " + id);
                 }
-            });
+            }
         });
 
-        var tappedBefore = null;
+        var tappedBefore;
+        var tappedTimeout;
         graph.on('tap', function(event) {
             var tappedNow = event.cyTarget;
-            setTimeout(function(){ tappedBefore = null; }, 300);
+            if (tappedTimeout && tappedBefore) {
+                clearTimeout(tappedTimeout);
+            }
             if(tappedBefore === tappedNow) {
-                mouseX = event.cyRenderedPosition.x;
-                mouseY = event.cyRenderedPosition.y;
                 tappedNow.trigger('doubleTap');
                 tappedBefore = null;
             } else {
+                tappedTimeout = setTimeout(function(){ tappedBefore = null; }, 300);
                 tappedBefore = tappedNow;
+            }
+
+            if (keys[86]) {  // v key is pressed
+                console.log("tap and v key pressed");
+                var id = generateUUID();
+                graph.add({
+                    group: "nodes",
+                    data: {
+                        id: id,
+                        label: "v_NewVertex",
+                        name: "v_NewVertex",
+                        color: 'LightSteelBlue'
+                    },
+                    renderedPosition: {
+                        x: event.cyRenderedPosition.x,
+                        y: event.cyRenderedPosition.y
+                    }
+                });
+                console.log("  Added vertex: " + id);
+            }
+
+            currentElement = null;
+
+            $('#name').val("");
+            $('#name').textinput('disable');
+
+            $('#checkboxStartElement').attr("checked", false).checkboxradio("refresh");
+            $('#checkboxStartElement').checkboxradio('disable');
+
+        });
+
+    	var currentElement = null;
+        graph.on('tap', 'node', function(event) {
+            currentElement = this;
+            $('#name').textinput('enable');
+            $('#name').val(this.data().name);
+
+            $('#checkboxStartElement').checkboxradio('enable');
+            if (graph.startElementId == this.id()) {
+                $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
+            }
+        });
+
+        graph.on('tap', 'edge', function(event) {
+            currentElement = this;
+            $('#name').textinput('enable');
+            $('#name').val(this.data().name);
+
+            $('#checkboxStartElement').checkboxradio('enable');
+            if (graph.startElementId == this.id()) {
+                $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
+            }
+        });
+
+        $('#generator').on('input',function(e){
+            graph.generator = $('#generator').val();
+        });
+
+        $('#name').on('input',function(e){
+            if (currentElement) {
+                currentElement.data('name', $('#name').val());
+            }
+        });
+
+        $('#checkboxStartElement').change(function() {
+            if ($(this).is(":checked")) {
+                if (currentElement) {
+                    graph.startElementId = currentElement.id();
+                }
+            } else {
+                if (currentElement == graph.startElementId) {
+                    graph.startElementId = undefined;
+                }
+            }
+        });
+
+        graph.on('doubleTap', function(event) {
+            $( "#nav-panel" ).panel( "open" );
+        });
+
+        $( ".ui-panel" ).panel({
+            close: function( event, ui ) {
+                console.log("Resize the model, beause the side panel has been closed");
+                graph.resize();
+            }
+        });
+
+        $( ".ui-panel" ).panel({
+            open: function( event, ui ) {
+                console.log("Resize the model, because the side panel has been opened");
+                graph.resize();
             }
         });
 
@@ -479,14 +640,16 @@
                 .always(function () {
                     console.log("readGraphsFromFile: first complete");
                     $("#tabs").show();
-                    for (var key in graphs) {
-                        console.log("readGraphsFromFile: resize graph: " + key);
+                    for (var modelId in graphs) {
+                        if (!graphs.hasOwnProperty(modelId)) {
+                            continue;
+                        }
+                        console.log("readGraphsFromFile: resize graph: " + modelId);
 
-                        var index = $('#tabs a[href="#A-' + key + '"]').parent().index();
+                        var index = $('#tabs a[href="#A-' + modelId + '"]').parent().index();
                         $("#tabs").tabs("option", "active", index);
-
-                        graphs[key].resize();
-                        graphs[key].doLayout = true;
+                        graphs[modelId].resize();
+                        graphs[modelId].fit();
                     }
                     defaultUI();
                 });
@@ -597,12 +760,7 @@
                     }
                 });
             }
-            graph.layout({ name: 'dagre',
-                animate: true,
-                minLen: function( edge ) {
-                    return 2;
-                }
-            });
+
             graphs[graph.id] = graph;
         }
         return graphs;
