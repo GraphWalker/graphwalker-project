@@ -84,8 +84,12 @@
                 <input type="text" id="generator" value=""/>
             </li>
             <li>
-                <label for="name">Name</label>
-                <input type="text" id="name" value=""/>
+                <label for="label">Name</label>
+                <input type="text" id="label" value=""/>
+            </li>
+            <li>
+                <label for="guard">Guard</label>
+                <input type="text" id="guard" value=""/>
             </li>
             <li>
                 <input type="checkbox" id="checkboxStartElement" class="custom" />
@@ -380,13 +384,13 @@
                 }
             }
         });
-        
+
 
         /**
-        * Place the gw3 files in:
-        * graphwalker-studio/src/main/resources/static/
-        **/
-        //readGraphsFromFile("Login.gw3");
+         * Place the gw3 files in:
+         * graphwalker-studio/src/main/resources/static/
+         **/
+        readGraphsFromFile("Login.gw3");
         //readGraphsFromFile("UC01.gw3");
         //readGraphsFromFile("PetClinic.gw3");
     });
@@ -547,19 +551,22 @@
 
             currentElement = null;
 
-            $('#name').val("");
-            $('#name').textinput('disable');
+            $('#label').val("");
+            $('#label').textinput('disable');
+
+            $('#guard').val("");
+            $('#guard').textinput('disable');
 
             $('#checkboxStartElement').attr("checked", false).checkboxradio("refresh");
             $('#checkboxStartElement').checkboxradio('disable');
 
         });
 
-    	var currentElement = null;
+        var currentElement = null;
         graph.on('tap', 'node', function(event) {
             currentElement = this;
-            $('#name').textinput('enable');
-            $('#name').val(this.data().name);
+            $('#label').textinput('enable');
+            $('#label').val(this.data().label);
 
             $('#checkboxStartElement').checkboxradio('enable');
             if (graph.startElementId == this.id()) {
@@ -569,8 +576,11 @@
 
         graph.on('tap', 'edge', function(event) {
             currentElement = this;
-            $('#name').textinput('enable');
-            $('#name').val(this.data().name);
+            $('#label').textinput('enable');
+            $('#label').val(this.data().label);
+
+            $('#guard').textinput('enable');
+            $('#guard').val(this.data().guard);
 
             $('#checkboxStartElement').checkboxradio('enable');
             if (graph.startElementId == this.id()) {
@@ -582,9 +592,23 @@
             graph.generator = $('#generator').val();
         });
 
-        $('#name').on('input',function(e){
+        $('#label').on('input',function(e){
             if (currentElement) {
-                currentElement.data('name', $('#name').val());
+                currentElement.data('label', $('#label').val());
+                currentElement.data('name', stripEmptyLines([currentElement.data().label,
+                    currentElement.data().guard,
+                    currentElement.data().actions,
+                    currentElement.data().requirements]));
+            }
+        });
+
+        $('#guard').on('input',function(e){
+            if (currentElement) {
+                currentElement.data('guard', $('#guard').val());
+                currentElement.data('name', stripEmptyLines([currentElement.data().label,
+                    currentElement.data().guard,
+                    currentElement.data().actions,
+                    currentElement.data().requirements]));
             }
         });
 
