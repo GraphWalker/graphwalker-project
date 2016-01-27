@@ -92,6 +92,10 @@
                 <input type="text" id="guard" value=""/>
             </li>
             <li>
+                <label for="actions">Actions</label>
+                <input type="text" id="actions" value=""/>
+            </li>
+            <li>
                 <input type="checkbox" id="checkboxStartElement" class="custom" />
                 <label for="checkboxStartElement">Start element</label>
             </li>
@@ -557,6 +561,9 @@
             $('#guard').val("");
             $('#guard').textinput('disable');
 
+            $('#actions').val("");
+            $('#actions').textinput('disable');
+
             $('#checkboxStartElement').attr("checked", false).checkboxradio("refresh");
             $('#checkboxStartElement').checkboxradio('disable');
 
@@ -567,6 +574,9 @@
             currentElement = this;
             $('#label').textinput('enable');
             $('#label').val(this.data().label);
+
+            $('#actions').textinput('enable');
+            $('#actions').val(this.data().actions);
 
             $('#checkboxStartElement').checkboxradio('enable');
             if (graph.startElementId == this.id()) {
@@ -581,6 +591,9 @@
 
             $('#guard').textinput('enable');
             $('#guard').val(this.data().guard);
+
+            $('#actions').textinput('enable');
+            $('#actions').val(this.data().actions);
 
             $('#checkboxStartElement').checkboxradio('enable');
             if (graph.startElementId == this.id()) {
@@ -605,6 +618,16 @@
         $('#guard').on('input',function(e){
             if (currentElement) {
                 currentElement.data('guard', $('#guard').val());
+                currentElement.data('name', stripEmptyLines([currentElement.data().label,
+                    currentElement.data().guard,
+                    currentElement.data().actions,
+                    currentElement.data().requirements]));
+            }
+        });
+
+        $('#actions').on('input',function(e){
+            if (currentElement) {
+                currentElement.data('actions', $('#actions').val());
                 currentElement.data('name', stripEmptyLines([currentElement.data().label,
                     currentElement.data().guard,
                     currentElement.data().actions,
