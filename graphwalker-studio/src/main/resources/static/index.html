@@ -96,6 +96,10 @@
                 <input type="text" id="actions" value=""/>
             </li>
             <li>
+                <label for="requirements">Requirements</label>
+                <input type="text" id="requirements" value=""/>
+            </li>
+            <li>
                 <input type="checkbox" id="checkboxStartElement" class="custom" />
                 <label for="checkboxStartElement">Start element</label>
             </li>
@@ -394,8 +398,8 @@
          * Place the gw3 files in:
          * graphwalker-studio/src/main/resources/static/
          **/
-        readGraphsFromFile("Login.gw3");
-        //readGraphsFromFile("UC01.gw3");
+        //readGraphsFromFile("Login.gw3");
+        readGraphsFromFile("UC01.gw3");
         //readGraphsFromFile("PetClinic.gw3");
     });
 
@@ -564,6 +568,9 @@
             $('#actions').val("");
             $('#actions').textinput('disable');
 
+            $('#requirements').val("");
+            $('#requirements').textinput('disable');
+
             $('#checkboxStartElement').attr("checked", false).checkboxradio("refresh");
             $('#checkboxStartElement').checkboxradio('disable');
 
@@ -577,6 +584,9 @@
 
             $('#actions').textinput('enable');
             $('#actions').val(this.data().actions);
+
+            $('#requirements').textinput('enable');
+            $('#requirements').val(this.data().requirements);
 
             $('#checkboxStartElement').checkboxradio('enable');
             if (graph.startElementId == this.id()) {
@@ -594,6 +604,9 @@
 
             $('#actions').textinput('enable');
             $('#actions').val(this.data().actions);
+
+            $('#requirements').textinput('enable');
+            $('#requirements').val(this.data().requirements);
 
             $('#checkboxStartElement').checkboxradio('enable');
             if (graph.startElementId == this.id()) {
@@ -632,6 +645,12 @@
                     currentElement.data().guard,
                     currentElement.data().actions,
                     currentElement.data().requirements]));
+            }
+        });
+
+        $('#requirements').on('input',function(e){
+            if (currentElement) {
+                currentElement.data('requirements', $('#requirements').val());
             }
         });
 
