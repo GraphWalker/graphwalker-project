@@ -203,11 +203,20 @@
                 continue;
             }
 
+            var actions = [];
+            if (graphs[modelId].actions !== undefined) {
+                actions.push(graphs[modelId].actions);
+            }
+            var requirements = [];
+            if (graphs[modelId].requirements !== undefined) {
+                requirements.push(graphs[modelId].requirements);
+            }
+
             var model = {
                 name: graphs[modelId].name,
                 id: modelId,
                 generator: graphs[modelId].generator,
-                actions: graphs[modelId].actions,
+                actions: actions,
                 vertices: [],
                 edges: []
             }
@@ -216,23 +225,43 @@
                 model.startElementId = graphs[modelId].startElementId;
             }
             graphs[modelId].nodes().each( function( index, node) {
+
+                actions = [];
+                if (node.data().actions !== undefined) {
+                    actions.push(node.data().actions);
+                }
+                requirements = [];
+                if (node.data().requirements !== undefined) {
+                    requirements.push(node.data().requirements);
+                }
+
                 var vertex = {
                     id: node.data().id,
-                    name: node.data().name,
+                    name: node.data().label,
                     sharedState: node.data().sharedState,
-                    actions: node.data().actions,
-                    requirements: node.data().requirements,
+                    actions: actions,
+                    requirements: requirements,
                     properties: node.data().properties
                 };
                 model.vertices.push(vertex);
             });
             graphs[modelId].edges().each( function( index, edge) {
+
+                actions = [];
+                if (edge.data().actions !== undefined) {
+                    actions.push(edge.data().actions);
+                }
+                requirements = [];
+                if (edge.data().requirements !== undefined) {
+                    requirements.push(edge.data().requirements);
+                }
+
                 var edge = {
                     id: edge.data().id,
-                    name: edge.data().name,
+                    name: edge.data().label,
                     guard: edge.data().guard,
-                    actions: edge.data().actions,
-                    requirements: edge.data().requirements,
+                    actions: actions,
+                    requirements: requirements,
                     properties: edge.data().properties,
                     sourceVertexId: edge.data().source,
                     targetVertexId: edge.data().target
@@ -747,7 +776,7 @@
                 graph.startElementId = jsonModel.startElementId;
             }
             if (jsonModel.hasOwnProperty('actions')) {
-                graph.actions = jsonModel.actions;
+                graph.actions = jsonModel.actions.join('');
             }
 
             var jsonVertices = jsonModel.vertices;
@@ -765,6 +794,15 @@
                     jsonVertex.properties = {};
                 }
 
+                var actions;
+                var requirements
+                if (jsonVertex.hasOwnProperty('actions')) {
+                    actions = jsonVertex.actions.join('');
+                }
+                if (jsonVertex.hasOwnProperty('requirements')) {
+                    requirements = jsonVertex.requirements.join();
+                }
+
                 graph.add({
                     group: "nodes",
                     data: {
@@ -774,8 +812,8 @@
                             jsonVertex.actions,
                             jsonVertex.requirements]),
                         sharedState: jsonVertex.sharedState,
-                        actions: jsonVertex.actions,
-                        requirements: jsonVertex.requirements,
+                        actions: actions,
+                        requirements: requirements,
                         properties: jsonVertex.properties,
                         color: 'LightSteelBlue'
                     },
@@ -808,6 +846,15 @@
                     });
                 }
 
+                var actions;
+                var requirements
+                if (jsonEdge.hasOwnProperty('actions')) {
+                    actions = jsonEdge.actions.join('');
+                }
+                if (jsonEdge.hasOwnProperty('requirements')) {
+                    requirements = jsonEdge.requirements.join();
+                }
+
                 graph.add({
                     group: "edges",
                     data: {
@@ -819,8 +866,8 @@
                             jsonEdge.guard,
                             jsonEdge.actions]),
                         guard: jsonEdge.guard,
-                        actions: jsonEdge.actions,
-                        requirements: jsonEdge.requirements,
+                        actions: actions,
+                        requirements: requirements,
                         properties: jsonEdge.properties,
                         color: 'LightSteelBlue'
                     }
