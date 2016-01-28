@@ -208,12 +208,12 @@
             }
 
             var actions = [];
-            if (graphs[modelId].actions !== undefined) {
+            if (graphs[modelId].actions) {
                 actions.push(graphs[modelId].actions);
             }
             var requirements = [];
-            if (graphs[modelId].requirements !== undefined) {
-                requirements.push(graphs[modelId].requirements);
+            if (graphs[modelId].requirements) {
+                requirements = graphs[modelId].requirements.split(',');
             }
 
             var model = {
@@ -231,12 +231,12 @@
             graphs[modelId].nodes().each( function( index, node) {
 
                 actions = [];
-                if (node.data().actions !== undefined) {
+                if (node.data().actions) {
                     actions.push(node.data().actions);
                 }
                 requirements = [];
-                if (node.data().requirements !== undefined) {
-                    requirements.push(node.data().requirements);
+                if (node.data().requirements) {
+                    requirements = node.data().requirements.split(',');
                 }
 
                 var vertex = {
@@ -252,12 +252,12 @@
             graphs[modelId].edges().each( function( index, edge) {
 
                 actions = [];
-                if (edge.data().actions !== undefined) {
+                if (edge.data().actions) {
                     actions.push(edge.data().actions);
                 }
                 requirements = [];
-                if (edge.data().requirements !== undefined) {
-                    requirements.push(edge.data().requirements);
+                if (edge.data().requirements) {
+                    requirements = edge.data().requirements.split(',');
                 }
 
                 var edge = {
@@ -433,7 +433,7 @@
          **/
         //readGraphsFromFile("Login.gw3");
         //readGraphsFromFile("UC01.gw3");
-        readGraphsFromFile("petClinic.gw3");
+        //readGraphsFromFile("petClinic.gw3");
     });
 
 
@@ -547,7 +547,9 @@
                             source: srcNode.id(),
                             target: dstNode.id(),
                             label: "e_NewEdge",
-                            name: "e_NewEdge",
+                            name: formatElementName({
+                                name: "e_NewEdge"
+                            }),
                             color: 'LightSteelBlue'
                         }
                     });
@@ -579,7 +581,9 @@
                     data: {
                         id: id,
                         label: "v_NewVertex",
-                        name: "v_NewVertex",
+                        name: formatElementName({
+                            name: "v_NewVertex"
+                        }),
                         color: 'LightSteelBlue'
                     },
                     renderedPosition: {
@@ -660,49 +664,64 @@
         $('#label').on('input',function(e){
             if (currentElement) {
                 currentElement.data('label', $('#label').val());
-                currentElement.data('name', stripEmptyLines([currentElement.data().label,
-                    currentElement.data().sharedState,
-                    currentElement.data().guard,
-                    currentElement.data().actions,
-                    currentElement.data().requirements]));
+                currentElement.data('name', formatElementName({
+                    name: currentElement.data().label,
+                    sharedState: currentElement.data().sharedState,
+                    guard: currentElement.data().guard,
+                    actions: currentElement.data().actions,
+                    requirements: currentElement.data().requirements
+                }));
             }
         });
 
         $('#sharedStateName').on('input',function(e){
             if (currentElement) {
                 currentElement.data('sharedState', $('#sharedStateName').val());
-                currentElement.data('name', stripEmptyLines([currentElement.data().label,
-                    currentElement.data().sharedState,
-                    currentElement.data().guard,
-                    currentElement.data().actions,
-                    currentElement.data().requirements]));
+                currentElement.data('name', formatElementName({
+                    name: currentElement.data().label,
+                    sharedState: currentElement.data().sharedState,
+                    guard: currentElement.data().guard,
+                    actions: currentElement.data().actions,
+                    requirements: currentElement.data().requirements
+            }));
             }
         });
 
         $('#guard').on('input',function(e){
             if (currentElement) {
                 currentElement.data('guard', $('#guard').val());
-                currentElement.data('name', stripEmptyLines([currentElement.data().label,
-                    currentElement.data().guard,
-                    currentElement.data().actions,
-                    currentElement.data().requirements]));
+                currentElement.data('name', formatElementName({
+                    name: currentElement.data().label,
+                    guard: currentElement.data().guard,
+                    actions: currentElement.data().actions,
+                    requirements: currentElement.data().requirements
+                }));
             }
         });
 
         $('#actions').on('input',function(e){
             if (currentElement) {
                 currentElement.data('actions', $('#actions').val());
-                currentElement.data('name', stripEmptyLines([currentElement.data().label,
-                    currentElement.data().sharedState,
-                    currentElement.data().guard,
-                    currentElement.data().actions,
-                    currentElement.data().requirements]));
+                currentElement.data('name', formatElementName({
+                    name: currentElement.data().label,
+                    sharedState: currentElement.data().sharedState,
+                    guard: currentElement.data().guard,
+                    actions: currentElement.data().actions,
+                    requirements: currentElement.data().requirements
+                }));
             }
         });
 
         $('#requirements').on('input',function(e){
             if (currentElement) {
                 currentElement.data('requirements', $('#requirements').val());
+                currentElement.data('name', formatElementName({
+                    name: currentElement.data().label,
+                    sharedState: currentElement.data().sharedState,
+                    guard: currentElement.data().guard,
+                    actions: currentElement.data().actions,
+                    requirements: currentElement.data().requirements
+                }));
             }
         });
 
@@ -831,10 +850,12 @@
                     data: {
                         id: jsonVertex.id,
                         label: jsonVertex.name,
-                        name: stripEmptyLines([jsonVertex.name,
-                            jsonVertex.sharedState,
-                            jsonVertex.actions,
-                            jsonVertex.requirements]),
+                        name: formatElementName({
+                            name: jsonVertex.name,
+                            sharedState: jsonVertex.sharedState,
+                            actions: jsonVertex.actions,
+                            requirements: jsonVertex.requirements
+                        }),
                         sharedState: jsonVertex.sharedState,
                         actions: actions,
                         requirements: requirements,
@@ -886,9 +907,11 @@
                         source: jsonEdge.sourceVertexId,
                         target: jsonEdge.targetVertexId,
                         label: jsonEdge.name,
-                        name: stripEmptyLines([jsonEdge.name,
-                            jsonEdge.guard,
-                            jsonEdge.actions]),
+                        name: formatElementName({
+                            name: jsonEdge.name,
+                            guard: jsonEdge.guard,
+                            actions: jsonEdge.actions
+                        }),
                         guard: jsonEdge.guard,
                         actions: actions,
                         requirements: requirements,
@@ -935,12 +958,22 @@
         return uuid;
     }
 
-    function stripEmptyLines(strArrayWithLEmptyLines) {
+    function formatElementName(jsonObj) {
         var str = "";
-        for (var i = 0; i < strArrayWithLEmptyLines.length; i++) {
-            if (strArrayWithLEmptyLines[i] !== undefined && strArrayWithLEmptyLines[i].length > 0) {
-                str += strArrayWithLEmptyLines[i] + '\n';
-            }
+        if (jsonObj.name) {
+            str += 'Name: ' + jsonObj.name + '\n';
+        }
+        if (jsonObj.sharedState) {
+            str += 'Shared state name: ' + jsonObj.sharedState + '\n';
+        }
+        if (jsonObj.guard) {
+            str += 'Guard: ' + jsonObj.guard + '\n';
+        }
+        if (jsonObj.actions) {
+            str += 'Actions: ' + jsonObj.actions + '\n';
+        }
+        if (jsonObj.requirements) {
+            str += 'Requirements: ' + jsonObj.requirements + '\n';
         }
         return str.slice(0, -1);
     }
