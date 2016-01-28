@@ -80,11 +80,23 @@
         </ul>
         <ul data-role="listview" data-theme="a" class="nav-search">
             <li>
-                <label for="generator">Generator</label>
+                <label for="modelName">Model name</label>
+                <input type="text" id="modelName" value=""/>
+            </li>
+            <li>
+                <label for="generator">Model generator</label>
                 <input type="text" id="generator" value=""/>
             </li>
             <li>
-                <label for="label">Name</label>
+                <label for="modelActions">Model actions</label>
+                <input type="text" id="modelActions" value=""/>
+            </li>
+            <li>
+                <label for="modelRequirement">Model requirement</label>
+                <input type="text" id="modelRequirement" value=""/>
+            </li>
+            <li>
+                <label for="label">Element name</label>
                 <input type="text" id="label" value=""/>
             </li>
             <li>
@@ -304,7 +316,8 @@
     function onAddModel() {
         console.log("onAddModel");
         var id = generateUUID();
-        createTab(id, "New model");
+        var graph = createTab(id, "New model");
+        graph.name = "New model";
 
         $("#tabs").show();
         var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
@@ -403,7 +416,10 @@
                 currentModelId = ui.newPanel.attr('id').substr(2);
                 console.log("tabs activate: " + currentModelId);
                 graphs[currentModelId].resize();
+                $('#modelName').val(graphs[currentModelId].name);
                 $('#generator').val(graphs[currentModelId].generator);
+                $('#modelActions').val(graphs[currentModelId].actions);
+                $('#modelRequirements').val(graphs[currentModelId].requirements);
             }
         });
 
@@ -426,9 +442,29 @@
             }
         });
 
+        $('#modelName').on('input',function(e){
+            if (graphs[currentModelId]) {
+                graphs[currentModelId].name = $('#modelName').val();
+                var selectedTab = $("#tabs").tabs( "option", "selected" );
+                $("#tabs ul li a").eq(selectedTab).text($('#modelName').val());
+            }
+        });
+
         $('#generator').on('input',function(e){
             if (graphs[currentModelId]) {
                 graphs[currentModelId].generator = $('#generator').val();
+            }
+        });
+
+        $('#modelActions').on('input',function(e){
+            if (graphs[currentModelId]) {
+                graphs[currentModelId].actions = $('#modelActions').val();
+            }
+        });
+
+        $('#modelRequirements').on('input',function(e){
+            if (graphs[currentModelId]) {
+                graphs[currentModelId].requirements = $('#modelRequirements').val();
             }
         });
 
@@ -440,7 +476,7 @@
          **/
         //readGraphsFromFile("Login.gw3");
         //readGraphsFromFile("UC01.gw3");
-        //readGraphsFromFile("petClinic.gw3");
+        readGraphsFromFile("petClinic.gw3");
     });
 
 
@@ -818,6 +854,7 @@
             var graph = createTab(id, name);
 
             graph.generator = jsonModel.generator;
+            graph.name = name;
 
             if (jsonModel.hasOwnProperty('startElementId')) {
                 graph.startElementId = jsonModel.startElementId;
