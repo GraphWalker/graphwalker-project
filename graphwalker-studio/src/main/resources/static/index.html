@@ -426,6 +426,13 @@
             }
         });
 
+        $('#generator').on('input',function(e){
+            if (graphs[currentModelId]) {
+                graphs[currentModelId].generator = $('#generator').val();
+            }
+        });
+
+
 
         /**
          * Place the gw3 files in:
@@ -657,10 +664,6 @@
             if (graph.startElementId == this.id()) {
                 $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
             }
-        });
-
-        $('#generator').on('input',function(e){
-            graphs[currentModelId].generator = $('#generator').val();
         });
 
         $('#label').on('input',function(e){
