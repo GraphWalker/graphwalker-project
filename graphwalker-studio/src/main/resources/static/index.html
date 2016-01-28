@@ -382,7 +382,6 @@
 
     function removeModel(modelId) {
         console.log("Remove model with id: " + modelId);
-
         delete graphs[modelId];
     }
 
@@ -404,6 +403,7 @@
                 currentModelId = ui.newPanel.attr('id').substr(2);
                 console.log("tabs activate: " + currentModelId);
                 graphs[currentModelId].resize();
+                $('#generator').val(graphs[currentModelId].generator);
             }
         });
 
@@ -468,6 +468,9 @@
         var graph = cytoscape({
             id: currentModelId,
             container: document.querySelector('#A-' + currentModelId),
+
+            currentElement: null,
+
 
             'boxSelectionEnabled': true,
             'wheelSensitivity': '0', // Values 0, 0.5 and 1 has the same effect...
@@ -616,7 +619,6 @@
 
         });
 
-        var currentElement = null;
         graph.on('tap', 'node', function(event) {
             currentElement = this;
             $('#label').textinput('enable');
@@ -658,7 +660,7 @@
         });
 
         $('#generator').on('input',function(e){
-            graph.generator = $('#generator').val();
+            graphs[currentModelId].generator = $('#generator').val();
         });
 
         $('#label').on('input',function(e){
@@ -731,7 +733,7 @@
                     graph.startElementId = currentElement.id();
                 }
             } else {
-                if (currentElement == graph.startElementId) {
+                if (currentElement == graph.data().startElementId) {
                     graph.startElementId = undefined;
                 }
             }
@@ -743,7 +745,7 @@
 
         $( ".ui-panel" ).panel({
             close: function( event, ui ) {
-                console.log("Resize the model, beause the side panel has been closed");
+                console.log("Resize the model, because the side panel has been closed");
                 graph.resize();
             }
         });
