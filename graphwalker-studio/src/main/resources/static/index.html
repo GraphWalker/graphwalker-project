@@ -88,6 +88,10 @@
                 <input type="text" id="label" value=""/>
             </li>
             <li>
+                <label for="sharedStateName">Shared state name</label>
+                <input type="text" id="sharedStateName" value=""/>
+            </li>
+            <li>
                 <label for="guard">Guard</label>
                 <input type="text" id="guard" value=""/>
             </li>
@@ -428,8 +432,8 @@
          * graphwalker-studio/src/main/resources/static/
          **/
         //readGraphsFromFile("Login.gw3");
-        readGraphsFromFile("UC01.gw3");
-        //readGraphsFromFile("PetClinic.gw3");
+        //readGraphsFromFile("UC01.gw3");
+        readGraphsFromFile("petClinic.gw3");
     });
 
 
@@ -591,6 +595,9 @@
             $('#label').val("");
             $('#label').textinput('disable');
 
+            $('#sharedStateName').val("");
+            $('#sharedStateName').textinput('disable');
+
             $('#guard').val("");
             $('#guard').textinput('disable');
 
@@ -610,6 +617,9 @@
             currentElement = this;
             $('#label').textinput('enable');
             $('#label').val(this.data().label);
+
+            $('#sharedStateName').textinput('enable');
+            $('#sharedStateName').val(this.data().sharedState);
 
             $('#actions').textinput('enable');
             $('#actions').val(this.data().actions);
@@ -651,6 +661,18 @@
             if (currentElement) {
                 currentElement.data('label', $('#label').val());
                 currentElement.data('name', stripEmptyLines([currentElement.data().label,
+                    currentElement.data().sharedState,
+                    currentElement.data().guard,
+                    currentElement.data().actions,
+                    currentElement.data().requirements]));
+            }
+        });
+
+        $('#sharedStateName').on('input',function(e){
+            if (currentElement) {
+                currentElement.data('sharedState', $('#sharedStateName').val());
+                currentElement.data('name', stripEmptyLines([currentElement.data().label,
+                    currentElement.data().sharedState,
                     currentElement.data().guard,
                     currentElement.data().actions,
                     currentElement.data().requirements]));
@@ -671,6 +693,7 @@
             if (currentElement) {
                 currentElement.data('actions', $('#actions').val());
                 currentElement.data('name', stripEmptyLines([currentElement.data().label,
+                    currentElement.data().sharedState,
                     currentElement.data().guard,
                     currentElement.data().actions,
                     currentElement.data().requirements]));
@@ -794,8 +817,8 @@
                     jsonVertex.properties = {};
                 }
 
-                var actions;
-                var requirements
+                var actions = undefined;
+                var requirements = undefined;
                 if (jsonVertex.hasOwnProperty('actions')) {
                     actions = jsonVertex.actions.join('');
                 }
@@ -809,6 +832,7 @@
                         id: jsonVertex.id,
                         label: jsonVertex.name,
                         name: stripEmptyLines([jsonVertex.name,
+                            jsonVertex.sharedState,
                             jsonVertex.actions,
                             jsonVertex.requirements]),
                         sharedState: jsonVertex.sharedState,
@@ -846,8 +870,8 @@
                     });
                 }
 
-                var actions;
-                var requirements
+                var actions = undefined;
+                var requirements = undefined;
                 if (jsonEdge.hasOwnProperty('actions')) {
                     actions = jsonEdge.actions.join('');
                 }
