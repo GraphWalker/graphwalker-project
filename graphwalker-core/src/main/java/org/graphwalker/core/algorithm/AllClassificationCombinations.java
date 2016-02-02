@@ -85,24 +85,21 @@ public final class AllClassificationCombinations implements Algorithm {
         }
 
         combinations = new ArrayList<>();
-        printCombinations(treeData, 0, new ArrayList<Classification.RuntimeClassification>());
+        getCombinations(treeData, 0, new ArrayList<Classification.RuntimeClassification>());
         return combinations;
     }
 
-    private static void printCombinations(List<List<Classification.RuntimeClassification>> treeData,
-                                          int n,
-                                          List<Classification.RuntimeClassification> testCase) {
+    private static void getCombinations(List<List<Classification.RuntimeClassification>> treeData,
+                                        int n,
+                                        ArrayList<Classification.RuntimeClassification> testCase) {
         if (n >= treeData.size()) {
             combinations.add(testCase);
-            testCase = null;
             return;
         }
         for (Classification.RuntimeClassification c : treeData.get(n)) {
-            if ( testCase == null ) {
-                testCase = new ArrayList<>();
-            }
-            testCase.add(c);
-            printCombinations(treeData, n + 1, testCase);
+            ArrayList<Classification.RuntimeClassification> foo = new ArrayList<>(testCase);
+            foo.add(c);
+            getCombinations(treeData, n + 1, foo);
         }
     }
 }
