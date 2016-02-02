@@ -32,6 +32,7 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.RequirementStatus;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.RuntimeBase;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -81,6 +82,15 @@ public abstract class Util {
                     jsonKeys.put(jsonKey);
                 }
                 object.put("data", jsonKeys);
+
+                JSONArray jsonProperties = new JSONArray();
+                RuntimeBase runtimeBase = (RuntimeBase) machine.getCurrentContext().getCurrentElement();
+                for (Map.Entry<String, Object> key : runtimeBase.getProperties().entrySet()) {
+                    JSONObject jsonKey = new JSONObject();
+                    jsonKey.put(key.getKey(), key.getValue());
+                    jsonProperties.put(jsonKey);
+                }
+                object.put("properties", jsonProperties);
             }
         }
         if (showUnvisited) {
