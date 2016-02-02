@@ -51,6 +51,7 @@ import org.graphdrawing.graphml.xmlns.DataType;
 import org.graphdrawing.graphml.xmlns.GraphType;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
+import org.graphdrawing.graphml.xmlns.impl.DataTypeImpl;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
@@ -252,8 +253,12 @@ public final class YEdContextFactory implements ContextFactory {
                         workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
                     }
                 } else {
+                    String description = "";
                     for (DataType data : node.getDataArray()) {
                         if (0 < data.getDomNode().getChildNodes().getLength()) {
+                            if (data.getKey().equals("d5")) {
+                                description = ((DataTypeImpl) data).getStringValue();
+                            }
                             if (isSupportedNode(data.xmlText())) {
                                 StringBuilder label = new StringBuilder();
                                 for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
@@ -264,6 +269,9 @@ public final class YEdContextFactory implements ContextFactory {
                                 parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
                                 YEdVertexParser.ParseContext parseContext = parser.parse();
                                 Vertex vertex = new Vertex();
+                                if (!description.isEmpty()) {
+                                    vertex.setProperty("description", description);
+                                }
                                 vertex.setProperty("x", getSupportedNode(data.xmlText()).getGeometry().getX());
                                 vertex.setProperty("y", getSupportedNode(data.xmlText()).getGeometry().getY());
                                 boolean blocked = false;
@@ -335,8 +343,12 @@ public final class YEdContextFactory implements ContextFactory {
         for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
             if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
                 org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType) object;
+                String description = "";
                 for (DataType data : edgeType.getDataArray()) {
                     if (0 < data.getDomNode().getChildNodes().getLength()) {
+                        if (data.getKey().equals("d9")) {
+                            description = ((DataTypeImpl) data).getStringValue();
+                        }
                         if (isSupportedEdge(data.xmlText())) {
                             StringBuilder label = new StringBuilder();
                             for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
@@ -348,6 +360,10 @@ public final class YEdContextFactory implements ContextFactory {
                             YEdEdgeParser.ParseContext parseContext = parser.parse();
 
                             Edge edge = new Edge();
+                            if (!description.isEmpty()) {
+                                edge.setProperty("description", description);
+                            }
+                            edge.setProperty("description", description);
                             if (null != elements.get(edgeType.getSource())) {
                                 edge.setSourceVertex(elements.get(edgeType.getSource()));
                             }
