@@ -363,7 +363,6 @@ public final class YEdContextFactory implements ContextFactory {
                             if (!description.isEmpty()) {
                                 edge.setProperty("description", description);
                             }
-                            edge.setProperty("description", description);
                             if (null != elements.get(edgeType.getSource())) {
                                 edge.setSourceVertex(elements.get(edgeType.getSource()));
                             }
