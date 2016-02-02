@@ -41,6 +41,7 @@ import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
@@ -50,6 +51,7 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.graphwalker.io.factory.gw3.GW3ContextFactory;
 import org.graphwalker.java.test.TestExecutor;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.graphwalker.restful.Restful;
@@ -410,16 +412,24 @@ public class CLI {
     }
 
     private void RunCommandOffline() throws Exception {
-        TestExecutor executor = new TestExecutor(getContextsWithPathGenerators(offline.model.iterator()));
-        executor.getMachine().addObserver(new Observer() {
-            @Override
-            public void update(Machine machine, Element element, EventType type) {
-                if (EventType.BEFORE_ELEMENT.equals(type)) {
-                    System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
+        if (offline.model.size() > 0 ) {
+            TestExecutor executor = new TestExecutor(getContextsWithPathGenerators(offline.model.iterator()));
+            executor.getMachine().addObserver(new Observer() {
+                @Override
+                public void update(Machine machine, Element element, EventType type) {
+                    if (EventType.BEFORE_ELEMENT.equals(type)) {
+                        System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
+                    }
                 }
+            });
+            executor.execute();
+        } else if (!offline.gw3.isEmpty()) {
+            SimpleMachine machine = new SimpleMachine(new GW3ContextFactory().createMultiple(Paths.get(offline.gw3)));
+            while (machine.hasNextStep()) {
+                machine.getNextStep();
+                System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
             }
-        });
-        executor.execute();
+        }
     }
 
     public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
