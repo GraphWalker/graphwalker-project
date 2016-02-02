@@ -86,5 +86,10 @@ public final class Classification extends CachedBuilder<Classification, Classifi
         public int hashCode() {
             return Objects.hash(super.hashCode(), classifications);
         }
+
+        @Override
+        public String toString() {
+            return getName();
+        }
     }
 }
