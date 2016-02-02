@@ -26,6 +26,8 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
