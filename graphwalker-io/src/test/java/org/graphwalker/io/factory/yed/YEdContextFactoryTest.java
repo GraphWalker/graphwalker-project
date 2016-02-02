@@ -75,7 +75,16 @@ public class YEdContextFactoryTest {
 
     @Test
     public void login() {
-        new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
+        Context context = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
+        Assert.assertThat(context.getModel().findVertices("v_ClientNotRunning").size(), is(1));
+
+        Vertex.RuntimeVertex vertex = context.getModel().findVertices("v_ClientNotRunning").get(0);
+        Assert.assertNotNull(vertex);
+        Assert.assertThat((String)vertex.getProperty("description"), is("Start the client process"));
+
+        Edge.RuntimeEdge edge = context.getModel().findEdges("e_ValidPremiumCredentials").get(0);
+        Assert.assertNotNull(edge);
+        Assert.assertThat((String)edge.getProperty("description"), is("Log in a s Premium user, using valid credentials"));
     }
 
     @Test
