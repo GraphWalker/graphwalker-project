@@ -69,7 +69,7 @@
             <li data-icon="delete"><a href="#" data-rel="close">Close menu</a></li>
             <li><button type='button' id="runModel" onclick="onRunModel()">Run model</button></li>
             <li>
-                <label for="executionSpeedSlider">Execution speed (ms)</label>
+                <label for="executionSpeedSlider">Execution delay (ms)</label>
                 <input type="range" id="executionSpeedSlider" value="0" min="0" max="500" data-highlight="true" />
             </li>
             <li><button type='button' id="resetModel" onclick="onResetModel()">Reset</button></li>
@@ -475,7 +475,7 @@
          * graphwalker-studio/src/main/resources/static/
          **/
         //readGraphsFromFile("Login.gw3");
-        //readGraphsFromFile("UC01.gw3");
+        readGraphsFromFile("UC01.gw3");
         //readGraphsFromFile("petClinic.gw3");
     });
 
