@@ -74,8 +74,7 @@ public final class AllClassificationCombinations implements Algorithm {
 
     /*
      * Will generate all combinations by the given classification tree.
-     * The result is returned as 2-dimensional matrix, where the rows are test cases,
-     * and the each row contains leafs.
+     * The result is returned as list, where each row represent the combination.
      */
     public List<List<Classification.RuntimeClassification>> generate() {
         List<Classification.RuntimeClassification> classes = getClassifications();
