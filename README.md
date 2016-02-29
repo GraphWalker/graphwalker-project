@@ -1,4 +1,5 @@
-GraphWalker [![Build Status](https://travis-ci.org/GraphWalker/graphwalker-project.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-project) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-project/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-project)
+GraphWalker [![Build Status](https://travis-ci.org/GraphWalker/graphwalker-project.svg?branch=master)](https://travis-ci.org/GraphWalker/graphwalker-project) [![Build status](https://ci.appveyor.com/api/projects/status/s0410i90aldxcbh5/branch/master?svg=true)](https://ci.appveyor.com/project/KristianKarl/graphwalker-project/branch/master)
+ [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-project/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-project)
 ===================
 
 Documentation on http://graphwalker.org/
