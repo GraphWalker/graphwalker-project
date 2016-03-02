@@ -256,7 +256,7 @@ public class CLI {
     private void RunCommandCheck() throws Exception {
         List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
         List<String> issues = ContextsChecker.hasIssues(contexts);
-        if (issues.size() > 0) {
+        if (!issues.isEmpty()) {
             for (String issue : issues) {
                 System.out.println(issue);
             }

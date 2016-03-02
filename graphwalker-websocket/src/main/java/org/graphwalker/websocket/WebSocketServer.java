@@ -396,7 +396,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     }
 
     private void sendIssues(WebSocket socket, List<String> issues) {
-        if (issues.size() > 0) {
+        if (!issues.isEmpty()) {
             JSONObject jsonIssue = new JSONObject();
             jsonIssue.put("command", "issues");
 
