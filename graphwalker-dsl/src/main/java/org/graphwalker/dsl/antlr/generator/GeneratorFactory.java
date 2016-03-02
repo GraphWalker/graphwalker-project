@@ -39,6 +39,9 @@ import org.graphwalker.dsl.generator.Logical_Lexer;
  * Created by krikar on 5/14/14.
  */
 public class GeneratorFactory {
+    
+    private GeneratorFactory() {}
+    
     public static PathGenerator parse(String str) {
         ANTLRInputStream inputStream = new ANTLRInputStream(str);
         Logical_Lexer lexer = new Logical_Lexer(inputStream);

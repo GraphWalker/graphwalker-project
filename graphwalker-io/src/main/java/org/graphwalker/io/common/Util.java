@@ -38,6 +38,9 @@ import java.util.ListIterator;
  * Created by krikar on 2015-11-04.
  */
 public class Util {
+    
+    private Util() {}
+    
     /*
      * Search the elements for a specific property: blocked.
      * If it exists, the element will be removed from

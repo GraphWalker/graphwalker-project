@@ -12,6 +12,8 @@ import java.util.List;
  * Created by krikar on 2015-11-08.
  */
 public class ContextChecker {
+    
+    private ContextChecker() {}
 
     /**
      * Checks the context for problems or any possible errors.

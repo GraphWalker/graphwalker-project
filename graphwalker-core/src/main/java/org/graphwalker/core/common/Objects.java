@@ -13,6 +13,8 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public class Objects {
+    
+    private Objects() {}
 
     public static <K, V> boolean isNullOrEmpty(Map<K, V> map) {
         return !isNotNullOrEmpty(map);
