@@ -146,7 +146,7 @@ public final class Assert<T> {
     }
 
     public Assert<T> a(Class<?> clazz) {
-        return a(clazz, MessageFactory.build("type", invert, object.getClass().getName(), isNull(clazz) ? "null" : (clazz.getName())));
+        return a(clazz, MessageFactory.build("type", invert, object.getClass().getName(), isNull(clazz) ? "null" : clazz.getName()));
     }
 
     public Assert<T> a(Class<?> clazz, String message) {

@@ -231,7 +231,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
         }
 
         private <T> T build(Builder<T> builder) {
-            return (isNotNull(builder) ? builder.build() : null);
+            return isNotNull(builder) ? builder.build() : null;
         }
 
         /**

@@ -118,12 +118,12 @@ public final class DotContextFactory implements ContextFactory {
         walker.walk(listener, parser.graph());
 
         Edge startEdge = null;
-        for (Vertex vertex : listener.vertices.values()) {
+        for (Vertex vertex : listener.getVertices().values()) {
             if (!vertex.getName().equalsIgnoreCase("START")) {
                 model.addVertex(vertex);
             }
         }
-        for (Edge edge : listener.edges) {
+        for (Edge edge : listener.getEdges()) {
             if (edge.getSourceVertex().getName() != null &&
                     edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
                 edge.setSourceVertex(null);
