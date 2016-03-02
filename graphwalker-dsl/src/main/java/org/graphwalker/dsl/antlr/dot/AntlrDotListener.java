@@ -44,8 +44,8 @@ import java.util.Vector;
 public class AntlrDotListener extends DOTBaseListener {
     private static final Logger logger = LoggerFactory.getLogger(AntlrDotListener.class);
 
-    public Map<String, Vertex> vertices = new HashMap<>();
-    public Vector<Edge> edges = new Vector<>();
+    private Map<String, Vertex> vertices = new HashMap<>();
+    private Vector<Edge> edges = new Vector<>();
 
     private Vertex src, dst = null;
     private Edge edge = null;
@@ -134,4 +134,14 @@ public class AntlrDotListener extends DOTBaseListener {
             }
         }
     }
+
+    public Map<String, Vertex> getVertices() {
+        return vertices;
+    }
+
+    public Vector<Edge> getEdges() {
+        return edges;
+    }
+    
+    
 }
