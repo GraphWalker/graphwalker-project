@@ -235,12 +235,10 @@ public final class TestMojo extends DefaultMojoBase {
     }
 
     private void displayResult(Result result) {
-        if (getLog().isErrorEnabled()) {
-            if (result.hasErrors()) {
-                getLog().info("------------------------------------------------------------------------");
-                for (String error : result.getErrors()) {
-                    getLog().error(error);
-                }
+        if (getLog().isErrorEnabled() &&result.hasErrors()) {
+            getLog().info("------------------------------------------------------------------------");
+            for (String error : result.getErrors()) {
+                getLog().error(error);
             }
         }
         if (getLog().isInfoEnabled()) {

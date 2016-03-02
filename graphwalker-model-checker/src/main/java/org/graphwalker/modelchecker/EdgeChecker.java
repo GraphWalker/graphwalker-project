@@ -26,10 +26,8 @@ public class EdgeChecker {
             issues.add("Edge must have a target vertex.");
         }
 
-        if (edge.hasName()) {
-            if (CharMatcher.WHITESPACE.matchesAnyOf(edge.getName())) {
-                issues.add("Name of edge cannot have any white spaces.");
-            }
+        if (edge.hasName() && CharMatcher.WHITESPACE.matchesAnyOf(edge.getName())) {
+            issues.add("Name of edge cannot have any white spaces.");
         }
 
         if (edge.getWeight() < 0 || edge.getWeight() > 1) {
