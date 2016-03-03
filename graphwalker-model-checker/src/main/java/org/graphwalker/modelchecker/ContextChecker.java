@@ -33,11 +33,9 @@ public class ContextChecker {
         issues.addAll(ModelChecker.hasIssues(context.getModel()));
 
         // Check for start element (or shared state)
-        if (context.getNextElement() == null) {
-            if (!context.getModel().hasSharedStates()) {
-                issues.add("The model has neither a start element or a defined shared state.");
-                return issues;
-            }
+        if (context.getNextElement() == null && !context.getModel().hasSharedStates()) {
+            issues.add("The model has neither a start element or a defined shared state.");
+            return issues;
         }
 
         // Check for a non-strongly connected graph and in combination with
