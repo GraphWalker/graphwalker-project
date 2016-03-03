@@ -115,7 +115,7 @@ public final class YEdContextFactory implements ContextFactory {
 
     @Override
     public <T extends Context> T create(Path path, T context) {
-        Edge startEdge = null;
+        Edge startEdge;
         Map<String, Vertex> elements = new HashMap<>();
         Model model = new Model();
         GraphmlDocument document = null;

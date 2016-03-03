@@ -36,6 +36,7 @@ import org.graphwalker.core.model.RuntimeBase;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -120,7 +121,7 @@ public abstract class Util {
      * @return The execution statistics in JSON format.
      */
     public static JSONObject getStatisticsAsJSON(Machine machine) {
-        HashMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
+        EnumMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
         JSONObject object = new JSONObject();
         object.put("totalNumberOfEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
         object.put("totalNumberOfUnvisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
@@ -165,8 +166,8 @@ public abstract class Util {
         return object;
     }
 
-    private static HashMap<Statistics, Integer> getStatistics(Context context) {
-        HashMap<Statistics, Integer> map = new HashMap<>();
+    private static EnumMap<Statistics, Integer> getStatistics(Context context) {
+        EnumMap<Statistics, Integer> map = new EnumMap<>(Statistics.class);
         map.put(Statistics.TOTAL_NUMBER_OF_VERTICES, context.getModel().getVertices().size());
         map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES, context.getProfiler().getUnvisitedVertices(context).size());
         map.put(Statistics.TOTAL_NUMBER_OF_EDGES, context.getModel().getEdges().size());
