@@ -310,7 +310,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
             for (String key : global.keySet()) {
                 if (isVariable(key, methods)) {
                     if (global.get(key) instanceof Double) {
-                        keys.put(key, "" + Math.round((double) global.get(key)));
+                        keys.put(key, Long.toString(Math.round((double) global.get(key))));
                     } else {
                         keys.put(key, global.get(key).toString());
                     }
@@ -321,7 +321,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
                 if (isVariable(key, methods)) {
                     Object value = getBindings(ENGINE_SCOPE).get(key);
                     if (value instanceof Double) {
-                        keys.put(key, "" + Math.round((double) value));
+                        keys.put(key, Long.toString(Math.round((double) value)));
                     } else {
                         keys.put(key, value.toString());
                     }
