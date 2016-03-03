@@ -378,15 +378,13 @@ public class CLI {
             }
         }
 
-        // Read the template
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(templateFileName)));
+        // Read the template        
         StringBuilder templateStrBuilder = new StringBuilder();
         String line;
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(templateFileName)))) {
             while ((line = reader.readLine()) != null) {
                 templateStrBuilder.append(line).append("\n");
             }
-            reader.close();
         } catch (IOException e) {
             logger.error(e.getMessage());
             throw new RuntimeException("Could not read the file: " + templateFileName);
