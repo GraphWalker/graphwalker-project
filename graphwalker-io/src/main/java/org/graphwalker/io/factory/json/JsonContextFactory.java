@@ -58,11 +58,10 @@ public final class JsonContextFactory implements ContextFactory {
     private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.json"));
 
     @Override
-    public <T extends Context> T create(Path path, T context) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
+    public <T extends Context> T create(Path path, T context) {        
         StringBuilder out = new StringBuilder();
         String line;
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
             while ((line = reader.readLine()) != null) {
                 out.append(line);
             }
@@ -71,12 +70,6 @@ public final class JsonContextFactory implements ContextFactory {
             throw new ContextFactoryException("Could not read the file.");
         }
         logger.debug(out.toString());
-        try {
-            reader.close();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
-        }
 
         create(out.toString(), context);
         return context;
