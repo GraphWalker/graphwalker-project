@@ -124,7 +124,7 @@ public final class JavaContextFactory implements ContextFactory {
         int index = 0;
         String add_vertices = "";
         for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-            String id = "";
+            String id;
             if (vertex.getId() != null && !vertex.getId().equals("")) {
                 id = vertex.getId();
             } else {

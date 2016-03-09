@@ -73,8 +73,7 @@ public class ExecuteTests extends TaskBase {
     }
 
     private Configuration createConfiguration() {
-        Configuration configuration = new Configuration();
-        return configuration;
+        return new Configuration();
     }
 
     private List<String> getClasspathElements() {
