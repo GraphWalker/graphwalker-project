@@ -20,6 +20,6 @@ public abstract class CoverageStopConditionBase extends StopConditionBase {
     }
 
     protected double getPercentAsDouble() {
-        return ((double) getPercent() / 100);
+        return (double) getPercent() / 100;
     }
 }
