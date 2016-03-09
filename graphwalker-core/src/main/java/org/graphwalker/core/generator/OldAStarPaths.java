@@ -129,7 +129,7 @@ public final class OldAStarPaths extends PathGeneratorBase<StopCondition> {
         for (Path<RuntimeEdge> fragments : pathFragments) {
             elements.addAll(fragments);
         }
-        return elements.size() != 0 && elements.containsAll(getContext().getModel().getEdges());
+        return !elements.isEmpty() && elements.containsAll(getContext().getModel().getEdges());
     }
 
     private void followOutEdge(Path<RuntimeEdge> fragment, List<RuntimeEdge> currentOutEdges) {

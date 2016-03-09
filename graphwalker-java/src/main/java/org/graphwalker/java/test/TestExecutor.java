@@ -279,7 +279,7 @@ public final class TestExecutor implements Executor {
 
     private Element getElement(RuntimeModel model, String name) {
         List<Element> elements = model.findElements(name);
-        if (null == elements || 0 == elements.size()) {
+        if (null == elements || elements.isEmpty()) {
             throw new TestExecutionException("Start element not found");
         }
         if (1 < elements.size()) {
@@ -315,7 +315,7 @@ public final class TestExecutor implements Executor {
 
     public void reportResults(File file, Date startTime, Properties properties) {
         new XMLReportGenerator(startTime, properties).writeReport(file, this);
-        if (0 < getFailures().size()) {
+        if (!getFailures().isEmpty()) {
             throw new TestExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
         }
     }
