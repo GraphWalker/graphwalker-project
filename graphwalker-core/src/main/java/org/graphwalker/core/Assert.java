@@ -237,7 +237,7 @@ public final class Assert<T> {
         if (isNull(object)) {
             return "null";
         } else {
-            return object.getClass().getName() + "<" + String.valueOf(object) + ">";
+            return object.getClass().getName() + "<" + object + ">";
         }
     }
 
