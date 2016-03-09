@@ -114,7 +114,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
     }
 
     public PathGenerator getGenerator() {
-        if (pathGenerators.size() == 0) {
+        if (pathGenerators.isEmpty()) {
             return null;
         } else if (pathGenerators.size() == 1) {
             return pathGenerators.get(0);
