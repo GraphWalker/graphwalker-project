@@ -128,7 +128,7 @@ public final class JavaContextFactory implements ContextFactory {
             if (vertex.getId() != null && !vertex.getId().equals("")) {
                 id = vertex.getId();
             } else {
-                id = "n" + String.valueOf(index++);
+                id = "n" + index++;
             }
 
             add_vertices += "Vertex " + vertex.getName() + " = new Vertex().setName(\"" + vertex.getName() + "\").setId(\"" + id + "\");";
@@ -143,7 +143,7 @@ public final class JavaContextFactory implements ContextFactory {
             if (edge.getId() != null && !edge.getId().equals("")) {
                 id = edge.getId();
             } else {
-                id = "n" + String.valueOf(index++);
+                id = "n" + index++;
             }
 
             add_edges += "model.addEdge( new Edge()";
