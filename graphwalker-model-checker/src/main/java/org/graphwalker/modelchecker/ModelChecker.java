@@ -14,6 +14,9 @@ import java.util.Set;
  * Created by krikar on 2015-11-08.
  */
 public class ModelChecker {
+    
+    private ModelChecker() {}
+    
     /**
      * Checks the model for problems or any possible errors.
      * Any findings will be added to a list of strings.

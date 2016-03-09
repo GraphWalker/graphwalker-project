@@ -42,6 +42,8 @@ import java.util.*;
  * @author Nils Olsson
  */
 public final class ContextFactoryScanner {
+    
+    private ContextFactoryScanner() {}
 
     private static final Logger logger = LoggerFactory.getLogger(ContextFactoryScanner.class);
 

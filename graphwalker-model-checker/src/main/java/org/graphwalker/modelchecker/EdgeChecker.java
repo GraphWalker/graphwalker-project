@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class EdgeChecker {
 
+    private EdgeChecker() {}
+    
     /**
      * Checks the edge for problems or any possible errors.
      * Any findings will be added to a list of strings.
