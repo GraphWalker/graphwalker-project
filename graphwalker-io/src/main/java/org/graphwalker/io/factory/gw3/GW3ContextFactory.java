@@ -97,11 +97,10 @@ public final class GW3ContextFactory implements ContextFactory {
     }
 
     @Override
-    public List<Context> createMultiple(Path path) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())));
+    public List<Context> createMultiple(Path path) {        
         StringBuilder jsonGW3 = new StringBuilder();
         String line;
-        try {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
             while ((line = reader.readLine()) != null) {
                 jsonGW3.append(line);
             }
@@ -110,12 +109,6 @@ public final class GW3ContextFactory implements ContextFactory {
             throw new ContextFactoryException("Could not read the file.");
         }
         logger.debug(jsonGW3.toString());
-        try {
-            reader.close();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
-        }
 
         return createMultiple(jsonGW3.toString());
     }
