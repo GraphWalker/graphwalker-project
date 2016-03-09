@@ -59,7 +59,7 @@ public final class FloydWarshall implements Algorithm {
             if (element instanceof RuntimeEdge) {
                 RuntimeEdge edge = (RuntimeEdge) element;
                 RuntimeVertex target = edge.getTargetVertex();
-                distances[elements.indexOf(edge)][elements.indexOf(target)] = (int) Math.ceil(1);
+                distances[elements.indexOf(edge)][elements.indexOf(target)] = 1;
             } else if (element instanceof RuntimeVertex) {
                 RuntimeVertex vertex = (RuntimeVertex) element;
                 for (RuntimeEdge edge : model.getOutEdges(vertex)) {
