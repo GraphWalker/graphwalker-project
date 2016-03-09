@@ -136,6 +136,15 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = super.hashCode();
+            result = prime * result
+                    + ((sharedState == null) ? 0 : sharedState.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (isNull(o) || getClass() != o.getClass()) return false;
@@ -143,5 +152,6 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
             RuntimeVertex that = (RuntimeVertex) o;
             return Objects.equals(sharedState, that.sharedState);
         }
+
     }
 }

@@ -569,6 +569,46 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((edges == null) ? 0 : edges.hashCode());
+            result = prime
+                    * result
+                    + ((edgesByNameCache == null) ? 0 : edgesByNameCache
+                            .hashCode());
+            result = prime
+                    * result
+                    + ((elementsByElementCache == null) ? 0
+                            : elementsByElementCache.hashCode());
+            result = prime
+                    * result
+                    + ((elementsByNameCache == null) ? 0 : elementsByNameCache
+                            .hashCode());
+            result = prime * result
+                    + ((elementsCache == null) ? 0 : elementsCache.hashCode());
+            result = prime
+                    * result
+                    + ((inEdgesByVertexCache == null) ? 0
+                            : inEdgesByVertexCache.hashCode());
+            result = prime
+                    * result
+                    + ((outEdgesByVertexCache == null) ? 0
+                            : outEdgesByVertexCache.hashCode());
+            result = prime
+                    * result
+                    + ((sharedStateCache == null) ? 0 : sharedStateCache
+                            .hashCode());
+            result = prime * result
+                    + ((vertices == null) ? 0 : vertices.hashCode());
+            result = prime
+                    * result
+                    + ((verticesByNameCache == null) ? 0 : verticesByNameCache
+                            .hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (isNull(o) || getClass() != o.getClass()) return false;
@@ -585,5 +625,6 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
                     Objects.equals(outEdgesByVertexCache, that.outEdgesByVertexCache) &&
                     Objects.equals(sharedStateCache, that.sharedStateCache);
         }
+        
     }
 }
