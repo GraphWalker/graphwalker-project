@@ -289,6 +289,20 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
         }
 
         @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((guard == null) ? 0 : guard.hashCode());
+            result = prime * result
+                    + ((sourceVertex == null) ? 0 : sourceVertex.hashCode());
+            result = prime * result
+                    + ((targetVertex == null) ? 0 : targetVertex.hashCode());
+            result = prime * result
+                    + ((weight == null) ? 0 : weight.hashCode());
+            return result;
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (isNull(o) || getClass() != o.getClass()) return false;
@@ -299,5 +313,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
                     Objects.equals(guard, that.guard) &&
                     Objects.equals(weight, that.weight);
         }
+
+        
     }
 }
