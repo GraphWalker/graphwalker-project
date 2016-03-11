@@ -83,7 +83,6 @@
         <module>graphwalker-maven-plugin</module>
         <module>graphwalker-maven-archetype</module>
         <module>graphwalker-cli</module>
-        <module>graphwalker-gradle-plugin</module>
         <module>graphwalker-studio</module>
         <module>graphwalker-model-checker</module>
     </modules>
@@ -202,31 +201,6 @@
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-grizzly2</artifactId>
                 <version>1.18.3</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>2.4.0-rc-2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gradle</groupId>
-                <artifactId>gradle-core</artifactId>
-                <version>2.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gradle</groupId>
-                <artifactId>gradle-base-services</artifactId>
-                <version>2.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gradle</groupId>
-                <artifactId>gradle-base-services-groovy</artifactId>
-                <version>2.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gradle</groupId>
-                <artifactId>gradle-plugins</artifactId>
-                <version>2.2.1</version>
             </dependency>
             <dependency>
                 <groupId>org.java-websocket</groupId>
