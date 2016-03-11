@@ -119,7 +119,6 @@ public class TestExecutorTest {
         List<URL> urls = new ArrayList<>();
         urls.add(new File(new File("."), "target/test-classes").toURI().toURL());
         urls.add(new File(new File("."), "target/classes").toURI().toURL());
-        urls.add(new File("/Users/nilols/.m2/repository/org/graphwalker/graphwalker-io/3.2.0-SNAPSHOT/graphwalker-io-3.2.0-SNAPSHOT.jar").toURI().toURL());
         urls.addAll(Arrays.asList(((URLClassLoader) getClass().getClassLoader()).getURLs()));
         Configuration configuration = new Configuration();
         configuration.addInclude("*MyOtherTest*");
