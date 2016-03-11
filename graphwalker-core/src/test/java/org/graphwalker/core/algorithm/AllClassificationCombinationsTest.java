@@ -31,11 +31,6 @@ import org.graphwalker.core.model.ClassificationTree;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Set;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Kristian Karl
  */
