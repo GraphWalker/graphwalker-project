@@ -1,4 +1,8 @@
-# The RESTFUL module 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-restful/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-restful)
+GraphWalker WebSocket Service
+==================
+
+# The RESTFUL module
 
 The module provides a restful api, tha facilitates the usage of GraphWalker for any other
 tool or programming language that kan do HTTP.
