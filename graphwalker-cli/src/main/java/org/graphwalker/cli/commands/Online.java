@@ -35,30 +35,30 @@ import java.util.List;
 @Parameters(commandDescription = "Starts GraphWalker as a WebSocket server. See http://graphwalker.org/docs/websocket_api")
 public class Online {
 
-    public static final String SERVICE_RESTFUL = "RESTFUL";
-    public static final String SERVICE_WEBSOCKET = "WEBSOCKET";
+  public static final String SERVICE_RESTFUL = "RESTFUL";
+  public static final String SERVICE_WEBSOCKET = "WEBSOCKET";
 
-    @Parameter(names = {"--verbose", "-o"}, required = false,
-            description = "Will print more details")
-    public boolean verbose = false;
+  @Parameter(names = {"--verbose", "-o"}, required = false,
+    description = "Will print more details")
+  public boolean verbose = false;
 
-    @Parameter(names = {"--unvisited", "-u"}, required = false,
-            description = "Will also print the remaining unvisited elements in the model.")
-    public boolean unvisited = false;
+  @Parameter(names = {"--unvisited", "-u"}, required = false,
+    description = "Will also print the remaining unvisited elements in the model.")
+  public boolean unvisited = false;
 
-    @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
-            description = "The model, as a graphml file followed by generator with stop condition. " +
-                    "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
-    public List<String> model = new ArrayList<>();
+  @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
+    description = "The model, as a graphml file followed by generator with stop condition. " +
+      "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
+  public List<String> model = new ArrayList<>();
 
-    @Parameter(names = {"--service", "-s"}, required = false, arity = 1,
-            description = "Selects which kind of service to start. Either WEBSOCKET [default], or RESTFUL")
-    public String service = SERVICE_WEBSOCKET;
+  @Parameter(names = {"--service", "-s"}, required = false, arity = 1,
+    description = "Selects which kind of service to start. Either WEBSOCKET [default], or RESTFUL")
+  public String service = SERVICE_WEBSOCKET;
 
-    @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
-    public int port = 8887;
+  @Parameter(names = {"--port", "-p"}, description = "Sets the port of the service")
+  public int port = 8887;
 
-    @Parameter(names = {"--start-element", "-e"}, required = false,
-            description = "Sets the starting element in the [first] model.")
-    public String startElement = "";
+  @Parameter(names = {"--start-element", "-e"}, required = false,
+    description = "Sets the starting element in the [first] model.")
+  public String startElement = "";
 }

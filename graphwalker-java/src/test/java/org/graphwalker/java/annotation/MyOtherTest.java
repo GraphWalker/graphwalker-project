@@ -39,19 +39,19 @@ import org.graphwalker.java.annotation.resources.MyModel;
 @GraphWalker(start = "vertex1")
 public class MyOtherTest extends ExecutionContext implements MyModel, Observer {
 
-    @Override
-    public void vertex1() {
-    }
+  @Override
+  public void vertex1() {
+  }
 
-    @Override
-    public void vertex2() {
-    }
+  @Override
+  public void vertex2() {
+  }
 
-    @Override
-    public void edge12() {
-    }
+  @Override
+  public void edge12() {
+  }
 
-    @Override
-    public void update(Machine machine, Element element, EventType type) {
-    }
+  @Override
+  public void update(Machine machine, Element element, EventType type) {
+  }
 }

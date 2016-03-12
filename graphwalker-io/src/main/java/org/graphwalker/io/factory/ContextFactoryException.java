@@ -31,15 +31,15 @@ package org.graphwalker.io.factory;
  */
 public class ContextFactoryException extends RuntimeException {
 
-    public ContextFactoryException() {
-        super();
-    }
+  public ContextFactoryException() {
+    super();
+  }
 
-    public ContextFactoryException(String message) {
-        super(message);
-    }
+  public ContextFactoryException(String message) {
+    super(message);
+  }
 
-    public ContextFactoryException(String message, Throwable t) {
-        super(message, t);
-    }
+  public ContextFactoryException(String message, Throwable t) {
+    super(message, t);
+  }
 }

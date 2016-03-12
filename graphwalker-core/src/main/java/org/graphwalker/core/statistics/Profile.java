@@ -37,106 +37,106 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Profile extends HashMap<Element, ProfileUnit> {
 
-    private final Path<Element> path = new Path<>();
+  private final Path<Element> path = new Path<>();
 
-    public void addExecution(Element element, Execution execution) {
-        path.push(element);
-        if (!containsKey(element)) {
-            put(element, new ProfileUnit(execution));
-        } else {
-            get(element).addExecution(execution);
+  public void addExecution(Element element, Execution execution) {
+    path.push(element);
+    if (!containsKey(element)) {
+      put(element, new ProfileUnit(execution));
+    } else {
+      get(element).addExecution(execution);
+    }
+  }
+
+  public Path<Element> getPath() {
+    return path;
+  }
+
+  public long getTotalExecutionCount() {
+    return getTotalExecutionCount(Element.class);
+  }
+
+  public long getTotalExecutionCount(Class<? extends Element> type) {
+    long count = 0;
+    for (Element element : keySet()) {
+      if (type.isAssignableFrom(element.getClass())) {
+        count += get(element).getExecutionCount();
+      }
+    }
+    return count;
+  }
+
+  public long getTotalExecutionCount(Element element) {
+    long count = 0;
+    for (Element e : keySet()) {
+      if (element == e) {
+        count += get(e).getExecutionCount();
+      }
+    }
+    return count;
+  }
+
+  public long getTotalExecutionTime() {
+    return getTotalExecutionTime(TimeUnit.NANOSECONDS);
+  }
+
+  public long getTotalExecutionTime(TimeUnit unit) {
+    return getTotalExecutionTime(Element.class, unit);
+  }
+
+  public long getTotalExecutionTime(Class<?> type, TimeUnit unit) {
+    long executionTime = 0;
+    for (Element element : keySet()) {
+      if (type.isAssignableFrom(element.getClass())) {
+        executionTime += get(element).getTotalExecutionTime();
+      }
+    }
+    return unit.convert(executionTime, TimeUnit.NANOSECONDS);
+  }
+
+  public long getFirstExecutionTime() {
+    return getFirstExecutionTime(Element.class);
+  }
+
+  public long getFirstExecutionTime(TimeUnit unit) {
+    return getFirstExecutionTime(Element.class, unit);
+  }
+
+  public long getFirstExecutionTime(Class<? extends Element> type) {
+    return getFirstExecutionTime(type, TimeUnit.NANOSECONDS);
+  }
+
+  public long getFirstExecutionTime(Class<? extends Element> type, TimeUnit unit) {
+    long time = Long.MAX_VALUE;
+    for (Element element : keySet()) {
+      if (type.isAssignableFrom(element.getClass())) {
+        long firstExecutionTime = get(element).getFirstExecutionTime();
+        if (time > firstExecutionTime) {
+          time = firstExecutionTime;
         }
+      }
     }
+    return unit.convert(time, TimeUnit.NANOSECONDS);
+  }
 
-    public Path<Element> getPath() {
-        return path;
-    }
+  public long getLastExecutionTime() {
+    return getLastExecutionTime(Element.class);
+  }
 
-    public long getTotalExecutionCount() {
-        return getTotalExecutionCount(Element.class);
-    }
+  public long getLastExecutionTime(Class<? extends Element> type) {
+    return getLastExecutionTime(type, TimeUnit.NANOSECONDS);
+  }
 
-    public long getTotalExecutionCount(Class<? extends Element> type) {
-        long count = 0;
-        for (Element element : keySet()) {
-            if (type.isAssignableFrom(element.getClass())) {
-                count += get(element).getExecutionCount();
-            }
+  public long getLastExecutionTime(Class<? extends Element> type, TimeUnit unit) {
+    long time = Long.MIN_VALUE;
+    for (Element element : keySet()) {
+      if (type.isAssignableFrom(element.getClass())) {
+        long lastExecutionTime = get(element).getLastExecutionTime();
+        if (time < lastExecutionTime) {
+          time = lastExecutionTime;
         }
-        return count;
+      }
     }
-
-    public long getTotalExecutionCount(Element element) {
-        long count = 0;
-        for (Element e : keySet()) {
-            if (element == e) {
-                count += get(e).getExecutionCount();
-            }
-        }
-        return count;
-    }
-
-    public long getTotalExecutionTime() {
-        return getTotalExecutionTime(TimeUnit.NANOSECONDS);
-    }
-
-    public long getTotalExecutionTime(TimeUnit unit) {
-        return getTotalExecutionTime(Element.class, unit);
-    }
-
-    public long getTotalExecutionTime(Class<?> type, TimeUnit unit) {
-        long executionTime = 0;
-        for (Element element : keySet()) {
-            if (type.isAssignableFrom(element.getClass())) {
-                executionTime += get(element).getTotalExecutionTime();
-            }
-        }
-        return unit.convert(executionTime, TimeUnit.NANOSECONDS);
-    }
-
-    public long getFirstExecutionTime() {
-        return getFirstExecutionTime(Element.class);
-    }
-
-    public long getFirstExecutionTime(TimeUnit unit) {
-        return getFirstExecutionTime(Element.class, unit);
-    }
-
-    public long getFirstExecutionTime(Class<? extends Element> type) {
-        return getFirstExecutionTime(type, TimeUnit.NANOSECONDS);
-    }
-
-    public long getFirstExecutionTime(Class<? extends Element> type, TimeUnit unit) {
-        long time = Long.MAX_VALUE;
-        for (Element element : keySet()) {
-            if (type.isAssignableFrom(element.getClass())) {
-                long firstExecutionTime = get(element).getFirstExecutionTime();
-                if (time > firstExecutionTime) {
-                    time = firstExecutionTime;
-                }
-            }
-        }
-        return unit.convert(time, TimeUnit.NANOSECONDS);
-    }
-
-    public long getLastExecutionTime() {
-        return getLastExecutionTime(Element.class);
-    }
-
-    public long getLastExecutionTime(Class<? extends Element> type) {
-        return getLastExecutionTime(type, TimeUnit.NANOSECONDS);
-    }
-
-    public long getLastExecutionTime(Class<? extends Element> type, TimeUnit unit) {
-        long time = Long.MIN_VALUE;
-        for (Element element : keySet()) {
-            if (type.isAssignableFrom(element.getClass())) {
-                long lastExecutionTime = get(element).getLastExecutionTime();
-                if (time < lastExecutionTime) {
-                    time = lastExecutionTime;
-                }
-            }
-        }
-        return unit.convert(time, TimeUnit.NANOSECONDS);
-    }
+    return unit.convert(time, TimeUnit.NANOSECONDS);
+  }
 }

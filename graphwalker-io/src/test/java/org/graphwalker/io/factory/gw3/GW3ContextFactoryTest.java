@@ -45,24 +45,24 @@ import static org.hamcrest.core.Is.is;
  * @author Kristian Karl
  */
 public class GW3ContextFactoryTest {
-    private static final Logger logger = LoggerFactory.getLogger(GW3ContextFactoryTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(GW3ContextFactoryTest.class);
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+  @Rule
+  public TemporaryFolder testFolder = new TemporaryFolder();
 
-    @Test
-    public void PetClinic() {
-        List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3"));
-        Assert.assertNotNull(contexts);
-        Assert.assertThat(contexts.size(), is(5));
+  @Test
+  public void PetClinic() {
+    List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(5));
+  }
+
+  @Test
+  public void PetClinicWithSimpleMachine() {
+    SimpleMachine machine = new SimpleMachine(new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3")));
+    while (machine.hasNextStep()) {
+      Element e = machine.getNextStep().getCurrentElement();
+      logger.debug(e.getName());
     }
-
-    @Test
-    public void PetClinicWithSimpleMachine() {
-        SimpleMachine machine = new SimpleMachine(new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3")));
-        while (machine.hasNextStep()) {
-            Element e = machine.getNextStep().getCurrentElement();
-            logger.debug(e.getName());
-        }
-    }
+  }
 }

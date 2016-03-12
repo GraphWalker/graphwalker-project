@@ -46,7 +46,65 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
 
-    private String sharedState;
+  private String sharedState;
+
+  /**
+   * Gets the name of the shared state.
+   *
+   * @return The name as a string.
+   * @see Vertex#setSharedState
+   */
+  public String getSharedState() {
+    return sharedState;
+  }
+
+  /**
+   * Sets the name of the shared state of this vertex.
+   * If the vertex is to act as a shared state, the name of the shared state needs to be set to a non-empty
+   * string.
+   * </p>
+   * The shared state is portal to other shared states in other models. It creates a 'virtual edge'
+   * between to vertices sharing the same name in their shared state.
+   * </p>
+   * <img src="doc-files/Vertex.setSharedState.png">
+   * </p>
+   * In the 2 models above, GraphWalker will create virtual edges, the dotted arrows. These edges will
+   * allow passages between the 2 models.
+   *
+   * @param sharedState The name of the shared state.
+   * @return The vertex
+   */
+  public Vertex setSharedState(String sharedState) {
+    this.sharedState = sharedState;
+    invalidateCache();
+    return this;
+  }
+
+  /**
+   * Creates an immutable vertex from this vertex.
+   *
+   * @return An immutable vertex as a RuntimeVertex
+   */
+  @Override
+  protected RuntimeVertex createCache() {
+    return new RuntimeVertex(this);
+  }
+
+  /**
+   * <h1>RuntimeVertex</h1>
+   * Immutable class for Vertex
+   * </p>
+   * This class is used in models. It guarantees that that the internal states of
+   * the instance will not change after it's construction.
+   */
+  public static final class RuntimeVertex extends RuntimeBase {
+
+    private final String sharedState;
+
+    private RuntimeVertex(Vertex vertex) {
+      super(vertex.getId(), vertex.getName(), vertex.getRequirements(), vertex.getProperties());
+      this.sharedState = vertex.getSharedState();
+    }
 
     /**
      * Gets the name of the shared state.
@@ -55,103 +113,45 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
      * @see Vertex#setSharedState
      */
     public String getSharedState() {
-        return sharedState;
+      return sharedState;
     }
 
     /**
-     * Sets the name of the shared state of this vertex.
-     * If the vertex is to act as a shared state, the name of the shared state needs to be set to a non-empty
-     * string.
-     * </p>
-     * The shared state is portal to other shared states in other models. It creates a 'virtual edge'
-     * between to vertices sharing the same name in their shared state.
-     * </p>
-     * <img src="doc-files/Vertex.setSharedState.png">
-     * </p>
-     * In the 2 models above, GraphWalker will create virtual edges, the dotted arrows. These edges will
-     * allow passages between the 2 models.
+     * Returns true if the vertex has a valid shared state.
      *
-     * @param sharedState The name of the shared state.
-     * @return The vertex
+     * @return True if the vertex has a shared state.
      */
-    public Vertex setSharedState(String sharedState) {
-        this.sharedState = sharedState;
-        invalidateCache();
-        return this;
+    public boolean hasSharedState() {
+      return isNotNullOrEmpty(sharedState);
     }
 
     /**
-     * Creates an immutable vertex from this vertex.
+     * TODO Needs documentation
      *
-     * @return An immutable vertex as a RuntimeVertex
+     * @param visitor
      */
     @Override
-    protected RuntimeVertex createCache() {
-        return new RuntimeVertex(this);
+    public void accept(ElementVisitor visitor) {
+      visitor.visit(this);
     }
 
-    /**
-     * <h1>RuntimeVertex</h1>
-     * Immutable class for Vertex
-     * </p>
-     * This class is used in models. It guarantees that that the internal states of
-     * the instance will not change after it's construction.
-     */
-    public static final class RuntimeVertex extends RuntimeBase {
-
-        private final String sharedState;
-
-        private RuntimeVertex(Vertex vertex) {
-            super(vertex.getId(), vertex.getName(), vertex.getRequirements(), vertex.getProperties());
-            this.sharedState = vertex.getSharedState();
-        }
-
-        /**
-         * Gets the name of the shared state.
-         *
-         * @return The name as a string.
-         * @see Vertex#setSharedState
-         */
-        public String getSharedState() {
-            return sharedState;
-        }
-
-        /**
-         * Returns true if the vertex has a valid shared state.
-         *
-         * @return True if the vertex has a shared state.
-         */
-        public boolean hasSharedState() {
-            return isNotNullOrEmpty(sharedState);
-        }
-
-        /**
-         * TODO Needs documentation
-         *
-         * @param visitor
-         */
-        @Override
-        public void accept(ElementVisitor visitor) {
-            visitor.visit(this);
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = super.hashCode();
-            result = prime * result
-                    + ((sharedState == null) ? 0 : sharedState.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (isNull(o) || getClass() != o.getClass()) return false;
-            if (!super.equals(o)) return false;
-            RuntimeVertex that = (RuntimeVertex) o;
-            return Objects.equals(sharedState, that.sharedState);
-        }
-
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result
+        + ((sharedState == null) ? 0 : sharedState.hashCode());
+      return result;
     }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (isNull(o) || getClass() != o.getClass()) return false;
+      if (!super.equals(o)) return false;
+      RuntimeVertex that = (RuntimeVertex) o;
+      return Objects.equals(sharedState, that.sharedState);
+    }
+
+  }
 }

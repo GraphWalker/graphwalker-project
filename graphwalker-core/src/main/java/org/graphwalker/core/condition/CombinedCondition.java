@@ -44,58 +44,58 @@ import java.util.List;
  */
 public final class CombinedCondition extends StopConditionBase {
 
-    private final List<StopCondition> conditions = new ArrayList<>();
+  private final List<StopCondition> conditions = new ArrayList<>();
 
-    public CombinedCondition() {
-        super("");
+  public CombinedCondition() {
+    super("");
+  }
+
+  public void addStopCondition(StopCondition condition) {
+    this.conditions.add(condition);
+    condition.setContext(getContext());
+  }
+
+
+  @Override
+  public void setContext(Context context) {
+    super.setContext(context);
+    for (StopCondition condition : conditions) {
+      condition.setContext(context);
     }
+  }
 
-    public void addStopCondition(StopCondition condition) {
-        this.conditions.add(condition);
-        condition.setContext(getContext());
+  public List<StopCondition> getStopConditions() {
+    return conditions;
+  }
+
+  @Override
+  public boolean isFulfilled() {
+    for (StopCondition condition : conditions) {
+      if (!condition.isFulfilled()) {
+        return false;
+      }
     }
+    return true;
+  }
 
-
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
-        for (StopCondition condition : conditions) {
-            condition.setContext(context);
-        }
+  @Override
+  public double getFulfilment() {
+    double fulfilment = 0;
+    for (StopCondition condition : conditions) {
+      fulfilment += condition.getFulfilment();
     }
+    return fulfilment / conditions.size();
+  }
 
-    public List<StopCondition> getStopConditions() {
-        return conditions;
+  @Override
+  public StringBuilder toString(StringBuilder builder) {
+    Iterator<StopCondition> iterator = conditions.iterator();
+    while (iterator.hasNext()) {
+      iterator.next().toString(builder);
+      if (iterator.hasNext()) {
+        builder.append(" AND ");
+      }
     }
-
-    @Override
-    public boolean isFulfilled() {
-        for (StopCondition condition : conditions) {
-            if (!condition.isFulfilled()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public double getFulfilment() {
-        double fulfilment = 0;
-        for (StopCondition condition : conditions) {
-            fulfilment += condition.getFulfilment();
-        }
-        return fulfilment / conditions.size();
-    }
-
-    @Override
-    public StringBuilder toString(StringBuilder builder) {
-        Iterator<StopCondition> iterator = conditions.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().toString(builder);
-            if (iterator.hasNext()) {
-                builder.append(" AND ");
-            }
-        }
-        return builder;
-    }
+    return builder;
+  }
 }

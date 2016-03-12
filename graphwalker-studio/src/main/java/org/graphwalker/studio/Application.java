@@ -18,21 +18,21 @@ import java.net.UnknownHostException;
 @EnableAutoConfiguration
 public class Application {
 
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+  private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) throws UnknownHostException {
-        WebSocketServer gwSocketServer = new WebSocketServer(9999);
-        gwSocketServer.start();
+  public static void main(String[] args) throws UnknownHostException {
+    WebSocketServer gwSocketServer = new WebSocketServer(9999);
+    gwSocketServer.start();
 
 
-        SpringApplication application = new SpringApplication(Application.class);
-        application.setShowBanner(false);
-        Environment environment = application.run(args).getEnvironment();
-        log.info("Access URLs:\n----------------------------------------------------------\n\t" +
-                        "Local: \t\thttp://127.0.0.1:{}\n\t" +
-                        "External: \thttp://{}:{}\n----------------------------------------------------------",
-                environment.getProperty("server.port"),
-                InetAddress.getLocalHost().getHostAddress(),
-                environment.getProperty("server.port"));
-    }
+    SpringApplication application = new SpringApplication(Application.class);
+    application.setShowBanner(false);
+    Environment environment = application.run(args).getEnvironment();
+    log.info("Access URLs:\n----------------------------------------------------------\n\t" +
+        "Local: \t\thttp://127.0.0.1:{}\n\t" +
+        "External: \thttp://{}:{}\n----------------------------------------------------------",
+      environment.getProperty("server.port"),
+      InetAddress.getLocalHost().getHostAddress(),
+      environment.getProperty("server.port"));
+  }
 }

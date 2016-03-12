@@ -35,5 +35,5 @@ package org.graphwalker.core.machine;
  * @author Nils Olsson
  */
 public enum RequirementStatus {
-    NOT_COVERED, PASSED, FAILED
+  NOT_COVERED, PASSED, FAILED
 }

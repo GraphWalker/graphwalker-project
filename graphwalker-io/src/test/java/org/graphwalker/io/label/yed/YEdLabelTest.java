@@ -45,78 +45,78 @@ import static org.hamcrest.core.Is.is;
 public class YEdLabelTest {
 
 
-    private List<String> vertexLabels = Arrays.asList(
-            "",
-            "Label",
-            "/* multi\nline\ncomment */                  Label",
-            "",
-            "v_vertex  \nSHARED:MyState",
-            "SHARED: MyState"
-    );
+  private List<String> vertexLabels = Arrays.asList(
+    "",
+    "Label",
+    "/* multi\nline\ncomment */                  Label",
+    "",
+    "v_vertex  \nSHARED:MyState",
+    "SHARED: MyState"
+  );
 
-    private List<String> edgeLabels = Arrays.asList(
-            "",
-            "Label",
-            "e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
-            "e_init / num_of_books = 0; MAX_BOOKS = 5;",
-            "name /* multi\nline\ncomment */ / i++; [i==0]",
-            "BLOCKED",
-            "e_AddBookToCart BLOCKED [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
-            "[ i ]",
-            "e_Init/validLogin=false;rememberMe=false;"
-    );
+  private List<String> edgeLabels = Arrays.asList(
+    "",
+    "Label",
+    "e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
+    "e_init / num_of_books = 0; MAX_BOOKS = 5;",
+    "name /* multi\nline\ncomment */ / i++; [i==0]",
+    "BLOCKED",
+    "e_AddBookToCart BLOCKED [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
+    "[ i ]",
+    "e_Init/validLogin=false;rememberMe=false;"
+  );
 
-    @Test
-    public void testVertexLabels() {
-        for (String label : vertexLabels) {
-            YEdVertexParser parser = new YEdVertexParser(getTokens(label));
-            YEdVertexParser.ParseContext context = parser.parse();
-            Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
-        }
+  @Test
+  public void testVertexLabels() {
+    for (String label : vertexLabels) {
+      YEdVertexParser parser = new YEdVertexParser(getTokens(label));
+      YEdVertexParser.ParseContext context = parser.parse();
+      Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
     }
+  }
 
-    @Test
-    public void testEdgeLabels() {
-        for (String label : edgeLabels) {
-            YEdEdgeParser parser = new YEdEdgeParser(getTokens(label));
-            YEdEdgeParser.ParseContext context = parser.parse();
-            Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
-        }
+  @Test
+  public void testEdgeLabels() {
+    for (String label : edgeLabels) {
+      YEdEdgeParser parser = new YEdEdgeParser(getTokens(label));
+      YEdEdgeParser.ParseContext context = parser.parse();
+      Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
     }
+  }
 
-    @Test
-    public void startVertex() {
-        YEdVertexParser parser = new YEdVertexParser(getTokens(" StARt "));
-        YEdVertexParser.ParseContext context = parser.parse();
-        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
-        Assert.assertNotNull(context.start());
-    }
+  @Test
+  public void startVertex() {
+    YEdVertexParser parser = new YEdVertexParser(getTokens(" StARt "));
+    YEdVertexParser.ParseContext context = parser.parse();
+    Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+    Assert.assertNotNull(context.start());
+  }
 
-    @Test
-    public void badVertexLabel() {
-        YEdVertexParser parser = new YEdVertexParser(getTokens("1name"));
-        YEdVertexParser.ParseContext context = parser.parse();
-        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(1));
-    }
+  @Test
+  public void badVertexLabel() {
+    YEdVertexParser parser = new YEdVertexParser(getTokens("1name"));
+    YEdVertexParser.ParseContext context = parser.parse();
+    Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(1));
+  }
 
-    @Test
-    public void badEdgeLabel() {
-        YEdEdgeParser parser = new YEdEdgeParser(getTokens("1name"));
-        YEdEdgeParser.ParseContext context = parser.parse();
-        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(1));
-    }
+  @Test
+  public void badEdgeLabel() {
+    YEdEdgeParser parser = new YEdEdgeParser(getTokens("1name"));
+    YEdEdgeParser.ParseContext context = parser.parse();
+    Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(1));
+  }
 
-    @Test
-    public void testGuard() {
-        YEdEdgeParser parser = new YEdEdgeParser(getTokens("[ i[0] ]"));
-        YEdEdgeParser.ParseContext context = parser.parse();
-        Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
-        Assert.assertThat(context.field(0).guard().getText(), is("[ i[0] ]"));
-    }
+  @Test
+  public void testGuard() {
+    YEdEdgeParser parser = new YEdEdgeParser(getTokens("[ i[0] ]"));
+    YEdEdgeParser.ParseContext context = parser.parse();
+    Assert.assertThat(parser.getNumberOfSyntaxErrors(), is(0));
+    Assert.assertThat(context.field(0).guard().getText(), is("[ i[0] ]"));
+  }
 
-    private CommonTokenStream getTokens(String label) {
-        ANTLRInputStream inputStream = new ANTLRInputStream(label);
-        YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
-        return new CommonTokenStream(lexer);
-    }
+  private CommonTokenStream getTokens(String label) {
+    ANTLRInputStream inputStream = new ANTLRInputStream(label);
+    YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
+    return new CommonTokenStream(lexer);
+  }
 }

@@ -43,36 +43,36 @@ import static org.hamcrest.core.Is.is;
  */
 public class GrammarTest {
 
-    private List<String> generators = Arrays.asList(
-            "random(never)",
-            "a_star(never)",
-            "quick_random(never)",
-            "weighted_random(vertex_coverage(100))",
-            "random(vertex_coverage(100))",
-            "random(edge_coverage(100))",
-            "random(reached_vertex(v_SomeVertex))",
-            "random(reached_vertex(e_SomeEdge))",
-            "random(requirement_coverage(100))",
-            "random(time(500))",
-            "random(length(24))",
-            "random(edge_coverage(100) or time(500))",
-            "random(edge_coverage(100) || time(500))",
-            "random(reached_vertex(e_SomeEdge) && edge_coverage(100))",
-            "random(reached_vertex(e_SomeEdge) and edge_coverage(100))",
-            "random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))",
-            "random(edge_coverage(100) and never) a_star(reached_vertex(v_SomeName) || edge_coverage(90))",
-            "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))"
-    );
+  private List<String> generators = Arrays.asList(
+    "random(never)",
+    "a_star(never)",
+    "quick_random(never)",
+    "weighted_random(vertex_coverage(100))",
+    "random(vertex_coverage(100))",
+    "random(edge_coverage(100))",
+    "random(reached_vertex(v_SomeVertex))",
+    "random(reached_vertex(e_SomeEdge))",
+    "random(requirement_coverage(100))",
+    "random(time(500))",
+    "random(length(24))",
+    "random(edge_coverage(100) or time(500))",
+    "random(edge_coverage(100) || time(500))",
+    "random(reached_vertex(e_SomeEdge) && edge_coverage(100))",
+    "random(reached_vertex(e_SomeEdge) and edge_coverage(100))",
+    "random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))",
+    "random(edge_coverage(100) and never) a_star(reached_vertex(v_SomeName) || edge_coverage(90))",
+    "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))"
+  );
 
-    @Test
-    public void testCLI() {
-        for (String generator : generators) {
-            ANTLRInputStream inputStream = new ANTLRInputStream(generator);
-            Logical_Lexer lexer = new Logical_Lexer(inputStream);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            Generator_Parser parser = new Generator_Parser(tokens);
-            Generator_Parser.ParseContext context = parser.parse();
-            Assert.assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
-        }
+  @Test
+  public void testCLI() {
+    for (String generator : generators) {
+      ANTLRInputStream inputStream = new ANTLRInputStream(generator);
+      Logical_Lexer lexer = new Logical_Lexer(inputStream);
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+      Generator_Parser parser = new Generator_Parser(tokens);
+      Generator_Parser.ParseContext context = parser.parse();
+      Assert.assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
     }
+  }
 }

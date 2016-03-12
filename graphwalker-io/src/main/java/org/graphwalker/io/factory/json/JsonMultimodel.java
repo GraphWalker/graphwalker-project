@@ -29,26 +29,26 @@ package org.graphwalker.io.factory.json;
 import java.util.List;
 
 public final class JsonMultimodel {
-    private String name;
-    private List<JsonModel> models;
+  private String name;
+  private List<JsonModel> models;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public List<JsonModel> getModels() {
-        return models;
-    }
+  public List<JsonModel> getModels() {
+    return models;
+  }
 
-    public void setModels(List<JsonModel> models) {
-        this.models = models;
-    }
+  public void setModels(List<JsonModel> models) {
+    this.models = models;
+  }
 
-    public void add(JsonModel jsonModel) {
-        models.add(jsonModel);
-    }
+  public void add(JsonModel jsonModel) {
+    models.add(jsonModel);
+  }
 }

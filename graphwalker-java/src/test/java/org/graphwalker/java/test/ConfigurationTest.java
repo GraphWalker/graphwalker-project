@@ -36,22 +36,22 @@ import static org.hamcrest.core.Is.is;
  */
 public class ConfigurationTest {
 
-    @Test
-    public void configurationTest() {
-        Configuration configuration = new Configuration();
-        configuration.addExclude("exclude");
-        Assert.assertThat(configuration.getExcludes().size(), is(1));
-        configuration.addInclude("include");
-        Assert.assertThat(configuration.getIncludes().size(), is(1));
-        configuration.addGroup("group");
-        Assert.assertThat(configuration.getGroups().size(), is(1));
-    }
+  @Test
+  public void configurationTest() {
+    Configuration configuration = new Configuration();
+    configuration.addExclude("exclude");
+    Assert.assertThat(configuration.getExcludes().size(), is(1));
+    configuration.addInclude("include");
+    Assert.assertThat(configuration.getIncludes().size(), is(1));
+    configuration.addGroup("group");
+    Assert.assertThat(configuration.getGroups().size(), is(1));
+  }
 
-    @Test
-    public void minimalConfigurationTest() {
-        Configuration configuration = new Configuration();
-        Assert.assertNotNull(configuration.getExcludes());
-        Assert.assertNotNull(configuration.getIncludes());
-        Assert.assertNotNull(configuration.getGroups());
-    }
+  @Test
+  public void minimalConfigurationTest() {
+    Configuration configuration = new Configuration();
+    Assert.assertNotNull(configuration.getExcludes());
+    Assert.assertNotNull(configuration.getIncludes());
+    Assert.assertNotNull(configuration.getGroups());
+  }
 }

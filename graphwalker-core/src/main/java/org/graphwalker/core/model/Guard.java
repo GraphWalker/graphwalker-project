@@ -36,13 +36,13 @@ package org.graphwalker.core.model;
  */
 public final class Guard {
 
-    private final String script;
+  private final String script;
 
-    public Guard(String script) {
-        this.script = script;
-    }
+  public Guard(String script) {
+    this.script = script;
+  }
 
-    public String getScript() {
-        return script;
-    }
+  public String getScript() {
+    return script;
+  }
 }

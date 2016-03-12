@@ -42,51 +42,51 @@ import java.nio.file.Paths;
  */
 public class CombinedGeneratorTest extends ExecutionContext implements CombinedGeneratorModel {
 
-    public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/CombinedGeneratorModel.graphml");
+  public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/CombinedGeneratorModel.graphml");
 
-    public int count = 0;
+  public int count = 0;
 
-    @Override
-    public void v_1() {
-        count++;
-    }
+  @Override
+  public void v_1() {
+    count++;
+  }
 
-    @Override
-    public void v_2() {
-        count++;
-    }
+  @Override
+  public void v_2() {
+    count++;
+  }
 
-    @Override
-    public void e_1() {
-        count++;
-    }
+  @Override
+  public void e_1() {
+    count++;
+  }
 
-    @Override
-    public void e_2() {
-        count++;
-    }
+  @Override
+  public void e_2() {
+    count++;
+  }
 
-    @Override
-    public void e_3() {
-        count++;
-    }
+  @Override
+  public void e_3() {
+    count++;
+  }
 
-    @Override
-    public void e_4() {
-        count++;
-    }
+  @Override
+  public void e_4() {
+    count++;
+  }
 
-    @Test
-    public void run() {
-        CombinedGeneratorTest context = new CombinedGeneratorTest();
-        CombinedPath combinedPath = new CombinedPath();
-        combinedPath.addPathGenerator(new RandomPath(new VertexCoverage(100)));
-        combinedPath.addPathGenerator(new RandomPath(new EdgeCoverage(100)));
-        new TestBuilder()
-                .setModel(MODEL_PATH)
-                .setContext(context)
-                .setPathGenerator(combinedPath)
-                .setStart("e_1").execute();
-        Assert.assertTrue(context.count >= 6);
-    }
+  @Test
+  public void run() {
+    CombinedGeneratorTest context = new CombinedGeneratorTest();
+    CombinedPath combinedPath = new CombinedPath();
+    combinedPath.addPathGenerator(new RandomPath(new VertexCoverage(100)));
+    combinedPath.addPathGenerator(new RandomPath(new EdgeCoverage(100)));
+    new TestBuilder()
+      .setModel(MODEL_PATH)
+      .setContext(context)
+      .setPathGenerator(combinedPath)
+      .setStart("e_1").execute();
+    Assert.assertTrue(context.count >= 6);
+  }
 }

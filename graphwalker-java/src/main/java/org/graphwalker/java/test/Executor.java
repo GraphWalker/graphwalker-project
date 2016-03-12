@@ -39,21 +39,21 @@ import java.util.Properties;
  * @author Nils Olsson
  */
 public interface Executor {
-    Result execute();
+  Result execute();
 
-    Result execute(boolean ignoreErrors);
+  Result execute(boolean ignoreErrors);
 
-    MachineConfiguration getMachineConfiguration();
+  MachineConfiguration getMachineConfiguration();
 
-    Machine getMachine();
+  Machine getMachine();
 
-    Result getResult();
+  Result getResult();
 
-    boolean isFailure(Context context);
+  boolean isFailure(Context context);
 
-    MachineException getFailure(Context context);
+  MachineException getFailure(Context context);
 
-    Collection<MachineException> getFailures();
+  Collection<MachineException> getFailures();
 
-    void reportResults(File file, Date startTime, Properties properties);
+  void reportResults(File file, Date startTime, Properties properties);
 }

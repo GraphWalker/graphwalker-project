@@ -36,31 +36,31 @@ import javax.script.ScriptException;
  */
 public final class InternalState extends StopConditionBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(InternalState.class);
-    private final String script;
+  private static final Logger logger = LoggerFactory.getLogger(InternalState.class);
+  private final String script;
 
-    public InternalState(String script) {
-        super(String.valueOf(script));
-        this.script = script;
-    }
+  public InternalState(String script) {
+    super(String.valueOf(script));
+    this.script = script;
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        try {
-            Object value = getContext().getScriptEngine().eval(script);
-            if (value instanceof Boolean) {
-                return (Boolean) value;
-            } else {
-                throw new StopConditionException("Wrong type of expression");
-            }
-        } catch (ScriptException e) {
-            logger.error(e.getMessage());
-            return false;
-        }
+  @Override
+  public boolean isFulfilled() {
+    try {
+      Object value = getContext().getScriptEngine().eval(script);
+      if (value instanceof Boolean) {
+        return (Boolean) value;
+      } else {
+        throw new StopConditionException("Wrong type of expression");
+      }
+    } catch (ScriptException e) {
+      logger.error(e.getMessage());
+      return false;
     }
+  }
 
-    @Override
-    public double getFulfilment() {
-        return isFulfilled() ? 1.0 : 0.0;
-    }
+  @Override
+  public double getFulfilment() {
+    return isFulfilled() ? 1.0 : 0.0;
+  }
 }

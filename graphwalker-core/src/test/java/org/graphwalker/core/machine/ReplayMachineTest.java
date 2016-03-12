@@ -13,27 +13,27 @@ import static org.hamcrest.core.Is.is;
  */
 public class ReplayMachineTest {
 
-    @Test
-    public void replayMachine() {
-        Machine machine = createMachineExecution();
-        Machine replayMachine = new ReplayMachine(machine.getProfiler());
-        while (replayMachine.hasNextStep()) {
-            replayMachine.getNextStep();
-        }
-        Assert.assertThat(replayMachine.getProfiler().getPath().toArray(), is(machine.getProfiler().getPath().toArray()));
+  @Test
+  public void replayMachine() {
+    Machine machine = createMachineExecution();
+    Machine replayMachine = new ReplayMachine(machine.getProfiler());
+    while (replayMachine.hasNextStep()) {
+      replayMachine.getNextStep();
     }
+    Assert.assertThat(replayMachine.getProfiler().getPath().toArray(), is(machine.getProfiler().getPath().toArray()));
+  }
 
-    private Machine createMachineExecution() {
-        Vertex vertex = new Vertex();
-        Edge edge1 = new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("flag = true;")).setName("edge1");
-        Edge edge2 = new Edge().setSourceVertex(vertex).setTargetVertex(vertex).setGuard(new Guard("flag === true")).setName("edge2");
-        Model model = new Model().addEdge(edge1).addEdge(edge2).addAction(new Action("var flag = false;"));
-        Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
-        context.setNextElement(vertex);
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        return machine;
+  private Machine createMachineExecution() {
+    Vertex vertex = new Vertex();
+    Edge edge1 = new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("flag = true;")).setName("edge1");
+    Edge edge2 = new Edge().setSourceVertex(vertex).setTargetVertex(vertex).setGuard(new Guard("flag === true")).setName("edge2");
+    Model model = new Model().addEdge(edge1).addEdge(edge2).addAction(new Action("var flag = false;"));
+    Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+    context.setNextElement(vertex);
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+    return machine;
+  }
 }

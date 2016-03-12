@@ -35,7 +35,7 @@ import java.util.List;
 @Parameters(commandDescription = "Generates a list of unique names of the requirements found in the model. See http://graphwalker.org/docs/command_line_syntax")
 public class Requirements {
 
-    @Parameter(names = {"--model", "-m"}, required = true,
-            description = "The model(s)")
-    public List<String> model = new ArrayList<>();
+  @Parameter(names = {"--model", "-m"}, required = true,
+    description = "The model(s)")
+  public List<String> model = new ArrayList<>();
 }

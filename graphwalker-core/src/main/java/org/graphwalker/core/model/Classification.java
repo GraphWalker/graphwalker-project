@@ -38,58 +38,58 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class Classification extends CachedBuilder<Classification, Classification.RuntimeClassification> {
 
-    private final List<Classification> classifications = new ArrayList<>();
+  private final List<Classification> classifications = new ArrayList<>();
 
-    public Classification addClassification(Classification classification) {
-        this.classifications.add(classification);
-        invalidateCache();
-        return this;
+  public Classification addClassification(Classification classification) {
+    this.classifications.add(classification);
+    invalidateCache();
+    return this;
+  }
+
+  public List<Classification> getClassifications() {
+    return classifications;
+  }
+
+  @Override
+  protected RuntimeClassification createCache() {
+    return new RuntimeClassification(this);
+  }
+
+  public static final class RuntimeClassification extends RuntimeBase {
+
+    private final List<RuntimeClassification> classifications;
+
+    private RuntimeClassification(Classification classification) {
+      super(classification.getId(), classification.getName());
+      this.classifications = BuilderFactory.build(classification.getClassifications());
     }
 
-    public List<Classification> getClassifications() {
-        return classifications;
+    public List<RuntimeClassification> getClassifications() {
+      return classifications;
     }
 
     @Override
-    protected RuntimeClassification createCache() {
-        return new RuntimeClassification(this);
+    public void accept(ElementVisitor visitor) {
+      visitor.visit(this);
     }
 
-    public static final class RuntimeClassification extends RuntimeBase {
-
-        private final List<RuntimeClassification> classifications;
-
-        private RuntimeClassification(Classification classification) {
-            super(classification.getId(), classification.getName());
-            this.classifications = BuilderFactory.build(classification.getClassifications());
-        }
-
-        public List<RuntimeClassification> getClassifications() {
-            return classifications;
-        }
-
-        @Override
-        public void accept(ElementVisitor visitor) {
-            visitor.visit(this);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (isNull(o) || getClass() != o.getClass()) return false;
-            if (!super.equals(o)) return false;
-            RuntimeClassification that = (RuntimeClassification) o;
-            return Objects.equals(classifications, that.classifications);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(super.hashCode(), classifications);
-        }
-
-        @Override
-        public String toString() {
-            return getName();
-        }
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (isNull(o) || getClass() != o.getClass()) return false;
+      if (!super.equals(o)) return false;
+      RuntimeClassification that = (RuntimeClassification) o;
+      return Objects.equals(classifications, that.classifications);
     }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(super.hashCode(), classifications);
+    }
+
+    @Override
+    public String toString() {
+      return getName();
+    }
+  }
 }

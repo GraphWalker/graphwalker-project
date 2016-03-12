@@ -41,26 +41,26 @@ import java.util.List;
  */
 public final class IsolatedClassLoader extends URLClassLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(IsolatedClassLoader.class);
+  private static final Logger logger = LoggerFactory.getLogger(IsolatedClassLoader.class);
 
-    public IsolatedClassLoader(List<String> urls) {
-        this(convert(urls));
-    }
+  public IsolatedClassLoader(List<String> urls) {
+    this(convert(urls));
+  }
 
-    public IsolatedClassLoader(URL[] urls) {
-        super(urls, ClassLoader.getSystemClassLoader().getParent());
-    }
+  public IsolatedClassLoader(URL[] urls) {
+    super(urls, ClassLoader.getSystemClassLoader().getParent());
+  }
 
-    private static URL[] convert(List<String> urls) {
-        List<URL> urlList = new ArrayList<>();
-        for (String url : urls) {
-            try {
-                urlList.add(new File(url).toURI().toURL());
-            } catch (MalformedURLException e) {
-                logger.error(e.getMessage());
-                throw new RuntimeException(e);
-            }
-        }
-        return urlList.toArray(new URL[urlList.size()]);
+  private static URL[] convert(List<String> urls) {
+    List<URL> urlList = new ArrayList<>();
+    for (String url : urls) {
+      try {
+        urlList.add(new File(url).toURI().toURL());
+      } catch (MalformedURLException e) {
+        logger.error(e.getMessage());
+        throw new RuntimeException(e);
+      }
     }
+    return urlList.toArray(new URL[urlList.size()]);
+  }
 }

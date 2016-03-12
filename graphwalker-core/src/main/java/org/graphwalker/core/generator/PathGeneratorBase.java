@@ -36,39 +36,39 @@ import static org.graphwalker.core.common.Objects.isNotNull;
  */
 public abstract class PathGeneratorBase<T extends StopCondition> implements PathGenerator<T> {
 
-    private Context context;
-    private T stopCondition;
+  private Context context;
+  private T stopCondition;
 
-    public Context getContext() {
-        return context;
-    }
+  public Context getContext() {
+    return context;
+  }
 
-    public void setContext(Context context) {
-        this.context = context;
-        if (isNotNull(getStopCondition())) {
-            getStopCondition().setContext(getContext());
-        }
+  public void setContext(Context context) {
+    this.context = context;
+    if (isNotNull(getStopCondition())) {
+      getStopCondition().setContext(getContext());
     }
+  }
 
-    public T getStopCondition() {
-        return stopCondition;
-    }
+  public T getStopCondition() {
+    return stopCondition;
+  }
 
-    public void setStopCondition(T stopCondition) {
-        this.stopCondition = stopCondition;
-        if (isNotNull(getContext())) {
-            this.stopCondition.setContext(getContext());
-        }
+  public void setStopCondition(T stopCondition) {
+    this.stopCondition = stopCondition;
+    if (isNotNull(getContext())) {
+      this.stopCondition.setContext(getContext());
     }
+  }
 
-    @Override
-    public String toString() {
-        return toString(new StringBuilder()).toString();
-    }
+  @Override
+  public String toString() {
+    return toString(new StringBuilder()).toString();
+  }
 
-    public StringBuilder toString(StringBuilder builder) {
-        builder.append(getClass().getSimpleName()).append("(");
-        getStopCondition().toString(builder).append(")");
-        return builder;
-    }
+  public StringBuilder toString(StringBuilder builder) {
+    builder.append(getClass().getSimpleName()).append("(");
+    getStopCondition().toString(builder).append(")");
+    return builder;
+  }
 }

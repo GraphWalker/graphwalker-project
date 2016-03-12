@@ -39,75 +39,75 @@ import java.util.Map;
  */
 public class JsonVertex {
 
-    private String id;
-    private String name;
-    private String sharedState;
-    private List<String> actions;
-    private List<String> requirements;
-    private Map<String, Object> properties;
+  private String id;
+  private String name;
+  private String sharedState;
+  private List<String> actions;
+  private List<String> requirements;
+  private Map<String, Object> properties;
 
-    public Vertex getVertex() {
-        Vertex vertex = new Vertex();
-        vertex.setId(id);
-        vertex.setName(name);
-        vertex.setSharedState(sharedState);
+  public Vertex getVertex() {
+    Vertex vertex = new Vertex();
+    vertex.setId(id);
+    vertex.setName(name);
+    vertex.setSharedState(sharedState);
 
-        if (requirements != null) {
-            for (String requirement : requirements) {
-                vertex.addRequirement(new Requirement(requirement));
-            }
-        }
-
-        if (properties != null) {
-            vertex.setProperties(properties);
-        }
-
-        return vertex;
+    if (requirements != null) {
+      for (String requirement : requirements) {
+        vertex.addRequirement(new Requirement(requirement));
+      }
     }
 
-    public void setVertex(Vertex.RuntimeVertex vertex) {
-        id = vertex.getId();
-        name = vertex.getName();
-        sharedState = vertex.getSharedState();
-
-        if (vertex.hasRequirements()) {
-            requirements = new ArrayList<>();
-            for (Requirement requirement : vertex.getRequirements()) {
-                requirements.add(requirement.getKey());
-            }
-        }
-
-        if (vertex.hasProperties()) {
-            properties = new HashMap<>();
-            properties.putAll(vertex.getProperties());
-        }
+    if (properties != null) {
+      vertex.setProperties(properties);
     }
 
-    public void setVertex(Vertex vertex) {
-        setVertex(vertex.build());
+    return vertex;
+  }
+
+  public void setVertex(Vertex.RuntimeVertex vertex) {
+    id = vertex.getId();
+    name = vertex.getName();
+    sharedState = vertex.getSharedState();
+
+    if (vertex.hasRequirements()) {
+      requirements = new ArrayList<>();
+      for (Requirement requirement : vertex.getRequirements()) {
+        requirements.add(requirement.getKey());
+      }
     }
 
-    public void copyValues(Vertex vertex) {
-        if (id != null) {
-            vertex.setId(id);
-        }
-
-        if (name != null) {
-            vertex.setName(name);
-        }
-
-        if (sharedState != null) {
-            vertex.setSharedState(sharedState);
-        }
-
-        if (requirements != null) {
-            for (String requirement : requirements) {
-                vertex.addRequirement(new Requirement(requirement));
-            }
-        }
-
-        if (properties != null) {
-            vertex.setProperties(properties);
-        }
+    if (vertex.hasProperties()) {
+      properties = new HashMap<>();
+      properties.putAll(vertex.getProperties());
     }
+  }
+
+  public void setVertex(Vertex vertex) {
+    setVertex(vertex.build());
+  }
+
+  public void copyValues(Vertex vertex) {
+    if (id != null) {
+      vertex.setId(id);
+    }
+
+    if (name != null) {
+      vertex.setName(name);
+    }
+
+    if (sharedState != null) {
+      vertex.setSharedState(sharedState);
+    }
+
+    if (requirements != null) {
+      for (String requirement : requirements) {
+        vertex.addRequirement(new Requirement(requirement));
+      }
+    }
+
+    if (properties != null) {
+      vertex.setProperties(properties);
+    }
+  }
 }

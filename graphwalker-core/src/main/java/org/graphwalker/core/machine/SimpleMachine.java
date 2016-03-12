@@ -59,255 +59,255 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public class SimpleMachine extends MachineBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
+  private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
 
-    private Element lastElement;
+  private Element lastElement;
 
-    public SimpleMachine() {
+  public SimpleMachine() {
+  }
+
+  public SimpleMachine(Context... contexts) {
+    this(Arrays.asList(contexts));
+  }
+
+  public SimpleMachine(Collection<Context> contexts) {
+    this.getContexts().addAll(contexts);
+    executeInitActions(contexts);
+    setCurrentContext(chooseStartContext(contexts));
+  }
+
+  private void executeInitActions(Collection<Context> contexts) {
+    for (Context context : contexts) {
+      setCurrentContext(context);
+      getCurrentContext().setProfiler(getProfiler());
+      if (isNull(context.getModel())) {
+        throw new MachineException("A context must be associated with a model");
+      }
+      execute(context.getModel().getActions());
     }
+  }
 
-    public SimpleMachine(Context... contexts) {
-        this(Arrays.asList(contexts));
-    }
-
-    public SimpleMachine(Collection<Context> contexts) {
-        this.getContexts().addAll(contexts);
-        executeInitActions(contexts);
-        setCurrentContext(chooseStartContext(contexts));
-    }
-
-    private void executeInitActions(Collection<Context> contexts) {
-        for (Context context : contexts) {
-            setCurrentContext(context);
-            getCurrentContext().setProfiler(getProfiler());
-            if (isNull(context.getModel())) {
-                throw new MachineException("A context must be associated with a model");
-            }
-            execute(context.getModel().getActions());
-        }
-    }
-
-    private Context chooseStartContext(Collection<Context> contexts) {
-        for (Context context : contexts) {
-            if (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement())) {
-                return context;
-            }
-        }
-        throw new MachineException("No start context found");
-    }
-
-    @Override
-    public Context getNextStep() {
-        MDC.put("trace", UUID.randomUUID().toString());
-        walk(getCurrentContext());
-        notifyObservers(getCurrentContext().getCurrentElement(), EventType.BEFORE_ELEMENT);
-        getProfiler().start(getCurrentContext());
-        execute(getCurrentContext().getCurrentElement());
-        getProfiler().stop(getCurrentContext());
-        if (getCurrentContext().getLastElement() instanceof RuntimeEdge) {
-            updateRequirements(getCurrentContext(), getCurrentContext().getLastElement());
-        }
-        if (getCurrentContext().getCurrentElement() instanceof RuntimeVertex) {
-            updateRequirements(getCurrentContext(), getCurrentContext().getCurrentElement());
-        }
-        notifyObservers(getCurrentContext().getCurrentElement(), EventType.AFTER_ELEMENT);
-        return getCurrentContext();
-    }
-
-    private void updateRequirements(Context context, Element element) {
-        if (element.hasRequirements()) {
-            for (Requirement requirement : element.getRequirements()) {
-                context.setRequirementStatus(requirement, RequirementStatus.PASSED);
-            }
-        }
-    }
-
-    protected Context getNextStep(Context context) {
-        logger.debug("Context: " + context);
-        if (isNotNull(context.getNextElement())) {
-            context.setCurrentElement(context.getNextElement());
-        } else {
-            context.getPathGenerator().getNextStep();
-        }
+  private Context chooseStartContext(Collection<Context> contexts) {
+    for (Context context : contexts) {
+      if (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement())) {
         return context;
+      }
+    }
+    throw new MachineException("No start context found");
+  }
+
+  @Override
+  public Context getNextStep() {
+    MDC.put("trace", UUID.randomUUID().toString());
+    walk(getCurrentContext());
+    notifyObservers(getCurrentContext().getCurrentElement(), EventType.BEFORE_ELEMENT);
+    getProfiler().start(getCurrentContext());
+    execute(getCurrentContext().getCurrentElement());
+    getProfiler().stop(getCurrentContext());
+    if (getCurrentContext().getLastElement() instanceof RuntimeEdge) {
+      updateRequirements(getCurrentContext(), getCurrentContext().getLastElement());
+    }
+    if (getCurrentContext().getCurrentElement() instanceof RuntimeVertex) {
+      updateRequirements(getCurrentContext(), getCurrentContext().getCurrentElement());
+    }
+    notifyObservers(getCurrentContext().getCurrentElement(), EventType.AFTER_ELEMENT);
+    return getCurrentContext();
+  }
+
+  private void updateRequirements(Context context, Element element) {
+    if (element.hasRequirements()) {
+      for (Requirement requirement : element.getRequirements()) {
+        context.setRequirementStatus(requirement, RequirementStatus.PASSED);
+      }
+    }
+  }
+
+  protected Context getNextStep(Context context) {
+    logger.debug("Context: " + context);
+    if (isNotNull(context.getNextElement())) {
+      context.setCurrentElement(context.getNextElement());
+    } else {
+      context.getPathGenerator().getNextStep();
+    }
+    return context;
+  }
+
+  private void walk(Context context) {
+    try {
+      if (isNull(context.getCurrentElement())) {
+        context = takeFirstStep(context);
+      } else {
+        context = takeNextStep(context);
+      }
+      if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
+        context.setExecutionStatus(ExecutionStatus.EXECUTING);
+      }
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+      getExceptionStrategy().handle(this, new MachineException(context, t));
+    }
+  }
+
+  private Context takeFirstStep(Context context) {
+    if (isNotNull(context.getNextElement())) {
+      context = getNextStep(context);
+    } else {
+      context = switchContext(findStartContext());
+    }
+    return context;
+  }
+
+  private Context findStartContext() {
+    Context startContext = null;
+    for (Context context : getContexts()) {
+      if (hasNextStep(context) && (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement()))) {
+        startContext = context;
+        break;
+      }
+    }
+    if (isNull(startContext)) {
+      throw new NoPathFoundException("No start element defined");
+    }
+    return startContext;
+  }
+
+  private Context switchContext(Context context) {
+    hasNextStep(getCurrentContext());
+    lastElement = getCurrentContext().getCurrentElement();
+    getCurrentContext().setCurrentElement(null);
+    setCurrentContext(context);
+    return getCurrentContext();
+  }
+
+  private Context takeNextStep(Context context) {
+    if (isVertex(context.getCurrentElement())) {
+      RuntimeVertex vertex = (RuntimeVertex) context.getCurrentElement();
+      if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
+        context = chooseSharedContext(context, vertex);
+      }
+    }
+    return getNextStep(context);
+  }
+
+  private Context chooseSharedContext(Context context, RuntimeVertex vertex) {
+    List<SharedStateTuple> candidates = getPossibleSharedStates(vertex.getSharedState());
+    Random random = new Random(System.nanoTime());
+    SharedStateTuple candidate = candidates.get(random.nextInt(candidates.size()));
+    if (!candidate.getVertex().equals(context.getCurrentElement())) {
+      candidate.context.setNextElement(candidate.getVertex());
+      context = switchContext(candidate.context);
+    } else {
+      lastElement = null;
+    }
+    return context;
+  }
+
+  private boolean isVertex(Element element) {
+    return element instanceof RuntimeVertex;
+  }
+
+  private boolean hasPossibleSharedStates(RuntimeVertex vertex) {
+    return isNotNull(vertex.getSharedState()) && 0 < getPossibleSharedStates(vertex.getSharedState()).size();
+  }
+
+  private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
+    List<SharedStateTuple> sharedStates = new ArrayList<>();
+    for (Context context : getContexts()) {
+      if (getCurrentContext().equals(context) && hasOutEdges(context)) {
+        sharedStates.add(new SharedStateTuple(getCurrentContext(), (RuntimeVertex) getCurrentContext().getCurrentElement()));
+      } else if (!getCurrentContext().equals(context) && context.getModel().hasSharedState(sharedState)) {
+        for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
+          if ((!vertex.equals(lastElement) || getCurrentContext().getModel().getOutEdges((RuntimeVertex) getCurrentContext().getCurrentElement()).isEmpty()) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
+            sharedStates.add(new SharedStateTuple(context, vertex));
+          }
+        }
+      }
+    }
+    return sharedStates;
+  }
+
+  private boolean hasOutEdges(Context context) {
+    return isNotNull(context.getCurrentElement())
+      && context.getCurrentElement() instanceof RuntimeVertex
+      && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
+  }
+
+  @Override
+  public boolean hasNextStep() {
+    MDC.put("trace", UUID.randomUUID().toString());
+    for (Context context : getContexts()) {
+      if (hasNextStep(context)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean hasNextStep(Context context) {
+    ExecutionStatus status = context.getExecutionStatus();
+    if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
+      return false;
+    }
+    if (isNull(context.getPathGenerator())) {
+      throw new MachineException("No path generator is defined");
+    }
+    boolean hasMoreSteps = context.getPathGenerator().hasNextStep();
+    if (!hasMoreSteps) {
+      context.setExecutionStatus(ExecutionStatus.COMPLETED);
+      updateRequirements(context, context.getModel());
+    }
+    return hasMoreSteps;
+  }
+
+  private void execute(Element element) {
+    try {
+      if (element instanceof RuntimeVertex) {
+        execute((RuntimeVertex) element);
+      } else if (element instanceof RuntimeEdge) {
+        execute((RuntimeEdge) element);
+      }
+    } catch (MachineException e) {
+      logger.error(e.getMessage());
+      getExceptionStrategy().handle(this, e);
+    }
+  }
+
+  private void execute(RuntimeEdge edge) {
+    execute(edge.getActions());
+    if (edge.hasName()) {
+      getCurrentContext().execute(edge.getName());
+    }
+  }
+
+  private void execute(List<Action> actions) {
+    for (Action action : actions) {
+      getCurrentContext().execute(action);
+    }
+  }
+
+  private void execute(RuntimeVertex vertex) {
+    if (vertex.hasName()) {
+      getCurrentContext().execute(vertex.getName());
+    }
+  }
+
+  private static class SharedStateTuple {
+
+    private final Context context;
+    private final RuntimeVertex vertex;
+
+    private SharedStateTuple(Context context, RuntimeVertex vertex) {
+      this.context = context;
+      this.vertex = vertex;
     }
 
-    private void walk(Context context) {
-        try {
-            if (isNull(context.getCurrentElement())) {
-                context = takeFirstStep(context);
-            } else {
-                context = takeNextStep(context);
-            }
-            if (ExecutionStatus.NOT_EXECUTED.equals(context.getExecutionStatus())) {
-                context.setExecutionStatus(ExecutionStatus.EXECUTING);
-            }
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-            getExceptionStrategy().handle(this, new MachineException(context, t));
-        }
+    public Context getContext() {
+      return context;
     }
 
-    private Context takeFirstStep(Context context) {
-        if (isNotNull(context.getNextElement())) {
-            context = getNextStep(context);
-        } else {
-            context = switchContext(findStartContext());
-        }
-        return context;
+    public RuntimeVertex getVertex() {
+      return vertex;
     }
-
-    private Context findStartContext() {
-        Context startContext = null;
-        for (Context context : getContexts()) {
-            if (hasNextStep(context) && (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement()))) {
-                startContext = context;
-                break;
-            }
-        }
-        if (isNull(startContext)) {
-            throw new NoPathFoundException("No start element defined");
-        }
-        return startContext;
-    }
-
-    private Context switchContext(Context context) {
-        hasNextStep(getCurrentContext());
-        lastElement = getCurrentContext().getCurrentElement();
-        getCurrentContext().setCurrentElement(null);
-        setCurrentContext(context);
-        return getCurrentContext();
-    }
-
-    private Context takeNextStep(Context context) {
-        if (isVertex(context.getCurrentElement())) {
-            RuntimeVertex vertex = (RuntimeVertex) context.getCurrentElement();
-            if (vertex.hasSharedState() && hasPossibleSharedStates(vertex)) {
-                context = chooseSharedContext(context, vertex);
-            }
-        }
-        return getNextStep(context);
-    }
-
-    private Context chooseSharedContext(Context context, RuntimeVertex vertex) {
-        List<SharedStateTuple> candidates = getPossibleSharedStates(vertex.getSharedState());
-        Random random = new Random(System.nanoTime());
-        SharedStateTuple candidate = candidates.get(random.nextInt(candidates.size()));
-        if (!candidate.getVertex().equals(context.getCurrentElement())) {
-            candidate.context.setNextElement(candidate.getVertex());
-            context = switchContext(candidate.context);
-        } else {
-            lastElement = null;
-        }
-        return context;
-    }
-
-    private boolean isVertex(Element element) {
-        return element instanceof RuntimeVertex;
-    }
-
-    private boolean hasPossibleSharedStates(RuntimeVertex vertex) {
-        return isNotNull(vertex.getSharedState()) && 0 < getPossibleSharedStates(vertex.getSharedState()).size();
-    }
-
-    private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
-        List<SharedStateTuple> sharedStates = new ArrayList<>();
-        for (Context context : getContexts()) {
-            if (getCurrentContext().equals(context) && hasOutEdges(context)) {
-                sharedStates.add(new SharedStateTuple(getCurrentContext(), (RuntimeVertex) getCurrentContext().getCurrentElement()));
-            } else if (!getCurrentContext().equals(context) && context.getModel().hasSharedState(sharedState)) {
-                for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-                    if ((!vertex.equals(lastElement) || getCurrentContext().getModel().getOutEdges((RuntimeVertex) getCurrentContext().getCurrentElement()).isEmpty()) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
-                        sharedStates.add(new SharedStateTuple(context, vertex));
-                    }
-                }
-            }
-        }
-        return sharedStates;
-    }
-
-    private boolean hasOutEdges(Context context) {
-        return isNotNull(context.getCurrentElement())
-                && context.getCurrentElement() instanceof RuntimeVertex
-                && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
-    }
-
-    @Override
-    public boolean hasNextStep() {
-        MDC.put("trace", UUID.randomUUID().toString());
-        for (Context context : getContexts()) {
-            if (hasNextStep(context)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean hasNextStep(Context context) {
-        ExecutionStatus status = context.getExecutionStatus();
-        if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {
-            return false;
-        }
-        if (isNull(context.getPathGenerator())) {
-            throw new MachineException("No path generator is defined");
-        }
-        boolean hasMoreSteps = context.getPathGenerator().hasNextStep();
-        if (!hasMoreSteps) {
-            context.setExecutionStatus(ExecutionStatus.COMPLETED);
-            updateRequirements(context, context.getModel());
-        }
-        return hasMoreSteps;
-    }
-
-    private void execute(Element element) {
-        try {
-            if (element instanceof RuntimeVertex) {
-                execute((RuntimeVertex) element);
-            } else if (element instanceof RuntimeEdge) {
-                execute((RuntimeEdge) element);
-            }
-        } catch (MachineException e) {
-            logger.error(e.getMessage());
-            getExceptionStrategy().handle(this, e);
-        }
-    }
-
-    private void execute(RuntimeEdge edge) {
-        execute(edge.getActions());
-        if (edge.hasName()) {
-            getCurrentContext().execute(edge.getName());
-        }
-    }
-
-    private void execute(List<Action> actions) {
-        for (Action action : actions) {
-            getCurrentContext().execute(action);
-        }
-    }
-
-    private void execute(RuntimeVertex vertex) {
-        if (vertex.hasName()) {
-            getCurrentContext().execute(vertex.getName());
-        }
-    }
-
-    private static class SharedStateTuple {
-
-        private final Context context;
-        private final RuntimeVertex vertex;
-
-        private SharedStateTuple(Context context, RuntimeVertex vertex) {
-            this.context = context;
-            this.vertex = vertex;
-        }
-
-        public Context getContext() {
-            return context;
-        }
-
-        public RuntimeVertex getVertex() {
-            return vertex;
-        }
-    }
+  }
 
 }

@@ -35,8 +35,8 @@ import java.util.List;
 @Parameters(commandDescription = "Will generate source code using the provided model and a template. See http://graphwalker.org/docs/command_line_syntax")
 public class Source {
 
-    @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
-            description = "This command requires an input model file, and an input template file. " +
-                    "See http://graphwalker.org/docs/command_line_syntax")
-    public List<String> input = new ArrayList<>();
+  @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
+    description = "This command requires an input model file, and an input template file. " +
+      "See http://graphwalker.org/docs/command_line_syntax")
+  public List<String> input = new ArrayList<>();
 }

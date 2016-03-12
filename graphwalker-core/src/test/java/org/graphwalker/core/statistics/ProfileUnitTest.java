@@ -36,15 +36,15 @@ import static org.hamcrest.core.Is.is;
  */
 public final class ProfileUnitTest {
 
-    @Test
-    public void measure() {
-        ProfileUnit profileUnit = new ProfileUnit(new Execution(0L, 350L));
-        profileUnit.addExecution(new Execution(350L, 150L));
-        Assert.assertNotNull(profileUnit);
-        Assert.assertThat(profileUnit.getExecutionCount(), is(2L));
-        Assert.assertThat(profileUnit.getAverageExecutionTime(), is(250L));
-        Assert.assertThat(profileUnit.getMinExecutionTime(), is(150L));
-        Assert.assertThat(profileUnit.getMaxExecutionTime(), is(350L));
-        Assert.assertThat(profileUnit.getTotalExecutionTime(), is(500L));
-    }
+  @Test
+  public void measure() {
+    ProfileUnit profileUnit = new ProfileUnit(new Execution(0L, 350L));
+    profileUnit.addExecution(new Execution(350L, 150L));
+    Assert.assertNotNull(profileUnit);
+    Assert.assertThat(profileUnit.getExecutionCount(), is(2L));
+    Assert.assertThat(profileUnit.getAverageExecutionTime(), is(250L));
+    Assert.assertThat(profileUnit.getMinExecutionTime(), is(150L));
+    Assert.assertThat(profileUnit.getMaxExecutionTime(), is(350L));
+    Assert.assertThat(profileUnit.getTotalExecutionTime(), is(500L));
+  }
 }

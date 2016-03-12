@@ -41,19 +41,19 @@ import java.io.File;
 @Mojo(name = "generate-test-sources", defaultPhase = LifecyclePhase.GENERATE_TEST_SOURCES, requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)
 public final class GenerateTestMojo extends GenerateMojoBase {
 
-    @Parameter(property = "graphwalker.generate.test.directory", defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
-    private File generatedSourcesDirectory;
+  @Parameter(property = "graphwalker.generate.test.directory", defaultValue = "${project.build.directory}/generated-test-sources/graphwalker")
+  private File generatedSourcesDirectory;
 
-    @Override
-    protected File getGeneratedSourcesDirectory() {
-        return generatedSourcesDirectory;
-    }
+  @Override
+  protected File getGeneratedSourcesDirectory() {
+    return generatedSourcesDirectory;
+  }
 
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        generate(getMavenProject().getTestResources());
-        if (getGeneratedSourcesDirectory().exists()) {
-            getMavenProject().addTestCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
-        }
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    generate(getMavenProject().getTestResources());
+    if (getGeneratedSourcesDirectory().exists()) {
+      getMavenProject().addTestCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
     }
+  }
 }

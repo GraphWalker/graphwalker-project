@@ -53,90 +53,90 @@ import java.util.Set;
  */
 public final class JsonContextFactory implements ContextFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(JsonContextFactory.class);
-    private static final String FILE_TYPE = "json";
-    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.json"));
+  private static final Logger logger = LoggerFactory.getLogger(JsonContextFactory.class);
+  private static final String FILE_TYPE = "json";
+  private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.json"));
 
-    @Override
-    public <T extends Context> T create(Path path, T context) {        
-        StringBuilder out = new StringBuilder();
-        String line;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
-            while ((line = reader.readLine()) != null) {
-                out.append(line);
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
-        }
-        logger.debug(out.toString());
-
-        create(out.toString(), context);
-        return context;
+  @Override
+  public <T extends Context> T create(Path path, T context) {
+    StringBuilder out = new StringBuilder();
+    String line;
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
+      while ((line = reader.readLine()) != null) {
+        out.append(line);
+      }
+    } catch (IOException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("Could not read the file.");
     }
+    logger.debug(out.toString());
 
-    @Override
-    public <T extends Context> T write(T context, Path path) throws IOException {
-        Files.newOutputStream(path).write(String.valueOf(getJsonFromContext(context)).getBytes());
-        return context;
+    create(out.toString(), context);
+    return context;
+  }
+
+  @Override
+  public <T extends Context> T write(T context, Path path) throws IOException {
+    Files.newOutputStream(path).write(String.valueOf(getJsonFromContext(context)).getBytes());
+    return context;
+  }
+
+  public String getJsonFromModel(Model model) {
+    return new Gson().toJson(model);
+  }
+
+  public String getJsonFromContext(Context context) {
+    JsonModel jsonModel = new JsonModel();
+    jsonModel.setModel(context.getModel());
+
+    if (context.getPathGenerator() != null) {
+      jsonModel.setGenerator(context.getPathGenerator().toString());
     }
-
-    public String getJsonFromModel(Model model) {
-        return new Gson().toJson(model);
+    if (context.getNextElement() != null && context.getNextElement().hasId()) {
+      jsonModel.setStartElementId(context.getNextElement().getId());
     }
+    return new Gson().toJson(jsonModel);
+  }
 
-    public String getJsonFromContext(Context context) {
-        JsonModel jsonModel = new JsonModel();
-        jsonModel.setModel(context.getModel());
+  public <T extends Context> T create(String jsonString, T context) {
+    Gson gson = new Gson();
+    JsonModel jsonModel = gson.fromJson(jsonString, JsonModel.class);
+    Model model = jsonModel.getModel();
 
-        if (context.getPathGenerator() != null) {
-            jsonModel.setGenerator(context.getPathGenerator().toString());
-        }
-        if (context.getNextElement() != null && context.getNextElement().hasId()) {
-            jsonModel.setStartElementId(context.getNextElement().getId());
-        }
-        return new Gson().toJson(jsonModel);
+    context.setModel(model.build());
+    if (jsonModel.getGenerator() != null) {
+      context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
     }
-
-    public <T extends Context> T create(String jsonString, T context) {
-        Gson gson = new Gson();
-        JsonModel jsonModel = gson.fromJson(jsonString, JsonModel.class);
-        Model model = jsonModel.getModel();
-
-        context.setModel(model.build());
-        if (jsonModel.getGenerator() != null) {
-            context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
-        }
-        for (Element element : context.getModel().getElements()) {
-            if (element.getId().equals(jsonModel.getStartElementId())) {
-                context.setNextElement(element);
-                break;
-            }
-        }
-        return context;
+    for (Element element : context.getModel().getElements()) {
+      if (element.getId().equals(jsonModel.getStartElementId())) {
+        context.setNextElement(element);
+        break;
+      }
     }
+    return context;
+  }
 
-    @Override
-    public Set<String> getSupportedFileTypes() {
-        return SUPPORTED_TYPE;
-    }
+  @Override
+  public Set<String> getSupportedFileTypes() {
+    return SUPPORTED_TYPE;
+  }
 
-    @Override
-    public boolean accept(Path path) {
-        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
-    }
+  @Override
+  public boolean accept(Path path) {
+    return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
+  }
 
-    @Override
-    public Context create(Path path) {
-        return create(path, new JsonContext());
-    }
+  @Override
+  public Context create(Path path) {
+    return create(path, new JsonContext());
+  }
 
-    @Override
-    public List<Context> createMultiple(Path path) {
-        return null;
-    }
+  @Override
+  public List<Context> createMultiple(Path path) {
+    return null;
+  }
 
-    public Context create(String jsonString) {
-        return create(jsonString, new JsonContext());
-    }
+  public Context create(String jsonString) {
+    return create(jsonString, new JsonContext());
+  }
 }

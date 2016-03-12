@@ -44,18 +44,18 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class ReachedVertex extends ReachedStopConditionBase {
 
-    public ReachedVertex(String target) {
-        super(target);
-    }
+  public ReachedVertex(String target) {
+    super(target);
+  }
 
-    public Set<Element> getTargetElements() {
-        Set<Element> elements = new HashSet<>();
-        List<RuntimeVertex> vertices = getContext().getModel().findVertices(getValue());
-        if (isNotNullOrEmpty(vertices)) {
-            elements.addAll(vertices);
-        }
-        return elements;
+  public Set<Element> getTargetElements() {
+    Set<Element> elements = new HashSet<>();
+    List<RuntimeVertex> vertices = getContext().getModel().findVertices(getValue());
+    if (isNotNullOrEmpty(vertices)) {
+      elements.addAll(vertices);
     }
+    return elements;
+  }
 
 
 }

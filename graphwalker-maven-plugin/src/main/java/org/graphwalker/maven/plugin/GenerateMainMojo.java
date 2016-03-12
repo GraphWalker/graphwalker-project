@@ -41,19 +41,19 @@ import java.io.File;
 @Mojo(name = "generate-sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE, threadSafe = true)
 public final class GenerateMainMojo extends GenerateMojoBase {
 
-    @Parameter(property = "graphwalker.generate.directory", defaultValue = "${project.build.directory}/generated-sources/graphwalker")
-    private File generatedSourcesDirectory;
+  @Parameter(property = "graphwalker.generate.directory", defaultValue = "${project.build.directory}/generated-sources/graphwalker")
+  private File generatedSourcesDirectory;
 
-    @Override
-    protected File getGeneratedSourcesDirectory() {
-        return generatedSourcesDirectory;
-    }
+  @Override
+  protected File getGeneratedSourcesDirectory() {
+    return generatedSourcesDirectory;
+  }
 
-    @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
-        generate(getMavenProject().getResources());
-        if (getGeneratedSourcesDirectory().exists()) {
-            getMavenProject().addCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
-        }
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    generate(getMavenProject().getResources());
+    if (getGeneratedSourcesDirectory().exists()) {
+      getMavenProject().addCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
     }
+  }
 }

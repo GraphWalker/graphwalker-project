@@ -42,35 +42,35 @@ import static org.hamcrest.core.Is.is;
  */
 public class SimpleTest extends ExecutionContext implements SimpleModel {
 
-    public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/SimpleModel.graphml");
+  public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/SimpleModel.graphml");
 
-    public int count = 0;
+  public int count = 0;
 
-    @Override
-    public void vertex() {
-        count++;
-    }
+  @Override
+  public void vertex() {
+    count++;
+  }
 
-    @Override
-    public void edge() {
-        count++;
-    }
+  @Override
+  public void edge() {
+    count++;
+  }
 
-    @Test
-    public void run2() {
-        SimpleTest context = new SimpleTest();
-        new TestBuilder()
-                .setModel(MODEL_PATH)
-                .setContext(context)
-                .setPathGenerator(new RandomPath(new VertexCoverage(100)))
-                .setStart("edge").execute();
-        Assert.assertThat(context.count, is(2));
-    }
+  @Test
+  public void run2() {
+    SimpleTest context = new SimpleTest();
+    new TestBuilder()
+      .setModel(MODEL_PATH)
+      .setContext(context)
+      .setPathGenerator(new RandomPath(new VertexCoverage(100)))
+      .setStart("edge").execute();
+    Assert.assertThat(context.count, is(2));
+  }
 
-    @Test
-    public void run() {
-        Result result = new TestBuilder().addModel(MODEL_PATH
-                , new SimpleTest().setPathGenerator(new RandomPath(new VertexCoverage(100)))).execute();
-        Assert.assertThat(result.getCompletedCount(), is(1));
-    }
+  @Test
+  public void run() {
+    Result result = new TestBuilder().addModel(MODEL_PATH
+      , new SimpleTest().setPathGenerator(new RandomPath(new VertexCoverage(100)))).execute();
+    Assert.assertThat(result.getCompletedCount(), is(1));
+  }
 }

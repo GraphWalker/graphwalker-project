@@ -5,9 +5,9 @@ package org.graphwalker.java.source.cache;
  */
 public interface Cache<K, V> {
 
-    void add(K key, V value);
+  void add(K key, V value);
 
-    V get(K key);
+  V get(K key);
 
-    boolean contains(K key);
+  boolean contains(K key);
 }

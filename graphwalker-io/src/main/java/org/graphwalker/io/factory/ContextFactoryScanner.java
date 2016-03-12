@@ -42,58 +42,59 @@ import java.util.*;
  * @author Nils Olsson
  */
 public final class ContextFactoryScanner {
-    
-    private ContextFactoryScanner() {}
 
-    private static final Logger logger = LoggerFactory.getLogger(ContextFactoryScanner.class);
+  private ContextFactoryScanner() {
+  }
 
-    static {
-        Reflections.log = null;
+  private static final Logger logger = LoggerFactory.getLogger(ContextFactoryScanner.class);
+
+  static {
+    Reflections.log = null;
+  }
+
+  private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
+
+  private static boolean valid(URL url) {
+    String extension = FilenameUtils.getExtension(url.getPath());
+    return "".equals(extension) || "jar".equals(extension);
+  }
+
+  private static Collection<URL> getUrls() {
+    Set<URL> filteredUrls = new HashSet<>();
+    Set<URL> urls = new HashSet<>();
+    urls.addAll(ClasspathHelper.forClassLoader());
+    urls.addAll(ClasspathHelper.forJavaClassPath());
+    for (URL url : urls) {
+      if (valid(url)) {
+        filteredUrls.add(url);
+      }
     }
+    return filteredUrls;
+  }
 
-    private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
+  public static ContextFactory get(Path path) {
+    return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).addScanners(new SubTypesScanner())), path);
+  }
 
-    private static boolean valid(URL url) {
-        String extension = FilenameUtils.getExtension(url.getPath());
-        return "".equals(extension) || "jar".equals(extension);
+  public static ContextFactory get(Reflections reflections, Path path) {
+    for (Class<? extends ContextFactory> factoryClass : reflections.getSubTypesOf(ContextFactory.class)) {
+      ContextFactory factory = create(factoryClass);
+      if (null != factory && factory.accept(path)) {
+        return factory;
+      }
     }
+    throw new ContextFactoryException("No suitable context factory found");
+  }
 
-    private static Collection<URL> getUrls() {
-        Set<URL> filteredUrls = new HashSet<>();
-        Set<URL> urls = new HashSet<>();
-        urls.addAll(ClasspathHelper.forClassLoader());
-        urls.addAll(ClasspathHelper.forJavaClassPath());
-        for (URL url : urls) {
-            if (valid(url)) {
-                filteredUrls.add(url);
-            }
-        }
-        return filteredUrls;
+  private static ContextFactory create(Class<? extends ContextFactory> factoryClass) {
+    if (!factories.containsKey(factoryClass)) {
+      try {
+        factories.put(factoryClass, factoryClass.newInstance());
+      } catch (InstantiationException | IllegalAccessException e) {
+        logger.error(e.getMessage());
+        return null;
+      }
     }
-
-    public static ContextFactory get(Path path) {
-        return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).addScanners(new SubTypesScanner())), path);
-    }
-
-    public static ContextFactory get(Reflections reflections, Path path) {
-        for (Class<? extends ContextFactory> factoryClass : reflections.getSubTypesOf(ContextFactory.class)) {
-            ContextFactory factory = create(factoryClass);
-            if (null != factory && factory.accept(path)) {
-                return factory;
-            }
-        }
-        throw new ContextFactoryException("No suitable context factory found");
-    }
-
-    private static ContextFactory create(Class<? extends ContextFactory> factoryClass) {
-        if (!factories.containsKey(factoryClass)) {
-            try {
-                factories.put(factoryClass, factoryClass.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                logger.error(e.getMessage());
-                return null;
-            }
-        }
-        return factories.get(factoryClass);
-    }
+    return factories.get(factoryClass);
+  }
 }

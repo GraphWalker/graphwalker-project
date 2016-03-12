@@ -35,64 +35,64 @@ import java.io.PrintStream;
 
 public abstract class CLITestRoot {
 
-    private static Logger logger = LoggerFactory.getLogger(CLITestRoot.class);
+  private static Logger logger = LoggerFactory.getLogger(CLITestRoot.class);
 
-    protected Result runCommand(String args[]) {
-        RedirectStream stdOutput = new RedirectStream();
-        RedirectStream errOutput = new RedirectStream();
+  protected Result runCommand(String args[]) {
+    RedirectStream stdOutput = new RedirectStream();
+    RedirectStream errOutput = new RedirectStream();
 
-        PrintStream outStream = new PrintStream(stdOutput);
-        PrintStream oldOutStream = System.out; // backup
-        PrintStream errStream = new PrintStream(errOutput);
-        PrintStream oldErrStream = System.err; // backup
+    PrintStream outStream = new PrintStream(stdOutput);
+    PrintStream oldOutStream = System.out; // backup
+    PrintStream errStream = new PrintStream(errOutput);
+    PrintStream oldErrStream = System.err; // backup
 
-        System.setOut(outStream);
-        System.setErr(errStream);
+    System.setOut(outStream);
+    System.setErr(errStream);
 
-        CLI.main(args);
+    CLI.main(args);
 
-        System.setOut(oldOutStream);
-        System.setErr(oldErrStream);
+    System.setOut(oldOutStream);
+    System.setErr(oldErrStream);
 
-        String outMsg = stdOutput.toString();
-        String errMsg = errOutput.toString();
-        logger.info("stdout: " + outMsg);
-        logger.info("stderr: " + errMsg);
+    String outMsg = stdOutput.toString();
+    String errMsg = errOutput.toString();
+    logger.info("stdout: " + outMsg);
+    logger.info("stderr: " + errMsg);
 
-        return new Result(outMsg, errMsg);
+    return new Result(outMsg, errMsg);
+  }
+
+  public class RedirectStream extends OutputStream {
+
+    private final StringBuffer buffer = new StringBuffer();
+
+    @Override
+    public void write(int b) throws IOException {
+      buffer.append(Character.toString((char) b));
     }
 
-    public class RedirectStream extends OutputStream {
+    @Override
+    public String toString() {
+      return buffer.toString();
+    }
+  }
 
-        private final StringBuffer buffer = new StringBuffer();
+  public class Result {
 
-        @Override
-        public void write(int b) throws IOException {
-            buffer.append(Character.toString((char) b));
-        }
+    private final String output;
+    private final String error;
 
-        @Override
-        public String toString() {
-            return buffer.toString();
-        }
+    public Result(String output, String error) {
+      this.output = output;
+      this.error = error;
     }
 
-    public class Result {
-
-        private final String output;
-        private final String error;
-
-        public Result(String output, String error) {
-            this.output = output;
-            this.error = error;
-        }
-
-        public String getOutput() {
-            return output;
-        }
-
-        public String getError() {
-            return error;
-        }
+    public String getOutput() {
+      return output;
     }
+
+    public String getError() {
+      return error;
+    }
+  }
 }

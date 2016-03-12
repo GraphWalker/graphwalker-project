@@ -45,110 +45,110 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Fleury implements Algorithm {
 
-    private final Context context;
+  private final Context context;
 
-    public Fleury(Context context) {
-        this.context = context;
+  public Fleury(Context context) {
+    this.context = context;
+  }
+
+  public Path<Element> getTrail(RuntimeEdge edge) {
+    Set<RuntimeEdge> visitedEdges = new HashSet<>();
+    visitedEdges.add(edge);
+    Path<Element> path = getTrail(edge.getTargetVertex(), visitedEdges);
+    path.addFirst(edge.getTargetVertex());
+    return path;
+  }
+
+  public Path<Element> getTrail(RuntimeVertex vertex) {
+    return getTrail(vertex, new HashSet<RuntimeEdge>());
+  }
+
+  private Path<Element> getTrail(RuntimeVertex vertex, Set<RuntimeEdge> visitedEdges) {
+    // Step 1
+    Path<Element> trail = new Path<>();
+    RuntimeVertex currentVertex = vertex;
+    List<RuntimeEdge> availableEdges = new ArrayList<>(context.getModel().getEdges());
+    availableEdges.removeAll(visitedEdges);
+    while (!availableEdges.isEmpty()) {
+      // Step 2
+      RuntimeEdge edge = getNextEdge(context.getModel(), visitedEdges, currentVertex);
+      // Step 3
+      trail.add(edge);
+      visitedEdges.add(edge);
+      currentVertex = edge.getTargetVertex();
+      trail.add(currentVertex);
+      // Step 4
+      availableEdges.remove(edge);
     }
+    return trail;
+  }
 
-    public Path<Element> getTrail(RuntimeEdge edge) {
-        Set<RuntimeEdge> visitedEdges = new HashSet<>();
-        visitedEdges.add(edge);
-        Path<Element> path = getTrail(edge.getTargetVertex(), visitedEdges);
-        path.addFirst(edge.getTargetVertex());
-        return path;
-    }
-
-    public Path<Element> getTrail(RuntimeVertex vertex) {
-        return getTrail(vertex, new HashSet<RuntimeEdge>());
-    }
-
-    private Path<Element> getTrail(RuntimeVertex vertex, Set<RuntimeEdge> visitedEdges) {
-        // Step 1
-        Path<Element> trail = new Path<>();
-        RuntimeVertex currentVertex = vertex;
-        List<RuntimeEdge> availableEdges = new ArrayList<>(context.getModel().getEdges());
-        availableEdges.removeAll(visitedEdges);
-        while (!availableEdges.isEmpty()) {
-            // Step 2
-            RuntimeEdge edge = getNextEdge(context.getModel(), visitedEdges, currentVertex);
-            // Step 3
-            trail.add(edge);
-            visitedEdges.add(edge);
-            currentVertex = edge.getTargetVertex();
-            trail.add(currentVertex);
-            // Step 4
-            availableEdges.remove(edge);
+  private RuntimeEdge getNextEdge(RuntimeModel model, Set<RuntimeEdge> visitedEdges, RuntimeVertex vertex) {
+    List<RuntimeEdge> bridges = new ArrayList<>();
+    for (RuntimeEdge edge : model.getOutEdges(vertex)) {
+      if (!visitedEdges.contains(edge)) {
+        if (!isBridge(model, visitedEdges, edge)) {
+          return edge;
+        } else {
+          bridges.add(edge);
         }
-        return trail;
+      }
+    }
+    if (!bridges.isEmpty()) {
+      return bridges.get(0);
+    }
+    throw new AlgorithmException();
+  }
+
+  private boolean isBridge(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
+    VertexCounter counter1 = new VertexCounter(model, visitedElements, edge);
+    VertexCounter counter2 = new VertexCounter(model);
+    edge.getSourceVertex().accept(counter1);
+    edge.getSourceVertex().accept(counter2);
+    return counter1.getCount() < counter2.getCount();
+  }
+
+  private static class VertexCounter implements ElementVisitor {
+
+    private final RuntimeModel model;
+    private final Set<Element> visitedElements = new HashSet<>();
+    private int count = 0;
+
+    public VertexCounter(RuntimeModel model) {
+      this.model = model;
     }
 
-    private RuntimeEdge getNextEdge(RuntimeModel model, Set<RuntimeEdge> visitedEdges, RuntimeVertex vertex) {
-        List<RuntimeEdge> bridges = new ArrayList<>();
+    public VertexCounter(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
+      this.model = model;
+      this.visitedElements.addAll(visitedElements);
+      this.visitedElements.add(edge);
+    }
+
+    public int getCount() {
+      return count;
+    }
+
+    private boolean isNotVisited(Element element) {
+      return !visitedElements.contains(element);
+    }
+
+    @Override
+    public void visit(Element element) {
+      visitedElements.add(element);
+      if (element instanceof RuntimeVertex) {
+        RuntimeVertex vertex = (RuntimeVertex) element;
+        count++;
         for (RuntimeEdge edge : model.getOutEdges(vertex)) {
-            if (!visitedEdges.contains(edge)) {
-                if (!isBridge(model, visitedEdges, edge)) {
-                    return edge;
-                } else {
-                    bridges.add(edge);
-                }
-            }
+          if (isNotVisited(edge)) {
+            edge.accept(this);
+          }
         }
-        if (!bridges.isEmpty()) {
-            return bridges.get(0);
+      } else if (element instanceof RuntimeEdge) {
+        RuntimeEdge edge = (RuntimeEdge) element;
+        if (isNotVisited(edge.getTargetVertex())) {
+          edge.getTargetVertex().accept(this);
         }
-        throw new AlgorithmException();
+      }
     }
-
-    private boolean isBridge(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
-        VertexCounter counter1 = new VertexCounter(model, visitedElements, edge);
-        VertexCounter counter2 = new VertexCounter(model);
-        edge.getSourceVertex().accept(counter1);
-        edge.getSourceVertex().accept(counter2);
-        return counter1.getCount() < counter2.getCount();
-    }
-
-    private static class VertexCounter implements ElementVisitor {
-
-        private final RuntimeModel model;
-        private final Set<Element> visitedElements = new HashSet<>();
-        private int count = 0;
-
-        public VertexCounter(RuntimeModel model) {
-            this.model = model;
-        }
-
-        public VertexCounter(RuntimeModel model, Set<RuntimeEdge> visitedElements, RuntimeEdge edge) {
-            this.model = model;
-            this.visitedElements.addAll(visitedElements);
-            this.visitedElements.add(edge);
-        }
-
-        public int getCount() {
-            return count;
-        }
-
-        private boolean isNotVisited(Element element) {
-            return !visitedElements.contains(element);
-        }
-
-        @Override
-        public void visit(Element element) {
-            visitedElements.add(element);
-            if (element instanceof RuntimeVertex) {
-                RuntimeVertex vertex = (RuntimeVertex) element;
-                count++;
-                for (RuntimeEdge edge : model.getOutEdges(vertex)) {
-                    if (isNotVisited(edge)) {
-                        edge.accept(this);
-                    }
-                }
-            } else if (element instanceof RuntimeEdge) {
-                RuntimeEdge edge = (RuntimeEdge) element;
-                if (isNotVisited(edge.getTargetVertex())) {
-                    edge.getTargetVertex().accept(this);
-                }
-            }
-        }
-    }
+  }
 }

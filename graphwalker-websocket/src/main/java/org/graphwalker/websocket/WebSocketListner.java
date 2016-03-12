@@ -46,110 +46,110 @@ import java.util.*;
 
 public class WebSocketListner extends org.java_websocket.server.WebSocketServer implements Observer {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketListner.class);
+  private static final Logger logger = LoggerFactory.getLogger(WebSocketListner.class);
 
-    private Machine machine;
-    private Set<WebSocket> sockets;
+  private Machine machine;
+  private Set<WebSocket> sockets;
 
-    public WebSocketListner(InetSocketAddress address, Machine machine) {
-        super(address);
-        this.machine = machine;
-        this.machine.addObserver(this);
-        sockets = new HashSet<>();
+  public WebSocketListner(InetSocketAddress address, Machine machine) {
+    super(address);
+    this.machine = machine;
+    this.machine.addObserver(this);
+    sockets = new HashSet<>();
+  }
+
+  @Override
+  public void onOpen(WebSocket socket, ClientHandshake handshake) {
+    logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
+    sockets.add(socket);
+  }
+
+  @Override
+  public void onClose(WebSocket socket, int code, String reason, boolean remote) {
+    logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " has disconnected");
+    sockets.remove(socket);
+  }
+
+  @Override
+  public void onMessage(WebSocket socket, String message) {
+    logger.debug("Received message from: "
+      + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+      + " : "
+      + message);
+
+    JSONObject response = new JSONObject();
+    JSONObject root;
+    try {
+      root = new JSONObject(message);
+    } catch (JSONException e) {
+      logger.error(e.getMessage());
+      response.put("message", "Unknown command: " + e.getMessage());
+      response.put("success", false);
+      socket.send(response.toString());
+      return;
     }
 
-    @Override
-    public void onOpen(WebSocket socket, ClientHandshake handshake) {
-        logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
-        sockets.add(socket);
-    }
+    String command = root.getString("command").toUpperCase();
+    switch (command) {
+      case "GETGW3": {
+        response.put("command", "getGW3");
+        response.put("success", false);
 
-    @Override
-    public void onClose(WebSocket socket, int code, String reason, boolean remote) {
-        logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " has disconnected");
-        sockets.remove(socket);
-    }
-
-    @Override
-    public void onMessage(WebSocket socket, String message) {
-        logger.debug("Received message from: "
-                + socket.getRemoteSocketAddress().getAddress().getHostAddress()
-                + " : "
-                + message);
-
-        JSONObject response = new JSONObject();
-        JSONObject root;
-        try {
-            root = new JSONObject(message);
-        } catch (JSONException e) {
-            logger.error(e.getMessage());
-            response.put("message", "Unknown command: " + e.getMessage());
-            response.put("success", false);
-            socket.send(response.toString());
-            return;
+        JSONArray jsonModels = new JSONArray();
+        for (Context context : machine.getContexts()) {
+          jsonModels.put(new JsonContextFactory().getJsonFromContext(context));
         }
-
-        String command = root.getString("command").toUpperCase();
-        switch (command) {
-            case "GETGW3": {
-                response.put("command", "getGW3");
-                response.put("success", false);
-
-                JSONArray jsonModels = new JSONArray();
-                for (Context context : machine.getContexts()){
-                    jsonModels.put(new JsonContextFactory().getJsonFromContext(context));
-                }
-                JSONObject jsonMachine = new JSONObject();
-                jsonMachine.put("name", "WebSocketListner");
-                jsonMachine.put("models", jsonModels);
-                response.put("gw3", jsonMachine);
-                response.put("success", true);
-                break;
-            }
-            default:
-                response.put("message", "Unknown command");
-                response.put("success", false);
-                break;
-        }
-        logger.debug("Sending response to: "
-                + socket.getRemoteSocketAddress().getAddress().getHostAddress()
-                + " : "
-                + response.toString());
-        socket.send(response.toString());
+        JSONObject jsonMachine = new JSONObject();
+        jsonMachine.put("name", "WebSocketListner");
+        jsonMachine.put("models", jsonModels);
+        response.put("gw3", jsonMachine);
+        response.put("success", true);
+        break;
+      }
+      default:
+        response.put("message", "Unknown command");
+        response.put("success", false);
+        break;
     }
+    logger.debug("Sending response to: "
+      + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+      + " : "
+      + response.toString());
+    socket.send(response.toString());
+  }
 
-    @Override
-    public void onError(WebSocket socket, Exception ex) {
-        ex.printStackTrace();
+  @Override
+  public void onError(WebSocket socket, Exception ex) {
+    ex.printStackTrace();
+  }
+
+  @Override
+  public void update(Machine machine, Element element, EventType type) {
+    logger.info("Received an update from a GraphWalker machine");
+    logger.info("Event: " + type);
+    if (type == EventType.AFTER_ELEMENT) {
+      JSONObject jsonObject = new JSONObject();
+      jsonObject.put("command", "visitedElement");
+      jsonObject.put("modelId", machine.getCurrentContext().getModel().getId());
+      jsonObject.put("elementId", element.getId());
+      jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
+      jsonObject.put("totalCount", machine.getProfiler().getTotalVisitCount());
+      jsonObject.put("stopConditionFulfillment", machine.getCurrentContext().getPathGenerator().getStopCondition().getFulfilment());
+
+      JSONObject data = new JSONObject();
+      for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
+        data.put(k.getKey(), k.getValue());
+      }
+      jsonObject.put("data", data);
+
+      send(jsonObject);
     }
+  }
 
-    @Override
-    public void update(Machine machine, Element element, EventType type) {
-        logger.info("Received an update from a GraphWalker machine");
-        logger.info("Event: " + type);
-        if (type == EventType.AFTER_ELEMENT) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("command", "visitedElement");
-            jsonObject.put("modelId", machine.getCurrentContext().getModel().getId());
-            jsonObject.put("elementId", element.getId());
-            jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
-            jsonObject.put("totalCount", machine.getProfiler().getTotalVisitCount());
-            jsonObject.put("stopConditionFulfillment", machine.getCurrentContext().getPathGenerator().getStopCondition().getFulfilment());
-
-            JSONObject data = new JSONObject();
-            for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
-                data.put(k.getKey(), k.getValue());
-            }
-            jsonObject.put("data", data);
-
-            send(jsonObject);
-        }
+  private void send(JSONObject jsonObject) {
+    for (WebSocket socket : sockets) {
+      logger.debug("Sending: " + jsonObject.toString());
+      socket.send(jsonObject.toString());
     }
-
-    private void send(JSONObject jsonObject) {
-        for (WebSocket socket : sockets) {
-            logger.debug("Sending: " + jsonObject.toString());
-            socket.send(jsonObject.toString());
-        }
-    }
+  }
 }

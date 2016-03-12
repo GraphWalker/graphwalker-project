@@ -35,36 +35,36 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public abstract class StopConditionBase implements StopCondition {
 
-    private final String value;
-    private Context context;
+  private final String value;
+  private Context context;
 
-    protected StopConditionBase(String value) {
-        this.value = value;
-    }
+  protected StopConditionBase(String value) {
+    this.value = value;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public Context getContext() {
-        return context;
-    }
+  public Context getContext() {
+    return context;
+  }
 
-    public void setContext(Context context) {
-        this.context = context;
-    }
+  public void setContext(Context context) {
+    this.context = context;
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return getContext().getCurrentElement() instanceof RuntimeVertex;
-    }
+  @Override
+  public boolean isFulfilled() {
+    return getContext().getCurrentElement() instanceof RuntimeVertex;
+  }
 
-    @Override
-    public String toString() {
-        return toString(new StringBuilder()).toString();
-    }
+  @Override
+  public String toString() {
+    return toString(new StringBuilder()).toString();
+  }
 
-    public StringBuilder toString(StringBuilder builder) {
-        return builder.append(getClass().getSimpleName()).append("(").append(getValue()).append(")");
-    }
+  public StringBuilder toString(StringBuilder builder) {
+    return builder.append(getClass().getSimpleName()).append("(").append(getValue()).append(")");
+  }
 }

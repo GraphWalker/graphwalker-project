@@ -33,12 +33,12 @@ import org.graphwalker.java.annotation.Model;
 @Model(file = "org/graphwalker/java/annotation/MyModel.graphml")
 public interface MyModel {
 
-    @Edge()
-    void vertex1();
+  @Edge()
+  void vertex1();
 
-    @Edge()
-    void vertex2();
+  @Edge()
+  void vertex2();
 
-    @Edge()
-    void edge12();
+  @Edge()
+  void edge12();
 }

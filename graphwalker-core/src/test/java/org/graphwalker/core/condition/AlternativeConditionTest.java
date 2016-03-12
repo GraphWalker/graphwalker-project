@@ -43,54 +43,54 @@ import static org.hamcrest.core.Is.is;
  */
 public class AlternativeConditionTest {
 
-    @Test
-    public void testConstructor() {
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
-        Assert.assertNotNull(alternativeCondition);
-        Assert.assertNotNull(alternativeCondition.getStopConditions());
-        Assert.assertThat(alternativeCondition.getStopConditions().size(), is(0));
-    }
+  @Test
+  public void testConstructor() {
+    AlternativeCondition alternativeCondition = new AlternativeCondition();
+    Assert.assertNotNull(alternativeCondition);
+    Assert.assertNotNull(alternativeCondition.getStopConditions());
+    Assert.assertThat(alternativeCondition.getStopConditions().size(), is(0));
+  }
 
-    @Test
-    public void testFulfilment() {
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
-        Model model = new Model().addEdge(e1);
-        StopCondition condition = new AlternativeCondition()
-                .addStopCondition(new VertexCoverage(100))
-                .addStopCondition(new ReachedEdge("e1"));
-        Context context = new TestExecutionContext(model, new RandomPath(condition));
-        context.setProfiler(new Profiler());
-        Assert.assertThat(condition.getFulfilment(), is(0.0));
-        context.setCurrentElement(v1.build());
-        context.getProfiler().start(context);
-        context.getProfiler().stop(context);
-        Assert.assertThat(condition.getFulfilment(), is(0.5));
-        context.setCurrentElement(e1.build());
-        Assert.assertThat(condition.getFulfilment(), is(1.0));
-        Assert.assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
+  @Test
+  public void testFulfilment() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
+    Model model = new Model().addEdge(e1);
+    StopCondition condition = new AlternativeCondition()
+      .addStopCondition(new VertexCoverage(100))
+      .addStopCondition(new ReachedEdge("e1"));
+    Context context = new TestExecutionContext(model, new RandomPath(condition));
+    context.setProfiler(new Profiler());
+    Assert.assertThat(condition.getFulfilment(), is(0.0));
+    context.setCurrentElement(v1.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    Assert.assertThat(condition.getFulfilment(), is(0.5));
+    context.setCurrentElement(e1.build());
+    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    Assert.assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
 
-    }
+  }
 
-    @Test
-    public void testIsFulfilled() {
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
-        Model model = new Model().addEdge(e1);
-        StopCondition condition = new AlternativeCondition()
-                .addStopCondition(new VertexCoverage(100))
-                .addStopCondition(new ReachedEdge("e1"));
-        Context context = new TestExecutionContext(model, new RandomPath(condition));
-        context.setProfiler(new Profiler());
-        Assert.assertFalse(condition.isFulfilled());
-        context.setCurrentElement(v1.build());
-        context.getProfiler().start(context);
-        context.getProfiler().stop(context);
-        Assert.assertFalse(condition.isFulfilled());
-        context.setCurrentElement(e1.build());
-        Assert.assertTrue(condition.isFulfilled());
-        Assert.assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
-    }
+  @Test
+  public void testIsFulfilled() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
+    Model model = new Model().addEdge(e1);
+    StopCondition condition = new AlternativeCondition()
+      .addStopCondition(new VertexCoverage(100))
+      .addStopCondition(new ReachedEdge("e1"));
+    Context context = new TestExecutionContext(model, new RandomPath(condition));
+    context.setProfiler(new Profiler());
+    Assert.assertFalse(condition.isFulfilled());
+    context.setCurrentElement(v1.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    Assert.assertFalse(condition.isFulfilled());
+    context.setCurrentElement(e1.build());
+    Assert.assertTrue(condition.isFulfilled());
+    Assert.assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
+  }
 }

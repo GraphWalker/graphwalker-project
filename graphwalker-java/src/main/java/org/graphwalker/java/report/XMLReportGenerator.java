@@ -49,199 +49,199 @@ import java.util.concurrent.TimeUnit;
  */
 public class XMLReportGenerator {
 
-    private static final Logger logger = LoggerFactory.getLogger(XMLReportGenerator.class);
+  private static final Logger logger = LoggerFactory.getLogger(XMLReportGenerator.class);
 
-    private static final String NEWLINE = "\n";
-    private static final String INDENT = "    ";
+  private static final String NEWLINE = "\n";
+  private static final String INDENT = "    ";
 
-    private final java.util.Properties systemProperties;
-    private final Date startTime;
+  private final java.util.Properties systemProperties;
+  private final Date startTime;
 
-    public XMLReportGenerator(Date startTime, java.util.Properties systemProperties) {
-        this.startTime = startTime;
-        this.systemProperties = systemProperties;
+  public XMLReportGenerator(Date startTime, java.util.Properties systemProperties) {
+    this.startTime = startTime;
+    this.systemProperties = systemProperties;
+  }
+
+  public void writeReport(File reportDirectory, Executor executor) {
+    Testsuites testsuites = new Testsuites();
+    List<Report> reports = new ArrayList<>();
+    Machine machine = executor.getMachine();
+
+    Report report = new Report(machine, startTime);
+    Testsuite testsuite = new Testsuite();
+    List<String> keys = new ArrayList<>(systemProperties.stringPropertyNames());
+    Collections.sort(keys);
+    Properties properties = new Properties();
+    for (String name : keys) {
+      Property property = new Property();
+      property.setName(name);
+      property.setValue(systemProperties.getProperty(name));
+      properties.getProperty().add(property);
+    }
+    testsuite.setProperties(properties);
+    testsuite.setTests(report.getTestsAsString());
+    testsuite.setFailures(report.getFailuresAsString());
+    testsuite.setErrors(report.getErrorsAsString());
+    testsuite.setTime(report.getTimeAsString());
+    testsuite.setTimestamp(report.getTimestamp());
+    for (Context context : machine.getContexts()) {
+      Testcase testcase = new Testcase();
+      testcase.setName(context.getClass().getSimpleName());
+      testcase.setClassname(context.getClass().getName());
+      testcase.setTime(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS)));
+      if (executor.isFailure(context)) {
+        Throwable throwable = executor.getFailure(context).getCause();
+        Error error = new Error();
+        error.setType(throwable.getClass().getName());
+        error.setMessage(throwable.getMessage());
+        error.setContent(getStackTrace(throwable));
+        testcase.getError().add(error);
+      } else if (report.isFailure(context)) {
+        Failure failure = new Failure();
+        failure.setType("Not fulfilled");
+        double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
+        failure.setMessage(String.valueOf(Math.round(100 * fulfilment)));
+        testcase.getFailure().add(failure);
+      }
+      testsuite.getTestcase().add(testcase);
+    }
+    testsuites.getTestsuite().add(testsuite);
+    reports.add(report);
+    consolidate(testsuites, reports);
+    writeReport(reportDirectory, testsuites);
+  }
+
+  private void writeReport(File reportDirectory, Testsuites testsuites) {
+    try {
+      JAXBContext context = JAXBContext.newInstance("org.graphwalker.java.report");
+      Marshaller marshaller = context.createMarshaller();
+      marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      marshaller.marshal(testsuites, getOutputStream(reportDirectory, getName()));
+    } catch (JAXBException e) {
+      logger.error(e.getMessage());
+      throw new XMLReportException(e);
+    }
+  }
+
+  private void consolidate(Testsuites testsuites, List<Report> reports) {
+    long tests = 0;
+    long failures = 0;
+    long errors = 0;
+    double time = Double.MAX_VALUE;
+    for (Report report : reports) {
+      tests += report.getTests();
+      failures += report.getFailures();
+      errors += report.getErrors();
+      if (time > report.getTime()) {
+        time = report.getTime();
+      }
+    }
+    testsuites.setTime(String.valueOf(time));
+    testsuites.setFailures(String.valueOf(failures));
+    testsuites.setErrors(String.valueOf(errors));
+    testsuites.setTests(String.valueOf(tests));
+  }
+
+  private String getName() {
+    DateFormat formatter = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS");
+    return "TEST-GraphWalker-" + formatter.format(startTime) + ".xml";
+  }
+
+  public static String getStackTrace(final Throwable throwable) {
+    final StringWriter stringWriter = new StringWriter();
+    final PrintWriter printWriter = new PrintWriter(stringWriter, true);
+    throwable.printStackTrace(printWriter);
+    StringBuffer buffer = new StringBuffer().append(NEWLINE);
+    for (String line : stringWriter.getBuffer().toString().split(NEWLINE)) {
+      buffer.append(INDENT).append(INDENT).append(INDENT).append(INDENT).append(line).append(NEWLINE);
+    }
+    return buffer.toString();
+  }
+
+  private String getSeconds(long milliseconds) {
+    return String.valueOf((double) milliseconds / 1000.0);
+  }
+
+  private OutputStream getOutputStream(File directory, String reportName) {
+    try {
+      if (!directory.exists()) {
+        directory.mkdirs();
+      }
+      return new FileOutputStream(new File(directory, reportName));
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+      throw new XMLReportException(t);
+    }
+  }
+
+  private class Report {
+
+    private final List<Context> failedExecutions = new ArrayList<>();
+    private int errors = 0;
+    private int tests = 0;
+    private int failures = 0;
+    private int time = 0;
+    private final String timestamp;
+
+    Report(Machine machine, Date startTime) {
+      DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+      timestamp = formatter.format(startTime);
+      for (Context context : machine.getContexts()) {
+        tests++;
+        switch (context.getExecutionStatus()) {
+          case FAILED: {
+            errors++;
+          }
+          break;
+          case NOT_EXECUTED:
+          case EXECUTING: {
+            failures++;
+            failedExecutions.add(context);
+          }
+        }
+        time += context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS);
+      }
     }
 
-    public void writeReport(File reportDirectory, Executor executor) {
-        Testsuites testsuites = new Testsuites();
-        List<Report> reports = new ArrayList<>();
-        Machine machine = executor.getMachine();
-
-        Report report = new Report(machine, startTime);
-        Testsuite testsuite = new Testsuite();
-        List<String> keys = new ArrayList<>(systemProperties.stringPropertyNames());
-        Collections.sort(keys);
-        Properties properties = new Properties();
-        for (String name : keys) {
-            Property property = new Property();
-            property.setName(name);
-            property.setValue(systemProperties.getProperty(name));
-            properties.getProperty().add(property);
-        }
-        testsuite.setProperties(properties);
-        testsuite.setTests(report.getTestsAsString());
-        testsuite.setFailures(report.getFailuresAsString());
-        testsuite.setErrors(report.getErrorsAsString());
-        testsuite.setTime(report.getTimeAsString());
-        testsuite.setTimestamp(report.getTimestamp());
-        for (Context context : machine.getContexts()) {
-            Testcase testcase = new Testcase();
-            testcase.setName(context.getClass().getSimpleName());
-            testcase.setClassname(context.getClass().getName());
-            testcase.setTime(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS)));
-            if (executor.isFailure(context)) {
-                Throwable throwable = executor.getFailure(context).getCause();
-                Error error = new Error();
-                error.setType(throwable.getClass().getName());
-                error.setMessage(throwable.getMessage());
-                error.setContent(getStackTrace(throwable));
-                testcase.getError().add(error);
-            } else if (report.isFailure(context)) {
-                Failure failure = new Failure();
-                failure.setType("Not fulfilled");
-                double fulfilment = context.getPathGenerator().getStopCondition().getFulfilment();
-                failure.setMessage(String.valueOf(Math.round(100 * fulfilment)));
-                testcase.getFailure().add(failure);
-            }
-            testsuite.getTestcase().add(testcase);
-        }
-        testsuites.getTestsuite().add(testsuite);
-        reports.add(report);
-        consolidate(testsuites, reports);
-        writeReport(reportDirectory, testsuites);
+    public boolean isFailure(Context context) {
+      return failedExecutions.contains(context);
     }
 
-    private void writeReport(File reportDirectory, Testsuites testsuites) {
-        try {
-            JAXBContext context = JAXBContext.newInstance("org.graphwalker.java.report");
-            Marshaller marshaller = context.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(testsuites, getOutputStream(reportDirectory, getName()));
-        } catch (JAXBException e) {
-            logger.error(e.getMessage());
-            throw new XMLReportException(e);
-        }
+    public int getErrors() {
+      return errors;
     }
 
-    private void consolidate(Testsuites testsuites, List<Report> reports) {
-        long tests = 0;
-        long failures = 0;
-        long errors = 0;
-        double time = Double.MAX_VALUE;
-        for (Report report : reports) {
-            tests += report.getTests();
-            failures += report.getFailures();
-            errors += report.getErrors();
-            if (time > report.getTime()) {
-                time = report.getTime();
-            }
-        }
-        testsuites.setTime(String.valueOf(time));
-        testsuites.setFailures(String.valueOf(failures));
-        testsuites.setErrors(String.valueOf(errors));
-        testsuites.setTests(String.valueOf(tests));
+    public String getErrorsAsString() {
+      return String.valueOf(errors);
     }
 
-    private String getName() {
-        DateFormat formatter = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS");
-        return "TEST-GraphWalker-" + formatter.format(startTime) + ".xml";
+    public int getTests() {
+      return tests;
     }
 
-    public static String getStackTrace(final Throwable throwable) {
-        final StringWriter stringWriter = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(stringWriter, true);
-        throwable.printStackTrace(printWriter);
-        StringBuffer buffer = new StringBuffer().append(NEWLINE);
-        for (String line : stringWriter.getBuffer().toString().split(NEWLINE)) {
-            buffer.append(INDENT).append(INDENT).append(INDENT).append(INDENT).append(line).append(NEWLINE);
-        }
-        return buffer.toString();
+    public String getTestsAsString() {
+      return String.valueOf(tests);
     }
 
-    private String getSeconds(long milliseconds) {
-        return String.valueOf((double) milliseconds / 1000.0);
+    public int getFailures() {
+      return failures;
     }
 
-    private OutputStream getOutputStream(File directory, String reportName) {
-        try {
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            return new FileOutputStream(new File(directory, reportName));
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-            throw new XMLReportException(t);
-        }
+    public String getFailuresAsString() {
+      return String.valueOf(failures);
     }
 
-    private class Report {
-
-        private final List<Context> failedExecutions = new ArrayList<>();
-        private int errors = 0;
-        private int tests = 0;
-        private int failures = 0;
-        private int time = 0;
-        private final String timestamp;
-
-        Report(Machine machine, Date startTime) {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            timestamp = formatter.format(startTime);
-            for (Context context : machine.getContexts()) {
-                tests++;
-                switch (context.getExecutionStatus()) {
-                    case FAILED: {
-                        errors++;
-                    }
-                    break;
-                    case NOT_EXECUTED:
-                    case EXECUTING: {
-                        failures++;
-                        failedExecutions.add(context);
-                    }
-                }
-                time += context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS);
-            }
-        }
-
-        public boolean isFailure(Context context) {
-            return failedExecutions.contains(context);
-        }
-
-        public int getErrors() {
-            return errors;
-        }
-
-        public String getErrorsAsString() {
-            return String.valueOf(errors);
-        }
-
-        public int getTests() {
-            return tests;
-        }
-
-        public String getTestsAsString() {
-            return String.valueOf(tests);
-        }
-
-        public int getFailures() {
-            return failures;
-        }
-
-        public String getFailuresAsString() {
-            return String.valueOf(failures);
-        }
-
-        public double getTime() {
-            return (double) time / 1000.0;
-        }
-
-        public String getTimeAsString() {
-            return String.valueOf((double) time / 1000.0);
-        }
-
-        public String getTimestamp() {
-            return timestamp;
-        }
+    public double getTime() {
+      return (double) time / 1000.0;
     }
+
+    public String getTimeAsString() {
+      return String.valueOf((double) time / 1000.0);
+    }
+
+    public String getTimestamp() {
+      return timestamp;
+    }
+  }
 }

@@ -41,24 +41,24 @@ import java.lang.reflect.Constructor;
  */
 public abstract class PathGeneratorFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(PathGeneratorFactory.class);
+  private static final Logger logger = LoggerFactory.getLogger(PathGeneratorFactory.class);
 
-    public static PathGenerator createPathGenerator(GraphWalker annotation) {
-        try {
-            Constructor constructor;
-            try {
-                constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
-            } catch (Throwable t) {
-                logger.error(t.getMessage());
-                constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
-            }
-            if (null == constructor) {
-                throw new TestExecutionException("Couldn't find a valid constructor");
-            }
-            return (PathGenerator) constructor.newInstance(StopConditionFactory.createStopCondition(annotation));
-        } catch (Throwable e) {
-            logger.error(e.getMessage());
-            throw new TestExecutionException(e);
-        }
+  public static PathGenerator createPathGenerator(GraphWalker annotation) {
+    try {
+      Constructor constructor;
+      try {
+        constructor = annotation.pathGenerator().getConstructor(StopCondition.class);
+      } catch (Throwable t) {
+        logger.error(t.getMessage());
+        constructor = annotation.pathGenerator().getConstructor(ReachedStopCondition.class);
+      }
+      if (null == constructor) {
+        throw new TestExecutionException("Couldn't find a valid constructor");
+      }
+      return (PathGenerator) constructor.newInstance(StopConditionFactory.createStopCondition(annotation));
+    } catch (Throwable e) {
+      logger.error(e.getMessage());
+      throw new TestExecutionException(e);
     }
+  }
 }

@@ -34,73 +34,73 @@ import java.util.List;
  */
 public final class Result {
 
-    private int testCount;
-    private int completedCount;
-    private int incompleteCount;
-    private int failedCount;
-    private int notExecutedCount;
-    private List<String> errors = new ArrayList<>();
+  private int testCount;
+  private int completedCount;
+  private int incompleteCount;
+  private int failedCount;
+  private int notExecutedCount;
+  private List<String> errors = new ArrayList<>();
 
-    public Result() {
-    }
+  public Result() {
+  }
 
-    public Result(int testCount) {
-        setTestCount(testCount);
-    }
+  public Result(int testCount) {
+    setTestCount(testCount);
+  }
 
-    public int getTestCount() {
-        return testCount;
-    }
+  public int getTestCount() {
+    return testCount;
+  }
 
-    public void setTestCount(int testCount) {
-        this.testCount = testCount;
-    }
+  public void setTestCount(int testCount) {
+    this.testCount = testCount;
+  }
 
-    public int getCompletedCount() {
-        return completedCount;
-    }
+  public int getCompletedCount() {
+    return completedCount;
+  }
 
-    public void setCompletedCount(int completedCount) {
-        this.completedCount = completedCount;
-    }
+  public void setCompletedCount(int completedCount) {
+    this.completedCount = completedCount;
+  }
 
-    public int getIncompleteCount() {
-        return incompleteCount;
-    }
+  public int getIncompleteCount() {
+    return incompleteCount;
+  }
 
-    public void setIncompleteCount(int incompleteCount) {
-        this.incompleteCount = incompleteCount;
-    }
+  public void setIncompleteCount(int incompleteCount) {
+    this.incompleteCount = incompleteCount;
+  }
 
-    public int getFailedCount() {
-        return failedCount;
-    }
+  public int getFailedCount() {
+    return failedCount;
+  }
 
-    public void setFailedCount(int failedCount) {
-        this.failedCount = failedCount;
-    }
+  public void setFailedCount(int failedCount) {
+    this.failedCount = failedCount;
+  }
 
-    public int getNotExecutedCount() {
-        return notExecutedCount;
-    }
+  public int getNotExecutedCount() {
+    return notExecutedCount;
+  }
 
-    public void setNotExecutedCount(int notExecutedCount) {
-        this.notExecutedCount = notExecutedCount;
-    }
+  public void setNotExecutedCount(int notExecutedCount) {
+    this.notExecutedCount = notExecutedCount;
+  }
 
-    public List<String> getErrors() {
-        return errors;
-    }
+  public List<String> getErrors() {
+    return errors;
+  }
 
-    public void setErrors(List<String> errors) {
-        this.errors = errors;
-    }
+  public void setErrors(List<String> errors) {
+    this.errors = errors;
+  }
 
-    public void addError(String error) {
-        this.errors.add(error);
-    }
+  public void addError(String error) {
+    this.errors.add(error);
+  }
 
-    public boolean hasErrors() {
-        return !getErrors().isEmpty();
-    }
+  public boolean hasErrors() {
+    return !getErrors().isEmpty();
+  }
 }

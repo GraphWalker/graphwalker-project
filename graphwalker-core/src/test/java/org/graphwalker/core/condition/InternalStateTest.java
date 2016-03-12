@@ -45,62 +45,62 @@ import static org.hamcrest.core.Is.is;
  */
 public class InternalStateTest {
 
-    @Test
-    public void testIsFulfilled() {
-        Vertex vertex = new Vertex();
-        Model model = new Model()
-                .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
-                .addAction(new Action("var index = 0"));
-        StopCondition condition = new InternalState("index == 99");
-        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            Assert.assertThat(condition.getFulfilment(), is(0.0));
-            Assert.assertFalse(condition.isFulfilled());
-            machine.getNextStep();
-        }
-        Assert.assertThat(condition.getFulfilment(), is(1.0));
-        Assert.assertTrue(condition.isFulfilled());
-        Assert.assertThat(context.getKeys().get("index"), is("99"));
+  @Test
+  public void testIsFulfilled() {
+    Vertex vertex = new Vertex();
+    Model model = new Model()
+      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
+      .addAction(new Action("var index = 0"));
+    StopCondition condition = new InternalState("index == 99");
+    Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      Assert.assertThat(condition.getFulfilment(), is(0.0));
+      Assert.assertFalse(condition.isFulfilled());
+      machine.getNextStep();
     }
+    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    Assert.assertTrue(condition.isFulfilled());
+    Assert.assertThat(context.getKeys().get("index"), is("99"));
+  }
 
-    @Test
-    public void testIsFulfilledWithInitEdge() {
-        Vertex start = new Vertex();
-        Vertex vertex = new Vertex();
-        Model model = new Model()
-                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
-                .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
-        StopCondition condition = new InternalState("index == 99");
-        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            Assert.assertThat(condition.getFulfilment(), is(0.0));
-            Assert.assertFalse(condition.isFulfilled());
-            machine.getNextStep();
-        }
-        Assert.assertThat(condition.getFulfilment(), is(1.0));
-        Assert.assertTrue(condition.isFulfilled());
-        Assert.assertThat(context.getKeys().get("index"), is("99"));
+  @Test
+  public void testIsFulfilledWithInitEdge() {
+    Vertex start = new Vertex();
+    Vertex vertex = new Vertex();
+    Model model = new Model()
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+    StopCondition condition = new InternalState("index == 99");
+    Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      Assert.assertThat(condition.getFulfilment(), is(0.0));
+      Assert.assertFalse(condition.isFulfilled());
+      machine.getNextStep();
     }
+    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    Assert.assertTrue(condition.isFulfilled());
+    Assert.assertThat(context.getKeys().get("index"), is("99"));
+  }
 
-    @Test(expected = StopConditionException.class)
-    public void testWrongTypeOfExpression() {
-        Vertex start = new Vertex();
-        Vertex vertex = new Vertex();
-        Model model = new Model()
-                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
-                .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
-        StopCondition condition = new InternalState("var test = 'test'");
-        Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            Assert.assertThat(condition.getFulfilment(), is(0.0));
-            Assert.assertFalse(condition.isFulfilled());
-            machine.getNextStep();
-        }
-        Assert.assertThat(condition.getFulfilment(), is(1.0));
-        Assert.assertTrue(condition.isFulfilled());
-        Assert.assertThat(context.getKeys().get("index"), is("99"));
+  @Test(expected = StopConditionException.class)
+  public void testWrongTypeOfExpression() {
+    Vertex start = new Vertex();
+    Vertex vertex = new Vertex();
+    Model model = new Model()
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+    StopCondition condition = new InternalState("var test = 'test'");
+    Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      Assert.assertThat(condition.getFulfilment(), is(0.0));
+      Assert.assertFalse(condition.isFulfilled());
+      machine.getNextStep();
     }
+    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    Assert.assertTrue(condition.isFulfilled());
+    Assert.assertThat(context.getKeys().get("index"), is("99"));
+  }
 }

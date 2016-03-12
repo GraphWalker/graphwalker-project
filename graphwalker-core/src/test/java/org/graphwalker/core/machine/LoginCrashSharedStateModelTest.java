@@ -43,185 +43,185 @@ import java.util.List;
  * This is a programatic implementaion of the models:
  * https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Login.graphml
  * https://raw.githubusercontent.com/GraphWalker/graphwalker-cli/master/src/test/resources/graphml/shared_state/Crash.graphml
- * <p>
+ * <p/>
  * Created by krikar on 8/20/14.
  */
 public class LoginCrashSharedStateModelTest {
 
-    /**
-     * The login Model
-     */
-    Vertex v_Browse = new Vertex().setName("v_Browse").setSharedState("LOGGED_IN");
-    Vertex v_ClientNotRunning = new Vertex().setName("v_ClientNotRunning").setSharedState("CLIENT_NOT_RUNNING");
-    Vertex v_LoginPrompted = new Vertex().setName("v_LoginPrompted");
+  /**
+   * The login Model
+   */
+  Vertex v_Browse = new Vertex().setName("v_Browse").setSharedState("LOGGED_IN");
+  Vertex v_ClientNotRunning = new Vertex().setName("v_ClientNotRunning").setSharedState("CLIENT_NOT_RUNNING");
+  Vertex v_LoginPrompted = new Vertex().setName("v_LoginPrompted");
 
-    Edge e_Close = new Edge().setName("e_Close").setSourceVertex(v_LoginPrompted).setTargetVertex(v_ClientNotRunning);
-    Edge e_Exit = new Edge().setName("e_Exit").setSourceVertex(v_Browse).setTargetVertex(v_ClientNotRunning);
-    Edge e_InvalidCredentials = new Edge().setName("e_InvalidCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("validLogin=false"));
-    Edge e_Logout = new Edge().setName("e_Logout").setSourceVertex(v_Browse).setTargetVertex(v_LoginPrompted);
-    Edge e_StartClient_1 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_LoginPrompted).setGuard(new Guard("!rememberMe||!validLogin"));
-    Edge e_StartClient_2 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_Browse).setGuard(new Guard("rememberMe&&validLogin"));
-    Edge e_ToggleRememberMe = new Edge().setName("e_ToggleRememberMe").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("rememberMe=true"));
-    Edge e_ValidPremiumCredentials = new Edge().setName("e_ValidPremiumCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_Browse).addAction(new Action("validLogin=true"));
+  Edge e_Close = new Edge().setName("e_Close").setSourceVertex(v_LoginPrompted).setTargetVertex(v_ClientNotRunning);
+  Edge e_Exit = new Edge().setName("e_Exit").setSourceVertex(v_Browse).setTargetVertex(v_ClientNotRunning);
+  Edge e_InvalidCredentials = new Edge().setName("e_InvalidCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("validLogin=false"));
+  Edge e_Logout = new Edge().setName("e_Logout").setSourceVertex(v_Browse).setTargetVertex(v_LoginPrompted);
+  Edge e_StartClient_1 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_LoginPrompted).setGuard(new Guard("!rememberMe||!validLogin"));
+  Edge e_StartClient_2 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_Browse).setGuard(new Guard("rememberMe&&validLogin"));
+  Edge e_ToggleRememberMe = new Edge().setName("e_ToggleRememberMe").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("rememberMe=true"));
+  Edge e_ValidPremiumCredentials = new Edge().setName("e_ValidPremiumCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_Browse).addAction(new Action("validLogin=true"));
 
-    Model loginModel = new Model().addEdge(e_Close)
-            .addEdge(e_Exit)
-            .addEdge(e_InvalidCredentials)
-            .addEdge(e_Logout)
-            .addEdge(e_StartClient_1)
-            .addEdge(e_StartClient_2)
-            .addEdge(e_ToggleRememberMe)
-            .addEdge(e_ValidPremiumCredentials)
-            //.addAction(new Action("e_Init()"))
-            .addAction(new Action("validLogin=false"))
-            .addAction(new Action("rememberMe=false"));
+  Model loginModel = new Model().addEdge(e_Close)
+    .addEdge(e_Exit)
+    .addEdge(e_InvalidCredentials)
+    .addEdge(e_Logout)
+    .addEdge(e_StartClient_1)
+    .addEdge(e_StartClient_2)
+    .addEdge(e_ToggleRememberMe)
+    .addEdge(e_ValidPremiumCredentials)
+    //.addAction(new Action("e_Init()"))
+    .addAction(new Action("validLogin=false"))
+    .addAction(new Action("rememberMe=false"));
 
-    /**
-     * The crash Model
-     */
-    Vertex firstVertex = new Vertex().setSharedState("LOGGED_IN");
-    Vertex v_CrashDumpFilesGenerated = new Vertex().setName("v_CrashDumpFilesGenerated");
-    Vertex lastVertex = new Vertex().setSharedState("CLIENT_NOT_RUNNING");
+  /**
+   * The crash Model
+   */
+  Vertex firstVertex = new Vertex().setSharedState("LOGGED_IN");
+  Vertex v_CrashDumpFilesGenerated = new Vertex().setName("v_CrashDumpFilesGenerated");
+  Vertex lastVertex = new Vertex().setSharedState("CLIENT_NOT_RUNNING");
 
-    Edge e_CrashSpotify = new Edge().setName("e_CrashSpotify").setSourceVertex(firstVertex).setTargetVertex(v_CrashDumpFilesGenerated);
-    Edge lastEdge = new Edge().setName("e_Exit").setSourceVertex(v_CrashDumpFilesGenerated).setTargetVertex(lastVertex);
+  Edge e_CrashSpotify = new Edge().setName("e_CrashSpotify").setSourceVertex(firstVertex).setTargetVertex(v_CrashDumpFilesGenerated);
+  Edge lastEdge = new Edge().setName("e_Exit").setSourceVertex(v_CrashDumpFilesGenerated).setTargetVertex(lastVertex);
 
-    Model crashModel = new Model()
-            .addEdge(e_CrashSpotify)
-            .addEdge(lastEdge);
+  Model crashModel = new Model()
+    .addEdge(e_CrashSpotify)
+    .addEdge(lastEdge);
 
 
-    //Test
-    public void ShortestAllPathEdgeCoverage() {
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(new EdgeCoverage(100))));
-        SimpleMachine machine = new SimpleMachine(contexts);
+  //Test
+  public void ShortestAllPathEdgeCoverage() {
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(new EdgeCoverage(100))));
+    SimpleMachine machine = new SimpleMachine(contexts);
 
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+  }
+
+  //Test
+  public void ShortestAllPathEdgeAndVertexCoverage() {
+    CombinedCondition combinedCondition = new CombinedCondition();
+    combinedCondition.addStopCondition(new EdgeCoverage(100));
+    combinedCondition.addStopCondition(new VertexCoverage(100));
+
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(combinedCondition)));
+    SimpleMachine machine = new SimpleMachine(contexts);
+
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+  }
+
+  //Test
+  public void ShortestAllPathEdgeOrVertexCoverage() {
+    AlternativeCondition alternativeCondition = new AlternativeCondition();
+    alternativeCondition.addStopCondition(new EdgeCoverage(100));
+    alternativeCondition.addStopCondition(new VertexCoverage(100));
+
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(alternativeCondition)));
+    SimpleMachine machine = new SimpleMachine(contexts);
+
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+  }
+
+  //Test
+  public void AStarPathReachedEdgeAndReachedVertex() {
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new AStarPath(new ReachedVertex("v_CrashDumpFilesGenerated"))));
+    SimpleMachine machine = new SimpleMachine(contexts);
+
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
 
-    //Test
-    public void ShortestAllPathEdgeAndVertexCoverage() {
-        CombinedCondition combinedCondition = new CombinedCondition();
-        combinedCondition.addStopCondition(new EdgeCoverage(100));
-        combinedCondition.addStopCondition(new VertexCoverage(100));
+    List<Element> expectedPath = Arrays.<Element>asList(
+      v_ClientNotRunning.build(),
+      e_StartClient_1.build(),
+      v_LoginPrompted.build(),
+      e_ValidPremiumCredentials.build(),
+      v_Browse.build(),
+      e_Exit.build());
+    Collections.reverse(expectedPath);
+    Assert.assertArrayEquals(expectedPath.toArray(), machine.getCurrentContext().getProfiler().getPath().toArray());
+  }
 
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(combinedCondition)).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(combinedCondition)));
-        SimpleMachine machine = new SimpleMachine(contexts);
+  /**
+   * Should not throw any exceptions or end up in some infinite loop
+   */
+  @Test
+  public void RandomPathEdgeCoverage() {
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new RandomPath(new EdgeCoverage(100))));
+    SimpleMachine machine = new SimpleMachine(contexts);
 
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+  }
 
-    //Test
-    public void ShortestAllPathEdgeOrVertexCoverage() {
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
-        alternativeCondition.addStopCondition(new EdgeCoverage(100));
-        alternativeCondition.addStopCondition(new VertexCoverage(100));
+  /**
+   * Should not throw any exceptions or end up in some infinite loop
+   */
+  @Test
+  public void RandomPathVertexCoverage() {
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new RandomPath(new VertexCoverage(100))));
+    SimpleMachine machine = new SimpleMachine(contexts);
 
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(alternativeCondition)).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(alternativeCondition)));
-        SimpleMachine machine = new SimpleMachine(contexts);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+  }
 
-    //Test
-    public void AStarPathReachedEdgeAndReachedVertex() {
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new AStarPath(new ReachedVertex("v_CrashDumpFilesGenerated"))));
-        SimpleMachine machine = new SimpleMachine(contexts);
+  /**
+   * Should not throw any exceptions or end up in some infinite loop
+   */
+  @Test
+  public void RandomPathEdgeAndVertexCoverage() {
+    CombinedCondition combinedCondition = new CombinedCondition();
+    combinedCondition.addStopCondition(new EdgeCoverage(100));
+    combinedCondition.addStopCondition(new VertexCoverage(100));
 
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new RandomPath(combinedCondition)));
+    SimpleMachine machine = new SimpleMachine(contexts);
 
-        List<Element> expectedPath = Arrays.<Element>asList(
-                v_ClientNotRunning.build(),
-                e_StartClient_1.build(),
-                v_LoginPrompted.build(),
-                e_ValidPremiumCredentials.build(),
-                v_Browse.build(),
-                e_Exit.build());
-        Collections.reverse(expectedPath);
-        Assert.assertArrayEquals(expectedPath.toArray(), machine.getCurrentContext().getProfiler().getPath().toArray());
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+  }
 
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    @Test
-    public void RandomPathEdgeCoverage() {
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new RandomPath(new EdgeCoverage(100))));
-        SimpleMachine machine = new SimpleMachine(contexts);
+  /**
+   * Should not throw any exceptions or end up in some infinite loop
+   */
+  @Test
+  public void RandomPathEdgeOrVertexCoverage() {
+    AlternativeCondition alternativeCondition = new AlternativeCondition();
+    alternativeCondition.addStopCondition(new EdgeCoverage(100));
+    alternativeCondition.addStopCondition(new VertexCoverage(100));
 
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(loginModel, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning));
+    contexts.add(new TestExecutionContext(crashModel, new RandomPath(alternativeCondition)));
+    SimpleMachine machine = new SimpleMachine(contexts);
+
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    @Test
-    public void RandomPathVertexCoverage() {
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new RandomPath(new VertexCoverage(100))));
-        SimpleMachine machine = new SimpleMachine(contexts);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-    }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    @Test
-    public void RandomPathEdgeAndVertexCoverage() {
-        CombinedCondition combinedCondition = new CombinedCondition();
-        combinedCondition.addStopCondition(new EdgeCoverage(100));
-        combinedCondition.addStopCondition(new VertexCoverage(100));
-
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new RandomPath(combinedCondition)).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new RandomPath(combinedCondition)));
-        SimpleMachine machine = new SimpleMachine(contexts);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-    }
-
-    /**
-     * Should not throw any exceptions or end up in some infinite loop
-     */
-    @Test
-    public void RandomPathEdgeOrVertexCoverage() {
-        AlternativeCondition alternativeCondition = new AlternativeCondition();
-        alternativeCondition.addStopCondition(new EdgeCoverage(100));
-        alternativeCondition.addStopCondition(new VertexCoverage(100));
-
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(new TestExecutionContext(loginModel, new RandomPath(alternativeCondition)).setNextElement(v_ClientNotRunning));
-        contexts.add(new TestExecutionContext(crashModel, new RandomPath(alternativeCondition)));
-        SimpleMachine machine = new SimpleMachine(contexts);
-
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-    }
+  }
 }

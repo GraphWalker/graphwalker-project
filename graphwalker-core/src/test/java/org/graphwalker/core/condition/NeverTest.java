@@ -36,21 +36,21 @@ import static org.hamcrest.core.Is.is;
  */
 public class NeverTest {
 
-    @Test
-    public void testConstructor() {
-        Never never = new Never();
-        Assert.assertNotNull(never);
-    }
+  @Test
+  public void testConstructor() {
+    Never never = new Never();
+    Assert.assertNotNull(never);
+  }
 
-    @Test
-    public void testFulfilment() {
-        StopCondition condition = new Never();
-        Assert.assertThat(condition.getFulfilment(), is(0.0));
-    }
+  @Test
+  public void testFulfilment() {
+    StopCondition condition = new Never();
+    Assert.assertThat(condition.getFulfilment(), is(0.0));
+  }
 
-    @Test
-    public void testIsFulfilled() {
-        StopCondition condition = new Never();
-        Assert.assertFalse(condition.isFulfilled());
-    }
+  @Test
+  public void testIsFulfilled() {
+    StopCondition condition = new Never();
+    Assert.assertFalse(condition.isFulfilled());
+  }
 }

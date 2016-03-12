@@ -38,42 +38,42 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public abstract class ReachedStopConditionBase extends StopConditionBase implements ReachedStopCondition {
 
-    protected ReachedStopConditionBase(String value) {
-        super(value);
-    }
+  protected ReachedStopConditionBase(String value) {
+    super(value);
+  }
 
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
-        validate(context);
-    }
+  @Override
+  public void setContext(Context context) {
+    super.setContext(context);
+    validate(context);
+  }
 
-    protected void validate(Context context) {
-        if (isNotNull(context) && isNull(context.getModel().findElements(getValue()))) {
-            throw new StopConditionException("Element not found");
+  protected void validate(Context context) {
+    if (isNotNull(context) && isNull(context.getModel().findElements(getValue()))) {
+      throw new StopConditionException("Element not found");
+    }
+  }
+
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL;
+  }
+
+  @Override
+  public double getFulfilment() {
+    Context context = getContext();
+    double maxFulfilment = 0;
+    if (isNotNull(context.getCurrentElement())) {
+      FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+      for (Element target : getTargetElements()) {
+        int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), target);
+        int max = floydWarshall.getMaximumDistance(target);
+        double fulfilment = 1 - (double) distance / max;
+        if (maxFulfilment < fulfilment) {
+          maxFulfilment = fulfilment;
         }
+      }
     }
-
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= FULFILLMENT_LEVEL;
-    }
-
-    @Override
-    public double getFulfilment() {
-        Context context = getContext();
-        double maxFulfilment = 0;
-        if (isNotNull(context.getCurrentElement())) {
-            FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-            for (Element target : getTargetElements()) {
-                int distance = floydWarshall.getShortestDistance(context.getCurrentElement(), target);
-                int max = floydWarshall.getMaximumDistance(target);
-                double fulfilment = 1 - (double) distance / max;
-                if (maxFulfilment < fulfilment) {
-                    maxFulfilment = fulfilment;
-                }
-            }
-        }
-        return maxFulfilment;
-    }
+    return maxFulfilment;
+  }
 }

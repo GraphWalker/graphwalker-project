@@ -41,64 +41,64 @@ import java.util.List;
  */
 public final class AllClassificationCombinations implements Algorithm {
 
-    private final ClassificationTree.RuntimeClassificationTree tree;
-    private static List<List<Classification.RuntimeClassification>> combinations;
+  private final ClassificationTree.RuntimeClassificationTree tree;
+  private static List<List<Classification.RuntimeClassification>> combinations;
 
-    public AllClassificationCombinations(ClassificationTree.RuntimeClassificationTree tree) {
-        this.tree = tree;
-    }
+  public AllClassificationCombinations(ClassificationTree.RuntimeClassificationTree tree) {
+    this.tree = tree;
+  }
 
-    /**
-     * Returns list of bottom level classes
-     */
-    public List<Classification.RuntimeClassification> getClassifications() {
-        List<Classification.RuntimeClassification> result = new ArrayList<>();
-        getClassifications(result, tree.getRoot());
-        return result;
-    }
+  /**
+   * Returns list of bottom level classes
+   */
+  public List<Classification.RuntimeClassification> getClassifications() {
+    List<Classification.RuntimeClassification> result = new ArrayList<>();
+    getClassifications(result, tree.getRoot());
+    return result;
+  }
 
-    private void getClassifications(List<Classification.RuntimeClassification> result,
-                                    Classification.RuntimeClassification node) {
-        List<Classification.RuntimeClassification> children = node.getClassifications();
-        for (Classification.RuntimeClassification child : children) {
-            if (child.getClassifications().size() > 0) {
-                getClassifications(result, child);
-            } else {
-                if (!result.contains(node)) {
-                    result.add(node);
-                }
-            }
+  private void getClassifications(List<Classification.RuntimeClassification> result,
+                                  Classification.RuntimeClassification node) {
+    List<Classification.RuntimeClassification> children = node.getClassifications();
+    for (Classification.RuntimeClassification child : children) {
+      if (child.getClassifications().size() > 0) {
+        getClassifications(result, child);
+      } else {
+        if (!result.contains(node)) {
+          result.add(node);
         }
+      }
+    }
+  }
+
+
+  /*
+   * Will generate all combinations by the given classification tree.
+   * The result is returned as list, where each row represent the combination.
+   */
+  public List<List<Classification.RuntimeClassification>> generate() {
+    List<Classification.RuntimeClassification> classes = getClassifications();
+    List<List<Classification.RuntimeClassification>> treeData = new ArrayList<>();
+    for (Classification.RuntimeClassification cls : classes) {
+      treeData.add(cls.getClassifications());
     }
 
+    combinations = new ArrayList<>();
+    getCombinations(treeData, 0, new ArrayList<Classification.RuntimeClassification>());
+    return combinations;
+  }
 
-    /*
-     * Will generate all combinations by the given classification tree.
-     * The result is returned as list, where each row represent the combination.
-     */
-    public List<List<Classification.RuntimeClassification>> generate() {
-        List<Classification.RuntimeClassification> classes = getClassifications();
-        List<List<Classification.RuntimeClassification>> treeData = new ArrayList<>();
-        for (Classification.RuntimeClassification cls : classes) {
-            treeData.add(cls.getClassifications());
-        }
-
-        combinations = new ArrayList<>();
-        getCombinations(treeData, 0, new ArrayList<Classification.RuntimeClassification>());
-        return combinations;
+  private static void getCombinations(List<List<Classification.RuntimeClassification>> treeData,
+                                      int n,
+                                      ArrayList<Classification.RuntimeClassification> testCase) {
+    if (n >= treeData.size()) {
+      combinations.add(testCase);
+      return;
     }
-
-    private static void getCombinations(List<List<Classification.RuntimeClassification>> treeData,
-                                        int n,
-                                        ArrayList<Classification.RuntimeClassification> testCase) {
-        if (n >= treeData.size()) {
-            combinations.add(testCase);
-            return;
-        }
-        for (Classification.RuntimeClassification c : treeData.get(n)) {
-            ArrayList<Classification.RuntimeClassification> foo = new ArrayList<>(testCase);
-            foo.add(c);
-            getCombinations(treeData, n + 1, foo);
-        }
+    for (Classification.RuntimeClassification c : treeData.get(n)) {
+      ArrayList<Classification.RuntimeClassification> foo = new ArrayList<>(testCase);
+      foo.add(c);
+      getCombinations(treeData, n + 1, foo);
     }
+  }
 }

@@ -62,203 +62,203 @@ import static org.hamcrest.core.Is.is;
 @GraphWalker(value = "random(edge_coverage(100))", start = "v_EmptyMachine")
 public class RestTest extends ExecutionContext implements RestFlow {
 
-    private static final Logger logger = LoggerFactory.getLogger(RestTest.class);
-    HttpServer server;
-    Restful rest;
-    HttpResponse response;
+  private static final Logger logger = LoggerFactory.getLogger(RestTest.class);
+  HttpServer server;
+  Restful rest;
+  HttpResponse response;
 
-    @BeforeExecution
-    public void StartServer() throws Exception {
-        ResourceConfig rc = new DefaultResourceConfig();
-        rest = new Restful(null, true, true);
-        rc.getSingletons().add(rest);
+  @BeforeExecution
+  public void StartServer() throws Exception {
+    ResourceConfig rc = new DefaultResourceConfig();
+    rest = new Restful(null, true, true);
+    rc.getSingletons().add(rest);
 
-        String url = "http://0.0.0.0:" + 9191;
+    String url = "http://0.0.0.0:" + 9191;
 
-        server = GrizzlyServerFactory.createHttpServer(url, rc);
-        logger.debug("Starting RestFul service");
-        server.start();
+    server = GrizzlyServerFactory.createHttpServer(url, rc);
+    logger.debug("Starting RestFul service");
+    server.start();
+  }
+
+  @AfterExecution
+  public void StopServer() {
+    logger.debug("Stopping RestFul service");
+    server.stop();
+  }
+
+  @Test
+  public void TestRun() {
+    Result result = new TestExecutor(getClass()).execute(true);
+    if (result.hasErrors()) {
+      for (String error : result.getErrors()) {
+        System.out.println(error);
+      }
+      Assert.fail("Test run failed.");
     }
+  }
 
-    @AfterExecution
-    public void StopServer() {
-        logger.debug("Stopping RestFul service");
-        server.stop();
+  @Override
+  public void e_GetData() {
+    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getData");
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Test
-    public void TestRun() {
-        Result result = new TestExecutor(getClass()).execute(true);
-        if (result.hasErrors()) {
-            for (String error : result.getErrors()) {
-                System.out.println(error);
-            }
-            Assert.fail("Test run failed.");
-        }
+  @Override
+  public void e_SetData() {
+    HttpPut request = new HttpPut("http://localhost:9191/graphwalker/setData/MAX_BOOKS=6;");
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void e_GetData() {
-        HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getData");
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  @Override
+  public void v_EmptyMachine() {
+    Assert.assertNull(rest.getContexts());
+    Assert.assertNull(rest.getMachine());
+  }
 
-    @Override
-    public void e_SetData() {
-        HttpPut request = new HttpPut("http://localhost:9191/graphwalker/setData/MAX_BOOKS=6;");
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  @Override
+  public void e_GetStatistics() {
+    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getStatistics");
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void v_EmptyMachine() {
-        Assert.assertNull(rest.getContexts());
-        Assert.assertNull(rest.getMachine());
+  @Override
+  public void e_GetNext() {
+    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getNext");
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void e_GetStatistics() {
-        HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getStatistics");
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  @Override
+  public void e_Restart() {
+    HttpPut request = new HttpPut("http://localhost:9191/graphwalker/restart");
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void e_GetNext() {
-        HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getNext");
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  @Override
+  public void v_RestRunning() {
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    String body = getResonseBody();
+    logger.debug(body);
+    Assert.assertThat(body, is("{\"result\":\"ok\"}"));
+    Assert.assertNotNull(rest.getContexts());
+    Assert.assertNotNull(rest.getMachine());
+  }
 
-    @Override
-    public void e_Restart() {
-        HttpPut request = new HttpPut("http://localhost:9191/graphwalker/restart");
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  @Override
+  public void e_Load() {
+    HttpPost request = new HttpPost("http://localhost:9191/graphwalker/load");
+    FileEntity fileEntity = new FileEntity(ResourceUtils.getResourceAsFile("gw3/UC01.gw3"), ContentType.TEXT_PLAIN);
+    request.setEntity(fileEntity);
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void v_RestRunning() {
-        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
-        String body = getResonseBody();
-        logger.debug(body);
-        Assert.assertThat(body, is("{\"result\":\"ok\"}"));
-        Assert.assertNotNull(rest.getContexts());
-        Assert.assertNotNull(rest.getMachine());
+  @Override
+  public void e_HasNext() {
+    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/hasNext");
+    try {
+      response = HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 
-    @Override
-    public void e_Load() {
-        HttpPost request = new HttpPost("http://localhost:9191/graphwalker/load");
-        FileEntity fileEntity = new FileEntity(ResourceUtils.getResourceAsFile("gw3/UC01.gw3"), ContentType.TEXT_PLAIN);
-        request.setEntity(fileEntity);
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+  @Override
+  public void v_GetData() {
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    String body = getResonseBody();
+    logger.debug(body);
+    Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
+    Assert.assertThat(body, matches(".*\"num_of_books\":\"0\".*"));
+    Assert.assertThat(body, matches(".*\"MAX_BOOKS\":\"5\".*"));
+    Assert.assertNotNull(rest.getContexts());
+    Assert.assertNotNull(rest.getMachine());
+  }
 
-    @Override
-    public void e_HasNext() {
-        HttpGet request = new HttpGet("http://localhost:9191/graphwalker/hasNext");
-        try {
-            response = HttpClientBuilder.create().build().execute(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  private String getResonseBody() {
+    ResponseHandler<String> handler = new BasicResponseHandler();
+    String body = null;
+    try {
+      body = handler.handleResponse(response);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    return body;
+  }
 
-    @Override
-    public void v_GetData() {
-        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
-        String body = getResonseBody();
-        logger.debug(body);
-        Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-        Assert.assertThat(body, matches(".*\"num_of_books\":\"0\".*"));
-        Assert.assertThat(body, matches(".*\"MAX_BOOKS\":\"5\".*"));
-        Assert.assertNotNull(rest.getContexts());
-        Assert.assertNotNull(rest.getMachine());
-    }
+  @Override
+  public void v_GetNext() {
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    String body = getResonseBody();
+    logger.debug(body);
+    Assert.assertThat(body, matches(".*\"numberOfElements\":19.*"));
+    Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
+    Assert.assertThat(body, matches(".*\"modelName\":\"UC01_GW2\".*"));
+    Assert.assertThat(body, matches(".*\"currentElementID\":\"e0\".*"));
+    Assert.assertThat(body, matches(".*\"currentElementName\":\"e_init\".*"));
+    Assert.assertThat(body, matches(".*\"data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\].*"));
+    Assert.assertThat(body, matches(".*\"numberOfUnvisitedElements\":18.*"));
+    Assert.assertNotNull(rest.getContexts());
+    Assert.assertNotNull(rest.getMachine());
+  }
 
-    private String getResonseBody() {
-        ResponseHandler<String> handler = new BasicResponseHandler();
-        String body = null;
-        try {
-            body = handler.handleResponse(response);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return body;
-    }
+  @Override
+  public void v_GetStatistics() {
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    String body = getResonseBody();
+    logger.debug(body);
+    Assert.assertThat(body, matches(".*\"edgeCoverage\":8.*"));
+    Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
+    Assert.assertThat(body, matches(".*\"totalNumberOfVisitedEdges\":1.*"));
+    Assert.assertThat(body, matches(".*\"totalNumberOfVisitedVertices\":0.*"));
+    Assert.assertThat(body, matches(".*\"totalNumberOfVertices\":7.*"));
+    Assert.assertThat(body, matches(".*\"totalNumberOfEdges\":12.*"));
+    Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedVertices\":7.*"));
+    Assert.assertThat(body, matches(".*\"vertexCoverage\":0.*"));
+    Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedEdges\":11.*"));
+    Assert.assertNotNull(rest.getContexts());
+    Assert.assertNotNull(rest.getMachine());
+  }
 
-    @Override
-    public void v_GetNext() {
-        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
-        String body = getResonseBody();
-        logger.debug(body);
-        Assert.assertThat(body, matches(".*\"numberOfElements\":19.*"));
-        Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-        Assert.assertThat(body, matches(".*\"modelName\":\"UC01_GW2\".*"));
-        Assert.assertThat(body, matches(".*\"currentElementID\":\"e0\".*"));
-        Assert.assertThat(body, matches(".*\"currentElementName\":\"e_init\".*"));
-        Assert.assertThat(body, matches(".*\"data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\].*"));
-        Assert.assertThat(body, matches(".*\"numberOfUnvisitedElements\":18.*"));
-        Assert.assertNotNull(rest.getContexts());
-        Assert.assertNotNull(rest.getMachine());
-    }
+  @Override
+  public void v_HasNext() {
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    String body = getResonseBody();
+    logger.debug(body);
+    Assert.assertThat(body, is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
+    Assert.assertNotNull(rest.getContexts());
+    Assert.assertNotNull(rest.getMachine());
+  }
 
-    @Override
-    public void v_GetStatistics() {
-        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
-        String body = getResonseBody();
-        logger.debug(body);
-        Assert.assertThat(body, matches(".*\"edgeCoverage\":8.*"));
-        Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-        Assert.assertThat(body, matches(".*\"totalNumberOfVisitedEdges\":1.*"));
-        Assert.assertThat(body, matches(".*\"totalNumberOfVisitedVertices\":0.*"));
-        Assert.assertThat(body, matches(".*\"totalNumberOfVertices\":7.*"));
-        Assert.assertThat(body, matches(".*\"totalNumberOfEdges\":12.*"));
-        Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedVertices\":7.*"));
-        Assert.assertThat(body, matches(".*\"vertexCoverage\":0.*"));
-        Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedEdges\":11.*"));
-        Assert.assertNotNull(rest.getContexts());
-        Assert.assertNotNull(rest.getMachine());
-    }
-
-    @Override
-    public void v_HasNext() {
-        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
-        String body = getResonseBody();
-        logger.debug(body);
-        Assert.assertThat(body, is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
-        Assert.assertNotNull(rest.getContexts());
-        Assert.assertNotNull(rest.getMachine());
-    }
-
-    @Override
-    public void v_SetData() {
-        Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
-        String body = getResonseBody();
-        logger.debug(body);
-        Assert.assertThat(body, is("{\"result\":\"ok\"}"));
-        Assert.assertNotNull(rest.getContexts());
-        Assert.assertNotNull(rest.getMachine());
-    }
+  @Override
+  public void v_SetData() {
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    String body = getResonseBody();
+    logger.debug(body);
+    Assert.assertThat(body, is("{\"result\":\"ok\"}"));
+    Assert.assertNotNull(rest.getContexts());
+    Assert.assertNotNull(rest.getMachine());
+  }
 }

@@ -35,8 +35,8 @@ import java.util.List;
 @Parameters(commandDescription = "Check and analyze model(s) for issues. See http://graphwalker.org/docs/command_line_syntax")
 public class Check {
 
-    @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
-            description = "Model followed by generator with stop condition. " +
-                    "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
-    public List<String> model = new ArrayList<>();
+  @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
+    description = "Model followed by generator with stop condition. " +
+      "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
+  public List<String> model = new ArrayList<>();
 }

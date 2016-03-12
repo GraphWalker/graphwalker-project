@@ -46,106 +46,106 @@ import java.util.List;
  */
 public class TestExecutorTest {
 
-    @GraphWalker(start = "myStartElement")
-    public static class MultipleStartElements extends ExecutionContext {
-        public MultipleStartElements() {
-            Vertex vertex = new Vertex();
-            Model model = new Model()
-                    .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
-                    .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
-            setModel(model.build());
+  @GraphWalker(start = "myStartElement")
+  public static class MultipleStartElements extends ExecutionContext {
+    public MultipleStartElements() {
+      Vertex vertex = new Vertex();
+      Model model = new Model()
+        .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
+      setModel(model.build());
 
-        }
+    }
+  }
+
+  @Test(expected = TestExecutionException.class)
+  public void multipleStartElements() {
+    Executor executor = new TestExecutor(MultipleStartElements.class);
+    executor.execute();
+  }
+
+  @GraphWalker(start = "myOnlyStartElement")
+  public static class SingleStartElements extends ExecutionContext {
+    public SingleStartElements() {
+      Vertex vertex = new Vertex().setName("myOnlyStartElement");
+      Model model = new Model()
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+      setModel(model.build());
+    }
+  }
+
+  @Test
+  public void singleStartElements() {
+    Executor executor = new TestExecutor(SingleStartElements.class);
+    executor.execute();
+  }
+
+  @GraphWalker(start = "nonExistingStartElement")
+  public static class NonExistingStartElement extends ExecutionContext {
+    public NonExistingStartElement() {
+      Vertex vertex = new Vertex();
+      Model model = new Model()
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+      setModel(model.build());
+    }
+  }
+
+  @Test(expected = TestExecutionException.class)
+  public void nonExistingStartElement() {
+    Executor executor = new TestExecutor(NonExistingStartElement.class);
+    executor.execute();
+  }
+
+  @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
+  public static class DSLConfiguredTest extends ExecutionContext {
+    public DSLConfiguredTest() {
+      Vertex vertex = new Vertex().setName("myStartElement");
+      Model model = new Model()
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+      setModel(model.build());
+    }
+  }
+
+  @Test
+  public void dslTest() {
+    new TestExecutor(DSLConfiguredTest.class).execute();
+  }
+
+  @Test
+  public void isolation() throws MalformedURLException {
+    List<URL> urls = new ArrayList<>();
+    urls.add(new File(new File("."), "target/test-classes").toURI().toURL());
+    urls.add(new File(new File("."), "target/classes").toURI().toURL());
+    urls.addAll(Arrays.asList(((URLClassLoader) getClass().getClassLoader()).getURLs()));
+    Configuration configuration = new Configuration();
+    configuration.addInclude("*MyOtherTest*");
+    Reflector reflector = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
+    MachineConfiguration mc = reflector.getMachineConfiguration();
+    Result result = reflector.execute();
+    //Assert.assertThat(result.getValue(), is(666));
+  }
+
+  @GraphWalker(start = "throwException")
+  public static class ThrowExceptionTest extends ExecutionContext {
+    public ThrowExceptionTest() {
+      Vertex vertex = new Vertex().setName("throwException");
+      Model model = new Model()
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+      setModel(model.build());
     }
 
-    @Test(expected = TestExecutionException.class)
-    public void multipleStartElements() {
-        Executor executor = new TestExecutor(MultipleStartElements.class);
-        executor.execute();
+    public void throwException() {
+      throw new RuntimeException();
     }
+  }
 
-    @GraphWalker(start = "myOnlyStartElement")
-    public static class SingleStartElements extends ExecutionContext {
-        public SingleStartElements() {
-            Vertex vertex = new Vertex().setName("myOnlyStartElement");
-            Model model = new Model()
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-            setModel(model.build());
-        }
-    }
-
-    @Test
-    public void singleStartElements() {
-        Executor executor = new TestExecutor(SingleStartElements.class);
-        executor.execute();
-    }
-
-    @GraphWalker(start = "nonExistingStartElement")
-    public static class NonExistingStartElement extends ExecutionContext {
-        public NonExistingStartElement() {
-            Vertex vertex = new Vertex();
-            Model model = new Model()
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-            setModel(model.build());
-        }
-    }
-
-    @Test(expected = TestExecutionException.class)
-    public void nonExistingStartElement() {
-        Executor executor = new TestExecutor(NonExistingStartElement.class);
-        executor.execute();
-    }
-
-    @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
-    public static class DSLConfiguredTest extends ExecutionContext {
-        public DSLConfiguredTest() {
-            Vertex vertex = new Vertex().setName("myStartElement");
-            Model model = new Model()
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-            setModel(model.build());
-        }
-    }
-
-    @Test
-    public void dslTest() {
-        new TestExecutor(DSLConfiguredTest.class).execute();
-    }
-
-    @Test
-    public void isolation() throws MalformedURLException {
-        List<URL> urls = new ArrayList<>();
-        urls.add(new File(new File("."), "target/test-classes").toURI().toURL());
-        urls.add(new File(new File("."), "target/classes").toURI().toURL());
-        urls.addAll(Arrays.asList(((URLClassLoader) getClass().getClassLoader()).getURLs()));
-        Configuration configuration = new Configuration();
-        configuration.addInclude("*MyOtherTest*");
-        Reflector reflector = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
-        MachineConfiguration mc = reflector.getMachineConfiguration();
-        Result result = reflector.execute();
-        //Assert.assertThat(result.getValue(), is(666));
-    }
-
-    @GraphWalker(start = "throwException")
-    public static class ThrowExceptionTest extends ExecutionContext {
-        public ThrowExceptionTest() {
-            Vertex vertex = new Vertex().setName("throwException");
-            Model model = new Model()
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-                    .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-            setModel(model.build());
-        }
-
-        public void throwException() {
-            throw new RuntimeException();
-        }
-    }
-
-    @Test(expected = TestExecutionException.class)
-    public void ThrowExceptionExecutor() {
-        Executor executor = new TestExecutor(ThrowExceptionTest.class);
-        executor.execute();
-    }
+  @Test(expected = TestExecutionException.class)
+  public void ThrowExceptionExecutor() {
+    Executor executor = new TestExecutor(ThrowExceptionTest.class);
+    executor.execute();
+  }
 }

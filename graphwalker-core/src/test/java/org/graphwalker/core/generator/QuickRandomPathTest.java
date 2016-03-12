@@ -41,31 +41,31 @@ import org.junit.Test;
  */
 public class QuickRandomPathTest {
 
-    private final Vertex source = new Vertex();
-    private final Vertex target = new Vertex();
-    private final Edge edge = new Edge().setSourceVertex(source).setTargetVertex(target);
-    private final Model model = new Model().addEdge(edge);
+  private final Vertex source = new Vertex();
+  private final Vertex target = new Vertex();
+  private final Edge edge = new Edge().setSourceVertex(source).setTargetVertex(target);
+  private final Model model = new Model().addEdge(edge);
 
-    @Test
-    public void simpleTest() {
-        Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
-        PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
-        context.setPathGenerator(generator);
-        context.setCurrentElement(source.build());
-        Assert.assertEquals(context.getCurrentElement(), source.build());
-        Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
-        Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
-    }
+  @Test
+  public void simpleTest() {
+    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
+    context.setPathGenerator(generator);
+    context.setCurrentElement(source.build());
+    Assert.assertEquals(context.getCurrentElement(), source.build());
+    Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
+    Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
+  }
 
-    @Test(expected = AlgorithmException.class)
-    public void failTest() {
-        Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
-        PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
-        context.setPathGenerator(generator);
-        context.setCurrentElement(source.build());
-        Assert.assertEquals(context.getCurrentElement(), source.build());
-        Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
-        Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
-        context.getPathGenerator().getNextStep(); // should fail
-    }
+  @Test(expected = AlgorithmException.class)
+  public void failTest() {
+    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
+    context.setPathGenerator(generator);
+    context.setCurrentElement(source.build());
+    Assert.assertEquals(context.getCurrentElement(), source.build());
+    Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
+    Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
+    context.getPathGenerator().getNextStep(); // should fail
+  }
 }

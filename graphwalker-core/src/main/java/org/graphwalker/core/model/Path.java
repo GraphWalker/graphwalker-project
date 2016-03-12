@@ -40,11 +40,11 @@ import java.util.Collection;
  */
 public final class Path<E extends Element> extends ArrayDeque<E> {
 
-    public Path() {
-        super();
-    }
+  public Path() {
+    super();
+  }
 
-    public Path(Collection<E> collection) {
-        super(collection);
-    }
+  public Path(Collection<E> collection) {
+    super(collection);
+  }
 }

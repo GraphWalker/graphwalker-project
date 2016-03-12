@@ -33,31 +33,31 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Execution {
 
-    private final long time;
-    private final long duration;
+  private final long time;
+  private final long duration;
 
-    public Execution(long time, long duration) {
-        this(time, duration, TimeUnit.NANOSECONDS);
-    }
+  public Execution(long time, long duration) {
+    this(time, duration, TimeUnit.NANOSECONDS);
+  }
 
-    public Execution(long time, long duration, TimeUnit unit) {
-        this.time = unit.convert(time, TimeUnit.NANOSECONDS);
-        this.duration = unit.convert(duration, TimeUnit.NANOSECONDS);
-    }
+  public Execution(long time, long duration, TimeUnit unit) {
+    this.time = unit.convert(time, TimeUnit.NANOSECONDS);
+    this.duration = unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    public long getTime(TimeUnit unit) {
-        return unit.convert(time, TimeUnit.NANOSECONDS);
-    }
+  public long getTime(TimeUnit unit) {
+    return unit.convert(time, TimeUnit.NANOSECONDS);
+  }
 
-    public long getTime() {
-        return time;
-    }
+  public long getTime() {
+    return time;
+  }
 
-    public long getDuration(TimeUnit unit) {
-        return unit.convert(duration, TimeUnit.NANOSECONDS);
-    }
+  public long getDuration(TimeUnit unit) {
+    return unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    public long getDuration() {
-        return duration;
-    }
+  public long getDuration() {
+    return duration;
+  }
 }

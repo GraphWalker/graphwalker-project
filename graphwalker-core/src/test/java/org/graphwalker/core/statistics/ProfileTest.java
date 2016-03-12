@@ -37,15 +37,15 @@ import static org.hamcrest.core.Is.is;
  */
 public final class ProfileTest {
 
-    @Test
-    public void measure() {
-        Profile profile = new Profile();
-        profile.addExecution(new Edge().build(), new Execution(0L, 350));
-        profile.addExecution(new Edge().build(), new Execution(350L, 150));
-        Assert.assertNotNull(profile);
-        Assert.assertThat(profile.getTotalExecutionCount(), is(2L));
-        Assert.assertThat(profile.getTotalExecutionTime(), is(500L));
-        Assert.assertThat(profile.getFirstExecutionTime(), is(0L));
-        Assert.assertThat(profile.getLastExecutionTime(), is(350L));
-    }
+  @Test
+  public void measure() {
+    Profile profile = new Profile();
+    profile.addExecution(new Edge().build(), new Execution(0L, 350));
+    profile.addExecution(new Edge().build(), new Execution(350L, 150));
+    Assert.assertNotNull(profile);
+    Assert.assertThat(profile.getTotalExecutionCount(), is(2L));
+    Assert.assertThat(profile.getTotalExecutionTime(), is(500L));
+    Assert.assertThat(profile.getFirstExecutionTime(), is(0L));
+    Assert.assertThat(profile.getLastExecutionTime(), is(350L));
+  }
 }

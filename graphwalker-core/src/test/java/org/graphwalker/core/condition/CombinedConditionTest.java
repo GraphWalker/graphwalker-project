@@ -36,31 +36,31 @@ import static org.hamcrest.core.Is.is;
  */
 public class CombinedConditionTest {
 
-    @Test
-    public void testConstructor() {
-        CombinedCondition condition = new CombinedCondition();
-        Assert.assertNotNull(condition);
-        Assert.assertNotNull(condition.getStopConditions());
-        Assert.assertThat(condition.getStopConditions().size(), is(0));
-    }
+  @Test
+  public void testConstructor() {
+    CombinedCondition condition = new CombinedCondition();
+    Assert.assertNotNull(condition);
+    Assert.assertNotNull(condition.getStopConditions());
+    Assert.assertThat(condition.getStopConditions().size(), is(0));
+  }
 
-    @Test
-    public void testFulfilment() {
-        CombinedCondition condition = new CombinedCondition();
-        condition.addStopCondition(new Never());
-        Assert.assertThat("Should be zero", condition.getFulfilment(), is(0.0));
-        Assert.assertThat(condition.toString(), is("Never()"));
-    }
+  @Test
+  public void testFulfilment() {
+    CombinedCondition condition = new CombinedCondition();
+    condition.addStopCondition(new Never());
+    Assert.assertThat("Should be zero", condition.getFulfilment(), is(0.0));
+    Assert.assertThat(condition.toString(), is("Never()"));
+  }
 
-    @Test
-    public void testIsFulfilled() {
-        CombinedCondition condition = new CombinedCondition();
-        condition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
-        condition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
-        condition.addStopCondition(new Never());
-        Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
-        Assert.assertThat(condition.toString(), is("Never() AND Never() AND Never()"));
-    }
+  @Test
+  public void testIsFulfilled() {
+    CombinedCondition condition = new CombinedCondition();
+    condition.addStopCondition(new Never());
+    Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
+    condition.addStopCondition(new Never());
+    Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
+    condition.addStopCondition(new Never());
+    Assert.assertThat("Should be false", condition.isFulfilled(), is(false));
+    Assert.assertThat(condition.toString(), is("Never() AND Never() AND Never()"));
+  }
 }

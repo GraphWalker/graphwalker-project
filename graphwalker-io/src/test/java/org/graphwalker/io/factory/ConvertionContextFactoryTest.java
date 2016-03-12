@@ -49,211 +49,211 @@ import static org.hamcrest.core.Is.is;
  * @author Kristian Karl
  */
 public class ConvertionContextFactoryTest {
-    private static final Logger logger = LoggerFactory.getLogger(ConvertionContextFactoryTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(ConvertionContextFactoryTest.class);
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+  @Rule
+  public TemporaryFolder testFolder = new TemporaryFolder();
 
-    @Test
-    public void graphml2Gw3() throws IOException {
-        Context yedContext = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
-        Assert.assertNotNull(yedContext);
+  @Test
+  public void graphml2Gw3() throws IOException {
+    Context yedContext = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
+    Assert.assertNotNull(yedContext);
 
-        File tempFile = testFolder.newFile("test.gw3");
-        Context gw3WriteContext = new GW3ContextFactory().write(yedContext, tempFile.toPath());
-        Assert.assertNotNull(gw3WriteContext);
+    File tempFile = testFolder.newFile("test.gw3");
+    Context gw3WriteContext = new GW3ContextFactory().write(yedContext, tempFile.toPath());
+    Assert.assertNotNull(gw3WriteContext);
 
-        Context gw3ReadContext = new GW3ContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(gw3ReadContext);
+    Context gw3ReadContext = new GW3ContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(gw3ReadContext);
 
-        Assert.assertThat(yedContext.getModel().getEdges().size(), is(gw3WriteContext.getModel().getEdges().size()));
-        Assert.assertThat(yedContext.getModel().getVertices().size(), is(gw3WriteContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(yedContext.getModel().getEdges().size(), is(gw3WriteContext.getModel().getEdges().size()));
+    Assert.assertThat(yedContext.getModel().getVertices().size(), is(gw3WriteContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertJsonToJson() throws IOException {
-        Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-        Assert.assertNotNull(jsonContext);
+  @Test
+  public void convertJsonToJson() throws IOException {
+    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContext);
 
-        File tempFile = testFolder.newFile("test.json");
-        Context jsonWriteContext = new JsonContextFactory().write(jsonContext, tempFile.toPath());
-        Assert.assertNotNull(jsonWriteContext);
+    File tempFile = testFolder.newFile("test.json");
+    Context jsonWriteContext = new JsonContextFactory().write(jsonContext, tempFile.toPath());
+    Assert.assertNotNull(jsonWriteContext);
 
-        Context jsonReadContext = new JsonContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(jsonReadContext);
+    Context jsonReadContext = new JsonContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(jsonReadContext);
 
-        Assert.assertThat(jsonContext.getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
-        Assert.assertThat(jsonContext.getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(jsonContext.getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
+    Assert.assertThat(jsonContext.getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertJsonToGraphml() throws IOException {
-        Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-        Assert.assertNotNull(jsonContext);
+  @Test
+  public void convertJsonToGraphml() throws IOException {
+    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContext);
 
-        File tempFile = testFolder.newFile("test.graphml");
-        Context yedWriteContext = new YEdContextFactory().write(jsonContext, tempFile.toPath());
-        Assert.assertNotNull(yedWriteContext);
+    File tempFile = testFolder.newFile("test.graphml");
+    Context yedWriteContext = new YEdContextFactory().write(jsonContext, tempFile.toPath());
+    Assert.assertNotNull(yedWriteContext);
 
-        Context yedReadContext = new YEdContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(yedReadContext);
+    Context yedReadContext = new YEdContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(yedReadContext);
 
-        // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
-        Assert.assertThat(jsonContext.getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
-        Assert.assertThat(jsonContext.getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
-    }
+    // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
+    Assert.assertThat(jsonContext.getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
+    Assert.assertThat(jsonContext.getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertJsonToJava() throws IOException {
-        Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-        Assert.assertNotNull(jsonContext);
+  @Test
+  public void convertJsonToJava() throws IOException {
+    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContext);
 
-        File tempFile = testFolder.newFile("test.java");
-        Context javaWriteContext = new JavaContextFactory().write(jsonContext, tempFile.toPath());
-        Assert.assertNotNull(javaWriteContext);
+    File tempFile = testFolder.newFile("test.java");
+    Context javaWriteContext = new JavaContextFactory().write(jsonContext, tempFile.toPath());
+    Assert.assertNotNull(javaWriteContext);
 
-        Assert.assertThat(jsonContext.getModel().getEdges().size(), is(javaWriteContext.getModel().getEdges().size()));
-        Assert.assertThat(jsonContext.getModel().getVertices().size(), is(javaWriteContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(jsonContext.getModel().getEdges().size(), is(javaWriteContext.getModel().getEdges().size()));
+    Assert.assertThat(jsonContext.getModel().getVertices().size(), is(javaWriteContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertJsonToDot() throws IOException {
-        Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-        Assert.assertNotNull(jsonContext);
+  @Test
+  public void convertJsonToDot() throws IOException {
+    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContext);
 
-        File tempFile = testFolder.newFile("test.dot");
-        Context dotWriteContext = new DotContextFactory().write(jsonContext, tempFile.toPath());
-        Assert.assertNotNull(dotWriteContext);
+    File tempFile = testFolder.newFile("test.dot");
+    Context dotWriteContext = new DotContextFactory().write(jsonContext, tempFile.toPath());
+    Assert.assertNotNull(dotWriteContext);
 
-        Context dotReadContext = new DotContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(dotReadContext);
+    Context dotReadContext = new DotContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(dotReadContext);
 
-        Assert.assertThat(jsonContext.getModel().getEdges().size(), is(dotReadContext.getModel().getEdges().size()));
-        Assert.assertThat(jsonContext.getModel().getVertices().size(), is(dotReadContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(jsonContext.getModel().getEdges().size(), is(dotReadContext.getModel().getEdges().size()));
+    Assert.assertThat(jsonContext.getModel().getVertices().size(), is(dotReadContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertGraphmlToGraphml() throws IOException {
-        Context yEdContext = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
-        Assert.assertNotNull(yEdContext);
+  @Test
+  public void convertGraphmlToGraphml() throws IOException {
+    Context yEdContext = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
+    Assert.assertNotNull(yEdContext);
 
-        File tempFile = testFolder.newFile("test.graphml");
-        Context yedWriteContext = new YEdContextFactory().write(yEdContext, tempFile.toPath());
-        Assert.assertNotNull(yedWriteContext);
+    File tempFile = testFolder.newFile("test.graphml");
+    Context yedWriteContext = new YEdContextFactory().write(yEdContext, tempFile.toPath());
+    Assert.assertNotNull(yedWriteContext);
 
-        Context yedReadContext = new YEdContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(yedReadContext);
+    Context yedReadContext = new YEdContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(yedReadContext);
 
-        // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
-        Assert.assertThat(yEdContext.getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
-        Assert.assertThat(yEdContext.getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
-    }
+    // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
+    Assert.assertThat(yEdContext.getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
+    Assert.assertThat(yEdContext.getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
+  }
 
 
-    @Test
-    public void convertGraphmlToDot() throws IOException {
-        Context yEdContext = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
-        Assert.assertNotNull(yEdContext);
+  @Test
+  public void convertGraphmlToDot() throws IOException {
+    Context yEdContext = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
+    Assert.assertNotNull(yEdContext);
 
-        File tempFile = testFolder.newFile("test.dot");
-        Context dotWriteContext = new DotContextFactory().write(yEdContext, tempFile.toPath());
-        Assert.assertNotNull(dotWriteContext);
+    File tempFile = testFolder.newFile("test.dot");
+    Context dotWriteContext = new DotContextFactory().write(yEdContext, tempFile.toPath());
+    Assert.assertNotNull(dotWriteContext);
 
-        Context dotReadContext = new DotContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(dotReadContext);
+    Context dotReadContext = new DotContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(dotReadContext);
 
-        Assert.assertThat(yEdContext.getModel().getEdges().size(), is(dotReadContext.getModel().getEdges().size()));
-        Assert.assertThat(yEdContext.getModel().getVertices().size(), is(dotReadContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(yEdContext.getModel().getEdges().size(), is(dotReadContext.getModel().getEdges().size()));
+    Assert.assertThat(yEdContext.getModel().getVertices().size(), is(dotReadContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertGraphmlToJava() throws IOException {
-        Context yEdContext = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
-        Assert.assertNotNull(yEdContext);
+  @Test
+  public void convertGraphmlToJava() throws IOException {
+    Context yEdContext = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
+    Assert.assertNotNull(yEdContext);
 
-        File tempFile = testFolder.newFile("test.java");
-        Context javaWriteContext = new JavaContextFactory().write(yEdContext, tempFile.toPath());
-        Assert.assertNotNull(javaWriteContext);
+    File tempFile = testFolder.newFile("test.java");
+    Context javaWriteContext = new JavaContextFactory().write(yEdContext, tempFile.toPath());
+    Assert.assertNotNull(javaWriteContext);
 
-        Assert.assertThat(yEdContext.getModel().getEdges().size(), is(javaWriteContext.getModel().getEdges().size()));
-        Assert.assertThat(yEdContext.getModel().getVertices().size(), is(javaWriteContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(yEdContext.getModel().getEdges().size(), is(javaWriteContext.getModel().getEdges().size()));
+    Assert.assertThat(yEdContext.getModel().getVertices().size(), is(javaWriteContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void graphml2Json() throws IOException {
-        Context yedContext = new YEdContextFactory().create(Paths.get("graphml/PetClinicSharedState.graphml"));
-        Assert.assertNotNull(yedContext);
+  @Test
+  public void graphml2Json() throws IOException {
+    Context yedContext = new YEdContextFactory().create(Paths.get("graphml/PetClinicSharedState.graphml"));
+    Assert.assertNotNull(yedContext);
 
-        File testFile = testFolder.newFile("test.json");
-        Context jsonWriteContext = new JsonContextFactory().write(yedContext, testFile.toPath());
-        Assert.assertNotNull(jsonWriteContext);
+    File testFile = testFolder.newFile("test.json");
+    Context jsonWriteContext = new JsonContextFactory().write(yedContext, testFile.toPath());
+    Assert.assertNotNull(jsonWriteContext);
 
-        Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
-        Assert.assertNotNull(jsonReadContext);
+    Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
+    Assert.assertNotNull(jsonReadContext);
 
-        Assert.assertThat(yedContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
-        Assert.assertThat(yedContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(yedContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
+    Assert.assertThat(yedContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertDotToDot() throws IOException {
-        Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-        Assert.assertNotNull(dotContext);
+  @Test
+  public void convertDotToDot() throws IOException {
+    Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
+    Assert.assertNotNull(dotContext);
 
-        File tempFile = testFolder.newFile("test.dot");
-        Context dotWriteContext = new DotContextFactory().write(dotContext, tempFile.toPath());
-        Assert.assertNotNull(dotWriteContext);
+    File tempFile = testFolder.newFile("test.dot");
+    Context dotWriteContext = new DotContextFactory().write(dotContext, tempFile.toPath());
+    Assert.assertNotNull(dotWriteContext);
 
-        Context dotReadContext = new DotContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(dotReadContext);
+    Context dotReadContext = new DotContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(dotReadContext);
 
-        Assert.assertThat(dotContext.getModel().getEdges().size(), is(dotReadContext.getModel().getEdges().size()));
-        Assert.assertThat(dotContext.getModel().getVertices().size(), is(dotReadContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(dotContext.getModel().getEdges().size(), is(dotReadContext.getModel().getEdges().size()));
+    Assert.assertThat(dotContext.getModel().getVertices().size(), is(dotReadContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertDotToJava() throws IOException {
-        Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-        Assert.assertNotNull(dotContext);
+  @Test
+  public void convertDotToJava() throws IOException {
+    Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
+    Assert.assertNotNull(dotContext);
 
-        File tempFile = testFolder.newFile("test.java");
-        Context javaWriteContext = new JavaContextFactory().write(dotContext, tempFile.toPath());
-        Assert.assertNotNull(javaWriteContext);
+    File tempFile = testFolder.newFile("test.java");
+    Context javaWriteContext = new JavaContextFactory().write(dotContext, tempFile.toPath());
+    Assert.assertNotNull(javaWriteContext);
 
-        Assert.assertThat(dotContext.getModel().getEdges().size(), is(javaWriteContext.getModel().getEdges().size()));
-        Assert.assertThat(dotContext.getModel().getVertices().size(), is(javaWriteContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(dotContext.getModel().getEdges().size(), is(javaWriteContext.getModel().getEdges().size()));
+    Assert.assertThat(dotContext.getModel().getVertices().size(), is(javaWriteContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertDotToGraphml() throws IOException {
-        Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-        Assert.assertNotNull(dotContext);
+  @Test
+  public void convertDotToGraphml() throws IOException {
+    Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
+    Assert.assertNotNull(dotContext);
 
-        File tempFile = testFolder.newFile("test.graphml");
-        Context yedWriteContext = new YEdContextFactory().write(dotContext, tempFile.toPath());
-        Assert.assertNotNull(yedWriteContext);
+    File tempFile = testFolder.newFile("test.graphml");
+    Context yedWriteContext = new YEdContextFactory().write(dotContext, tempFile.toPath());
+    Assert.assertNotNull(yedWriteContext);
 
-        Context yedReadContext = new YEdContextFactory().create(tempFile.toPath());
-        Assert.assertNotNull(yedReadContext);
+    Context yedReadContext = new YEdContextFactory().create(tempFile.toPath());
+    Assert.assertNotNull(yedReadContext);
 
-        // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
-        Assert.assertThat(dotContext.getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
-        Assert.assertThat(dotContext.getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
-    }
+    // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
+    Assert.assertThat(dotContext.getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
+    Assert.assertThat(dotContext.getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
+  }
 
-    @Test
-    public void convertDotToJson() throws IOException {
-        Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-        Assert.assertNotNull(dotContext);
+  @Test
+  public void convertDotToJson() throws IOException {
+    Context dotContext = new DotContextFactory().create(Paths.get("dot/Login.dot"));
+    Assert.assertNotNull(dotContext);
 
-        File testFile = testFolder.newFile("test.json");
-        Context jsonWriteContext = new JsonContextFactory().write(dotContext, testFile.toPath());
-        Assert.assertNotNull(jsonWriteContext);
+    File testFile = testFolder.newFile("test.json");
+    Context jsonWriteContext = new JsonContextFactory().write(dotContext, testFile.toPath());
+    Assert.assertNotNull(jsonWriteContext);
 
-        Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
-        Assert.assertNotNull(jsonReadContext);
+    Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
+    Assert.assertNotNull(jsonReadContext);
 
-        Assert.assertThat(dotContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
-        Assert.assertThat(dotContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
-    }
+    Assert.assertThat(dotContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
+    Assert.assertThat(dotContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
+  }
 }

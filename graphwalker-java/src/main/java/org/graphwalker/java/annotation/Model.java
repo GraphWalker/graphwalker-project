@@ -38,5 +38,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Model {
 
-    String file() default "";
+  String file() default "";
 }

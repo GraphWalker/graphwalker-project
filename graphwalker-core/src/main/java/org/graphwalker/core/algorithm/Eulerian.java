@@ -41,80 +41,80 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class Eulerian implements Algorithm {
 
-    private final Context context;
-    private final Map<RuntimeVertex, PolarityCounter> polarities;
+  private final Context context;
+  private final Map<RuntimeVertex, PolarityCounter> polarities;
 
-    public Eulerian(Context context) {
-        this.context = context;
-        this.polarities = new HashMap<>(context.getModel().getVertices().size());
-        polarize();
+  public Eulerian(Context context) {
+    this.context = context;
+    this.polarities = new HashMap<>(context.getModel().getVertices().size());
+    polarize();
+  }
+
+  public enum EulerianType {
+    EULERIAN, SEMI_EULERIAN, NOT_EULERIAN
+  }
+
+  private void polarize() {
+    for (RuntimeEdge edge : context.getModel().getEdges()) {
+      getPolarityCounter(edge.getSourceVertex()).decrease();
+      getPolarityCounter(edge.getTargetVertex()).increase();
+    }
+    for (RuntimeVertex vertex : context.getModel().getVertices()) {
+      if (!polarities.get(vertex).hasPolarity()) {
+        polarities.remove(vertex);
+      }
+    }
+  }
+
+  private PolarityCounter getPolarityCounter(RuntimeVertex vertex) {
+    if (!polarities.containsKey(vertex)) {
+      polarities.put(vertex, new PolarityCounter());
+    }
+    return polarities.get(vertex);
+  }
+
+  public EulerianType getEulerianType() {
+    if (polarities.isEmpty()) {
+      return EulerianType.EULERIAN;
+    }
+    if (2 == polarities.size()) {
+      return EulerianType.SEMI_EULERIAN;
+    }
+    return EulerianType.NOT_EULERIAN;
+  }
+
+  public Path<Element> getEulerPath(RuntimeVertex vertex) {
+    if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
+      throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
+    }
+    return context.getAlgorithm(Fleury.class).getTrail(vertex);
+  }
+
+  public Path<Element> getEulerPath(RuntimeEdge edge) {
+    if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
+      throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
+    }
+    return context.getAlgorithm(Fleury.class).getTrail(edge);
+  }
+
+  class PolarityCounter {
+
+    private int polarity = 0;
+
+    public void increase() {
+      polarity += 1;
     }
 
-    public enum EulerianType {
-        EULERIAN, SEMI_EULERIAN, NOT_EULERIAN
+    public void decrease() {
+      polarity -= 1;
     }
 
-    private void polarize() {
-        for (RuntimeEdge edge : context.getModel().getEdges()) {
-            getPolarityCounter(edge.getSourceVertex()).decrease();
-            getPolarityCounter(edge.getTargetVertex()).increase();
-        }
-        for (RuntimeVertex vertex : context.getModel().getVertices()) {
-            if (!polarities.get(vertex).hasPolarity()) {
-                polarities.remove(vertex);
-            }
-        }
+    public boolean hasPolarity() {
+      return 0 != polarity;
     }
 
-    private PolarityCounter getPolarityCounter(RuntimeVertex vertex) {
-        if (!polarities.containsKey(vertex)) {
-            polarities.put(vertex, new PolarityCounter());
-        }
-        return polarities.get(vertex);
+    public int getPolarity() {
+      return polarity;
     }
-
-    public EulerianType getEulerianType() {
-        if (polarities.isEmpty()) {
-            return EulerianType.EULERIAN;
-        }
-        if (2 == polarities.size()) {
-            return EulerianType.SEMI_EULERIAN;
-        }
-        return EulerianType.NOT_EULERIAN;
-    }
-
-    public Path<Element> getEulerPath(RuntimeVertex vertex) {
-        if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
-            throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
-        }
-        return context.getAlgorithm(Fleury.class).getTrail(vertex);
-    }
-
-    public Path<Element> getEulerPath(RuntimeEdge edge) {
-        if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
-            throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
-        }
-        return context.getAlgorithm(Fleury.class).getTrail(edge);
-    }
-
-    class PolarityCounter {
-
-        private int polarity = 0;
-
-        public void increase() {
-            polarity += 1;
-        }
-
-        public void decrease() {
-            polarity -= 1;
-        }
-
-        public boolean hasPolarity() {
-            return 0 != polarity;
-        }
-
-        public int getPolarity() {
-            return polarity;
-        }
-    }
+  }
 }

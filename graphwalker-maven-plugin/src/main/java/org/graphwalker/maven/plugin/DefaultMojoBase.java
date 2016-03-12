@@ -42,44 +42,44 @@ import java.util.Set;
  */
 public abstract class DefaultMojoBase extends AbstractMojo {
 
-    @Component
-    private MavenSession session;
+  @Component
+  private MavenSession session;
 
-    @Component
-    private MavenProject mavenProject;
+  @Component
+  private MavenProject mavenProject;
 
-    protected MavenSession getSession() {
-        return session;
+  protected MavenSession getSession() {
+    return session;
+  }
+
+  protected MavenProject getMavenProject() {
+    return mavenProject;
+  }
+
+  private String toString(Set<String> set) {
+    if (null == set) {
+      return "";
     }
+    return StringUtils.join(set.toArray(new String[set.size()]), ",");
+  }
 
-    protected MavenProject getMavenProject() {
-        return mavenProject;
-    }
+  protected Set<File> findFiles(Set<String> includes, Set<String> excludes, File... directories) {
+    return findFiles(toString(includes), toString(excludes), directories);
+  }
 
-    private String toString(Set<String> set) {
-        if (null == set) {
-            return "";
+  protected Set<File> findFiles(String includes, String excludes, File... directories) {
+    Set<File> files = new HashSet<>();
+    for (File directory : directories) {
+      if (directory.exists()) {
+        try {
+          for (Object filename : FileUtils.getFileNames(directory, includes, excludes, true, true)) {
+            files.add(new File((String) filename));
+          }
+        } catch (Throwable t) {
+          getLog().debug(t);
         }
-        return StringUtils.join(set.toArray(new String[set.size()]), ",");
+      }
     }
-
-    protected Set<File> findFiles(Set<String> includes, Set<String> excludes, File... directories) {
-        return findFiles(toString(includes), toString(excludes), directories);
-    }
-
-    protected Set<File> findFiles(String includes, String excludes, File... directories) {
-        Set<File> files = new HashSet<>();
-        for (File directory : directories) {
-            if (directory.exists()) {
-                try {
-                    for (Object filename : FileUtils.getFileNames(directory, includes, excludes, true, true)) {
-                        files.add(new File((String) filename));
-                    }
-                } catch (Throwable t) {
-                    getLog().debug(t);
-                }
-            }
-        }
-        return files;
-    }
+    return files;
+  }
 }

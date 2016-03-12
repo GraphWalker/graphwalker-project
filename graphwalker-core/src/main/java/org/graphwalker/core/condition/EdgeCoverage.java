@@ -40,25 +40,25 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
  */
 public final class EdgeCoverage extends CoverageStopConditionBase {
 
-    public EdgeCoverage(int percent) {
-        super(percent);
-    }
+  public EdgeCoverage(int percent) {
+    super(percent);
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
-    }
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
+  }
 
-    @Override
-    public double getFulfilment() {
-        Context context = getContext();
-        long totalEdgesCount = context.getModel().getEdges().size();
-        long visitedEdgesCount = 0;
-        for (RuntimeEdge edge : context.getModel().getEdges()) {
-            if (context.getProfiler().isVisited(edge)) {
-                visitedEdgesCount++;
-            }
-        }
-        return ((double) visitedEdgesCount / totalEdgesCount) / getPercentAsDouble();
+  @Override
+  public double getFulfilment() {
+    Context context = getContext();
+    long totalEdgesCount = context.getModel().getEdges().size();
+    long visitedEdgesCount = 0;
+    for (RuntimeEdge edge : context.getModel().getEdges()) {
+      if (context.getProfiler().isVisited(edge)) {
+        visitedEdgesCount++;
+      }
     }
+    return ((double) visitedEdgesCount / totalEdgesCount) / getPercentAsDouble();
+  }
 }

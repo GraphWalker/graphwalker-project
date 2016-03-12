@@ -36,27 +36,27 @@ package org.graphwalker.core.condition;
  */
 public final class Length extends StopConditionBase {
 
-    private final long length;
+  private final long length;
 
-    public Length(long length) {
-        super(String.valueOf(length));
-        if (0 > length) {
-            throw new StopConditionException("The length of the test, cannot be negative");
-        }
-        this.length = length;
+  public Length(long length) {
+    super(String.valueOf(length));
+    if (0 > length) {
+      throw new StopConditionException("The length of the test, cannot be negative");
     }
+    this.length = length;
+  }
 
-    public long getLength() {
-        return length;
-    }
+  public long getLength() {
+    return length;
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
-    }
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
+  }
 
-    @Override
-    public double getFulfilment() {
-        return (double) getContext().getProfiler().getTotalVisitCount() / length;
-    }
+  @Override
+  public double getFulfilment() {
+    return (double) getContext().getProfiler().getTotalVisitCount() / length;
+  }
 }

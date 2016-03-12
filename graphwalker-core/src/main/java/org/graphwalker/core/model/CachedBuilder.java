@@ -36,55 +36,55 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public abstract class CachedBuilder<B, T> extends BuilderBase<B, T> {
 
-    private T cache;
+  private T cache;
 
-    protected void invalidateCache() {
-        cache = null;
+  protected void invalidateCache() {
+    cache = null;
+  }
+
+  protected abstract T createCache();
+
+  @Override
+  public T build() {
+    if (isNull(cache)) {
+      cache = createCache();
     }
+    return cache;
+  }
 
-    protected abstract T createCache();
+  @Override
+  public B setId(String id) {
+    invalidateCache();
+    return super.setId(id);
+  }
 
-    @Override
-    public T build() {
-        if (isNull(cache)) {
-            cache = createCache();
-        }
-        return cache;
-    }
+  @Override
+  public B setName(String name) {
+    invalidateCache();
+    return super.setName(name);
+  }
 
-    @Override
-    public B setId(String id) {
-        invalidateCache();
-        return super.setId(id);
-    }
+  @Override
+  public B addRequirement(Requirement requirement) {
+    invalidateCache();
+    return super.addRequirement(requirement);
+  }
 
-    @Override
-    public B setName(String name) {
-        invalidateCache();
-        return super.setName(name);
-    }
+  @Override
+  public B setRequirements(Set<Requirement> requirements) {
+    invalidateCache();
+    return super.setRequirements(requirements);
+  }
 
-    @Override
-    public B addRequirement(Requirement requirement) {
-        invalidateCache();
-        return super.addRequirement(requirement);
-    }
+  @Override
+  public B setProperties(Map<String, Object> properties) {
+    invalidateCache();
+    return super.setProperties(properties);
+  }
 
-    @Override
-    public B setRequirements(Set<Requirement> requirements) {
-        invalidateCache();
-        return super.setRequirements(requirements);
-    }
-
-    @Override
-    public B setProperties(Map<String, Object> properties) {
-        invalidateCache();
-        return super.setProperties(properties);
-    }
-
-    @Override
-    public B setProperty(String key, Object value) {
-        invalidateCache();
-        return super.setProperty(key, value);
-    }
+  @Override
+  public B setProperty(String key, Object value) {
+    invalidateCache();
+    return super.setProperty(key, value);
+  }
 }

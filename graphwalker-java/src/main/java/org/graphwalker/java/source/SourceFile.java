@@ -37,63 +37,63 @@ import java.nio.file.Paths;
  */
 public final class SourceFile {
 
-    private static final Path DEFAULT_PATH = Paths.get("/");
-    private final Path inputPath;
-    private final Path relativePath;
-    private final Path outputPath;
-    private final String packageName;
+  private static final Path DEFAULT_PATH = Paths.get("/");
+  private final Path inputPath;
+  private final Path relativePath;
+  private final Path outputPath;
+  private final String packageName;
 
-    public SourceFile(File file) {
-        this(file.toPath(), DEFAULT_PATH, DEFAULT_PATH);
+  public SourceFile(File file) {
+    this(file.toPath(), DEFAULT_PATH, DEFAULT_PATH);
+  }
+
+  public SourceFile(File file, File baseDirectory, File outputDirectory) {
+    this(file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
+  }
+
+  public SourceFile(Path inputPath) {
+    this(inputPath, DEFAULT_PATH, DEFAULT_PATH);
+  }
+
+  public SourceFile(Path inputPath, Path basePath, Path outputPath) {
+    this.inputPath = inputPath;
+    this.relativePath = basePath.relativize(inputPath);
+    if (null != this.relativePath.getParent()) {
+      this.packageName = this.relativePath.getParent().toString()
+        .replace(File.separator, ".").replaceAll(" ", "_");
+    } else {
+      this.packageName = "";
     }
+    this.outputPath = outputPath.resolve(this.relativePath).resolveSibling(getFileName() + ".java");
+  }
 
-    public SourceFile(File file, File baseDirectory, File outputDirectory) {
-        this(file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
+  public Path getInputPath() {
+    return inputPath;
+  }
+
+  public Path getRelativePath() {
+    return relativePath;
+  }
+
+  public Path getOutputPath() {
+    return outputPath;
+  }
+
+  public String getPackageName() {
+    return this.packageName;
+  }
+
+  public String getFileName() {
+    return removeExtension(inputPath.getFileName().toString());
+  }
+
+
+  private String removeExtension(final String filename) {
+    String ext = FilenameUtils.getExtension(filename);
+    if ("".equals(ext)) {
+      return filename;
     }
-
-    public SourceFile(Path inputPath) {
-        this(inputPath, DEFAULT_PATH, DEFAULT_PATH);
-    }
-
-    public SourceFile(Path inputPath, Path basePath, Path outputPath) {
-        this.inputPath = inputPath;
-        this.relativePath = basePath.relativize(inputPath);
-        if (null != this.relativePath.getParent()) {
-            this.packageName = this.relativePath.getParent().toString()
-                    .replace(File.separator, ".").replaceAll(" ", "_");
-        } else {
-            this.packageName = "";
-        }
-        this.outputPath = outputPath.resolve(this.relativePath).resolveSibling(getFileName() + ".java");
-    }
-
-    public Path getInputPath() {
-        return inputPath;
-    }
-
-    public Path getRelativePath() {
-        return relativePath;
-    }
-
-    public Path getOutputPath() {
-        return outputPath;
-    }
-
-    public String getPackageName() {
-        return this.packageName;
-    }
-
-    public String getFileName() {
-        return removeExtension(inputPath.getFileName().toString());
-    }
-
-
-    private String removeExtension(final String filename) {
-        String ext = FilenameUtils.getExtension(filename);
-        if ("".equals(ext)) {
-            return filename;
-        }
-        final int index = filename.lastIndexOf(ext) - 1;
-        return filename.substring(0, index);
-    }
+    final int index = filename.lastIndexOf(ext) - 1;
+    return filename.substring(0, index);
+  }
 }

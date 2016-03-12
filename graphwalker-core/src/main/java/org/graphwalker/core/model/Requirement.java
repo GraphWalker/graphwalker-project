@@ -38,23 +38,23 @@ package org.graphwalker.core.model;
  */
 public final class Requirement {
 
-    private final String key;
+  private final String key;
 
-    /**
-     * Creates a requirement, and stores it as string key.
-     *
-     * @param key The requirement as a string.
-     */
-    public Requirement(String key) {
-        this.key = key;
-    }
+  /**
+   * Creates a requirement, and stores it as string key.
+   *
+   * @param key The requirement as a string.
+   */
+  public Requirement(String key) {
+    this.key = key;
+  }
 
-    /**
-     * Gets the requirement.
-     *
-     * @return The requirement as string.
-     */
-    public String getKey() {
-        return key;
-    }
+  /**
+   * Gets the requirement.
+   *
+   * @return The requirement as string.
+   */
+  public String getKey() {
+    return key;
+  }
 }

@@ -42,25 +42,25 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class VertexCoverage extends CoverageStopConditionBase {
 
-    public VertexCoverage(int percent) {
-        super(percent);
-    }
+  public VertexCoverage(int percent) {
+    super(percent);
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
-    }
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
+  }
 
-    @Override
-    public double getFulfilment() {
-        Context context = getContext();
-        List<RuntimeVertex> vertices = context.getModel().getVertices();
-        double visitedVertexCount = 0.0;
-        for (RuntimeVertex vertex : vertices) {
-            if (context.getProfiler().isVisited(vertex)) {
-                visitedVertexCount++;
-            }
-        }
-        return (visitedVertexCount / vertices.size()) / getPercentAsDouble();
+  @Override
+  public double getFulfilment() {
+    Context context = getContext();
+    List<RuntimeVertex> vertices = context.getModel().getVertices();
+    double visitedVertexCount = 0.0;
+    for (RuntimeVertex vertex : vertices) {
+      if (context.getProfiler().isVisited(vertex)) {
+        visitedVertexCount++;
+      }
     }
+    return (visitedVertexCount / vertices.size()) / getPercentAsDouble();
+  }
 }

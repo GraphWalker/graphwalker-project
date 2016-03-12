@@ -31,5 +31,5 @@ package org.graphwalker.core.model;
  */
 public interface ElementVisitor {
 
-    void visit(Element element);
+  void visit(Element element);
 }

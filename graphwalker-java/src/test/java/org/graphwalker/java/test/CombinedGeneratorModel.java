@@ -35,21 +35,21 @@ import org.graphwalker.java.annotation.Model;
 @Model(file = "org/graphwalker/java/test/SimpleModel.graphml")
 public interface CombinedGeneratorModel {
 
-    @Edge()
-    void e_1();
+  @Edge()
+  void e_1();
 
-    @Edge()
-    void e_2();
+  @Edge()
+  void e_2();
 
-    @Edge()
-    void e_3();
+  @Edge()
+  void e_3();
 
-    @Edge()
-    void e_4();
+  @Edge()
+  void e_4();
 
-    @Edge()
-    void v_1();
+  @Edge()
+  void v_1();
 
-    @Edge()
-    void v_2();
+  @Edge()
+  void v_2();
 }

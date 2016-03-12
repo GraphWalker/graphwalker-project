@@ -42,106 +42,106 @@ import java.util.Vector;
  * Created by krikar on 8/27/14.
  */
 public class AntlrDotListener extends DOTBaseListener {
-    private static final Logger logger = LoggerFactory.getLogger(AntlrDotListener.class);
+  private static final Logger logger = LoggerFactory.getLogger(AntlrDotListener.class);
 
-    private Map<String, Vertex> vertices = new HashMap<>();
-    private Vector<Edge> edges = new Vector<>();
+  private Map<String, Vertex> vertices = new HashMap<>();
+  private Vector<Edge> edges = new Vector<>();
 
-    private Vertex src, dst = null;
-    private Edge edge = null;
+  private Vertex src, dst = null;
+  private Edge edge = null;
 
-    private boolean expectEdge = false;
-    private boolean expectVertex = false;
-    private boolean expectEdgeLabel = false;
-    private boolean expectVertexLabel = false;
+  private boolean expectEdge = false;
+  private boolean expectVertex = false;
+  private boolean expectEdgeLabel = false;
+  private boolean expectVertexLabel = false;
 
 
-    @Override
-    public void enterNode_id(@NotNull DOTParser.Node_idContext ctx) {
-        expectVertex = true;
-        logger.trace("Parsing vertex: " + ctx.getText());
-        if (!vertices.containsKey(ctx.getText())) {
-            if (src == null) {
-                logger.trace("Create source vertex: " + ctx.getText());
-                src = new Vertex();
-                src.setId(ctx.getText());
-                src.setName(ctx.getText());
-                vertices.put(ctx.getText(), src);
-            } else if (dst == null || src != null) {
-                logger.trace("Create target vertex: " + ctx.getText());
-                dst = new Vertex();
-                dst.setId(ctx.getText());
-                dst.setName(ctx.getText());
-                vertices.put(ctx.getText(), dst);
-                if (edge != null) {
-                    logger.trace("Setting source and target vertices for edge");
-                    edge.setSourceVertex(src);
-                    edge.setTargetVertex(dst);
-                }
-            }
-        } else {
-            if (src == null) {
-                src = vertices.get(ctx.getText());
-                logger.trace("Using earlier read source vertex: " + src.getId());
-            } else if (dst == null) {
-                dst = vertices.get(ctx.getText());
-                logger.trace("Using earlier read target vertex: " + dst.getId());
-            }
+  @Override
+  public void enterNode_id(@NotNull DOTParser.Node_idContext ctx) {
+    expectVertex = true;
+    logger.trace("Parsing vertex: " + ctx.getText());
+    if (!vertices.containsKey(ctx.getText())) {
+      if (src == null) {
+        logger.trace("Create source vertex: " + ctx.getText());
+        src = new Vertex();
+        src.setId(ctx.getText());
+        src.setName(ctx.getText());
+        vertices.put(ctx.getText(), src);
+      } else if (dst == null || src != null) {
+        logger.trace("Create target vertex: " + ctx.getText());
+        dst = new Vertex();
+        dst.setId(ctx.getText());
+        dst.setName(ctx.getText());
+        vertices.put(ctx.getText(), dst);
+        if (edge != null) {
+          logger.trace("Setting source and target vertices for edge");
+          edge.setSourceVertex(src);
+          edge.setTargetVertex(dst);
         }
+      }
+    } else {
+      if (src == null) {
+        src = vertices.get(ctx.getText());
+        logger.trace("Using earlier read source vertex: " + src.getId());
+      } else if (dst == null) {
+        dst = vertices.get(ctx.getText());
+        logger.trace("Using earlier read target vertex: " + dst.getId());
+      }
+    }
+  }
+
+  @Override
+  public void enterEdgeop(@NotNull DOTParser.EdgeopContext ctx) {
+    expectEdge = true;
+    edge = new Edge();
+    edges.add(edge);
+    logger.debug("Create edge");
+  }
+
+  @Override
+  public void enterId(@NotNull DOTParser.IdContext ctx) {
+    if (ctx.getText().equalsIgnoreCase("LABEL")) {
+      if (expectEdge) {
+        expectEdgeLabel = true;
+      } else if (expectVertex) {
+        expectVertexLabel = true;
+      }
+      return;
     }
 
-    @Override
-    public void enterEdgeop(@NotNull DOTParser.EdgeopContext ctx) {
-        expectEdge = true;
-        edge = new Edge();
-        edges.add(edge);
-        logger.debug("Create edge");
+    String label = ctx.getText();
+    if (label.length() > 2) {
+      label = label.substring(1, label.length() - 1);
     }
 
-    @Override
-    public void enterId(@NotNull DOTParser.IdContext ctx) {
-        if (ctx.getText().equalsIgnoreCase("LABEL")) {
-            if (expectEdge) {
-                expectEdgeLabel = true;
-            } else if (expectVertex) {
-                expectVertexLabel = true;
-            }
-            return;
-        }
+    if (expectEdgeLabel) {
+      logger.debug("Edge label: " + label);
+      expectEdgeLabel = false;
+      expectEdge = false;
 
-        String label = ctx.getText();
-        if (label.length() > 2) {
-            label = label.substring(1, label.length() - 1);
-        }
-
-        if (expectEdgeLabel) {
-            logger.debug("Edge label: " + label);
-            expectEdgeLabel = false;
-            expectEdge = false;
-
-            edge.setId(label);
-            edge.setName(label);
-            edge.setSourceVertex(src);
-            edge.setTargetVertex(dst);
-            src = dst = null;
-        } else if (expectVertexLabel) {
-            logger.debug("Vertex label: " + label);
-            expectVertexLabel = false;
-            if (dst != null) {
-                dst.setName(label);
-            } else if (src != null) {
-                src.setName(label);
-            }
-        }
+      edge.setId(label);
+      edge.setName(label);
+      edge.setSourceVertex(src);
+      edge.setTargetVertex(dst);
+      src = dst = null;
+    } else if (expectVertexLabel) {
+      logger.debug("Vertex label: " + label);
+      expectVertexLabel = false;
+      if (dst != null) {
+        dst.setName(label);
+      } else if (src != null) {
+        src.setName(label);
+      }
     }
+  }
 
-    public Map<String, Vertex> getVertices() {
-        return vertices;
-    }
+  public Map<String, Vertex> getVertices() {
+    return vertices;
+  }
 
-    public Vector<Edge> getEdges() {
-        return edges;
-    }
-    
-    
+  public Vector<Edge> getEdges() {
+    return edges;
+  }
+
+
 }

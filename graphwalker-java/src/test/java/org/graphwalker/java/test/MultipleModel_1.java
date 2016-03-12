@@ -34,27 +34,27 @@ import org.graphwalker.core.machine.ExecutionContext;
  */
 public class MultipleModel_1 extends ExecutionContext {
 
-    public int count = 0;
+  public int count = 0;
 
-    public void a() {
-        count += 1;
-    }
+  public void a() {
+    count += 1;
+  }
 
-    public void b1() {
-        count += 1;
-    }
+  public void b1() {
+    count += 1;
+  }
 
-    public void b2() {
-        count += 1;
-    }
+  public void b2() {
+    count += 1;
+  }
 
-    public void b3() {
-        count += 1;
-    }
+  public void b3() {
+    count += 1;
+  }
 
-    public void A() {
-    }
+  public void A() {
+  }
 
-    public void B() {
-    }
+  public void B() {
+  }
 }

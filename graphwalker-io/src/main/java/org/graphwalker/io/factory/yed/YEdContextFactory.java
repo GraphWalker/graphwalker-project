@@ -88,390 +88,390 @@ import java.util.Set;
  */
 public final class YEdContextFactory implements ContextFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(YEdContextFactory.class);
-    private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
-    private static final String FILE_TYPE = "graphml";
-    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
+  private static final Logger logger = LoggerFactory.getLogger(YEdContextFactory.class);
+  private static final String NAMESPACE = "declare namespace xq='http://graphml.graphdrawing.org/xmlns';";
+  private static final String FILE_TYPE = "graphml";
+  private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.graphml"));
 
-    @Override
-    public Set<String> getSupportedFileTypes() {
-        return SUPPORTED_TYPE;
+  @Override
+  public Set<String> getSupportedFileTypes() {
+    return SUPPORTED_TYPE;
+  }
+
+  @Override
+  public boolean accept(java.nio.file.Path path) {
+    return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
+  }
+
+  @Override
+  public Context create(Path path) {
+    return create(path, new YEdContext());
+  }
+
+  @Override
+  public List<Context> createMultiple(Path path) {
+    return null;
+  }
+
+  @Override
+  public <T extends Context> T create(Path path, T context) {
+    Edge startEdge;
+    Map<String, Vertex> elements = new HashMap<>();
+    Model model = new Model();
+    GraphmlDocument document = null;
+    try {
+      document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(path.toString()));
+    } catch (XmlException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
+    } catch (IOException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("Could not read the file.");
+    } catch (ResourceNotFoundException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("Could not read the file.");
+    }
+    try {
+      Vertex startVertex = addVertices(model, context, document, elements);
+      startEdge = addEdges(model, context, document, elements, startVertex);
+    } catch (XmlException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("The file seems not to be of valid yEd format.");
     }
 
-    @Override
-    public boolean accept(java.nio.file.Path path) {
-        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
+    model.setName(FilenameUtils.getBaseName(path.toString()));
+    context.setModel(model.build());
+    if (null != startEdge) {
+      context.setNextElement(startEdge);
     }
 
-    @Override
-    public Context create(Path path) {
-        return create(path, new YEdContext());
+    return context;
+  }
+
+  @Override
+  public <T extends Context> T write(T context, Path path) throws IOException {
+    String newLine = System.getProperty("line.separator");
+    StringBuilder str = new StringBuilder();
+
+    str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);
+    str.append("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+      + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
+      + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
+    str.append("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>").append(newLine);
+    str.append("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>").append(newLine);
+    str.append("  <graph id=\"G\" edgedefault=\"directed\">").append(newLine);
+
+    for (Vertex.RuntimeVertex v : context.getModel().getVertices()) {
+      str.append("    <node id=\"" + v.getId() + "\">").append(newLine);
+      str.append("      <data key=\"d0\" >").append(newLine);
+      str.append("        <y:ShapeNode >").append(newLine);
+      str.append("          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>").append(newLine);
+      str.append("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>").append(newLine);
+      str.append("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
+      str.append("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
+        + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+        + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
+        + v.getName());
+
+      str.append("</y:NodeLabel>").append(newLine);
+      str.append("          <y:Shape type=\"rectangle\"/>").append(newLine);
+      str.append("        </y:ShapeNode>").append(newLine);
+      str.append("      </data>").append(newLine);
+      str.append("    </node>").append(newLine);
     }
 
-    @Override
-    public List<Context> createMultiple(Path path) {
-        return null;
-    }
+    for (Edge.RuntimeEdge e : context.getModel().getEdges()) {
+      Vertex.RuntimeVertex src = e.getSourceVertex();
+      Vertex.RuntimeVertex dest = e.getTargetVertex();
 
-    @Override
-    public <T extends Context> T create(Path path, T context) {
-        Edge startEdge;
-        Map<String, Vertex> elements = new HashMap<>();
-        Model model = new Model();
-        GraphmlDocument document = null;
-        try {
-            document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(path.toString()));
-        } catch (XmlException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
-        } catch (ResourceNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
+      if (src == null || dest == null) {
+        continue;
+      }
+
+      str.append("    <edge id=\"" + e.getId() + "\" source=\"" + src.getId() + "\" target=\"" + dest.getId() + "\">").append(newLine);
+      str.append("      <data key=\"d1\" >").append(newLine);
+      str.append("        <y:PolyLineEdge >").append(newLine);
+      str.append("          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">").append(newLine);
+      str.append("            <y:Point x=\"273.3125\" y=\"95.0\"/>").append(newLine);
+      str.append("            <y:Point x=\"209.5625\" y=\"95.0\"/>").append(newLine);
+      str.append("            <y:Point x=\"209.5625\" y=\"143.701171875\"/>").append(newLine);
+      str.append("            <y:Point x=\"265.625\" y=\"143.701171875\"/>").append(newLine);
+      str.append("          </y:Path>").append(newLine);
+      str.append("          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
+      str.append("          <y:Arrows source=\"none\" target=\"standard\"/>").append(newLine);
+
+      if (!e.getName().isEmpty()) {
+        String label = e.getName();
+
+        if (e.hasGuard()) {
+          label += newLine + "[" + e.getGuard().getScript() + "]";
         }
-        try {
-            Vertex startVertex = addVertices(model, context, document, elements);
-            startEdge = addEdges(model, context, document, elements, startVertex);
-        } catch (XmlException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("The file seems not to be of valid yEd format.");
+        if (e.hasActions()) {
+          label += newLine + "/";
+          for (Action action : e.getActions()) {
+            label += action.getScript();
+          }
         }
 
-        model.setName(FilenameUtils.getBaseName(path.toString()));
-        context.setModel(model.build());
-        if (null != startEdge) {
-            context.setNextElement(startEdge);
-        }
+        label = label.replaceAll("&", "&amp;");
+        label = label.replaceAll("<", "&lt;");
+        label = label.replaceAll(">", "&gt;");
+        label = label.replaceAll("'", "&apos;");
+        label = label.replaceAll("\"", "&quot;");
 
-        return context;
+        str.append("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
+          + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+          + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
+          + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
+        str.append("</y:EdgeLabel>").append(newLine);
+      }
+
+      str.append("          <y:BendStyle smoothed=\"false\"/>").append(newLine);
+      str.append("        </y:PolyLineEdge>").append(newLine);
+      str.append("      </data>").append(newLine);
+      str.append("    </edge>").append(newLine);
+
     }
 
-    @Override
-    public <T extends Context> T write(T context, Path path) throws IOException {
-        String newLine = System.getProperty("line.separator");
-        StringBuilder str = new StringBuilder();
+    str.append("  </graph>").append(newLine);
+    str.append("</graphml>").append(newLine);
 
-        str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);
-        str.append("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
-                + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
-        str.append("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>").append(newLine);
-        str.append("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>").append(newLine);
-        str.append("  <graph id=\"G\" edgedefault=\"directed\">").append(newLine);
+    Files.newOutputStream(path).write(String.valueOf(str).getBytes());
+    return context;
+  }
 
-        for (Vertex.RuntimeVertex v : context.getModel().getVertices()) {
-            str.append("    <node id=\"" + v.getId() + "\">").append(newLine);
-            str.append("      <data key=\"d0\" >").append(newLine);
-            str.append("        <y:ShapeNode >").append(newLine);
-            str.append("          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>").append(newLine);
-            str.append("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>").append(newLine);
-            str.append("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
-            str.append("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
-                    + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-                    + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
-                    + v.getName());
-
-            str.append("</y:NodeLabel>").append(newLine);
-            str.append("          <y:Shape type=\"rectangle\"/>").append(newLine);
-            str.append("        </y:ShapeNode>").append(newLine);
-            str.append("      </data>").append(newLine);
-            str.append("    </node>").append(newLine);
-        }
-
-        for (Edge.RuntimeEdge e : context.getModel().getEdges()) {
-            Vertex.RuntimeVertex src = e.getSourceVertex();
-            Vertex.RuntimeVertex dest = e.getTargetVertex();
-
-            if (src == null || dest == null) {
-                continue;
-            }
-
-            str.append("    <edge id=\"" + e.getId() + "\" source=\"" + src.getId() + "\" target=\"" + dest.getId() + "\">").append(newLine);
-            str.append("      <data key=\"d1\" >").append(newLine);
-            str.append("        <y:PolyLineEdge >").append(newLine);
-            str.append("          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">").append(newLine);
-            str.append("            <y:Point x=\"273.3125\" y=\"95.0\"/>").append(newLine);
-            str.append("            <y:Point x=\"209.5625\" y=\"95.0\"/>").append(newLine);
-            str.append("            <y:Point x=\"209.5625\" y=\"143.701171875\"/>").append(newLine);
-            str.append("            <y:Point x=\"265.625\" y=\"143.701171875\"/>").append(newLine);
-            str.append("          </y:Path>").append(newLine);
-            str.append("          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
-            str.append("          <y:Arrows source=\"none\" target=\"standard\"/>").append(newLine);
-
-            if (!e.getName().isEmpty()) {
-                String label = e.getName();
-
-                if (e.hasGuard()) {
-                    label += newLine + "[" + e.getGuard().getScript() + "]";
+  private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
+    Vertex startVertex = null;
+    Deque<XmlObject> workQueue = new ArrayDeque<>();
+    workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
+    while (!workQueue.isEmpty()) {
+      XmlObject object = workQueue.pop();
+      if (object instanceof NodeType) {
+        NodeType node = (NodeType) object;
+        if (0 < node.getGraphArray().length) {
+          for (GraphType subgraph : node.getGraphArray()) {
+            workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
+          }
+        } else {
+          String description = "";
+          for (DataType data : node.getDataArray()) {
+            if (0 < data.getDomNode().getChildNodes().getLength()) {
+              if (data.getKey().equals("d5")) {
+                description = ((DataTypeImpl) data).getStringValue();
+              }
+              if (isSupportedNode(data.xmlText())) {
+                StringBuilder label = new StringBuilder();
+                for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
+                  label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
                 }
-                if (e.hasActions()) {
-                    label += newLine + "/";
-                    for (Action action : e.getActions()) {
-                        label += action.getScript();
-                    }
+                YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
+                parser.removeErrorListeners();
+                parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
+                YEdVertexParser.ParseContext parseContext = parser.parse();
+                Vertex vertex = new Vertex();
+                if (!description.isEmpty()) {
+                  vertex.setProperty("description", description);
                 }
-
-                label = label.replaceAll("&", "&amp;");
-                label = label.replaceAll("<", "&lt;");
-                label = label.replaceAll(">", "&gt;");
-                label = label.replaceAll("'", "&apos;");
-                label = label.replaceAll("\"", "&quot;");
-
-                str.append("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
-                        + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-                        + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
-                        + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
-                str.append("</y:EdgeLabel>").append(newLine);
-            }
-
-            str.append("          <y:BendStyle smoothed=\"false\"/>").append(newLine);
-            str.append("        </y:PolyLineEdge>").append(newLine);
-            str.append("      </data>").append(newLine);
-            str.append("    </edge>").append(newLine);
-
-        }
-
-        str.append("  </graph>").append(newLine);
-        str.append("</graphml>").append(newLine);
-
-        Files.newOutputStream(path).write(String.valueOf(str).getBytes());
-        return context;
-    }
-
-    private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
-        Vertex startVertex = null;
-        Deque<XmlObject> workQueue = new ArrayDeque<>();
-        workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
-        while (!workQueue.isEmpty()) {
-            XmlObject object = workQueue.pop();
-            if (object instanceof NodeType) {
-                NodeType node = (NodeType) object;
-                if (0 < node.getGraphArray().length) {
-                    for (GraphType subgraph : node.getGraphArray()) {
-                        workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
-                    }
+                vertex.setProperty("x", getSupportedNode(data.xmlText()).getGeometry().getX());
+                vertex.setProperty("y", getSupportedNode(data.xmlText()).getGeometry().getY());
+                boolean blocked = false;
+                if (null != parseContext.start()) {
+                  elements.put(node.getId(), vertex);
+                  vertex.setId(node.getId());
+                  startVertex = vertex;
                 } else {
-                    String description = "";
-                    for (DataType data : node.getDataArray()) {
-                        if (0 < data.getDomNode().getChildNodes().getLength()) {
-                            if (data.getKey().equals("d5")) {
-                                description = ((DataTypeImpl) data).getStringValue();
-                            }
-                            if (isSupportedNode(data.xmlText())) {
-                                StringBuilder label = new StringBuilder();
-                                for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
-                                    label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
-                                }
-                                YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
-                                parser.removeErrorListeners();
-                                parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
-                                YEdVertexParser.ParseContext parseContext = parser.parse();
-                                Vertex vertex = new Vertex();
-                                if (!description.isEmpty()) {
-                                    vertex.setProperty("description", description);
-                                }
-                                vertex.setProperty("x", getSupportedNode(data.xmlText()).getGeometry().getX());
-                                vertex.setProperty("y", getSupportedNode(data.xmlText()).getGeometry().getY());
-                                boolean blocked = false;
-                                if (null != parseContext.start()) {
-                                    elements.put(node.getId(), vertex);
-                                    vertex.setId(node.getId());
-                                    startVertex = vertex;
-                                } else {
-                                    for (YEdVertexParser.FieldContext field : parseContext.field()) {
-                                        if (null != field.names()) {
-                                            vertex.setName(field.names().getText());
-                                        }
-                                        if (null != field.shared() && null != field.shared().Identifier()) {
-                                            vertex.setSharedState(field.shared().Identifier().getText());
-                                        }
-                                        if (null != field.reqtags()) {
-                                            vertex.setRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
-                                        }
-                                        if (null != field.actions()) {
-                                            model.addActions(convertVertexAction(field.actions().action()));
-                                        }
-                                        if (null != field.blocked()) {
-                                            blocked = true;
-                                        }
-                                    }
-                                    if (!blocked) {
-                                        elements.put(node.getId(), vertex);
-                                        vertex.setId(node.getId());
-                                        model.addVertex(vertex);
-                                    }
-                                }
-                            }
-                        }
+                  for (YEdVertexParser.FieldContext field : parseContext.field()) {
+                    if (null != field.names()) {
+                      vertex.setName(field.names().getText());
                     }
-                }
-            }
-        }
-        return startVertex;
-    }
-
-    private boolean isSupportedNode(String xml) {
-        return xml.contains("GenericNode")
-                || xml.contains("ShapeNode")
-                || xml.contains("GenericGroupNode")
-                || xml.contains("GroupNode")
-                || xml.contains("ImageNode")
-                || xml.contains("TableNode");
-    }
-
-    private com.yworks.xml.graphml.NodeType getSupportedNode(String xml) throws XmlException {
-        if (xml.contains("GenericNode")) {
-            return GenericNodeDocument.Factory.parse(xml).getGenericNode();
-        } else if (xml.contains("ShapeNode")) {
-            return ShapeNodeDocument.Factory.parse(xml).getShapeNode();
-        } else if (xml.contains("GenericGroupNode")) {
-            return GenericGroupNodeDocument.Factory.parse(xml).getGenericGroupNode();
-        } else if (xml.contains("GroupNode")) {
-            return GroupNodeDocument.Factory.parse(xml).getGroupNode();
-        } else if (xml.contains("ImageNode")) {
-            return ImageNodeDocument.Factory.parse(xml).getImageNode();
-        } else if (xml.contains("TableNode")) {
-            return TableNodeDocument.Factory.parse(xml).getTableNode();
-        }
-        throw new ContextFactoryException("Unsupported node type: " + xml);
-    }
-
-    private Edge addEdges(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
-        Edge startEdge = null;
-        for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
-            if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
-                org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType) object;
-                String description = "";
-                for (DataType data : edgeType.getDataArray()) {
-                    if (0 < data.getDomNode().getChildNodes().getLength()) {
-                        if (data.getKey().equals("d9")) {
-                            description = ((DataTypeImpl) data).getStringValue();
-                        }
-                        if (isSupportedEdge(data.xmlText())) {
-                            StringBuilder label = new StringBuilder();
-                            for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
-                                label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
-                            }
-                            YEdEdgeParser parser = new YEdEdgeParser(getTokenStream(label.toString()));
-                            parser.removeErrorListeners();
-                            parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
-                            YEdEdgeParser.ParseContext parseContext = parser.parse();
-
-                            Edge edge = new Edge();
-                            if (!description.isEmpty()) {
-                                edge.setProperty("description", description);
-                            }
-                            if (null != elements.get(edgeType.getSource())) {
-                                edge.setSourceVertex(elements.get(edgeType.getSource()));
-                            }
-                            if (null != elements.get(edgeType.getTarget())) {
-                                edge.setTargetVertex(elements.get(edgeType.getTarget()));
-                            }
-                            boolean blocked = false;
-                            for (YEdEdgeParser.FieldContext field : parseContext.field()) {
-                                if (null != field.names()) {
-                                    edge.setName(field.names().getText());
-                                }
-                                if (null != field.guard()) {
-                                    // TODO: Fix this in the parser
-                                    String text = field.guard().getText().trim();
-                                    edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
-                                }
-                                if (null != field.actions()) {
-                                    edge.addActions(convertEdgeAction(field.actions().action()));
-                                }
-                                if (null != field.reqtags()) {
-                                    edge.setRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));
-                                }
-                                if (null != field.blocked()) {
-                                    blocked = true;
-                                }
-                            }
-                            if (!blocked && null != edge.getTargetVertex()) {
-                                if (null != startVertex && edgeType.getSource().equals(startVertex.getId())) {
-                                    edge.setSourceVertex(null);
-                                    edge.setId(edgeType.getId());
-                                    model.addEdge(edge);
-                                    startEdge = edge;
-                                } else if (null != edge.getSourceVertex()) {
-                                    edge.setId(edgeType.getId());
-                                    model.addEdge(edge);
-                                }
-                            }
-                        }
+                    if (null != field.shared() && null != field.shared().Identifier()) {
+                      vertex.setSharedState(field.shared().Identifier().getText());
                     }
+                    if (null != field.reqtags()) {
+                      vertex.setRequirements(convertVertexRequirement(field.reqtags().reqtagList().reqtag()));
+                    }
+                    if (null != field.actions()) {
+                      model.addActions(convertVertexAction(field.actions().action()));
+                    }
+                    if (null != field.blocked()) {
+                      blocked = true;
+                    }
+                  }
+                  if (!blocked) {
+                    elements.put(node.getId(), vertex);
+                    vertex.setId(node.getId());
+                    model.addVertex(vertex);
+                  }
                 }
+              }
             }
+          }
         }
-        return startEdge;
+      }
     }
+    return startVertex;
+  }
 
-    private boolean isSupportedEdge(String xml) {
-        return xml.contains("PolyLineEdge")
-                || xml.contains("GenericEdge")
-                || xml.contains("ArcEdge")
-                || xml.contains("QuadCurveEdge")
-                || xml.contains("SplineEdge")
-                || xml.contains("BezierEdge");
+  private boolean isSupportedNode(String xml) {
+    return xml.contains("GenericNode")
+      || xml.contains("ShapeNode")
+      || xml.contains("GenericGroupNode")
+      || xml.contains("GroupNode")
+      || xml.contains("ImageNode")
+      || xml.contains("TableNode");
+  }
+
+  private com.yworks.xml.graphml.NodeType getSupportedNode(String xml) throws XmlException {
+    if (xml.contains("GenericNode")) {
+      return GenericNodeDocument.Factory.parse(xml).getGenericNode();
+    } else if (xml.contains("ShapeNode")) {
+      return ShapeNodeDocument.Factory.parse(xml).getShapeNode();
+    } else if (xml.contains("GenericGroupNode")) {
+      return GenericGroupNodeDocument.Factory.parse(xml).getGenericGroupNode();
+    } else if (xml.contains("GroupNode")) {
+      return GroupNodeDocument.Factory.parse(xml).getGroupNode();
+    } else if (xml.contains("ImageNode")) {
+      return ImageNodeDocument.Factory.parse(xml).getImageNode();
+    } else if (xml.contains("TableNode")) {
+      return TableNodeDocument.Factory.parse(xml).getTableNode();
     }
+    throw new ContextFactoryException("Unsupported node type: " + xml);
+  }
 
-    private com.yworks.xml.graphml.EdgeType getSupportedEdge(String xml) throws XmlException {
-        if (xml.contains("GenericEdge")) {
-            return GenericEdgeDocument.Factory.parse(xml).getGenericEdge();
-        } else if (xml.contains("PolyLineEdge")) {
-            return PolyLineEdgeDocument.Factory.parse(xml).getPolyLineEdge();
-        } else if (xml.contains("ArcEdge")) {
-            return ArcEdgeDocument.Factory.parse(xml).getArcEdge();
-        } else if (xml.contains("QuadCurveEdge")) {
-            return QuadCurveEdgeDocument.Factory.parse(xml).getQuadCurveEdge();
-        } else if (xml.contains("SplineEdge")) {
-            return SplineEdgeDocument.Factory.parse(xml).getSplineEdge();
-        } else if (xml.contains("BezierEdge")) {
-            return BezierEdgeDocument.Factory.parse(xml).getBezierEdge();
+  private Edge addEdges(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
+    Edge startEdge = null;
+    for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
+      if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
+        org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType) object;
+        String description = "";
+        for (DataType data : edgeType.getDataArray()) {
+          if (0 < data.getDomNode().getChildNodes().getLength()) {
+            if (data.getKey().equals("d9")) {
+              description = ((DataTypeImpl) data).getStringValue();
+            }
+            if (isSupportedEdge(data.xmlText())) {
+              StringBuilder label = new StringBuilder();
+              for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
+                label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
+              }
+              YEdEdgeParser parser = new YEdEdgeParser(getTokenStream(label.toString()));
+              parser.removeErrorListeners();
+              parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
+              YEdEdgeParser.ParseContext parseContext = parser.parse();
+
+              Edge edge = new Edge();
+              if (!description.isEmpty()) {
+                edge.setProperty("description", description);
+              }
+              if (null != elements.get(edgeType.getSource())) {
+                edge.setSourceVertex(elements.get(edgeType.getSource()));
+              }
+              if (null != elements.get(edgeType.getTarget())) {
+                edge.setTargetVertex(elements.get(edgeType.getTarget()));
+              }
+              boolean blocked = false;
+              for (YEdEdgeParser.FieldContext field : parseContext.field()) {
+                if (null != field.names()) {
+                  edge.setName(field.names().getText());
+                }
+                if (null != field.guard()) {
+                  // TODO: Fix this in the parser
+                  String text = field.guard().getText().trim();
+                  edge.setGuard(new Guard(text.substring(1, text.length() - 1)));
+                }
+                if (null != field.actions()) {
+                  edge.addActions(convertEdgeAction(field.actions().action()));
+                }
+                if (null != field.reqtags()) {
+                  edge.setRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));
+                }
+                if (null != field.blocked()) {
+                  blocked = true;
+                }
+              }
+              if (!blocked && null != edge.getTargetVertex()) {
+                if (null != startVertex && edgeType.getSource().equals(startVertex.getId())) {
+                  edge.setSourceVertex(null);
+                  edge.setId(edgeType.getId());
+                  model.addEdge(edge);
+                  startEdge = edge;
+                } else if (null != edge.getSourceVertex()) {
+                  edge.setId(edgeType.getId());
+                  model.addEdge(edge);
+                }
+              }
+            }
+          }
         }
-        throw new ContextFactoryException("Unsupported edge type: " + xml);
+      }
     }
+    return startEdge;
+  }
 
-    private List<Action> convertEdgeAction(List<YEdEdgeParser.ActionContext> actionContexts) {
-        List<Action> actions = new ArrayList<>();
-        for (YEdEdgeParser.ActionContext actionContext : actionContexts) {
-            actions.add(new Action(actionContext.getText()));
-        }
-        return actions;
-    }
+  private boolean isSupportedEdge(String xml) {
+    return xml.contains("PolyLineEdge")
+      || xml.contains("GenericEdge")
+      || xml.contains("ArcEdge")
+      || xml.contains("QuadCurveEdge")
+      || xml.contains("SplineEdge")
+      || xml.contains("BezierEdge");
+  }
 
-    private List<Action> convertVertexAction(List<YEdVertexParser.ActionContext> actionContexts) {
-        List<Action> actions = new ArrayList<>();
-        for (YEdVertexParser.ActionContext actionContext : actionContexts) {
-            actions.add(new Action(actionContext.getText()));
-        }
-        return actions;
+  private com.yworks.xml.graphml.EdgeType getSupportedEdge(String xml) throws XmlException {
+    if (xml.contains("GenericEdge")) {
+      return GenericEdgeDocument.Factory.parse(xml).getGenericEdge();
+    } else if (xml.contains("PolyLineEdge")) {
+      return PolyLineEdgeDocument.Factory.parse(xml).getPolyLineEdge();
+    } else if (xml.contains("ArcEdge")) {
+      return ArcEdgeDocument.Factory.parse(xml).getArcEdge();
+    } else if (xml.contains("QuadCurveEdge")) {
+      return QuadCurveEdgeDocument.Factory.parse(xml).getQuadCurveEdge();
+    } else if (xml.contains("SplineEdge")) {
+      return SplineEdgeDocument.Factory.parse(xml).getSplineEdge();
+    } else if (xml.contains("BezierEdge")) {
+      return BezierEdgeDocument.Factory.parse(xml).getBezierEdge();
     }
+    throw new ContextFactoryException("Unsupported edge type: " + xml);
+  }
 
-    private Set<Requirement> convertEdgeRequirement(List<YEdEdgeParser.ReqtagContext> reqtagContexts) {
-        Set<Requirement> requirements = new HashSet<>();
-        for (YEdEdgeParser.ReqtagContext reqtagContext : reqtagContexts) {
-            requirements.add(new Requirement(reqtagContext.getText()));
-        }
-        return requirements;
+  private List<Action> convertEdgeAction(List<YEdEdgeParser.ActionContext> actionContexts) {
+    List<Action> actions = new ArrayList<>();
+    for (YEdEdgeParser.ActionContext actionContext : actionContexts) {
+      actions.add(new Action(actionContext.getText()));
     }
+    return actions;
+  }
 
-    private Set<Requirement> convertVertexRequirement(List<YEdVertexParser.ReqtagContext> reqtagContexts) {
-        Set<Requirement> requirements = new HashSet<>();
-        for (YEdVertexParser.ReqtagContext reqtagContext : reqtagContexts) {
-            requirements.add(new Requirement(reqtagContext.getText()));
-        }
-        return requirements;
+  private List<Action> convertVertexAction(List<YEdVertexParser.ActionContext> actionContexts) {
+    List<Action> actions = new ArrayList<>();
+    for (YEdVertexParser.ActionContext actionContext : actionContexts) {
+      actions.add(new Action(actionContext.getText()));
     }
+    return actions;
+  }
 
-    private CommonTokenStream getTokenStream(String label) {
-        ANTLRInputStream inputStream = new ANTLRInputStream(label);
-        YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
-        return new CommonTokenStream(lexer);
+  private Set<Requirement> convertEdgeRequirement(List<YEdEdgeParser.ReqtagContext> reqtagContexts) {
+    Set<Requirement> requirements = new HashSet<>();
+    for (YEdEdgeParser.ReqtagContext reqtagContext : reqtagContexts) {
+      requirements.add(new Requirement(reqtagContext.getText()));
     }
+    return requirements;
+  }
+
+  private Set<Requirement> convertVertexRequirement(List<YEdVertexParser.ReqtagContext> reqtagContexts) {
+    Set<Requirement> requirements = new HashSet<>();
+    for (YEdVertexParser.ReqtagContext reqtagContext : reqtagContexts) {
+      requirements.add(new Requirement(reqtagContext.getText()));
+    }
+    return requirements;
+  }
+
+  private CommonTokenStream getTokenStream(String label) {
+    ANTLRInputStream inputStream = new ANTLRInputStream(label);
+    YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
+    return new CommonTokenStream(lexer);
+  }
 
 }

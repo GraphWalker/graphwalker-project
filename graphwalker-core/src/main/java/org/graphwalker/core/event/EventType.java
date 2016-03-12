@@ -30,5 +30,5 @@ package org.graphwalker.core.event;
  * @author Nils Olsson
  */
 public enum EventType {
-    BEFORE_ELEMENT, AFTER_ELEMENT
+  BEFORE_ELEMENT, AFTER_ELEMENT
 }

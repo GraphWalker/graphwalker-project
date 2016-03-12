@@ -39,42 +39,42 @@ import java.util.Arrays;
  */
 public class FleuryTest {
 
-    private static final Vertex v1 = new Vertex().setName("v1");
-    private static final Vertex v2 = new Vertex().setName("v2");
-    private static final Vertex v3 = new Vertex().setName("v3");
-    private static final Vertex v4 = new Vertex().setName("v4");
-    private static final Vertex v5 = new Vertex().setName("v5");
-    private static final Vertex v6 = new Vertex().setName("v6");
+  private static final Vertex v1 = new Vertex().setName("v1");
+  private static final Vertex v2 = new Vertex().setName("v2");
+  private static final Vertex v3 = new Vertex().setName("v3");
+  private static final Vertex v4 = new Vertex().setName("v4");
+  private static final Vertex v5 = new Vertex().setName("v5");
+  private static final Vertex v6 = new Vertex().setName("v6");
 
-    private static final Edge e1 = new Edge().setName("e1").setSourceVertex(v1).setTargetVertex(v2);
-    private static final Edge e2 = new Edge().setName("e2").setSourceVertex(v2).setTargetVertex(v3);
-    private static final Edge e3 = new Edge().setName("e3").setSourceVertex(v3).setTargetVertex(v1);
-    private static final Edge e4 = new Edge().setName("e4").setSourceVertex(v1).setTargetVertex(v4);
-    private static final Edge e5 = new Edge().setName("e5").setSourceVertex(v4).setTargetVertex(v5);
-    private static final Edge e6 = new Edge().setName("e6").setSourceVertex(v5).setTargetVertex(v6);
-    private static final Edge e7 = new Edge().setName("e7").setSourceVertex(v6).setTargetVertex(v4);
+  private static final Edge e1 = new Edge().setName("e1").setSourceVertex(v1).setTargetVertex(v2);
+  private static final Edge e2 = new Edge().setName("e2").setSourceVertex(v2).setTargetVertex(v3);
+  private static final Edge e3 = new Edge().setName("e3").setSourceVertex(v3).setTargetVertex(v1);
+  private static final Edge e4 = new Edge().setName("e4").setSourceVertex(v1).setTargetVertex(v4);
+  private static final Edge e5 = new Edge().setName("e5").setSourceVertex(v4).setTargetVertex(v5);
+  private static final Edge e6 = new Edge().setName("e6").setSourceVertex(v5).setTargetVertex(v6);
+  private static final Edge e7 = new Edge().setName("e7").setSourceVertex(v6).setTargetVertex(v4);
 
-    private static final Model model = new Model()
-            .addEdge(e1)
-            .addEdge(e2)
-            .addEdge(e3)
-            .addEdge(e4)
-            .addEdge(e5)
-            .addEdge(e6)
-            .addEdge(e7);
+  private static final Model model = new Model()
+    .addEdge(e1)
+    .addEdge(e2)
+    .addEdge(e3)
+    .addEdge(e4)
+    .addEdge(e5)
+    .addEdge(e6)
+    .addEdge(e7);
 
 
-    private static final Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(
-            e1.build(), v2.build(), e2.build(), v3.build(), e3.build(), v1.build()
-            , e4.build(), v4.build(), e5.build(), v5.build(), e6.build(), v6.build(), e7.build(), v4.build()
-    ));
+  private static final Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(
+    e1.build(), v2.build(), e2.build(), v3.build(), e3.build(), v1.build()
+    , e4.build(), v4.build(), e5.build(), v5.build(), e6.build(), v6.build(), e7.build(), v4.build()
+  ));
 
-    @Test
-    public void findTrail() {
-        Context context = new TestExecutionContext(model, null);
-        Fleury fleury = new Fleury(context);
-        Path<Element> path = fleury.getTrail(v1.build());
-        Assert.assertArrayEquals(expectedPath.toArray(), path.toArray());
-    }
+  @Test
+  public void findTrail() {
+    Context context = new TestExecutionContext(model, null);
+    Fleury fleury = new Fleury(context);
+    Path<Element> path = fleury.getTrail(v1.build());
+    Assert.assertArrayEquals(expectedPath.toArray(), path.toArray());
+  }
 
 }

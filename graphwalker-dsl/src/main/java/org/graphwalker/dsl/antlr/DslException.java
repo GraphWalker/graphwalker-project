@@ -31,11 +31,11 @@ package org.graphwalker.dsl.antlr;
  */
 public class DslException extends RuntimeException {
 
-    public DslException(Throwable throwable) {
-        super(throwable);
-    }
+  public DslException(Throwable throwable) {
+    super(throwable);
+  }
 
-    public DslException(String message) {
-        super(message);
-    }
+  public DslException(String message) {
+    super(message);
+  }
 }

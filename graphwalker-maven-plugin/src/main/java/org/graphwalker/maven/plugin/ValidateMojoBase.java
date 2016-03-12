@@ -35,7 +35,7 @@ import java.util.List;
  */
 public abstract class ValidateMojoBase extends DefaultMojoBase {
 
-    protected void validate(List<Resource> resources) {
-        // TODO: implement
-    }
+  protected void validate(List<Resource> resources) {
+    // TODO: implement
+  }
 }

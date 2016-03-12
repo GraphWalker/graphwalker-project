@@ -33,11 +33,11 @@ import org.graphwalker.core.model.Element;
  */
 public interface Observable {
 
-    void addObserver(Observer observer);
+  void addObserver(Observer observer);
 
-    void deleteObserver(Observer observer);
+  void deleteObserver(Observer observer);
 
-    void deleteObservers();
+  void deleteObservers();
 
-    void notifyObservers(Element element, EventType type);
+  void notifyObservers(Element element, EventType type);
 }

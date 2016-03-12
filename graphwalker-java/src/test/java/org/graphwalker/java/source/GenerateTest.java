@@ -34,20 +34,20 @@ import org.junit.Test;
  */
 public class GenerateTest {
 
-    @Test
-    public void generate() {
-        String source = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
-        Assert.assertTrue(source.contains("edge12"));
-        Assert.assertTrue(source.contains("vertex2"));
-        Assert.assertFalse(source.contains("SHARED"));
-    }
+  @Test
+  public void generate() {
+    String source = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
+    Assert.assertTrue(source.contains("edge12"));
+    Assert.assertTrue(source.contains("vertex2"));
+    Assert.assertFalse(source.contains("SHARED"));
+  }
 
-    @Test
-    public void generatePathWithSpace() {
-        String source = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
-        Assert.assertTrue(source.contains("edge12"));
-        Assert.assertTrue(source.contains("vertex2"));
-        Assert.assertFalse(source.contains("SHARED"));
-        Assert.assertTrue(source.contains("package org.graphwalker.java.path_with_space;"));
-    }
+  @Test
+  public void generatePathWithSpace() {
+    String source = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
+    Assert.assertTrue(source.contains("edge12"));
+    Assert.assertTrue(source.contains("vertex2"));
+    Assert.assertFalse(source.contains("SHARED"));
+    Assert.assertTrue(source.contains("package org.graphwalker.java.path_with_space;"));
+  }
 }

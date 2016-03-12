@@ -47,80 +47,80 @@ import static org.graphwalker.core.common.Objects.isNotNull;
  */
 public final class Profiler {
 
-    private final Profile profile = new Profile();
-    private long startTime = 0;
+  private final Profile profile = new Profile();
+  private long startTime = 0;
 
-    private final Map<Element, Context> elementContextMap = new HashMap<>();
-    private final Set<Context> contexts = new HashSet<>();
+  private final Map<Element, Context> elementContextMap = new HashMap<>();
+  private final Set<Context> contexts = new HashSet<>();
 
-    public Context getContext(Element element) {
-        return elementContextMap.get(element);
+  public Context getContext(Element element) {
+    return elementContextMap.get(element);
+  }
+
+  public Set<Context> getContexts() {
+    return contexts;
+  }
+
+  public void start(Context context) {
+    contexts.add(context);
+    startTime = System.nanoTime();
+  }
+
+  public void stop(Context context) {
+    Element element = context.getCurrentElement();
+    if (isNotNull(element)) {
+      profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
+      elementContextMap.put(element, context);
     }
+  }
 
-    public Set<Context> getContexts() {
-        return contexts;
-    }
+  public boolean isVisited(Element element) {
+    return profile.containsKey(element);
+  }
 
-    public void start(Context context) {
-        contexts.add(context);
-        startTime = System.nanoTime();
-    }
+  public long getTotalVisitCount() {
+    return profile.getTotalExecutionCount();
+  }
 
-    public void stop(Context context) {
-        Element element = context.getCurrentElement();
-        if (isNotNull(element)) {
-            profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
-            elementContextMap.put(element, context);
-        }
-    }
+  public long getVisitCount(Element element) {
+    return profile.getTotalExecutionCount(element);
+  }
 
-    public boolean isVisited(Element element) {
-        return profile.containsKey(element);
+  public List<Element> getUnvisitedElements(Context context) {
+    List<Element> elementList = new ArrayList<>();
+    for (Element e : context.getModel().getElements()) {
+      if (!isVisited(e)) {
+        elementList.add(e);
+      }
     }
+    return elementList;
+  }
 
-    public long getTotalVisitCount() {
-        return profile.getTotalExecutionCount();
+  public List<Element> getUnvisitedEdges(Context context) {
+    List<Element> elementList = new ArrayList<>();
+    for (Element e : context.getModel().getElements()) {
+      if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
+        elementList.add(e);
+      }
     }
+    return elementList;
+  }
 
-    public long getVisitCount(Element element) {
-        return profile.getTotalExecutionCount(element);
+  public List<Element> getUnvisitedVertices(Context context) {
+    List<Element> elementList = new ArrayList<>();
+    for (Element e : context.getModel().getElements()) {
+      if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
+        elementList.add(e);
+      }
     }
+    return elementList;
+  }
 
-    public List<Element> getUnvisitedElements(Context context) {
-        List<Element> elementList = new ArrayList<>();
-        for (Element e : context.getModel().getElements()) {
-            if (!isVisited(e)) {
-                elementList.add(e);
-            }
-        }
-        return elementList;
-    }
+  public Path<Element> getPath() {
+    return profile.getPath();
+  }
 
-    public List<Element> getUnvisitedEdges(Context context) {
-        List<Element> elementList = new ArrayList<>();
-        for (Element e : context.getModel().getElements()) {
-            if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
-                elementList.add(e);
-            }
-        }
-        return elementList;
-    }
-
-    public List<Element> getUnvisitedVertices(Context context) {
-        List<Element> elementList = new ArrayList<>();
-        for (Element e : context.getModel().getElements()) {
-            if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
-                elementList.add(e);
-            }
-        }
-        return elementList;
-    }
-
-    public Path<Element> getPath() {
-        return profile.getPath();
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
+  public Profile getProfile() {
+    return profile;
+  }
 }

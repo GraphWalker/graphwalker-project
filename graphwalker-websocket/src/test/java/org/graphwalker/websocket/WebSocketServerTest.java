@@ -47,67 +47,67 @@ import static org.hamcrest.CoreMatchers.is;
 @GraphWalker(value = "random(edge_coverage(100))", start = "e_Connect")
 public class WebSocketServerTest extends ExecutionContext implements WebSocketFlow {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketServerTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(WebSocketServerTest.class);
 
-    private WebSocketClient client = new WebSocketClient();
-    private WebSocketServer server;
-    private int numberOfConnections = 0;
+  private WebSocketClient client = new WebSocketClient();
+  private WebSocketServer server;
+  private int numberOfConnections = 0;
 
-    @BeforeExecution
-    public void StartServer() throws Exception {
-        server = new WebSocketServer(8887);
-        server.start();
+  @BeforeExecution
+  public void StartServer() throws Exception {
+    server = new WebSocketServer(8887);
+    server.start();
+  }
+
+  @Test
+  public void TestRun() {
+    Result result = new TestExecutor(getClass()).execute(true);
+    if (result.hasErrors()) {
+      for (String error : result.getErrors()) {
+        System.out.println(error);
+      }
+      Assert.fail("Test run failed.");
     }
+  }
 
-    @Test
-    public void TestRun() {
-        Result result = new TestExecutor(getClass()).execute(true);
-        if (result.hasErrors()) {
-            for (String error : result.getErrors()) {
-                System.out.println(error);
-            }
-            Assert.fail("Test run failed.");
-        }
-    }
+  @Override
+  public void e_StartMachine() {
+    client.startMachine(Paths.get("json/SmallModel.json"));
+  }
 
-    @Override
-    public void e_StartMachine() {
-        client.startMachine(Paths.get("json/SmallModel.json"));
-    }
+  @Override
+  public void e_Connect() {
+    numberOfConnections = server.getSockets().size();
+    client.run();
+  }
 
-    @Override
-    public void e_Connect() {
-        numberOfConnections = server.getSockets().size();
-        client.run();
-    }
+  @Override
+  public void v_MachineRunning() {
+    WebSocket socket = server.getSockets().iterator().next();
+    Assert.assertNotNull(server.getMachines().get(socket));
+  }
 
-    @Override
-    public void v_MachineRunning() {
-        WebSocket socket = server.getSockets().iterator().next();
-        Assert.assertNotNull(server.getMachines().get(socket));
-    }
+  @Override
+  public void e_HasNext() {
+    client.hasNext();
+  }
 
-    @Override
-    public void e_HasNext() {
-        client.hasNext();
-    }
+  @Override
+  public void v_EmptyMachine() {
+    Assert.assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
+    Assert.assertThat("We should now haw 1 connection", server.getSockets().size(), is(1));
+    Assert.assertThat(server.getMachines().size(), is(1));
+    WebSocket socket = server.getSockets().iterator().next();
+    Assert.assertNull(server.getMachines().get(socket));
+  }
 
-    @Override
-    public void v_EmptyMachine() {
-        Assert.assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
-        Assert.assertThat("We should now haw 1 connection", server.getSockets().size(), is(1));
-        Assert.assertThat(server.getMachines().size(), is(1));
-        WebSocket socket = server.getSockets().iterator().next();
-        Assert.assertNull(server.getMachines().get(socket));
-    }
+  @Override
+  public void e_GetData() {
+    client.getData();
+  }
 
-    @Override
-    public void e_GetData() {
-        client.getData();
-    }
-
-    @Override
-    public void e_GetNext() {
-        client.getNext();
-    }
+  @Override
+  public void e_GetNext() {
+    client.getNext();
+  }
 }

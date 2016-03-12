@@ -40,20 +40,20 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class TestExecutionContext extends ExecutionContext {
 
-    private static final Bindings bindings = new SimpleBindings();
+  private static final Bindings bindings = new SimpleBindings();
 
-    public TestExecutionContext() {
-        super();
-        getScriptEngine().put("global", bindings);
-    }
+  public TestExecutionContext() {
+    super();
+    getScriptEngine().put("global", bindings);
+  }
 
-    public TestExecutionContext(Model model, PathGenerator generator) {
-        super(model, generator);
-        getScriptEngine().put("global", bindings);
-    }
+  public TestExecutionContext(Model model, PathGenerator generator) {
+    super(model, generator);
+    getScriptEngine().put("global", bindings);
+  }
 
-    public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
-        super(model, generator);
-        getScriptEngine().put("global", bindings);
-    }
+  public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
+    super(model, generator);
+    getScriptEngine().put("global", bindings);
+  }
 }

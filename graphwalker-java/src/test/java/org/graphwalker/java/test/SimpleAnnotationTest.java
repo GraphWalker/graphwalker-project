@@ -36,16 +36,16 @@ import org.junit.Test;
 @GraphWalker
 public class SimpleAnnotationTest extends ExecutionContext implements SimpleModel {
 
-    @Override
-    public void vertex() {
-    }
+  @Override
+  public void vertex() {
+  }
 
-    @Override
-    public void edge() {
-    }
+  @Override
+  public void edge() {
+  }
 
-    @Test
-    public void run() {
-        new TestExecutor(getClass()).execute();
-    }
+  @Test
+  public void run() {
+    new TestExecutor(getClass()).execute();
+  }
 }

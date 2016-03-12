@@ -54,92 +54,92 @@ import java.util.*;
  */
 public final class GW3ContextFactory implements ContextFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(GW3ContextFactory.class);
-    private static final String FILE_TYPE = "gw3";
-    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.gw3"));
+  private static final Logger logger = LoggerFactory.getLogger(GW3ContextFactory.class);
+  private static final String FILE_TYPE = "gw3";
+  private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.gw3"));
 
-    @Override
-    public <T extends Context> T create(Path path, T context) {
-        new JsonContextFactory().create(path, context);
-        return context;
+  @Override
+  public <T extends Context> T create(Path path, T context) {
+    new JsonContextFactory().create(path, context);
+    return context;
+  }
+
+  /*
+   * Reuse JsonContextFactory for single models
+   */
+  @Override
+  public <T extends Context> T write(T context, Path path) throws IOException {
+    Files.newOutputStream(path).write(String.valueOf(new JsonContextFactory().getJsonFromContext(context)).getBytes());
+    return context;
+  }
+
+  /*
+   * Reuse JsonContextFactory for single models
+   */
+  public <T extends Context> T create(String jsonString, T context) {
+    new JsonContextFactory().create(jsonString, context);
+    return context;
+  }
+
+  @Override
+  public Set<String> getSupportedFileTypes() {
+    return SUPPORTED_TYPE;
+  }
+
+  @Override
+  public boolean accept(Path path) {
+    return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
+  }
+
+  @Override
+  public Context create(Path path) {
+    return create(path, new JsonContext());
+  }
+
+  @Override
+  public List<Context> createMultiple(Path path) {
+    StringBuilder jsonGW3 = new StringBuilder();
+    String line;
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
+      while ((line = reader.readLine()) != null) {
+        jsonGW3.append(line);
+      }
+    } catch (IOException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("Could not read the file.");
     }
+    logger.debug(jsonGW3.toString());
 
-    /*
-     * Reuse JsonContextFactory for single models
-     */
-    @Override
-    public <T extends Context> T write(T context, Path path) throws IOException {
-        Files.newOutputStream(path).write(String.valueOf(new JsonContextFactory().getJsonFromContext(context)).getBytes());
-        return context;
-    }
+    return createMultiple(jsonGW3.toString());
+  }
 
-    /*
-     * Reuse JsonContextFactory for single models
-     */
-    public <T extends Context> T create(String jsonString, T context) {
-        new JsonContextFactory().create(jsonString, context);
-        return context;
-    }
+  public List<Context> createMultiple(String jsonGW3) {
+    List<Context> contexts = new ArrayList<>();
+    JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonGW3, JsonMultimodel.class);
+    for (JsonModel jsonModel : jsonMultimodel.getModels()) {
+      GW3Context context = new GW3Context();
+      Model model = jsonModel.getModel();
 
-    @Override
-    public Set<String> getSupportedFileTypes() {
-        return SUPPORTED_TYPE;
-    }
-
-    @Override
-    public boolean accept(Path path) {
-        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
-    }
-
-    @Override
-    public Context create(Path path) {
-        return create(path, new JsonContext());
-    }
-
-    @Override
-    public List<Context> createMultiple(Path path) {        
-        StringBuilder jsonGW3 = new StringBuilder();
-        String line;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
-            while ((line = reader.readLine()) != null) {
-                jsonGW3.append(line);
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
+      context.setModel(model.build());
+      if (jsonModel.getGenerator() != null) {
+        context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
+      }
+      for (Element element : context.getModel().getElements()) {
+        if (element.getId().equals(jsonModel.getStartElementId())) {
+          context.setNextElement(element);
+          break;
         }
-        logger.debug(jsonGW3.toString());
-
-        return createMultiple(jsonGW3.toString());
+      }
+      contexts.add(context);
     }
 
-    public List<Context> createMultiple(String jsonGW3) {
-        List<Context> contexts = new ArrayList<>();
-        JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonGW3, JsonMultimodel.class);
-        for (JsonModel jsonModel : jsonMultimodel.getModels()) {
-            GW3Context context = new GW3Context();
-            Model model = jsonModel.getModel();
+    return contexts;
+  }
 
-            context.setModel(model.build());
-            if (jsonModel.getGenerator() != null) {
-                context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
-            }
-            for (Element element : context.getModel().getElements()) {
-                if (element.getId().equals(jsonModel.getStartElementId())) {
-                    context.setNextElement(element);
-                    break;
-                }
-            }
-            contexts.add(context);
-        }
-
-        return contexts;
-    }
-
-    /*
-     * Reuse JsonContextFactory for single models
-     */
-    public Context create(String jsonString) {
-        return create(jsonString, new JsonContext());
-    }
+  /*
+   * Reuse JsonContextFactory for single models
+   */
+  public Context create(String jsonString) {
+    return create(jsonString, new JsonContext());
+  }
 }
