@@ -16,6 +16,7 @@ env:
 # Workaround for bug where hostname longer than 64 chars and running OpenJDK 7
 # http://bugs.java.com/bugdatabase/view_bug.do?bug_id=7089443
 before_install:
+  - pip install codecov
   - cat /etc/hosts # optionally check the content *before*
   - sudo hostname "$(hostname | cut -c1-63)"
   - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
@@ -27,3 +28,5 @@ install:
 script:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn deploy --settings deploy.xml || mvn test'
 
+after_success:
+  - codecov
