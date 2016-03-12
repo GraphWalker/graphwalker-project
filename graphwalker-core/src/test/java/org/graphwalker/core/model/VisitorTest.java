@@ -188,20 +188,20 @@ public class VisitorTest {
     private void visit(RuntimeVertex vertex) {
       count++;
       for (RuntimeEdge edge : model.getOutEdges(vertex)) {
-        if (!isVisited(edge)) {
+        if (isNotVisited(edge)) {
           edge.accept(this);
         }
       }
     }
 
     private void visit(RuntimeEdge edge) {
-      if (!isVisited(edge.getTargetVertex())) {
+      if (isNotVisited(edge.getTargetVertex())) {
         edge.getTargetVertex().accept(this);
       }
     }
 
-    private boolean isVisited(Element element) {
-      return visited.contains(element);
+    private boolean isNotVisited(Element element) {
+      return !visited.contains(element);
     }
   }
 }
