@@ -47,64 +47,64 @@ import static org.graphwalker.core.common.Objects.isNotNull;
  */
 public abstract class MachineBase implements Machine {
 
-    private final List<Context> contexts = new ArrayList<>();
-    private final List<Observer> observers = new ArrayList<>();
-    private final Profiler profiler = new Profiler();
+  private final List<Context> contexts = new ArrayList<>();
+  private final List<Observer> observers = new ArrayList<>();
+  private final Profiler profiler = new Profiler();
 
-    private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
-    private Context currentContext;
+  private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
+  private Context currentContext;
 
-    @Override
-    public List<Context> getContexts() {
-        return contexts;
+  @Override
+  public List<Context> getContexts() {
+    return contexts;
+  }
+
+  @Override
+  public void addObserver(Observer observer) {
+    if (isNotNull(observer) && !observers.contains(observer)) {
+      observers.add(observer);
     }
+  }
 
-    @Override
-    public void addObserver(Observer observer) {
-        if (isNotNull(observer) && !observers.contains(observer)) {
-            observers.add(observer);
-        }
+  @Override
+  public void notifyObservers(Element element, EventType type) {
+    for (Observer observer : observers) {
+      observer.update(this, element, type);
     }
+  }
 
-    @Override
-    public void notifyObservers(Element element, EventType type) {
-        for (Observer observer : observers) {
-            observer.update(this, element, type);
-        }
-    }
+  @Override
+  public void deleteObserver(Observer observer) {
+    observers.remove(observer);
+  }
 
-    @Override
-    public void deleteObserver(Observer observer) {
-        observers.remove(observer);
-    }
+  @Override
+  public void deleteObservers() {
+    observers.clear();
+  }
 
-    @Override
-    public void deleteObservers() {
-        observers.clear();
-    }
+  @Override
+  public Profiler getProfiler() {
+    return profiler;
+  }
 
-    @Override
-    public Profiler getProfiler() {
-        return profiler;
-    }
+  @Override
+  public Context getCurrentContext() {
+    return currentContext;
+  }
 
-    @Override
-    public Context getCurrentContext() {
-        return currentContext;
-    }
+  protected void setCurrentContext(Context currentContext) {
+    this.currentContext = currentContext;
+  }
 
-    protected void setCurrentContext(Context currentContext) {
-        this.currentContext = currentContext;
-    }
+  @Override
+  public ExceptionStrategy getExceptionStrategy() {
+    return exceptionStrategy;
+  }
 
-    @Override
-    public ExceptionStrategy getExceptionStrategy() {
-        return exceptionStrategy;
-    }
-
-    @Override
-    public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
-        this.exceptionStrategy = exceptionStrategy;
-    }
+  @Override
+  public void setExceptionStrategy(ExceptionStrategy exceptionStrategy) {
+    this.exceptionStrategy = exceptionStrategy;
+  }
 
 }

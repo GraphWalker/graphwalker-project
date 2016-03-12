@@ -35,14 +35,14 @@ import java.util.Set;
  */
 public class MachineConfiguration {
 
-    private Set<ContextConfiguration> contextConfigurations = new HashSet<>();
+  private Set<ContextConfiguration> contextConfigurations = new HashSet<>();
 
-    public Collection<ContextConfiguration> getContextConfigurations() {
-        return contextConfigurations;
-    }
+  public Collection<ContextConfiguration> getContextConfigurations() {
+    return contextConfigurations;
+  }
 
-    public MachineConfiguration addContextConfiguration(ContextConfiguration context) {
-        contextConfigurations.add(context);
-        return this;
-    }
+  public MachineConfiguration addContextConfiguration(ContextConfiguration context) {
+    contextConfigurations.add(context);
+    return this;
+  }
 }

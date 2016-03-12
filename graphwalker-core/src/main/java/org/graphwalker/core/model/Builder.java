@@ -30,6 +30,6 @@ package org.graphwalker.core.model;
  * @author Nils Olsson
  */
 public interface Builder<T> {
-    T build();
+  T build();
 }
 

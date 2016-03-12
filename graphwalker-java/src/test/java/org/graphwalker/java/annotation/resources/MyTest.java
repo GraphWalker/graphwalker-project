@@ -35,41 +35,41 @@ import org.graphwalker.java.annotation.*;
  * @author Nils Olsson
  */
 @GraphWalker(start = "vertex1"
-        , groups = "MyTests"
-        , pathGenerator = RandomPath.class
-        , stopCondition = VertexCoverage.class
-        , stopConditionValue = "100")
+  , groups = "MyTests"
+  , pathGenerator = RandomPath.class
+  , stopCondition = VertexCoverage.class
+  , stopConditionValue = "100")
 public class MyTest extends ExecutionContext implements MyModel {
 
-    private int count = 0;
+  private int count = 0;
 
-    @Vertex
-    @BeforeExecution
-    public void vertex1() {
-        count++;
-    }
+  @Vertex
+  @BeforeExecution
+  public void vertex1() {
+    count++;
+  }
 
-    @Edge
-    public void edge12() {
-    }
+  @Edge
+  public void edge12() {
+  }
 
-    @Vertex
-    @AfterExecution
-    public void vertex2() {
-        count++;
-    }
+  @Vertex
+  @AfterExecution
+  public void vertex2() {
+    count++;
+  }
 
-    @BeforeElement
-    public void logger() {
-        count++;
-    }
+  @BeforeElement
+  public void logger() {
+    count++;
+  }
 
-    public int getCount() {
-        return count;
-    }
+  public int getCount() {
+    return count;
+  }
 
-    @AfterElement
-    private int getPrivateCount() {
-        return count;
-    }
+  @AfterElement
+  private int getPrivateCount() {
+    return count;
+  }
 }

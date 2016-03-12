@@ -38,20 +38,20 @@ import java.util.List;
  */
 public abstract class GenerateMojoBase extends DefaultMojoBase {
 
-    public GenerateMojoBase() {
-    }
+  public GenerateMojoBase() {
+  }
 
-    protected abstract File getGeneratedSourcesDirectory();
+  protected abstract File getGeneratedSourcesDirectory();
 
-    protected void generate(List<Resource> resources) {
-        for (Resource resource : resources) {
-            generate(resource);
-        }
+  protected void generate(List<Resource> resources) {
+    for (Resource resource : resources) {
+      generate(resource);
     }
+  }
 
-    private void generate(Resource resource) {
-        File baseDirectory = new File(resource.getDirectory());
-        CodeGenerator.generate(baseDirectory.toPath(), getGeneratedSourcesDirectory().toPath());
-    }
+  private void generate(Resource resource) {
+    File baseDirectory = new File(resource.getDirectory());
+    CodeGenerator.generate(baseDirectory.toPath(), getGeneratedSourcesDirectory().toPath());
+  }
 
 }

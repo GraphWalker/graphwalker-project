@@ -37,43 +37,43 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class StopConditionFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(StopConditionFactory.class);
+  private static final Logger logger = LoggerFactory.getLogger(StopConditionFactory.class);
 
-    public static StopCondition createStopCondition(GraphWalker annotation) {
-        String value = annotation.stopConditionValue();
-        Class<? extends StopCondition> stopCondition = annotation.stopCondition();
-        if (value.isEmpty()) {
-            try {
-                return stopCondition.newInstance();
-            } catch (Throwable t) {
-                logger.error(t.getMessage());
-            }
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{String.class}).newInstance(value);
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Long.TYPE}).newInstance(Long.parseLong(value));
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Integer.TYPE}).newInstance(Integer.parseInt(value));
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Double.TYPE}).newInstance(Double.parseDouble(value));
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-        }
-        try {
-            return stopCondition.getConstructor(new Class[]{Float.TYPE}).newInstance(Float.parseFloat(value));
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-        }
-        throw new TestExecutionException();
+  public static StopCondition createStopCondition(GraphWalker annotation) {
+    String value = annotation.stopConditionValue();
+    Class<? extends StopCondition> stopCondition = annotation.stopCondition();
+    if (value.isEmpty()) {
+      try {
+        return stopCondition.newInstance();
+      } catch (Throwable t) {
+        logger.error(t.getMessage());
+      }
     }
+    try {
+      return stopCondition.getConstructor(new Class[]{String.class}).newInstance(value);
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+    }
+    try {
+      return stopCondition.getConstructor(new Class[]{Long.TYPE}).newInstance(Long.parseLong(value));
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+    }
+    try {
+      return stopCondition.getConstructor(new Class[]{Integer.TYPE}).newInstance(Integer.parseInt(value));
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+    }
+    try {
+      return stopCondition.getConstructor(new Class[]{Double.TYPE}).newInstance(Double.parseDouble(value));
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+    }
+    try {
+      return stopCondition.getConstructor(new Class[]{Float.TYPE}).newInstance(Float.parseFloat(value));
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+    }
+    throw new TestExecutionException();
+  }
 }

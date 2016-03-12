@@ -36,14 +36,14 @@ import static org.graphwalker.core.common.Objects.unmodifiableList;
  */
 public final class BuilderFactory {
 
-    private BuilderFactory() {
-    }
+  private BuilderFactory() {
+  }
 
-    public static <T> List<T> build(List<? extends Builder<T>> builders) {
-        List<T> objects = new ArrayList<>();
-        for (Builder<T> builder : builders) {
-            objects.add(builder.build());
-        }
-        return unmodifiableList(objects);
+  public static <T> List<T> build(List<? extends Builder<T>> builders) {
+    List<T> objects = new ArrayList<>();
+    for (Builder<T> builder : builders) {
+      objects.add(builder.build());
     }
+    return unmodifiableList(objects);
+  }
 }

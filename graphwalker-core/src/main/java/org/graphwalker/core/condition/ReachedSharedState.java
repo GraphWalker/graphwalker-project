@@ -45,20 +45,20 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class ReachedSharedState extends ReachedStopConditionBase {
 
-    public ReachedSharedState(String target) {
-        super(target);
-    }
+  public ReachedSharedState(String target) {
+    super(target);
+  }
 
-    public Set<Element> getTargetElements() {
-        Set<Element> elements = new HashSet<>();
-        elements.addAll(getContext().getModel().getSharedStates(getValue()));
-        return elements;
-    }
+  public Set<Element> getTargetElements() {
+    Set<Element> elements = new HashSet<>();
+    elements.addAll(getContext().getModel().getSharedStates(getValue()));
+    return elements;
+  }
 
-    @Override
-    protected void validate(Context context) {
-        if (isNotNull(context)&& isNull(context.getModel().getSharedStates(getValue()))) {
-            throw new StopConditionException("Shared state not found");
-        }
+  @Override
+  protected void validate(Context context) {
+    if (isNotNull(context) && isNull(context.getModel().getSharedStates(getValue()))) {
+      throw new StopConditionException("Shared state not found");
     }
+  }
 }

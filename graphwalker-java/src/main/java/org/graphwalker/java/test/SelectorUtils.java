@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  */
 public abstract class SelectorUtils {
 
-    public static boolean match(String pattern, String value) {
-        return Pattern.matches(pattern.replaceAll("\\*", ".*"), value);
-    }
+  public static boolean match(String pattern, String value) {
+    return Pattern.matches(pattern.replaceAll("\\*", ".*"), value);
+  }
 }

@@ -56,123 +56,123 @@ import java.util.*;
  */
 public final class DotContextFactory implements ContextFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(DotContextFactory.class);
-    private static final String FILE_TYPE = "dot";
-    private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.dot"));
+  private static final Logger logger = LoggerFactory.getLogger(DotContextFactory.class);
+  private static final String FILE_TYPE = "dot";
+  private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.dot"));
 
-    private Vertex startVertex = null;
-    private Edge startEdge = null;
-    private Map<String, Vertex> elements = new HashMap<>();
+  private Vertex startVertex = null;
+  private Edge startEdge = null;
+  private Map<String, Vertex> elements = new HashMap<>();
 
-    @Override
-    public Set<String> getSupportedFileTypes() {
-        return SUPPORTED_TYPE;
+  @Override
+  public Set<String> getSupportedFileTypes() {
+    return SUPPORTED_TYPE;
+  }
+
+  @Override
+  public boolean accept(Path path) {
+    return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
+  }
+
+  @Override
+  public Context create(Path path) {
+    return create(path, new DotContext());
+  }
+
+  @Override
+  public List<Context> createMultiple(Path path) {
+    return null;
+  }
+
+  @Override
+  public <T extends Context> T create(Path path, T context) {
+
+    Model model = new Model();
+
+    StringBuilder out = new StringBuilder();
+    String line;
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
+      while ((line = reader.readLine()) != null) {
+        out.append(line);
+      }
+    } catch (IOException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("Could not read the file.");
+    }
+    logger.debug(out.toString());
+
+    DOTLexer lexer = new DOTLexer(new ANTLRInputStream(out.toString()));
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+    DOTParser parser = new DOTParser(tokens);
+    ParseTreeWalker walker = new ParseTreeWalker();
+
+    AntlrDotListener listener = new AntlrDotListener();
+    walker.walk(listener, parser.graph());
+
+    Edge startEdge = null;
+    for (Vertex vertex : listener.getVertices().values()) {
+      if (!vertex.getName().equalsIgnoreCase("START")) {
+        model.addVertex(vertex);
+      }
+    }
+    for (Edge edge : listener.getEdges()) {
+      if (edge.getSourceVertex().getName() != null &&
+        edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
+        edge.setSourceVertex(null);
+        startEdge = edge;
+      }
+      model.addEdge(edge);
     }
 
-    @Override
-    public boolean accept(Path path) {
-        return FilenameUtils.getExtension(path.toString()).equalsIgnoreCase(FILE_TYPE);
-    }
-
-    @Override
-    public Context create(Path path) {
-        return create(path, new DotContext());
-    }
-
-    @Override
-    public List<Context> createMultiple(Path path) {
-        return null;
-    }
-
-    @Override
-    public <T extends Context> T create(Path path, T context) {
-
-        Model model = new Model();
-        
-        StringBuilder out = new StringBuilder();
-        String line;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
-            while ((line = reader.readLine()) != null) {
-                out.append(line);
-            }
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            throw new ContextFactoryException("Could not read the file.");
+    model.setName(path.toString());
+    context.setModel(model.build());
+    if (null != startEdge) {
+      context.setNextElement(startEdge);
+    } else {
+      for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+        if (context.getModel().getOutEdges(vertex).isEmpty()) {
+          context.setNextElement(vertex);
         }
-        logger.debug(out.toString());
+      }
 
-        DOTLexer lexer = new DOTLexer(new ANTLRInputStream(out.toString()));
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-        DOTParser parser = new DOTParser(tokens);
-        ParseTreeWalker walker = new ParseTreeWalker();
-
-        AntlrDotListener listener = new AntlrDotListener();
-        walker.walk(listener, parser.graph());
-
-        Edge startEdge = null;
-        for (Vertex vertex : listener.getVertices().values()) {
-            if (!vertex.getName().equalsIgnoreCase("START")) {
-                model.addVertex(vertex);
-            }
-        }
-        for (Edge edge : listener.getEdges()) {
-            if (edge.getSourceVertex().getName() != null &&
-                    edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
-                edge.setSourceVertex(null);
-                startEdge = edge;
-            }
-            model.addEdge(edge);
-        }
-
-        model.setName(path.toString());
-        context.setModel(model.build());
-        if (null != startEdge) {
-            context.setNextElement(startEdge);
-        } else {
-            for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-                if (context.getModel().getOutEdges(vertex).isEmpty()) {
-                    context.setNextElement(vertex);
-                }
-            }
-
-        }
-        return context;
     }
+    return context;
+  }
 
-    @Override
-    public <T extends Context> T write(T context, Path path) throws IOException {
-        String newLine = System.getProperty("line.separator");
-        StringBuilder str = new StringBuilder();
+  @Override
+  public <T extends Context> T write(T context, Path path) throws IOException {
+    String newLine = System.getProperty("line.separator");
+    StringBuilder str = new StringBuilder();
 
-        str.append("digraph " + FilenameUtils.getBaseName(path.toString())).append(" {").append(newLine);
-        for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-            if (edge.getSourceVertex() != null) {
-                str.append(edge.getSourceVertex().getName());
-            } else {
-                str.append("Start");
-            }
+    str.append("digraph " + FilenameUtils.getBaseName(path.toString())).append(" {").append(newLine);
+    for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+      if (edge.getSourceVertex() != null) {
+        str.append(edge.getSourceVertex().getName());
+      } else {
+        str.append("Start");
+      }
 
-            str.append(" -> ");
-            if (edge.getTargetVertex() != null)
-                str.append(edge.getTargetVertex().getName());
-            str.append(" [label=\"");
-            str.append(edge.getName());
-            if (edge.hasGuard()) {
-                str.append("\\n[").append(edge.getGuard().getScript()).append("]");
-            }
-            if (edge.hasActions()) {
-                str.append("\\n/");
-                for (Action action : edge.getActions()) {
-                    str.append(action.getScript());
-                }
-            }
-            str.append("\"];").append(newLine);
+      str.append(" -> ");
+      if (edge.getTargetVertex() != null)
+        str.append(edge.getTargetVertex().getName());
+      str.append(" [label=\"");
+      str.append(edge.getName());
+      if (edge.hasGuard()) {
+        str.append("\\n[").append(edge.getGuard().getScript()).append("]");
+      }
+      if (edge.hasActions()) {
+        str.append("\\n/");
+        for (Action action : edge.getActions()) {
+          str.append(action.getScript());
         }
-        str.append("}").append(newLine);
-
-        Files.newOutputStream(path).write(String.valueOf(str).getBytes());
-
-        return context;
+      }
+      str.append("\"];").append(newLine);
     }
+    str.append("}").append(newLine);
+
+    Files.newOutputStream(path).write(String.valueOf(str).getBytes());
+
+    return context;
+  }
 }

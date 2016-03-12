@@ -40,57 +40,57 @@ import java.net.URL;
  */
 public final class ResourceUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
+  private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 
-    private ResourceUtils() {
-    }
+  private ResourceUtils() {
+  }
 
-    public static File getResourceAsFile(final String filename) {
-        File file = createFile(filename);
-        if (file.exists()) {
-            return file;
-        } else {
-            URL resource = ResourceUtils.class.getResource(filename);
-            if (null == resource) {
-                resource = Thread.currentThread().getContextClassLoader().getResource(filename);
-            }
-            if (null != resource) {
-                return new File(resource.getFile());
-            }
-            throw new ResourceNotFoundException();
-        }
+  public static File getResourceAsFile(final String filename) {
+    File file = createFile(filename);
+    if (file.exists()) {
+      return file;
+    } else {
+      URL resource = ResourceUtils.class.getResource(filename);
+      if (null == resource) {
+        resource = Thread.currentThread().getContextClassLoader().getResource(filename);
+      }
+      if (null != resource) {
+        return new File(resource.getFile());
+      }
+      throw new ResourceNotFoundException();
     }
+  }
 
-    public static InputStream getResourceAsStream(final String filename) {
-        File file = createFile(filename);
-        if (file.exists()) {
-            try {
-                return new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                logger.error(e.getMessage());
-                throw new ResourceNotFoundException();
-            }
-        } else {
-            InputStream resource = ResourceUtils.class.getResourceAsStream(filename);
-            if (null == resource) {
-                resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
-            }
-            if (null != resource) {
-                return resource;
-            }
-            throw new ResourceNotFoundException();
-        }
+  public static InputStream getResourceAsStream(final String filename) {
+    File file = createFile(filename);
+    if (file.exists()) {
+      try {
+        return new FileInputStream(file);
+      } catch (FileNotFoundException e) {
+        logger.error(e.getMessage());
+        throw new ResourceNotFoundException();
+      }
+    } else {
+      InputStream resource = ResourceUtils.class.getResourceAsStream(filename);
+      if (null == resource) {
+        resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(filename);
+      }
+      if (null != resource) {
+        return resource;
+      }
+      throw new ResourceNotFoundException();
     }
+  }
 
-    private static String[] splitPath(String filename) {
-        return filename.split("[\\\\/]");
-    }
+  private static String[] splitPath(String filename) {
+    return filename.split("[\\\\/]");
+  }
 
-    private static File createFile(String filename) {
-        File createdFile = null;
-        for (String part : splitPath(filename)) {
-            createdFile = new File(createdFile, part);
-        }
-        return createdFile;
+  private static File createFile(String filename) {
+    File createdFile = null;
+    for (String part : splitPath(filename)) {
+      createdFile = new File(createdFile, part);
     }
+    return createdFile;
+  }
 }

@@ -41,36 +41,36 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
 
-    private Path<Element> path = null;
+  private Path<Element> path = null;
 
-    public ShortestAllPaths(StopCondition stopCondition) {
-        setStopCondition(stopCondition);
-    }
+  public ShortestAllPaths(StopCondition stopCondition) {
+    setStopCondition(stopCondition);
+  }
 
-    @Override
-    public Context getNextStep() {
-        Context context = getContext();
-        if (isNull(path)) {
-            path = getPath(context);
-        }
-        context.setCurrentElement(path.removeFirst());
-        return context;
+  @Override
+  public Context getNextStep() {
+    Context context = getContext();
+    if (isNull(path)) {
+      path = getPath(context);
     }
+    context.setCurrentElement(path.removeFirst());
+    return context;
+  }
 
-    private Path<Element> getPath(Context context) {
-        Element element = context.getCurrentElement();
-        if (isNull(element)) {
-            element = context.getNextElement();
-        }
-        if (element instanceof RuntimeVertex) {
-            return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeVertex) element);
-        } else {
-            return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeEdge) element);
-        }
+  private Path<Element> getPath(Context context) {
+    Element element = context.getCurrentElement();
+    if (isNull(element)) {
+      element = context.getNextElement();
     }
+    if (element instanceof RuntimeVertex) {
+      return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeVertex) element);
+    } else {
+      return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeEdge) element);
+    }
+  }
 
-    @Override
-    public boolean hasNextStep() {
-        return !getStopCondition().isFulfilled();
-    }
+  @Override
+  public boolean hasNextStep() {
+    return !getStopCondition().isFulfilled();
+  }
 }

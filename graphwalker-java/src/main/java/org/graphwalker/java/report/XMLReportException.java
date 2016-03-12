@@ -31,7 +31,7 @@ package org.graphwalker.java.report;
  */
 public class XMLReportException extends RuntimeException {
 
-    public XMLReportException(Throwable throwable) {
-        super(throwable);
-    }
+  public XMLReportException(Throwable throwable) {
+    super(throwable);
+  }
 }

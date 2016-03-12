@@ -35,8 +35,8 @@ import java.util.List;
 @Parameters(commandDescription = "Convert a graph in file format, to some other format. See http://graphwalker.org/docs/command_line_syntax")
 public class Convert {
 
-    @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
-            description = "This command requires an input file, and an output file. " +
-                    "See http://graphwalker.org/docs/command_line_syntax")
-    public List<String> input = new ArrayList<>();
+  @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
+    description = "This command requires an input file, and an output file. " +
+      "See http://graphwalker.org/docs/command_line_syntax")
+  public List<String> input = new ArrayList<>();
 }

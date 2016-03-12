@@ -44,100 +44,100 @@ import java.util.Deque;
  */
 public class ShortestAllPathsTest {
 
-    @Test
-    public void bridge() {
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-        Vertex v3 = new Vertex();
-        Vertex v4 = new Vertex();
-        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
-        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
-        Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
-        Edge e4 = new Edge().setSourceVertex(v1).setTargetVertex(v4);
-        Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
-        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
-        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
-        context.setProfiler(new Profiler());
-        Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
-        );
-        context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep()) {
-            context.getPathGenerator().getNextStep();
-            context.getProfiler().start(context);
-            context.getProfiler().stop(context);
-            Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
-        }
-        Assert.assertTrue(expectedElements.isEmpty());
+  @Test
+  public void bridge() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Vertex v3 = new Vertex();
+    Vertex v4 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
+    Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
+    Edge e4 = new Edge().setSourceVertex(v1).setTargetVertex(v4);
+    Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
+    Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
+    Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+    context.setProfiler(new Profiler());
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
+    );
+    context.setNextElement(v1);
+    while (context.getPathGenerator().hasNextStep()) {
+      context.getPathGenerator().getNextStep();
+      context.getProfiler().start(context);
+      context.getProfiler().stop(context);
+      Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
     }
+    Assert.assertTrue(expectedElements.isEmpty());
+  }
 
-    @Test
-    public void bridgeNotCompleted() {
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-        Vertex v3 = new Vertex();
-        Vertex v4 = new Vertex();
-        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
-        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
-        Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
-        Edge e4 = new Edge().setSourceVertex(v1).setTargetVertex(v4);
-        Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
-        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
-        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
-        context.setProfiler(new Profiler());
-        Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(e1, v2, e2, v3, e3, v1)
-        );
-        context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep()) {
-            context.getPathGenerator().getNextStep();
-            context.getProfiler().start(context);
-            context.getProfiler().stop(context);
-            Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
-        }
-        Assert.assertTrue(expectedElements.isEmpty());
+  @Test
+  public void bridgeNotCompleted() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Vertex v3 = new Vertex();
+    Vertex v4 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
+    Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
+    Edge e4 = new Edge().setSourceVertex(v1).setTargetVertex(v4);
+    Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
+    Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
+    Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
+    context.setProfiler(new Profiler());
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1)
+    );
+    context.setNextElement(v1);
+    while (context.getPathGenerator().hasNextStep()) {
+      context.getPathGenerator().getNextStep();
+      context.getProfiler().start(context);
+      context.getProfiler().stop(context);
+      Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
     }
+    Assert.assertTrue(expectedElements.isEmpty());
+  }
 
-    @Test
-    public void circle() {
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-        Vertex v3 = new Vertex();
-        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
-        Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
-        Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
-        Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
-        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
-        context.setProfiler(new Profiler());
-        Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-                Arrays.asList(e1, v2, e2, v3, e3, v1)
-        );
-        context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep()) {
-            context.getPathGenerator().getNextStep();
-            context.getProfiler().start(context);
-            context.getProfiler().stop(context);
-            Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
-        }
-        Assert.assertTrue(expectedElements.isEmpty());
+  @Test
+  public void circle() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Vertex v3 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v3);
+    Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
+    Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
+    Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+    context.setProfiler(new Profiler());
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1)
+    );
+    context.setNextElement(v1);
+    while (context.getPathGenerator().hasNextStep()) {
+      context.getPathGenerator().getNextStep();
+      context.getProfiler().start(context);
+      context.getProfiler().stop(context);
+      Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
     }
+    Assert.assertTrue(expectedElements.isEmpty());
+  }
 
-    @Test(expected = AlgorithmException.class)
-    public void tree() {
-        Vertex v1 = new Vertex();
-        Vertex v2 = new Vertex();
-        Vertex v3 = new Vertex();
-        Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
-        Edge e2 = new Edge().setSourceVertex(v1).setTargetVertex(v3);
-        Model model = new Model().addEdge(e1).addEdge(e2);
-        Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
-        context.setProfiler(new Profiler());
-        context.setNextElement(v1);
-        while (context.getPathGenerator().hasNextStep()) {
-            context.getPathGenerator().getNextStep();
-            context.getProfiler().start(context);
-            context.getProfiler().stop(context);
-        }
+  @Test(expected = AlgorithmException.class)
+  public void tree() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Vertex v3 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
+    Edge e2 = new Edge().setSourceVertex(v1).setTargetVertex(v3);
+    Model model = new Model().addEdge(e1).addEdge(e2);
+    Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
+    context.setProfiler(new Profiler());
+    context.setNextElement(v1);
+    while (context.getPathGenerator().hasNextStep()) {
+      context.getPathGenerator().getNextStep();
+      context.getProfiler().start(context);
+      context.getProfiler().stop(context);
     }
+  }
 
 }

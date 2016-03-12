@@ -46,29 +46,29 @@ import static org.hamcrest.core.Is.is;
  */
 public class TimeDurationTest {
 
-    @Test
-    public void testConstructor() {
-        TimeDuration timeDuration = new TimeDuration(100, TimeUnit.SECONDS);
-        Assert.assertThat(timeDuration.getDuration(), is(100L));
-    }
+  @Test
+  public void testConstructor() {
+    TimeDuration timeDuration = new TimeDuration(100, TimeUnit.SECONDS);
+    Assert.assertThat(timeDuration.getDuration(), is(100L));
+  }
 
-    @Test(expected = StopConditionException.class)
-    public void testNegativeTime() {
-        new TimeDuration(-100, TimeUnit.SECONDS);
-    }
+  @Test(expected = StopConditionException.class)
+  public void testNegativeTime() {
+    new TimeDuration(-100, TimeUnit.SECONDS);
+  }
 
-    @Test
-    public void testIsFulfilled() {
-        Vertex vertex = new Vertex();
-        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
-        Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));
-        Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
-        context.setNextElement(vertex);
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
+  @Test
+  public void testIsFulfilled() {
+    Vertex vertex = new Vertex();
+    Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+    Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));
+    Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+    context.setNextElement(vertex);
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+    Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
+  }
 
 }

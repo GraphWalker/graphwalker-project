@@ -5,7 +5,7 @@ package org.graphwalker.java.source;
  */
 public class CodeGeneratorException extends RuntimeException {
 
-    public CodeGeneratorException(Throwable cause) {
-        super(cause);
-    }
+  public CodeGeneratorException(Throwable cause) {
+    super(cause);
+  }
 }

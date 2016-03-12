@@ -41,50 +41,50 @@ import static org.hamcrest.core.Is.is;
  */
 public class RequirementTest {
 
-    @Test
-    public void create() {
-        Requirement requirement = new Requirement("REQ");
-        Assert.assertNotNull(requirement);
-        Assert.assertEquals("REQ", requirement.getKey());
-    }
+  @Test
+  public void create() {
+    Requirement requirement = new Requirement("REQ");
+    Assert.assertNotNull(requirement);
+    Assert.assertEquals("REQ", requirement.getKey());
+  }
 
-    @Test
-    public void executeWithSingleRequirement() {
-        Model model = new Model().addVertex(new Vertex().addRequirement(new Requirement("REQ1")).setName("CHECK_REQ"));
-        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
-        context.setNextElement(model.getVertices().get(0));
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        Assert.assertNotNull(context.getRequirements());
-        Assert.assertThat(context.getRequirements().size(), is(1));
-        Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
-        Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
-        Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
+  @Test
+  public void executeWithSingleRequirement() {
+    Model model = new Model().addVertex(new Vertex().addRequirement(new Requirement("REQ1")).setName("CHECK_REQ"));
+    Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+    context.setNextElement(model.getVertices().get(0));
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+    Assert.assertNotNull(context.getRequirements());
+    Assert.assertThat(context.getRequirements().size(), is(1));
+    Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
+    Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
+    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
+  }
 
-    @Test
-    public void executeWithMultipleRequirements() {
-        Vertex start = new Vertex().addRequirement(new Requirement("FIRST_STEP"));
-        Vertex alt1 = new Vertex().setName("Alt1").addRequirement(new Requirement("ALT1"));
-        Vertex alt2 = new Vertex().setName("Alt2").addRequirement(new Requirement("ALT2"));
-        Model model = new Model()
-                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt1).addRequirement(new Requirement("road1")))
-                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt2).addRequirement(new Requirement("road2")));
-        AlternativeCondition condition = new AlternativeCondition();
-        condition.addStopCondition(new ReachedVertex("Alt1"));
-        condition.addStopCondition(new ReachedVertex("Alt2"));
-        Context context = new TestExecutionContext(model, new RandomPath(condition));
-        context.setNextElement(model.getVertices().get(0));
-        Machine machine = new SimpleMachine(context);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        Assert.assertNotNull(context.getRequirements());
-        Assert.assertThat(context.getRequirements().size(), is(5));
-        Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
-        Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(2));
-        Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(3));
+  @Test
+  public void executeWithMultipleRequirements() {
+    Vertex start = new Vertex().addRequirement(new Requirement("FIRST_STEP"));
+    Vertex alt1 = new Vertex().setName("Alt1").addRequirement(new Requirement("ALT1"));
+    Vertex alt2 = new Vertex().setName("Alt2").addRequirement(new Requirement("ALT2"));
+    Model model = new Model()
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt1).addRequirement(new Requirement("road1")))
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt2).addRequirement(new Requirement("road2")));
+    AlternativeCondition condition = new AlternativeCondition();
+    condition.addStopCondition(new ReachedVertex("Alt1"));
+    condition.addStopCondition(new ReachedVertex("Alt2"));
+    Context context = new TestExecutionContext(model, new RandomPath(condition));
+    context.setNextElement(model.getVertices().get(0));
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+    Assert.assertNotNull(context.getRequirements());
+    Assert.assertThat(context.getRequirements().size(), is(5));
+    Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
+    Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(2));
+    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(3));
+  }
 }

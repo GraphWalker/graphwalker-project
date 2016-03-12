@@ -32,22 +32,22 @@ import org.hamcrest.Description;
 import java.util.regex.Pattern;
 
 public class RegexMatcher extends BaseMatcher {
-    private final String regex;
+  private final String regex;
 
-    public RegexMatcher(String regex) {
-        this.regex = regex;
-    }
+  public RegexMatcher(String regex) {
+    this.regex = regex;
+  }
 
-    public boolean matches(Object o) {
-        Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-        return pattern.matcher((String) o).find();
-    }
+  public boolean matches(Object o) {
+    Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+    return pattern.matcher((String) o).find();
+  }
 
-    public void describeTo(Description description) {
-        description.appendText("matches regex=");
-    }
+  public void describeTo(Description description) {
+    description.appendText("matches regex=");
+  }
 
-    public static RegexMatcher matches(String regex) {
-        return new RegexMatcher(regex);
-    }
+  public static RegexMatcher matches(String regex) {
+    return new RegexMatcher(regex);
+  }
 }

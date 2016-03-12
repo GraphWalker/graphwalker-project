@@ -36,38 +36,39 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface Element {
-    String getId();
-    boolean hasId();
+  String getId();
 
-    /**
-     * Gets the name of the element..
-     *
-     * @return The name as a string.
-     * @see Vertex#setName
-     * @see Edge#setName
-     */
-    String getName();
+  boolean hasId();
 
-    /**
-     * Returns true if the element has a name.
-     * </p>
-     * A valid name is anon empty string.
-     *
-     * @return True if the element has a valid name.
-     */
-    boolean hasName();
+  /**
+   * Gets the name of the element..
+   *
+   * @return The name as a string.
+   * @see Vertex#setName
+   * @see Edge#setName
+   */
+  String getName();
 
-    Set<Requirement> getRequirements();
+  /**
+   * Returns true if the element has a name.
+   * </p>
+   * A valid name is anon empty string.
+   *
+   * @return True if the element has a valid name.
+   */
+  boolean hasName();
 
-    boolean hasRequirements();
+  Set<Requirement> getRequirements();
 
-    List<Action> getActions();
+  boolean hasRequirements();
 
-    boolean hasActions();
+  List<Action> getActions();
 
-    void accept(ElementVisitor visitor);
+  boolean hasActions();
 
-    Object getProperty(String key);
+  void accept(ElementVisitor visitor);
 
-    boolean hasProperty(String key);
+  Object getProperty(String key);
+
+  boolean hasProperty(String key);
 }

@@ -39,24 +39,24 @@ import org.graphwalker.core.machine.RequirementStatus;
  */
 public final class RequirementCoverage extends CoverageStopConditionBase {
 
-    public RequirementCoverage(int percent) {
-        super(percent);
-    }
+  public RequirementCoverage(int percent) {
+    super(percent);
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
-    }
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
+  }
 
-    @Override
-    public double getFulfilment() {
-        Context context = getContext();
-        double totalCount = context.getRequirements().size();
-        if (0 == totalCount) {
-            return 1.0;
-        }
-        double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
-        double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
-        return ((passedCount + failedCount) / totalCount) / getPercentAsDouble();
+  @Override
+  public double getFulfilment() {
+    Context context = getContext();
+    double totalCount = context.getRequirements().size();
+    if (0 == totalCount) {
+      return 1.0;
     }
+    double passedCount = context.getRequirements(RequirementStatus.PASSED).size();
+    double failedCount = context.getRequirements(RequirementStatus.FAILED).size();
+    return ((passedCount + failedCount) / totalCount) / getPercentAsDouble();
+  }
 }

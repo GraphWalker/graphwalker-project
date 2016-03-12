@@ -39,30 +39,31 @@ import org.graphwalker.dsl.generator.Logical_Lexer;
  * Created by krikar on 5/14/14.
  */
 public class GeneratorFactory {
-    
-    private GeneratorFactory() {}
-    
-    public static PathGenerator parse(String str) {
-        ANTLRInputStream inputStream = new ANTLRInputStream(str);
-        Logical_Lexer lexer = new Logical_Lexer(inputStream);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        Generator_Parser parser = new Generator_Parser(tokens);
-        parser.removeErrorListeners();
-        parser.addErrorListener(new DslErrorListner());
-        Generator_Parser.ParseContext context = parser.parse();
 
-        ParseTreeWalker walker = new ParseTreeWalker();
-        GeneratorLoader generatorLoader = new GeneratorLoader();
-        walker.walk(generatorLoader, context);
+  private GeneratorFactory() {
+  }
 
-        PathGenerator generator = generatorLoader.getGenerator();
-        if ( generator == null) {
-            throw new DslException("No valid generator found.");
-        }
-        if (generator.getStopCondition() == null ) {
-            throw new DslException("No valid stop condition found.");
-        }
+  public static PathGenerator parse(String str) {
+    ANTLRInputStream inputStream = new ANTLRInputStream(str);
+    Logical_Lexer lexer = new Logical_Lexer(inputStream);
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    Generator_Parser parser = new Generator_Parser(tokens);
+    parser.removeErrorListeners();
+    parser.addErrorListener(new DslErrorListner());
+    Generator_Parser.ParseContext context = parser.parse();
 
-        return generator;
+    ParseTreeWalker walker = new ParseTreeWalker();
+    GeneratorLoader generatorLoader = new GeneratorLoader();
+    walker.walk(generatorLoader, context);
+
+    PathGenerator generator = generatorLoader.getGenerator();
+    if (generator == null) {
+      throw new DslException("No valid generator found.");
     }
+    if (generator.getStopCondition() == null) {
+      throw new DslException("No valid stop condition found.");
+    }
+
+    return generator;
+  }
 }

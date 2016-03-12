@@ -36,78 +36,78 @@ import org.junit.Test;
  */
 public class AllClassificationCombinationsTest {
 
-    @Test
-    public void simpleTree() {
-        Classification branchA = new Classification().setName("Branch A");
-        branchA.addClassification(new Classification().setName("Leaf 1"));
-        branchA.addClassification(new Classification().setName("Leaf 2"));
-        branchA.addClassification(new Classification().setName("Leaf 3"));
+  @Test
+  public void simpleTree() {
+    Classification branchA = new Classification().setName("Branch A");
+    branchA.addClassification(new Classification().setName("Leaf 1"));
+    branchA.addClassification(new Classification().setName("Leaf 2"));
+    branchA.addClassification(new Classification().setName("Leaf 3"));
 
-        Classification branchB = new Classification().setName("Branch B");
-        branchB.addClassification(new Classification().setName("Leaf 4"));
-        branchB.addClassification(new Classification().setName("Leaf 5"));
-        branchB.addClassification(new Classification().setName("Leaf 6"));
+    Classification branchB = new Classification().setName("Branch B");
+    branchB.addClassification(new Classification().setName("Leaf 4"));
+    branchB.addClassification(new Classification().setName("Leaf 5"));
+    branchB.addClassification(new Classification().setName("Leaf 6"));
 
-        Classification branchC = new Classification().setName("Branch C");
-        branchC.addClassification(new Classification().setName("Leaf 7"));
-        branchC.addClassification(new Classification().setName("Leaf 8"));
-        branchC.addClassification(new Classification().setName("Leaf 9"));
+    Classification branchC = new Classification().setName("Branch C");
+    branchC.addClassification(new Classification().setName("Leaf 7"));
+    branchC.addClassification(new Classification().setName("Leaf 8"));
+    branchC.addClassification(new Classification().setName("Leaf 9"));
 
-        ClassificationTree tree = new ClassificationTree();
-        tree.addClassification(branchA);
-        tree.addClassification(branchB);
-        tree.addClassification(branchC);
+    ClassificationTree tree = new ClassificationTree();
+    tree.addClassification(branchA);
+    tree.addClassification(branchB);
+    tree.addClassification(branchC);
 
-        AllClassificationCombinations allCombinations = new AllClassificationCombinations(tree.build());
-        Assert.assertNotNull(allCombinations);
+    AllClassificationCombinations allCombinations = new AllClassificationCombinations(tree.build());
+    Assert.assertNotNull(allCombinations);
 
-        allCombinations.generate();
-    }
+    allCombinations.generate();
+  }
 
-    @Test
-    public void timeSheetEntry() {
+  @Test
+  public void timeSheetEntry() {
         /*
          * Populate tre according to the time sheet entry example at:
          * https://mattarcherblog.wordpress.com/2012/03/07/software-test-case-design-with-the-classification-tree-technique-sample-book-chapter/
          */
-        Classification time = new Classification().setName("Time");
-        Classification hours = new Classification().setName("Hours");
-        Classification negativeHours = new Classification().setName("Negative hours");
-        Classification zeroAndPositiveHours = new Classification().setName("Zero and positive hours");
-        Classification minutes = new Classification().setName("Minutes");
-        Classification lowerBoundry = new Classification().setName("Lower boundry");
-        Classification justBelowLowerBoundry = new Classification().setName("Just below lower boundry");
-        Classification justAboveLowerBoundry = new Classification().setName("Just above lower boundry");
-        Classification upperBoundry = new Classification().setName("Upper boundry");
-        Classification justBelowUpperBoundry = new Classification().setName("Just below upper boundry");
-        Classification justAboveUpperBoundry = new Classification().setName("Just above upper boundry");
-        Classification costCode = new Classification().setName("Cost code");
-        Classification anyExistingCode = new Classification().setName("Any existing code");
-        Classification anyNonExistentCode = new Classification().setName("Any non-existent code");
+    Classification time = new Classification().setName("Time");
+    Classification hours = new Classification().setName("Hours");
+    Classification negativeHours = new Classification().setName("Negative hours");
+    Classification zeroAndPositiveHours = new Classification().setName("Zero and positive hours");
+    Classification minutes = new Classification().setName("Minutes");
+    Classification lowerBoundry = new Classification().setName("Lower boundry");
+    Classification justBelowLowerBoundry = new Classification().setName("Just below lower boundry");
+    Classification justAboveLowerBoundry = new Classification().setName("Just above lower boundry");
+    Classification upperBoundry = new Classification().setName("Upper boundry");
+    Classification justBelowUpperBoundry = new Classification().setName("Just below upper boundry");
+    Classification justAboveUpperBoundry = new Classification().setName("Just above upper boundry");
+    Classification costCode = new Classification().setName("Cost code");
+    Classification anyExistingCode = new Classification().setName("Any existing code");
+    Classification anyNonExistentCode = new Classification().setName("Any non-existent code");
 
-        ClassificationTree tree = new ClassificationTree();
-        tree.addClassification(time);
+    ClassificationTree tree = new ClassificationTree();
+    tree.addClassification(time);
 
-        time.addClassification(hours);
-        time.addClassification(minutes);
+    time.addClassification(hours);
+    time.addClassification(minutes);
 
-        minutes.addClassification(lowerBoundry);
-        minutes.addClassification(upperBoundry);
+    minutes.addClassification(lowerBoundry);
+    minutes.addClassification(upperBoundry);
 
-        lowerBoundry.addClassification(justBelowLowerBoundry);
-        lowerBoundry.addClassification(justAboveLowerBoundry);
+    lowerBoundry.addClassification(justBelowLowerBoundry);
+    lowerBoundry.addClassification(justAboveLowerBoundry);
 
-        upperBoundry.addClassification(justBelowUpperBoundry);
-        upperBoundry.addClassification(justAboveUpperBoundry);
+    upperBoundry.addClassification(justBelowUpperBoundry);
+    upperBoundry.addClassification(justAboveUpperBoundry);
 
-        tree.addClassification(costCode);
+    tree.addClassification(costCode);
 
-        costCode.addClassification(anyExistingCode);
-        costCode.addClassification(anyNonExistentCode);
+    costCode.addClassification(anyExistingCode);
+    costCode.addClassification(anyNonExistentCode);
 
-        AllClassificationCombinations allCombinations = new AllClassificationCombinations(tree.build());
-        Assert.assertNotNull(allCombinations);
+    AllClassificationCombinations allCombinations = new AllClassificationCombinations(tree.build());
+    Assert.assertNotNull(allCombinations);
 
-        //List<List<Classification>> result = allCombinations.generate();
-    }
+    //List<List<Classification>> result = allCombinations.generate();
+  }
 }

@@ -54,82 +54,82 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
-    private final Random random = new Random(System.nanoTime());
+  private final Random random = new Random(System.nanoTime());
 
-    public WeightedRandomPath(StopCondition stopCondition) {
-        setStopCondition(stopCondition);
+  public WeightedRandomPath(StopCondition stopCondition) {
+    setStopCondition(stopCondition);
+  }
+
+  @Override
+  public Context getNextStep() {
+    Context context = getContext();
+    Element currentElement = context.getCurrentElement();
+    if (isNull(currentElement)) {
+      throw new NoPathFoundException("Execution context has no current element set");
+    }
+    List<Element> elements = context.filter(context.getModel().getElements(currentElement));
+    if (elements.isEmpty()) {
+      throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
     }
 
-    @Override
-    public Context getNextStep() {
-        Context context = getContext();
-        Element currentElement = context.getCurrentElement();
-        if (isNull(currentElement)) {
-            throw new NoPathFoundException("Execution context has no current element set");
-        }
-        List<Element> elements = context.filter(context.getModel().getElements(currentElement));
-        if (elements.isEmpty()) {
-            throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
-        }
+    if (currentElement instanceof Vertex.RuntimeVertex) {
+      context.setCurrentElement(getWeightedEdge(elements, currentElement));
+    } else {
+      context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+    }
+    return context;
+  }
 
-        if (currentElement instanceof Vertex.RuntimeVertex) {
-            context.setCurrentElement(getWeightedEdge(elements, currentElement));
+  @Override
+  public boolean hasNextStep() {
+    return !getStopCondition().isFulfilled();
+  }
+
+  private Element getWeightedEdge(List<Element> elements, Element currentElement) {
+
+    Map<Edge.RuntimeEdge, Double> probabilities = new HashMap<>();
+    int numberOfZeros = 0;
+    double sum = 0;
+
+    for (Element element : elements) {
+      if (element instanceof Edge.RuntimeEdge) {
+        Edge.RuntimeEdge edge = (Edge.RuntimeEdge) element;
+        if (edge.getWeight() > 0) {
+          probabilities.put(edge, edge.getWeight());
+          sum += edge.getWeight();
+          if (sum > 1) {
+            throw new MachineException("The sum of all weights in edges from vertex: '"
+              + currentElement.getName()
+              + "', adds up to more than 1.00");
+          }
         } else {
-            context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+          numberOfZeros++;
+          probabilities.put(edge, 0d);
         }
-        return context;
+      }
     }
 
-    @Override
-    public boolean hasNextStep() {
-        return !getStopCondition().isFulfilled();
-    }
+    double rest = (1 - sum) / numberOfZeros;
+    int index = random.nextInt(100);
+    double weight = 0;
+    for (Element element : elements) {
+      if (element instanceof Edge.RuntimeEdge) {
+        Edge.RuntimeEdge edge = (Edge.RuntimeEdge) element;
 
-    private Element getWeightedEdge(List<Element> elements, Element currentElement) {
-
-        Map<Edge.RuntimeEdge, Double> probabilities = new HashMap<>();
-        int numberOfZeros = 0;
-        double sum = 0;
-
-        for (Element element : elements) {
-            if (element instanceof Edge.RuntimeEdge) {
-                Edge.RuntimeEdge edge = (Edge.RuntimeEdge) element;
-                if (edge.getWeight() > 0) {
-                    probabilities.put(edge, edge.getWeight());
-                    sum += edge.getWeight();
-                    if (sum > 1) {
-                        throw new MachineException("The sum of all weights in edges from vertex: '"
-                                + currentElement.getName()
-                                + "', adds up to more than 1.00");
-                    }
-                } else {
-                    numberOfZeros++;
-                    probabilities.put(edge, 0d);
-                }
-            }
+        if (probabilities.get(edge) == 0) {
+          probabilities.put(edge, rest);
         }
 
-        double rest = (1 - sum) / numberOfZeros;
-        int index = random.nextInt(100);
-        double weight = 0;
-        for (Element element : elements) {
-            if (element instanceof Edge.RuntimeEdge) {
-                Edge.RuntimeEdge edge = (Edge.RuntimeEdge) element;
-
-                if (probabilities.get(edge) == 0) {
-                    probabilities.put(edge, rest);
-                }
-
-                weight = weight + probabilities.get(edge) * 100;
-                if (index < weight) {
-                    return edge;
-                }
-            }
+        weight = weight + probabilities.get(edge) * 100;
+        if (index < weight) {
+          return edge;
         }
-
-        throw new MachineException("Could not calculate which weighted edge to choose from vertex: "
-                + currentElement.getName()
-                + "'");
+      }
     }
+
+    throw new MachineException("Could not calculate which weighted edge to choose from vertex: "
+      + currentElement.getName()
+      + "'");
+  }
 }
 

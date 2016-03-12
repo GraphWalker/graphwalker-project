@@ -35,17 +35,17 @@ import java.util.List;
  * @author Nils Olsson
  */
 public interface Machine extends Observable {
-    Context getNextStep();
+  Context getNextStep();
 
-    boolean hasNextStep();
+  boolean hasNextStep();
 
-    List<Context> getContexts();
+  List<Context> getContexts();
 
-    Context getCurrentContext();
+  Context getCurrentContext();
 
-    ExceptionStrategy getExceptionStrategy();
+  ExceptionStrategy getExceptionStrategy();
 
-    void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
+  void setExceptionStrategy(ExceptionStrategy exceptionStrategy);
 
-    Profiler getProfiler();
+  Profiler getProfiler();
 }

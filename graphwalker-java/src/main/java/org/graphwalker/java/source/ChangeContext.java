@@ -39,39 +39,39 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class ChangeContext {
 
-    private final RuntimeModel model;
-    private final Set<String> methodNames;
-    private final Set<MethodDeclaration> methodDeclarations = new HashSet<>();
+  private final RuntimeModel model;
+  private final Set<String> methodNames;
+  private final Set<MethodDeclaration> methodDeclarations = new HashSet<>();
 
-    public ChangeContext(RuntimeModel model) {
-        this.model = model;
-        methodNames = extractMethodNames(model);
-    }
+  public ChangeContext(RuntimeModel model) {
+    this.model = model;
+    methodNames = extractMethodNames(model);
+  }
 
-    public Set<String> getMethodNames() {
-        return methodNames;
-    }
+  public Set<String> getMethodNames() {
+    return methodNames;
+  }
 
-    public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
-        methodDeclarations.add(methodDeclaration);
-    }
+  public void addMethodDeclaration(MethodDeclaration methodDeclaration) {
+    methodDeclarations.add(methodDeclaration);
+  }
 
-    public Set<MethodDeclaration> getMethodDeclarations() {
-        return methodDeclarations;
-    }
+  public Set<MethodDeclaration> getMethodDeclarations() {
+    return methodDeclarations;
+  }
 
-    private Set<String> extractMethodNames(RuntimeModel model) {
-        Set<String> methodNames = new HashSet<>();
-        for (Element element : model.getElements()) {
-            // TODO: do we need to ignore Start!?
-            if (element.hasName() && !"Start".equalsIgnoreCase(element.getName())) {
-                methodNames.add(element.getName());
-            }
-        }
-        return methodNames;
+  private Set<String> extractMethodNames(RuntimeModel model) {
+    Set<String> methodNames = new HashSet<>();
+    for (Element element : model.getElements()) {
+      // TODO: do we need to ignore Start!?
+      if (element.hasName() && !"Start".equalsIgnoreCase(element.getName())) {
+        methodNames.add(element.getName());
+      }
     }
+    return methodNames;
+  }
 
-    public boolean isVertex(String name) {
-        return null != model.findVertices(name);
-    }
+  public boolean isVertex(String name) {
+    return null != model.findVertices(name);
+  }
 }

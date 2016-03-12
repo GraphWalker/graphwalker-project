@@ -46,33 +46,33 @@ import java.util.List;
  */
 public final class AStarPath extends PathGeneratorBase<ReachedStopCondition> {
 
-    public AStarPath(ReachedStopCondition stopCondition) {
-        setStopCondition(stopCondition);
-    }
+  public AStarPath(ReachedStopCondition stopCondition) {
+    setStopCondition(stopCondition);
+  }
 
-    @Override
-    public Context getNextStep() {
-        Context context = getContext();
-        List<Element> elements = context.filter(context.getModel().getElements(context.getCurrentElement()));
-        if (elements.isEmpty()) {
-            throw new NoPathFoundException();
-        }
-        Element target = null;
-        int distance = Integer.MAX_VALUE;
-        FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-        for (Element element : context.filter(getStopCondition().getTargetElements())) {
-            int edgeDistance = floydWarshall.getShortestDistance(context.getCurrentElement(), element);
-            if (edgeDistance < distance) {
-                distance = edgeDistance;
-                target = element;
-            }
-        }
-        AStar astar = context.getAlgorithm(AStar.class);
-        return context.setCurrentElement(astar.getNextElement(context.getCurrentElement(), target));
+  @Override
+  public Context getNextStep() {
+    Context context = getContext();
+    List<Element> elements = context.filter(context.getModel().getElements(context.getCurrentElement()));
+    if (elements.isEmpty()) {
+      throw new NoPathFoundException();
     }
+    Element target = null;
+    int distance = Integer.MAX_VALUE;
+    FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+    for (Element element : context.filter(getStopCondition().getTargetElements())) {
+      int edgeDistance = floydWarshall.getShortestDistance(context.getCurrentElement(), element);
+      if (edgeDistance < distance) {
+        distance = edgeDistance;
+        target = element;
+      }
+    }
+    AStar astar = context.getAlgorithm(AStar.class);
+    return context.setCurrentElement(astar.getNextElement(context.getCurrentElement(), target));
+  }
 
-    @Override
-    public boolean hasNextStep() {
-        return !getStopCondition().isFulfilled();
-    }
+  @Override
+  public boolean hasNextStep() {
+    return !getStopCondition().isFulfilled();
+  }
 }

@@ -39,139 +39,139 @@ import java.util.Properties;
  */
 public final class Reflector {
 
-    private final ClassLoader classLoader;
-    private final Class<?> collectionClass;
-    private final Class<?> executorClass;
-    private final Class<?> configurationClass;
-    private final Class<?> resultClass;
-    private final Class<?> machineConfigurationClass;
-    private final Class<?> contextConfigurationClass;
-    private final Method setIncludes;
-    private final Method setExcludes;
-    private final Method setGroups;
-    private final Method execute;
-    private final Method reportResults;
-    private final Method setTestCount;
-    private final Method getTestCount;
-    private final Method setCompletedCount;
-    private final Method getCompletedCount;
-    private final Method setIncompleteCount;
-    private final Method getIncompleteCount;
-    private final Method setFailedCount;
-    private final Method getFailedCount;
-    private final Method setNotExecutedCount;
-    private final Method getNotExecutedCount;
-    private final Method setErrors;
-    private final Method getErrors;
-    private final Method getMachineConfiguration;
-    private final Method getContextConfigurations;
-    private final Method getTestClassName;
-    private final Method getPathGeneratorName;
-    private final Method getStopConditionName;
-    private final Method getStopConditionValue;
-    private final Method setTestClassName;
-    private final Method setPathGeneratorName;
-    private final Method setStopConditionName;
-    private final Method setStopConditionValue;
-    private final Object executor;
+  private final ClassLoader classLoader;
+  private final Class<?> collectionClass;
+  private final Class<?> executorClass;
+  private final Class<?> configurationClass;
+  private final Class<?> resultClass;
+  private final Class<?> machineConfigurationClass;
+  private final Class<?> contextConfigurationClass;
+  private final Method setIncludes;
+  private final Method setExcludes;
+  private final Method setGroups;
+  private final Method execute;
+  private final Method reportResults;
+  private final Method setTestCount;
+  private final Method getTestCount;
+  private final Method setCompletedCount;
+  private final Method getCompletedCount;
+  private final Method setIncompleteCount;
+  private final Method getIncompleteCount;
+  private final Method setFailedCount;
+  private final Method getFailedCount;
+  private final Method setNotExecutedCount;
+  private final Method getNotExecutedCount;
+  private final Method setErrors;
+  private final Method getErrors;
+  private final Method getMachineConfiguration;
+  private final Method getContextConfigurations;
+  private final Method getTestClassName;
+  private final Method getPathGeneratorName;
+  private final Method getStopConditionName;
+  private final Method getStopConditionValue;
+  private final Method setTestClassName;
+  private final Method setPathGeneratorName;
+  private final Method setStopConditionName;
+  private final Method setStopConditionValue;
+  private final Object executor;
 
-    public Reflector(Configuration configuration, ClassLoader classLoader) {
-        ClassLoader contextClassLoader = switchClassLoader(classLoader);
-        this.classLoader = classLoader;
-        this.collectionClass = Reflections.loadClass(classLoader, Collection.class);
-        this.executorClass = Reflections.loadClass(classLoader, TestExecutor.class);
-        this.configurationClass = Reflections.loadClass(classLoader, Configuration.class);
-        this.resultClass = Reflections.loadClass(classLoader, Result.class);
-        this.machineConfigurationClass = Reflections.loadClass(classLoader, MachineConfiguration.class);
-        this.contextConfigurationClass = Reflections.loadClass(classLoader, ContextConfiguration.class);
-        this.setIncludes = Reflections.getMethod(configurationClass, "setIncludes", collectionClass);
-        this.setExcludes = Reflections.getMethod(configurationClass, "setExcludes", collectionClass);
-        this.setGroups = Reflections.getMethod(configurationClass, "setGroups", collectionClass);
-        this.execute = Reflections.getMethod(executorClass, "execute", Boolean.TYPE);
-        this.reportResults = Reflections.getMethod(executorClass, "reportResults", File.class, Date.class, Properties.class);
-        this.setTestCount = Reflections.getMethod(Result.class, "setTestCount", Integer.TYPE);
-        this.getTestCount = Reflections.getMethod(resultClass, "getTestCount");
-        this.setCompletedCount = Reflections.getMethod(Result.class, "setCompletedCount", Integer.TYPE);
-        this.getCompletedCount = Reflections.getMethod(resultClass, "getCompletedCount");
-        this.setIncompleteCount = Reflections.getMethod(Result.class, "setIncompleteCount", Integer.TYPE);
-        this.getIncompleteCount = Reflections.getMethod(resultClass, "getIncompleteCount");
-        this.setFailedCount = Reflections.getMethod(Result.class, "setFailedCount", Integer.TYPE);
-        this.getFailedCount = Reflections.getMethod(resultClass, "getFailedCount");
-        this.setNotExecutedCount = Reflections.getMethod(Result.class, "setNotExecutedCount", Integer.TYPE);
-        this.getNotExecutedCount = Reflections.getMethod(resultClass, "getNotExecutedCount");
-        this.setErrors = Reflections.getMethod(Result.class, "setErrors", List.class);
-        this.getErrors = Reflections.getMethod(resultClass, "getErrors");
-        this.getMachineConfiguration = Reflections.getMethod(executorClass, "getMachineConfiguration");
-        this.getContextConfigurations = Reflections.getMethod(machineConfigurationClass, "getContextConfigurations");
-        this.getTestClassName = Reflections.getMethod(contextConfigurationClass, "getTestClassName");
-        this.getPathGeneratorName = Reflections.getMethod(contextConfigurationClass, "getPathGeneratorName");
-        this.getStopConditionName = Reflections.getMethod(contextConfigurationClass, "getStopConditionName");
-        this.getStopConditionValue = Reflections.getMethod(contextConfigurationClass, "getStopConditionValue");
-        this.setTestClassName = Reflections.getMethod(ContextConfiguration.class, "setTestClassName", String.class);
-        this.setPathGeneratorName = Reflections.getMethod(ContextConfiguration.class, "setPathGeneratorName", String.class);
-        this.setStopConditionName = Reflections.getMethod(ContextConfiguration.class, "setStopConditionName", String.class);
-        this.setStopConditionValue = Reflections.getMethod(ContextConfiguration.class, "setStopConditionValue", String.class);
-        this.executor = createExecutor(configuration);
-        switchClassLoader(contextClassLoader);
-    }
+  public Reflector(Configuration configuration, ClassLoader classLoader) {
+    ClassLoader contextClassLoader = switchClassLoader(classLoader);
+    this.classLoader = classLoader;
+    this.collectionClass = Reflections.loadClass(classLoader, Collection.class);
+    this.executorClass = Reflections.loadClass(classLoader, TestExecutor.class);
+    this.configurationClass = Reflections.loadClass(classLoader, Configuration.class);
+    this.resultClass = Reflections.loadClass(classLoader, Result.class);
+    this.machineConfigurationClass = Reflections.loadClass(classLoader, MachineConfiguration.class);
+    this.contextConfigurationClass = Reflections.loadClass(classLoader, ContextConfiguration.class);
+    this.setIncludes = Reflections.getMethod(configurationClass, "setIncludes", collectionClass);
+    this.setExcludes = Reflections.getMethod(configurationClass, "setExcludes", collectionClass);
+    this.setGroups = Reflections.getMethod(configurationClass, "setGroups", collectionClass);
+    this.execute = Reflections.getMethod(executorClass, "execute", Boolean.TYPE);
+    this.reportResults = Reflections.getMethod(executorClass, "reportResults", File.class, Date.class, Properties.class);
+    this.setTestCount = Reflections.getMethod(Result.class, "setTestCount", Integer.TYPE);
+    this.getTestCount = Reflections.getMethod(resultClass, "getTestCount");
+    this.setCompletedCount = Reflections.getMethod(Result.class, "setCompletedCount", Integer.TYPE);
+    this.getCompletedCount = Reflections.getMethod(resultClass, "getCompletedCount");
+    this.setIncompleteCount = Reflections.getMethod(Result.class, "setIncompleteCount", Integer.TYPE);
+    this.getIncompleteCount = Reflections.getMethod(resultClass, "getIncompleteCount");
+    this.setFailedCount = Reflections.getMethod(Result.class, "setFailedCount", Integer.TYPE);
+    this.getFailedCount = Reflections.getMethod(resultClass, "getFailedCount");
+    this.setNotExecutedCount = Reflections.getMethod(Result.class, "setNotExecutedCount", Integer.TYPE);
+    this.getNotExecutedCount = Reflections.getMethod(resultClass, "getNotExecutedCount");
+    this.setErrors = Reflections.getMethod(Result.class, "setErrors", List.class);
+    this.getErrors = Reflections.getMethod(resultClass, "getErrors");
+    this.getMachineConfiguration = Reflections.getMethod(executorClass, "getMachineConfiguration");
+    this.getContextConfigurations = Reflections.getMethod(machineConfigurationClass, "getContextConfigurations");
+    this.getTestClassName = Reflections.getMethod(contextConfigurationClass, "getTestClassName");
+    this.getPathGeneratorName = Reflections.getMethod(contextConfigurationClass, "getPathGeneratorName");
+    this.getStopConditionName = Reflections.getMethod(contextConfigurationClass, "getStopConditionName");
+    this.getStopConditionValue = Reflections.getMethod(contextConfigurationClass, "getStopConditionValue");
+    this.setTestClassName = Reflections.getMethod(ContextConfiguration.class, "setTestClassName", String.class);
+    this.setPathGeneratorName = Reflections.getMethod(ContextConfiguration.class, "setPathGeneratorName", String.class);
+    this.setStopConditionName = Reflections.getMethod(ContextConfiguration.class, "setStopConditionName", String.class);
+    this.setStopConditionValue = Reflections.getMethod(ContextConfiguration.class, "setStopConditionValue", String.class);
+    this.executor = createExecutor(configuration);
+    switchClassLoader(contextClassLoader);
+  }
 
-    private Object createExecutor(Configuration configuration) {
-        Constructor<?> constructor = Reflections.getConstructor(classLoader, executorClass, configurationClass);
-        return Reflections.newInstance(constructor, createConfiguration(configuration));
-    }
+  private Object createExecutor(Configuration configuration) {
+    Constructor<?> constructor = Reflections.getConstructor(classLoader, executorClass, configurationClass);
+    return Reflections.newInstance(constructor, createConfiguration(configuration));
+  }
 
-    private Object createConfiguration(Configuration configuration) {
-        Object newConfiguration = Reflections.newInstance(classLoader, configurationClass);
-        Reflections.invoke(newConfiguration, setIncludes, configuration.getIncludes());
-        Reflections.invoke(newConfiguration, setExcludes, configuration.getExcludes());
-        Reflections.invoke(newConfiguration, setGroups, configuration.getGroups());
-        return newConfiguration;
-    }
+  private Object createConfiguration(Configuration configuration) {
+    Object newConfiguration = Reflections.newInstance(classLoader, configurationClass);
+    Reflections.invoke(newConfiguration, setIncludes, configuration.getIncludes());
+    Reflections.invoke(newConfiguration, setExcludes, configuration.getExcludes());
+    Reflections.invoke(newConfiguration, setGroups, configuration.getGroups());
+    return newConfiguration;
+  }
 
-    private ClassLoader switchClassLoader(ClassLoader classLoader) {
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(classLoader);
-        return contextClassLoader;
-    }
+  private ClassLoader switchClassLoader(ClassLoader classLoader) {
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
+    return contextClassLoader;
+  }
 
-    public Result execute() {
-        ClassLoader contextClassLoader = switchClassLoader(classLoader);
-        Result result = createResult(Reflections.invoke(executor, execute, true));
-        switchClassLoader(contextClassLoader);
-        return result;
-    }
+  public Result execute() {
+    ClassLoader contextClassLoader = switchClassLoader(classLoader);
+    Result result = createResult(Reflections.invoke(executor, execute, true));
+    switchClassLoader(contextClassLoader);
+    return result;
+  }
 
-    private Result createResult(Object result) {
-        Result newResult = new Result();
-        Reflections.invoke(newResult, setTestCount, Reflections.invoke(result, getTestCount));
-        Reflections.invoke(newResult, setCompletedCount, Reflections.invoke(result, getCompletedCount));
-        Reflections.invoke(newResult, setIncompleteCount, Reflections.invoke(result, getIncompleteCount));
-        Reflections.invoke(newResult, setFailedCount, Reflections.invoke(result, getFailedCount));
-        Reflections.invoke(newResult, setNotExecutedCount, Reflections.invoke(result, getNotExecutedCount));
-        Reflections.invoke(newResult, setErrors, Reflections.invoke(result, getErrors));
-        return newResult;
-    }
+  private Result createResult(Object result) {
+    Result newResult = new Result();
+    Reflections.invoke(newResult, setTestCount, Reflections.invoke(result, getTestCount));
+    Reflections.invoke(newResult, setCompletedCount, Reflections.invoke(result, getCompletedCount));
+    Reflections.invoke(newResult, setIncompleteCount, Reflections.invoke(result, getIncompleteCount));
+    Reflections.invoke(newResult, setFailedCount, Reflections.invoke(result, getFailedCount));
+    Reflections.invoke(newResult, setNotExecutedCount, Reflections.invoke(result, getNotExecutedCount));
+    Reflections.invoke(newResult, setErrors, Reflections.invoke(result, getErrors));
+    return newResult;
+  }
 
-    @SuppressWarnings("unchecked")
-    public MachineConfiguration getMachineConfiguration() {
-        ClassLoader contextClassLoader = switchClassLoader(classLoader);
-        MachineConfiguration newMachineConfiguration = new MachineConfiguration();
-        Object machineConfiguration = Reflections.invoke(executor, getMachineConfiguration);
-        for (Object contextConfiguration : (Collection<Object>) Reflections.invoke(machineConfiguration, getContextConfigurations)) {
-            ContextConfiguration newContextConfiguration = new ContextConfiguration();
-            Reflections.invoke(newContextConfiguration, setTestClassName, Reflections.invoke(contextConfiguration, getTestClassName));
-            Reflections.invoke(newContextConfiguration, setPathGeneratorName, Reflections.invoke(contextConfiguration, getPathGeneratorName));
-            Reflections.invoke(newContextConfiguration, setStopConditionName, Reflections.invoke(contextConfiguration, getStopConditionName));
-            Reflections.invoke(newContextConfiguration, setStopConditionValue, Reflections.invoke(contextConfiguration, getStopConditionValue));
-            newMachineConfiguration.addContextConfiguration(newContextConfiguration);
-        }
-        switchClassLoader(contextClassLoader);
-        return newMachineConfiguration;
+  @SuppressWarnings("unchecked")
+  public MachineConfiguration getMachineConfiguration() {
+    ClassLoader contextClassLoader = switchClassLoader(classLoader);
+    MachineConfiguration newMachineConfiguration = new MachineConfiguration();
+    Object machineConfiguration = Reflections.invoke(executor, getMachineConfiguration);
+    for (Object contextConfiguration : (Collection<Object>) Reflections.invoke(machineConfiguration, getContextConfigurations)) {
+      ContextConfiguration newContextConfiguration = new ContextConfiguration();
+      Reflections.invoke(newContextConfiguration, setTestClassName, Reflections.invoke(contextConfiguration, getTestClassName));
+      Reflections.invoke(newContextConfiguration, setPathGeneratorName, Reflections.invoke(contextConfiguration, getPathGeneratorName));
+      Reflections.invoke(newContextConfiguration, setStopConditionName, Reflections.invoke(contextConfiguration, getStopConditionName));
+      Reflections.invoke(newContextConfiguration, setStopConditionValue, Reflections.invoke(contextConfiguration, getStopConditionValue));
+      newMachineConfiguration.addContextConfiguration(newContextConfiguration);
     }
+    switchClassLoader(contextClassLoader);
+    return newMachineConfiguration;
+  }
 
-    public void reportResults(File file, Date startTime, Properties properties) {
-        ClassLoader contextClassLoader = switchClassLoader(classLoader);
-        Reflections.invoke(executor, reportResults, file, startTime, properties);
-        switchClassLoader(contextClassLoader);
-    }
+  public void reportResults(File file, Date startTime, Properties properties) {
+    ClassLoader contextClassLoader = switchClassLoader(classLoader);
+    Reflections.invoke(executor, reportResults, file, startTime, properties);
+    switchClassLoader(contextClassLoader);
+  }
 }

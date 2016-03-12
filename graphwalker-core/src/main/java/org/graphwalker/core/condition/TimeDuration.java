@@ -38,29 +38,29 @@ import java.util.concurrent.TimeUnit;
  */
 public final class TimeDuration extends StopConditionBase {
 
-    private final long duration;
-    private final long timestamp;
+  private final long duration;
+  private final long timestamp;
 
-    public TimeDuration(long duration, TimeUnit unit) {
-        super(String.valueOf(duration));
-        if (0 > duration) {
-            throw new StopConditionException("A duration cannot be negative");
-        }
-        this.timestamp = System.nanoTime();
-        this.duration = TimeUnit.NANOSECONDS.convert(duration, unit);
+  public TimeDuration(long duration, TimeUnit unit) {
+    super(String.valueOf(duration));
+    if (0 > duration) {
+      throw new StopConditionException("A duration cannot be negative");
     }
+    this.timestamp = System.nanoTime();
+    this.duration = TimeUnit.NANOSECONDS.convert(duration, unit);
+  }
 
-    public long getDuration() {
-        return TimeUnit.SECONDS.convert(duration, TimeUnit.NANOSECONDS);
-    }
+  public long getDuration() {
+    return TimeUnit.SECONDS.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
-    }
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
+  }
 
-    @Override
-    public double getFulfilment() {
-        return (double) (System.nanoTime() - timestamp) / duration;
-    }
+  @Override
+  public double getFulfilment() {
+    return (double) (System.nanoTime() - timestamp) / duration;
+  }
 }

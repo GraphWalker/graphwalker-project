@@ -16,34 +16,34 @@ import static org.hamcrest.core.Is.is;
  */
 public class AccessModelTest {
 
-    @Test
-    public void read() {
-        ExecutionContext context = createContext();
-        Assert.assertThat(round(context.getAttribute("x")), is(1));
-    }
+  @Test
+  public void read() {
+    ExecutionContext context = createContext();
+    Assert.assertThat(round(context.getAttribute("x")), is(1));
+  }
 
-    private int round(Object value) {
-        if (value instanceof Double) {
-            return (int) Math.round((Double) value);
-        } else {
-            return (Integer) value;
-        }
+  private int round(Object value) {
+    if (value instanceof Double) {
+      return (int) Math.round((Double) value);
+    } else {
+      return (Integer) value;
     }
+  }
 
-    @Test
-    public void write() {
-        ExecutionContext context = createContext();
-        context.setAttribute("y", 2);
-        Assert.assertThat((Integer) context.getAttribute("y"), is(2));
-    }
+  @Test
+  public void write() {
+    ExecutionContext context = createContext();
+    context.setAttribute("y", 2);
+    Assert.assertThat((Integer) context.getAttribute("y"), is(2));
+  }
 
-    private ExecutionContext createContext() {
-        Model model = new Model();
-        model.addEdge(new Edge()
-                .setSourceVertex(new Vertex())
-                .setTargetVertex(new Vertex()));
-        ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
-        context.execute(new Action("x = 1;"));
-        return context;
-    }
+  private ExecutionContext createContext() {
+    Model model = new Model();
+    model.addEdge(new Edge()
+      .setSourceVertex(new Vertex())
+      .setTargetVertex(new Vertex()));
+    ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
+    context.execute(new Action("x = 1;"));
+    return context;
+  }
 }

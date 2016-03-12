@@ -31,32 +31,32 @@ package org.graphwalker.core.model;
  */
 public final class ClassificationTree implements Builder<ClassificationTree.RuntimeClassificationTree> {
 
-    private final Classification classification = new Classification();
+  private final Classification classification = new Classification();
 
-    public ClassificationTree addClassification(Classification classification) {
-        this.classification.addClassification(classification);
-        return this;
+  public ClassificationTree addClassification(Classification classification) {
+    this.classification.addClassification(classification);
+    return this;
+  }
+
+  public Classification getRoot() {
+    return classification;
+  }
+
+  @Override
+  public RuntimeClassificationTree build() {
+    return new RuntimeClassificationTree(this);
+  }
+
+  public static class RuntimeClassificationTree {
+
+    private final Classification.RuntimeClassification root;
+
+    private RuntimeClassificationTree(ClassificationTree classificationTree) {
+      this.root = classificationTree.getRoot().build();
     }
 
-    public Classification getRoot() {
-        return classification;
+    public Classification.RuntimeClassification getRoot() {
+      return root;
     }
-
-    @Override
-    public RuntimeClassificationTree build() {
-        return new RuntimeClassificationTree(this);
-    }
-
-    public static class RuntimeClassificationTree {
-
-        private final Classification.RuntimeClassification root;
-
-        private RuntimeClassificationTree(ClassificationTree classificationTree) {
-            this.root = classificationTree.getRoot().build();
-        }
-
-        public Classification.RuntimeClassification getRoot() {
-            return root;
-        }
-    }
+  }
 }

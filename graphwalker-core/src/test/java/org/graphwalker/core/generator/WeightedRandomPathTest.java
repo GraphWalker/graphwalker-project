@@ -41,33 +41,33 @@ import org.slf4j.LoggerFactory;
  */
 public class WeightedRandomPathTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(WeightedRandomPathTest.class);
+  private static final Logger logger = LoggerFactory.getLogger(WeightedRandomPathTest.class);
 
-    private final Vertex source = new Vertex().setName("source");
-    private final Vertex target = new Vertex().setName("target");
-    private final Edge edge1 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.5).setName("edge1");
-    private final Edge edge2 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.25).setName("edge2");
-    private final Edge edge3 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.15).setName("edge3");
-    private final Edge edge4 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge4");
-    private final Edge edge5 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge5");
-    private final Edge back2SourceEdge = new Edge().setSourceVertex(target).setTargetVertex(source).setName("back2SourceEdge");
-    private final Model model = new Model()
-            .addEdge(edge1)
-            .addEdge(edge2)
-            .addEdge(edge3)
-            .addEdge(edge4)
-            .addEdge(edge5)
-            .addEdge(back2SourceEdge);
+  private final Vertex source = new Vertex().setName("source");
+  private final Vertex target = new Vertex().setName("target");
+  private final Edge edge1 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.5).setName("edge1");
+  private final Edge edge2 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.25).setName("edge2");
+  private final Edge edge3 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.15).setName("edge3");
+  private final Edge edge4 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge4");
+  private final Edge edge5 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge5");
+  private final Edge back2SourceEdge = new Edge().setSourceVertex(target).setTargetVertex(source).setName("back2SourceEdge");
+  private final Model model = new Model()
+    .addEdge(edge1)
+    .addEdge(edge2)
+    .addEdge(edge3)
+    .addEdge(edge4)
+    .addEdge(edge5)
+    .addEdge(back2SourceEdge);
 
-    @Test
-    public void runWeightedRandom() {
-        PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
-        SimpleMachine machine = new SimpleMachine(new ExecutionContext(model, generator) {
-        }.setCurrentElement(source.build()));
+  @Test
+  public void runWeightedRandom() {
+    PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
+    SimpleMachine machine = new SimpleMachine(new ExecutionContext(model, generator) {
+    }.setCurrentElement(source.build()));
 
-        while (machine.hasNextStep()) {
-            logger.debug(machine.getCurrentContext().getCurrentElement().getName());
-            machine.getNextStep();
-        }
+    while (machine.hasNextStep()) {
+      logger.debug(machine.getCurrentContext().getCurrentElement().getName());
+      machine.getNextStep();
     }
+  }
 }

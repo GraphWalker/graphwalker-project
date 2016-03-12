@@ -33,54 +33,54 @@ import java.util.*;
  */
 public final class Configuration {
 
-    private final static Set<String> DEFAULT = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("*")));
+  private final static Set<String> DEFAULT = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("*")));
 
-    private final Set<String> includes = new HashSet<>();
-    private final Set<String> excludes = new HashSet<>();
-    private final Set<String> groups = new HashSet<>();
+  private final Set<String> includes = new HashSet<>();
+  private final Set<String> excludes = new HashSet<>();
+  private final Set<String> groups = new HashSet<>();
 
-    public Set<String> getIncludes() {
-        return includes.isEmpty() ? DEFAULT : includes;
-    }
+  public Set<String> getIncludes() {
+    return includes.isEmpty() ? DEFAULT : includes;
+  }
 
-    public Configuration setIncludes(Collection<String> includes) {
-        this.includes.clear();
-        this.includes.addAll(includes);
-        return this;
-    }
+  public Configuration setIncludes(Collection<String> includes) {
+    this.includes.clear();
+    this.includes.addAll(includes);
+    return this;
+  }
 
-    public Configuration addInclude(String include) {
-        includes.add(include);
-        return this;
-    }
+  public Configuration addInclude(String include) {
+    includes.add(include);
+    return this;
+  }
 
-    public Set<String> getExcludes() {
-        return excludes;
-    }
+  public Set<String> getExcludes() {
+    return excludes;
+  }
 
-    public Configuration setExcludes(Collection<String> excludes) {
-        this.excludes.clear();
-        this.excludes.addAll(excludes);
-        return this;
-    }
+  public Configuration setExcludes(Collection<String> excludes) {
+    this.excludes.clear();
+    this.excludes.addAll(excludes);
+    return this;
+  }
 
-    public Configuration addExclude(String exclude) {
-        excludes.add(exclude);
-        return this;
-    }
+  public Configuration addExclude(String exclude) {
+    excludes.add(exclude);
+    return this;
+  }
 
-    public Set<String> getGroups() {
-        return groups.isEmpty() ? DEFAULT : groups;
-    }
+  public Set<String> getGroups() {
+    return groups.isEmpty() ? DEFAULT : groups;
+  }
 
-    public Configuration setGroups(Collection<String> groups) {
-        this.groups.clear();
-        this.groups.addAll(groups);
-        return this;
-    }
+  public Configuration setGroups(Collection<String> groups) {
+    this.groups.clear();
+    this.groups.addAll(groups);
+    return this;
+  }
 
-    public Configuration addGroup(String group) {
-        groups.add(group);
-        return this;
-    }
+  public Configuration addGroup(String group) {
+    groups.add(group);
+    return this;
+  }
 }

@@ -38,45 +38,46 @@ import java.util.ListIterator;
  * Created by krikar on 2015-11-04.
  */
 public class Util {
-    
-    private Util() {}
-    
-    /*
-     * Search the elements for a specific property: blocked.
-     * If it exists, the element will be removed from
-     * the model.
-     * If the element is a vertex, all in- and out edges will be removed as well.
-     */
-    static public void filterBlockedElements(List<Context> executionContexts) {
-        for (Context context : executionContexts) {
-            Model model = new Model(context.getModel());
-            List<Edge> edges = model.getEdges();
-            List<Vertex> vertices = model.getVertices();
 
-            ListIterator<Edge> e_it = edges.listIterator();
-            while (e_it.hasNext()) {
-                Edge edge = e_it.next();
-                if (edge.hasProperty("blocked")) {
-                    e_it.remove();
-                }
-            }
-            ListIterator<Vertex> v_it = vertices.listIterator();
-            while (v_it.hasNext()) {
-                Vertex vertex = v_it.next();
-                if (vertex.hasProperty("blocked")) {
-                    e_it = edges.listIterator();
-                    while (e_it.hasNext()) {
-                        Edge e = e_it.next();
-                        if (e.getSourceVertex() == vertex) {
-                            e_it.remove();
-                        } else if (e.getTargetVertex() == vertex) {
-                            e_it.remove();
-                        }
-                    }
-                    v_it.remove();
-                }
-            }
-            context.setModel(model.build());
+  private Util() {
+  }
+
+  /*
+   * Search the elements for a specific property: blocked.
+   * If it exists, the element will be removed from
+   * the model.
+   * If the element is a vertex, all in- and out edges will be removed as well.
+   */
+  static public void filterBlockedElements(List<Context> executionContexts) {
+    for (Context context : executionContexts) {
+      Model model = new Model(context.getModel());
+      List<Edge> edges = model.getEdges();
+      List<Vertex> vertices = model.getVertices();
+
+      ListIterator<Edge> e_it = edges.listIterator();
+      while (e_it.hasNext()) {
+        Edge edge = e_it.next();
+        if (edge.hasProperty("blocked")) {
+          e_it.remove();
         }
+      }
+      ListIterator<Vertex> v_it = vertices.listIterator();
+      while (v_it.hasNext()) {
+        Vertex vertex = v_it.next();
+        if (vertex.hasProperty("blocked")) {
+          e_it = edges.listIterator();
+          while (e_it.hasNext()) {
+            Edge e = e_it.next();
+            if (e.getSourceVertex() == vertex) {
+              e_it.remove();
+            } else if (e.getTargetVertex() == vertex) {
+              e_it.remove();
+            }
+          }
+          v_it.remove();
+        }
+      }
+      context.setModel(model.build());
     }
+  }
 }

@@ -34,10 +34,10 @@ import org.junit.Test;
  */
 public class GuardTest {
 
-    @Test
-    public void create() {
-        Guard guard = new Guard("i < 0");
-        Assert.assertNotNull(guard);
-        Assert.assertEquals("i < 0", guard.getScript());
-    }
+  @Test
+  public void create() {
+    Guard guard = new Guard("i < 0");
+    Assert.assertNotNull(guard);
+    Assert.assertEquals("i < 0", guard.getScript());
+  }
 }

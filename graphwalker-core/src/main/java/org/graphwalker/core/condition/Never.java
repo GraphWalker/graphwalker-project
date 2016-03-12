@@ -35,17 +35,17 @@ package org.graphwalker.core.condition;
  */
 public final class Never extends StopConditionBase {
 
-    public Never() {
-        super("");
-    }
+  public Never() {
+    super("");
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        return false;
-    }
+  @Override
+  public boolean isFulfilled() {
+    return false;
+  }
 
-    @Override
-    public double getFulfilment() {
-        return 0;
-    }
+  @Override
+  public double getFulfilment() {
+    return 0;
+  }
 }

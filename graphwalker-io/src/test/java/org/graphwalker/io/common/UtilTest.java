@@ -42,17 +42,17 @@ import static org.hamcrest.core.Is.is;
  */
 public class UtilTest {
 
-    @Test
-    public void filterBlockedElements() {
-        Context context = new JsonContextFactory().create(Paths.get("json/graphWithBlockedElements.json"));
-        Assert.assertNotNull(context);
-        Assert.assertThat(context.getModel().getVertices().size(), is(5));
-        Assert.assertThat(context.getModel().getEdges().size(), is(10));
+  @Test
+  public void filterBlockedElements() {
+    Context context = new JsonContextFactory().create(Paths.get("json/graphWithBlockedElements.json"));
+    Assert.assertNotNull(context);
+    Assert.assertThat(context.getModel().getVertices().size(), is(5));
+    Assert.assertThat(context.getModel().getEdges().size(), is(10));
 
-        List<Context> contexts = new ArrayList<>();
-        contexts.add(context);
-        Util.filterBlockedElements(contexts);
-        Assert.assertThat(context.getModel().getVertices().size(), is(4));
-        Assert.assertThat(context.getModel().getEdges().size(), is(7));
-    }
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(context);
+    Util.filterBlockedElements(contexts);
+    Assert.assertThat(context.getModel().getVertices().size(), is(4));
+    Assert.assertThat(context.getModel().getEdges().size(), is(7));
+  }
 }

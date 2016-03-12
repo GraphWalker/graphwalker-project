@@ -56,49 +56,49 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
-    private final List<Element> elements = new ArrayList<>();
-    private Element target = null;
+  private final List<Element> elements = new ArrayList<>();
+  private Element target = null;
 
-    public QuickRandomPath(StopCondition stopCondition) {
-        setStopCondition(stopCondition);
+  public QuickRandomPath(StopCondition stopCondition) {
+    setStopCondition(stopCondition);
+  }
+
+  @Override
+  public Context getNextStep() {
+    Context context = getContext();
+    if (elements.isEmpty()) {
+      elements.addAll(context.getModel().getElements());
+      elements.remove(context.getCurrentElement());
+      Collections.shuffle(elements);
     }
+    if (isNull(target) || target.equals(context.getCurrentElement())) {
+      if (elements.isEmpty()) {
+        throw new NoPathFoundException();
+      } else {
+        orderElementsUnvisitedFirst(elements);
+        target = elements.get(0);
+      }
+    }
+    Element nextElement = context.getAlgorithm(AStar.class).getNextElement(context.getCurrentElement(), target);
+    elements.remove(nextElement);
+    return context.setCurrentElement(nextElement);
+  }
 
-    @Override
-    public Context getNextStep() {
-        Context context = getContext();
-        if (elements.isEmpty()) {
-            elements.addAll(context.getModel().getElements());
-            elements.remove(context.getCurrentElement());
-            Collections.shuffle(elements);
+  private void orderElementsUnvisitedFirst(List<Element> elements) {
+    final Profiler profiler = getContext().getProfiler();
+    if (isNotNull(profiler)) {
+      Collections.sort(elements, new Comparator<Element>() {
+        @Override
+        public int compare(Element a, Element b) {
+          return Boolean.compare(profiler.isVisited(a), profiler.isVisited(b));
         }
-        if (isNull(target) || target.equals(context.getCurrentElement())) {
-            if (elements.isEmpty()) {
-                throw new NoPathFoundException();
-            } else {
-                orderElementsUnvisitedFirst(elements);
-                target = elements.get(0);
-            }
-        }
-        Element nextElement = context.getAlgorithm(AStar.class).getNextElement(context.getCurrentElement(), target);
-        elements.remove(nextElement);
-        return context.setCurrentElement(nextElement);
+      });
     }
+  }
 
-    private void orderElementsUnvisitedFirst(List<Element> elements) {
-        final Profiler profiler = getContext().getProfiler();
-        if (isNotNull(profiler)) {
-            Collections.sort(elements, new Comparator<Element>() {
-                @Override
-                public int compare(Element a, Element b) {
-                    return Boolean.compare(profiler.isVisited(a), profiler.isVisited(b));
-                }
-            });
-        }
-    }
-
-    @Override
-    public boolean hasNextStep() {
-        return !getStopCondition().isFulfilled();
-    }
+  @Override
+  public boolean hasNextStep() {
+    return !getStopCondition().isFulfilled();
+  }
 }
 

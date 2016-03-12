@@ -30,5 +30,5 @@ package org.graphwalker.core.machine;
  * @author Nils Olsson
  */
 public enum ExecutionStatus {
-    NOT_EXECUTED, EXECUTING, COMPLETED, FAILED
+  NOT_EXECUTED, EXECUTING, COMPLETED, FAILED
 }

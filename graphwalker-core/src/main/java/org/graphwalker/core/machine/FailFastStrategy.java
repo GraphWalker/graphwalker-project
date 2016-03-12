@@ -43,22 +43,22 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
  */
 public final class FailFastStrategy implements ExceptionStrategy {
 
-    @Override
-    public void handle(Machine machine, MachineException exception) {
-        Context context = exception.getContext();
-        fail(context, context.getCurrentElement());
-        if (context.getLastElement() instanceof RuntimeEdge) {
-            fail(context, context.getLastElement());
-        }
-        context.setExecutionStatus(ExecutionStatus.FAILED);
-        throw exception;
+  @Override
+  public void handle(Machine machine, MachineException exception) {
+    Context context = exception.getContext();
+    fail(context, context.getCurrentElement());
+    if (context.getLastElement() instanceof RuntimeEdge) {
+      fail(context, context.getLastElement());
     }
+    context.setExecutionStatus(ExecutionStatus.FAILED);
+    throw exception;
+  }
 
-    private void fail(Context context, Element element) {
-        if (element.hasRequirements()) {
-            for (Requirement requirement : element.getRequirements()) {
-                context.setRequirementStatus(requirement, RequirementStatus.FAILED);
-            }
-        }
+  private void fail(Context context, Element element) {
+    if (element.hasRequirements()) {
+      for (Requirement requirement : element.getRequirements()) {
+        context.setRequirementStatus(requirement, RequirementStatus.FAILED);
+      }
     }
+  }
 }

@@ -38,66 +38,66 @@ import java.lang.reflect.Method;
  */
 public abstract class Reflections {
 
-    private static final Logger logger = LoggerFactory.getLogger(Reflections.class);
+  private static final Logger logger = LoggerFactory.getLogger(Reflections.class);
 
-    private static final Class[] NO_ARGS = new Class[]{};
+  private static final Class[] NO_ARGS = new Class[]{};
 
-    public static Class<?> loadClass(ClassLoader classLoader, Class<?> type) {
-        try {
-            return classLoader.loadClass(type.getName());
-        } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+  public static Class<?> loadClass(ClassLoader classLoader, Class<?> type) {
+    try {
+      return classLoader.loadClass(type.getName());
+    } catch (ClassNotFoundException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException(e);
     }
+  }
 
-    public static Object newInstance(ClassLoader classLoader, Class<?> type) {
-        try {
-            return loadClass(classLoader, type).newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+  public static Object newInstance(ClassLoader classLoader, Class<?> type) {
+    try {
+      return loadClass(classLoader, type).newInstance();
+    } catch (InstantiationException | IllegalAccessException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException(e);
     }
+  }
 
-    public static Object newInstance(Constructor<?> constructor, Object... arguments) {
-        try {
-            return constructor.newInstance(arguments);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+  public static Object newInstance(Constructor<?> constructor, Object... arguments) {
+    try {
+      return constructor.newInstance(arguments);
+    } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException(e);
     }
+  }
 
-    public static Object invoke(Object object, Method method, Object... arguments) {
-        try {
-            return method.invoke(object, arguments);
-        } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+  public static Object invoke(Object object, Method method, Object... arguments) {
+    try {
+      return method.invoke(object, arguments);
+    } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException(e);
     }
+  }
 
-    public static Method getMethod(Class<?> type, String name, Class... parameters) {
-        try {
-            return type.getMethod(name, parameters);
-        } catch (NoSuchMethodException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+  public static Method getMethod(Class<?> type, String name, Class... parameters) {
+    try {
+      return type.getMethod(name, parameters);
+    } catch (NoSuchMethodException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException(e);
     }
+  }
 
-    public static Constructor<?> getConstructor(ClassLoader classLoader, Class<?> type, Class<?> parameters) {
-        try {
-            return loadClass(classLoader, type).getConstructor(parameters);
-        } catch (NoSuchMethodException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException(e);
-        }
+  public static Constructor<?> getConstructor(ClassLoader classLoader, Class<?> type, Class<?> parameters) {
+    try {
+      return loadClass(classLoader, type).getConstructor(parameters);
+    } catch (NoSuchMethodException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException(e);
     }
+  }
 
-    public static Object get(Object object, Class<?> type, String name) {
-        Method method = getMethod(type, name, NO_ARGS);
-        return invoke(object, method);
-    }
+  public static Object get(Object object, Class<?> type, String name) {
+    Method method = getMethod(type, name, NO_ARGS);
+    return invoke(object, method);
+  }
 }

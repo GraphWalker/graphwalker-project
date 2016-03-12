@@ -62,261 +62,261 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public final class TestExecutor implements Executor {
 
-    private static final Logger logger = LoggerFactory.getLogger(TestExecutor.class);
+  private static final Logger logger = LoggerFactory.getLogger(TestExecutor.class);
 
-    private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
-            .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
-            .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+  private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
+    .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
+    .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
 
-    private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
-        Reflections.log = null;
-        List<URL> urls = new ArrayList<>(), filteredUrls = new ArrayList<>();
-        urls.addAll(classPath);
-        urls.addAll(classLoader);
-        for (URL url : urls) {
-            if (!filteredUrls.contains(url) && new File(url.getFile()).exists()) {
-                filteredUrls.add(url);
-            }
+  private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
+    Reflections.log = null;
+    List<URL> urls = new ArrayList<>(), filteredUrls = new ArrayList<>();
+    urls.addAll(classPath);
+    urls.addAll(classLoader);
+    for (URL url : urls) {
+      if (!filteredUrls.contains(url) && new File(url.getFile()).exists()) {
+        filteredUrls.add(url);
+      }
+    }
+    return filteredUrls;
+  }
+
+  private final Configuration configuration;
+  private final MachineConfiguration machineConfiguration;
+  private final Map<Context, MachineException> failures = new HashMap<>();
+  private final Machine machine;
+  private Result result;
+
+  public TestExecutor(Configuration configuration) {
+    this.configuration = configuration;
+    this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
+    this.machine = createMachine(machineConfiguration);
+  }
+
+  public TestExecutor(Class<?>... tests) {
+    this.configuration = new Configuration();
+    this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
+    this.machine = createMachine(machineConfiguration);
+  }
+
+  public TestExecutor(Context... contexts) {
+    this.configuration = new Configuration();
+    this.machineConfiguration = new MachineConfiguration();
+    this.machine = new SimpleMachine(contexts);
+  }
+
+  public TestExecutor(Collection<Context> contexts) {
+    this.configuration = new Configuration();
+    this.machineConfiguration = new MachineConfiguration();
+    this.machine = new SimpleMachine(contexts);
+  }
+
+  @Override
+  public Machine getMachine() {
+    return machine;
+  }
+
+  private MachineConfiguration createMachineConfiguration(Collection<Class<?>> testClasses) {
+    MachineConfiguration machineConfiguration = new MachineConfiguration();
+    for (Class<?> testClass : testClasses) {
+      GraphWalker annotation = testClass.getAnnotation(GraphWalker.class);
+      if (isTestIncluded(annotation, testClass.getName())) {
+        ContextConfiguration contextConfiguration = new ContextConfiguration();
+        contextConfiguration.setTestClass(testClass);
+        machineConfiguration.addContextConfiguration(contextConfiguration);
+      }
+    }
+    return machineConfiguration;
+  }
+
+  private Collection<Context> createContexts(MachineConfiguration machineConfiguration) {
+    Set<Context> contexts = new HashSet<>();
+    for (ContextConfiguration contextConfiguration : machineConfiguration.getContextConfigurations()) {
+      Context context = createContext(contextConfiguration.getTestClass());
+      configureContext(context);
+      contexts.add(context);
+    }
+    return contexts;
+  }
+
+  private Context createContext(Class<?> testClass) {
+    try {
+      return (Context) testClass.newInstance();
+    } catch (Throwable t) {
+      logger.error(t.getMessage());
+      throw new TestExecutionException("Failed to create context");
+    }
+  }
+
+  private void configureContext(Context context) {
+    Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
+    GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
+    if (!models.isEmpty()) {
+      Path path = Paths.get(models.iterator().next().file());
+      ContextFactoryScanner.get(reflections, path).create(path, context);
+    }
+    if (!"".equals(annotation.value())) {
+      context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
+    } else {
+      context.setPathGenerator(PathGeneratorFactory.createPathGenerator(annotation));
+    }
+    if (!"".equals(annotation.start())) {
+      context.setNextElement(getElement(context.getModel(), annotation.start()));
+    }
+  }
+
+  private Machine createMachine(MachineConfiguration machineConfiguration) {
+    Collection<Context> contexts = createContexts(machineConfiguration);
+    Machine machine = new SimpleMachine(contexts);
+    for (Context context : machine.getContexts()) {
+      if (context instanceof Observer) {
+        machine.addObserver((Observer) context);
+      }
+    }
+    return machine;
+  }
+
+  @Override
+  public MachineConfiguration getMachineConfiguration() {
+    return machineConfiguration;
+  }
+
+  @Override
+  public Result execute() {
+    return execute(false);
+  }
+
+  @Override
+  public Result execute(boolean ignoreErrors) {
+    result = new Result(machine.getContexts().size());
+    executeAnnotation(BeforeExecution.class, machine);
+    try {
+      Context context = null;
+      while (machine.hasNextStep()) {
+        if (null != context) {
+          executeAnnotation(BeforeElement.class, context);
         }
-        return filteredUrls;
+        context = machine.getNextStep();
+        executeAnnotation(AfterElement.class, context);
+      }
+    } catch (MachineException e) {
+      logger.error(e.getMessage());
+      failures.put(e.getContext(), e);
     }
-
-    private final Configuration configuration;
-    private final MachineConfiguration machineConfiguration;
-    private final Map<Context, MachineException> failures = new HashMap<>();
-    private final Machine machine;
-    private Result result;
-
-    public TestExecutor(Configuration configuration) {
-        this.configuration = configuration;
-        this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
-        this.machine = createMachine(machineConfiguration);
+    executeAnnotation(AfterExecution.class, machine);
+    updateResult(result, machine);
+    if (!ignoreErrors && !failures.isEmpty()) {
+      throw new TestExecutionException("Test execution contains failures");
     }
+    return result;
+  }
 
-    public TestExecutor(Class<?>... tests) {
-        this.configuration = new Configuration();
-        this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
-        this.machine = createMachine(machineConfiguration);
-    }
+  @Override
+  public Result getResult() {
+    return result;
+  }
 
-    public TestExecutor(Context... contexts) {
-        this.configuration = new Configuration();
-        this.machineConfiguration = new MachineConfiguration();
-        this.machine = new SimpleMachine(contexts);
-    }
-
-    public TestExecutor(Collection<Context> contexts) {
-        this.configuration = new Configuration();
-        this.machineConfiguration = new MachineConfiguration();
-        this.machine = new SimpleMachine(contexts);
-    }
-
-    @Override
-    public Machine getMachine() {
-        return machine;
-    }
-
-    private MachineConfiguration createMachineConfiguration(Collection<Class<?>> testClasses) {
-        MachineConfiguration machineConfiguration = new MachineConfiguration();
-        for (Class<?> testClass : testClasses) {
-            GraphWalker annotation = testClass.getAnnotation(GraphWalker.class);
-            if (isTestIncluded(annotation, testClass.getName())) {
-                ContextConfiguration contextConfiguration = new ContextConfiguration();
-                contextConfiguration.setTestClass(testClass);
-                machineConfiguration.addContextConfiguration(contextConfiguration);
-            }
+  private void updateResult(Result result, Machine machine) {
+    int completed = 0, failed = 0, notExecuted = 0, incomplete = 0;
+    for (Context context : machine.getContexts()) {
+      switch (context.getExecutionStatus()) {
+        case COMPLETED: {
+          completed++;
         }
-        return machineConfiguration;
-    }
-
-    private Collection<Context> createContexts(MachineConfiguration machineConfiguration) {
-        Set<Context> contexts = new HashSet<>();
-        for (ContextConfiguration contextConfiguration : machineConfiguration.getContextConfigurations()) {
-            Context context = createContext(contextConfiguration.getTestClass());
-            configureContext(context);
-            contexts.add(context);
+        break;
+        case FAILED: {
+          failed++;
         }
-        return contexts;
-    }
-
-    private Context createContext(Class<?> testClass) {
-        try {
-            return (Context) testClass.newInstance();
-        } catch (Throwable t) {
-            logger.error(t.getMessage());
-            throw new TestExecutionException("Failed to create context");
+        break;
+        case NOT_EXECUTED: {
+          notExecuted++;
         }
-    }
-
-    private void configureContext(Context context) {
-        Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
-        GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
-        if (!models.isEmpty()) {
-            Path path = Paths.get(models.iterator().next().file());
-            ContextFactoryScanner.get(reflections, path).create(path, context);
+        break;
+        case EXECUTING: {
+          incomplete++;
         }
-        if (!"".equals(annotation.value())) {
-            context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
-        } else {
-            context.setPathGenerator(PathGeneratorFactory.createPathGenerator(annotation));
+      }
+    }
+    result.setCompletedCount(completed);
+    result.setFailedCount(failed);
+    result.setNotExecutedCount(notExecuted);
+    result.setIncompleteCount(incomplete);
+    for (MachineException exception : getFailures()) {
+      result.addError(getStackTrace(exception.getCause()));
+    }
+  }
+
+  private String getStackTrace(Throwable throwable) {
+    StringWriter writer = new StringWriter();
+    throwable.printStackTrace(new PrintWriter(writer, true));
+    return writer.getBuffer().toString();
+  }
+
+  private boolean isTestIncluded(GraphWalker annotation, String name) {
+    boolean belongsToGroup = false;
+    for (String group : annotation.groups()) {
+      for (String definedGroups : configuration.getGroups()) {
+        if (SelectorUtils.match(definedGroups, group)) {
+          belongsToGroup = true;
+          break;
         }
-        if (!"".equals(annotation.start())) {
-            context.setNextElement(getElement(context.getModel(), annotation.start()));
+      }
+    }
+    if (belongsToGroup) {
+      for (String exclude : configuration.getExcludes()) {
+        if (SelectorUtils.match(exclude, name)) {
+          return false;
         }
-    }
-
-    private Machine createMachine(MachineConfiguration machineConfiguration) {
-        Collection<Context> contexts = createContexts(machineConfiguration);
-        Machine machine = new SimpleMachine(contexts);
-        for (Context context : machine.getContexts()) {
-            if (context instanceof Observer) {
-                machine.addObserver((Observer) context);
-            }
+      }
+      for (String include : configuration.getIncludes()) {
+        if (SelectorUtils.match(include, name)) {
+          return true;
         }
-        return machine;
+      }
     }
+    return false;
+  }
 
-    @Override
-    public MachineConfiguration getMachineConfiguration() {
-        return machineConfiguration;
+  private Element getElement(RuntimeModel model, String name) {
+    List<Element> elements = model.findElements(name);
+    if (null == elements || elements.isEmpty()) {
+      throw new TestExecutionException("Start element not found");
     }
+    if (1 < elements.size()) {
+      throw new TestExecutionException("Ambiguous start element defined");
+    }
+    return elements.get(0);
+  }
 
-    @Override
-    public Result execute() {
-        return execute(false);
+  private void executeAnnotation(Class<? extends Annotation> annotation, Machine machine) {
+    for (Context context : machine.getContexts()) {
+      executeAnnotation(annotation, context);
     }
+  }
 
-    @Override
-    public Result execute(boolean ignoreErrors) {
-        result = new Result(machine.getContexts().size());
-        executeAnnotation(BeforeExecution.class, machine);
-        try {
-            Context context = null;
-            while (machine.hasNextStep()) {
-                if (null != context) {
-                    executeAnnotation(BeforeElement.class, context);
-                }
-                context = machine.getNextStep();
-                executeAnnotation(AfterElement.class, context);
-            }
-        } catch (MachineException e) {
-            logger.error(e.getMessage());
-            failures.put(e.getContext(), e);
-        }
-        executeAnnotation(AfterExecution.class, machine);
-        updateResult(result, machine);
-        if (!ignoreErrors && !failures.isEmpty()) {
-            throw new TestExecutionException("Test execution contains failures");
-        }
-        return result;
-    }
+  private void executeAnnotation(Class<? extends Annotation> annotation, Context context) {
+    AnnotationUtils.execute(annotation, context);
+  }
 
-    @Override
-    public Result getResult() {
-        return result;
-    }
+  @Override
+  public boolean isFailure(Context context) {
+    return failures.containsKey(context);
+  }
 
-    private void updateResult(Result result, Machine machine) {
-        int completed = 0, failed = 0, notExecuted = 0, incomplete = 0;
-        for (Context context : machine.getContexts()) {
-            switch (context.getExecutionStatus()) {
-                case COMPLETED: {
-                    completed++;
-                }
-                break;
-                case FAILED: {
-                    failed++;
-                }
-                break;
-                case NOT_EXECUTED: {
-                    notExecuted++;
-                }
-                break;
-                case EXECUTING: {
-                    incomplete++;
-                }
-            }
-        }
-        result.setCompletedCount(completed);
-        result.setFailedCount(failed);
-        result.setNotExecutedCount(notExecuted);
-        result.setIncompleteCount(incomplete);
-        for (MachineException exception : getFailures()) {
-            result.addError(getStackTrace(exception.getCause()));
-        }
-    }
+  @Override
+  public MachineException getFailure(Context context) {
+    return failures.get(context);
+  }
 
-    private String getStackTrace(Throwable throwable) {
-        StringWriter writer = new StringWriter();
-        throwable.printStackTrace(new PrintWriter(writer, true));
-        return writer.getBuffer().toString();
-    }
+  @Override
+  public Collection<MachineException> getFailures() {
+    return failures.values();
+  }
 
-    private boolean isTestIncluded(GraphWalker annotation, String name) {
-        boolean belongsToGroup = false;
-        for (String group : annotation.groups()) {
-            for (String definedGroups : configuration.getGroups()) {
-                if (SelectorUtils.match(definedGroups, group)) {
-                    belongsToGroup = true;
-                    break;
-                }
-            }
-        }
-        if (belongsToGroup) {
-            for (String exclude : configuration.getExcludes()) {
-                if (SelectorUtils.match(exclude, name)) {
-                    return false;
-                }
-            }
-            for (String include : configuration.getIncludes()) {
-                if (SelectorUtils.match(include, name)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+  public void reportResults(File file, Date startTime, Properties properties) {
+    new XMLReportGenerator(startTime, properties).writeReport(file, this);
+    if (!getFailures().isEmpty()) {
+      throw new TestExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
     }
-
-    private Element getElement(RuntimeModel model, String name) {
-        List<Element> elements = model.findElements(name);
-        if (null == elements || elements.isEmpty()) {
-            throw new TestExecutionException("Start element not found");
-        }
-        if (1 < elements.size()) {
-            throw new TestExecutionException("Ambiguous start element defined");
-        }
-        return elements.get(0);
-    }
-
-    private void executeAnnotation(Class<? extends Annotation> annotation, Machine machine) {
-        for (Context context : machine.getContexts()) {
-            executeAnnotation(annotation, context);
-        }
-    }
-
-    private void executeAnnotation(Class<? extends Annotation> annotation, Context context) {
-        AnnotationUtils.execute(annotation, context);
-    }
-
-    @Override
-    public boolean isFailure(Context context) {
-        return failures.containsKey(context);
-    }
-
-    @Override
-    public MachineException getFailure(Context context) {
-        return failures.get(context);
-    }
-
-    @Override
-    public Collection<MachineException> getFailures() {
-        return failures.values();
-    }
-
-    public void reportResults(File file, Date startTime, Properties properties) {
-        new XMLReportGenerator(startTime, properties).writeReport(file, this);
-        if (!getFailures().isEmpty()) {
-            throw new TestExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
-        }
-    }
+  }
 }

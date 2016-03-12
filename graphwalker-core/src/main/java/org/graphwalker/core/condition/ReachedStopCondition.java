@@ -35,5 +35,5 @@ import java.util.Set;
  */
 public interface ReachedStopCondition extends StopCondition {
 
-    Set<Element> getTargetElements();
+  Set<Element> getTargetElements();
 }

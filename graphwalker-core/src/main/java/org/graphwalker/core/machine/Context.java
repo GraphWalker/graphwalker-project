@@ -46,51 +46,51 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  * @author Nils Olsson
  */
 public interface Context {
-    ExecutionStatus getExecutionStatus();
+  ExecutionStatus getExecutionStatus();
 
-    Context setExecutionStatus(ExecutionStatus executionStatus);
+  Context setExecutionStatus(ExecutionStatus executionStatus);
 
-    ScriptEngine getScriptEngine();
+  ScriptEngine getScriptEngine();
 
-    RuntimeModel getModel();
+  RuntimeModel getModel();
 
-    Context setModel(RuntimeModel model);
+  Context setModel(RuntimeModel model);
 
-    Profiler getProfiler();
+  Profiler getProfiler();
 
-    Context setProfiler(Profiler profiler);
+  Context setProfiler(Profiler profiler);
 
-    PathGenerator getPathGenerator();
+  PathGenerator getPathGenerator();
 
-    Context setPathGenerator(PathGenerator pathGenerator);
+  Context setPathGenerator(PathGenerator pathGenerator);
 
-    Element getLastElement();
+  Element getLastElement();
 
-    Element getCurrentElement();
+  Element getCurrentElement();
 
-    Context setCurrentElement(Element element);
+  Context setCurrentElement(Element element);
 
-    Element getNextElement();
+  Element getNextElement();
 
-    Context setNextElement(Builder<? extends Element> nextElement);
+  Context setNextElement(Builder<? extends Element> nextElement);
 
-    Context setNextElement(Element nextElement);
+  Context setNextElement(Element nextElement);
 
-    List<Requirement> getRequirements();
+  List<Requirement> getRequirements();
 
-    List<Requirement> getRequirements(RequirementStatus status);
+  List<Requirement> getRequirements(RequirementStatus status);
 
-    Context setRequirementStatus(Requirement requirement, RequirementStatus requirementStatus);
+  Context setRequirementStatus(Requirement requirement, RequirementStatus requirementStatus);
 
-    <A extends Algorithm> A getAlgorithm(Class<A> clazz);
+  <A extends Algorithm> A getAlgorithm(Class<A> clazz);
 
-    <E> List<E> filter(Collection<E> elements);
+  <E> List<E> filter(Collection<E> elements);
 
-    boolean isAvailable(RuntimeEdge edge);
+  boolean isAvailable(RuntimeEdge edge);
 
-    void execute(Action action);
+  void execute(Action action);
 
-    void execute(String name);
+  void execute(String name);
 
-    Map<String, String> getKeys();
+  Map<String, String> getKeys();
 }

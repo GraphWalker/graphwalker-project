@@ -10,22 +10,22 @@ import java.util.concurrent.TimeUnit;
  */
 public final class CacheEntry {
 
-    @Expose
-    private long modified;
+  @Expose
+  private long modified;
 
-    @Expose
-    private boolean generated;
+  @Expose
+  private boolean generated;
 
-    public CacheEntry(long modified, boolean generated) {
-        this.modified = modified;
-        this.generated = generated;
-    }
+  public CacheEntry(long modified, boolean generated) {
+    this.modified = modified;
+    this.generated = generated;
+  }
 
-    public FileTime getLastModifiedTime() {
-        return FileTime.from(modified, TimeUnit.MILLISECONDS);
-    }
+  public FileTime getLastModifiedTime() {
+    return FileTime.from(modified, TimeUnit.MILLISECONDS);
+  }
 
-    public boolean isGenerated() {
-        return generated;
-    }
+  public boolean isGenerated() {
+    return generated;
+  }
 }

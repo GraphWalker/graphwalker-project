@@ -35,82 +35,82 @@ import java.util.concurrent.TimeUnit;
  */
 public final class ProfileUnit {
 
-    private final List<Execution> executions = new LinkedList<>();
+  private final List<Execution> executions = new LinkedList<>();
 
-    public ProfileUnit(Execution execution) {
-        addExecution(execution);
-    }
+  public ProfileUnit(Execution execution) {
+    addExecution(execution);
+  }
 
-    public void addExecution(Execution executionTime) {
-        executions.add(executionTime);
-    }
+  public void addExecution(Execution executionTime) {
+    executions.add(executionTime);
+  }
 
-    public long getExecutionCount() {
-        return executions.size();
-    }
+  public long getExecutionCount() {
+    return executions.size();
+  }
 
-    public long getMinExecutionTime() {
-        return getMinExecutionTime(TimeUnit.NANOSECONDS);
-    }
+  public long getMinExecutionTime() {
+    return getMinExecutionTime(TimeUnit.NANOSECONDS);
+  }
 
-    public long getMinExecutionTime(TimeUnit unit) {
-        long duration = Long.MAX_VALUE;
-        for (Execution execution : executions) {
-            if (execution.getDuration() < duration) {
-                duration = execution.getDuration();
-            }
-        }
-        return unit.convert(duration, TimeUnit.NANOSECONDS);
+  public long getMinExecutionTime(TimeUnit unit) {
+    long duration = Long.MAX_VALUE;
+    for (Execution execution : executions) {
+      if (execution.getDuration() < duration) {
+        duration = execution.getDuration();
+      }
     }
+    return unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    public long getAverageExecutionTime() {
-        return getAverageExecutionTime(TimeUnit.NANOSECONDS);
-    }
+  public long getAverageExecutionTime() {
+    return getAverageExecutionTime(TimeUnit.NANOSECONDS);
+  }
 
-    public long getAverageExecutionTime(TimeUnit unit) {
-        long duration = getTotalExecutionTime() / (executions.isEmpty() ? 1 : executions.size());
-        return unit.convert(duration, TimeUnit.NANOSECONDS);
-    }
+  public long getAverageExecutionTime(TimeUnit unit) {
+    long duration = getTotalExecutionTime() / (executions.isEmpty() ? 1 : executions.size());
+    return unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    public long getMaxExecutionTime() {
-        return getMaxExecutionTime(TimeUnit.NANOSECONDS);
-    }
+  public long getMaxExecutionTime() {
+    return getMaxExecutionTime(TimeUnit.NANOSECONDS);
+  }
 
-    public long getMaxExecutionTime(TimeUnit unit) {
-        long duration = Long.MIN_VALUE;
-        for (Execution execution : executions) {
-            if (execution.getDuration() > duration) {
-                duration = execution.getDuration();
-            }
-        }
-        return unit.convert(duration, TimeUnit.NANOSECONDS);
+  public long getMaxExecutionTime(TimeUnit unit) {
+    long duration = Long.MIN_VALUE;
+    for (Execution execution : executions) {
+      if (execution.getDuration() > duration) {
+        duration = execution.getDuration();
+      }
     }
+    return unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    public long getTotalExecutionTime() {
-        return getTotalExecutionTime(TimeUnit.NANOSECONDS);
-    }
+  public long getTotalExecutionTime() {
+    return getTotalExecutionTime(TimeUnit.NANOSECONDS);
+  }
 
-    public long getTotalExecutionTime(TimeUnit unit) {
-        long duration = 0;
-        for (Execution execution : executions) {
-            duration += execution.getDuration();
-        }
-        return unit.convert(duration, TimeUnit.NANOSECONDS);
+  public long getTotalExecutionTime(TimeUnit unit) {
+    long duration = 0;
+    for (Execution execution : executions) {
+      duration += execution.getDuration();
     }
+    return unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
 
-    public long getFirstExecutionTime() {
-        return getFirstExecutionTime(TimeUnit.NANOSECONDS);
-    }
+  public long getFirstExecutionTime() {
+    return getFirstExecutionTime(TimeUnit.NANOSECONDS);
+  }
 
-    public long getFirstExecutionTime(TimeUnit unit) {
-        return unit.convert(executions.get(0).getTime(), TimeUnit.NANOSECONDS);
-    }
+  public long getFirstExecutionTime(TimeUnit unit) {
+    return unit.convert(executions.get(0).getTime(), TimeUnit.NANOSECONDS);
+  }
 
-    public long getLastExecutionTime() {
-        return getLastExecutionTime(TimeUnit.NANOSECONDS);
-    }
+  public long getLastExecutionTime() {
+    return getLastExecutionTime(TimeUnit.NANOSECONDS);
+  }
 
-    public long getLastExecutionTime(TimeUnit unit) {
-        return unit.convert(executions.get(executions.size() - 1).getTime(), TimeUnit.NANOSECONDS);
-    }
+  public long getLastExecutionTime(TimeUnit unit) {
+    return unit.convert(executions.get(executions.size() - 1).getTime(), TimeUnit.NANOSECONDS);
+  }
 }

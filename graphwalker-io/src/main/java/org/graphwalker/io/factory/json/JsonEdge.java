@@ -41,113 +41,113 @@ import java.util.Map;
  */
 public class JsonEdge {
 
-    private String id;
-    private String name;
-    private String guard;
-    private List<String> actions;
-    private List<String> requirements;
-    private Map<String, Object> properties;
-    private String sourceVertexId;
-    private String targetVertexId;
+  private String id;
+  private String name;
+  private String guard;
+  private List<String> actions;
+  private List<String> requirements;
+  private Map<String, Object> properties;
+  private String sourceVertexId;
+  private String targetVertexId;
 
-    public String getSourceVertexId() {
-        return sourceVertexId;
+  public String getSourceVertexId() {
+    return sourceVertexId;
+  }
+
+  public String getTargetVertexId() {
+    return targetVertexId;
+  }
+
+  public Edge getEdge() {
+    Edge edge = new Edge();
+    edge.setId(id);
+    edge.setName(name);
+    edge.setGuard(new Guard(guard));
+
+    if (actions != null) {
+      for (String action : actions) {
+        edge.addAction(new Action(action));
+      }
     }
 
-    public String getTargetVertexId() {
-        return targetVertexId;
+    if (requirements != null) {
+      for (String requirement : requirements) {
+        edge.addRequirement(new Requirement(requirement));
+      }
     }
 
-    public Edge getEdge() {
-        Edge edge = new Edge();
-        edge.setId(id);
-        edge.setName(name);
-        edge.setGuard(new Guard(guard));
-
-        if (actions != null) {
-            for (String action : actions) {
-                edge.addAction(new Action(action));
-            }
-        }
-
-        if (requirements != null) {
-            for (String requirement : requirements) {
-                edge.addRequirement(new Requirement(requirement));
-            }
-        }
-
-        if (properties != null) {
-            edge.setProperties(properties);
-        }
-
-        return edge;
+    if (properties != null) {
+      edge.setProperties(properties);
     }
 
-    public void setEdge(Edge.RuntimeEdge edge) {
-        id = edge.getId();
-        name = edge.getName();
-        if (edge.hasGuard()) {
-            guard = edge.getGuard().getScript();
-        }
+    return edge;
+  }
 
-        if (edge.getSourceVertex() != null) {
-            sourceVertexId = edge.getSourceVertex().getId();
-        }
-        if (edge.getTargetVertex() != null) {
-            targetVertexId = edge.getTargetVertex().getId();
-        }
-
-        if (edge.hasActions()) {
-            actions = new ArrayList<>();
-            for (Action action : edge.getActions()) {
-                actions.add(action.getScript());
-            }
-        }
-
-        if (edge.hasRequirements()) {
-            requirements = new ArrayList<>();
-            for (Requirement requirement : edge.getRequirements()) {
-                requirements.add(requirement.getKey());
-            }
-        }
-
-        if (edge.hasProperties()) {
-            properties = new HashMap<>();
-            properties.putAll(edge.getProperties());
-        }
+  public void setEdge(Edge.RuntimeEdge edge) {
+    id = edge.getId();
+    name = edge.getName();
+    if (edge.hasGuard()) {
+      guard = edge.getGuard().getScript();
     }
 
-    public void setEdge(Edge edge) {
-        setEdge(edge.build());
+    if (edge.getSourceVertex() != null) {
+      sourceVertexId = edge.getSourceVertex().getId();
+    }
+    if (edge.getTargetVertex() != null) {
+      targetVertexId = edge.getTargetVertex().getId();
     }
 
-    public void copyValues(Edge edge) {
-        if (id != null) {
-            edge.setId(id);
-        }
-
-        if (name != null) {
-            edge.setName(name);
-        }
-
-        if (guard != null) {
-            edge.setGuard(new Guard(guard));
-        }
-
-        if (actions != null) {
-            for (String action : actions) {
-                edge.addAction(new Action(action));
-            }
-        }
-
-        if (requirements != null) {
-            for (String requirement : requirements) {
-                edge.addRequirement(new Requirement(requirement));
-            }
-        }
-
-        if (properties != null) {
-            edge.setProperties(properties);
-        }
+    if (edge.hasActions()) {
+      actions = new ArrayList<>();
+      for (Action action : edge.getActions()) {
+        actions.add(action.getScript());
+      }
     }
+
+    if (edge.hasRequirements()) {
+      requirements = new ArrayList<>();
+      for (Requirement requirement : edge.getRequirements()) {
+        requirements.add(requirement.getKey());
+      }
+    }
+
+    if (edge.hasProperties()) {
+      properties = new HashMap<>();
+      properties.putAll(edge.getProperties());
+    }
+  }
+
+  public void setEdge(Edge edge) {
+    setEdge(edge.build());
+  }
+
+  public void copyValues(Edge edge) {
+    if (id != null) {
+      edge.setId(id);
+    }
+
+    if (name != null) {
+      edge.setName(name);
+    }
+
+    if (guard != null) {
+      edge.setGuard(new Guard(guard));
+    }
+
+    if (actions != null) {
+      for (String action : actions) {
+        edge.addAction(new Action(action));
+      }
+    }
+
+    if (requirements != null) {
+      for (String requirement : requirements) {
+        edge.addRequirement(new Requirement(requirement));
+      }
+    }
+
+    if (properties != null) {
+      edge.setProperties(properties);
+    }
+  }
 }

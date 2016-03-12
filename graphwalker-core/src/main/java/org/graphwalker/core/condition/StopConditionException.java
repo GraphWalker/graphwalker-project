@@ -31,7 +31,7 @@ package org.graphwalker.core.condition;
  */
 public class StopConditionException extends RuntimeException {
 
-    public StopConditionException(String message) {
-        super(message);
-    }
+  public StopConditionException(String message) {
+    super(message);
+  }
 }

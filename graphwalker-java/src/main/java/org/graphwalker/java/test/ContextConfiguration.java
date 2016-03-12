@@ -33,61 +33,61 @@ import org.graphwalker.java.annotation.GraphWalker;
  */
 public class ContextConfiguration {
 
-    private Class<?> testClass;
-    private String testClassName;
-    private String pathGeneratorName;
-    private String stopConditionName;
-    private String stopConditionValue;
+  private Class<?> testClass;
+  private String testClassName;
+  private String pathGeneratorName;
+  private String stopConditionName;
+  private String stopConditionValue;
 
-    public ContextConfiguration() {
-    }
+  public ContextConfiguration() {
+  }
 
-    public ContextConfiguration(Class<?> testClass) {
-        setTestClass(testClass);
-    }
+  public ContextConfiguration(Class<?> testClass) {
+    setTestClass(testClass);
+  }
 
-    public Class<?> getTestClass() {
-        return testClass;
-    }
+  public Class<?> getTestClass() {
+    return testClass;
+  }
 
-    public void setTestClass(Class<?> testClass) {
-        this.testClass = testClass;
-        GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
-        setTestClassName(testClass.getSimpleName());
-        setPathGeneratorName(configuration.pathGenerator().getSimpleName());
-        setStopConditionName(configuration.stopCondition().getSimpleName());
-        setStopConditionValue(configuration.stopConditionValue());
-    }
+  public void setTestClass(Class<?> testClass) {
+    this.testClass = testClass;
+    GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
+    setTestClassName(testClass.getSimpleName());
+    setPathGeneratorName(configuration.pathGenerator().getSimpleName());
+    setStopConditionName(configuration.stopCondition().getSimpleName());
+    setStopConditionValue(configuration.stopConditionValue());
+  }
 
-    public String getTestClassName() {
-        return testClassName;
-    }
+  public String getTestClassName() {
+    return testClassName;
+  }
 
-    public void setTestClassName(String testClassName) {
-        this.testClassName = testClassName;
-    }
+  public void setTestClassName(String testClassName) {
+    this.testClassName = testClassName;
+  }
 
-    public String getPathGeneratorName() {
-        return pathGeneratorName;
-    }
+  public String getPathGeneratorName() {
+    return pathGeneratorName;
+  }
 
-    public void setPathGeneratorName(String pathGeneratorName) {
-        this.pathGeneratorName = pathGeneratorName;
-    }
+  public void setPathGeneratorName(String pathGeneratorName) {
+    this.pathGeneratorName = pathGeneratorName;
+  }
 
-    public String getStopConditionName() {
-        return stopConditionName;
-    }
+  public String getStopConditionName() {
+    return stopConditionName;
+  }
 
-    public void setStopConditionName(String stopConditionName) {
-        this.stopConditionName = stopConditionName;
-    }
+  public void setStopConditionName(String stopConditionName) {
+    this.stopConditionName = stopConditionName;
+  }
 
-    public String getStopConditionValue() {
-        return stopConditionValue;
-    }
+  public String getStopConditionValue() {
+    return stopConditionValue;
+  }
 
-    public void setStopConditionValue(String stopConditionValue) {
-        this.stopConditionValue = stopConditionValue;
-    }
+  public void setStopConditionValue(String stopConditionValue) {
+    this.stopConditionValue = stopConditionValue;
+  }
 }

@@ -48,35 +48,35 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class RandomPath extends PathGeneratorBase<StopCondition> {
 
-    private static final Logger logger = LoggerFactory.getLogger(RandomPath.class);
+  private static final Logger logger = LoggerFactory.getLogger(RandomPath.class);
 
-    private final Random random = new Random(System.nanoTime());
+  private final Random random = new Random(System.nanoTime());
 
-    public RandomPath(StopCondition stopCondition) {
-        setStopCondition(stopCondition);
+  public RandomPath(StopCondition stopCondition) {
+    setStopCondition(stopCondition);
+  }
+
+  @Override
+  public Context getNextStep() {
+    Context context = getContext();
+    Element currentElement = context.getCurrentElement();
+    if (isNull(currentElement)) {
+      throw new NoPathFoundException("Execution context has no current element set");
     }
-
-    @Override
-    public Context getNextStep() {
-        Context context = getContext();
-        Element currentElement = context.getCurrentElement();
-        if (isNull(currentElement)) {
-            throw new NoPathFoundException("Execution context has no current element set");
-        }
-        List<Element> elements = context.filter(context.getModel().getElements(currentElement));
-        if (elements.isEmpty()) {
-            logger.error("currentElement: " + currentElement);
-            logger.error("context.getModel().getElements(): " + context.getModel().getElements());
-            throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
-        }
-        context.setCurrentElement(elements.get(random.nextInt(elements.size())));
-        return context;
+    List<Element> elements = context.filter(context.getModel().getElements(currentElement));
+    if (elements.isEmpty()) {
+      logger.error("currentElement: " + currentElement);
+      logger.error("context.getModel().getElements(): " + context.getModel().getElements());
+      throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
     }
+    context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+    return context;
+  }
 
-    @Override
-    public boolean hasNextStep() {
-        return !getStopCondition().isFulfilled();
-    }
+  @Override
+  public boolean hasNextStep() {
+    return !getStopCondition().isFulfilled();
+  }
 
 }
 

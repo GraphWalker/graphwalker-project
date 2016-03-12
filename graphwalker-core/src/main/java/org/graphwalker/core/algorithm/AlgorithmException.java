@@ -31,10 +31,10 @@ package org.graphwalker.core.algorithm;
  */
 public final class AlgorithmException extends RuntimeException {
 
-    public AlgorithmException() {
-    }
+  public AlgorithmException() {
+  }
 
-    public AlgorithmException(String message) {
-        super(message);
-    }
+  public AlgorithmException(String message) {
+    super(message);
+  }
 }

@@ -48,67 +48,67 @@ import static org.hamcrest.core.Is.is;
  */
 public class ObserverTest implements Observer {
 
-    private int counter = 0;
+  private int counter = 0;
 
-    @Override
-    public void update(Machine observable, Element object, EventType type) {
-        if (EventType.BEFORE_ELEMENT.equals(type)) {
-            counter++;
-        }
+  @Override
+  public void update(Machine observable, Element object, EventType type) {
+    if (EventType.BEFORE_ELEMENT.equals(type)) {
+      counter++;
     }
+  }
 
-    private MachineBase createMachine() {
-        Vertex vertex = new Vertex();
-        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
-        Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
-        context.setNextElement(vertex);
-        MachineBase machine = new SimpleMachine(context);
-        Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));
-        Assert.assertTrue(Observable.class.isAssignableFrom(machine.getClass()));
-        return machine;
-    }
+  private MachineBase createMachine() {
+    Vertex vertex = new Vertex();
+    Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
+    Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+    context.setNextElement(vertex);
+    MachineBase machine = new SimpleMachine(context);
+    Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));
+    Assert.assertTrue(Observable.class.isAssignableFrom(machine.getClass()));
+    return machine;
+  }
 
-    @Test
-    public void verifyEvents() {
-        Machine machine = createMachine();
-        final List<EventType> types = new ArrayList<>();
-        machine.addObserver(new Observer() {
-            @Override
-            public void update(Machine observable, Element object, EventType type) {
-                types.add(type);
-            }
-        });
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        Assert.assertArrayEquals(new Object[]{
-                BEFORE_ELEMENT, AFTER_ELEMENT
-                , BEFORE_ELEMENT, AFTER_ELEMENT
-                , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
+  @Test
+  public void verifyEvents() {
+    Machine machine = createMachine();
+    final List<EventType> types = new ArrayList<>();
+    machine.addObserver(new Observer() {
+      @Override
+      public void update(Machine observable, Element object, EventType type) {
+        types.add(type);
+      }
+    });
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+    Assert.assertArrayEquals(new Object[]{
+      BEFORE_ELEMENT, AFTER_ELEMENT
+      , BEFORE_ELEMENT, AFTER_ELEMENT
+      , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
+  }
 
-    @Test
-    public void updateCounter() {
-        Machine machine = createMachine();
-        machine.addObserver(this);
-        Context context = machine.getContexts().get(0);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-        }
-        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-        Assert.assertThat(counter, is(3));
+  @Test
+  public void updateCounter() {
+    Machine machine = createMachine();
+    machine.addObserver(this);
+    Context context = machine.getContexts().get(0);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
+    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    Assert.assertThat(counter, is(3));
+  }
 
-    @Test
-    public void removeObserver() {
-        Machine machine = createMachine();
-        machine.addObserver(this);
-        Context context = machine.getContexts().get(0);
-        while (machine.hasNextStep()) {
-            machine.getNextStep();
-            machine.deleteObserver(this);
-        }
-        Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-        Assert.assertThat(counter, is(1));
+  @Test
+  public void removeObserver() {
+    Machine machine = createMachine();
+    machine.addObserver(this);
+    Context context = machine.getContexts().get(0);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+      machine.deleteObserver(this);
     }
+    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    Assert.assertThat(counter, is(1));
+  }
 }

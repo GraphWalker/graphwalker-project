@@ -52,153 +52,153 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class AStar implements Algorithm {
 
-    private final Context context;
+  private final Context context;
 
-    public AStar(Context context) {
-        this.context = context;
+  public AStar(Context context) {
+    this.context = context;
+  }
+
+  public Element getNextElement(Element origin, Element destination) {
+    Map<Element, AStarNode> openSet = new HashMap<>();
+    PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
+    Map<Element, AStarNode> closeSet = new HashMap<>();
+    FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+    AStarNode sourceNode = new AStarNode(origin, 0, floydWarshall.getShortestDistance(origin, destination));
+    openSet.put(origin, sourceNode);
+    queue.add(sourceNode);
+    AStarNode node = queue.poll();
+    if (node.getElement().equals(destination)) {
+      return node.getElement();
+    } else {
+      closeSet.put(node.getElement(), node);
+      List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
+      for (Element neighbor : neighbors) {
+        AStarNode visited = closeSet.get(neighbor);
+        if (isNull(visited)) {
+          double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
+          AStarNode neighborNode = openSet.get(neighbor);
+          if (isNull(neighborNode)) {
+            neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
+            neighborNode.setParent(node);
+            openSet.put(neighbor, neighborNode);
+            queue.add(neighborNode);
+          } else if (g < neighborNode.getG()) {
+            neighborNode.setParent(node);
+            neighborNode.setG(g);
+            neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
+          }
+        }
+      }
     }
+    if (!queue.isEmpty()) {
+      return queue.poll().getElement();
+    }
+    throw new AlgorithmException();
+  }
 
-    public Element getNextElement(Element origin, Element destination) {
-        Map<Element, AStarNode> openSet = new HashMap<>();
-        PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
-        Map<Element, AStarNode> closeSet = new HashMap<>();
-        FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-        AStarNode sourceNode = new AStarNode(origin, 0, floydWarshall.getShortestDistance(origin, destination));
-        openSet.put(origin, sourceNode);
-        queue.add(sourceNode);
-        AStarNode node = queue.poll();
-        if (node.getElement().equals(destination)) {
-            return node.getElement();
-        } else {
-            closeSet.put(node.getElement(), node);
-            List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
-            for (Element neighbor : neighbors) {
-                AStarNode visited = closeSet.get(neighbor);
-                if (isNull(visited)) {
-                    double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
-                    AStarNode neighborNode = openSet.get(neighbor);
-                    if (isNull(neighborNode)) {
-                        neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
-                        neighborNode.setParent(node);
-                        openSet.put(neighbor, neighborNode);
-                        queue.add(neighborNode);
-                    } else if (g < neighborNode.getG()) {
-                        neighborNode.setParent(node);
-                        neighborNode.setG(g);
-                        neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
-                    }
-                }
+  public Path<Element> getShortestPath(Element origin, Element destination) {
+    Map<Element, AStarNode> openSet = new HashMap<>();
+    PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
+    Map<Element, AStarNode> closeSet = new HashMap<>();
+    FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
+    AStarNode sourceNode = new AStarNode(origin, 0, floydWarshall.getShortestDistance(origin, destination));
+    openSet.put(origin, sourceNode);
+    queue.add(sourceNode);
+    AStarNode targetNode = null;
+    while (openSet.size() > 0) {
+      AStarNode node = queue.poll();
+      openSet.remove(node.getElement());
+      if (node.getElement().equals(destination)) {
+        targetNode = node;
+        break;
+      } else {
+        closeSet.put(node.getElement(), node);
+        List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
+        for (Element neighbor : neighbors) {
+          AStarNode visited = closeSet.get(neighbor);
+          if (isNull(visited)) {
+            double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
+            AStarNode neighborNode = openSet.get(neighbor);
+            if (isNull(neighborNode)) {
+              neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
+              neighborNode.setParent(node);
+              openSet.put(neighbor, neighborNode);
+              queue.add(neighborNode);
+            } else if (g < neighborNode.getG()) {
+              neighborNode.setParent(node);
+              neighborNode.setG(g);
+              neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
             }
+          }
         }
-        if (!queue.isEmpty()) {
-            return queue.poll().getElement();
-        }
-        throw new AlgorithmException();
+      }
+    }
+    if (isNotNull(targetNode)) {
+      List<Element> path = new ArrayList<>();
+      path.add(targetNode.getElement());
+      AStarNode node = targetNode.getParent();
+      while (isNotNull(node)) {
+        path.add(node.getElement());
+        node = node.getParent();
+      }
+      Collections.reverse(path);
+      return new Path<>(path);
+    }
+    throw new AlgorithmException();
+  }
+
+  private class AStarNode {
+
+    private final Element element;
+    private AStarNode parent;
+    private double g;
+    private double h;
+
+    AStarNode(Element element, double g, double h) {
+      this.element = element;
+      this.g = g;
+      this.h = h;
     }
 
-    public Path<Element> getShortestPath(Element origin, Element destination) {
-        Map<Element, AStarNode> openSet = new HashMap<>();
-        PriorityQueue<AStarNode> queue = new PriorityQueue<>(10, new AStarNodeComparator());
-        Map<Element, AStarNode> closeSet = new HashMap<>();
-        FloydWarshall floydWarshall = context.getAlgorithm(FloydWarshall.class);
-        AStarNode sourceNode = new AStarNode(origin, 0, floydWarshall.getShortestDistance(origin, destination));
-        openSet.put(origin, sourceNode);
-        queue.add(sourceNode);
-        AStarNode targetNode = null;
-        while (openSet.size() > 0) {
-            AStarNode node = queue.poll();
-            openSet.remove(node.getElement());
-            if (node.getElement().equals(destination)) {
-                targetNode = node;
-                break;
-            } else {
-                closeSet.put(node.getElement(), node);
-                List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
-                for (Element neighbor : neighbors) {
-                    AStarNode visited = closeSet.get(neighbor);
-                    if (isNull(visited)) {
-                        double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
-                        AStarNode neighborNode = openSet.get(neighbor);
-                        if (isNull(neighborNode)) {
-                            neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
-                            neighborNode.setParent(node);
-                            openSet.put(neighbor, neighborNode);
-                            queue.add(neighborNode);
-                        } else if (g < neighborNode.getG()) {
-                            neighborNode.setParent(node);
-                            neighborNode.setG(g);
-                            neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
-                        }
-                    }
-                }
-            }
-        }
-        if (isNotNull(targetNode)) {
-            List<Element> path = new ArrayList<>();
-            path.add(targetNode.getElement());
-            AStarNode node = targetNode.getParent();
-            while (isNotNull(node)) {
-                path.add(node.getElement());
-                node = node.getParent();
-            }
-            Collections.reverse(path);
-            return new Path<>(path);
-        }
-        throw new AlgorithmException();
+    private Element getElement() {
+      return element;
     }
 
-    private class AStarNode {
-
-        private final Element element;
-        private AStarNode parent;
-        private double g;
-        private double h;
-
-        AStarNode(Element element, double g, double h) {
-            this.element = element;
-            this.g = g;
-            this.h = h;
-        }
-
-        private Element getElement() {
-            return element;
-        }
-
-        private AStarNode getParent() {
-            return parent;
-        }
-
-        private void setParent(AStarNode parent) {
-            this.parent = parent;
-        }
-
-        private double getG() {
-            return g;
-        }
-
-        private void setG(double g) {
-            this.g = g;
-        }
-
-        private void setH(double h) {
-            this.h = h;
-        }
-
-        public double getF() {
-            return g + h;
-        }
+    private AStarNode getParent() {
+      return parent;
     }
 
-    private class AStarNodeComparator implements Comparator<AStarNode> {
-
-        public int compare(AStarNode first, AStarNode second) {
-            if (first.getF() < second.getF()) {
-                return -1;
-            } else if (first.getF() > second.getF()) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
+    private void setParent(AStarNode parent) {
+      this.parent = parent;
     }
+
+    private double getG() {
+      return g;
+    }
+
+    private void setG(double g) {
+      this.g = g;
+    }
+
+    private void setH(double h) {
+      this.h = h;
+    }
+
+    public double getF() {
+      return g + h;
+    }
+  }
+
+  private class AStarNodeComparator implements Comparator<AStarNode> {
+
+    public int compare(AStarNode first, AStarNode second) {
+      if (first.getF() < second.getF()) {
+        return -1;
+      } else if (first.getF() > second.getF()) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  }
 }

@@ -31,11 +31,11 @@ package org.graphwalker.core.generator;
  */
 public final class NoPathFoundException extends RuntimeException {
 
-    public NoPathFoundException() {
-    }
+  public NoPathFoundException() {
+  }
 
-    public NoPathFoundException(String message) {
-        super(message);
-    }
+  public NoPathFoundException(String message) {
+    super(message);
+  }
 
 }

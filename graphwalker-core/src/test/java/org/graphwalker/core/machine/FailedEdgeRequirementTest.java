@@ -43,24 +43,24 @@ import static org.hamcrest.core.Is.is;
  */
 public class FailedEdgeRequirementTest extends ExecutionContext {
 
-    public void fail() {
-        throw new RuntimeException("fail");
-    }
+  public void fail() {
+    throw new RuntimeException("fail");
+  }
 
-    @Test
-    public void failEdgeRequirement() {
-        Vertex vertex = new Vertex();
-        Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).setName("fail").addRequirement(new Requirement("REQ1")));
-        StopCondition stopCondition = new RequirementCoverage(100);
-        Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
-        context.setNextElement(vertex);
-        Machine machine = new SimpleMachine(context);
-        try {
-            while (machine.hasNextStep()) {
-                machine.getNextStep();
-            }
-        } catch (RuntimeException e) {
-            Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(1));
-        }
+  @Test
+  public void failEdgeRequirement() {
+    Vertex vertex = new Vertex();
+    Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).setName("fail").addRequirement(new Requirement("REQ1")));
+    StopCondition stopCondition = new RequirementCoverage(100);
+    Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
+    context.setNextElement(vertex);
+    Machine machine = new SimpleMachine(context);
+    try {
+      while (machine.hasNextStep()) {
+        machine.getNextStep();
+      }
+    } catch (RuntimeException e) {
+      Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(1));
     }
+  }
 }

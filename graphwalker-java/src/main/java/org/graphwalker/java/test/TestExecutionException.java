@@ -31,15 +31,15 @@ package org.graphwalker.java.test;
  */
 public class TestExecutionException extends RuntimeException {
 
-    public TestExecutionException() {
-        super();
-    }
+  public TestExecutionException() {
+    super();
+  }
 
-    public TestExecutionException(String message) {
-        super(message);
-    }
+  public TestExecutionException(String message) {
+    super(message);
+  }
 
-    public TestExecutionException(Throwable throwable) {
-        super(throwable);
-    }
+  public TestExecutionException(Throwable throwable) {
+    super(throwable);
+  }
 }

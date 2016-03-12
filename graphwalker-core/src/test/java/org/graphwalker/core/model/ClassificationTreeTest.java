@@ -37,16 +37,16 @@ import static org.hamcrest.core.Is.is;
  */
 public class ClassificationTreeTest {
 
-    @Test
-    public void create() {
-        ClassificationTree tree = new ClassificationTree();
-        tree.addClassification(new Classification().setName("A"));
-        tree.addClassification(new Classification().setName("B"));
-        Assert.assertNotNull(tree.getRoot());
-        Assert.assertNull(tree.getRoot().getName());
-        Assert.assertThat(tree.getRoot().getClassifications().size(), is(2));
-        RuntimeClassificationTree runtimeTree = tree.build();
-        Assert.assertNotNull(runtimeTree);
-        Assert.assertThat(runtimeTree.getRoot().getClassifications().size(), is(2));
-    }
+  @Test
+  public void create() {
+    ClassificationTree tree = new ClassificationTree();
+    tree.addClassification(new Classification().setName("A"));
+    tree.addClassification(new Classification().setName("B"));
+    Assert.assertNotNull(tree.getRoot());
+    Assert.assertNull(tree.getRoot().getName());
+    Assert.assertThat(tree.getRoot().getClassifications().size(), is(2));
+    RuntimeClassificationTree runtimeTree = tree.build();
+    Assert.assertNotNull(runtimeTree);
+    Assert.assertThat(runtimeTree.getRoot().getClassifications().size(), is(2));
+  }
 }

@@ -55,62 +55,62 @@ import java.util.List;
  */
 public final class CombinedPath extends PathGeneratorBase<StopCondition> {
 
-    private final List<PathGenerator> generators = new ArrayList<>();
-    private int index = 0;
+  private final List<PathGenerator> generators = new ArrayList<>();
+  private int index = 0;
 
-    public void addPathGenerator(PathGenerator generator) {
-        generators.add(generator);
-        generator.setContext(getContext());
-    }
+  public void addPathGenerator(PathGenerator generator) {
+    generators.add(generator);
+    generator.setContext(getContext());
+  }
 
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
-        for (PathGenerator generator : generators) {
-            generator.setContext(context);
-        }
+  @Override
+  public void setContext(Context context) {
+    super.setContext(context);
+    for (PathGenerator generator : generators) {
+      generator.setContext(context);
     }
+  }
 
-    public List<PathGenerator> getPathGenerators() {
-        return generators;
-    }
+  public List<PathGenerator> getPathGenerators() {
+    return generators;
+  }
 
-    private PathGenerator getActivePathGenerator() {
-        return generators.get(index);
-    }
+  private PathGenerator getActivePathGenerator() {
+    return generators.get(index);
+  }
 
-    @Override
-    public StopCondition getStopCondition() {
-        return getActivePathGenerator().getStopCondition();
-    }
+  @Override
+  public StopCondition getStopCondition() {
+    return getActivePathGenerator().getStopCondition();
+  }
 
-    @Override
-    public Context getNextStep() {
-        if (hasNextStep()) {
-            return getActivePathGenerator().getNextStep();
-        }
-        throw new NoPathFoundException();
+  @Override
+  public Context getNextStep() {
+    if (hasNextStep()) {
+      return getActivePathGenerator().getNextStep();
     }
+    throw new NoPathFoundException();
+  }
 
-    @Override
-    public boolean hasNextStep() {
-        for (; index < generators.size(); index++) {
-            if (getActivePathGenerator().hasNextStep()) {
-                return true;
-            }
-        }
-        return false;
+  @Override
+  public boolean hasNextStep() {
+    for (; index < generators.size(); index++) {
+      if (getActivePathGenerator().hasNextStep()) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    @Override
-    public StringBuilder toString(StringBuilder builder) {
-        Iterator<PathGenerator> iterator = generators.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().toString(builder);
-            if (iterator.hasNext()) {
-                builder.append(" AND ");
-            }
-        }
-        return builder;
+  @Override
+  public StringBuilder toString(StringBuilder builder) {
+    Iterator<PathGenerator> iterator = generators.iterator();
+    while (iterator.hasNext()) {
+      iterator.next().toString(builder);
+      if (iterator.hasNext()) {
+        builder.append(" AND ");
+      }
     }
+    return builder;
+  }
 }

@@ -45,48 +45,48 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public final class DepthFirstSearch implements Algorithm {
 
-    private final Context context;
+  private final Context context;
 
-    public DepthFirstSearch(Context context) {
-        this.context = context;
+  public DepthFirstSearch(Context context) {
+    this.context = context;
+  }
+
+  public List<Element> getConnectedComponent(Element root) {
+    return createConnectedComponent(createElementStatusMap(context.getModel().getElements()), root);
+  }
+
+  private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
+    Map<Element, ElementStatus> elementStatusMap = new HashMap<>();
+    for (Element element : elements) {
+      elementStatusMap.put(element, ElementStatus.UNREACHABLE);
     }
+    return elementStatusMap;
+  }
 
-    public List<Element> getConnectedComponent(Element root) {
-        return createConnectedComponent(createElementStatusMap(context.getModel().getElements()), root);
-    }
-
-    private Map<Element, ElementStatus> createElementStatusMap(List<Element> elements) {
-        Map<Element, ElementStatus> elementStatusMap = new HashMap<>();
-        for (Element element : elements) {
-            elementStatusMap.put(element, ElementStatus.UNREACHABLE);
+  private List<Element> createConnectedComponent(Map<Element, ElementStatus> elementStatusMap, Element root) {
+    List<Element> connectedComponent = new ArrayList<>();
+    Deque<Element> stack = new ArrayDeque<>();
+    stack.push(root);
+    while (!stack.isEmpty()) {
+      Element element = stack.pop();
+      if (ElementStatus.UNREACHABLE.equals(elementStatusMap.get(element))) {
+        connectedComponent.add(element);
+        elementStatusMap.put(element, ElementStatus.REACHABLE);
+        if (element instanceof RuntimeVertex) {
+          RuntimeVertex vertex = (RuntimeVertex) element;
+          for (RuntimeEdge edge : context.getModel().getOutEdges(vertex)) {
+            stack.push(edge);
+          }
+        } else if (element instanceof RuntimeEdge) {
+          RuntimeEdge edge = (RuntimeEdge) element;
+          stack.push(edge.getTargetVertex());
         }
-        return elementStatusMap;
+      }
     }
+    return unmodifiableList(connectedComponent);
+  }
 
-    private List<Element> createConnectedComponent(Map<Element, ElementStatus> elementStatusMap, Element root) {
-        List<Element> connectedComponent = new ArrayList<>();
-        Deque<Element> stack = new ArrayDeque<>();
-        stack.push(root);
-        while (!stack.isEmpty()) {
-            Element element = stack.pop();
-            if (ElementStatus.UNREACHABLE.equals(elementStatusMap.get(element))) {
-                connectedComponent.add(element);
-                elementStatusMap.put(element, ElementStatus.REACHABLE);
-                if (element instanceof RuntimeVertex) {
-                    RuntimeVertex vertex = (RuntimeVertex) element;
-                    for (RuntimeEdge edge : context.getModel().getOutEdges(vertex)) {
-                        stack.push(edge);
-                    }
-                } else if (element instanceof RuntimeEdge) {
-                    RuntimeEdge edge = (RuntimeEdge) element;
-                    stack.push(edge.getTargetVertex());
-                }
-            }
-        }
-        return unmodifiableList(connectedComponent);
-    }
-
-    private enum ElementStatus {
-        UNREACHABLE, REACHABLE
-    }
+  private enum ElementStatus {
+    UNREACHABLE, REACHABLE
+  }
 }

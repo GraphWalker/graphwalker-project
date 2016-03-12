@@ -44,61 +44,61 @@ import java.util.List;
  */
 public final class AlternativeCondition extends StopConditionBase {
 
-    private final List<StopCondition> conditions = new ArrayList<>();
+  private final List<StopCondition> conditions = new ArrayList<>();
 
-    public AlternativeCondition() {
-        super("");
-    }
+  public AlternativeCondition() {
+    super("");
+  }
 
-    public AlternativeCondition addStopCondition(StopCondition condition) {
-        this.conditions.add(condition);
-        condition.setContext(getContext());
-        return this;
-    }
+  public AlternativeCondition addStopCondition(StopCondition condition) {
+    this.conditions.add(condition);
+    condition.setContext(getContext());
+    return this;
+  }
 
-    @Override
-    public void setContext(Context context) {
-        super.setContext(context);
-        for (StopCondition condition : conditions) {
-            condition.setContext(context);
-        }
+  @Override
+  public void setContext(Context context) {
+    super.setContext(context);
+    for (StopCondition condition : conditions) {
+      condition.setContext(context);
     }
+  }
 
-    public List<StopCondition> getStopConditions() {
-        return conditions;
-    }
+  public List<StopCondition> getStopConditions() {
+    return conditions;
+  }
 
-    @Override
-    public boolean isFulfilled() {
-        for (StopCondition condition : conditions) {
-            if (condition.isFulfilled()) {
-                return true;
-            }
-        }
-        return false;
+  @Override
+  public boolean isFulfilled() {
+    for (StopCondition condition : conditions) {
+      if (condition.isFulfilled()) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    @Override
-    public double getFulfilment() {
-        double fulfilment = 0;
-        for (StopCondition condition : conditions) {
-            double newFulfilment = condition.getFulfilment();
-            if (newFulfilment > fulfilment) {
-                fulfilment = newFulfilment;
-            }
-        }
-        return fulfilment;
+  @Override
+  public double getFulfilment() {
+    double fulfilment = 0;
+    for (StopCondition condition : conditions) {
+      double newFulfilment = condition.getFulfilment();
+      if (newFulfilment > fulfilment) {
+        fulfilment = newFulfilment;
+      }
     }
+    return fulfilment;
+  }
 
-    @Override
-    public StringBuilder toString(StringBuilder builder) {
-        Iterator<StopCondition> iterator = conditions.iterator();
-        while (iterator.hasNext()) {
-            iterator.next().toString(builder);
-            if (iterator.hasNext()) {
-                builder.append(" OR ");
-            }
-        }
-        return builder;
+  @Override
+  public StringBuilder toString(StringBuilder builder) {
+    Iterator<StopCondition> iterator = conditions.iterator();
+    while (iterator.hasNext()) {
+      iterator.next().toString(builder);
+      if (iterator.hasNext()) {
+        builder.append(" OR ");
+      }
     }
+    return builder;
+  }
 }

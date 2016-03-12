@@ -42,66 +42,66 @@ import java.util.Set;
  */
 public abstract class AnnotationUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(AnnotationUtils.class);
+  private static final Logger logger = LoggerFactory.getLogger(AnnotationUtils.class);
 
-    public static Set<Class<?>> findTests(Reflections reflections) {
-        return find(reflections, Context.class, GraphWalker.class);
+  public static Set<Class<?>> findTests(Reflections reflections) {
+    return find(reflections, Context.class, GraphWalker.class);
+  }
+
+  public static Set<Class<?>> find(Reflections reflections, Class<?> type, Class<? extends Annotation> annotation) {
+    Set<Class<?>> classes = new HashSet<>();
+    for (Class<?> subType : reflections.getTypesAnnotatedWith(annotation)) {
+      if (type.isAssignableFrom(subType)) {
+        classes.add(subType);
+      }
     }
+    return classes;
+  }
 
-    public static Set<Class<?>> find(Reflections reflections, Class<?> type, Class<? extends Annotation> annotation) {
-        Set<Class<?>> classes = new HashSet<>();
-        for (Class<?> subType : reflections.getTypesAnnotatedWith(annotation)) {
-            if (type.isAssignableFrom(subType)) {
-                classes.add(subType);
-            }
-        }
-        return classes;
+  private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation) {
+    return isAnnotationPresent(type, annotation, Thread.currentThread().getContextClassLoader());
+  }
+
+  @SuppressWarnings("unchecked")
+  private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation, ClassLoader classLoader) {
+    try {
+      Class<? extends Annotation> a = (Class<? extends Annotation>) classLoader.loadClass(annotation.getName());
+      return type.isAnnotationPresent(a);
+    } catch (ClassNotFoundException e) {
+      logger.error(e.getMessage());
+      throw new RuntimeException();
     }
+  }
 
-    private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation) {
-        return isAnnotationPresent(type, annotation, Thread.currentThread().getContextClassLoader());
+  public static <T extends Annotation> Set<T> getAnnotations(final Class<?> clazz, final Class<T> annotation) {
+    Set<T> annotations = new HashSet<>();
+    Class<?> queryClass = clazz;
+    while (null != queryClass) {
+      addAnnotation(queryClass, annotations, annotation);
+      for (Class<?> interfaceClass : queryClass.getInterfaces()) {
+        addAnnotation(interfaceClass, annotations, annotation);
+      }
+      queryClass = queryClass.getSuperclass();
     }
+    return annotations;
+  }
 
-    @SuppressWarnings("unchecked")
-    private static boolean isAnnotationPresent(Class<?> type, Class<? extends Annotation> annotation, ClassLoader classLoader) {
+  private static <T extends Annotation> void addAnnotation(final Class<?> clazz, final Set<T> annotations, final Class<T> annotation) {
+    if (clazz.isAnnotationPresent(annotation)) {
+      annotations.add(clazz.getAnnotation(annotation));
+    }
+  }
+
+  public static void execute(Class<? extends Annotation> annotation, Object implementation) {
+    for (Method method : implementation.getClass().getMethods()) {
+      if (method.isAnnotationPresent(annotation)) {
         try {
-            Class<? extends Annotation> a = (Class<? extends Annotation>) classLoader.loadClass(annotation.getName());
-            return type.isAnnotationPresent(a);
-        } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new RuntimeException();
+          method.invoke(implementation);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+          e.printStackTrace();
         }
+      }
     }
-
-    public static <T extends Annotation> Set<T> getAnnotations(final Class<?> clazz, final Class<T> annotation) {
-        Set<T> annotations = new HashSet<>();
-        Class<?> queryClass = clazz;
-        while (null != queryClass) {
-            addAnnotation(queryClass, annotations, annotation);
-            for (Class<?> interfaceClass : queryClass.getInterfaces()) {
-                addAnnotation(interfaceClass, annotations, annotation);
-            }
-            queryClass = queryClass.getSuperclass();
-        }
-        return annotations;
-    }
-
-    private static <T extends Annotation> void addAnnotation(final Class<?> clazz, final Set<T> annotations, final Class<T> annotation) {
-        if (clazz.isAnnotationPresent(annotation)) {
-            annotations.add(clazz.getAnnotation(annotation));
-        }
-    }
-
-    public static void execute(Class<? extends Annotation> annotation, Object implementation) {
-        for (Method method : implementation.getClass().getMethods()) {
-            if (method.isAnnotationPresent(annotation)) {
-                try {
-                    method.invoke(implementation);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+  }
 
 }

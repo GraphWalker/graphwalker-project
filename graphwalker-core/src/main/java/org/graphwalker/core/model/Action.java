@@ -37,13 +37,13 @@ package org.graphwalker.core.model;
  */
 public final class Action {
 
-    private final String script;
+  private final String script;
 
-    public Action(String script) {
-        this.script = script;
-    }
+  public Action(String script) {
+    this.script = script;
+  }
 
-    public String getScript() {
-        return script;
-    }
+  public String getScript() {
+    return script;
+  }
 }

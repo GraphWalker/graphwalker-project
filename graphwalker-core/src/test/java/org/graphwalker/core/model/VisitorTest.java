@@ -42,166 +42,166 @@ import static org.hamcrest.core.Is.is;
  */
 public class VisitorTest {
 
-    RuntimeModel model = new Model().addEdge(
-            new Edge()
-                    .setName("edge1")
-                    .setSourceVertex(new Vertex()
-                            .setName("vertex1"))
-                    .setTargetVertex(new Vertex()
-                            .setName("vertex2")))
-            .build();
+  RuntimeModel model = new Model().addEdge(
+    new Edge()
+      .setName("edge1")
+      .setSourceVertex(new Vertex()
+        .setName("vertex1"))
+      .setTargetVertex(new Vertex()
+        .setName("vertex2")))
+    .build();
 
-    @Test
-    public void visitVertex() {
-        ElementVisitor visitor = new MyElementVisitor();
-        new Vertex().setName("vertex").build().accept(visitor);
+  @Test
+  public void visitVertex() {
+    ElementVisitor visitor = new MyElementVisitor();
+    new Vertex().setName("vertex").build().accept(visitor);
+  }
+
+  @Test
+  public void visitVertices() {
+    MyNamedVertexCounter visitor = new MyNamedVertexCounter();
+    model.accept(visitor);
+    Assert.assertThat(visitor.count, is(2));
+  }
+
+  @Test
+  public void visitEdge() {
+    ElementVisitor visitor = new MyEdgeVisitor();
+    new Edge().setName("edge1").setSourceVertex(new Vertex()).setTargetVertex(new Vertex()).build().accept(visitor);
+  }
+
+  @Test
+  public void visitEdges() {
+    Vertex startVertex = new Vertex().setName("start");
+    Vertex endVertex = new Vertex().setName("end");
+    RuntimeModel pseudograph = new Model()
+      .addEdge(new Edge().setSourceVertex(startVertex).setTargetVertex(endVertex))
+      .addEdge(new Edge().setSourceVertex(endVertex).setTargetVertex(endVertex))
+      .build();
+    MyLoopEdgeFinder visitor = new MyLoopEdgeFinder();
+    pseudograph.accept(visitor);
+    Assert.assertThat(visitor.count, is(1));
+  }
+
+  @Test
+  public void detectBridge() {
+    Vertex start = new Vertex();
+    Vertex v1 = new Vertex().setName("V1");
+    Vertex v2 = new Vertex().setName("V2");
+    Edge e1 = new Edge().setSourceVertex(start).setTargetVertex(v2);
+    Model model = new Model().addEdge(e1)
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1));
+
+    MyVertexCounter count1 = new MyVertexCounter(model.build());
+    MyVertexCounter count2 = new MyVertexCounter(model.build(), e1.build());
+
+    start.build().accept(count1);
+    start.build().accept(count2);
+
+    // if e1 is a bridge then the vertex count will differ between count1 and count2
+    Assert.assertNotEquals(count1.count, count2.count);
+
+    // if we add a edge between v1 and v2 then e1 is no longer a bridge and count1 and count3 should be the same
+    model.addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+    MyVertexCounter count3 = new MyVertexCounter(model.build(), e1.build());
+    start.build().accept(count3);
+    Assert.assertEquals(count1.count, count3.count);
+
+  }
+
+  private class MyElementVisitor implements ElementVisitor {
+
+    @Override
+    public void visit(Element element) {
     }
+  }
 
-    @Test
-    public void visitVertices() {
-        MyNamedVertexCounter visitor = new MyNamedVertexCounter();
-        model.accept(visitor);
-        Assert.assertThat(visitor.count, is(2));
-    }
+  private class MyNamedVertexCounter implements ElementVisitor {
 
-    @Test
-    public void visitEdge() {
-        ElementVisitor visitor = new MyEdgeVisitor();
-        new Edge().setName("edge1").setSourceVertex(new Vertex()).setTargetVertex(new Vertex()).build().accept(visitor);
-    }
+    int count = 0;
 
-    @Test
-    public void visitEdges() {
-        Vertex startVertex = new Vertex().setName("start");
-        Vertex endVertex = new Vertex().setName("end");
-        RuntimeModel pseudograph = new Model()
-                .addEdge(new Edge().setSourceVertex(startVertex).setTargetVertex(endVertex))
-                .addEdge(new Edge().setSourceVertex(endVertex).setTargetVertex(endVertex))
-                .build();
-        MyLoopEdgeFinder visitor = new MyLoopEdgeFinder();
-        pseudograph.accept(visitor);
-        Assert.assertThat(visitor.count, is(1));
-    }
-
-    @Test
-    public void detectBridge() {
-        Vertex start = new Vertex();
-        Vertex v1 = new Vertex().setName("V1");
-        Vertex v2 = new Vertex().setName("V2");
-        Edge e1 = new Edge().setSourceVertex(start).setTargetVertex(v2);
-        Model model = new Model().addEdge(e1)
-                .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1));
-
-        MyVertexCounter count1 = new MyVertexCounter(model.build());
-        MyVertexCounter count2 = new MyVertexCounter(model.build(), e1.build());
-
-        start.build().accept(count1);
-        start.build().accept(count2);
-
-        // if e1 is a bridge then the vertex count will differ between count1 and count2
-        Assert.assertNotEquals(count1.count, count2.count);
-
-        // if we add a edge between v1 and v2 then e1 is no longer a bridge and count1 and count3 should be the same
-        model.addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
-        MyVertexCounter count3 = new MyVertexCounter(model.build(), e1.build());
-        start.build().accept(count3);
-        Assert.assertEquals(count1.count, count3.count);
-
-    }
-
-    private class MyElementVisitor implements ElementVisitor {
-
-        @Override
-        public void visit(Element element) {
+    @Override
+    public void visit(Element element) {
+      if (element instanceof RuntimeModel) {
+        RuntimeModel model = (RuntimeModel) element;
+        // We don't need to visit() all edges to count the vertices with names, it's just PoC (we could just loop over them)
+        for (Element childElement : model.getElements()) {
+          childElement.accept(this);
         }
+      } else if (element instanceof RuntimeVertex && element.hasName()) {
+        count++;
+      }
     }
+  }
 
-    private class MyNamedVertexCounter implements ElementVisitor {
+  private class MyLoopEdgeFinder implements ElementVisitor {
 
-        int count = 0;
+    int count = 0;
 
-        @Override
-        public void visit(Element element) {
-            if (element instanceof RuntimeModel) {
-                RuntimeModel model = (RuntimeModel) element;
-                // We don't need to visit() all edges to count the vertices with names, it's just PoC (we could just loop over them)
-                for (Element childElement : model.getElements()) {
-                    childElement.accept(this);
-                }
-            } else if (element instanceof RuntimeVertex && element.hasName()) {
-                count++;
-            }
-        }
-    }
-
-    private class MyLoopEdgeFinder implements ElementVisitor {
-
-        int count = 0;
-
-        @Override
-        public void visit(Element element) {
-            if (element instanceof RuntimeModel) {
-                RuntimeModel model = (RuntimeModel) element;
-                for (RuntimeEdge edge : model.getEdges()) {
-                    if (edge.getSourceVertex().equals(edge.getTargetVertex())) {
-                        count++;
-                    }
-                }
-            }
-        }
-    }
-
-    private class MyEdgeVisitor implements ElementVisitor {
-
-        @Override
-        public void visit(Element element) {
-        }
-    }
-
-    private class MyVertexCounter implements ElementVisitor {
-
-        private RuntimeModel model;
-        private int count = 0;
-        private Set<Element> visited = new HashSet<>();
-
-        MyVertexCounter(RuntimeModel model) {
-            this(model, null);
-        }
-
-        MyVertexCounter(RuntimeModel model, RuntimeEdge skipEdge) {
-            this.model = model;
-            if (null != skipEdge) {
-                visited.add(skipEdge);
-            }
-        }
-
-        @Override
-        public void visit(Element element) {
-            visited.add(element);
-            if (element instanceof RuntimeVertex) {
-                visit((RuntimeVertex) element);
-            } else if (element instanceof RuntimeEdge) {
-                visit((RuntimeEdge) element);
-            }
-        }
-
-        private void visit(RuntimeVertex vertex) {
+    @Override
+    public void visit(Element element) {
+      if (element instanceof RuntimeModel) {
+        RuntimeModel model = (RuntimeModel) element;
+        for (RuntimeEdge edge : model.getEdges()) {
+          if (edge.getSourceVertex().equals(edge.getTargetVertex())) {
             count++;
-            for (RuntimeEdge edge : model.getOutEdges(vertex)) {
-                if (!isVisited(edge)) {
-                    edge.accept(this);
-                }
-            }
+          }
         }
-
-        private void visit(RuntimeEdge edge) {
-            if (!isVisited(edge.getTargetVertex())) {
-                edge.getTargetVertex().accept(this);
-            }
-        }
-
-        private boolean isVisited(Element element) {
-            return visited.contains(element);
-        }
+      }
     }
+  }
+
+  private class MyEdgeVisitor implements ElementVisitor {
+
+    @Override
+    public void visit(Element element) {
+    }
+  }
+
+  private class MyVertexCounter implements ElementVisitor {
+
+    private RuntimeModel model;
+    private int count = 0;
+    private Set<Element> visited = new HashSet<>();
+
+    MyVertexCounter(RuntimeModel model) {
+      this(model, null);
+    }
+
+    MyVertexCounter(RuntimeModel model, RuntimeEdge skipEdge) {
+      this.model = model;
+      if (null != skipEdge) {
+        visited.add(skipEdge);
+      }
+    }
+
+    @Override
+    public void visit(Element element) {
+      visited.add(element);
+      if (element instanceof RuntimeVertex) {
+        visit((RuntimeVertex) element);
+      } else if (element instanceof RuntimeEdge) {
+        visit((RuntimeEdge) element);
+      }
+    }
+
+    private void visit(RuntimeVertex vertex) {
+      count++;
+      for (RuntimeEdge edge : model.getOutEdges(vertex)) {
+        if (!isVisited(edge)) {
+          edge.accept(this);
+        }
+      }
+    }
+
+    private void visit(RuntimeEdge edge) {
+      if (!isVisited(edge.getTargetVertex())) {
+        edge.getTargetVertex().accept(this);
+      }
+    }
+
+    private boolean isVisited(Element element) {
+      return visited.contains(element);
+    }
+  }
 }

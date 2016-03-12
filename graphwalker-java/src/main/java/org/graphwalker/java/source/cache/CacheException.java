@@ -5,7 +5,7 @@ package org.graphwalker.java.source.cache;
  */
 public class CacheException extends RuntimeException {
 
-    public CacheException(Throwable cause) {
-        super(cause);
-    }
+  public CacheException(Throwable cause) {
+    super(cause);
+  }
 }

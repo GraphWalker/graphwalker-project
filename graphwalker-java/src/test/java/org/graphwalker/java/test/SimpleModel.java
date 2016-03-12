@@ -35,9 +35,9 @@ import org.graphwalker.java.annotation.Model;
 @Model(file = "org/graphwalker/java/test/SimpleModel.graphml")
 public interface SimpleModel {
 
-    @Edge()
-    void vertex();
+  @Edge()
+  void vertex();
 
-    @Edge()
-    void edge();
+  @Edge()
+  void edge();
 }

@@ -40,13 +40,13 @@ import java.util.Set;
  */
 public final class ReachedEdge extends ReachedStopConditionBase {
 
-    public ReachedEdge(String target) {
-        super(target);
-    }
+  public ReachedEdge(String target) {
+    super(target);
+  }
 
-    public Set<Element> getTargetElements() {
-        Set<Element> elements = new HashSet<>();
-        elements.addAll(getContext().getModel().findEdges(getValue()));
-        return elements;
-    }
+  public Set<Element> getTargetElements() {
+    Set<Element> elements = new HashSet<>();
+    elements.addAll(getContext().getModel().findEdges(getValue()));
+    return elements;
+  }
 }

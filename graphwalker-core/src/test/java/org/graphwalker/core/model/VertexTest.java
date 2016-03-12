@@ -37,47 +37,47 @@ import static org.hamcrest.core.IsNot.not;
  */
 public class VertexTest {
 
-    @Test
-    public void create() {
-        Vertex vertex = new Vertex()
-                .setName("vertex")
-                .setSharedState("MY_STATE")
-                .addRequirement(new Requirement("REQ1"))
-                .addRequirement(new Requirement("REQ2"));
-        Assert.assertNotNull(vertex);
-        Assert.assertNotNull(vertex.getName());
-        Assert.assertEquals(vertex.getName(), "vertex");
-        Assert.assertNotNull(vertex.getSharedState());
-        Assert.assertThat(vertex.getSharedState(), is("MY_STATE"));
-        Assert.assertNotNull(vertex.getRequirements());
-        Assert.assertThat(vertex.getRequirements().size(), is(2));
-        Assert.assertNotNull(vertex.build());
-        Assert.assertNotEquals(vertex, vertex.build());
-        Assert.assertEquals(vertex.build(), vertex.build());
-        Assert.assertEquals(vertex.build().getName(), vertex.getName());
-        Assert.assertNotNull(vertex.build().getRequirements());
-        Assert.assertThat(vertex.build().getRequirements().size(), is(2));
-    }
+  @Test
+  public void create() {
+    Vertex vertex = new Vertex()
+      .setName("vertex")
+      .setSharedState("MY_STATE")
+      .addRequirement(new Requirement("REQ1"))
+      .addRequirement(new Requirement("REQ2"));
+    Assert.assertNotNull(vertex);
+    Assert.assertNotNull(vertex.getName());
+    Assert.assertEquals(vertex.getName(), "vertex");
+    Assert.assertNotNull(vertex.getSharedState());
+    Assert.assertThat(vertex.getSharedState(), is("MY_STATE"));
+    Assert.assertNotNull(vertex.getRequirements());
+    Assert.assertThat(vertex.getRequirements().size(), is(2));
+    Assert.assertNotNull(vertex.build());
+    Assert.assertNotEquals(vertex, vertex.build());
+    Assert.assertEquals(vertex.build(), vertex.build());
+    Assert.assertEquals(vertex.build().getName(), vertex.getName());
+    Assert.assertNotNull(vertex.build().getRequirements());
+    Assert.assertThat(vertex.build().getRequirements().size(), is(2));
+  }
 
-    @Test
-    public void testEquality() throws Exception {
-        Vertex v1 = new Vertex().setId("n0").setName("SomeName");
-        Vertex v2 = new Vertex().setId("n0").setName("SomeName");
-        Assert.assertThat(v1.build(), is(v2.build()));
-    }
+  @Test
+  public void testEquality() throws Exception {
+    Vertex v1 = new Vertex().setId("n0").setName("SomeName");
+    Vertex v2 = new Vertex().setId("n0").setName("SomeName");
+    Assert.assertThat(v1.build(), is(v2.build()));
+  }
 
-    @Test
-    public void testInequality() throws Exception {
-        Vertex v1 = new Vertex().setId("n0").setName("SomeName");
-        Vertex v2 = new Vertex().setId("n1").setName("SomeName");
-        Assert.assertThat(v1.build(), not(v2.build()));
-    }
+  @Test
+  public void testInequality() throws Exception {
+    Vertex v1 = new Vertex().setId("n0").setName("SomeName");
+    Vertex v2 = new Vertex().setId("n1").setName("SomeName");
+    Assert.assertThat(v1.build(), not(v2.build()));
+  }
 
-    @Test
-    public void testProperties() throws Exception {
-        Vertex vertex = new Vertex();
-        Assert.assertFalse(vertex.build().hasProperties());
-        vertex.setProperty("test", "value");
-        Assert.assertTrue(vertex.build().hasProperties());
-    }
+  @Test
+  public void testProperties() throws Exception {
+    Vertex vertex = new Vertex();
+    Assert.assertFalse(vertex.build().hasProperties());
+    vertex.setProperty("test", "value");
+    Assert.assertTrue(vertex.build().hasProperties());
+  }
 }

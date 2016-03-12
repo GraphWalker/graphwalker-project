@@ -33,16 +33,16 @@ import static org.hamcrest.core.Is.is;
 
 
 public class IOErrorsTest extends CLITestRoot {
-    /**
-     * Non existent file
-     */
-    @Test
-    public void nonExistentFile() {
-        String args[] = {"offline", "-m", "sdsdtkdsjhsl.graphml", "random(edge_coverage(100))"};
-        Result result = runCommand(args);
-        Assert.assertThat(result.getError(), is("An error occurred when running command: " +
-                "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
-                System.lineSeparator() + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
-        Assert.assertThat(result.getOutput(), is(""));
-    }
+  /**
+   * Non existent file
+   */
+  @Test
+  public void nonExistentFile() {
+    String args[] = {"offline", "-m", "sdsdtkdsjhsl.graphml", "random(edge_coverage(100))"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is("An error occurred when running command: " +
+      "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
+      System.lineSeparator() + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
+    Assert.assertThat(result.getOutput(), is(""));
+  }
 }
