@@ -3,54 +3,54 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  
-    <parent>
-      <groupId>org.graphwalker</groupId>
-      <artifactId>graphwalker-project</artifactId>
-      <version>3.4.0-SNAPSHOT</version>
-    </parent>
 
-    <name>GraphWalker Maven Archetype</name>
-    <artifactId>graphwalker-maven-archetype</artifactId>
-    <packaging>maven-archetype</packaging>
+  <parent>
+    <groupId>org.graphwalker</groupId>
+    <artifactId>graphwalker-project</artifactId>
+    <version>3.4.0-SNAPSHOT</version>
+  </parent>
 
-    <scm>
-        <url>https://github.com/GraphWalker/graphwalker-project</url>
-        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
-        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
-    </scm>
+  <name>GraphWalker Maven Archetype</name>
+  <artifactId>graphwalker-maven-archetype</artifactId>
+  <packaging>maven-archetype</packaging>
 
-    <build>
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.archetype</groupId>
-                <artifactId>archetype-packaging</artifactId>
-                <version>2.2</version>
-            </extension>
-        </extensions>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-                    <licenseName>mit</licenseName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>update-license</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/archetype-resources/**/*.*</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+  <scm>
+    <url>https://github.com/GraphWalker/graphwalker-project</url>
+    <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+    <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+  </scm>
+
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.archetype</groupId>
+        <artifactId>archetype-packaging</artifactId>
+        <version>2.2</version>
+      </extension>
+    </extensions>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>1.6</version>
+        <configuration>
+          <licenseName>mit</licenseName>
+        </configuration>
+        <executions>
+          <execution>
+            <id>update-license</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>update-file-header</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/archetype-resources/**/*.*</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -2,78 +2,78 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.graphwalker</groupId>
-        <artifactId>graphwalker-project</artifactId>
-        <version>3.4.0-SNAPSHOT</version>
-    </parent>
+  <parent>
+    <groupId>org.graphwalker</groupId>
+    <artifactId>graphwalker-project</artifactId>
+    <version>3.4.0-SNAPSHOT</version>
+  </parent>
 
-    <artifactId>graphwalker-studio</artifactId>
-    <name>GraphWalker Studio</name>
+  <artifactId>graphwalker-studio</artifactId>
+  <name>GraphWalker Studio</name>
 
-    <scm>
-        <url>https://github.com/GraphWalker/graphwalker-project</url>
-        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
-        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
-    </scm>
+  <scm>
+    <url>https://github.com/GraphWalker/graphwalker-project</url>
+    <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+    <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+  </scm>
 
-    <properties>
-        <java.version>1.7</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <start-class>org.graphwalker.studio.Application</start-class>
-    </properties>
+  <properties>
+    <java.version>1.7</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <start-class>org.graphwalker.studio.Application</start-class>
+  </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-websocket</artifactId>
-            <version>3.4.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>1.2.7.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <version>1.2.7.RELEASE</version>
-        </dependency>
-        <!-- tag::actuator[] -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <version>1.2.7.RELEASE</version>
-        </dependency>
-        <!-- end::actuator[] -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.13</version>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>org.graphwalker</groupId>
+      <artifactId>graphwalker-websocket</artifactId>
+      <version>3.4.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>1.2.7.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <version>1.2.7.RELEASE</version>
+    </dependency>
+    <!-- tag::actuator[] -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <version>1.2.7.RELEASE</version>
+    </dependency>
+    <!-- end::actuator[] -->
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.0.13</version>
+    </dependency>
+  </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.3.1.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>${start-class}</mainClass>
-                    <addResources>true</addResources>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>1.3.1.RELEASE</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>${start-class}</mainClass>
+          <addResources>true</addResources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
