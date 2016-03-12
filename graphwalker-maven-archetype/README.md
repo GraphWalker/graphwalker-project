@@ -1,4 +1,5 @@
-GraphWalker Maven Archetype [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-maven-archetype/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-maven-archetype)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-maven-archetype/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-maven-archetype)
+GraphWalker Maven Archetype
 ================
 
 A GraphWalker maven archetype. To help create boilerplate GraphWalker maven projects.
