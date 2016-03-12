@@ -2,77 +2,77 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <parent>
+  <parent>
+    <groupId>org.graphwalker</groupId>
+    <artifactId>graphwalker-project</artifactId>
+    <version>3.4.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>graphwalker-restful</artifactId>
+  <name>GraphWalker Restful Service</name>
+
+  <scm>
+    <url>https://github.com/GraphWalker/graphwalker-project</url>
+    <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
+    <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+  </scm>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.graphwalker</groupId>
+      <artifactId>graphwalker-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graphwalker</groupId>
+      <artifactId>graphwalker-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.graphwalker</groupId>
+      <artifactId>graphwalker-java</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-grizzly2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.btmatthews.hamcrest</groupId>
+      <artifactId>hamcrest-matchers</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
         <groupId>org.graphwalker</groupId>
-        <artifactId>graphwalker-project</artifactId>
-        <version>3.4.0-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>graphwalker-restful</artifactId>
-    <name>GraphWalker Restful Service</name>
-
-    <scm>
-        <url>https://github.com/GraphWalker/graphwalker-project</url>
-        <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
-        <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
-    </scm>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.graphwalker</groupId>
-            <artifactId>graphwalker-java</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-grizzly2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.btmatthews.hamcrest</groupId>
-            <artifactId>hamcrest-matchers</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.graphwalker</groupId>
-                <artifactId>graphwalker-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generate-test-sources</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>generate-test-sources</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+        <artifactId>graphwalker-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-test-sources</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>generate-test-sources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
