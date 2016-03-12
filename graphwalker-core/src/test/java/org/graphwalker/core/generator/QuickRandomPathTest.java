@@ -29,6 +29,8 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.algorithm.AlgorithmException;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -52,11 +54,12 @@ public class QuickRandomPathTest {
     Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
     context.setPathGenerator(generator);
-    context.setCurrentElement(source.build());
-    Assert.assertEquals(context.getCurrentElement(), source.build());
-    Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
-    Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
-    Assert.assertFalse(generator.hasNextStep());
+    Machine machine = new SimpleMachine(context);
+    Assert.assertTrue(machine.hasNextStep());
+    Assert.assertEquals(machine.getNextStep().getCurrentElement(), source.build());
+    Assert.assertEquals(machine.getNextStep().getCurrentElement(), edge.build());
+    Assert.assertEquals(machine.getNextStep().getCurrentElement(), target.build());
+    Assert.assertFalse(machine.hasNextStep());
   }
 
   @Test(expected = AlgorithmException.class)
