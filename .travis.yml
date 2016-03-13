@@ -1,5 +1,6 @@
 language:
   java
+  
 jdk:
   - openjdk7
   - oraclejdk7
@@ -13,6 +14,17 @@ env:
   global:
     - secure: "NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI="
     - secure: "fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE="
+    - secure: "UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g="
+
+addons:
+  coverity_scan:
+    project:
+      name: "GraphWalker/graphwalker-project"
+      description: "Build submitted via Travis CI"
+    notification_email: nilols@spotify.com
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile"
+    branch_pattern: coverity_scan
 
 # Workaround for bug where hostname longer than 64 chars and running OpenJDK 7
 # http://bugs.java.com/bugdatabase/view_bug.do?bug_id=7089443
