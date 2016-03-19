@@ -23,8 +23,8 @@ addons:
       description: "Build submitted via Travis CI"
     notification_email: nilols@spotify.com
     build_command_prepend: "mvn clean"
-    build_command:   "mvn -DskipTests=true compile"
-    branch_pattern: coverity_scan
+    build_command: "mvn -DskipTests=true compile"
+    branch_pattern: master
 
 # Workaround for bug where hostname longer than 64 chars and running OpenJDK 7
 # http://bugs.java.com/bugdatabase/view_bug.do?bug_id=7089443
