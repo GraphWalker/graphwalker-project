@@ -6,19 +6,18 @@
 
 **Implemented enhancements:**
 
-- If an action script contains more than 1 semicolon, execution fails [\#22](https://github.com/GraphWalker/graphwalker-project/issues/22)
+- Remove tests from CLI in favor for IO [\#21](https://github.com/GraphWalker/graphwalker-project/issues/21)
+- Moving some tests to the maven verify buildlifecycle  [\#16](https://github.com/GraphWalker/graphwalker-project/issues/16)
+- Bumping antlr to 4.5 fails unit tests in graphwalker-dsl [\#15](https://github.com/GraphWalker/graphwalker-project/issues/15)
+
+**Fixed bugs:**
+
+- File names too long for Windows [\#20](https://github.com/GraphWalker/graphwalker-project/issues/20)
+- Swedish characters åäö [\#13](https://github.com/GraphWalker/graphwalker-project/issues/13)
 
 **Closed issues:**
 
-- Is it possible to low chances of edge/vertex for being selected next in graph?! [\#35](https://github.com/GraphWalker/graphwalker-project/issues/35)
-- is it possible to access coverage information? [\#33](https://github.com/GraphWalker/graphwalker-project/issues/33)
-- Remove tests from CLI in favor for IO [\#21](https://github.com/GraphWalker/graphwalker-project/issues/21)
-- File names too long for Windows [\#20](https://github.com/GraphWalker/graphwalker-project/issues/20)
-- Null pointer exception when building a model read from json [\#19](https://github.com/GraphWalker/graphwalker-project/issues/19)
-- GraphWalker WebSopcket API - getNext returning visitedElement response [\#17](https://github.com/GraphWalker/graphwalker-project/issues/17)
-- Moving some tests to the maven verify buildlifecycle  [\#16](https://github.com/GraphWalker/graphwalker-project/issues/16)
-- Bumping antlr to 4.5 fails unit tests in graphwalker-dsl [\#15](https://github.com/GraphWalker/graphwalker-project/issues/15)
-- Swedish characters åäö [\#13](https://github.com/GraphWalker/graphwalker-project/issues/13)
+- print execution plan [\#32](https://github.com/GraphWalker/graphwalker-project/issues/32)
 
 **Merged pull requests:**
 
@@ -38,6 +37,7 @@
 
 **Closed issues:**
 
+- Test code generation? [\#10](https://github.com/GraphWalker/graphwalker-project/issues/10)
 - ArrayLists in v2.6.2 vs v3.2.1 [\#9](https://github.com/GraphWalker/graphwalker-project/issues/9)
 - io: Tests fail when run on Windows [\#5](https://github.com/GraphWalker/graphwalker-project/issues/5)
 
