@@ -26,8 +26,65 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 /**
  * @author Nils Olsson
  */
 public class EulerianTest {
+
+  private final Vertex A = new Vertex().setName("A");
+  private final Vertex B = new Vertex().setName("B");
+  private final Vertex C = new Vertex().setName("C");
+
+  private Model createModel() {
+    return new Model()
+      .addEdge(new Edge().setSourceVertex(A).setTargetVertex(B))
+      .addEdge(new Edge().setSourceVertex(B).setTargetVertex(C))
+      .addEdge(new Edge().setSourceVertex(C).setTargetVertex(A))
+      .addEdge(new Edge().setSourceVertex(B).setTargetVertex(A));
+  }
+
+  @Test
+  public void verifyNotEulerian() {
+    Model model = createModel().addEdge(new Edge().setSourceVertex(C).setTargetVertex(A));
+    Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
+    assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.NOT_EULERIAN));
+  }
+
+  @Test(expected = AlgorithmException.class)
+  public void verifyNotEulerianPathFromVertex() {
+    Model model = createModel().addEdge(new Edge().setSourceVertex(C).setTargetVertex(A));
+    Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
+    assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.NOT_EULERIAN));
+    eulerian.getEulerPath(A.build());
+  }
+
+  @Test(expected = AlgorithmException.class)
+  public void verifyNotEulerianPathFromEdge() {
+    Model model = createModel().addEdge(new Edge().setSourceVertex(C).setTargetVertex(A));
+    Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
+    assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.NOT_EULERIAN));
+    eulerian.getEulerPath(model.getEdges().get(0).build());
+  }
+
+  @Test
+  public void verifySemiEulerian() {
+    Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(createModel().build()));
+    assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.SEMI_EULERIAN));
+  }
+
+  @Test
+  public void verifyEulerian() {
+    Model model = createModel().addEdge(new Edge().setSourceVertex(A).setTargetVertex(B));
+    Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
+    assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.EULERIAN));
+  }
 }

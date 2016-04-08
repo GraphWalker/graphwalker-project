@@ -110,7 +110,7 @@ public final class Eulerian implements Algorithm {
     }
 
     public boolean hasPolarity() {
-      return 0 != polarity;
+      return 0 != getPolarity();
     }
 
     public int getPolarity() {
