@@ -6,12 +6,18 @@
 
 **Implemented enhancements:**
 
+- New CLI command: convert [\#47](https://github.com/GraphWalker/graphwalker-project/issues/47)
+- Adding CLI command: source [\#45](https://github.com/GraphWalker/graphwalker-project/issues/45)
+- Added BLOCKED feature [\#44](https://github.com/GraphWalker/graphwalker-project/issues/44)
+- Added modelchecking, cli command: check [\#43](https://github.com/GraphWalker/graphwalker-project/issues/43)
+- Added tests [\#42](https://github.com/GraphWalker/graphwalker-project/issues/42)
 - Remove tests from CLI in favor for IO [\#21](https://github.com/GraphWalker/graphwalker-project/issues/21)
 - Moving some tests to the maven verify buildlifecycle  [\#16](https://github.com/GraphWalker/graphwalker-project/issues/16)
 - Bumping antlr to 4.5 fails unit tests in graphwalker-dsl [\#15](https://github.com/GraphWalker/graphwalker-project/issues/15)
 
 **Fixed bugs:**
 
+- Fixed  jdk comparability issues [\#46](https://github.com/GraphWalker/graphwalker-project/issues/46)
 - File names too long for Windows [\#20](https://github.com/GraphWalker/graphwalker-project/issues/20)
 - Swedish characters åäö [\#13](https://github.com/GraphWalker/graphwalker-project/issues/13)
 
