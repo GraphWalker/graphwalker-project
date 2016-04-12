@@ -48,7 +48,7 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class RandomPath extends PathGeneratorBase<StopCondition> {
 
-  private static final Logger logger = LoggerFactory.getLogger(RandomPath.class);
+  private static final Logger LOG = LoggerFactory.getLogger(RandomPath.class);
 
   private final Random random = new Random(System.nanoTime());
 
@@ -65,8 +65,8 @@ public final class RandomPath extends PathGeneratorBase<StopCondition> {
     }
     List<Element> elements = context.filter(context.getModel().getElements(currentElement));
     if (elements.isEmpty()) {
-      logger.error("currentElement: " + currentElement);
-      logger.error("context.getModel().getElements(): " + context.getModel().getElements());
+      LOG.error("currentElement: " + currentElement);
+      LOG.error("context.getModel().getElements(): " + context.getModel().getElements());
       throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
     }
     context.setCurrentElement(elements.get(random.nextInt(elements.size())));

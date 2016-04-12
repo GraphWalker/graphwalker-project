@@ -71,7 +71,7 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  */
 public abstract class ExecutionContext extends SimpleScriptContext implements Context {
 
-  private static final Logger logger = LoggerFactory.getLogger(ExecutionContext.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ExecutionContext.class);
 
   private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
   private ScriptEngine scriptEngine;
@@ -111,7 +111,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
       compiledScript.eval(bindings);
       scriptEngine = compiledScript.getEngine();
     } catch (ScriptException e) {
-      logger.error(e.getMessage());
+      LOG.error(e.getMessage());
       throw new RuntimeException(e);
     }
   }
@@ -246,7 +246,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
         Constructor<? extends Algorithm> constructor = clazz.getConstructor(Context.class);
         algorithms.put(clazz, constructor.newInstance(this));
       } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-        logger.error(e.getMessage());
+        LOG.error(e.getMessage());
         throw new MachineException(this, e);
       }
     }
@@ -272,11 +272,11 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   public boolean isAvailable(RuntimeEdge edge) {
     if (edge.hasGuard()) {
-      logger.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
+      LOG.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
       try {
         return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());
       } catch (ScriptException e) {
-        logger.error(e.getMessage());
+        LOG.error(e.getMessage());
         throw new MachineException(this, e);
       }
     }
@@ -284,24 +284,24 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   public void execute(Action action) {
-    logger.debug("Execute {}", action.getScript());
+    LOG.debug("Execute {}", action.getScript());
     try {
       getScriptEngine().eval(action.getScript());
     } catch (ScriptException e) {
-      logger.error(e.getMessage());
+      LOG.error(e.getMessage());
       throw new MachineException(this, e);
     }
   }
 
   public void execute(String name) {
-    logger.debug("Execute {}", name);
+    LOG.debug("Execute {}", name);
     try {
       getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
       getScriptEngine().eval(name + "()");
     } catch (NoSuchMethodException e) {
       // ignore, method is not defined in the execution context
     } catch (Throwable t) {
-      logger.error(t.getMessage());
+      LOG.error(t.getMessage());
       throw new MachineException(this, t);
     }
   }
