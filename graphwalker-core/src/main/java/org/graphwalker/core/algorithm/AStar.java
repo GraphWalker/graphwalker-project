@@ -91,7 +91,10 @@ public final class AStar implements Algorithm {
       }
     }
     if (!queue.isEmpty()) {
-      return queue.poll().getElement();
+      AStarNode result = queue.poll();
+      if (null != result) {
+        return result.getElement();
+      }
     }
     throw new AlgorithmException();
   }
@@ -107,27 +110,29 @@ public final class AStar implements Algorithm {
     AStarNode targetNode = null;
     while (openSet.size() > 0) {
       AStarNode node = queue.poll();
-      openSet.remove(node.getElement());
-      if (node.getElement().equals(destination)) {
-        targetNode = node;
-        break;
-      } else {
-        closeSet.put(node.getElement(), node);
-        List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
-        for (Element neighbor : neighbors) {
-          AStarNode visited = closeSet.get(neighbor);
-          if (isNull(visited)) {
-            double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
-            AStarNode neighborNode = openSet.get(neighbor);
-            if (isNull(neighborNode)) {
-              neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
-              neighborNode.setParent(node);
-              openSet.put(neighbor, neighborNode);
-              queue.add(neighborNode);
-            } else if (g < neighborNode.getG()) {
-              neighborNode.setParent(node);
-              neighborNode.setG(g);
-              neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
+      if (null != node) {
+        openSet.remove(node.getElement());
+        if (node.getElement().equals(destination)) {
+          targetNode = node;
+          break;
+        } else {
+          closeSet.put(node.getElement(), node);
+          List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
+          for (Element neighbor : neighbors) {
+            AStarNode visited = closeSet.get(neighbor);
+            if (isNull(visited)) {
+              double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
+              AStarNode neighborNode = openSet.get(neighbor);
+              if (isNull(neighborNode)) {
+                neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
+                neighborNode.setParent(node);
+                openSet.put(neighbor, neighborNode);
+                queue.add(neighborNode);
+              } else if (g < neighborNode.getG()) {
+                neighborNode.setParent(node);
+                neighborNode.setG(g);
+                neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
+              }
             }
           }
         }
