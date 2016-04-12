@@ -89,7 +89,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   private final Map<Requirement, RequirementStatus> requirements = new HashMap<>();
 
   public ExecutionContext() {
-    ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+    ScriptEngine engine = getEngineByName();
     engine.setContext(this);
     String script = "";
     Compilable compiler = (Compilable) engine;
@@ -114,6 +114,14 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
       logger.error(e.getMessage());
       throw new RuntimeException(e);
     }
+  }
+
+  private ScriptEngine getEngineByName() {
+    ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+    if (null == engine) {
+      throw new MachineException("Failed to create ScriptEngine");
+    }
+    return engine;
   }
 
   public ExecutionContext(Model model, PathGenerator pathGenerator) {
