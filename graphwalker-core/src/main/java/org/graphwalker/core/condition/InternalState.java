@@ -36,7 +36,7 @@ import javax.script.ScriptException;
  */
 public final class InternalState extends StopConditionBase {
 
-  private static final Logger logger = LoggerFactory.getLogger(InternalState.class);
+  private static final Logger LOG = LoggerFactory.getLogger(InternalState.class);
   private final String script;
 
   public InternalState(String script) {
@@ -54,7 +54,7 @@ public final class InternalState extends StopConditionBase {
         throw new StopConditionException("Wrong type of expression");
       }
     } catch (ScriptException e) {
-      logger.error(e.getMessage());
+      LOG.error(e.getMessage());
       return false;
     }
   }

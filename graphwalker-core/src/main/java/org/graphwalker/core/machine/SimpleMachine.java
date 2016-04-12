@@ -59,7 +59,7 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  */
 public class SimpleMachine extends MachineBase {
 
-  private static final Logger logger = LoggerFactory.getLogger(SimpleMachine.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SimpleMachine.class);
 
   private Element lastElement;
 
@@ -123,7 +123,7 @@ public class SimpleMachine extends MachineBase {
   }
 
   protected Context getNextStep(Context context) {
-    logger.debug("Context: " + context);
+    LOG.debug("Context: " + context);
     if (isNotNull(context.getNextElement())) {
       context.setCurrentElement(context.getNextElement());
     } else {
@@ -143,7 +143,7 @@ public class SimpleMachine extends MachineBase {
         context.setExecutionStatus(ExecutionStatus.EXECUTING);
       }
     } catch (Throwable t) {
-      logger.error(t.getMessage());
+      LOG.error(t.getMessage());
       getExceptionStrategy().handle(this, new MachineException(context, t));
     }
   }
@@ -267,7 +267,7 @@ public class SimpleMachine extends MachineBase {
         execute((RuntimeEdge) element);
       }
     } catch (MachineException e) {
-      logger.error(e.getMessage());
+      LOG.error(e.getMessage());
       getExceptionStrategy().handle(this, e);
     }
   }

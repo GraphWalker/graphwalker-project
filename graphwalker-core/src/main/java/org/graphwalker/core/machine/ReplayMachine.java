@@ -29,7 +29,8 @@ import static org.graphwalker.core.common.Objects.isNotNull;
  */
 public final class ReplayMachine extends SimpleMachine {
 
-  private static final Logger logger = LoggerFactory.getLogger(ReplayMachine.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ReplayMachine.class);
+
   private final Profiler profiler;
   private final Iterator<Element> iterator;
 
@@ -50,7 +51,7 @@ public final class ReplayMachine extends SimpleMachine {
         newContext.setNextElement(profiler.getPath().getFirst());
         contexts.add(newContext);
       } catch (InstantiationException | IllegalAccessException e) {
-        logger.error(e.getMessage());
+        LOG.error(e.getMessage());
         throw new MachineException(context, e);
       }
     }
