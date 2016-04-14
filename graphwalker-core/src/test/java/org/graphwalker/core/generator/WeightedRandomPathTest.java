@@ -27,8 +27,10 @@ package org.graphwalker.core.generator;
  */
 
 import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
  */
 public class WeightedRandomPathTest {
 
-  private static final Logger logger = LoggerFactory.getLogger(WeightedRandomPathTest.class);
+  private static final Logger LOG = LoggerFactory.getLogger(WeightedRandomPathTest.class);
 
   private final Vertex source = new Vertex().setName("source");
   private final Vertex target = new Vertex().setName("target");
@@ -50,6 +52,8 @@ public class WeightedRandomPathTest {
   private final Edge edge3 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.15).setName("edge3");
   private final Edge edge4 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge4");
   private final Edge edge5 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge5");
+  private final Edge edge6 = new Edge().setSourceVertex(source).setTargetVertex(target).setWeight(0.15).setName("edge6");
+
   private final Edge back2SourceEdge = new Edge().setSourceVertex(target).setTargetVertex(source).setName("back2SourceEdge");
   private final Model model = new Model()
     .addEdge(edge1)
@@ -60,13 +64,73 @@ public class WeightedRandomPathTest {
     .addEdge(back2SourceEdge);
 
   @Test
-  public void runWeightedRandom() {
+  public void doesNotThrowForValidModel() {
     PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
-    SimpleMachine machine = new SimpleMachine(new ExecutionContext(model, generator) {
-    }.setCurrentElement(source.build()));
+    Context context = new TestExecutionContext(model, generator).setCurrentElement(source.build());
+    SimpleMachine machine = new SimpleMachine(context);
 
     while (machine.hasNextStep()) {
-      logger.debug(machine.getCurrentContext().getCurrentElement().getName());
+      LOG.debug(machine.getCurrentContext().getCurrentElement().getName());
+      machine.getNextStep();
+    }
+  }
+
+  @Test(expected = MachineException.class)
+  public void throwsWhenTotalWeightHigherThanOne() {
+    Model invalidModel = new Model()
+      .addEdge(edge1)
+      .addEdge(edge2)
+      .addEdge(edge3)
+      .addEdge(edge4)
+      .addEdge(edge5)
+      .addEdge(edge6)
+      .addEdge(back2SourceEdge);
+    PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
+    Context context = new TestExecutionContext(invalidModel, generator).setCurrentElement(source.build());
+    SimpleMachine machine = new SimpleMachine(context);
+
+    while (machine.hasNextStep()) {
+      LOG.debug(machine.getCurrentContext().getCurrentElement().getName());
+      machine.getNextStep();
+    }
+  }
+
+  @Test(expected = MachineException.class)
+  public void throwsWhenModelEmpty() {
+    Model emptyModel = new Model();
+    PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
+    Context context = new TestExecutionContext(emptyModel, generator).setCurrentElement(source.build());
+    SimpleMachine machine = new SimpleMachine(context);
+
+    while (machine.hasNextStep()) {
+      LOG.debug(machine.getCurrentContext().getCurrentElement().getName());
+      machine.getNextStep();
+    }
+  }
+
+  @Test
+  public void doesNotThrowWhenNoWeightsSpecified() {
+    Edge edge1 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge1");
+    Edge edge2 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge2");
+    Edge edge3 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge3");
+    Edge edge4 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge4");
+    Edge edge5 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge5");
+
+    Edge back2SourceEdge = new Edge().setSourceVertex(target).setTargetVertex(source).setName("back2SourceEdge");
+    Model unweightedModel = new Model()
+      .addEdge(edge1)
+      .addEdge(edge2)
+      .addEdge(edge3)
+      .addEdge(edge4)
+      .addEdge(edge5)
+      .addEdge(back2SourceEdge);
+
+    PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
+    Context context = new TestExecutionContext(unweightedModel, generator).setCurrentElement(source.build());
+    SimpleMachine machine = new SimpleMachine(context);
+
+    while (machine.hasNextStep()) {
+      LOG.debug(machine.getCurrentContext().getCurrentElement().getName());
       machine.getNextStep();
     }
   }
