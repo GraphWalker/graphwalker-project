@@ -36,7 +36,7 @@
   <name>GraphWalker Example</name>
 
   <properties>
-    <graphwalker.version>3.4.0-SNAPSHOT</graphwalker.version>
+    <graphwalker.version>3.4.0</graphwalker.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
