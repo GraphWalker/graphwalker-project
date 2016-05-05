@@ -5,7 +5,7 @@ import requests,json
 ##    java -jar graphwalker-3.4.0-SNAPSHOT.jar source -i model.graphml python.template > model.py
 ##
 ## 2) Start graphwalker:
-##    java -jar graphwalker-3.4.0-SNAPSHOT.jar online --json --service RESTFUL -m model.graphml "random(edge_coverage(100))"
+##    java -jar graphwalker-3.4.0-SNAPSHOT.jar online --service RESTFUL -m model.graphml "random(edge_coverage(100))"
 ##
 ## 3) Run the per program:
 ##    python model.py
@@ -19,9 +19,9 @@ def {LABEL}() :
 FOOTER<{{
 gw_url = 'http://localhost:8887/graphwalker'
 
-while requests.get(gw_url+'/hasNext').json()['HasNext'] == 'true' :
+while requests.get(gw_url+'/hasNext').json()['hasNext'] == 'true' :
     # Get next step from GraphWalker
-    step = requests.get(gw_url+'/getNext').json()['CurrentElementName']
+    step = requests.get(gw_url+'/getNext').json()['currentElementName']
     if step != '' :
         eval( step + "()" )
 }}>FOOTER
