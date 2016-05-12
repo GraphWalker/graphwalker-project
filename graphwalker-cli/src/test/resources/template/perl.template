@@ -4,10 +4,10 @@ use warnings;
 
 ##
 ## 1) Generate perl stub source code:
-##    java -jar graphwalker-3.4.0-SNAPSHOT.jar source -i model.graphml perl.template > model.perl
+##    java -jar graphwalker-4.0.0-SNAPSHOT.jar source -i model.graphml perl.template > model.perl
 ##
 ## 2) Start graphwalker:
-##    java -jar graphwalker-3.4.0-SNAPSHOT.jar online -s RESTFUL -m model.graphml "random(edge_coverage(100))"
+##    java -jar graphwalker-4.0.0-SNAPSHOT.jar online -s RESTFUL -m model.graphml "random(edge_coverage(100))"
 ##
 ## 3) Run the per program:
 ##    perl login.perl http://localhost:8887/graphwalker
