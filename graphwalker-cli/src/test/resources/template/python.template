@@ -2,10 +2,10 @@ HEADER<{{
 import requests,json
 ##
 ## 1) Generate python stub source code:
-##    java -jar graphwalker-3.4.0-SNAPSHOT.jar source -i model.graphml python.template > model.py
+##    java -jar graphwalker-4.0.0-SNAPSHOT.jar source -i model.graphml python.template > model.py
 ##
 ## 2) Start graphwalker:
-##    java -jar graphwalker-3.4.0-SNAPSHOT.jar online --service RESTFUL -m model.graphml "random(edge_coverage(100))"
+##    java -jar graphwalker-4.0.0-SNAPSHOT.jar online --service RESTFUL -m model.graphml "random(edge_coverage(100))"
 ##
 ## 3) Run the per program:
 ##    python model.py

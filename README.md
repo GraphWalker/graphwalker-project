@@ -22,5 +22,5 @@ mvn package -pl graphwalker-cli -am
 
 The jar is in:
 ```bash
-graphwalker-cli/target/graphwalker-cli-3.4.0-SNAPSHOT.jar
+graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar
 ```
