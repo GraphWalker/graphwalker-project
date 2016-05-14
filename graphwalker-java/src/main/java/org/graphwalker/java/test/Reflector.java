@@ -51,16 +51,6 @@ public final class Reflector {
   private final Method setGroups;
   private final Method execute;
   private final Method reportResults;
-  private final Method setTestCount;
-  private final Method getTestCount;
-  private final Method setCompletedCount;
-  private final Method getCompletedCount;
-  private final Method setIncompleteCount;
-  private final Method getIncompleteCount;
-  private final Method setFailedCount;
-  private final Method getFailedCount;
-  private final Method setNotExecutedCount;
-  private final Method getNotExecutedCount;
   private final Method setErrors;
   private final Method getErrors;
   private final Method getMachineConfiguration;
@@ -89,16 +79,6 @@ public final class Reflector {
     this.setGroups = Reflections.getMethod(configurationClass, "setGroups", collectionClass);
     this.execute = Reflections.getMethod(executorClass, "execute", Boolean.TYPE);
     this.reportResults = Reflections.getMethod(executorClass, "reportResults", File.class, Date.class, Properties.class);
-    this.setTestCount = Reflections.getMethod(Result.class, "setTestCount", Integer.TYPE);
-    this.getTestCount = Reflections.getMethod(resultClass, "getTestCount");
-    this.setCompletedCount = Reflections.getMethod(Result.class, "setCompletedCount", Integer.TYPE);
-    this.getCompletedCount = Reflections.getMethod(resultClass, "getCompletedCount");
-    this.setIncompleteCount = Reflections.getMethod(Result.class, "setIncompleteCount", Integer.TYPE);
-    this.getIncompleteCount = Reflections.getMethod(resultClass, "getIncompleteCount");
-    this.setFailedCount = Reflections.getMethod(Result.class, "setFailedCount", Integer.TYPE);
-    this.getFailedCount = Reflections.getMethod(resultClass, "getFailedCount");
-    this.setNotExecutedCount = Reflections.getMethod(Result.class, "setNotExecutedCount", Integer.TYPE);
-    this.getNotExecutedCount = Reflections.getMethod(resultClass, "getNotExecutedCount");
     this.setErrors = Reflections.getMethod(Result.class, "setErrors", List.class);
     this.getErrors = Reflections.getMethod(resultClass, "getErrors");
     this.getMachineConfiguration = Reflections.getMethod(executorClass, "getMachineConfiguration");
@@ -143,11 +123,6 @@ public final class Reflector {
 
   private Result createResult(Object result) {
     Result newResult = new Result();
-    Reflections.invoke(newResult, setTestCount, Reflections.invoke(result, getTestCount));
-    Reflections.invoke(newResult, setCompletedCount, Reflections.invoke(result, getCompletedCount));
-    Reflections.invoke(newResult, setIncompleteCount, Reflections.invoke(result, getIncompleteCount));
-    Reflections.invoke(newResult, setFailedCount, Reflections.invoke(result, getFailedCount));
-    Reflections.invoke(newResult, setNotExecutedCount, Reflections.invoke(result, getNotExecutedCount));
     Reflections.invoke(newResult, setErrors, Reflections.invoke(result, getErrors));
     return newResult;
   }
