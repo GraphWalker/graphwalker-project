@@ -188,7 +188,7 @@ public final class TestExecutor implements Executor {
 
   @Override
   public Result execute(boolean ignoreErrors) {
-    result = new Result(machine.getContexts().size());
+    result = new Result();
     executeAnnotation(BeforeExecution.class, machine);
     try {
       Context context = null;
@@ -204,7 +204,7 @@ public final class TestExecutor implements Executor {
       failures.put(e.getContext(), e);
     }
     executeAnnotation(AfterExecution.class, machine);
-    updateResult(result, machine);
+    result.updateResults(machine, failures);
     if (!ignoreErrors && !failures.isEmpty()) {
       throw new TestExecutionException("Test execution contains failures");
     }
@@ -214,42 +214,6 @@ public final class TestExecutor implements Executor {
   @Override
   public Result getResult() {
     return result;
-  }
-
-  private void updateResult(Result result, Machine machine) {
-    int completed = 0, failed = 0, notExecuted = 0, incomplete = 0;
-    for (Context context : machine.getContexts()) {
-      switch (context.getExecutionStatus()) {
-        case COMPLETED: {
-          completed++;
-        }
-        break;
-        case FAILED: {
-          failed++;
-        }
-        break;
-        case NOT_EXECUTED: {
-          notExecuted++;
-        }
-        break;
-        case EXECUTING: {
-          incomplete++;
-        }
-      }
-    }
-    result.setCompletedCount(completed);
-    result.setFailedCount(failed);
-    result.setNotExecutedCount(notExecuted);
-    result.setIncompleteCount(incomplete);
-    for (MachineException exception : getFailures()) {
-      result.addError(getStackTrace(exception.getCause()));
-    }
-  }
-
-  private String getStackTrace(Throwable throwable) {
-    StringWriter writer = new StringWriter();
-    throwable.printStackTrace(new PrintWriter(writer, true));
-    return writer.getBuffer().toString();
   }
 
   private boolean isTestIncluded(GraphWalker annotation, String name) {

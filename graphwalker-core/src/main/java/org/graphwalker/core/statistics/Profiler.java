@@ -27,6 +27,7 @@ package org.graphwalker.core.statistics;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.RequirementStatus;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
@@ -38,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipFile;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 
@@ -49,6 +51,20 @@ public final class Profiler {
 
   private final Profile profile = new Profile();
   private long startTime = 0;
+  private int modelCount;
+  private int completedModelCount;
+  private int incompleteModelCount;
+  private int failedModelCount;
+  private int notExecutedModelCount;
+  private int totalNumberOfEdges;
+  private int totalNumberOfVertices;
+  private int totalNumberOfUnvisitedVertices;
+  private int totalNumberOfUnvisitedEdges;
+  private int totalNumberOfRequirements;
+  private int totalNumberOfRequirementsNotCovered;
+  private int totalNumberOfRequirementsPassed;
+  private int totalNumberOfRequirementsFailed;
+
 
   private final Map<Element, Context> elementContextMap = new HashMap<>();
   private final Set<Context> contexts = new HashSet<>();
@@ -96,11 +112,47 @@ public final class Profiler {
     return elementList;
   }
 
+  public List<Element> getUnvisitedElements() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (!isVisited(e)) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
+  public List<Element> getVisitedEdges() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (isVisited(e) && e instanceof Edge.RuntimeEdge) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
   public List<Element> getUnvisitedEdges(Context context) {
     List<Element> elementList = new ArrayList<>();
     for (Element e : context.getModel().getElements()) {
       if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
         elementList.add(e);
+      }
+    }
+    return elementList;
+  }
+
+  public List<Element> getUnvisitedEdges() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
+          elementList.add(e);
+        }
       }
     }
     return elementList;
@@ -116,11 +168,119 @@ public final class Profiler {
     return elementList;
   }
 
+  public List<Element> getUnvisitedVertices() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
+  public List<Element> getVisitedVertices() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (isVisited(e) && e instanceof Vertex.RuntimeVertex) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
   public Path<Element> getPath() {
     return profile.getPath();
   }
 
   public Profile getProfile() {
     return profile;
+  }
+
+  public int getModelCount() {
+    return modelCount;
+  }
+
+  public int getCompletedModelCount() {
+    return completedModelCount;
+  }
+
+  public int getIncompleteModelCount() {
+    return incompleteModelCount;
+  }
+
+  public int getFailedModelCount() {
+    return failedModelCount;
+  }
+
+  public int getNotExecutedModelCount() {
+    return notExecutedModelCount;
+  }
+
+  public int getTotalNumberOfUnvisitedVertices() {
+    return totalNumberOfUnvisitedVertices;
+  }
+
+  public int getTotalNumberOfUnvisitedEdges() {
+    return totalNumberOfUnvisitedEdges;
+  }
+
+  public int getTotalNumberOfRequirements() {
+    return totalNumberOfRequirements;
+  }
+
+  public int getTotalNumberOfRequirementsNotCovered() {
+    return totalNumberOfRequirementsNotCovered;
+  }
+
+  public int getTotalNumberOfRequirementsPassed() {
+    return totalNumberOfRequirementsPassed;
+  }
+
+  public int getTotalNumberOfRequirementsFailed() {
+    return totalNumberOfRequirementsFailed;
+  }
+
+  public void updateResult() {
+    for (Context context : getContexts()) {
+      switch (context.getExecutionStatus()) {
+        case COMPLETED: {
+          completedModelCount++;
+        }
+        break;
+        case FAILED: {
+          failedModelCount++;
+        }
+        break;
+        case NOT_EXECUTED: {
+          notExecutedModelCount++;
+        }
+        break;
+        case EXECUTING: {
+          incompleteModelCount++;
+        }
+      }
+
+      modelCount++;
+      totalNumberOfEdges +=                  context.getModel().getEdges().size();
+      totalNumberOfVertices +=               context.getModel().getVertices().size();
+      totalNumberOfUnvisitedVertices +=      context.getProfiler().getUnvisitedVertices(context).size();
+      totalNumberOfUnvisitedEdges +=         context.getProfiler().getUnvisitedEdges(context).size();
+      totalNumberOfRequirements +=           context.getRequirements().size();
+      totalNumberOfRequirementsNotCovered += context.getRequirements(RequirementStatus.NOT_COVERED).size();
+      totalNumberOfRequirementsPassed +=     context.getRequirements(RequirementStatus.PASSED).size();
+      totalNumberOfRequirementsFailed +=     context.getRequirements(RequirementStatus.FAILED).size();
+    }
+  }
+
+  public int getTotalNumberOfEdges() {
+    return totalNumberOfEdges;
+  }
+
+  public int getTotalNumberOfVertices() {
+    return totalNumberOfVertices;
   }
 }

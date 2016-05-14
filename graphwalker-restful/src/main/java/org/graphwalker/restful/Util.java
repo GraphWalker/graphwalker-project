@@ -38,6 +38,7 @@ import org.json.JSONObject;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -121,8 +122,9 @@ public abstract class Util {
    * @return The execution statistics in JSON format.
    */
   public static JSONObject getStatisticsAsJSON(Machine machine) {
-    EnumMap<Statistics, Integer> map = getStatistics(machine.getCurrentContext());
+    EnumMap<Statistics, Integer> map = getStatistics(machine.getContexts());
     JSONObject object = new JSONObject();
+    object.put("totalNumberOfModels", machine.getContexts().size());
     object.put("totalNumberOfEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES));
     object.put("totalNumberOfUnvisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
     object.put("totalNumberOfVisitedEdges", map.get(Statistics.TOTAL_NUMBER_OF_EDGES) - map.get(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES));
@@ -166,16 +168,38 @@ public abstract class Util {
     return object;
   }
 
-  private static EnumMap<Statistics, Integer> getStatistics(Context context) {
+  private static EnumMap<Statistics, Integer> getStatistics(List<Context> contexts) {
     EnumMap<Statistics, Integer> map = new EnumMap<>(Statistics.class);
-    map.put(Statistics.TOTAL_NUMBER_OF_VERTICES, context.getModel().getVertices().size());
-    map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES, context.getProfiler().getUnvisitedVertices(context).size());
-    map.put(Statistics.TOTAL_NUMBER_OF_EDGES, context.getModel().getEdges().size());
-    map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES, context.getProfiler().getUnvisitedEdges(context).size());
-    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS, context.getRequirements().size());
-    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED, context.getRequirements(RequirementStatus.NOT_COVERED).size());
-    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_PASSED, context.getRequirements(RequirementStatus.PASSED).size());
-    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_FAILED, context.getRequirements(RequirementStatus.FAILED).size());
+
+    int total_number_of_vertices                 = 0;
+    int total_number_of_unvisited_vertices       = 0;
+    int total_number_of_edges                    = 0;
+    int total_number_of_unvisited_edges          = 0;
+    int total_number_of_requirements             = 0;
+    int total_number_of_requirements_not_covered = 0;
+    int total_number_of_requirements_passed      = 0;
+    int total_number_of_requirements_failed      = 0;
+
+    for (Context context : contexts) {
+      total_number_of_vertices +=                 context.getModel().getVertices().size();
+      total_number_of_unvisited_vertices +=       context.getProfiler().getUnvisitedVertices(context).size();
+      total_number_of_edges +=                    context.getModel().getEdges().size();
+      total_number_of_unvisited_edges +=          context.getProfiler().getUnvisitedEdges(context).size();
+      total_number_of_requirements +=             context.getRequirements().size();
+      total_number_of_requirements_not_covered += context.getRequirements(RequirementStatus.NOT_COVERED).size();
+      total_number_of_requirements_passed +=      context.getRequirements(RequirementStatus.PASSED).size();
+      total_number_of_requirements_failed +=      context.getRequirements(RequirementStatus.FAILED).size();
+    }
+
+    map.put(Statistics.TOTAL_NUMBER_OF_VERTICES,                 total_number_of_vertices);
+    map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_VERTICES,       total_number_of_unvisited_vertices);
+    map.put(Statistics.TOTAL_NUMBER_OF_EDGES,                    total_number_of_edges);
+    map.put(Statistics.TOTAL_NUMBER_OF_UNVISITED_EDGES,          total_number_of_unvisited_edges);
+    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS,             total_number_of_requirements);
+    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_NOT_COVERED, total_number_of_requirements_not_covered);
+    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_PASSED,      total_number_of_requirements_passed);
+    map.put(Statistics.TOTAL_NUMBER_OF_REQUIREMENTS_FAILED,      total_number_of_requirements_failed);
+
     return map;
   }
 }
