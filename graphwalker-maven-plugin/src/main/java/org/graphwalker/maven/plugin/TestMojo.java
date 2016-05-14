@@ -246,12 +246,7 @@ public final class TestMojo extends DefaultMojoBase {
       getLog().info("");
       getLog().info("Result :");
       getLog().info("");
-      getLog().info(MessageFormat.format("Tests: {0}, Completed: {1}, Incomplete: {2}, Failed: {3}, Not Executed: {4}"
-        , result.getTestCount()
-        , result.getCompletedCount()
-        , result.getIncompleteCount()
-        , result.getFailedCount()
-        , result.getNotExecutedCount()));
+      getLog().info(result.getResults().toString());
       getLog().info("");
     }
   }
