@@ -46,6 +46,7 @@ import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.Result;
 import org.graphwalker.java.test.TestExecutor;
+import org.hamcrest.core.StringContains;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -53,7 +54,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-import static com.btmatthews.hamcrest.regex.PatternMatcher.matches;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -190,9 +190,9 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-    Assert.assertThat(body, matches(".*\"num_of_books\":\"0\".*"));
-    Assert.assertThat(body, matches(".*\"MAX_BOOKS\":\"5\".*"));
+    Assert.assertThat(body, new StringContains("\"result\":\"ok\""));
+    Assert.assertThat(body, new StringContains("\"num_of_books\":\"0\""));
+    Assert.assertThat(body, new StringContains("\"MAX_BOOKS\":\"5\""));
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
   }
@@ -213,13 +213,13 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, matches(".*\"numberOfElements\":19.*"));
-    Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-    Assert.assertThat(body, matches(".*\"modelName\":\"UC01_GW2\".*"));
-    Assert.assertThat(body, matches(".*\"currentElementID\":\"e0\".*"));
-    Assert.assertThat(body, matches(".*\"currentElementName\":\"e_init\".*"));
-    Assert.assertThat(body, matches(".*\"data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\].*"));
-    Assert.assertThat(body, matches(".*\"numberOfUnvisitedElements\":18.*"));
+    Assert.assertThat(body, new StringContains("\"numberOfElements\":19"));
+    Assert.assertThat(body, new StringContains("\"result\":\"ok\""));
+    Assert.assertThat(body, new StringContains("\"modelName\":\"UC01_GW2\""));
+    Assert.assertThat(body, new StringContains("\"currentElementID\":\"e0\""));
+    Assert.assertThat(body, new StringContains("\"currentElementName\":\"e_init\""));
+    Assert.assertThat(body, new StringContains("\"data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\]"));
+    Assert.assertThat(body, new StringContains("\"numberOfUnvisitedElements\":18"));
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
   }
@@ -229,15 +229,15 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, matches(".*\"edgeCoverage\":8.*"));
-    Assert.assertThat(body, matches(".*\"result\":\"ok\".*"));
-    Assert.assertThat(body, matches(".*\"totalNumberOfVisitedEdges\":1.*"));
-    Assert.assertThat(body, matches(".*\"totalNumberOfVisitedVertices\":0.*"));
-    Assert.assertThat(body, matches(".*\"totalNumberOfVertices\":7.*"));
-    Assert.assertThat(body, matches(".*\"totalNumberOfEdges\":12.*"));
-    Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedVertices\":7.*"));
-    Assert.assertThat(body, matches(".*\"vertexCoverage\":0.*"));
-    Assert.assertThat(body, matches(".*\"totalNumberOfUnvisitedEdges\":11.*"));
+    Assert.assertThat(body, new StringContains("\"edgeCoverage\":8"));
+    Assert.assertThat(body, new StringContains("\"result\":\"ok\""));
+    Assert.assertThat(body, new StringContains("\"totalNumberOfVisitedEdges\":1"));
+    Assert.assertThat(body, new StringContains("\"totalNumberOfVisitedVertices\":0"));
+    Assert.assertThat(body, new StringContains("\"totalNumberOfVertices\":7"));
+    Assert.assertThat(body, new StringContains("\"totalNumberOfEdges\":12"));
+    Assert.assertThat(body, new StringContains("\"totalNumberOfUnvisitedVertices\":7"));
+    Assert.assertThat(body, new StringContains("\"vertexCoverage\":0"));
+    Assert.assertThat(body, new StringContains("\"totalNumberOfUnvisitedEdges\":11"));
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
   }
