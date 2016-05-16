@@ -32,12 +32,14 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Profiler;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -62,13 +64,8 @@ public class ShortestAllPathsTest {
       Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
     );
     context.setNextElement(v1);
-    while (context.getPathGenerator().hasNextStep()) {
-      context.getPathGenerator().getNextStep();
-      context.getProfiler().start(context);
-      context.getProfiler().stop(context);
-      Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
-    }
-    Assert.assertTrue(expectedElements.isEmpty());
+    execute(context, expectedElements);
+    assertTrue(expectedElements.isEmpty());
   }
 
   @Test
@@ -89,13 +86,8 @@ public class ShortestAllPathsTest {
       Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
     context.setNextElement(v1);
-    while (context.getPathGenerator().hasNextStep()) {
-      context.getPathGenerator().getNextStep();
-      context.getProfiler().start(context);
-      context.getProfiler().stop(context);
-      Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
-    }
-    Assert.assertTrue(expectedElements.isEmpty());
+    execute(context, expectedElements);
+    assertTrue(expectedElements.isEmpty());
   }
 
   @Test
@@ -113,13 +105,17 @@ public class ShortestAllPathsTest {
       Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
     context.setNextElement(v1);
+    execute(context, expectedElements);
+    assertTrue(expectedElements.isEmpty());
+  }
+
+  private void execute(Context context, Deque<Builder<? extends Element>> expectedElements) {
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();
       context.getProfiler().start(context);
       context.getProfiler().stop(context);
-      Assert.assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
+      assertEquals(expectedElements.removeFirst().build(), context.getCurrentElement());
     }
-    Assert.assertTrue(expectedElements.isEmpty());
   }
 
   @Test(expected = AlgorithmException.class)
