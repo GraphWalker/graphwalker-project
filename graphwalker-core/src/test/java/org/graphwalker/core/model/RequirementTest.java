@@ -30,11 +30,17 @@ import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.*;
-import org.junit.Assert;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.RequirementStatus;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -44,8 +50,8 @@ public class RequirementTest {
   @Test
   public void create() {
     Requirement requirement = new Requirement("REQ");
-    Assert.assertNotNull(requirement);
-    Assert.assertEquals("REQ", requirement.getKey());
+    assertNotNull(requirement);
+    assertEquals("REQ", requirement.getKey());
   }
 
   @Test
@@ -57,11 +63,11 @@ public class RequirementTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertNotNull(context.getRequirements());
-    Assert.assertThat(context.getRequirements().size(), is(1));
-    Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
-    Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
-    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
+    assertNotNull(context.getRequirements());
+    assertThat(context.getRequirements().size(), is(1));
+    assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
+    assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
+    assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
   }
 
   @Test
@@ -81,10 +87,10 @@ public class RequirementTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertNotNull(context.getRequirements());
-    Assert.assertThat(context.getRequirements().size(), is(5));
-    Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
-    Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(2));
-    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(3));
+    assertNotNull(context.getRequirements());
+    assertThat(context.getRequirements().size(), is(5));
+    assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
+    assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(2));
+    assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(3));
   }
 }

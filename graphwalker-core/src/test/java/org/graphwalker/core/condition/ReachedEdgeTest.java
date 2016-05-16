@@ -32,10 +32,12 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -63,13 +65,13 @@ public class ReachedEdgeTest {
     StopCondition condition = new ReachedEdge("e2");
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setCurrentElement(v1.build());
-    Assert.assertThat(condition.getFulfilment(), is(0.25));
+    assertThat(condition.getFulfilment(), is(0.25));
     context.setCurrentElement(e1.build());
-    Assert.assertThat(condition.getFulfilment(), is(0.50));
+    assertThat(condition.getFulfilment(), is(0.50));
     context.setCurrentElement(v2.build());
-    Assert.assertThat(condition.getFulfilment(), is(0.75));
+    assertThat(condition.getFulfilment(), is(0.75));
     context.setCurrentElement(e2.build());
-    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    assertThat(condition.getFulfilment(), is(1.0));
   }
 
   @Test
@@ -81,11 +83,11 @@ public class ReachedEdgeTest {
     Model model = new Model().addEdge(e1).addEdge(e2);
     StopCondition condition = new ReachedEdge("e2");
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e1.build());
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e2.build());
-    Assert.assertTrue(condition.isFulfilled());
+    assertTrue(condition.isFulfilled());
   }
 
 
@@ -98,11 +100,11 @@ public class ReachedEdgeTest {
     Model model = new Model().addEdge(e1).addEdge(e2);
     ReachedStopCondition condition = new ReachedEdge("e2");
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e1.build());
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e2.build());
-    Assert.assertTrue(condition.isFulfilled());
-    Assert.assertFalse(condition.getTargetElements().isEmpty());
+    assertTrue(condition.isFulfilled());
+    assertFalse(condition.getTargetElements().isEmpty());
   }
 }

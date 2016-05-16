@@ -34,12 +34,14 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -49,7 +51,7 @@ public class TimeDurationTest {
   @Test
   public void testConstructor() {
     TimeDuration timeDuration = new TimeDuration(100, TimeUnit.SECONDS);
-    Assert.assertThat(timeDuration.getDuration(), is(100L));
+    assertThat(timeDuration.getDuration(), is(100L));
   }
 
   @Test(expected = StopConditionException.class)
@@ -62,13 +64,13 @@ public class TimeDurationTest {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
     Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));
-    Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+    assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
+    assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
   }
 
 }

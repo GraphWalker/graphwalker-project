@@ -32,10 +32,12 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -45,7 +47,7 @@ public class LengthTest {
   @Test
   public void testConstructor() {
     Length length = new Length(333);
-    Assert.assertThat(length.getLength(), is(333L));
+    assertThat(length.getLength(), is(333L));
   }
 
   @Test(expected = StopConditionException.class)
@@ -61,10 +63,10 @@ public class LengthTest {
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
     context.setProfiler(new Profiler());
     for (int i = 0; i <= 100; i++) {
-      Assert.assertThat(condition.getFulfilment(), is((double) i / 100));
+      assertThat(condition.getFulfilment(), is((double) i / 100));
       context.getProfiler().start(context);
       context.getProfiler().stop(context);
-      Assert.assertThat(condition.getFulfilment(), is((double) (i + 1) / 100));
+      assertThat(condition.getFulfilment(), is((double) (i + 1) / 100));
     }
   }
 
@@ -76,10 +78,10 @@ public class LengthTest {
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
     context.setProfiler(new Profiler());
     for (int i = 0; i < 100; i++) {
-      Assert.assertFalse(condition.isFulfilled());
+      assertFalse(condition.isFulfilled());
       context.getProfiler().start(context);
       context.getProfiler().stop(context);
     }
-    Assert.assertTrue(condition.isFulfilled());
+    assertTrue(condition.isFulfilled());
   }
 }

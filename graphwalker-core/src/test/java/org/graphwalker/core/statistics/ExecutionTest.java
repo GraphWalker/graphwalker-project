@@ -26,12 +26,13 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -41,12 +42,12 @@ public class ExecutionTest {
   @Test
   public void create() {
     Execution execution = new Execution(100000000L, 50000L);
-    Assert.assertNotNull(execution);
-    Assert.assertThat(execution.getTime(), is(100000000L));
-    Assert.assertThat(execution.getDuration(), is(50000L));
-    Assert.assertThat(execution.getTime(TimeUnit.MILLISECONDS), is(100L));
-    Assert.assertThat(execution.getDuration(TimeUnit.MICROSECONDS), is(50L));
-    Assert.assertThat(execution.getTime(TimeUnit.SECONDS), is(0L));
-    Assert.assertThat(execution.getDuration(TimeUnit.DAYS), is(0L));
+    assertNotNull(execution);
+    assertThat(execution.getTime(), is(100000000L));
+    assertThat(execution.getDuration(), is(50000L));
+    assertThat(execution.getTime(TimeUnit.MILLISECONDS), is(100L));
+    assertThat(execution.getDuration(TimeUnit.MICROSECONDS), is(50L));
+    assertThat(execution.getTime(TimeUnit.SECONDS), is(0L));
+    assertThat(execution.getDuration(TimeUnit.DAYS), is(0L));
   }
 }

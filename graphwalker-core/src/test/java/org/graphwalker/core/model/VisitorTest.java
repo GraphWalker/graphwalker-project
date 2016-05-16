@@ -26,7 +26,6 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -36,6 +35,9 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -61,7 +63,7 @@ public class VisitorTest {
   public void visitVertices() {
     MyNamedVertexCounter visitor = new MyNamedVertexCounter();
     model.accept(visitor);
-    Assert.assertThat(visitor.count, is(2));
+    assertThat(visitor.count, is(2));
   }
 
   @Test
@@ -80,7 +82,7 @@ public class VisitorTest {
       .build();
     MyLoopEdgeFinder visitor = new MyLoopEdgeFinder();
     pseudograph.accept(visitor);
-    Assert.assertThat(visitor.count, is(1));
+    assertThat(visitor.count, is(1));
   }
 
   @Test
@@ -99,13 +101,13 @@ public class VisitorTest {
     start.build().accept(count2);
 
     // if e1 is a bridge then the vertex count will differ between count1 and count2
-    Assert.assertNotEquals(count1.count, count2.count);
+    assertNotEquals(count1.count, count2.count);
 
     // if we add a edge between v1 and v2 then e1 is no longer a bridge and count1 and count3 should be the same
     model.addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
     MyVertexCounter count3 = new MyVertexCounter(model.build(), e1.build());
     start.build().accept(count3);
-    Assert.assertEquals(count1.count, count3.count);
+    assertEquals(count1.count, count3.count);
 
   }
 

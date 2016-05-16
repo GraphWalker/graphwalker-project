@@ -26,10 +26,11 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -40,11 +41,11 @@ public final class ProfileUnitTest {
   public void measure() {
     ProfileUnit profileUnit = new ProfileUnit(new Execution(0L, 350L));
     profileUnit.addExecution(new Execution(350L, 150L));
-    Assert.assertNotNull(profileUnit);
-    Assert.assertThat(profileUnit.getExecutionCount(), is(2L));
-    Assert.assertThat(profileUnit.getAverageExecutionTime(), is(250L));
-    Assert.assertThat(profileUnit.getMinExecutionTime(), is(150L));
-    Assert.assertThat(profileUnit.getMaxExecutionTime(), is(350L));
-    Assert.assertThat(profileUnit.getTotalExecutionTime(), is(500L));
+    assertNotNull(profileUnit);
+    assertThat(profileUnit.getExecutionCount(), is(2L));
+    assertThat(profileUnit.getAverageExecutionTime(), is(250L));
+    assertThat(profileUnit.getMinExecutionTime(), is(150L));
+    assertThat(profileUnit.getMaxExecutionTime(), is(350L));
+    assertThat(profileUnit.getTotalExecutionTime(), is(500L));
   }
 }

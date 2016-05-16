@@ -39,7 +39,6 @@ import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -48,6 +47,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -63,9 +66,9 @@ public class SimpleMachineTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
   }
 
   @Test
@@ -77,9 +80,9 @@ public class SimpleMachineTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
   }
 
   @Test
@@ -91,9 +94,9 @@ public class SimpleMachineTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
   }
 
   @Test
@@ -108,10 +111,10 @@ public class SimpleMachineTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-    Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5L));
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertThat(context.getProfiler().getTotalVisitCount(), is(5L));
   }
 
   @Test
@@ -127,10 +130,10 @@ public class SimpleMachineTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-    Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(5L));
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertThat(context.getProfiler().getTotalVisitCount(), is(5L));
   }
 
   @Test(expected = MachineException.class)
@@ -145,7 +148,7 @@ public class SimpleMachineTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      Assert.assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
     }
   }
 
@@ -168,7 +171,7 @@ public class SimpleMachineTest {
     }
     // the profiler path is a stack so the first element is the last visited, therefore we create the list in reverse order
     Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build(), shared1.build(), edge1.build(), start.build()));
-    Assert.assertArrayEquals(expectedPath.toArray(), machine.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), machine.getProfiler().getPath().toArray());
   }
 
   @Test(expected = MachineException.class)
@@ -214,7 +217,7 @@ public class SimpleMachineTest {
       , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
       , e5.build(), v2.build(), e6.build(), v3b.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
   @Test
@@ -231,7 +234,7 @@ public class SimpleMachineTest {
     }
     List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build(), e2.build(), v1.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
   @Test
@@ -267,7 +270,7 @@ public class SimpleMachineTest {
       e3.build(),
       v3.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
   @Test
@@ -309,7 +312,7 @@ public class SimpleMachineTest {
       e4.build(),
       v3a.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
   @Test
@@ -333,9 +336,9 @@ public class SimpleMachineTest {
       e2.build(),
       endVertex.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
-    Assert.assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
-    Assert.assertThat(context.getProfiler().getTotalVisitCount(), is(3L));
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
+    assertThat(context.getProfiler().getTotalVisitCount(), is(3L));
   }
 
   @Test
@@ -350,7 +353,7 @@ public class SimpleMachineTest {
     }
     List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
 }
