@@ -26,11 +26,16 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -44,40 +49,40 @@ public class VertexTest {
       .setSharedState("MY_STATE")
       .addRequirement(new Requirement("REQ1"))
       .addRequirement(new Requirement("REQ2"));
-    Assert.assertNotNull(vertex);
-    Assert.assertNotNull(vertex.getName());
-    Assert.assertEquals(vertex.getName(), "vertex");
-    Assert.assertNotNull(vertex.getSharedState());
-    Assert.assertThat(vertex.getSharedState(), is("MY_STATE"));
-    Assert.assertNotNull(vertex.getRequirements());
-    Assert.assertThat(vertex.getRequirements().size(), is(2));
-    Assert.assertNotNull(vertex.build());
-    Assert.assertNotEquals(vertex, vertex.build());
-    Assert.assertEquals(vertex.build(), vertex.build());
-    Assert.assertEquals(vertex.build().getName(), vertex.getName());
-    Assert.assertNotNull(vertex.build().getRequirements());
-    Assert.assertThat(vertex.build().getRequirements().size(), is(2));
+    assertNotNull(vertex);
+    assertNotNull(vertex.getName());
+    assertEquals(vertex.getName(), "vertex");
+    assertNotNull(vertex.getSharedState());
+    assertThat(vertex.getSharedState(), is("MY_STATE"));
+    assertNotNull(vertex.getRequirements());
+    assertThat(vertex.getRequirements().size(), is(2));
+    assertNotNull(vertex.build());
+    assertNotEquals(vertex, vertex.build());
+    assertEquals(vertex.build(), vertex.build());
+    assertEquals(vertex.build().getName(), vertex.getName());
+    assertNotNull(vertex.build().getRequirements());
+    assertThat(vertex.build().getRequirements().size(), is(2));
   }
 
   @Test
   public void testEquality() throws Exception {
     Vertex v1 = new Vertex().setId("n0").setName("SomeName");
     Vertex v2 = new Vertex().setId("n0").setName("SomeName");
-    Assert.assertThat(v1.build(), is(v2.build()));
+    assertThat(v1.build(), is(v2.build()));
   }
 
   @Test
   public void testInequality() throws Exception {
     Vertex v1 = new Vertex().setId("n0").setName("SomeName");
     Vertex v2 = new Vertex().setId("n1").setName("SomeName");
-    Assert.assertThat(v1.build(), not(v2.build()));
+    assertThat(v1.build(), not(v2.build()));
   }
 
   @Test
   public void testProperties() throws Exception {
     Vertex vertex = new Vertex();
-    Assert.assertFalse(vertex.build().hasProperties());
+    assertFalse(vertex.build().hasProperties());
     vertex.setProperty("test", "value");
-    Assert.assertTrue(vertex.build().hasProperties());
+    assertTrue(vertex.build().hasProperties());
   }
 }

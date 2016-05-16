@@ -32,10 +32,12 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -61,11 +63,11 @@ public class ReachedVertexTest {
     StopCondition condition = new ReachedVertex("v2");
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setCurrentElement(v1.build());
-    Assert.assertThat(condition.getFulfilment(), is(0.0));
+    assertThat(condition.getFulfilment(), is(0.0));
     context.setCurrentElement(e1.build());
-    Assert.assertThat(condition.getFulfilment(), is(0.5));
+    assertThat(condition.getFulfilment(), is(0.5));
     context.setCurrentElement(v2.build());
-    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    assertThat(condition.getFulfilment(), is(1.0));
   }
 
   @Test
@@ -76,12 +78,12 @@ public class ReachedVertexTest {
     Model model = new Model().addEdge(e1);
     StopCondition condition = new ReachedVertex("v2");
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(v1.build());
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e1.build());
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(v2.build());
-    Assert.assertTrue(condition.isFulfilled());
+    assertTrue(condition.isFulfilled());
   }
 }

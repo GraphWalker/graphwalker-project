@@ -27,11 +27,16 @@ package org.graphwalker.core.algorithm;
  */
 
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.*;
-import org.junit.Assert;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -56,7 +61,7 @@ public class AStarTest {
   public void astar() {
     AStar aStar = new AStar(new TestExecutionContext().setModel(model.build()));
     Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
-    Assert.assertNotNull(path);
-    Assert.assertThat(path.size(), is(5));
+    assertNotNull(path);
+    assertThat(path.size(), is(5));
   }
 }

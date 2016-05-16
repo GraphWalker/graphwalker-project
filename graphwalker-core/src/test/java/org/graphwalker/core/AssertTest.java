@@ -34,6 +34,7 @@ import java.util.List;
 
 import static org.graphwalker.core.Assert.expect;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -310,7 +311,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("expected: java.lang.Integer<1> but was: java.lang.Integer<2>"));
+    assertThat(message, is("expected: java.lang.Integer<1> but was: java.lang.Integer<2>"));
   }
 
   @Test
@@ -321,7 +322,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("expected not: java.lang.Integer<1> but was: java.lang.Integer<1>"));
+    assertThat(message, is("expected not: java.lang.Integer<1> but was: java.lang.Integer<1>"));
   }
 
   @Test
@@ -332,7 +333,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("expected: java.lang.Class<class java.lang.Integer> but was: java.lang.Class<class java.lang.Long>"));
+    assertThat(message, is("expected: java.lang.Class<class java.lang.Integer> but was: java.lang.Class<class java.lang.Long>"));
   }
 
   @Test
@@ -343,7 +344,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("expected not: java.lang.Class<class java.lang.Integer> but was: java.lang.Class<class java.lang.Integer>"));
+    assertThat(message, is("expected not: java.lang.Class<class java.lang.Integer> but was: java.lang.Class<class java.lang.Integer>"));
   }
 
   @Test
@@ -354,7 +355,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("expected size: 1 but was: 2"));
+    assertThat(message, is("expected size: 1 but was: 2"));
   }
 
   @Test
@@ -365,7 +366,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("expected different size: 1 but was: 1"));
+    assertThat(message, is("expected different size: 1 but was: 1"));
   }
 
   @Test
@@ -376,7 +377,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("property: myMethods not found"));
+    assertThat(message, is("property: myMethods not found"));
   }
 
   @Test
@@ -387,7 +388,7 @@ public class AssertTest {
     } catch (AssertionError e) {
       message = e.getMessage();
     }
-    org.junit.Assert.assertThat(message, is("property: methods found"));
+    assertThat(message, is("property: methods found"));
   }
 
   class MyPropertyTest {

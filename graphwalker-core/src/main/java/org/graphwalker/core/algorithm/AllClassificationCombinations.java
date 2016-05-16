@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * <h1>All combinations from given classification tree</h1>
- * The algo will generate all possible combinations given the classification tree.
+ * The algorithm will generate all possible combinations given the classification tree.
  * </p>
  *
  * @author Kristian karl

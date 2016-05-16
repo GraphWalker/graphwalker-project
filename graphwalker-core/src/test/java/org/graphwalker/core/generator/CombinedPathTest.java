@@ -32,8 +32,9 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Nils Olsson
@@ -75,13 +76,13 @@ public class CombinedPathTest {
   @Test
   public void toStringTest() {
     CombinedPath generator = new CombinedPath();
-    Assert.assertEquals(generator.getPathGenerators().size(), 0);
-    Assert.assertEquals(generator.toString(), "");
+    assertEquals(generator.getPathGenerators().size(), 0);
+    assertEquals(generator.toString(), "");
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
-    Assert.assertEquals(generator.getPathGenerators().size(), 1);
-    Assert.assertEquals("RandomPath(ReachedVertex(v1))", generator.toString());
+    assertEquals(generator.getPathGenerators().size(), 1);
+    assertEquals("RandomPath(ReachedVertex(v1))", generator.toString());
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
-    Assert.assertEquals(generator.getPathGenerators().size(), 2);
-    Assert.assertEquals("RandomPath(ReachedVertex(v1)) AND RandomPath(ReachedVertex(v2))", generator.toString());
+    assertEquals(generator.getPathGenerators().size(), 2);
+    assertEquals("RandomPath(ReachedVertex(v1)) AND RandomPath(ReachedVertex(v2))", generator.toString());
   }
 }

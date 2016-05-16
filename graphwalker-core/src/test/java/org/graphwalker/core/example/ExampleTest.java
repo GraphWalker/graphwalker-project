@@ -28,12 +28,21 @@ package org.graphwalker.core.example;
 
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.*;
-import org.graphwalker.core.model.*;
-import org.junit.Assert;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.ExecutionStatus;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -117,15 +126,15 @@ public class ExampleTest extends ExecutionContext {
     this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
     setNextElement(start);
     Machine machine = new SimpleMachine(this);
-    Assert.assertThat(getExecutionStatus(), is(ExecutionStatus.NOT_EXECUTED));
+    assertThat(getExecutionStatus(), is(ExecutionStatus.NOT_EXECUTED));
     try {
       while (machine.hasNextStep()) {
         machine.getNextStep();
-        Assert.assertThat(getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+        assertThat(getExecutionStatus(), is(ExecutionStatus.EXECUTING));
       }
     } catch (Throwable t) {
-      Assert.assertTrue(MachineException.class.isAssignableFrom(t.getClass()));
-      Assert.assertThat(getExecutionStatus(), is(ExecutionStatus.FAILED));
+      assertTrue(MachineException.class.isAssignableFrom(t.getClass()));
+      assertThat(getExecutionStatus(), is(ExecutionStatus.FAILED));
     }
   }
 }
