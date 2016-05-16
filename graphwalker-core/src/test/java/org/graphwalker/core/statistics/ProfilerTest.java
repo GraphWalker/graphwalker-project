@@ -51,7 +51,8 @@ import static org.junit.Assert.assertTrue;
  * @author Nils Olsson
  */
 public final class ProfilerTest {
-  private static final Logger logger = LoggerFactory.getLogger(ProfilerTest.class);
+
+  private static final Logger LOG = LoggerFactory.getLogger(ProfilerTest.class);
 
   private static final Vertex start = new Vertex();
   private static final Context context = new TestExecutionContext()
@@ -122,10 +123,10 @@ public final class ProfilerTest {
     Machine machine = new SimpleMachine(context1, context2);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      logger.debug(machine.getCurrentContext().getCurrentElement().getName());
+      LOG.debug(machine.getCurrentContext().getCurrentElement().getName());
     }
 
-    logger.debug("\na: " + context1.getAttribute("a").toString() +
+    LOG.debug("\na: " + context1.getAttribute("a").toString() +
       "\nb1: " + context1.getAttribute("b1").toString() +
       "\nb2: " + context1.getAttribute("b2").toString() +
       "\nd: " + context2.getAttribute("d").toString() +
