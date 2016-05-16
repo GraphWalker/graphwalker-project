@@ -47,7 +47,7 @@ import java.util.Map;
 public final class Result {
 
   private List<String> errors = new ArrayList<>();
-  JSONObject result;
+  private JSONObject results;
 
   public Result() {
   }
@@ -68,80 +68,137 @@ public final class Result {
     return !getErrors().isEmpty();
   }
 
+  public void setResults(String results) {
+    this.results = new JSONObject(results.toString());
+  }
+
   public JSONObject getResults() {
-    return result;
+    return results;
+  }
+
+  public String getResultsAsString() {
+    return results.toString(2);
   }
 
   public void updateResults(Machine machine, Map<Context, MachineException> failures) {
-    machine.getProfiler().updateResult();
+    int modelCount = 0;
+    int completedModelCount = 0;
+    int incompleteModelCount = 0;
+    int failedModelCount = 0;
+    int notExecutedModelCount = 0;
+    int totalNumberOfEdges = 0;
+    int totalNumberOfVertices = 0;
+    int totalNumberOfUnvisitedVertices = 0;
+    int totalNumberOfUnvisitedEdges = 0;
+    int totalNumberOfRequirements = 0;
+    int totalNumberOfRequirementsNotCovered = 0;
+    int totalNumberOfRequirementsPassed = 0;
+    int totalNumberOfRequirementsFailed = 0;
 
-    result = new JSONObject();
-    result.put("totalNumberOfModels", machine.getProfiler().getModelCount());
-    result.put("totalCompletedNumberOfModels", machine.getProfiler().getCompletedModelCount());
-    result.put("totalIncompleteNumberOfModels", machine.getProfiler().getIncompleteModelCount());
-    result.put("totalFailedNumberOfModels", machine.getProfiler().getFailedModelCount());
-    result.put("totalNotExecutedNumberOfModels", machine.getProfiler().getNotExecutedModelCount());
-    result.put("totalNumberOfEdges", machine.getProfiler().getTotalNumberOfEdges());
-    result.put("totalNumberOfUnvisitedEdges", machine.getProfiler().getTotalNumberOfUnvisitedEdges());
-    result.put("totalNumberOfVisitedEdges", machine.getProfiler().getVisitedEdges().size());
-    result.put("edgeCoverage", 100 * (machine.getProfiler().getTotalNumberOfEdges() - machine.getProfiler().getTotalNumberOfUnvisitedEdges()) / machine.getProfiler().getTotalNumberOfEdges());
-    result.put("totalNumberOfVertices", machine.getProfiler().getTotalNumberOfVertices());
-    result.put("totalNumberOfUnvisitedVertices", machine.getProfiler().getTotalNumberOfUnvisitedVertices());
-    result.put("totalNumberOfVisitedVertices", machine.getProfiler().getVisitedVertices().size());
-    result.put("vertexCoverage", 100 * (machine.getProfiler().getTotalNumberOfVertices() - machine.getProfiler().getTotalNumberOfUnvisitedVertices()) / machine.getProfiler().getTotalNumberOfVertices());
+    JSONArray edgesNotVisitedJson = new JSONArray();
+    JSONArray verticesNotVisitedJson = new JSONArray();
+    JSONArray requirementsNotCoveredJson = new JSONArray();
+    JSONArray requirementsPassedJson = new JSONArray();
+    JSONArray requirementsFailedJson = new JSONArray();
 
-    if (machine.getProfiler().getTotalNumberOfUnvisitedEdges() > 0) {
-      JSONArray jsonElements = new JSONArray();
-      for (Element edge : machine.getProfiler().getUnvisitedEdges()) {
+
+    for (Context context : machine.getContexts()) {
+      switch (context.getExecutionStatus()) {
+        case COMPLETED: {
+          completedModelCount++;
+        }
+        break;
+        case FAILED: {
+          failedModelCount++;
+        }
+        break;
+        case NOT_EXECUTED: {
+          notExecutedModelCount++;
+        }
+        break;
+        case EXECUTING: {
+          incompleteModelCount++;
+        }
+      }
+
+      for (Requirement r : context.getRequirements(RequirementStatus.NOT_COVERED)) {
+        JSONObject jsonElement = new JSONObject();
+        jsonElement.put("requirementKey", r.getKey());
+        jsonElement.put("modelName", context.getModel().getName());
+        requirementsNotCoveredJson.put(jsonElement);
+      }
+
+      for (Requirement r : context.getRequirements(RequirementStatus.PASSED)) {
+        JSONObject jsonElement = new JSONObject();
+        jsonElement.put("requirementKey", r.getKey());
+        jsonElement.put("modelName", context.getModel().getName());
+        requirementsPassedJson.put(jsonElement);
+      }
+
+      for (Requirement r : context.getRequirements(RequirementStatus.FAILED)) {
+        JSONObject jsonElement = new JSONObject();
+        jsonElement.put("RequirementKey", r.getKey());
+        jsonElement.put("modelName", context.getModel().getName());
+        requirementsFailedJson.put(jsonElement);
+      }
+
+      for (Element edge : context.getProfiler().getUnvisitedEdges(context)) {
         JSONObject jsonElement = new JSONObject();
         jsonElement.put("edgeName", edge.getName());
         jsonElement.put("edgeId", edge.getId());
-        jsonElements.put(jsonElement);
+        jsonElement.put("modelName", context.getModel().getName());
+        edgesNotVisitedJson.put(jsonElement);
       }
-      result.put("edgesNotVisited", jsonElements);
-    }
 
-    if (machine.getProfiler().getTotalNumberOfUnvisitedVertices() > 0) {
-      JSONArray jsonElements = new JSONArray();
-      for (Element vertex : machine.getProfiler().getUnvisitedVertices()) {
+      for (Element vertex : context.getProfiler().getUnvisitedVertices(context)) {
         JSONObject jsonElement = new JSONObject();
         jsonElement.put("vertexName", vertex.getName());
         jsonElement.put("vertexId", vertex.getId());
-        jsonElements.put(jsonElement);
+        jsonElement.put("modelName", context.getModel().getName());
+        verticesNotVisitedJson.put(jsonElement);
       }
-      result.put("verticesNotVisited", jsonElements);
+
+      modelCount++;
+      totalNumberOfEdges +=                  context.getModel().getEdges().size();
+      totalNumberOfVertices +=               context.getModel().getVertices().size();
+      totalNumberOfUnvisitedVertices +=      context.getProfiler().getUnvisitedVertices(context).size();
+      totalNumberOfUnvisitedEdges +=         context.getProfiler().getUnvisitedEdges(context).size();
+      totalNumberOfRequirements +=           context.getRequirements().size();
+      totalNumberOfRequirementsNotCovered += context.getRequirements(RequirementStatus.NOT_COVERED).size();
+      totalNumberOfRequirementsPassed +=     context.getRequirements(RequirementStatus.PASSED).size();
+      totalNumberOfRequirementsFailed +=     context.getRequirements(RequirementStatus.FAILED).size();
     }
 
-    if (machine.getProfiler().getTotalNumberOfRequirements() > 0) {
-      result.put("totalNumberOfRequirement", machine.getProfiler().getTotalNumberOfRequirements());
-      result.put("totalNumberOfUncoveredRequirement", machine.getProfiler().getTotalNumberOfRequirementsNotCovered());
-      result.put("totalNumberOfPassedRequirement", machine.getProfiler().getTotalNumberOfRequirementsPassed());
-      result.put("totalNumberOfFailedRequirement", machine.getProfiler().getTotalNumberOfRequirementsFailed());
-      result.put("requirementCoverage", 100 * (machine.getProfiler().getTotalNumberOfRequirements() - machine.getProfiler().getTotalNumberOfRequirementsNotCovered()) / machine.getProfiler().getTotalNumberOfRequirements());
 
-      JSONArray jsonElements = new JSONArray();
-      for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.NOT_COVERED)) {
-        JSONObject jsonElement = new JSONObject();
-        jsonElement.put("requirementKey", r.getKey());
-        jsonElements.put(jsonElement);
-      }
-      result.put("requirementsNotCovered", jsonElements);
+    results = new JSONObject();
+    results.put("totalNumberOfModels", modelCount);
+    results.put("totalCompletedNumberOfModels", completedModelCount);
+    results.put("totalIncompleteNumberOfModels", incompleteModelCount);
+    results.put("totalFailedNumberOfModels", failedModelCount);
+    results.put("totalNotExecutedNumberOfModels", notExecutedModelCount);
+    results.put("totalNumberOfEdges", totalNumberOfEdges);
+    results.put("totalNumberOfUnvisitedEdges", totalNumberOfUnvisitedEdges);
+    results.put("totalNumberOfVisitedEdges", machine.getProfiler().getVisitedEdges().size());
+    results.put("edgeCoverage", 100 * (totalNumberOfEdges - totalNumberOfUnvisitedEdges) / totalNumberOfEdges);
+    results.put("totalNumberOfVertices", totalNumberOfVertices);
+    results.put("totalNumberOfUnvisitedVertices",totalNumberOfUnvisitedVertices);
+    results.put("totalNumberOfVisitedVertices", machine.getProfiler().getVisitedVertices().size());
+    results.put("vertexCoverage", 100 * (totalNumberOfVertices - totalNumberOfUnvisitedVertices) / totalNumberOfVertices);
 
-      jsonElements = new JSONArray();
-      for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.PASSED)) {
-        JSONObject jsonElement = new JSONObject();
-        jsonElement.put("requirementKey", r.getKey());
-        jsonElements.put(jsonElement);
-      }
-      result.put("requirementsPassed", jsonElements);
+    results.put("edgesNotVisited", edgesNotVisitedJson);
+    results.put("verticesNotVisited", verticesNotVisitedJson);
 
-      jsonElements = new JSONArray();
-      for (Requirement r : machine.getCurrentContext().getRequirements(RequirementStatus.FAILED)) {
-        JSONObject jsonElement = new JSONObject();
-        jsonElement.put("RequirementKey", r.getKey());
-        jsonElements.put(jsonElement);
-      }
-      result.put("requirementsFailed", jsonElements);
+
+    if (totalNumberOfRequirements > 0) {
+      results.put("totalNumberOfRequirement", totalNumberOfRequirements);
+      results.put("totalNumberOfUncoveredRequirement", totalNumberOfRequirementsNotCovered);
+      results.put("totalNumberOfPassedRequirement", totalNumberOfRequirementsPassed);
+      results.put("totalNumberOfFailedRequirement", totalNumberOfRequirementsFailed);
+      results.put("requirementCoverage", 100 * (totalNumberOfRequirements - totalNumberOfRequirementsNotCovered) / totalNumberOfRequirements);
+
+      results.put("requirementsNotCovered", requirementsNotCoveredJson);
+      results.put("requirementsPassed", requirementsPassedJson);
+      results.put("requirementsFailed", requirementsFailedJson);
     }
 
     if (failures.size() > 0) {
@@ -151,7 +208,7 @@ public final class Result {
         jsonFailure.put("failure", getStackTrace(exception.getCause()));
         jsonFailures.put(jsonFailure);
       }
-      result.put("failures", jsonFailures);
+      results.put("failures", jsonFailures);
     }
   }
 

@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -239,6 +238,7 @@ public final class TestMojo extends DefaultMojoBase {
       getLog().info("------------------------------------------------------------------------");
       for (String error : result.getErrors()) {
         getLog().error(error);
+
       }
     }
     if (getLog().isInfoEnabled()) {
@@ -246,7 +246,7 @@ public final class TestMojo extends DefaultMojoBase {
       getLog().info("");
       getLog().info("Result :");
       getLog().info("");
-      getLog().info(result.getResults().toString());
+      getLog().info(result.getResultsAsString());
       getLog().info("");
     }
   }
