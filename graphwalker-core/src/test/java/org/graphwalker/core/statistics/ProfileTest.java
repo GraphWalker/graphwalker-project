@@ -27,10 +27,11 @@ package org.graphwalker.core.statistics;
  */
 
 import org.graphwalker.core.model.Edge;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -42,10 +43,10 @@ public final class ProfileTest {
     Profile profile = new Profile();
     profile.addExecution(new Edge().build(), new Execution(0L, 350));
     profile.addExecution(new Edge().build(), new Execution(350L, 150));
-    Assert.assertNotNull(profile);
-    Assert.assertThat(profile.getTotalExecutionCount(), is(2L));
-    Assert.assertThat(profile.getTotalExecutionTime(), is(500L));
-    Assert.assertThat(profile.getFirstExecutionTime(), is(0L));
-    Assert.assertThat(profile.getLastExecutionTime(), is(350L));
+    assertNotNull(profile);
+    assertThat(profile.getTotalExecutionCount(), is(2L));
+    assertThat(profile.getTotalExecutionTime(), is(500L));
+    assertThat(profile.getFirstExecutionTime(), is(0L));
+    assertThat(profile.getLastExecutionTime(), is(350L));
   }
 }

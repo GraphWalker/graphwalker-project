@@ -37,12 +37,15 @@ import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -61,19 +64,19 @@ public final class ProfilerTest {
   @Test
   public void create() {
     Profiler profiler = new Profiler();
-    Assert.assertNotNull(profiler);
-    Assert.assertFalse(profiler.isVisited(start.build()));
-    Assert.assertThat(profiler.getTotalVisitCount(), is(0L));
-    Assert.assertThat(profiler.getVisitCount(start.build()), is(0L));
+    assertNotNull(profiler);
+    assertFalse(profiler.isVisited(start.build()));
+    assertThat(profiler.getTotalVisitCount(), is(0L));
+    assertThat(profiler.getVisitCount(start.build()), is(0L));
     profiler.start(context);
     profiler.stop(context);
-    Assert.assertTrue(profiler.isVisited(start.build()));
-    Assert.assertThat(profiler.getTotalVisitCount(), is(1L));
-    Assert.assertThat(profiler.getVisitCount(start.build()), is(1L));
-    Assert.assertThat(profiler.getUnvisitedElements(context).size(), is(2));
-    Assert.assertThat(profiler.getUnvisitedEdges(context).size(), is(1));
-    Assert.assertThat(profiler.getUnvisitedVertices(context).size(), is(1));
-    Assert.assertThat(profiler.getPath().size(), is(1));
+    assertTrue(profiler.isVisited(start.build()));
+    assertThat(profiler.getTotalVisitCount(), is(1L));
+    assertThat(profiler.getVisitCount(start.build()), is(1L));
+    assertThat(profiler.getUnvisitedElements(context).size(), is(2));
+    assertThat(profiler.getUnvisitedEdges(context).size(), is(1));
+    assertThat(profiler.getUnvisitedVertices(context).size(), is(1));
+    assertThat(profiler.getPath().size(), is(1));
   }
 
 
@@ -128,11 +131,11 @@ public final class ProfilerTest {
       "\nd: " + context2.getAttribute("d").toString() +
       "\nc1: " + context2.getAttribute("c1").toString() +
       "\nc2: " + context2.getAttribute("c2").toString());
-    Assert.assertTrue(Float.parseFloat(context1.getAttribute("a").toString()) >= 1);
-    Assert.assertTrue(Float.parseFloat(context1.getAttribute("b1").toString()) >= 1);
-    Assert.assertTrue(Float.parseFloat(context1.getAttribute("b2").toString()) >= 1);
-    Assert.assertTrue(Float.parseFloat(context2.getAttribute("d").toString()) >= 1);
-    Assert.assertTrue(Float.parseFloat(context2.getAttribute("c1").toString()) >= 1);
-    Assert.assertTrue(Float.parseFloat(context2.getAttribute("c2").toString()) >= 1);
+    assertTrue(Float.parseFloat(context1.getAttribute("a").toString()) >= 1);
+    assertTrue(Float.parseFloat(context1.getAttribute("b1").toString()) >= 1);
+    assertTrue(Float.parseFloat(context1.getAttribute("b2").toString()) >= 1);
+    assertTrue(Float.parseFloat(context2.getAttribute("d").toString()) >= 1);
+    assertTrue(Float.parseFloat(context2.getAttribute("c1").toString()) >= 1);
+    assertTrue(Float.parseFloat(context2.getAttribute("c2").toString()) >= 1);
   }
 }

@@ -28,12 +28,15 @@ package org.graphwalker.core.event;
 
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.*;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineBase;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -42,6 +45,10 @@ import java.util.List;
 import static org.graphwalker.core.event.EventType.AFTER_ELEMENT;
 import static org.graphwalker.core.event.EventType.BEFORE_ELEMENT;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -63,8 +70,8 @@ public class ObserverTest implements Observer {
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
     context.setNextElement(vertex);
     MachineBase machine = new SimpleMachine(context);
-    Assert.assertTrue(Observer.class.isAssignableFrom(this.getClass()));
-    Assert.assertTrue(Observable.class.isAssignableFrom(machine.getClass()));
+    assertTrue(Observer.class.isAssignableFrom(this.getClass()));
+    assertTrue(Observable.class.isAssignableFrom(machine.getClass()));
     return machine;
   }
 
@@ -81,7 +88,7 @@ public class ObserverTest implements Observer {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertArrayEquals(new Object[]{
+    assertArrayEquals(new Object[]{
       BEFORE_ELEMENT, AFTER_ELEMENT
       , BEFORE_ELEMENT, AFTER_ELEMENT
       , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
@@ -95,8 +102,8 @@ public class ObserverTest implements Observer {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-    Assert.assertThat(counter, is(3));
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertThat(counter, is(3));
   }
 
   @Test
@@ -108,7 +115,7 @@ public class ObserverTest implements Observer {
       machine.getNextStep();
       machine.deleteObserver(this);
     }
-    Assert.assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
-    Assert.assertThat(counter, is(1));
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+    assertThat(counter, is(1));
   }
 }

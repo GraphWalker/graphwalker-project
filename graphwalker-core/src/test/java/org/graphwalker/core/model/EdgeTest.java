@@ -26,13 +26,17 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -49,49 +53,47 @@ public class EdgeTest {
       .setActions(Arrays.asList(new Action("action2"), new Action("action3")))
       .addAction(new Action("action1"))
       .setWeight(.5);
-    Assert.assertNotNull(edge);
-    Assert.assertEquals("name", edge.getName());
-    Assert.assertEquals("name", edge.build().getName());
-    Assert.assertNotNull(edge.getSourceVertex());
-    Assert.assertNotNull(edge.build().getTargetVertex());
-    Assert.assertNotNull(edge.getTargetVertex());
-    Assert.assertNotNull(edge.build().getTargetVertex());
-    Assert.assertNotNull(edge.getGuard());
-    Assert.assertNotNull(edge.build().getGuard());
-    Assert.assertTrue(edge.build().hasGuard());
-    Assert.assertEquals(edge.getGuard(), edge.build().getGuard());
-    Assert.assertNotNull(edge.getActions());
-    Assert.assertThat(edge.getActions().size(), is(3));
-    Assert.assertThat(edge.getWeight(), is(.5));
-    Assert.assertNotNull(edge.build().getActions());
-    Assert.assertThat(edge.build().getActions().size(), is(3));
-    Assert.assertThat(edge.build().getWeight(), is(.5));
-    Assert.assertFalse(edge.setGuard(null).build().hasGuard());
-    Assert.assertFalse(edge.setGuard(new Guard("")).build().hasGuard());
+    assertNotNull(edge);
+    assertEquals("name", edge.getName());
+    assertEquals("name", edge.build().getName());
+    assertNotNull(edge.getSourceVertex());
+    assertNotNull(edge.build().getTargetVertex());
+    assertNotNull(edge.getTargetVertex());
+    assertNotNull(edge.build().getTargetVertex());
+    assertNotNull(edge.getGuard());
+    assertNotNull(edge.build().getGuard());
+    assertTrue(edge.build().hasGuard());
+    assertEquals(edge.getGuard(), edge.build().getGuard());
+    assertNotNull(edge.getActions());
+    assertThat(edge.getActions().size(), is(3));
+    assertThat(edge.getWeight(), is(.5));
+    assertNotNull(edge.build().getActions());
+    assertThat(edge.build().getActions().size(), is(3));
+    assertThat(edge.build().getWeight(), is(.5));
+    assertFalse(edge.setGuard(null).build().hasGuard());
+    assertFalse(edge.setGuard(new Guard("")).build().hasGuard());
   }
 
   @Test
   public void testEquality() throws Exception {
     Edge e1 = new Edge().setId("ID1");
     Edge e2 = new Edge().setId("ID1");
-    Assert.assertThat(e1.build(), is(e2.build()));
+    assertThat(e1.build(), is(e2.build()));
   }
 
   @Test
   public void testInequality() throws Exception {
     Edge e1 = new Edge().setId("ID1");
     Edge e2 = new Edge().setId("ID2");
-    Assert.assertThat(e1.build(), not(e2.build()));
+    assertThat(e1.build(), not(e2.build()));
   }
 
   @Test
   public void testProperties() throws Exception {
     Edge edge = new Edge().setId("ID");
-    Assert.assertFalse(edge.build().hasProperties());
-    Assert.assertTrue(edge.setProperty("x", "y").build().hasProperties());
-    Assert.assertThat((String) edge.getProperty("x"), is("y"));
-    Assert.assertThat((String) edge.build().getProperty("x"), is("y"));
-    //Assert.assertThat((String)edge.remove("x"), is("y"));
-    //Assert.assertFalse(edge.build().hasProperty("x"));
+    assertFalse(edge.build().hasProperties());
+    assertTrue(edge.setProperty("x", "y").build().hasProperties());
+    assertThat((String) edge.getProperty("x"), is("y"));
+    assertThat((String) edge.build().getProperty("x"), is("y"));
   }
 }

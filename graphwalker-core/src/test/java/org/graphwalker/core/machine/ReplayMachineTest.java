@@ -2,11 +2,15 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.model.*;
-import org.junit.Assert;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -20,7 +24,7 @@ public class ReplayMachineTest {
     while (replayMachine.hasNextStep()) {
       replayMachine.getNextStep();
     }
-    Assert.assertThat(replayMachine.getProfiler().getPath().toArray(), is(machine.getProfiler().getPath().toArray()));
+    assertThat(replayMachine.getProfiler().getPath().toArray(), is(machine.getProfiler().getPath().toArray()));
   }
 
   private Machine createMachineExecution() {

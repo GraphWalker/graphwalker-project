@@ -33,10 +33,10 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -60,7 +60,7 @@ public class FailedEdgeRequirementTest extends ExecutionContext {
         machine.getNextStep();
       }
     } catch (RuntimeException e) {
-      Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(1));
+      assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(1));
     }
   }
 }
