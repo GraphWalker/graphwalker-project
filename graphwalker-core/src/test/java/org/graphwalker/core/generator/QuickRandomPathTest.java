@@ -36,8 +36,11 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Kristian Karl
@@ -55,11 +58,11 @@ public class QuickRandomPathTest {
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
     context.setPathGenerator(generator);
     Machine machine = new SimpleMachine(context);
-    Assert.assertTrue(machine.hasNextStep());
-    Assert.assertEquals(machine.getNextStep().getCurrentElement(), source.build());
-    Assert.assertEquals(machine.getNextStep().getCurrentElement(), edge.build());
-    Assert.assertEquals(machine.getNextStep().getCurrentElement(), target.build());
-    Assert.assertFalse(machine.hasNextStep());
+    assertTrue(machine.hasNextStep());
+    assertEquals(machine.getNextStep().getCurrentElement(), source.build());
+    assertEquals(machine.getNextStep().getCurrentElement(), edge.build());
+    assertEquals(machine.getNextStep().getCurrentElement(), target.build());
+    assertFalse(machine.hasNextStep());
   }
 
   @Test(expected = AlgorithmException.class)
@@ -69,9 +72,9 @@ public class QuickRandomPathTest {
     context.setProfiler(new Profiler());
     context.setPathGenerator(generator);
     context.setCurrentElement(source.build());
-    Assert.assertEquals(context.getCurrentElement(), source.build());
-    Assert.assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
-    Assert.assertEquals(generator.getNextStep().getCurrentElement(), target.build());
+    assertEquals(context.getCurrentElement(), source.build());
+    assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
+    assertEquals(generator.getNextStep().getCurrentElement(), target.build());
     context.getPathGenerator().getNextStep(); // should fail
   }
 
@@ -82,7 +85,7 @@ public class QuickRandomPathTest {
     context.setProfiler(new Profiler());
     context.setPathGenerator(generator);
     context.setCurrentElement(source.build());
-    Assert.assertTrue(generator.hasNextStep());
+    assertTrue(generator.hasNextStep());
     generator.getNextStep(); // should fail
   }
 }

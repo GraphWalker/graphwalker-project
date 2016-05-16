@@ -33,10 +33,12 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -46,7 +48,7 @@ public class EdgeCoverageTest {
   @Test
   public void testConstructor() {
     EdgeCoverage edgeCoverage = new EdgeCoverage(200);
-    Assert.assertThat(edgeCoverage.getPercent(), is(200));
+    assertThat(edgeCoverage.getPercent(), is(200));
   }
 
   @Test(expected = StopConditionException.class)
@@ -64,15 +66,15 @@ public class EdgeCoverageTest {
     StopCondition condition = new EdgeCoverage(100);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setProfiler(new Profiler());
-    Assert.assertThat(condition.getFulfilment(), is(0.0));
+    assertThat(condition.getFulfilment(), is(0.0));
     context.setCurrentElement(e1.build());
     context.getProfiler().start(context);
     context.getProfiler().stop(context);
-    Assert.assertThat(condition.getFulfilment(), is(0.5));
+    assertThat(condition.getFulfilment(), is(0.5));
     context.setCurrentElement(e2.build());
     context.getProfiler().start(context);
     context.getProfiler().stop(context);
-    Assert.assertThat(condition.getFulfilment(), is(1.0));
+    assertThat(condition.getFulfilment(), is(1.0));
   }
 
   @Test
@@ -85,18 +87,18 @@ public class EdgeCoverageTest {
     StopCondition condition = new EdgeCoverage(100);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setProfiler(new Profiler());
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e1.build());
     context.getProfiler().start(context);
     context.getProfiler().stop(context);
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(e2.build());
     context.getProfiler().start(context);
     context.getProfiler().stop(context);
-    Assert.assertFalse(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
     context.setCurrentElement(v2.build());
     context.getProfiler().start(context);
     context.getProfiler().stop(context);
-    Assert.assertTrue(condition.isFulfilled());
+    assertTrue(condition.isFulfilled());
   }
 }

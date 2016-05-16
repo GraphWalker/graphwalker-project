@@ -29,8 +29,12 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.model.*;
-import org.junit.Assert;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,6 +42,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -56,8 +62,8 @@ public class SharedStateTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
   }
 
   @Test
@@ -75,14 +81,14 @@ public class SharedStateTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(context3).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(context3).isEmpty(), is(true));
     List<String> names = new ArrayList<>();
     for (Element element : machine.getProfiler().getPath()) {
       names.add(element.getName());
     }
-    Assert.assertArrayEquals(names.toArray(), Arrays.asList("A", "I", "H", "G", "F", "E", "D", "C", "B", "A").toArray());
+    assertArrayEquals(names.toArray(), Arrays.asList("A", "I", "H", "G", "F", "E", "D", "C", "B", "A").toArray());
   }
 
   @Test
@@ -120,8 +126,8 @@ public class SharedStateTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(contextPetClinic).isEmpty(), is(true));
-    Assert.assertThat(machine.getProfiler().getUnvisitedElements(contextVeterinarians).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(contextPetClinic).isEmpty(), is(true));
+    assertThat(machine.getProfiler().getUnvisitedElements(contextVeterinarians).isEmpty(), is(true));
 
   }
 

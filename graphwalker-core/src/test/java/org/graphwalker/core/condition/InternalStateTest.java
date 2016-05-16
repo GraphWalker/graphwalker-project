@@ -35,10 +35,12 @@ import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -55,13 +57,13 @@ public class InternalStateTest {
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
-      Assert.assertThat(condition.getFulfilment(), is(0.0));
-      Assert.assertFalse(condition.isFulfilled());
+      assertThat(condition.getFulfilment(), is(0.0));
+      assertFalse(condition.isFulfilled());
       machine.getNextStep();
     }
-    Assert.assertThat(condition.getFulfilment(), is(1.0));
-    Assert.assertTrue(condition.isFulfilled());
-    Assert.assertThat(context.getKeys().get("index"), is("99"));
+    assertThat(condition.getFulfilment(), is(1.0));
+    assertTrue(condition.isFulfilled());
+    assertThat(context.getKeys().get("index"), is("99"));
   }
 
   @Test
@@ -75,13 +77,13 @@ public class InternalStateTest {
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
-      Assert.assertThat(condition.getFulfilment(), is(0.0));
-      Assert.assertFalse(condition.isFulfilled());
+      assertThat(condition.getFulfilment(), is(0.0));
+      assertFalse(condition.isFulfilled());
       machine.getNextStep();
     }
-    Assert.assertThat(condition.getFulfilment(), is(1.0));
-    Assert.assertTrue(condition.isFulfilled());
-    Assert.assertThat(context.getKeys().get("index"), is("99"));
+    assertThat(condition.getFulfilment(), is(1.0));
+    assertTrue(condition.isFulfilled());
+    assertThat(context.getKeys().get("index"), is("99"));
   }
 
   @Test(expected = StopConditionException.class)
@@ -95,12 +97,12 @@ public class InternalStateTest {
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
-      Assert.assertThat(condition.getFulfilment(), is(0.0));
-      Assert.assertFalse(condition.isFulfilled());
+      assertThat(condition.getFulfilment(), is(0.0));
+      assertFalse(condition.isFulfilled());
       machine.getNextStep();
     }
-    Assert.assertThat(condition.getFulfilment(), is(1.0));
-    Assert.assertTrue(condition.isFulfilled());
-    Assert.assertThat(context.getKeys().get("index"), is("99"));
+    assertThat(condition.getFulfilment(), is(1.0));
+    assertTrue(condition.isFulfilled());
+    assertThat(context.getKeys().get("index"), is("99"));
   }
 }

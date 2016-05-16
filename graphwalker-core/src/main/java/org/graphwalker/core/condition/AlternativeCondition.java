@@ -94,7 +94,7 @@ public final class AlternativeCondition extends StopConditionBase {
   public StringBuilder toString(StringBuilder builder) {
     Iterator<StopCondition> iterator = conditions.iterator();
     while (iterator.hasNext()) {
-      iterator.next().toString(builder);
+      builder = iterator.next().toString(builder);
       if (iterator.hasNext()) {
         builder.append(" OR ");
       }

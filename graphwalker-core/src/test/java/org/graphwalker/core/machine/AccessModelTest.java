@@ -6,10 +6,10 @@ import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -19,7 +19,7 @@ public class AccessModelTest {
   @Test
   public void read() {
     ExecutionContext context = createContext();
-    Assert.assertThat(round(context.getAttribute("x")), is(1));
+    assertThat(round(context.getAttribute("x")), is(1));
   }
 
   private int round(Object value) {
@@ -34,7 +34,7 @@ public class AccessModelTest {
   public void write() {
     ExecutionContext context = createContext();
     context.setAttribute("y", 2);
-    Assert.assertThat((Integer) context.getAttribute("y"), is(2));
+    assertThat((Integer) context.getAttribute("y"), is(2));
   }
 
   private ExecutionContext createContext() {

@@ -27,15 +27,23 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.*;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.RequirementStatus;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -45,7 +53,7 @@ public class RequirementCoverageTest {
   @Test
   public void testConstructor() {
     RequirementCoverage requirementCoverage = new RequirementCoverage(66);
-    Assert.assertThat(requirementCoverage.getPercent(), is(66));
+    assertThat(requirementCoverage.getPercent(), is(66));
   }
 
   @Test(expected = StopConditionException.class)
@@ -64,9 +72,9 @@ public class RequirementCoverageTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    Assert.assertEquals(context.getRequirements(), context.getRequirements(RequirementStatus.PASSED));
-    Assert.assertTrue(context.getRequirements(RequirementStatus.NOT_COVERED).isEmpty());
-    Assert.assertTrue(context.getRequirements(RequirementStatus.FAILED).isEmpty());
+    assertEquals(context.getRequirements(), context.getRequirements(RequirementStatus.PASSED));
+    assertTrue(context.getRequirements(RequirementStatus.NOT_COVERED).isEmpty());
+    assertTrue(context.getRequirements(RequirementStatus.FAILED).isEmpty());
   }
 
   @Test
@@ -78,10 +86,10 @@ public class RequirementCoverageTest {
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
-      Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+      assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
       machine.getNextStep();
     }
-    Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
+    assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
   }
 
   @Test
@@ -92,10 +100,10 @@ public class RequirementCoverageTest {
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
-      Assert.assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
+      assertFalse(context.getPathGenerator().getStopCondition().isFulfilled());
       machine.getNextStep();
     }
-    Assert.assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
+    assertTrue(context.getPathGenerator().getStopCondition().isFulfilled());
   }
 
   @Test
@@ -106,20 +114,20 @@ public class RequirementCoverageTest {
     Context context = new TestExecutionContext(model, new RandomPath(stopCondition));
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);
-    Assert.assertFalse(stopCondition.isFulfilled());
-    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
+    assertFalse(stopCondition.isFulfilled());
+    assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
     machine.getNextStep();
-    Assert.assertFalse(stopCondition.isFulfilled());
-    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
+    assertFalse(stopCondition.isFulfilled());
+    assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
     machine.getNextStep();
-    Assert.assertFalse(stopCondition.isFulfilled());
-    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
+    assertFalse(stopCondition.isFulfilled());
+    assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(0));
     machine.getNextStep();
-    Assert.assertTrue(stopCondition.isFulfilled());
-    Assert.assertNotNull(context.getRequirements());
-    Assert.assertThat(context.getRequirements().size(), is(1));
-    Assert.assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
-    Assert.assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
-    Assert.assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
+    assertTrue(stopCondition.isFulfilled());
+    assertNotNull(context.getRequirements());
+    assertThat(context.getRequirements().size(), is(1));
+    assertThat(context.getRequirements(RequirementStatus.FAILED).size(), is(0));
+    assertThat(context.getRequirements(RequirementStatus.NOT_COVERED).size(), is(0));
+    assertThat(context.getRequirements(RequirementStatus.PASSED).size(), is(1));
   }
 }

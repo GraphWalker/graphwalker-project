@@ -30,10 +30,10 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -68,7 +68,7 @@ public class DepthFirstSearchTest {
   @Test
   public void connectedComponent() {
     DepthFirstSearch depthFirstSearch = new DepthFirstSearch(new TestExecutionContext().setModel(model.build()));
-    Assert.assertThat(depthFirstSearch.getConnectedComponent(v00.build()).size(), is(10));
-    Assert.assertThat(depthFirstSearch.getConnectedComponent(ve0.build()).size(), is(3));
+    assertThat(depthFirstSearch.getConnectedComponent(v00.build()).size(), is(10));
+    assertThat(depthFirstSearch.getConnectedComponent(ve0.build()).size(), is(3));
   }
 }

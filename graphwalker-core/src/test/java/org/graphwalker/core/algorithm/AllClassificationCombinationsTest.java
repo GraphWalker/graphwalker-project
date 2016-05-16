@@ -28,8 +28,9 @@ package org.graphwalker.core.algorithm;
 
 import org.graphwalker.core.model.Classification;
 import org.graphwalker.core.model.ClassificationTree;
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Kristian Karl
@@ -59,7 +60,7 @@ public class AllClassificationCombinationsTest {
     tree.addClassification(branchC);
 
     AllClassificationCombinations allCombinations = new AllClassificationCombinations(tree.build());
-    Assert.assertNotNull(allCombinations);
+    assertNotNull(allCombinations);
 
     allCombinations.generate();
   }
@@ -106,7 +107,7 @@ public class AllClassificationCombinationsTest {
     costCode.addClassification(anyNonExistentCode);
 
     AllClassificationCombinations allCombinations = new AllClassificationCombinations(tree.build());
-    Assert.assertNotNull(allCombinations);
+    assertNotNull(allCombinations);
 
     //List<List<Classification>> result = allCombinations.generate();
   }

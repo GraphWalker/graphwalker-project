@@ -28,11 +28,16 @@ package org.graphwalker.core.algorithm;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.*;
-import org.junit.Assert;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import java.util.Arrays;
+
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Nils Olsson
@@ -74,7 +79,7 @@ public class FleuryTest {
     Context context = new TestExecutionContext(model, null);
     Fleury fleury = new Fleury(context);
     Path<Element> path = fleury.getTrail(v1.build());
-    Assert.assertArrayEquals(expectedPath.toArray(), path.toArray());
+    assertArrayEquals(expectedPath.toArray(), path.toArray());
   }
 
 }

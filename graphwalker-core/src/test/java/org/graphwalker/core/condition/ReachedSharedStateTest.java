@@ -31,13 +31,19 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.*;
-import org.junit.Assert;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Nils Olsson
@@ -88,7 +94,7 @@ public class ReachedSharedStateTest {
       e6.build(),
       v4.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
   @Test
@@ -130,6 +136,6 @@ public class ReachedSharedStateTest {
       e4.build(),
       v3.build());
     Collections.reverse(expectedPath);
-    Assert.assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 }

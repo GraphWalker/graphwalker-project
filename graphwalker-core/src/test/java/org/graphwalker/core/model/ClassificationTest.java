@@ -26,11 +26,13 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.graphwalker.core.model.Classification.RuntimeClassification;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -43,19 +45,19 @@ public class ClassificationTest {
     root.setName("root");
     root.addClassification(new Classification().setName("leaf1"));
     root.addClassification(new Classification().setName("leaf2"));
-    Assert.assertNotNull(root);
-    Assert.assertEquals("root", root.getName());
-    Assert.assertThat(root.getClassifications().size(), is(2));
+    assertNotNull(root);
+    assertEquals("root", root.getName());
+    assertThat(root.getClassifications().size(), is(2));
     RuntimeClassification runtimeRoot = root.build();
-    Assert.assertNotNull(runtimeRoot);
-    Assert.assertThat(runtimeRoot.getClassifications().size(), is(2));
-    Assert.assertNotNull(runtimeRoot.getClassifications().get(0));
-    Assert.assertNotNull(runtimeRoot.getClassifications().get(0).getName());
-    Assert.assertNotNull(runtimeRoot.getClassifications().get(0).getClassifications());
-    Assert.assertThat(runtimeRoot.getClassifications().get(0).getClassifications().size(), is(0));
-    Assert.assertNotNull(runtimeRoot.getClassifications().get(1));
-    Assert.assertNotNull(runtimeRoot.getClassifications().get(1).getName());
-    Assert.assertNotNull(runtimeRoot.getClassifications().get(1).getClassifications());
-    Assert.assertThat(runtimeRoot.getClassifications().get(1).getClassifications().size(), is(0));
+    assertNotNull(runtimeRoot);
+    assertThat(runtimeRoot.getClassifications().size(), is(2));
+    assertNotNull(runtimeRoot.getClassifications().get(0));
+    assertNotNull(runtimeRoot.getClassifications().get(0).getName());
+    assertNotNull(runtimeRoot.getClassifications().get(0).getClassifications());
+    assertThat(runtimeRoot.getClassifications().get(0).getClassifications().size(), is(0));
+    assertNotNull(runtimeRoot.getClassifications().get(1));
+    assertNotNull(runtimeRoot.getClassifications().get(1).getName());
+    assertNotNull(runtimeRoot.getClassifications().get(1).getClassifications());
+    assertThat(runtimeRoot.getClassifications().get(1).getClassifications().size(), is(0));
   }
 }

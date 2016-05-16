@@ -26,15 +26,14 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -158,8 +157,8 @@ public class ModelTest {
   public void recreateModel() {
     Model model1 = new Model().setId("m1").addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
     Model model2 = new Model(model1.build());
-    Assert.assertEquals(model1.getId(), model2.getId());
-    Assert.assertEquals(model1.getName(), model2.getName());
+    assertEquals(model1.getId(), model2.getId());
+    assertEquals(model1.getName(), model2.getName());
   }
 
   @Test
