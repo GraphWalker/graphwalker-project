@@ -72,23 +72,7 @@ public final class AStar implements Algorithm {
     } else {
       closeSet.put(node.getElement(), node);
       List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
-      for (Element neighbor : neighbors) {
-        AStarNode visited = closeSet.get(neighbor);
-        if (isNull(visited)) {
-          double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
-          AStarNode neighborNode = openSet.get(neighbor);
-          if (isNull(neighborNode)) {
-            neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
-            neighborNode.setParent(node);
-            openSet.put(neighbor, neighborNode);
-            queue.add(neighborNode);
-          } else if (g < neighborNode.getG()) {
-            neighborNode.setParent(node);
-            neighborNode.setG(g);
-            neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
-          }
-        }
-      }
+      calculate(destination, openSet, queue, closeSet, floydWarshall, node, neighbors);
     }
     if (!queue.isEmpty()) {
       AStarNode result = queue.poll();
@@ -97,6 +81,26 @@ public final class AStar implements Algorithm {
       }
     }
     throw new AlgorithmException();
+  }
+
+  private void calculate(Element destination, Map<Element, AStarNode> openSet, PriorityQueue<AStarNode> queue, Map<Element, AStarNode> closeSet, FloydWarshall floydWarshall, AStarNode node, List<Element> neighbors) {
+    for (Element neighbor : neighbors) {
+      AStarNode visited = closeSet.get(neighbor);
+      if (isNull(visited)) {
+        double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
+        AStarNode neighborNode = openSet.get(neighbor);
+        if (isNull(neighborNode)) {
+          neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
+          neighborNode.setParent(node);
+          openSet.put(neighbor, neighborNode);
+          queue.add(neighborNode);
+        } else if (g < neighborNode.getG()) {
+          neighborNode.setParent(node);
+          neighborNode.setG(g);
+          neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
+        }
+      }
+    }
   }
 
   public Path<Element> getShortestPath(Element origin, Element destination) {
@@ -118,23 +122,7 @@ public final class AStar implements Algorithm {
         } else {
           closeSet.put(node.getElement(), node);
           List<Element> neighbors = context.filter(context.getModel().getElements(node.getElement()));
-          for (Element neighbor : neighbors) {
-            AStarNode visited = closeSet.get(neighbor);
-            if (isNull(visited)) {
-              double g = node.getG() + floydWarshall.getShortestDistance(node.getElement(), neighbor);
-              AStarNode neighborNode = openSet.get(neighbor);
-              if (isNull(neighborNode)) {
-                neighborNode = new AStarNode(neighbor, g, floydWarshall.getShortestDistance(neighbor, destination));
-                neighborNode.setParent(node);
-                openSet.put(neighbor, neighborNode);
-                queue.add(neighborNode);
-              } else if (g < neighborNode.getG()) {
-                neighborNode.setParent(node);
-                neighborNode.setG(g);
-                neighborNode.setH(floydWarshall.getShortestDistance(neighbor, destination));
-              }
-            }
-          }
+          calculate(destination, openSet, queue, closeSet, floydWarshall, node, neighbors);
         }
       }
     }
