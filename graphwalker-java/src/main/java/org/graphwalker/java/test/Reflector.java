@@ -26,6 +26,8 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -53,6 +55,8 @@ public final class Reflector {
   private final Method reportResults;
   private final Method setErrors;
   private final Method getErrors;
+  private final Method setResult;
+  private final Method getResultsAsString;
   private final Method getMachineConfiguration;
   private final Method getContextConfigurations;
   private final Method getTestClassName;
@@ -81,6 +85,8 @@ public final class Reflector {
     this.reportResults = Reflections.getMethod(executorClass, "reportResults", File.class, Date.class, Properties.class);
     this.setErrors = Reflections.getMethod(Result.class, "setErrors", List.class);
     this.getErrors = Reflections.getMethod(resultClass, "getErrors");
+    this.setResult = Reflections.getMethod(Result.class, "setResults", String.class);
+    this.getResultsAsString = Reflections.getMethod(resultClass, "getResultsAsString");
     this.getMachineConfiguration = Reflections.getMethod(executorClass, "getMachineConfiguration");
     this.getContextConfigurations = Reflections.getMethod(machineConfigurationClass, "getContextConfigurations");
     this.getTestClassName = Reflections.getMethod(contextConfigurationClass, "getTestClassName");
@@ -124,6 +130,7 @@ public final class Reflector {
   private Result createResult(Object result) {
     Result newResult = new Result();
     Reflections.invoke(newResult, setErrors, Reflections.invoke(result, getErrors));
+    Reflections.invoke(newResult, setResult, Reflections.invoke(result, getResultsAsString));
     return newResult;
   }
 

@@ -1,10 +1,7 @@
 package org.graphwalker.java.test;
 
-import javafx.collections.transformation.SortedList;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.gw3.GW3ContextFactory;
-import org.hamcrest.Matcher;
-import org.hamcrest.core.Is;
 import org.hamcrest.core.StringStartsWith;
 import org.json.JSONObject;
 import org.junit.Assert;
