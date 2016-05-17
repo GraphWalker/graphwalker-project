@@ -71,6 +71,6 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
   public void run() {
     Result result = new TestBuilder().addModel(MODEL_PATH
       , new SimpleTest().setPathGenerator(new RandomPath(new VertexCoverage(100)))).execute();
-    Assert.assertThat(result.getCompletedCount(), is(1));
+    Assert.assertThat(result.getResults().getInt("totalCompletedNumberOfModels"), is(1));
   }
 }
