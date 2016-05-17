@@ -96,6 +96,30 @@ public final class Profiler {
     return elementList;
   }
 
+  public List<Element> getUnvisitedElements() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (!isVisited(e)) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
+  public List<Element> getVisitedEdges() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (isVisited(e) && e instanceof Edge.RuntimeEdge) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
   public List<Element> getUnvisitedEdges(Context context) {
     List<Element> elementList = new ArrayList<>();
     for (Element e : context.getModel().getElements()) {
@@ -106,11 +130,47 @@ public final class Profiler {
     return elementList;
   }
 
+  public List<Element> getUnvisitedEdges() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
   public List<Element> getUnvisitedVertices(Context context) {
     List<Element> elementList = new ArrayList<>();
     for (Element e : context.getModel().getElements()) {
       if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
         elementList.add(e);
+      }
+    }
+    return elementList;
+  }
+
+  public List<Element> getUnvisitedVertices() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
+          elementList.add(e);
+        }
+      }
+    }
+    return elementList;
+  }
+
+  public List<Element> getVisitedVertices() {
+    List<Element> elementList = new ArrayList<>();
+    for (Context context : getContexts()) {
+      for (Element e : context.getModel().getElements()) {
+        if (isVisited(e) && e instanceof Vertex.RuntimeVertex) {
+          elementList.add(e);
+        }
       }
     }
     return elementList;
