@@ -32,12 +32,16 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
+import org.graphwalker.core.model.Model.RuntimeModel;
+import org.graphwalker.core.model.Vertex.RuntimeVertex;
 import org.graphwalker.core.statistics.Profiler;
 import org.junit.Test;
 
+import static org.graphwalker.core.Models.findEdge;
+import static org.graphwalker.core.Models.findVertex;
+import static org.graphwalker.core.Models.simpleModel;
+import static org.graphwalker.core.Models.singleModel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -47,44 +51,49 @@ import static org.junit.Assert.assertTrue;
  */
 public class QuickRandomPathTest {
 
-  private final Vertex source = new Vertex();
-  private final Vertex target = new Vertex();
-  private final Edge edge = new Edge().setSourceVertex(source).setTargetVertex(target);
-  private final Model model = new Model().addEdge(edge);
-
   @Test
   public void simpleTest() {
-    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    RuntimeModel model = simpleModel().build();
+    RuntimeVertex source = findVertex(model, "A");
+    RuntimeVertex target = findVertex(model, "B");
+    RuntimeEdge edge = findEdge(model, "ab");
+    Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
     context.setPathGenerator(generator);
     Machine machine = new SimpleMachine(context);
     assertTrue(machine.hasNextStep());
-    assertEquals(machine.getNextStep().getCurrentElement(), source.build());
-    assertEquals(machine.getNextStep().getCurrentElement(), edge.build());
-    assertEquals(machine.getNextStep().getCurrentElement(), target.build());
+    assertEquals(machine.getNextStep().getCurrentElement(), source);
+    assertEquals(machine.getNextStep().getCurrentElement(), edge);
+    assertEquals(machine.getNextStep().getCurrentElement(), target);
     assertFalse(machine.hasNextStep());
   }
 
   @Test(expected = AlgorithmException.class)
   public void failTest() {
-    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    RuntimeModel model = simpleModel().build();
+    RuntimeVertex source = findVertex(model, "A");
+    RuntimeVertex target = findVertex(model, "B");
+    RuntimeEdge edge = findEdge(model, "ab");
+    Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
     context.setProfiler(new Profiler());
     context.setPathGenerator(generator);
-    context.setCurrentElement(source.build());
-    assertEquals(context.getCurrentElement(), source.build());
-    assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
-    assertEquals(generator.getNextStep().getCurrentElement(), target.build());
+    context.setCurrentElement(source);
+    assertEquals(context.getCurrentElement(), source);
+    assertEquals(generator.getNextStep().getCurrentElement(), edge);
+    assertEquals(generator.getNextStep().getCurrentElement(), target);
     context.getPathGenerator().getNextStep(); // should fail
   }
 
   @Test(expected = NoPathFoundException.class)
-  public void emptyModel() {
-    Context context = new TestExecutionContext().setModel(new Model().addVertex(source).build()).setNextElement(source);
+  public void singleTest() {
+    RuntimeModel model = singleModel().build();
+    RuntimeVertex source = findVertex(model, "A");
+    Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
     context.setProfiler(new Profiler());
     context.setPathGenerator(generator);
-    context.setCurrentElement(source.build());
+    context.setCurrentElement(source);
     assertTrue(generator.hasNextStep());
     generator.getNextStep(); // should fail
   }

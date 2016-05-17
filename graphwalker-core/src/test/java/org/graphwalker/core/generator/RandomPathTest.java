@@ -30,11 +30,14 @@ import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
+import org.graphwalker.core.model.Model.RuntimeModel;
+import org.graphwalker.core.model.Vertex.RuntimeVertex;
 import org.junit.Test;
 
+import static org.graphwalker.core.Models.findEdge;
+import static org.graphwalker.core.Models.findVertex;
+import static org.graphwalker.core.Models.simpleModel;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -44,20 +47,19 @@ import static org.junit.Assert.assertTrue;
  */
 public class RandomPathTest {
 
-  private final Vertex source = new Vertex();
-  private final Vertex target = new Vertex();
-  private final Edge edge = new Edge().setSourceVertex(source).setTargetVertex(target);
-  private final Model model = new Model().addEdge(edge);
-
   @Test
   public void simpleTest() {
+    RuntimeModel model = simpleModel().build();
+    RuntimeVertex source = findVertex(model, "A");
+    RuntimeVertex target = findVertex(model, "B");
+    RuntimeEdge edge = findEdge(model, "ab");
     PathGenerator generator = new RandomPath(new VertexCoverage(100));
-    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     context.setPathGenerator(generator);
-    context.setCurrentElement(source.build());
-    assertEquals(context.getCurrentElement(), source.build());
-    assertEquals(generator.getNextStep().getCurrentElement(), edge.build());
-    assertEquals(generator.getNextStep().getCurrentElement(), target.build());
+    context.setCurrentElement(source);
+    assertEquals(context.getCurrentElement(), source);
+    assertEquals(generator.getNextStep().getCurrentElement(), edge);
+    assertEquals(generator.getNextStep().getCurrentElement(), target);
     assertNotNull(generator.getContext());
     assertNotNull(generator.getStopCondition());
   }
@@ -65,23 +67,31 @@ public class RandomPathTest {
   @Test
   @SuppressWarnings("unchecked")
   public void newStopConditionTest() {
-    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    RuntimeModel model = simpleModel().build();
+    RuntimeVertex source = findVertex(model, "A");
+    RuntimeVertex target = findVertex(model, "B");
+    RuntimeEdge edge = findEdge(model, "ab");
+    Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
-    context.setCurrentElement(source.build());
-    assertEquals(context.getCurrentElement(), source.build());
-    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
-    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
+    context.setCurrentElement(source);
+    assertEquals(context.getCurrentElement(), source);
+    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge);
+    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target);
     context.getPathGenerator().setStopCondition(new EdgeCoverage(100));
     assertTrue(EdgeCoverage.class.isAssignableFrom(context.getPathGenerator().getStopCondition().getClass()));
   }
 
   @Test(expected = NoPathFoundException.class)
   public void failTest() {
-    Context context = new TestExecutionContext().setModel(model.build()).setNextElement(source);
+    RuntimeModel model = simpleModel().build();
+    RuntimeVertex source = findVertex(model, "A");
+    RuntimeVertex target = findVertex(model, "B");
+    RuntimeEdge edge = findEdge(model, "ab");
+    Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
-    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), source.build());
-    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge.build());
-    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target.build());
+    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), source);
+    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), edge);
+    assertEquals(context.getPathGenerator().getNextStep().getCurrentElement(), target);
     context.getPathGenerator().getNextStep(); // should fail
   }
 }
