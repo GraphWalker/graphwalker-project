@@ -27,7 +27,6 @@ package org.graphwalker.core.statistics;
  */
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.RequirementStatus;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
