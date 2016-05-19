@@ -201,7 +201,7 @@ public final class Result {
       results.put("requirementsFailed", requirementsFailedJson);
     }
 
-    if (failures.size() > 0) {
+    if (failures != null && failures.size() > 0) {
       JSONArray jsonFailures = new JSONArray();
       for (MachineException exception : failures.values()) {
         JSONObject jsonFailure = new JSONObject();
