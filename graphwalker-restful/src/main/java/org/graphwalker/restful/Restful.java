@@ -71,17 +71,17 @@ public class Restful {
   @Path("load")
   public String load(String jsonGW3) {
     logger.debug("Received load with gw3: " + jsonGW3);
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       List<Context> contexts = new GW3ContextFactory().createMultiple(jsonGW3);
       setContexts(contexts);
-      obj.put("result", "ok");
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   /**
@@ -96,20 +96,20 @@ public class Restful {
   @Path("hasNext")
   public String hasNext() {
     logger.debug("Received hasNext");
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       if (machine.hasNextStep()) {
-        obj.put("hasNext", "true").toString();
+        resultJson.put("hasNext", "true").toString();
       } else {
-        obj.put("hasNext", "false").toString();
+        resultJson.put("hasNext", "false").toString();
       }
-      obj.put("result", "ok");
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   /**
@@ -124,18 +124,18 @@ public class Restful {
   @Path("getNext")
   public String getNext() {
     logger.debug("Received getNext");
-    JSONObject obj;
+    JSONObject resultJson;
     try {
       machine.getNextStep();
-      obj = Util.getStepAsJSON(machine, verbose, unvisited);
-      obj.put("result", "ok");
+      resultJson = Util.getStepAsJSON(machine, verbose, unvisited);
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj = new JSONObject();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson = new JSONObject();
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   @GET
@@ -166,16 +166,16 @@ public class Restful {
   @Path("setData/{script}")
   public String setData(@PathParam("script") String script) {
     logger.debug("Received setData with script: " + script);
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       machine.getCurrentContext().execute(new Action(script));
-      obj.put("result", "ok");
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   @PUT
@@ -183,16 +183,16 @@ public class Restful {
   @Produces("text/plain;charset=UTF-8")
   public String restart() {
     logger.debug("Received restart");
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       machine = new SimpleMachine(contexts);
-      obj.put("result", "ok");
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   @PUT
@@ -201,17 +201,17 @@ public class Restful {
   @Path("fail/{reason}")
   public String fail(@PathParam("reason") String reason) {
     logger.debug("Received fail with reason: " + reason);
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       FailFastStrategy failFastStrategy = new FailFastStrategy();
       failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
-      obj.put("result", "ok");
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   @GET
@@ -219,19 +219,18 @@ public class Restful {
   @Path("getStatistics")
   public String getStatistics() {
     logger.debug("Received getStatistics");
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       Result result = new Result();
       result.updateResults(machine, null);
-      obj = result.getResults();
-      obj.put("result", "ok");
+      resultJson = result.getResults();
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj = new JSONObject();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   public List<Context> getContexts() {
