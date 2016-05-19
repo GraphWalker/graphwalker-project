@@ -29,6 +29,7 @@ package org.graphwalker.restful;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.io.factory.gw3.GW3ContextFactory;
+import org.graphwalker.java.test.Result;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -220,7 +221,9 @@ public class Restful {
     logger.debug("Received getStatistics");
     JSONObject obj = new JSONObject();
     try {
-      obj = Util.getStatisticsAsJSON(machine);
+      Result result = new Result();
+      result.updateResults(machine, null);
+      obj = result.getResults();
       obj.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
