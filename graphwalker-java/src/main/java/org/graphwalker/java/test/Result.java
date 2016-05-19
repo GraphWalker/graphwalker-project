@@ -41,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+
 /**
  * @author Nils Olsson
  */
@@ -201,7 +203,7 @@ public final class Result {
       results.put("requirementsFailed", requirementsFailedJson);
     }
 
-    if (failures.size() > 0) {
+    if (isNotNullOrEmpty(failures)) {
       JSONArray jsonFailures = new JSONArray();
       for (MachineException exception : failures.values()) {
         JSONObject jsonFailure = new JSONObject();
