@@ -144,20 +144,20 @@ public class Restful {
   @Path("getData")
   public String getData() {
     logger.debug("Received getData");
-    JSONObject obj = new JSONObject();
+    JSONObject resultJson = new JSONObject();
     try {
       JSONObject data = new JSONObject();
       for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
         data.put(k.getKey(), k.getValue());
       }
-      obj.put("data", data);
-      obj.put("result", "ok");
+      resultJson.put("data", data);
+      resultJson.put("result", "ok");
     } catch (Exception e) {
       e.printStackTrace();
-      obj.put("result", "nok");
-      obj.put("error", e.getMessage());
+      resultJson.put("result", "nok");
+      resultJson.put("error", e.getMessage());
     }
-    return obj.toString();
+    return resultJson.toString();
   }
 
   @PUT
