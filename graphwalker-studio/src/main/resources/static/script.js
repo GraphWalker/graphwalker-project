@@ -4,7 +4,6 @@ var currentModelId;
 var pauseExecution = false;
 var stepExecution = false;
 var keys = {};
-var executionSpeed = 0;
 
 window.onload = function() {
   document.getElementById('loading-mask').style.display='none';
@@ -139,7 +138,7 @@ function onRunModel() {
         requirements = edge.data().requirements.split(',');
       }
 
-      var edge = {
+      var newEdge = {
         id: edge.data().id,
         name: edge.data().label,
         guard: edge.data().guard,
@@ -149,7 +148,7 @@ function onRunModel() {
         sourceVertexId: edge.data().source,
         targetVertexId: edge.data().target
       };
-      model.edges.push(edge);
+      model.edges.push(newEdge);
     });
     start.gw3.models.push(model);
   }
@@ -185,9 +184,9 @@ function onAddModel() {
   var id = generateUUID();
   var graph = createTab(id, 'New model');
   graph.name = 'New model';
-
-  var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
-  $('#tabs').show().tabs('option', 'active', index);
+  var tabs = $('#tabs');
+  var index = tabs.find('a[href="#A-' + id + '"]').parent().index();
+  tabs.show().tabs('option', 'active', index);
 }
 
 function onDoLayout() {
@@ -197,7 +196,7 @@ function onDoLayout() {
     var layout = graphs[currentModelId].makeLayout({
       name: 'dagre',
       animate: true,
-      minLen: function( edge ) {
+      minLen: function() {
         return 2;
       }
     });
@@ -211,7 +210,7 @@ function onDoLayout() {
  ************************************************************************
  */
 var startEvent = new CustomEvent('startEvent', {});
-document.addEventListener('startEvent', function (e) {
+document.addEventListener('startEvent', function () {
   console.log('startEvent: ' + currentModelId);
 
   // Change some UI elements
@@ -227,7 +226,7 @@ document.addEventListener('startEvent', function (e) {
 });
 
 var hasNextEvent = new CustomEvent('hasNextEvent', {});
-document.addEventListener('hasNextEvent', function (e) {
+document.addEventListener('hasNextEvent', function() {
   console.log('hasNextEvent: pauseExecution: ' + pauseExecution + ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
   if (pauseExecution) {
     if (!stepExecution) {
@@ -311,27 +310,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  modelName.on('input', function(e){
+  modelName.on('input', function() {
     if (graphs[currentModelId]) {
       graphs[currentModelId].name = modelName.val();
-      var selectedTab = $('#tabs').tabs('option', 'selected');
-      $('#tabs ul li a').eq(selectedTab).text(modelName.val());
+      var tabs = $('#tabs');
+      var selectedTab = tabs.tabs('option', 'selected');
+      tabs.find('ul li a').eq(selectedTab).text(modelName.val());
     }
   });
 
-  generator.on('input', function(e){
+  generator.on('input', function() {
     if (graphs[currentModelId]) {
       graphs[currentModelId].generator = generator.val();
     }
   });
 
-  modelActions.on('input', function(e){
+  modelActions.on('input', function() {
     if (graphs[currentModelId]) {
       graphs[currentModelId].actions = modelActions.val();
     }
   });
 
-  modelRequirements.on('input', function(e){
+  modelRequirements.on('input', function() {
     if (graphs[currentModelId]) {
       graphs[currentModelId].requirements = modelRequirements.val();
     }
@@ -373,28 +373,20 @@ function createTab(modelId, modelName) {
 
 function createGraph(currentModelId) {
   console.log('createGraph - ' + currentModelId);
-  var mouseX, mouseY;
-
   var graph = cytoscape({
     id: currentModelId,
     container: document.querySelector('#A-' + currentModelId),
-
     currentElement: null,
-
-
-    'boxSelectionEnabled': true,
-    'wheelSensitivity': '0', // Values 0, 0.5 and 1 has the same effect...
-
-    ready: function(evt) {
+    boxSelectionEnabled: true,
+    wheelSensitivity: '0', // Values 0, 0.5 and 1 has the same effect...
+    ready: function() {
       console.log('Cytoscape is ready...')
     },
-
     style: cytoscape.stylesheet()
       .selector('core')
       .css({
         //'active-bg-size': 0 // remove the grey circle when panning
       })
-
       .selector('node')
       .css({
         'content': 'data(name)',
@@ -412,7 +404,6 @@ function createGraph(currentModelId) {
         'padding-top': '10',
         'padding-bottom': '10'
       })
-
       .selector('edge')
       .css({
         'content': 'data(name)',
@@ -425,18 +416,16 @@ function createGraph(currentModelId) {
         'target-arrow-color': 'data(color)',
         'background-color': 'data(color)'
       })
-
       .selector(':selected')
       .css({
         'background-color': 'MediumSlateBlue ',
         'line-color': 'MediumSlateBlue ',
         'target-arrow-color': 'MediumSlateBlue '
       })
-
   });
 
   var srcNode = null;
-  graph.on('tapstart', 'node', function(event) {
+  graph.on('tapstart', 'node', function() {
     if (keys[69]) {  // e key is pressed
       console.log('tapstart with e key pressed on node: ' + this.id());
       srcNode = this;
@@ -445,7 +434,7 @@ function createGraph(currentModelId) {
   });
 
   var dstNode = null;
-  graph.on('tapend', 'node', function(event) {
+  graph.on('tapend', 'node', function() {
     if (keys[69]) {  // e key is pressed
       console.log('tapend with e key pressed on node: ' + this.id());
       dstNode = this;
@@ -517,7 +506,7 @@ function createGraph(currentModelId) {
     $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
   });
 
-  graph.on('tap', 'node', function(event) {
+  graph.on('tap', 'node', function() {
     currentElement = this;
     $('#label').textinput('enable').val(this.data().label);
     $('#sharedStateName').textinput('enable').val(this.data().sharedState);
@@ -531,7 +520,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  graph.on('tap', 'edge', function(event) {
+  graph.on('tap', 'edge', function() {
     currentElement = this;
     $('#label').textinput('enable').val(this.data().label);
     $('#guard').textinput('enable').val(this.data().guard);
@@ -545,7 +534,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#label').on('input', function(e){
+  $('#label').on('input', function() {
     if (currentElement) {
       currentElement.data('label', $('#label').val());
       currentElement.data('name', formatElementName({
@@ -558,7 +547,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#sharedStateName').on('input', function(e){
+  $('#sharedStateName').on('input', function() {
     if (currentElement) {
       currentElement.data('sharedState', $('#sharedStateName').val());
       currentElement.data('name', formatElementName({
@@ -571,7 +560,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#guard').on('input', function(e){
+  $('#guard').on('input', function() {
     if (currentElement) {
       currentElement.data('guard', $('#guard').val());
       currentElement.data('name', formatElementName({
@@ -583,7 +572,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#actions').on('input', function(e){
+  $('#actions').on('input', function() {
     if (currentElement) {
       currentElement.data('actions', $('#actions').val());
       currentElement.data('name', formatElementName({
@@ -596,7 +585,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#requirements').on('input', function(e){
+  $('#requirements').on('input', function() {
     if (currentElement) {
       currentElement.data('requirements', $('#requirements').val());
       currentElement.data('name', formatElementName({
@@ -621,18 +610,18 @@ function createGraph(currentModelId) {
     }
   });
 
-  graph.on('doubleTap', function(event) {
+  graph.on('doubleTap', function() {
     $('#nav-panel').panel('open');
   });
   var uipanel = $('.ui-panel');
   uipanel.panel({
-    close: function( event, ui ) {
+    close: function() {
       console.log('Resize the model, because the side panel has been closed');
       graph.resize();
     }
   });
   uipanel.panel({
-    open: function( event, ui ) {
+    open: function() {
       console.log('Resize the model, because the side panel has been opened');
       graph.resize();
     }
@@ -646,33 +635,32 @@ function readGraphsFromFile(fileName) {
   console.log('readGraphFromFile - ' + fileName);
   // Assign handlers immediately after making the request,
   // and remember the jqxhr object for this request
-  var jqxhr = $.getJSON(fileName, function () {
-      console.log('readGraphsFromFile: success');
-    })
-    .done(function (jsonGraphs) {
-      console.log('readGraphsFromFile: done');
-      readGraphFromJSON(jsonGraphs);
-    })
-    .fail(function () {
-      console.log('readGraphsFromFile: error');
-    })
-    .always(function () {
-      console.log('readGraphsFromFile: first complete');
-      var tabs = $('#tabs');
-      tabs.show();
-      for (var modelId in graphs) {
-        if (!graphs.hasOwnProperty(modelId)) {
-          continue;
-        }
-        console.log('readGraphsFromFile: resize graph: ' + modelId);
-
-        var index = $('#tabs a[href="#A-' + modelId + '"]').parent().index();
-        tabs.tabs('option', 'active', index);
-        graphs[modelId].resize();
-        graphs[modelId].fit();
+  var tabs = $('#tabs');
+  $.getJSON(fileName, function () {
+    console.log('readGraphsFromFile: success');
+  })
+  .done(function (jsonGraphs) {
+    console.log('readGraphsFromFile: done');
+    readGraphFromJSON(jsonGraphs);
+  })
+  .fail(function () {
+    console.log('readGraphsFromFile: error');
+  })
+  .always(function () {
+    console.log('readGraphsFromFile: first complete');
+    tabs.show();
+    for (var modelId in graphs) {
+      if (!graphs.hasOwnProperty(modelId)) {
+        continue;
       }
-      defaultUI();
-    });
+      console.log('readGraphsFromFile: resize graph: ' + modelId);
+      var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+      tabs.tabs('option', 'active', index);
+      graphs[modelId].resize();
+      graphs[modelId].fit();
+    }
+    defaultUI();
+  });
 }
 
 function readGraphFromJSON(jsonGraphs) {
@@ -720,13 +708,13 @@ function readGraphFromJSON(jsonGraphs) {
         jsonVertex.properties = {};
       }
 
-      var actions;
-      var requirements;
+      var vertexActions;
+      var vertexRequirements;
       if (jsonVertex.hasOwnProperty('actions')) {
-        actions = jsonVertex.actions.join('');
+        vertexActions = jsonVertex.actions.join('');
       }
       if (jsonVertex.hasOwnProperty('requirements')) {
-        requirements = jsonVertex.requirements.join();
+        vertexRequirements = jsonVertex.requirements.join();
       }
 
       graph.add({
@@ -741,8 +729,8 @@ function readGraphFromJSON(jsonGraphs) {
             requirements: jsonVertex.requirements
           }),
           sharedState: jsonVertex.sharedState,
-          actions: actions,
-          requirements: requirements,
+          actions: vertexActions,
+          requirements: vertexRequirements,
           properties: jsonVertex.properties,
           color: 'LightSteelBlue'
         },
@@ -775,13 +763,13 @@ function readGraphFromJSON(jsonGraphs) {
         });
       }
 
-      var actions;
-      var requirements;
+      var edgeActions;
+      var edgeRequirements;
       if (jsonEdge.hasOwnProperty('actions')) {
-        actions = jsonEdge.actions.join('');
+        edgeActions = jsonEdge.actions.join('');
       }
       if (jsonEdge.hasOwnProperty('requirements')) {
-        requirements = jsonEdge.requirements.join();
+        edgeRequirements = jsonEdge.requirements.join();
       }
 
       graph.add({
@@ -797,8 +785,8 @@ function readGraphFromJSON(jsonGraphs) {
             actions: jsonEdge.actions
           }),
           guard: jsonEdge.guard,
-          actions: actions,
-          requirements: requirements,
+          actions: edgeActions,
+          requirements: edgeRequirements,
           properties: jsonEdge.properties,
           color: 'LightSteelBlue'
         }
@@ -945,8 +933,9 @@ function onMessage(evt) {
       graphs[currentModelId].nodes().unselect();
       graphs[currentModelId].edges().unselect();
 
-      var index = $('#tabs a[href="#A-' + currentModelId + '"]').parent().index();
-      $('#tabs').tabs('option', 'active', index);
+      var tabs = $('#tabs');
+      var index = tabs.find('a[href="#A-' + currentModelId + '"]').parent().index();
+      tabs.tabs('option', 'active', index);
 
       graphs[currentModelId].$('#'+msg.elementId).data('color', 'lightgreen');
       graphs[currentModelId].$('#'+msg.elementId).select();
