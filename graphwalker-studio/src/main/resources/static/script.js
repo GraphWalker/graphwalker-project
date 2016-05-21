@@ -8,10 +8,14 @@ var executionSpeed = 0;
 
 window.onload = function() {
   document.getElementById('loading-mask').style.display='none';
-}
+};
 
 function onLoadModel() {
-  $("<input type='file' class='ui-helper-hidden-accessible' />").appendTo("body").focus().trigger('click').remove();
+  $('<input type="file" class="ui-helper-hidden-accessible" />')
+    .appendTo('body')
+    .focus()
+    .trigger('click')
+    .remove();
 }
 
 function onSaveModel() {
@@ -19,62 +23,62 @@ function onSaveModel() {
 }
 
 function onPausePlayExecution(element) {
-  console.log("pausePlayExecution: " + element.innerHTML + ", pauseExecution: " + pauseExecution + ", clicked: " + currentModelId);
+  console.log('pausePlayExecution: ' + element.innerHTML + ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
   stepExecution = false;
 
   if (pauseExecution) {
-    document.getElementById("runModel").disabled = true;
-    document.getElementById("resetModel").disabled = true;
-    document.getElementById("pausePlayExecution").disabled = false;
-    document.getElementById("stepExecution").disabled = true;
-    document.getElementById("pausePlayExecution").innerHTML = "Pause";
+    document.getElementById('runModel').disabled = true;
+    document.getElementById('resetModel').disabled = true;
+    document.getElementById('pausePlayExecution').disabled = false;
+    document.getElementById('stepExecution').disabled = true;
+    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
     pauseExecution = false;
 
     var hasNext = {
-      command: "hasNext"
+      command: 'hasNext'
     };
     doSend(JSON.stringify(hasNext));
   } else {
-    document.getElementById("runModel").disabled = true;
-    document.getElementById("resetModel").disabled = false;
-    document.getElementById("pausePlayExecution").disabled = false;
-    document.getElementById("stepExecution").disabled = false;
-    document.getElementById("pausePlayExecution").innerHTML = "Run";
+    document.getElementById('runModel').disabled = true;
+    document.getElementById('resetModel').disabled = false;
+    document.getElementById('pausePlayExecution').disabled = false;
+    document.getElementById('stepExecution').disabled = false;
+    document.getElementById('pausePlayExecution').innerHTML = 'Run';
     pauseExecution = true;
   }
-};
+}
 
 function onStepExecution() {
-  console.log("onStepExecution: " + currentModelId);
-  document.getElementById("runModel").disabled = true;
-  document.getElementById("resetModel").disabled = false;
-  document.getElementById("pausePlayExecution").disabled = false;
-  document.getElementById("stepExecution").disabled = false;
+  console.log('onStepExecution: ' + currentModelId);
+  document.getElementById('runModel').disabled = true;
+  document.getElementById('resetModel').disabled = false;
+  document.getElementById('pausePlayExecution').disabled = false;
+  document.getElementById('stepExecution').disabled = false;
   stepExecution = true;
 
   var hasNext = {
-    command: "hasNext"
+    command: 'hasNext'
   };
   doSend(JSON.stringify(hasNext));
-};
+}
 
 // Run the execution of the state machine
 function onRunModel() {
-  console.log("onRunModel: " + currentModelId);
-  $( ".ui-panel" ).panel( "close" );
+  console.log('onRunModel: ' + currentModelId);
+  $('.ui-panel').panel('close');
 
-  document.getElementById("runModel").disabled = true;
-  document.getElementById("resetModel").disabled = true;
-  document.getElementById("pausePlayExecution").disabled = false;
-  document.getElementById("stepExecution").disabled = true;
-  document.getElementById("addModel").disabled = true;
+  document.getElementById('runModel').disabled = true;
+  document.getElementById('resetModel').disabled = true;
+  document.getElementById('pausePlayExecution').disabled = false;
+  document.getElementById('stepExecution').disabled = true;
+  document.getElementById('addModel').disabled = true;
   stepExecution = false;
   pauseExecution = false;
 
   var start = {
-    command: "start",
+    command: 'start',
     gw3: {
-      name: "GraphWalker Studio",
+      name: 'GraphWalker Studio',
       models: []
     }
   };
@@ -99,7 +103,7 @@ function onRunModel() {
       actions: actions,
       vertices: [],
       edges: []
-    }
+    };
 
     if (graphs[modelId].startElementId !== undefined) {
       model.startElementId = graphs[modelId].startElementId;
@@ -125,8 +129,7 @@ function onRunModel() {
       };
       model.vertices.push(vertex);
     });
-    graphs[modelId].edges().each( function( index, edge) {
-
+    graphs[modelId].edges().each( function(index, edge) {
       actions = [];
       if (edge.data().actions) {
         actions.push(edge.data().actions);
@@ -152,14 +155,14 @@ function onRunModel() {
   }
 
   doSend(JSON.stringify(start));
-};
+}
 
 // Reset the state machine to it's initial state
 function onResetModel() {
-  console.log("onResetModel: " + currentModelId);
+  console.log('onResetModel: ' + currentModelId);
   defaultUI();
 
-  issues.innerHTML = "Ready";
+  issues.innerHTML = 'Ready';
 
   for (var modelId in graphs) {
     if (!graphs.hasOwnProperty(modelId)) {
@@ -175,21 +178,21 @@ function onResetModel() {
     }).data('color', 'LightGreen');
   }
 
-};
+}
 
 function onAddModel() {
-  console.log("onAddModel");
+  console.log('onAddModel');
   var id = generateUUID();
-  var graph = createTab(id, "New model");
-  graph.name = "New model";
+  var graph = createTab(id, 'New model');
+  graph.name = 'New model';
 
-  $("#tabs").show();
+  $('#tabs').show();
   var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
-  $("#tabs").tabs("option", "active", index);
-};
+  $('#tabs').tabs('option', 'active', index);
+}
 
 function onDoLayout() {
-  console.log("onDoLayout");
+  console.log('onDoLayout');
   if (graphs[currentModelId] !== undefined) {
     graphs[currentModelId].layout().stop();
     var layout = graphs[currentModelId].makeLayout({
@@ -201,48 +204,46 @@ function onDoLayout() {
     });
     layout.run();
   }
-};
-
-
+}
 
 /*
  ************************************************************************
  * CREATE SOME CUSTOM EVENTS THAT HANDLES MODEL EXECUTION
  ************************************************************************
  */
-var startEvent = new CustomEvent("startEvent", {});
-document.addEventListener("startEvent", function (e) {
-  console.log("startEvent: " + currentModelId);
+var startEvent = new CustomEvent('startEvent', {});
+document.addEventListener('startEvent', function (e) {
+  console.log('startEvent: ' + currentModelId);
 
   // Change some UI elements
-  document.getElementById("runModel").disabled = true;
-  document.getElementById("resetModel").disabled = true;
-  document.getElementById("pausePlayExecution").disabled = false;
-  document.getElementById("stepExecution").disabled = true;
+  document.getElementById('runModel').disabled = true;
+  document.getElementById('resetModel').disabled = true;
+  document.getElementById('pausePlayExecution').disabled = false;
+  document.getElementById('stepExecution').disabled = true;
 
   var hasNext = {
-    command: "hasNext"
+    command: 'hasNext'
   };
   doSend(JSON.stringify(hasNext));
 });
 
-var hasNextEvent = new CustomEvent("hasNextEvent", {});
-document.addEventListener("hasNextEvent", function (e) {
-  console.log("hasNextEvent: pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution + " : modelId " + currentModelId);
+var hasNextEvent = new CustomEvent('hasNextEvent', {});
+document.addEventListener('hasNextEvent', function (e) {
+  console.log('hasNextEvent: pauseExecution: ' + pauseExecution + ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
   if (pauseExecution) {
     if (!stepExecution) {
       return;
     }
   }
   var getNext = {
-    command: "getNext"
+    command: 'getNext'
   };
   doSend(JSON.stringify(getNext));
 });
 
-var getNextEvent = new CustomEvent("getNextEvent", {"modelId": "", "elementId": "", "name": ""});
-document.addEventListener("getNextEvent", function (e) {
-  console.log("getNextEvent: " + e.id + ": " + e.name + "pauseExecution: " + pauseExecution + ", stepExecution: " + stepExecution + " : modelId " + currentModelId);
+var getNextEvent = new CustomEvent('getNextEvent', {"modelId": "", "elementId": "", "name": ""});
+document.addEventListener('getNextEvent', function (e) {
+  console.log('getNextEvent: ' + e.id + ': ' + e.name + 'pauseExecution: ' + pauseExecution + ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
 
   if (stepExecution) {
     stepExecution = false;
@@ -250,7 +251,7 @@ document.addEventListener("getNextEvent", function (e) {
   }
 
   var hasNext = {
-    command: "hasNext"
+    command: 'hasNext'
   };
   setTimeout(function () {
     doSend(JSON.stringify(hasNext));
@@ -258,19 +259,19 @@ document.addEventListener("getNextEvent", function (e) {
 });
 
 function removeModel(modelId) {
-  console.log("Remove model with id: " + modelId);
+  console.log('Remove model with id: ' + modelId);
   delete graphs[modelId];
 }
 
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  $("#tabs").delegate("span.ui-icon-close", "click", function () {
-    var id = $(this).closest("li").remove().attr("aria-controls").substr(2);
-    $("#A-" + id).remove();
-    $("#tabs").tabs("refresh");
-    if ($("#tabs").find("li").length < 1) {
-      $("#tabs").hide();
+  $('#tabs').delegate('span.ui-icon-close', 'click', function () {
+    var id = $(this).closest('li').remove().attr('aria-controls').substr(2);
+    $('#A-' + id).remove();
+    $('#tabs').tabs('refresh');
+    if ($('#tabs').find('li').length < 1) {
+      $('#tabs').hide();
     }
     removeModel(id);
   });
@@ -278,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#tabs').tabs({
     activate: function (event, ui) {
       currentModelId = ui.newPanel.attr('id').substr(2);
-      console.log("tabs activate: " + currentModelId);
+      console.log('tabs activate: ' + currentModelId);
       graphs[currentModelId].resize();
       $('#modelName').val(graphs[currentModelId].name);
       $('#generator').val(graphs[currentModelId].generator);
@@ -288,15 +289,15 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Hide the tab component. It will get visible when the graps are loaded.
-  $("#tabs").hide();
+  $('#tabs').hide();
 
   $(document).keyup(function(e) {
-    console.log("key up: " + e.which);
+    console.log('key up: ' + e.which);
     delete keys[e.which];
   });
 
   $(document).keydown(function(e) {
-    console.log("key down: " + e.which);
+    console.log('key down: ' + e.which);
     keys[e.which] = true;
 
     if (keys[46]) {  // Delete key is pressed
@@ -309,8 +310,8 @@ document.addEventListener('DOMContentLoaded', function () {
   $('#modelName').on('input',function(e){
     if (graphs[currentModelId]) {
       graphs[currentModelId].name = $('#modelName').val();
-      var selectedTab = $("#tabs").tabs( "option", "selected" );
-      $("#tabs ul li a").eq(selectedTab).text($('#modelName').val());
+      var selectedTab = $('#tabs').tabs( 'option', 'selected' );
+      $('#tabs ul li a').eq(selectedTab).text($('#modelName').val());
     }
   });
 
@@ -337,38 +338,38 @@ document.addEventListener('DOMContentLoaded', function () {
    * Place the gw3 files in:
    * graphwalker-studio/src/main/resources/static/
    **/
-  //readGraphsFromFile("Login.gw3");
-  //readGraphsFromFile("UC01.gw3");
-  //readGraphsFromFile("petClinic.gw3");
+  //readGraphsFromFile('Login.gw3');
+  //readGraphsFromFile('UC01.gw3');
+  //readGraphsFromFile('petClinic.gw3');
 });
 
 
 function createTab(modelId, modelName) {
-  console.log("createTab: " + modelId + ", " + modelName);
+  console.log('createTab: ' + modelId + ', ' + modelName);
 
-  var tabs = $("#tabs").tabs();
-  var ul = tabs.find("ul");
+  var tabs = $('#tabs').tabs();
+  var ul = tabs.find('ul');
 
   // ID tokens must begin with a letter ([A-Za-z])
   // https://www.w3.org/TR/html401/types.html#type-name
-  var href = "#A-" + modelId;
-  $("<li><a href='" + href + "'>" + modelName + "</a><span class='ui-icon ui-icon-close'></span></li>").appendTo(ul);
-  $("<div id='A-" + modelId + "'></div>").appendTo(tabs);
-  tabs.tabs("refresh");
+  var href = '#A-' + modelId;
+  $('<li><a href="' + href + '">' + modelName + '</a><span class="ui-icon ui-icon-close"></span></li>').appendTo(ul);
+  $('<div id="A-' + modelId + '"></div>').appendTo(tabs);
+  tabs.tabs('refresh');
 
-  $("<style>").prop("type", "text/css").html("\
-                    " + href + " {\
+  $('<style>').prop('type', 'text/css').html('\
+                    ' + href + ' {\
                         background: floralwhite;\
                         position: relative;\
                         height:100%;\
                         overflow-y: hidden;\
-                    }").appendTo("head");
+                    }').appendTo('head');
 
   return createGraph(modelId);
 }
 
 function createGraph(currentModelId) {
-  console.log("createGraph - " + currentModelId);
+  console.log('createGraph - ' + currentModelId);
   var mouseX, mouseY;
 
   var graph = cytoscape({
@@ -382,7 +383,7 @@ function createGraph(currentModelId) {
     'wheelSensitivity': '0', // Values 0, 0.5 and 1 has the same effect...
 
     ready: function(evt) {
-      console.log("Cytoscape is ready...")
+      console.log('Cytoscape is ready...')
     },
 
     style: cytoscape.stylesheet()
@@ -432,37 +433,37 @@ function createGraph(currentModelId) {
   });
 
   var srcNode = null;
-  graph.on("tapstart", 'node', function(event) {
+  graph.on('tapstart', 'node', function(event) {
     if (keys[69]) {  // e key is pressed
-      console.log("tapstart with e key pressed on node: " + this.id());
+      console.log('tapstart with e key pressed on node: ' + this.id());
       srcNode = this;
       graph.autoungrabify(true);
     }
   });
 
   var dstNode = null;
-  graph.on("tapend", 'node', function(event) {
+  graph.on('tapend', 'node', function(event) {
     if (keys[69]) {  // e key is pressed
-      console.log("tapend with e key pressed on node: " + this.id());
+      console.log('tapend with e key pressed on node: ' + this.id());
       dstNode = this;
       graph.autoungrabify(false);
 
       if (srcNode !== undefined && dstNode !== undefined) {
         var id = generateUUID();
         graph.add({
-          group: "edges",
+          group: 'edges',
           data: {
             id: id,
             source: srcNode.id(),
             target: dstNode.id(),
-            label: "e_NewEdge",
+            label: 'e_NewEdge',
             name: formatElementName({
-              name: "e_NewEdge"
+              name: 'e_NewEdge'
             }),
             color: 'LightSteelBlue'
           }
         });
-        console.log("  Added edge: " + id);
+        console.log('  Added edge: ' + id);
       }
     }
   });
@@ -483,15 +484,15 @@ function createGraph(currentModelId) {
     }
 
     if (keys[86]) {  // v key is pressed
-      console.log("tap and v key pressed");
+      console.log('tap and v key pressed');
       var id = generateUUID();
       graph.add({
-        group: "nodes",
+        group: 'nodes',
         data: {
           id: id,
-          label: "v_NewVertex",
+          label: 'v_NewVertex',
           name: formatElementName({
-            name: "v_NewVertex"
+            name: 'v_NewVertex'
           }),
           color: 'LightSteelBlue'
         },
@@ -500,27 +501,26 @@ function createGraph(currentModelId) {
           y: event.cyRenderedPosition.y
         }
       });
-      console.log("  Added vertex: " + id);
+      console.log('  Added vertex: ' + id);
     }
 
     currentElement = null;
 
-    $('#label').val("");
-    $('#label').textinput('disable');
+    $('#label').val('').textinput('disable');
 
-    $('#sharedStateName').val("");
+    $('#sharedStateName').val('');
     $('#sharedStateName').textinput('disable');
 
-    $('#guard').val("");
+    $('#guard').val('');
     $('#guard').textinput('disable');
 
-    $('#actions').val("");
+    $('#actions').val('');
     $('#actions').textinput('disable');
 
-    $('#requirements').val("");
+    $('#requirements').val('');
     $('#requirements').textinput('disable');
 
-    $('#checkboxStartElement').attr("checked", false).checkboxradio("refresh");
+    $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh');
     $('#checkboxStartElement').checkboxradio('disable');
 
   });
@@ -630,7 +630,7 @@ function createGraph(currentModelId) {
   });
 
   $('#checkboxStartElement').change(function() {
-    if ($(this).is(":checked")) {
+    if ($(this).is(':checked')) {
       if (currentElement) {
         graph.startElementId = currentElement.id();
       }
@@ -642,19 +642,19 @@ function createGraph(currentModelId) {
   });
 
   graph.on('doubleTap', function(event) {
-    $( "#nav-panel" ).panel( "open" );
+    $( '#nav-panel' ).panel( 'open' );
   });
 
-  $( ".ui-panel" ).panel({
+  $( '.ui-panel' ).panel({
     close: function( event, ui ) {
-      console.log("Resize the model, because the side panel has been closed");
+      console.log('Resize the model, because the side panel has been closed');
       graph.resize();
     }
   });
 
-  $( ".ui-panel" ).panel({
+  $( '.ui-panel' ).panel({
     open: function( event, ui ) {
-      console.log("Resize the model, because the side panel has been opened");
+      console.log('Resize the model, because the side panel has been opened');
       graph.resize();
     }
   });
@@ -664,31 +664,31 @@ function createGraph(currentModelId) {
 }
 
 function readGraphsFromFile(fileName) {
-  console.log("readGraphFromFile - " + fileName);
+  console.log('readGraphFromFile - ' + fileName);
 
   // Assign handlers immediately after making the request,
   // and remember the jqxhr object for this request
   var jqxhr = $.getJSON(fileName, function () {
-      console.log("readGraphsFromFile: success");
+      console.log('readGraphsFromFile: success');
     })
     .done(function (jsonGraphs) {
-      console.log("readGraphsFromFile: done");
+      console.log('readGraphsFromFile: done');
       readGraphFromJSON(jsonGraphs);
     })
     .fail(function () {
-      console.log("readGraphsFromFile: error");
+      console.log('readGraphsFromFile: error');
     })
     .always(function () {
-      console.log("readGraphsFromFile: first complete");
-      $("#tabs").show();
+      console.log('readGraphsFromFile: first complete');
+      $('#tabs').show();
       for (var modelId in graphs) {
         if (!graphs.hasOwnProperty(modelId)) {
           continue;
         }
-        console.log("readGraphsFromFile: resize graph: " + modelId);
+        console.log('readGraphsFromFile: resize graph: ' + modelId);
 
         var index = $('#tabs a[href="#A-' + modelId + '"]').parent().index();
-        $("#tabs").tabs("option", "active", index);
+        $('#tabs').tabs('option', 'active', index);
         graphs[modelId].resize();
         graphs[modelId].fit();
       }
@@ -712,7 +712,7 @@ function readGraphFromJSON(jsonGraphs) {
     if (jsonModel.hasOwnProperty('name')) {
       name = jsonModel.name;
     } else {
-      name = "Model: " + modelIndex;
+      name = 'Model: ' + modelIndex;
     }
     var graph = createTab(id, name);
 
@@ -731,11 +731,11 @@ function readGraphFromJSON(jsonGraphs) {
       var jsonVertex = jsonVertices[i];
       var x = 0, y = 0;
       if (jsonVertex.properties != undefined) {
-        if (jsonVertex.properties["x"] != undefined) {
-          x = jsonVertex.properties["x"];
+        if (jsonVertex.properties['x'] != undefined) {
+          x = jsonVertex.properties['x'];
         }
-        if (jsonVertex.properties["y"] != undefined) {
-          y = jsonVertex.properties["y"];
+        if (jsonVertex.properties['y'] != undefined) {
+          y = jsonVertex.properties['y'];
         }
       } else {
         jsonVertex.properties = {};
@@ -751,7 +751,7 @@ function readGraphFromJSON(jsonGraphs) {
       }
 
       graph.add({
-        group: "nodes",
+        group: 'nodes',
         data: {
           id: jsonVertex.id,
           label: jsonVertex.name,
@@ -779,13 +779,13 @@ function readGraphFromJSON(jsonGraphs) {
 
       // If source vertex is undefined, assume start vertex
       if (jsonEdge.sourceVertexId === undefined) {
-        jsonEdge.sourceVertexId = "Start";
+        jsonEdge.sourceVertexId = 'Start';
 
         graph.add({
-          group: "nodes",
+          group: 'nodes',
           data: {
             id: jsonEdge.sourceVertexId,
-            name: "Start",
+            name: 'Start',
             startVertex: true,
             color: 'LightGreen'
           },
@@ -806,7 +806,7 @@ function readGraphFromJSON(jsonGraphs) {
       }
 
       graph.add({
-        group: "edges",
+        group: 'edges',
         data: {
           id: jsonEdge.id,
           source: jsonEdge.sourceVertexId,
@@ -832,39 +832,39 @@ function readGraphFromJSON(jsonGraphs) {
 }
 
 function defaultUI() {
-  console.log("defaultUI");
+  console.log('defaultUI');
 
   if (Object.keys(graphs).length > 0 && currentModelId !== undefined) {
-    document.getElementById("runModel").disabled = false;
-    document.getElementById("resetModel").disabled = true;
-    document.getElementById("stepExecution").disabled = true;
-    document.getElementById("pausePlayExecution").innerHTML = "Pause";
-    document.getElementById("pausePlayExecution").disabled = true;
-    document.getElementById("addModel").disabled = false;
+    document.getElementById('runModel').disabled = false;
+    document.getElementById('resetModel').disabled = true;
+    document.getElementById('stepExecution').disabled = true;
+    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
+    document.getElementById('pausePlayExecution').disabled = true;
+    document.getElementById('addModel').disabled = false;
   } else {
-    document.getElementById("runModel").disabled = false;
-    document.getElementById("resetModel").disabled = false;
-    document.getElementById("stepExecution").disabled = false;
-    document.getElementById("pausePlayExecution").innerHTML = "Pause";
-    document.getElementById("pausePlayExecution").disabled = false;
-    document.getElementById("addModel").disabled = false;
+    document.getElementById('runModel').disabled = false;
+    document.getElementById('resetModel').disabled = false;
+    document.getElementById('stepExecution').disabled = false;
+    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
+    document.getElementById('pausePlayExecution').disabled = false;
+    document.getElementById('addModel').disabled = false;
   }
 }
 
 function generateUUID() {
-  console.log("generateUUID");
+  console.log('generateUUID');
   var d = new Date().getTime();
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
     return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
-  console.log("  UUID: " + uuid);
+  console.log('  UUID: ' + uuid);
   return uuid;
 }
 
 function formatElementName(jsonObj) {
-  var str = "";
+  var str = '';
   if (jsonObj.name) {
     str += 'Name: ' + jsonObj.name + '\n';
   }
@@ -889,7 +889,7 @@ function formatElementName(jsonObj) {
  * WEBSOCKET CLIENT TO GRAPHWALKER
  *
  *************************************************************************/
-var wsUri = "ws://localhost:9999";
+var wsUri = 'ws://localhost:9999';
 var websocket;
 var messageState = testWebSocket();
 function testWebSocket() {
@@ -914,58 +914,58 @@ function onClose(evt) {
   console.log('onClose: ' + evt.data);
 }
 function onMessage(evt) {
-  console.log("onMessage: " + evt.data);
+  console.log('onMessage: ' + evt.data);
   var msg = JSON.parse(event.data);
 
   switch (msg.command) {
-    case "hasNext":
+    case 'hasNext':
       if (msg.success) {
-        console.log("Command hasNext: " + msg.hasNext);
+        console.log('Command hasNext: ' + msg.hasNext);
         if (msg.hasNext) {
           hasNextEvent.fullfilled = msg.hasNext;
           document.dispatchEvent(hasNextEvent);
         } else {
           defaultUI();
-          document.getElementById("runModel").disabled = true;
-          document.getElementById("resetModel").disabled = false;
+          document.getElementById('runModel').disabled = true;
+          document.getElementById('resetModel').disabled = false;
         }
       } else {
         defaultUI();
       }
       break;
-    case "getNext":
+    case 'getNext':
       if (msg.success) {
-        console.log("Command getNext ok");
+        console.log('Command getNext ok');
         document.dispatchEvent(getNextEvent, msg.modelId, msg.elementId, msg.name);
       } else {
         defaultUI();
       }
       break;
-    case "start":
+    case 'start':
       if (msg.success) {
-        issues.innerHTML = "No issues";
-        console.log("Command start ok");
+        issues.innerHTML = 'No issues';
+        console.log('Command start ok');
         document.dispatchEvent(startEvent);
       } else {
         defaultUI();
       }
       break;
-    case "issues":
+    case 'issues':
       issues.innerHTML = msg.issues;
       break;
-    case "noIssues":
-      issues.innerHTML = "No issues";
+    case 'noIssues':
+      issues.innerHTML = 'No issues';
       break;
-    case "visitedElement":
-      console.log("Command visitedElement. Will color green on (modelId, elementId): " + msg.modelId + ", " + msg.elementId);
-      issues.innerHTML = "Steps: " + msg.totalCount + ", Done: " + (msg.stopConditionFulfillment * 100).toFixed(0) + "%, data: " + JSON.stringify(msg.data);
+    case 'visitedElement':
+      console.log('Command visitedElement. Will color green on (modelId, elementId): ' + msg.modelId + ', ' + msg.elementId);
+      issues.innerHTML = 'Steps: ' + msg.totalCount + ', Done: ' + (msg.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(msg.data);
 
       currentModelId = msg.modelId;
       graphs[currentModelId].nodes().unselect();
       graphs[currentModelId].edges().unselect();
 
       var index = $('#tabs a[href="#A-' + currentModelId + '"]').parent().index();
-      $("#tabs").tabs("option", "active", index);
+      $('#tabs').tabs('option', 'active', index);
 
       graphs[currentModelId].$('#'+msg.elementId).data('color', 'lightgreen');
       graphs[currentModelId].$('#'+msg.elementId).select();
