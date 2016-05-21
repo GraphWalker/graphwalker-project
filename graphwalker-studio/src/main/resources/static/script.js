@@ -6,6 +6,10 @@ var stepExecution = false;
 var keys = {};
 var executionSpeed = 0;
 
+window.onload = function() {
+  document.getElementById('loading-mask').style.display='none';
+}
+
 function onLoadModel() {
   $("<input type='file' class='ui-helper-hidden-accessible' />").appendTo("body").focus().trigger('click').remove();
 }

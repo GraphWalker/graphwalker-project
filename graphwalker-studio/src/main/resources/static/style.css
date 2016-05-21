@@ -4,6 +4,16 @@ body {
   padding: 0;
 }
 
+#loading-mask {
+  background-color: white;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
 #tabs {
   position: absolute;
   top: 0;
