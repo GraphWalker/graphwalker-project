@@ -1,7 +1,7 @@
 package org.graphwalker.modelchecker;
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.gw3.GW3ContextFactory;
+import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import static org.hamcrest.core.Is.is;
 public class ContextsCheckerTest {
   @Test
   public void testDefault() {
-    List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("gw3/petClinic.gw3"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/petClinic.json"));
     List<String> issues = ContextsChecker.hasIssues(contexts);
     Assert.assertThat(issues.size(), is(2));
   }

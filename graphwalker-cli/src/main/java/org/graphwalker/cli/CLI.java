@@ -51,7 +51,7 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
-import org.graphwalker.io.factory.gw3.GW3ContextFactory;
+import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.java.test.TestExecutor;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.graphwalker.restful.Restful;
@@ -422,7 +422,7 @@ public class CLI {
       });
       executor.execute();
     } else if (!offline.gw3.isEmpty()) {
-      SimpleMachine machine = new SimpleMachine(new GW3ContextFactory().createMultiple(Paths.get(offline.gw3)));
+      SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get(offline.gw3)));
       while (machine.hasNextStep()) {
         machine.getNextStep();
         System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
