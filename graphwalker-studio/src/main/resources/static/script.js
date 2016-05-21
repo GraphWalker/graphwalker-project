@@ -1,6 +1,6 @@
 // Hash array that holds all graphs/models.
 var graphs =[];
-var currentModelId = undefined;
+var currentModelId;
 var pauseExecution = false;
 var stepExecution = false;
 var keys = {};
@@ -108,7 +108,7 @@ function onRunModel() {
     if (graphs[modelId].startElementId !== undefined) {
       model.startElementId = graphs[modelId].startElementId;
     }
-    graphs[modelId].nodes().each( function( index, node) {
+    graphs[modelId].nodes().each(function( index, node) {
 
       actions = [];
       if (node.data().actions) {
@@ -129,7 +129,7 @@ function onRunModel() {
       };
       model.vertices.push(vertex);
     });
-    graphs[modelId].edges().each( function(index, edge) {
+    graphs[modelId].edges().each(function(index, edge) {
       actions = [];
       if (edge.data().actions) {
         actions.push(edge.data().actions);
@@ -186,9 +186,8 @@ function onAddModel() {
   var graph = createTab(id, 'New model');
   graph.name = 'New model';
 
-  $('#tabs').show();
   var index = $('#tabs a[href="#A-' + id + '"]').parent().index();
-  $('#tabs').tabs('option', 'active', index);
+  $('#tabs').show().tabs('option', 'active', index);
 }
 
 function onDoLayout() {
@@ -265,31 +264,36 @@ function removeModel(modelId) {
 
 
 document.addEventListener('DOMContentLoaded', function () {
+  var tabs = $('#tabs');
+  var modelRequirements = $('#modelRequirements');
+  var modelActions = $('#modelActions');
+  var modelName = $('#modelName');
+  var generator = $('#generator');
 
-  $('#tabs').delegate('span.ui-icon-close', 'click', function () {
+  tabs.delegate('span.ui-icon-close', 'click', function () {
     var id = $(this).closest('li').remove().attr('aria-controls').substr(2);
     $('#A-' + id).remove();
-    $('#tabs').tabs('refresh');
-    if ($('#tabs').find('li').length < 1) {
-      $('#tabs').hide();
+    tabs.tabs('refresh');
+    if (tabs.find('li').length < 1) {
+      tabs.hide();
     }
     removeModel(id);
   });
 
-  $('#tabs').tabs({
+  tabs.tabs({
     activate: function (event, ui) {
       currentModelId = ui.newPanel.attr('id').substr(2);
       console.log('tabs activate: ' + currentModelId);
       graphs[currentModelId].resize();
-      $('#modelName').val(graphs[currentModelId].name);
-      $('#generator').val(graphs[currentModelId].generator);
-      $('#modelActions').val(graphs[currentModelId].actions);
-      $('#modelRequirements').val(graphs[currentModelId].requirements);
+      modelName.val(graphs[currentModelId].name);
+      generator.val(graphs[currentModelId].generator);
+      modelActions.val(graphs[currentModelId].actions);
+      modelRequirements.val(graphs[currentModelId].requirements);
     }
   });
 
   // Hide the tab component. It will get visible when the graps are loaded.
-  $('#tabs').hide();
+  tabs.hide();
 
   $(document).keyup(function(e) {
     console.log('key up: ' + e.which);
@@ -307,32 +311,31 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  $('#modelName').on('input',function(e){
+  modelName.on('input', function(e){
     if (graphs[currentModelId]) {
-      graphs[currentModelId].name = $('#modelName').val();
-      var selectedTab = $('#tabs').tabs( 'option', 'selected' );
-      $('#tabs ul li a').eq(selectedTab).text($('#modelName').val());
+      graphs[currentModelId].name = modelName.val();
+      var selectedTab = $('#tabs').tabs('option', 'selected');
+      $('#tabs ul li a').eq(selectedTab).text(modelName.val());
     }
   });
 
-  $('#generator').on('input',function(e){
+  generator.on('input', function(e){
     if (graphs[currentModelId]) {
-      graphs[currentModelId].generator = $('#generator').val();
+      graphs[currentModelId].generator = generator.val();
     }
   });
 
-  $('#modelActions').on('input',function(e){
+  modelActions.on('input', function(e){
     if (graphs[currentModelId]) {
-      graphs[currentModelId].actions = $('#modelActions').val();
+      graphs[currentModelId].actions = modelActions.val();
     }
   });
 
-  $('#modelRequirements').on('input',function(e){
+  modelRequirements.on('input', function(e){
     if (graphs[currentModelId]) {
-      graphs[currentModelId].requirements = $('#modelRequirements').val();
+      graphs[currentModelId].requirements = modelRequirements.val();
     }
   });
-
 
   /**
    * Place the gw3 files in:
@@ -507,65 +510,42 @@ function createGraph(currentModelId) {
     currentElement = null;
 
     $('#label').val('').textinput('disable');
-
-    $('#sharedStateName').val('');
-    $('#sharedStateName').textinput('disable');
-
-    $('#guard').val('');
-    $('#guard').textinput('disable');
-
-    $('#actions').val('');
-    $('#actions').textinput('disable');
-
-    $('#requirements').val('');
-    $('#requirements').textinput('disable');
-
-    $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh');
-    $('#checkboxStartElement').checkboxradio('disable');
-
+    $('#sharedStateName').val('').textinput('disable');
+    $('#guard').val('').textinput('disable');
+    $('#actions').val('').textinput('disable');
+    $('#requirements').val('').textinput('disable');
+    $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
   });
 
   graph.on('tap', 'node', function(event) {
     currentElement = this;
-    $('#label').textinput('enable');
-    $('#label').val(this.data().label);
+    $('#label').textinput('enable').val(this.data().label);
+    $('#sharedStateName').textinput('enable').val(this.data().sharedState);
+    $('#actions').textinput('enable').val(this.data().actions);
+    $('#requirements').textinput('enable').val(this.data().requirements);
 
-    $('#sharedStateName').textinput('enable');
-    $('#sharedStateName').val(this.data().sharedState);
-
-    $('#actions').textinput('enable');
-    $('#actions').val(this.data().actions);
-
-    $('#requirements').textinput('enable');
-    $('#requirements').val(this.data().requirements);
-
-    $('#checkboxStartElement').checkboxradio('enable');
+    var checkboxStartElement = $('#checkboxStartElement');
+    checkboxStartElement.checkboxradio('enable');
     if (graph.startElementId == this.id()) {
-      $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
+      checkboxStartElement.prop('checked', true).checkboxradio('refresh');
     }
   });
 
   graph.on('tap', 'edge', function(event) {
     currentElement = this;
-    $('#label').textinput('enable');
-    $('#label').val(this.data().label);
+    $('#label').textinput('enable').val(this.data().label);
+    $('#guard').textinput('enable').val(this.data().guard);
+    $('#actions').textinput('enable').val(this.data().actions);
+    $('#requirements').textinput('enable').val(this.data().requirements);
 
-    $('#guard').textinput('enable');
-    $('#guard').val(this.data().guard);
-
-    $('#actions').textinput('enable');
-    $('#actions').val(this.data().actions);
-
-    $('#requirements').textinput('enable');
-    $('#requirements').val(this.data().requirements);
-
-    $('#checkboxStartElement').checkboxradio('enable');
+    var checkboxStartElement = $('#checkboxStartElement');
+    checkboxStartElement.checkboxradio('enable');
     if (graph.startElementId == this.id()) {
-      $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
+      checkboxStartElement.prop('checked', true).checkboxradio('refresh');
     }
   });
 
-  $('#label').on('input',function(e){
+  $('#label').on('input', function(e){
     if (currentElement) {
       currentElement.data('label', $('#label').val());
       currentElement.data('name', formatElementName({
@@ -578,7 +558,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#sharedStateName').on('input',function(e){
+  $('#sharedStateName').on('input', function(e){
     if (currentElement) {
       currentElement.data('sharedState', $('#sharedStateName').val());
       currentElement.data('name', formatElementName({
@@ -591,7 +571,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#guard').on('input',function(e){
+  $('#guard').on('input', function(e){
     if (currentElement) {
       currentElement.data('guard', $('#guard').val());
       currentElement.data('name', formatElementName({
@@ -603,7 +583,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#actions').on('input',function(e){
+  $('#actions').on('input', function(e){
     if (currentElement) {
       currentElement.data('actions', $('#actions').val());
       currentElement.data('name', formatElementName({
@@ -616,7 +596,7 @@ function createGraph(currentModelId) {
     }
   });
 
-  $('#requirements').on('input',function(e){
+  $('#requirements').on('input', function(e){
     if (currentElement) {
       currentElement.data('requirements', $('#requirements').val());
       currentElement.data('name', formatElementName({
@@ -642,17 +622,16 @@ function createGraph(currentModelId) {
   });
 
   graph.on('doubleTap', function(event) {
-    $( '#nav-panel' ).panel( 'open' );
+    $('#nav-panel').panel('open');
   });
-
-  $( '.ui-panel' ).panel({
+  var uipanel = $('.ui-panel');
+  uipanel.panel({
     close: function( event, ui ) {
       console.log('Resize the model, because the side panel has been closed');
       graph.resize();
     }
   });
-
-  $( '.ui-panel' ).panel({
+  uipanel.panel({
     open: function( event, ui ) {
       console.log('Resize the model, because the side panel has been opened');
       graph.resize();
@@ -665,7 +644,6 @@ function createGraph(currentModelId) {
 
 function readGraphsFromFile(fileName) {
   console.log('readGraphFromFile - ' + fileName);
-
   // Assign handlers immediately after making the request,
   // and remember the jqxhr object for this request
   var jqxhr = $.getJSON(fileName, function () {
@@ -680,7 +658,8 @@ function readGraphsFromFile(fileName) {
     })
     .always(function () {
       console.log('readGraphsFromFile: first complete');
-      $('#tabs').show();
+      var tabs = $('#tabs');
+      tabs.show();
       for (var modelId in graphs) {
         if (!graphs.hasOwnProperty(modelId)) {
           continue;
@@ -688,7 +667,7 @@ function readGraphsFromFile(fileName) {
         console.log('readGraphsFromFile: resize graph: ' + modelId);
 
         var index = $('#tabs a[href="#A-' + modelId + '"]').parent().index();
-        $('#tabs').tabs('option', 'active', index);
+        tabs.tabs('option', 'active', index);
         graphs[modelId].resize();
         graphs[modelId].fit();
       }
@@ -741,8 +720,8 @@ function readGraphFromJSON(jsonGraphs) {
         jsonVertex.properties = {};
       }
 
-      var actions = undefined;
-      var requirements = undefined;
+      var actions;
+      var requirements;
       if (jsonVertex.hasOwnProperty('actions')) {
         actions = jsonVertex.actions.join('');
       }
@@ -796,8 +775,8 @@ function readGraphFromJSON(jsonGraphs) {
         });
       }
 
-      var actions = undefined;
-      var requirements = undefined;
+      var actions;
+      var requirements;
       if (jsonEdge.hasOwnProperty('actions')) {
         actions = jsonEdge.actions.join('');
       }
@@ -825,7 +804,6 @@ function readGraphFromJSON(jsonGraphs) {
         }
       });
     }
-
     graphs[graph.id] = graph;
   }
   return graphs;
@@ -833,7 +811,6 @@ function readGraphFromJSON(jsonGraphs) {
 
 function defaultUI() {
   console.log('defaultUI');
-
   if (Object.keys(graphs).length > 0 && currentModelId !== undefined) {
     document.getElementById('runModel').disabled = false;
     document.getElementById('resetModel').disabled = true;
@@ -892,6 +869,7 @@ function formatElementName(jsonObj) {
 var wsUri = 'ws://localhost:9999';
 var websocket;
 var messageState = testWebSocket();
+
 function testWebSocket() {
   websocket = new WebSocket(wsUri);
   websocket.onopen = function (evt) {
@@ -907,12 +885,15 @@ function testWebSocket() {
     onError(evt);
   };
 }
+
 function onOpen(evt) {
   console.log('onOpen: ' + evt.data);
 }
+
 function onClose(evt) {
   console.log('onClose: ' + evt.data);
 }
+
 function onMessage(evt) {
   console.log('onMessage: ' + evt.data);
   var msg = JSON.parse(event.data);
@@ -974,9 +955,11 @@ function onMessage(evt) {
       break;
   }
 }
+
 function onError(evt) {
   console.error('Error: ' + evt.data);
 }
+
 function doSend(message) {
   console.log('Sending msgs: ' + message);
   websocket.send(message);
