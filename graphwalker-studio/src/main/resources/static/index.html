@@ -25,13 +25,15 @@
 
     <div data-role="footer" data-position="fixed" data-theme="b">
       <h4 id="issues">Fixed footer</h4>
-    </div><!-- /footer -->
+    </div>
 
     <div data-role="panel" data-position-fixed="true" data-theme="a" id="nav-panel" data-dismissible="false">
       <ul data-role="listview" data-theme="a" class="nav-search">
-        <li data-icon="delete"><a href="#" data-rel="close">Close menu</a></li>
+        <li data-icon="delete">
+          <a href="#" data-rel="close">Close menu</a>
+        </li>
         <li>
-          <button type='button' id="loadModel" onclick="onLoadModel()">Load model</input>
+          <button type='button' id="loadModel" onclick="onLoadModel()">Load model</button>
         </li>
         <li>
           <button type='button' id="saveModel" onclick="onSaveModel()">Save model</button>
@@ -103,20 +105,19 @@
       </ul>
     </div>
 
-    <div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="b"
-         id="add-form">
+    <div id="add-form" data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="b">
       <form class="userform">
         <h2>Login</h2>
         <label for="name">Username:</label>
         <input type="text" name="name" id="name" value="" data-clear-btn="true" data-mini="true">
         <label for="password">Password:</label>
-        <input type="password" name="password" id="password" value="" data-clear-btn="true" autocomplete="off"
-               data-mini="true">
+        <input type="password" name="password" id="password" value="" data-clear-btn="true" autocomplete="off" data-mini="true">
         <div class="ui-grid-a">
-          <div class="ui-block-a"><a href="#" data-rel="close" data-role="button" data-theme="c"
-                                     data-mini="true">Cancel</a>
+          <div class="ui-block-a">
+            <a href="#" data-rel="close" data-role="button" data-theme="c" data-mini="true">Cancel</a>
           </div>
-          <div class="ui-block-b"><a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true">Save</a>
+          <div class="ui-block-b">
+            <a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true">Save</a>
           </div>
         </div>
       </form>
