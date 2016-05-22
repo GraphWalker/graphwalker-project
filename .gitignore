@@ -27,6 +27,7 @@ release.properties
 work/
 amps-standalone/
 */dependency-reduced-pom.xml
+**/node_modules
 
 # Mac stuff #
 #############

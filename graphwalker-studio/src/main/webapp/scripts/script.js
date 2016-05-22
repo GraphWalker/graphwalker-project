@@ -1,15 +1,15 @@
+var cytoscape = require("cytoscape");
+
 // Hash array that holds all graphs/models.
 var graphs =[];
 var currentModelId;
 var pauseExecution = false;
 var stepExecution = false;
 var keys = {};
+var issues;
+var currentElement;
 
-window.onload = function() {
-  document.getElementById('loading-mask').style.display='none';
-};
-
-function onLoadModel() {
+export function onLoadModel() {
   $('<input type="file" class="ui-helper-hidden-accessible" />')
     .appendTo('body')
     .focus()
@@ -17,12 +17,13 @@ function onLoadModel() {
     .remove();
 }
 
-function onSaveModel() {
+export function onSaveModel() {
   console.log('onSaveModel called');
 }
 
-function onPausePlayExecution(element) {
-  console.log('pausePlayExecution: ' + element.innerHTML + ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
+export function onPausePlayExecution(element) {
+  console.log('pausePlayExecution: ' + element.innerHTML +
+    ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
   stepExecution = false;
 
   if (pauseExecution) {
@@ -47,7 +48,7 @@ function onPausePlayExecution(element) {
   }
 }
 
-function onStepExecution() {
+export function onStepExecution() {
   console.log('onStepExecution: ' + currentModelId);
   document.getElementById('runModel').disabled = true;
   document.getElementById('resetModel').disabled = false;
@@ -62,7 +63,7 @@ function onStepExecution() {
 }
 
 // Run the execution of the state machine
-function onRunModel() {
+export function onRunModel() {
   console.log('onRunModel: ' + currentModelId);
   $('.ui-panel').panel('close');
 
@@ -157,7 +158,7 @@ function onRunModel() {
 }
 
 // Reset the state machine to it's initial state
-function onResetModel() {
+export function onResetModel() {
   console.log('onResetModel: ' + currentModelId);
   defaultUI();
 
@@ -173,13 +174,13 @@ function onResetModel() {
     graphs[modelId].nodes().data('color', 'LightSteelBlue');
     graphs[modelId].edges().data('color', 'LightSteelBlue');
     graphs[modelId].nodes().filterFn(function( ele ){
-      return ele.data('startVertex') == true;
+      return ele.data('startVertex') === true;
     }).data('color', 'LightGreen');
   }
 
 }
 
-function onAddModel() {
+export function onAddModel() {
   console.log('onAddModel');
   var id = generateUUID();
   var graph = createTab(id, 'New model');
@@ -189,7 +190,7 @@ function onAddModel() {
   tabs.show().tabs('option', 'active', index);
 }
 
-function onDoLayout() {
+export function onDoLayout() {
   console.log('onDoLayout');
   if (graphs[currentModelId] !== undefined) {
     graphs[currentModelId].layout().stop();
@@ -227,7 +228,8 @@ document.addEventListener('startEvent', function () {
 
 var hasNextEvent = new CustomEvent('hasNextEvent', {});
 document.addEventListener('hasNextEvent', function() {
-  console.log('hasNextEvent: pauseExecution: ' + pauseExecution + ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
+  console.log('hasNextEvent: pauseExecution: ' + pauseExecution +
+    ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
   if (pauseExecution) {
     if (!stepExecution) {
       return;
@@ -241,7 +243,8 @@ document.addEventListener('hasNextEvent', function() {
 
 var getNextEvent = new CustomEvent('getNextEvent', {"modelId": "", "elementId": "", "name": ""});
 document.addEventListener('getNextEvent', function (e) {
-  console.log('getNextEvent: ' + e.id + ': ' + e.name + 'pauseExecution: ' + pauseExecution + ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
+  console.log('getNextEvent: ' + e.id + ': ' + e.name + 'pauseExecution: ' + pauseExecution +
+    ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
 
   if (stepExecution) {
     stepExecution = false;
@@ -380,7 +383,7 @@ function createGraph(currentModelId) {
     boxSelectionEnabled: true,
     wheelSensitivity: '0', // Values 0, 0.5 and 1 has the same effect...
     ready: function() {
-      console.log('Cytoscape is ready...')
+      console.log('Cytoscape is ready...');
     },
     style: cytoscape.stylesheet()
       .selector('core')
@@ -515,7 +518,7 @@ function createGraph(currentModelId) {
 
     var checkboxStartElement = $('#checkboxStartElement');
     checkboxStartElement.checkboxradio('enable');
-    if (graph.startElementId == this.id()) {
+    if (graph.startElementId === this.id()) {
       checkboxStartElement.prop('checked', true).checkboxradio('refresh');
     }
   });
@@ -529,7 +532,7 @@ function createGraph(currentModelId) {
 
     var checkboxStartElement = $('#checkboxStartElement');
     checkboxStartElement.checkboxradio('enable');
-    if (graph.startElementId == this.id()) {
+    if (graph.startElementId === this.id()) {
       checkboxStartElement.prop('checked', true).checkboxradio('refresh');
     }
   });
@@ -604,7 +607,7 @@ function createGraph(currentModelId) {
         graph.startElementId = currentElement.id();
       }
     } else {
-      if (currentElement == graph.data().startElementId) {
+      if (currentElement === graph.data().startElementId) {
         graph.startElementId = undefined;
       }
     }
@@ -637,30 +640,30 @@ function readGraphsFromFile(fileName) {
   // and remember the jqxhr object for this request
   var tabs = $('#tabs');
   $.getJSON(fileName, function () {
-    console.log('readGraphsFromFile: success');
-  })
-  .done(function (jsonGraphs) {
-    console.log('readGraphsFromFile: done');
-    readGraphFromJSON(jsonGraphs);
-  })
-  .fail(function () {
-    console.log('readGraphsFromFile: error');
-  })
-  .always(function () {
-    console.log('readGraphsFromFile: first complete');
-    tabs.show();
-    for (var modelId in graphs) {
-      if (!graphs.hasOwnProperty(modelId)) {
-        continue;
+      console.log('readGraphsFromFile: success');
+    })
+    .done(function (jsonGraphs) {
+      console.log('readGraphsFromFile: done');
+      readGraphFromJSON(jsonGraphs);
+    })
+    .fail(function () {
+      console.log('readGraphsFromFile: error');
+    })
+    .always(function () {
+      console.log('readGraphsFromFile: first complete');
+      tabs.show();
+      for (var modelId in graphs) {
+        if (!graphs.hasOwnProperty(modelId)) {
+          continue;
+        }
+        console.log('readGraphsFromFile: resize graph: ' + modelId);
+        var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+        tabs.tabs('option', 'active', index);
+        graphs[modelId].resize();
+        graphs[modelId].fit();
       }
-      console.log('readGraphsFromFile: resize graph: ' + modelId);
-      var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
-      tabs.tabs('option', 'active', index);
-      graphs[modelId].resize();
-      graphs[modelId].fit();
-    }
-    defaultUI();
-  });
+      defaultUI();
+    });
 }
 
 function readGraphFromJSON(jsonGraphs) {
@@ -697,12 +700,12 @@ function readGraphFromJSON(jsonGraphs) {
     for (var i = 0; i < jsonVertices.length; i++) {
       var jsonVertex = jsonVertices[i];
       var x = 0, y = 0;
-      if (jsonVertex.properties != undefined) {
-        if (jsonVertex.properties['x'] != undefined) {
-          x = jsonVertex.properties['x'];
+      if (jsonVertex.properties !== undefined) {
+        if (jsonVertex.properties.x !== undefined) {
+          x = jsonVertex.properties.x;
         }
-        if (jsonVertex.properties['y'] != undefined) {
-          y = jsonVertex.properties['y'];
+        if (jsonVertex.properties.y !== undefined) {
+          y = jsonVertex.properties.y;
         }
       } else {
         jsonVertex.properties = {};
@@ -817,14 +820,16 @@ function defaultUI() {
 }
 
 function generateUUID() {
+  /*jslint bitwise: true */
   console.log('generateUUID');
   var d = new Date().getTime();
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     var r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
-    return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
   });
   console.log('  UUID: ' + uuid);
+  /*jslint bitwise: false */
   return uuid;
 }
 
@@ -926,8 +931,11 @@ function onMessage(event) {
       issues.innerHTML = 'No issues';
       break;
     case 'visitedElement':
-      console.log('Command visitedElement. Will color green on (modelId, elementId): ' + message.modelId + ', ' + message.elementId);
-      issues.innerHTML = 'Steps: ' + message.totalCount + ', Done: ' + (message.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(message.data);
+      console.log('Command visitedElement. Will color green on (modelId, elementId): ' +
+        message.modelId + ', ' + message.elementId);
+      issues.innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
+        (message.stopConditionFulfillment * 100).toFixed(0) +
+        '%, data: ' + JSON.stringify(message.data);
 
       currentModelId = message.modelId;
       graphs[currentModelId].nodes().unselect();
@@ -953,3 +961,4 @@ function doSend(message) {
   console.log('Sending msgs: ' + message);
   websocket.send(message);
 }
+
