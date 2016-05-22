@@ -1,4 +1,5 @@
-var cytoscape = require("cytoscape");
+var $ = require('jquery');
+var cytoscape = require('cytoscape');
 
 // Hash array that holds all graphs/models.
 var graphs =[];

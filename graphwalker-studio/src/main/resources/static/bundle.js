@@ -47,27 +47,119 @@ var graphwalker =
 
 	'use strict';
 
-	__webpack_require__(1);
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(2);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _Editor = __webpack_require__(3);
+
+	var _Editor2 = _interopRequireDefault(_Editor);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	__webpack_require__(5);
+
 
 	window.onload = function () {
+	  _reactDom2.default.render(_react2.default.createElement(_Editor2.default, null), document.getElementById('loading-mask'));
 	  document.getElementById('loading-mask').style.display = 'none';
 	};
 
 	module.exports = {
-	  studio: __webpack_require__(5)
+	  studio: __webpack_require__(9),
+	  editor: __webpack_require__(3)
 	};
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	module.exports = React;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = ReactDOM;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _cytoscape = __webpack_require__(4);
+
+	var _cytoscape2 = _interopRequireDefault(_cytoscape);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Editor = function (_React$Component) {
+	  _inherits(Editor, _React$Component);
+
+	  function Editor() {
+	    _classCallCheck(this, Editor);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Editor).call(this));
+	  }
+
+	  _createClass(Editor, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Component built with React'
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Editor;
+	}(_react2.default.Component);
+
+	exports.default = Editor;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = cytoscape;
+
+/***/ },
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(2);
+	var content = __webpack_require__(6);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(4)(content, {});
+	var update = __webpack_require__(8)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -84,10 +176,10 @@ var graphwalker =
 	}
 
 /***/ },
-/* 2 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(3)();
+	exports = module.exports = __webpack_require__(7)();
 	// imports
 
 
@@ -98,7 +190,7 @@ var graphwalker =
 
 
 /***/ },
-/* 3 */
+/* 7 */
 /***/ function(module, exports) {
 
 	/*
@@ -154,7 +246,7 @@ var graphwalker =
 
 
 /***/ },
-/* 4 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -406,7 +498,7 @@ var graphwalker =
 
 
 /***/ },
-/* 5 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -422,7 +514,8 @@ var graphwalker =
 	exports.onResetModel = onResetModel;
 	exports.onAddModel = onAddModel;
 	exports.onDoLayout = onDoLayout;
-	var cytoscape = __webpack_require__(6);
+	var $ = __webpack_require__(10);
+	var cytoscape = __webpack_require__(4);
 
 	// Hash array that holds all graphs/models.
 	var graphs = [];
@@ -1369,10 +1462,10 @@ var graphwalker =
 	}
 
 /***/ },
-/* 6 */
+/* 10 */
 /***/ function(module, exports) {
 
-	module.exports = cytoscape;
+	module.exports = jQuery;
 
 /***/ }
 /******/ ]);
