@@ -18,7 +18,7 @@ function onLoadModel() {
 }
 
 function onSaveModel() {
-
+  console.log('onSaveModel called');
 }
 
 function onPausePlayExecution(element) {
@@ -882,16 +882,16 @@ function onClose(evt) {
   console.log('onClose: ' + evt.data);
 }
 
-function onMessage(evt) {
-  console.log('onMessage: ' + evt.data);
-  var msg = JSON.parse(event.data);
+function onMessage(event) {
+  console.log('onMessage: ' + event.data);
+  var message = JSON.parse(event.data);
 
-  switch (msg.command) {
+  switch (message.command) {
     case 'hasNext':
-      if (msg.success) {
-        console.log('Command hasNext: ' + msg.hasNext);
-        if (msg.hasNext) {
-          hasNextEvent.fullfilled = msg.hasNext;
+      if (message.success) {
+        console.log('Command hasNext: ' + message.hasNext);
+        if (message.hasNext) {
+          hasNextEvent.fullfilled = message.hasNext;
           document.dispatchEvent(hasNextEvent);
         } else {
           defaultUI();
@@ -903,15 +903,15 @@ function onMessage(evt) {
       }
       break;
     case 'getNext':
-      if (msg.success) {
+      if (message.success) {
         console.log('Command getNext ok');
-        document.dispatchEvent(getNextEvent, msg.modelId, msg.elementId, msg.name);
+        document.dispatchEvent(getNextEvent, message.modelId, message.elementId, message.name);
       } else {
         defaultUI();
       }
       break;
     case 'start':
-      if (msg.success) {
+      if (message.success) {
         issues.innerHTML = 'No issues';
         console.log('Command start ok');
         document.dispatchEvent(startEvent);
@@ -920,16 +920,16 @@ function onMessage(evt) {
       }
       break;
     case 'issues':
-      issues.innerHTML = msg.issues;
+      issues.innerHTML = message.issues;
       break;
     case 'noIssues':
       issues.innerHTML = 'No issues';
       break;
     case 'visitedElement':
-      console.log('Command visitedElement. Will color green on (modelId, elementId): ' + msg.modelId + ', ' + msg.elementId);
-      issues.innerHTML = 'Steps: ' + msg.totalCount + ', Done: ' + (msg.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(msg.data);
+      console.log('Command visitedElement. Will color green on (modelId, elementId): ' + message.modelId + ', ' + message.elementId);
+      issues.innerHTML = 'Steps: ' + message.totalCount + ', Done: ' + (message.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(message.data);
 
-      currentModelId = msg.modelId;
+      currentModelId = message.modelId;
       graphs[currentModelId].nodes().unselect();
       graphs[currentModelId].edges().unselect();
 
@@ -937,8 +937,8 @@ function onMessage(evt) {
       var index = tabs.find('a[href="#A-' + currentModelId + '"]').parent().index();
       tabs.tabs('option', 'active', index);
 
-      graphs[currentModelId].$('#'+msg.elementId).data('color', 'lightgreen');
-      graphs[currentModelId].$('#'+msg.elementId).select();
+      graphs[currentModelId].$('#'+message.elementId).data('color', 'lightgreen');
+      graphs[currentModelId].$('#'+message.elementId).select();
       break;
     default:
       break;
