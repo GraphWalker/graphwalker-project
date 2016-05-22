@@ -5,7 +5,17 @@
   <title>GraphWalker Studio</title>
   <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <style>
+    #loading-mask {
+      background-color: white;
+      height: 100%;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 9999;
+    }
+  </style>
 </head>
 <body>
   <div id="loading-mask"></div>
@@ -33,32 +43,32 @@
           <a href="#" data-rel="close">Close menu</a>
         </li>
         <li>
-          <button type='button' id="loadModel" onclick="onLoadModel()">Load model</button>
+          <button type='button' id="loadModel" onclick="graphwalker.studio.onLoadModel()">Load model</button>
         </li>
         <li>
-          <button type='button' id="saveModel" onclick="onSaveModel()">Save model</button>
+          <button type='button' id="saveModel" onclick="graphwalker.studio.onSaveModel()">Save model</button>
         </li>
         <li>
-          <button type='button' id="runModel" onclick="onRunModel()">Run model</button>
+          <button type='button' id="runModel" onclick="graphwalker.studio.onRunModel()">Run model</button>
         </li>
         <li>
           <label for="executionSpeedSlider">Execution delay (ms)</label>
           <input type="range" id="executionSpeedSlider" value="0" min="0" max="500" data-highlight="true"/>
         </li>
         <li>
-          <button type='button' id="resetModel" onclick="onResetModel()">Reset</button>
+          <button type='button' id="resetModel" onclick="graphwalker.studio.onResetModel()">Reset</button>
         </li>
         <li>
-          <button type='button' id="pausePlayExecution" onclick="onPausePlayExecution(this)" value="Pause">Pause</button>
+          <button type='button' id="pausePlayExecution" onclick="graphwalker.studio.onPausePlayExecution(this)" value="Pause">Pause</button>
         </li>
         <li>
-          <button type='button' id="stepExecution" onclick="onStepExecution()">Step</button>
+          <button type='button' id="stepExecution" onclick="graphwalker.studio.onStepExecution()">Step</button>
         </li>
         <li>
-          <button type='button' id="addModel" onclick="onAddModel()">Add Model</button>
+          <button type='button' id="addModel" onclick="graphwalker.studio.onAddModel()">Add Model</button>
         </li>
         <li>
-          <button type='button' id="doLayout" onclick="onDoLayout()">Do layout</button>
+          <button type='button' id="doLayout" onclick="graphwalker.studio.onDoLayout()">Do layout</button>
         </li>
       </ul>
       <ul data-role="listview" data-theme="a" class="nav-search">
@@ -129,6 +139,6 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.6.1/cytoscape.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js"></script>
-  <script type="text/javascript" src="script.js"></script>
+  <script type="text/javascript" src="bundle.js"></script>
 </body>
 </html>
