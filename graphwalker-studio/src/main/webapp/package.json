@@ -1,0 +1,19 @@
+{
+  "name": "graphwalker-studio",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.9.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "css-loader": "^0.23.1",
+    "jshint": "^2.9.2",
+    "jshint-loader": "^0.8.3",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1"
+  }
+}
