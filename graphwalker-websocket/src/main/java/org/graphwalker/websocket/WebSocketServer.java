@@ -32,8 +32,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.io.factory.gw3.GW3ContextFactory;
-import org.graphwalker.modelchecker.ContextChecker;
+import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -290,7 +289,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         response.put("success", false);
         List<Context> gw3Contexts = null;
         try {
-          gw3Contexts = new GW3ContextFactory().createMultiple(root.getJSONObject("gw3").toString());
+          gw3Contexts = new JsonContextFactory().createMultiple(root.getJSONObject("gw3").toString());
           Machine machine = new SimpleMachine(gw3Contexts);
           machine.addObserver(this);
           machines.put(socket, machine);

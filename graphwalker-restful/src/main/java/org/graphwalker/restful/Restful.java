@@ -28,7 +28,7 @@ package org.graphwalker.restful;
 
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Action;
-import org.graphwalker.io.factory.gw3.GW3ContextFactory;
+import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.java.test.Result;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -73,7 +73,7 @@ public class Restful {
     logger.debug("Received load with gw3: " + jsonGW3);
     JSONObject resultJson = new JSONObject();
     try {
-      List<Context> contexts = new GW3ContextFactory().createMultiple(jsonGW3);
+      List<Context> contexts = new JsonContextFactory().createMultiple(jsonGW3);
       setContexts(contexts);
       resultJson.put("result", "ok");
     } catch (Exception e) {

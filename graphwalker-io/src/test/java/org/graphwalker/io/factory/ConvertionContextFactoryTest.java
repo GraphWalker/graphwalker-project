@@ -28,7 +28,6 @@ package org.graphwalker.io.factory;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.dot.DotContextFactory;
-import org.graphwalker.io.factory.gw3.GW3ContextFactory;
 import org.graphwalker.io.factory.java.JavaContextFactory;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.io.factory.yed.YEdContextFactory;
@@ -53,22 +52,6 @@ public class ConvertionContextFactoryTest {
 
   @Rule
   public TemporaryFolder testFolder = new TemporaryFolder();
-
-  @Test
-  public void graphml2Gw3() throws IOException {
-    Context yedContext = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
-    Assert.assertNotNull(yedContext);
-
-    File tempFile = testFolder.newFile("test.gw3");
-    Context gw3WriteContext = new GW3ContextFactory().write(yedContext, tempFile.toPath());
-    Assert.assertNotNull(gw3WriteContext);
-
-    Context gw3ReadContext = new GW3ContextFactory().create(tempFile.toPath());
-    Assert.assertNotNull(gw3ReadContext);
-
-    Assert.assertThat(yedContext.getModel().getEdges().size(), is(gw3WriteContext.getModel().getEdges().size()));
-    Assert.assertThat(yedContext.getModel().getVertices().size(), is(gw3WriteContext.getModel().getVertices().size()));
-  }
 
   @Test
   public void convertJsonToJson() throws IOException {
