@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -185,5 +186,21 @@ public class JsonContextFactoryTest {
     Assert.assertThat(model.getVertices().size(), is(readContext.getModel().getVertices().size()));
     Assert.assertThat(model.getEdges().size(), is(readContext.getModel().getEdges().size()));
     Assert.assertThat(writeContext.getCurrentElement(), is(readContext.getCurrentElement()));
+  }
+
+  @Test
+  public void PetClinic() {
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/petClinic.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(5));
+  }
+
+  @Test
+  public void PetClinicWithSimpleMachine() {
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get("json/petClinic.json")));
+    while (machine.hasNextStep()) {
+      Element e = machine.getNextStep().getCurrentElement();
+      logger.debug(e.getName());
+    }
   }
 }

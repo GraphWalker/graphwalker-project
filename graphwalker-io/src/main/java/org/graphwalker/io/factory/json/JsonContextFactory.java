@@ -43,10 +43,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by krikar on 9/24/14.
@@ -133,7 +130,42 @@ public final class JsonContextFactory implements ContextFactory {
 
   @Override
   public List<Context> createMultiple(Path path) {
-    return null;
+    StringBuilder jsonStr = new StringBuilder();
+    String line;
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
+      while ((line = reader.readLine()) != null) {
+        jsonStr.append(line);
+      }
+    } catch (IOException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("Could not read the file.");
+    }
+    logger.debug(jsonStr.toString());
+
+    return createMultiple(jsonStr.toString());
+  }
+
+  public List<Context> createMultiple(String jsonStr) {
+    List<Context> contexts = new ArrayList<>();
+    JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonStr, JsonMultimodel.class);
+    for (JsonModel jsonModel : jsonMultimodel.getModels()) {
+      JsonContext context = new JsonContext();
+      Model model = jsonModel.getModel();
+
+      context.setModel(model.build());
+      if (jsonModel.getGenerator() != null) {
+        context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
+      }
+      for (Element element : context.getModel().getElements()) {
+        if (element.getId().equals(jsonModel.getStartElementId())) {
+          context.setNextElement(element);
+          break;
+        }
+      }
+      contexts.add(context);
+    }
+
+    return contexts;
   }
 
   public Context create(String jsonString) {

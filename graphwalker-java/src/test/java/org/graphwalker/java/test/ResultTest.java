@@ -1,7 +1,7 @@
 package org.graphwalker.java.test;
 
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.gw3.GW3ContextFactory;
+import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.hamcrest.core.StringStartsWith;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -26,7 +26,7 @@ public class ResultTest {
    */
   @Test
   public void PetClinic() {
-    List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/PetClinic.json"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/PetClinic.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 
@@ -51,7 +51,7 @@ public class ResultTest {
    */
   @Test
   public void UC01() {
-    List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/UC01.gw3"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/UC01.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 
@@ -93,7 +93,7 @@ public class ResultTest {
    */
   @Test
   public void DualPathModel() {
-    List<Context> contexts = new GW3ContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/DualPathModel.json"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/DualPathModel.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 
