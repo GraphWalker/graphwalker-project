@@ -44,13 +44,14 @@ public class UtilTest {
 
   @Test
   public void filterBlockedElements() {
-    Context context = new JsonContextFactory().create(Paths.get("json/graphWithBlockedElements.json"));
-    Assert.assertNotNull(context);
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/graphWithBlockedElements.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
     Assert.assertThat(context.getModel().getVertices().size(), is(5));
     Assert.assertThat(context.getModel().getEdges().size(), is(10));
 
-    List<Context> contexts = new ArrayList<>();
-    contexts.add(context);
     Util.filterBlockedElements(contexts);
     Assert.assertThat(context.getModel().getVertices().size(), is(4));
     Assert.assertThat(context.getModel().getEdges().size(), is(7));

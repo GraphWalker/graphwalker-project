@@ -117,6 +117,11 @@ public final class JavaContextFactory implements ContextFactory {
     "}");
 
   @Override
+  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
+    return null;
+  }
+
+  @Override
   public <T extends Context> T write(T context, Path path) throws IOException {
     String template = StringUtils.join(javaCodeTemplate.toArray(), "\n");
     template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));

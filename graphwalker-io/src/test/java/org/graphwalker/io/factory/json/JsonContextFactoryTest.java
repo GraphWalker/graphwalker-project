@@ -58,7 +58,11 @@ public class JsonContextFactoryTest {
 
   @Test
   public void smallModel() {
-    Context context = new JsonContextFactory().create(Paths.get("json/SmallModel.json"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/SmallModel.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(2));
     Assert.assertThat(context.getModel().getEdges().size(), is(4));
 
@@ -71,7 +75,7 @@ public class JsonContextFactoryTest {
 
   @Test
   public void SmallModelWithSimpleMachine() {
-    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get("json/SmallModel.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
     }
@@ -79,7 +83,7 @@ public class JsonContextFactoryTest {
 
   @Test
   public void UC01WithSimpleMachine() {
-    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/UC01.json")));
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get("json/UC01.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
     }
@@ -87,8 +91,11 @@ public class JsonContextFactoryTest {
 
   @Test
   public void requirement() {
-    ContextFactory factory = new JsonContextFactory();
-    Context context = factory.create(Paths.get("json/UC01.json"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/UC01.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().findVertices("v_BaseURL").get(0).getRequirements().size(), is(1));
     Requirement requirement = context.getModel().findVertices("v_BaseURL").get(0).getRequirements().iterator().next();
     Assert.assertThat(requirement.getKey(), is("UC01 2.2.1"));
@@ -96,8 +103,11 @@ public class JsonContextFactoryTest {
 
   @Test
   public void property() {
-    ContextFactory factory = new JsonContextFactory();
-    Context context = factory.create(Paths.get("json/UC01.json"));
+    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/UC01.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().findVertices("v_BrowserStarted").get(0).getProperties().size(), is(1));
     String color = (String) context.getModel().findVertices("v_BrowserStarted").get(0).getProperty("color");
     Assert.assertTrue(color != null);
@@ -113,7 +123,7 @@ public class JsonContextFactoryTest {
   @Test
   public void acceptJsonTestFailure() {
     ContextFactory factory = new JsonContextFactory();
-    factory.create(Paths.get("json/NonModel.json"));
+    factory.createMultiple(Paths.get("json/NonModel.json"));
   }
 
   @Test
@@ -129,7 +139,11 @@ public class JsonContextFactoryTest {
     ContextFactory factory = new JsonContextFactory();
     factory.write(writeContext, testFile.toPath());
 
-    Context readContext = new JsonContextFactory().create(testFile.toPath());
+    List<Context> readContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Assert.assertNotNull(readContexts);
+    Assert.assertThat(readContexts.size(), is(1));
+    Context readContext = readContexts.get(0);
+
     Assert.assertThat(model.getEdges().get(0).getGuard().getScript(), is(readContext.getModel().getEdges().get(0).getGuard().getScript()));
   }
 
@@ -145,7 +159,11 @@ public class JsonContextFactoryTest {
     ContextFactory factory = new JsonContextFactory();
     factory.write(writeContext, testFile.toPath());
 
-    Context readContext = new JsonContextFactory().create(testFile.toPath());
+    List<Context> readContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Assert.assertNotNull(readContexts);
+    Assert.assertThat(readContexts.size(), is(1));
+    Context readContext = readContexts.get(0);
+
     Assert.assertThat(model.getEdges().get(0).getActions().size(), is(readContext.getModel().getEdges().get(0).getActions().size()));
   }
 
@@ -181,7 +199,10 @@ public class JsonContextFactoryTest {
     ContextFactory factory = new JsonContextFactory();
     factory.write(writeContext, testFile.toPath());
 
-    Context readContext = new JsonContextFactory().create(testFile.toPath());
+    List<Context> readContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Assert.assertNotNull(readContexts);
+    Assert.assertThat(readContexts.size(), is(1));
+    Context readContext = readContexts.get(0);
 
     Assert.assertThat(model.getVertices().size(), is(readContext.getModel().getVertices().size()));
     Assert.assertThat(model.getEdges().size(), is(readContext.getModel().getEdges().size()));
