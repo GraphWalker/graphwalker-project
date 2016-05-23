@@ -46,6 +46,8 @@ public interface ContextFactory {
 
   <T extends Context> T write(T context, Path path) throws IOException;
 
+  <T extends List<Context>> T write(T contexts, Path path) throws IOException;
+
   boolean accept(Path path);
 
   Set<String> getSupportedFileTypes();

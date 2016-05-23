@@ -45,6 +45,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * Created by krikar on 9/24/14.
  */
@@ -78,11 +80,18 @@ public final class JsonContextFactory implements ContextFactory {
     return context;
   }
 
+  @Override
+  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
+    Files.newOutputStream(path).write(String.valueOf(getJsonFromContexts(contexts)).getBytes());
+    return contexts;
+  }
+
   public String getJsonFromModel(Model model) {
     return new Gson().toJson(model);
   }
 
   public String getJsonFromContext(Context context) {
+    JsonMultimodel jsonMultimodel = new JsonMultimodel();
     JsonModel jsonModel = new JsonModel();
     jsonModel.setModel(context.getModel());
 
@@ -92,25 +101,29 @@ public final class JsonContextFactory implements ContextFactory {
     if (context.getNextElement() != null && context.getNextElement().hasId()) {
       jsonModel.setStartElementId(context.getNextElement().getId());
     }
-    return new Gson().toJson(jsonModel);
+    jsonMultimodel.add(jsonModel);
+    return new Gson().toJson(jsonMultimodel);
+  }
+
+  public String getJsonFromContexts(List<Context> contexts) {
+    JsonMultimodel jsonMultimodel = new JsonMultimodel();
+    for (Context context : contexts) {
+      JsonModel jsonModel = new JsonModel();
+      jsonModel.setModel(context.getModel());
+
+      if (context.getPathGenerator() != null) {
+        jsonModel.setGenerator(context.getPathGenerator().toString());
+      }
+      if (context.getNextElement() != null && context.getNextElement().hasId()) {
+        jsonModel.setStartElementId(context.getNextElement().getId());
+      }
+      jsonMultimodel.add(jsonModel);
+    }
+    return new Gson().toJson(jsonMultimodel);
   }
 
   public <T extends Context> T create(String jsonString, T context) {
-    Gson gson = new Gson();
-    JsonModel jsonModel = gson.fromJson(jsonString, JsonModel.class);
-    Model model = jsonModel.getModel();
-
-    context.setModel(model.build());
-    if (jsonModel.getGenerator() != null) {
-      context.setPathGenerator(GeneratorFactory.parse(jsonModel.getGenerator()));
-    }
-    for (Element element : context.getModel().getElements()) {
-      if (element.getId().equals(jsonModel.getStartElementId())) {
-        context.setNextElement(element);
-        break;
-      }
-    }
-    return context;
+    return null;
   }
 
   @Override
@@ -125,7 +138,7 @@ public final class JsonContextFactory implements ContextFactory {
 
   @Override
   public Context create(Path path) {
-    return create(path, new JsonContext());
+    return null;
   }
 
   @Override
@@ -148,6 +161,11 @@ public final class JsonContextFactory implements ContextFactory {
   public List<Context> createMultiple(String jsonStr) {
     List<Context> contexts = new ArrayList<>();
     JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonStr, JsonMultimodel.class);
+
+    if (isNull(jsonMultimodel) || isNull(jsonMultimodel.getModels())) {
+      return null;
+    }
+
     for (JsonModel jsonModel : jsonMultimodel.getModels()) {
       JsonContext context = new JsonContext();
       Model model = jsonModel.getModel();
