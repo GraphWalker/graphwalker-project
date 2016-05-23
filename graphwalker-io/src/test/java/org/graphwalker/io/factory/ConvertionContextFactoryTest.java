@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -55,15 +56,19 @@ public class ConvertionContextFactoryTest {
 
   @Test
   public void convertJsonToJson() throws IOException {
-    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContext);
+    List<Context> jsonContexts = new JsonContextFactory().createMultiple(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContexts);
+    Assert.assertThat(jsonContexts.size(), is(1));
+    Context jsonContext = jsonContexts.get(0);
 
     File tempFile = testFolder.newFile("test.json");
     Context jsonWriteContext = new JsonContextFactory().write(jsonContext, tempFile.toPath());
     Assert.assertNotNull(jsonWriteContext);
 
-    Context jsonReadContext = new JsonContextFactory().create(tempFile.toPath());
-    Assert.assertNotNull(jsonReadContext);
+    List<Context> jsonReadContexts = new JsonContextFactory().createMultiple(tempFile.toPath());
+    Assert.assertNotNull(jsonReadContexts);
+    Assert.assertThat(jsonReadContexts.size(), is(1));
+    Context jsonReadContext = jsonReadContexts.get(0);
 
     Assert.assertThat(jsonContext.getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
     Assert.assertThat(jsonContext.getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
@@ -71,8 +76,10 @@ public class ConvertionContextFactoryTest {
 
   @Test
   public void convertJsonToGraphml() throws IOException {
-    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContext);
+    List<Context> jsonContexts = new JsonContextFactory().createMultiple(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContexts);
+    Assert.assertThat(jsonContexts.size(), is(1));
+    Context jsonContext = jsonContexts.get(0);
 
     File tempFile = testFolder.newFile("test.graphml");
     Context yedWriteContext = new YEdContextFactory().write(jsonContext, tempFile.toPath());
@@ -88,8 +95,10 @@ public class ConvertionContextFactoryTest {
 
   @Test
   public void convertJsonToJava() throws IOException {
-    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContext);
+    List<Context> jsonContexts = new JsonContextFactory().createMultiple(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContexts);
+    Assert.assertThat(jsonContexts.size(), is(1));
+    Context jsonContext = jsonContexts.get(0);
 
     File tempFile = testFolder.newFile("test.java");
     Context javaWriteContext = new JavaContextFactory().write(jsonContext, tempFile.toPath());
@@ -101,8 +110,10 @@ public class ConvertionContextFactoryTest {
 
   @Test
   public void convertJsonToDot() throws IOException {
-    Context jsonContext = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContext);
+    List<Context> jsonContexts = new JsonContextFactory().createMultiple(Paths.get("json/example.json"));
+    Assert.assertNotNull(jsonContexts);
+    Assert.assertThat(jsonContexts.size(), is(1));
+    Context jsonContext = jsonContexts.get(0);
 
     File tempFile = testFolder.newFile("test.dot");
     Context dotWriteContext = new DotContextFactory().write(jsonContext, tempFile.toPath());
@@ -171,11 +182,13 @@ public class ConvertionContextFactoryTest {
     Context jsonWriteContext = new JsonContextFactory().write(yedContext, testFile.toPath());
     Assert.assertNotNull(jsonWriteContext);
 
-    Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
-    Assert.assertNotNull(jsonReadContext);
+    List<Context> jsonReadContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Assert.assertNotNull(jsonReadContexts);
+    Assert.assertThat(jsonReadContexts.size(), is(1));
+    Context jsonReadContext = jsonReadContexts.get(0);
 
-    Assert.assertThat(yedContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
-    Assert.assertThat(yedContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
+    Assert.assertThat(yedContext.getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
+    Assert.assertThat(yedContext.getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
   }
 
   @Test
@@ -233,10 +246,12 @@ public class ConvertionContextFactoryTest {
     Context jsonWriteContext = new JsonContextFactory().write(dotContext, testFile.toPath());
     Assert.assertNotNull(jsonWriteContext);
 
-    Context jsonReadContext = new JsonContextFactory().create(testFile.toPath());
-    Assert.assertNotNull(jsonReadContext);
+    List<Context> jsonReadContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Assert.assertNotNull(jsonReadContexts);
+    Assert.assertThat(jsonReadContexts.size(), is(1));
+    Context jsonReadContext = jsonReadContexts.get(0);
 
-    Assert.assertThat(dotContext.getModel().getEdges().size(), is(jsonWriteContext.getModel().getEdges().size()));
-    Assert.assertThat(dotContext.getModel().getVertices().size(), is(jsonWriteContext.getModel().getVertices().size()));
+    Assert.assertThat(dotContext.getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
+    Assert.assertThat(dotContext.getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
   }
 }
