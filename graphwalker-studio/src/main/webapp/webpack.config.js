@@ -1,39 +1,43 @@
 var path = require('path');
 
 module.exports = {
-  entry: "./index.js",
+  entry: './index.js',
   output: {
-    library: "graphwalker",
+    library: 'graphwalker',
     libraryTarget: 'var',
     path: __dirname + '/../resources/static',
-    filename: "bundle.js"
+    filename: 'bundle.js'
   },
   externals: {
-    "jquery": "jQuery",
-    "cytoscape": "cytoscape"
+    'jquery': 'jQuery',
+    'cytoscape': 'cytoscape',
+    'react': 'React',
+    'react-dom': 'ReactDOM'
   },
   module: {
     preLoaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "jshint-loader"
+        loader: 'eslint-loader'
       }
     ],
     loaders: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel-loader"
+        loader: 'babel',
+        query:
+        {
+          presets:['react']
+        }
       }, {
         test: /\.css$/,
-        loader: "style!css"
+        loader: 'style!css'
       }
     ]
   },
-  jshint: {
-    camelcase: true,
-    emitErrors: false,
-    failOnHint: false
+  eslint: {
+    configFile: '.eslintrc'
   }
 };
