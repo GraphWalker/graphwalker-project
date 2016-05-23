@@ -149,6 +149,11 @@ public final class YEdContextFactory implements ContextFactory {
   }
 
   @Override
+  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
+    return null;
+  }
+
+  @Override
   public <T extends Context> T write(T context, Path path) throws IOException {
     String newLine = System.getProperty("line.separator");
     StringBuilder str = new StringBuilder();

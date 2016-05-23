@@ -26,7 +26,10 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.graphwalker.core.common.Objects.isNull;
 
 public final class JsonMultimodel {
   private String name;
@@ -49,6 +52,9 @@ public final class JsonMultimodel {
   }
 
   public void add(JsonModel jsonModel) {
+    if (isNull(models)) {
+      models = new ArrayList<>();
+    }
     models.add(jsonModel);
   }
 }

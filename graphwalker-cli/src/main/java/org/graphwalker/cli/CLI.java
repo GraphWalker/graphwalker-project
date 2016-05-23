@@ -69,6 +69,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 public class CLI {
@@ -361,7 +362,17 @@ public class CLI {
     ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(modelFileName));
     Context context;
     try {
-      context = inputFactory.create(Paths.get(modelFileName));
+      if (inputFactory instanceof JsonContextFactory) {
+        List<Context> contexts = inputFactory.createMultiple(Paths.get(modelFileName));
+        if (isNotNullOrEmpty(contexts)) {
+          context = contexts.get(0);
+        } else {
+          logger.error("No valid models found in: " + modelFileName);
+          throw new RuntimeException("No valid models found in: " + modelFileName);
+        }
+      } else {
+        context = inputFactory.create(Paths.get(modelFileName));
+      }
     } catch (DslException e) {
       System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
       throw new Exception("Model syntax error");
