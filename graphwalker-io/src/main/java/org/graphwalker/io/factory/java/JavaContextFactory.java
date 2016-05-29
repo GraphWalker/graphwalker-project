@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -51,10 +52,6 @@ public final class JavaContextFactory implements ContextFactory {
   private static final Logger logger = LoggerFactory.getLogger(JavaContextFactory.class);
   private static final String FILE_TYPE = "java";
   private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.java"));
-
-  private Vertex startVertex = null;
-  private Edge startEdge = null;
-  private Map<String, Vertex> elements = new HashMap<>();
 
   @Override
   public Set<String> getSupportedFileTypes() {
@@ -67,18 +64,8 @@ public final class JavaContextFactory implements ContextFactory {
   }
 
   @Override
-  public Context create(Path path) {
-    return create(path, new JavaContext());
-  }
-
-  @Override
-  public List<Context> createMultiple(Path path) {
-    return null;
-  }
-
-  @Override
-  public <T extends Context> T create(Path path, T context) {
-    throw new ContextFactoryException("Creating a model from Java is not supported");
+  public List<Context> create(Path path) {
+    throw new ContextFactoryException("Creating a context from a java file is not supported.");
   }
 
   public static final List<String>
@@ -117,62 +104,58 @@ public final class JavaContextFactory implements ContextFactory {
     "}");
 
   @Override
-  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
-    return null;
-  }
+  public void write(List<Context> contexts, Path path) throws IOException {
+    for (Context context : contexts) {
+      String template = StringUtils.join(javaCodeTemplate.toArray(), "\n");
+      template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));
 
-  @Override
-  public <T extends Context> T write(T context, Path path) throws IOException {
-    String template = StringUtils.join(javaCodeTemplate.toArray(), "\n");
-    template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));
-
-    int index = 0;
-    String add_vertices = "";
-    for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-      String id;
-      if (vertex.getId() != null && !vertex.getId().equals("")) {
-        id = vertex.getId();
-      } else {
-        id = "n" + index++;
-      }
-
-      add_vertices += "Vertex " + vertex.getName() + " = new Vertex().setName(\"" + vertex.getName() + "\").setId(\"" + id + "\");";
-      add_vertices += "\n";
-    }
-    template = template.replace("{ADD_VERTICES}", add_vertices);
-
-    index = 0;
-    String add_edges = "";
-    for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-      String id;
-      if (edge.getId() != null && !edge.getId().equals("")) {
-        id = edge.getId();
-      } else {
-        id = "n" + index++;
-      }
-
-      add_edges += "model.addEdge( new Edge()";
-      if (edge.getSourceVertex() != null) {
-        add_edges += ".setSourceVertex(" + edge.getSourceVertex().getName() + ")";
-      }
-      add_edges += ".setTargetVertex(" + edge.getTargetVertex().getName() + ")";
-      add_edges += ".setName(\"" + edge.getName() + "\").setId(\"" + id + "\")";
-
-      if (edge.hasGuard()) {
-        add_edges += ".setGuard(new Guard(\"" + edge.getGuard().getScript() + "\"))";
-      }
-      if (edge.hasActions()) {
-        for (Action action : edge.getActions()) {
-          add_edges += ".addAction(new Action(\"" + action.getScript() + "\"))";
+      int index = 0;
+      String add_vertices = "";
+      for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+        String id;
+        if (vertex.getId() != null && !vertex.getId().equals("")) {
+          id = vertex.getId();
+        } else {
+          id = "n" + index++;
         }
+
+        add_vertices += "Vertex " + vertex.getName() + " = new Vertex().setName(\"" + vertex.getName() + "\").setId(\"" + id + "\");";
+        add_vertices += "\n";
       }
-      add_edges += ");\n";
+      template = template.replace("{ADD_VERTICES}", add_vertices);
+
+      index = 0;
+      String add_edges = "";
+      for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+        String id;
+        if (edge.getId() != null && !edge.getId().equals("")) {
+          id = edge.getId();
+        } else {
+          id = "n" + index++;
+        }
+
+        add_edges += "model.addEdge( new Edge()";
+        if (edge.getSourceVertex() != null) {
+          add_edges += ".setSourceVertex(" + edge.getSourceVertex().getName() + ")";
+        }
+        add_edges += ".setTargetVertex(" + edge.getTargetVertex().getName() + ")";
+        add_edges += ".setName(\"" + edge.getName() + "\").setId(\"" + id + "\")";
+
+        if (edge.hasGuard()) {
+          add_edges += ".setGuard(new Guard(\"" + edge.getGuard().getScript() + "\"))";
+        }
+        if (edge.hasActions()) {
+          for (Action action : edge.getActions()) {
+            add_edges += ".addAction(new Action(\"" + action.getScript() + "\"))";
+          }
+        }
+        add_edges += ");\n";
+      }
+      template = template.replace("{ADD_EDGES}", add_edges);
+      template = template.replace("{START_ELEMENT_NAME}", context.getNextElement().getName());
+
+      Path javaFile = Paths.get( path.getParent().toString(), context.getModel().getName());
+      Files.newOutputStream(javaFile).write(String.valueOf(template).getBytes());
     }
-    template = template.replace("{ADD_EDGES}", add_edges);
-    template = template.replace("{START_ELEMENT_NAME}", context.getNextElement().getName());
-
-    Files.newOutputStream(path).write(String.valueOf(template).getBytes());
-
-    return context;
   }
 }

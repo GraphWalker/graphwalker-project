@@ -31,6 +31,7 @@ import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +44,8 @@ import static org.hamcrest.core.Is.is;
 public class UtilTest {
 
   @Test
-  public void filterBlockedElements() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/graphWithBlockedElements.json"));
+  public void filterBlockedElements() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/graphWithBlockedElements.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
 

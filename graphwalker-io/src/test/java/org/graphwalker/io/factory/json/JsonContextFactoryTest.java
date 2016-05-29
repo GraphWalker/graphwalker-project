@@ -33,6 +33,7 @@ import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.*;
 import org.graphwalker.io.TestExecutionContext;
 import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +43,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -57,8 +60,8 @@ public class JsonContextFactoryTest {
   public TemporaryFolder testFolder = new TemporaryFolder();
 
   @Test
-  public void smallModel() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/SmallModel.json"));
+  public void smallModel() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/SmallModel.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
@@ -74,24 +77,24 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void SmallModelWithSimpleMachine() {
-    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get("json/SmallModel.json")));
+  public void SmallModelWithSimpleMachine() throws IOException {
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
     }
   }
 
   @Test
-  public void UC01WithSimpleMachine() {
-    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get("json/UC01.json")));
+  public void UC01WithSimpleMachine() throws IOException {
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/UC01.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
     }
   }
 
   @Test
-  public void requirement() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/UC01.json"));
+  public void requirement() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/UC01.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
@@ -102,8 +105,8 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void property() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/UC01.json"));
+  public void property() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/UC01.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
@@ -120,10 +123,10 @@ public class JsonContextFactoryTest {
     Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
   }
 
-  @Test
-  public void acceptJsonTestFailure() {
+  @Test(expected=ContextFactoryException.class)
+  public void acceptJsonTestFailure() throws IOException {
     ContextFactory factory = new JsonContextFactory();
-    factory.createMultiple(Paths.get("json/NonModel.json"));
+    factory.create(Paths.get("json/NonModel.json"));
   }
 
   @Test
@@ -135,11 +138,14 @@ public class JsonContextFactoryTest {
 
     Context writeContext = new TestExecutionContext();
     writeContext.setModel(model.build());
-    File testFile = testFolder.newFile("guard.json");
-    ContextFactory factory = new JsonContextFactory();
-    factory.write(writeContext, testFile.toPath());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
 
-    List<Context> readContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Path tmpFolder = testFolder.getRoot().toPath();
+    ContextFactory factory = new JsonContextFactory();
+    factory.write(writeContexts, tmpFolder);
+
+    List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
     Assert.assertNotNull(readContexts);
     Assert.assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
@@ -155,11 +161,14 @@ public class JsonContextFactoryTest {
 
     Context writeContext = new TestExecutionContext();
     writeContext.setModel(model.build());
-    File testFile = testFolder.newFile("actions.json");
-    ContextFactory factory = new JsonContextFactory();
-    factory.write(writeContext, testFile.toPath());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
 
-    List<Context> readContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    Path tmpFolder = testFolder.getRoot().toPath();
+    ContextFactory factory = new JsonContextFactory();
+    factory.write(writeContexts, tmpFolder);
+
+    List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
     Assert.assertNotNull(readContexts);
     Assert.assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
@@ -194,12 +203,14 @@ public class JsonContextFactoryTest {
     Context writeContext = new TestExecutionContext();
     writeContext.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));
     writeContext.setNextElement(writeContext.getModel().findElements("e_init").get(0));
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
 
-    File testFile = testFolder.newFile("uc01.json");
+    Path tmpFolder = testFolder.getRoot().toPath();
     ContextFactory factory = new JsonContextFactory();
-    factory.write(writeContext, testFile.toPath());
+    factory.write(writeContexts, tmpFolder);
 
-    List<Context> readContexts = new JsonContextFactory().createMultiple(testFile.toPath());
+    List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
     Assert.assertNotNull(readContexts);
     Assert.assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
@@ -210,15 +221,15 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void PetClinic() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/petClinic.json"));
+  public void PetClinic() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/petClinic.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(5));
   }
 
   @Test
-  public void PetClinicWithSimpleMachine() {
-    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get("json/petClinic.json")));
+  public void PetClinicWithSimpleMachine() throws IOException {
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/petClinic.json")));
     while (machine.hasNextStep()) {
       Element e = machine.getNextStep().getCurrentElement();
       logger.debug(e.getName());

@@ -39,10 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static org.graphwalker.core.common.Objects.isNull;
@@ -57,52 +60,14 @@ public final class JsonContextFactory implements ContextFactory {
   private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.json"));
 
   @Override
-  public <T extends Context> T create(Path path, T context) {
-    StringBuilder out = new StringBuilder();
-    String line;
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
-      while ((line = reader.readLine()) != null) {
-        out.append(line);
-      }
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-      throw new ContextFactoryException("Could not read the file.");
-    }
-    logger.debug(out.toString());
-
-    create(out.toString(), context);
-    return context;
-  }
-
-  @Override
-  public <T extends Context> T write(T context, Path path) throws IOException {
-    Files.newOutputStream(path).write(String.valueOf(getJsonFromContext(context)).getBytes());
-    return context;
-  }
-
-  @Override
-  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
-    Files.newOutputStream(path).write(String.valueOf(getJsonFromContexts(contexts)).getBytes());
-    return contexts;
+  public void write(List<Context> contexts, Path path) throws IOException {
+    File folder = path.toFile().getAbsoluteFile();
+    Path jsonFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".json");
+    Files.newOutputStream(jsonFile).write(String.valueOf(getJsonFromContexts(contexts)).getBytes());
   }
 
   public String getJsonFromModel(Model model) {
     return new Gson().toJson(model);
-  }
-
-  public String getJsonFromContext(Context context) {
-    JsonMultimodel jsonMultimodel = new JsonMultimodel();
-    JsonModel jsonModel = new JsonModel();
-    jsonModel.setModel(context.getModel());
-
-    if (context.getPathGenerator() != null) {
-      jsonModel.setGenerator(context.getPathGenerator().toString());
-    }
-    if (context.getNextElement() != null && context.getNextElement().hasId()) {
-      jsonModel.setStartElementId(context.getNextElement().getId());
-    }
-    jsonMultimodel.add(jsonModel);
-    return new Gson().toJson(jsonMultimodel);
   }
 
   public String getJsonFromContexts(List<Context> contexts) {
@@ -122,10 +87,6 @@ public final class JsonContextFactory implements ContextFactory {
     return new Gson().toJson(jsonMultimodel);
   }
 
-  public <T extends Context> T create(String jsonString, T context) {
-    return null;
-  }
-
   @Override
   public Set<String> getSupportedFileTypes() {
     return SUPPORTED_TYPE;
@@ -137,15 +98,24 @@ public final class JsonContextFactory implements ContextFactory {
   }
 
   @Override
-  public Context create(Path path) {
-    return null;
+  public List<Context> create(Path path) throws IOException {
+    List<Context> contexts = new ArrayList<>();
+
+    if (ResourceUtils.isDirectory(path)) {
+      DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
+      for (Path file : directoryStream) {
+        contexts.addAll(read(file));
+      }
+    } else {
+      contexts.addAll(read(path));
+    }
+    return contexts;
   }
 
-  @Override
-  public List<Context> createMultiple(Path path) {
+  private List<Context> read(Path file) {
     StringBuilder jsonStr = new StringBuilder();
     String line;
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(file.toString())))) {
       while ((line = reader.readLine()) != null) {
         jsonStr.append(line);
       }
@@ -155,15 +125,15 @@ public final class JsonContextFactory implements ContextFactory {
     }
     logger.debug(jsonStr.toString());
 
-    return createMultiple(jsonStr.toString());
+    return create(jsonStr.toString());
   }
 
-  public List<Context> createMultiple(String jsonStr) {
+  public List<Context> create(String jsonStr) {
     List<Context> contexts = new ArrayList<>();
     JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonStr, JsonMultimodel.class);
 
     if (isNull(jsonMultimodel) || isNull(jsonMultimodel.getModels())) {
-      return null;
+      throw  new ContextFactoryException("The json file is not a valid GraphWalker model(s) file");
     }
 
     for (JsonModel jsonModel : jsonMultimodel.getModels()) {
@@ -184,9 +154,5 @@ public final class JsonContextFactory implements ContextFactory {
     }
 
     return contexts;
-  }
-
-  public Context create(String jsonString) {
-    return create(jsonString, new JsonContext());
   }
 }
