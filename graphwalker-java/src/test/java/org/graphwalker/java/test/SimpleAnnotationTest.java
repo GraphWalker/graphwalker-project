@@ -30,6 +30,8 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * @author Nils Olsson
  */
@@ -45,7 +47,7 @@ public class SimpleAnnotationTest extends ExecutionContext implements SimpleMode
   }
 
   @Test
-  public void run() {
+  public void run() throws IOException {
     new TestExecutor(getClass()).execute();
   }
 }

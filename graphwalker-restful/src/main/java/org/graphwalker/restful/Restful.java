@@ -73,7 +73,7 @@ public class Restful {
     logger.debug("Received load with gw3: " + jsonGW3);
     JSONObject resultJson = new JSONObject();
     try {
-      List<Context> contexts = new JsonContextFactory().createMultiple(jsonGW3);
+      List<Context> contexts = new JsonContextFactory().create(jsonGW3);
       setContexts(contexts);
       resultJson.put("result", "ok");
     } catch (Exception e) {

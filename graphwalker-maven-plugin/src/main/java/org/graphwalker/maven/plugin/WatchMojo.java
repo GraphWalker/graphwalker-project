@@ -37,6 +37,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.CodeGenerator;
@@ -178,32 +179,35 @@ public final class WatchMojo extends AbstractMojo {
     return null != ContextFactoryScanner.get(path);
   }
 
-  private void generate(SourceFile sourceFile) {
+  private void generate(SourceFile sourceFile) throws IOException {
     File outputFile = sourceFile.getOutputPath().toFile();
-    try {
       ContextFactory contextFactory = ContextFactoryScanner.get(sourceFile.getInputPath());
-      RuntimeModel model = contextFactory.create(sourceFile.getInputPath()).getModel();
-      String source = codeGenerator.generate(sourceFile, model);
-      if (Files.exists(sourceFile.getOutputPath())) {
-        String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
-        if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
-          return;
+      List<Context> contexts = contextFactory.create(sourceFile.getInputPath());
+      for ( Context context : contexts ){
+        try {
+          RuntimeModel model = context.getModel();
+          String source = codeGenerator.generate(sourceFile, model);
+          if (Files.exists(sourceFile.getOutputPath())) {
+            String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
+            if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
+              return;
+            }
+          }
+          if (getLog().isInfoEnabled()) {
+            getLog().info("Generate: " + sourceFile.getOutputPath());
+          }
+          FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+          FileUtils.fileDelete(outputFile.getAbsolutePath());
+          FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
+        } catch (Throwable t) {
+          if (getLog().isInfoEnabled()) {
+            getLog().info("Error: Generate: " + sourceFile.getOutputPath());
+          }
+          if (getLog().isDebugEnabled()) {
+            getLog().debug("Error: Generate: " + sourceFile.getOutputPath(), t);
+          }
         }
       }
-      if (getLog().isInfoEnabled()) {
-        getLog().info("Generate: " + sourceFile.getOutputPath());
-      }
-      FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
-      FileUtils.fileDelete(outputFile.getAbsolutePath());
-      FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
-    } catch (Throwable t) {
-      if (getLog().isInfoEnabled()) {
-        getLog().info("Error: Generate: " + sourceFile.getOutputPath());
-      }
-      if (getLog().isDebugEnabled()) {
-        getLog().debug("Error: Generate: " + sourceFile.getOutputPath(), t);
-      }
-    }
   }
 
   private void update(Path root, Path path) throws IOException {

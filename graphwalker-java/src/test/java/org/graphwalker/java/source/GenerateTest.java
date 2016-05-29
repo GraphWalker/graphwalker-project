@@ -29,13 +29,15 @@ package org.graphwalker.java.source;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * @author Nils Olsson
  */
 public class GenerateTest {
 
   @Test
-  public void generate() {
+  public void generate() throws IOException {
     String source = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
     Assert.assertTrue(source.contains("edge12"));
     Assert.assertTrue(source.contains("vertex2"));
@@ -43,7 +45,7 @@ public class GenerateTest {
   }
 
   @Test
-  public void generatePathWithSpace() {
+  public void generatePathWithSpace() throws IOException {
     String source = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
     Assert.assertTrue(source.contains("edge12"));
     Assert.assertTrue(source.contains("vertex2"));

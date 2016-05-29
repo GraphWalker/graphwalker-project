@@ -95,13 +95,9 @@ public class WebSocketListner extends org.java_websocket.server.WebSocketServer 
         response.put("command", "getGW3");
         response.put("success", false);
 
-        JSONArray jsonModels = new JSONArray();
-        for (Context context : machine.getContexts()) {
-          jsonModels.put(new JsonContextFactory().getJsonFromContext(context));
-        }
         JSONObject jsonMachine = new JSONObject();
         jsonMachine.put("name", "WebSocketListner");
-        jsonMachine.put("models", jsonModels);
+        response.put("models", new JsonContextFactory().getJsonFromContexts(machine.getContexts()));
         response.put("gw3", jsonMachine);
         response.put("success", true);
         break;

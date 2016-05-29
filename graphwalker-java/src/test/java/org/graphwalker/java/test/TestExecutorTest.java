@@ -31,15 +31,20 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -59,7 +64,7 @@ public class TestExecutorTest {
   }
 
   @Test(expected = TestExecutionException.class)
-  public void multipleStartElements() {
+  public void multipleStartElements() throws IOException {
     Executor executor = new TestExecutor(MultipleStartElements.class);
     executor.execute();
   }
@@ -76,7 +81,7 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void singleStartElements() {
+  public void singleStartElements() throws IOException {
     Executor executor = new TestExecutor(SingleStartElements.class);
     executor.execute();
   }
@@ -93,7 +98,7 @@ public class TestExecutorTest {
   }
 
   @Test(expected = TestExecutionException.class)
-  public void nonExistingStartElement() {
+  public void nonExistingStartElement() throws IOException {
     Executor executor = new TestExecutor(NonExistingStartElement.class);
     executor.execute();
   }
@@ -110,7 +115,7 @@ public class TestExecutorTest {
   }
 
   @Test
-  public void dslTest() {
+  public void dslTest() throws IOException {
     new TestExecutor(DSLConfiguredTest.class).execute();
   }
 
@@ -125,7 +130,19 @@ public class TestExecutorTest {
     Reflector reflector = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
     MachineConfiguration mc = reflector.getMachineConfiguration();
     Result result = reflector.execute();
-    //Assert.assertThat(result.getValue(), is(666));
+    JSONObject results = result.getResults();
+    Assert.assertThat(result.getErrors().size(), is(0));
+    Assert.assertThat(results.getInt("totalFailedNumberOfModels"), is(0));
+    Assert.assertThat(results.getInt("totalNotExecutedNumberOfModels"), is(0));
+    Assert.assertThat(results.getInt("totalNumberOfUnvisitedVertices"), is(0));
+    Assert.assertThat(results.getInt("totalNumberOfModels"), is(1));
+    Assert.assertThat(results.getInt("totalCompletedNumberOfModels"), is(1));
+    Assert.assertThat(results.getInt("totalNumberOfVisitedEdges"), is(1));
+    Assert.assertThat(results.getInt("totalIncompleteNumberOfModels"), is(0));
+    Assert.assertThat(results.getInt("totalNumberOfVisitedVertices"), is(2));
+    Assert.assertThat(results.getInt("edgeCoverage"), is(100));
+    Assert.assertThat(results.getInt("vertexCoverage"), is(100));
+    Assert.assertThat(results.getInt("totalNumberOfUnvisitedEdges"), is(0));
   }
 
   @GraphWalker(start = "throwException")
@@ -144,7 +161,7 @@ public class TestExecutorTest {
   }
 
   @Test(expected = TestExecutionException.class)
-  public void ThrowExceptionExecutor() {
+  public void ThrowExceptionExecutor() throws IOException {
     Executor executor = new TestExecutor(ThrowExceptionTest.class);
     executor.execute();
   }
