@@ -1,8 +1,6 @@
-package org.graphwalker.cli.util;
-
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,20 +24,24 @@ package org.graphwalker.cli.util;
  * #L%
  */
 
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
+package org.graphwalker.cli;
 
-/**
- * @author Nils Olsson
- */
-public abstract class LoggerUtil {
+import org.junit.Assert;
+import org.junit.Test;
 
-  public enum Level {
-    OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
-  }
+import java.io.IOException;
 
-  public static void setLogLevel(Level level) {
-    Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-    root.setLevel(ch.qos.logback.classic.Level.valueOf(level.name()));
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.Is.is;
+
+
+public class PrintVersionTest extends CLITestRoot {
+
+  @Test
+  public void version() throws IOException {
+    String args[] = {"--version"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(result.getOutput(), containsString("org.graphwalker version: "));
   }
 }
