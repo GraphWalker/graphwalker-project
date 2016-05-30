@@ -497,17 +497,6 @@ public class CLI {
     return executionContexts;
   }
 
-  private void verifyModel(RuntimeModel model) {
-    // Verify that the model has more than 1 vertex
-    if (model.getVertices().size() < 1) {
-      throw new RuntimeException("Model has less than 1 vertices. [Excluding the Start vertex]");
-    }
-    // Verify that the model has more than 0 edges
-    if (model.getEdges().size() < 1) {
-      throw new RuntimeException("Model has less than 1 edge.");
-    }
-  }
-
   private String printVersionInformation() {
     String version = "org.graphwalker version: " + getVersionString() + System.getProperty("line.separator");
     version += System.getProperty("line.separator");
@@ -531,25 +520,5 @@ public class CLI {
       }
     }
     return properties.getProperty("graphwalker.version");
-  }
-
-  private String generateListOfValidGenerators() {
-    return "";
-  }
-
-  private String generateListOfValidStopConditions() {
-    return "";
-  }
-
-  private boolean helpNeeded(String module, boolean condition, String message) {
-    if (condition) {
-      System.out.println(message);
-      System.out.println("Type 'java -jar graphwalker.jar help " + module + "' for help.");
-    }
-    return condition;
-  }
-
-  public Online getOnline() {
-    return online;
   }
 }
