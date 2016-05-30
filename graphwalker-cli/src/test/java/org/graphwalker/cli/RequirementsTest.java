@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
@@ -43,7 +44,12 @@ public class RequirementsTest extends CLITestRoot {
     String args[] = {"requirements", "-m", "graphml/online/ShoppingCart.graphml"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split("\n")),
+
+    List<String> array = Arrays.asList(result.getOutput().split("\n"));
+    for (int i = 0; i < array.size(); i++) {
+      array.set(i, array.get(i).trim());
+    }
+    Assert.assertThat(array,
       containsInAnyOrder("UC01 2.2.1",
         "UC01 2.2.2",
         "UC01 2.2.3",
