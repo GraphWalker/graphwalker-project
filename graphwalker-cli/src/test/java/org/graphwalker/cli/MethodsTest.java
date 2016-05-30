@@ -1,8 +1,6 @@
-package org.graphwalker.io.factory;
-
 /*
  * #%L
- * GraphWalker Input/Output
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,23 +24,30 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
+package org.graphwalker.cli;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
+import java.util.Arrays;
 
-/**
- * @author Nils Olsson
- */
-public interface ContextFactory {
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
 
-  List<Context> create(Path path) throws IOException;
 
-  void write(List<Context> contexts, Path path) throws IOException;
+public class MethodsTest extends CLITestRoot {
 
-  boolean accept(Path path);
-
-  Set<String> getSupportedFileTypes();
+  @Test
+  public void methods() throws IOException {
+    String args[] = {"methods", "-m", "json/example.json"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+      containsInAnyOrder("e_AnotherAction",
+        "e_FirstAction",
+        "e_SomeOtherAction",
+        "v_VerifySomeAction",
+        "v_VerifySomeOtherAction"));
+  }
 }

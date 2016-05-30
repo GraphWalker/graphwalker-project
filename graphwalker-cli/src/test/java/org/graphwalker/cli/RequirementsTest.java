@@ -1,8 +1,6 @@
-package org.graphwalker.io.factory;
-
 /*
  * #%L
- * GraphWalker Input/Output
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,23 +24,36 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
+package org.graphwalker.cli;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-/**
- * @author Nils Olsson
- */
-public interface ContextFactory {
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
 
-  List<Context> create(Path path) throws IOException;
 
-  void write(List<Context> contexts, Path path) throws IOException;
+public class RequirementsTest extends CLITestRoot {
 
-  boolean accept(Path path);
+  @Test
+  public void requirements() throws IOException {
+    String args[] = {"requirements", "-m", "graphml/online/ShoppingCart.graphml"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
 
-  Set<String> getSupportedFileTypes();
+    List<String> array = Arrays.asList(result.getOutput().split("\n"));
+    for (int i = 0; i < array.size(); i++) {
+      array.set(i, array.get(i).trim());
+    }
+    Assert.assertThat(array,
+      containsInAnyOrder("UC01 2.2.1",
+        "UC01 2.2.2",
+        "UC01 2.2.3",
+        "UC01 2.3",
+        "UC01 2.4"));
+  }
 }

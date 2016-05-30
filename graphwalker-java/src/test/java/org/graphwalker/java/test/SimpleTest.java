@@ -28,10 +28,14 @@ package org.graphwalker.java.test;
 
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.io.factory.ContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -57,20 +61,19 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
   }
 
   @Test
-  public void run2() {
+  public void run2() throws IOException {
     SimpleTest context = new SimpleTest();
-    new TestBuilder()
-      .setModel(MODEL_PATH)
-      .setContext(context)
-      .setPathGenerator(new RandomPath(new VertexCoverage(100)))
-      .setStart("edge").execute();
+    context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+    context.setNextElement(new Edge().setName("edge").build());
+    new TestBuilder().addContext(context, MODEL_PATH).execute();
     Assert.assertThat(context.count, is(2));
   }
 
   @Test
-  public void run() {
-    Result result = new TestBuilder().addModel(MODEL_PATH
-      , new SimpleTest().setPathGenerator(new RandomPath(new VertexCoverage(100)))).execute();
+  public void run() throws IOException {
+    SimpleTest context = new SimpleTest();
+    context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
+    Result result = new TestBuilder().addContext(context ,MODEL_PATH).execute();
     Assert.assertThat(result.getResults().getInt("totalCompletedNumberOfModels"), is(1));
   }
 }

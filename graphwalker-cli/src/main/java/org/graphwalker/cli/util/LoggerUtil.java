@@ -42,9 +42,4 @@ public abstract class LoggerUtil {
     Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
     root.setLevel(ch.qos.logback.classic.Level.valueOf(level.name()));
   }
-
-  public static Level getLogLevel() {
-    Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-    return Level.valueOf(root.getLevel().levelStr);
-  }
 }

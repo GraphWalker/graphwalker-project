@@ -1,8 +1,6 @@
-package org.graphwalker.io.factory;
-
 /*
  * #%L
- * GraphWalker Input/Output
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,23 +24,26 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
+package org.graphwalker.cli;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Set;
+import java.util.Arrays;
 
-/**
- * @author Nils Olsson
- */
-public interface ContextFactory {
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.core.Is.is;
 
-  List<Context> create(Path path) throws IOException;
 
-  void write(List<Context> contexts, Path path) throws IOException;
+public class CheckTest extends CLITestRoot {
 
-  boolean accept(Path path);
-
-  Set<String> getSupportedFileTypes();
+  @Test
+  public void check() throws IOException {
+    String args[] = {"check", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
+  }
 }

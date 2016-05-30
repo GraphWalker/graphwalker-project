@@ -1,10 +1,10 @@
-package org.graphwalker.java.report;
+package org.graphwalker.io.common;
 
 /*
  * #%L
- * GraphWalker Java
+ * GraphWalker Input/Output
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2015 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,51 +28,56 @@ package org.graphwalker.java.report;
 
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.graphwalker.java.test.Executor;
-import org.graphwalker.java.test.TestExecutor;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.IsEqual;
-import org.hamcrest.xml.HasXPath;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
 import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
-import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
- * @author Nils Olsson
+ * Created by krikar on 2015-11-04.
  */
-public class ReportTest {
+public class ResourceUtilsTest {
 
   @Rule
   public TemporaryFolder testFolder = new TemporaryFolder();
 
   @Test
-  public void writeReport() throws IOException {
-    Date date = new Date();
-    DateFormat formatter = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS");
-    Path reportName = Paths.get(testFolder.getRoot().toPath().toString(),
-      "TEST-GraphWalker-" + formatter.format(date) + ".xml");
-    XMLReportGenerator xmlReportGenerator = new XMLReportGenerator(date, System.getProperties());
+  public void getResourceAsFile_asFile() throws IOException {
+    File file = ResourceUtils.getResourceAsFile(testFolder.newFile("getResourceAsFile_asFile").toString());
+    Assert.assertNotNull(file);
+    Assert.assertTrue(file.exists());
+    Assert.assertTrue(file.canRead());
+  }
 
-    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/PetClinic.json"));
-    Executor executor = new TestExecutor(contexts);
-    xmlReportGenerator.writeReport(testFolder.getRoot().toPath().toFile(), executor);
-    String xml = new String(Files.readAllBytes(reportName));
-    assertThat(xml, hasXPath("/testsuites/@tests"));
-    assertThat(xml, hasXPath("/testsuites/@failures"));
-    assertThat(xml, hasXPath("/testsuites/@errors"));
+  @Test
+  public void getResourceAsFile_asResource() {
+    File file = ResourceUtils.getResourceAsFile("json/example.json");
+    Assert.assertNotNull(file);
+    Assert.assertTrue(file.exists());
+    Assert.assertTrue(file.canRead());
+  }
+
+  @Test(expected = ResourceNotFoundException.class)
+  public void getResourceAsFileNotFound() {
+    ResourceUtils.getResourceAsFile("json/kKJhdKJHJKhDGd.json");
+  }
+
+  @Test
+  public void getResourceAsStream() {
+    InputStream stream = ResourceUtils.getResourceAsStream("json/example.json");
+    Assert.assertNotNull(stream);
+  }
+
+  @Test(expected = ResourceNotFoundException.class)
+  public void getResourceAsStreamNotFound() {
+    ResourceUtils.getResourceAsStream("json/kKJhdKJHJKhDGd.json");
   }
 }

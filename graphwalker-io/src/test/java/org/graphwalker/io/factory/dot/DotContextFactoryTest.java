@@ -27,10 +27,13 @@ package org.graphwalker.io.factory.dot;
  */
 
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.common.ResourceNotFoundException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -39,9 +42,18 @@ import static org.hamcrest.core.Is.is;
  */
 public class DotContextFactoryTest {
 
+  @Test(expected = ResourceNotFoundException.class)
+  public void readNotAvailable() throws IOException {
+    new DotContextFactory().create(Paths.get("dot/KDAJHDUYDJSKJ.dot"));
+  }
+
   @Test
-  public void SimplestGraph() {
-    Context context = new DotContextFactory().create(Paths.get("dot/SimplestGraph.dot"));
+  public void SimplestGraph() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimplestGraph.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(2));
     Assert.assertThat(context.getModel().getEdges().size(), is(1));
 
@@ -57,15 +69,23 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void g3v2e() {
-    Context context = new DotContextFactory().create(Paths.get("dot/3v2e.dot"));
+  public void g3v2e() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/3v2e.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(3));
     Assert.assertThat(context.getModel().getEdges().size(), is(2));
   }
 
   @Test
-  public void g3v2e_withEdgeLabel() {
-    Context context = new DotContextFactory().create(Paths.get("dot/3v2e_withEdgeLabel.dot"));
+  public void g3v2e_withEdgeLabel() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/3v2e_withEdgeLabel.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(3));
     Assert.assertThat(context.getModel().getEdges().size(), is(2));
 
@@ -86,8 +106,12 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void Simple3v2e() {
-    Context context = new DotContextFactory().create(Paths.get("dot/Simple3v2e.dot"));
+  public void Simple3v2e() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Simple3v2e.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(3));
     Assert.assertThat(context.getModel().getEdges().size(), is(2));
 
@@ -109,15 +133,23 @@ public class DotContextFactoryTest {
 
 
   @Test
-  public void Simple4v3e() {
-    Context context = new DotContextFactory().create(Paths.get("dot/Simple4v3e.dot"));
+  public void Simple4v3e() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Simple4v3e.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(4));
     Assert.assertThat(context.getModel().getEdges().size(), is(3));
   }
 
   @Test
-  public void SimplestGWGraph() {
-    Context context = new DotContextFactory().create(Paths.get("dot/SimplestGWGraph.dot"));
+  public void SimplestGWGraph() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimplestGWGraph.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(1));
     Assert.assertThat(context.getModel().getEdges().size(), is(1));
 
@@ -129,8 +161,12 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void SimpleGWGraph() {
-    Context context = new DotContextFactory().create(Paths.get("dot/SimpleGW.dot"));
+  public void SimpleGWGraph() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimpleGW.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(1));
     Assert.assertThat(context.getModel().getEdges().size(), is(1));
 
@@ -145,8 +181,12 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void GW_Login() {
-    Context context = new DotContextFactory().create(Paths.get("dot/Login.dot"));
+  public void GW_Login() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+
     Assert.assertThat(context.getModel().getVertices().size(), is(3));
     Assert.assertThat(context.getModel().getEdges().size(), is(9));
   }

@@ -26,20 +26,7 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
-import com.yworks.xml.graphml.ArcEdgeDocument;
-import com.yworks.xml.graphml.BezierEdgeDocument;
-import com.yworks.xml.graphml.EdgeLabelType;
-import com.yworks.xml.graphml.GenericEdgeDocument;
-import com.yworks.xml.graphml.GenericGroupNodeDocument;
-import com.yworks.xml.graphml.GenericNodeDocument;
-import com.yworks.xml.graphml.GroupNodeDocument;
-import com.yworks.xml.graphml.ImageNodeDocument;
-import com.yworks.xml.graphml.NodeLabelType;
-import com.yworks.xml.graphml.PolyLineEdgeDocument;
-import com.yworks.xml.graphml.QuadCurveEdgeDocument;
-import com.yworks.xml.graphml.ShapeNodeDocument;
-import com.yworks.xml.graphml.SplineEdgeDocument;
-import com.yworks.xml.graphml.TableNodeDocument;
+import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -53,12 +40,7 @@ import org.graphdrawing.graphml.xmlns.GraphmlDocument;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphdrawing.graphml.xmlns.impl.DataTypeImpl;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.dsl.antlr.yed.YEdDescriptiveErrorListener;
 import org.graphwalker.dsl.yed.YEdEdgeParser;
 import org.graphwalker.dsl.yed.YEdLabelLexer;
@@ -70,18 +52,13 @@ import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * @author Nils Olsson
@@ -104,17 +81,23 @@ public final class YEdContextFactory implements ContextFactory {
   }
 
   @Override
-  public Context create(Path path) {
-    return create(path, new YEdContext());
+  public List<Context> create(Path path) throws IOException {
+    List<Context> contexts = new ArrayList<>();
+
+    if (ResourceUtils.isDirectory(path)) {
+      DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
+      for (Path file : directoryStream) {
+        contexts.add(read(file));
+      }
+    } else {
+      contexts.add(read(path));
+    }
+    return contexts;
   }
 
-  @Override
-  public List<Context> createMultiple(Path path) {
-    return null;
-  }
+  private Context read(Path path) {
+    Context context = new YEdContext();
 
-  @Override
-  public <T extends Context> T create(Path path, T context) {
     Edge startEdge;
     Map<String, Vertex> elements = new HashMap<>();
     Model model = new Model();
@@ -132,8 +115,8 @@ public final class YEdContextFactory implements ContextFactory {
       throw new ContextFactoryException("Could not read the file.");
     }
     try {
-      Vertex startVertex = addVertices(model, context, document, elements);
-      startEdge = addEdges(model, context, document, elements, startVertex);
+      Vertex startVertex = addVertices(model, document, elements);
+      startEdge = addEdges(model, document, elements, startVertex);
     } catch (XmlException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("The file seems not to be of valid yEd format.");
@@ -149,103 +132,101 @@ public final class YEdContextFactory implements ContextFactory {
   }
 
   @Override
-  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
-    return null;
-  }
+  public void write(List<Context> contexts, Path path) throws IOException {
+    for (Context context : contexts) {
+      String newLine = System.getProperty("line.separator");
+      StringBuilder str = new StringBuilder();
 
-  @Override
-  public <T extends Context> T write(T context, Path path) throws IOException {
-    String newLine = System.getProperty("line.separator");
-    StringBuilder str = new StringBuilder();
+      str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);
+      str.append("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+        + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
+        + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
+      str.append("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>").append(newLine);
+      str.append("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>").append(newLine);
+      str.append("  <graph id=\"G\" edgedefault=\"directed\">").append(newLine);
 
-    str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);
-    str.append("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-      + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
-      + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
-    str.append("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>").append(newLine);
-    str.append("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>").append(newLine);
-    str.append("  <graph id=\"G\" edgedefault=\"directed\">").append(newLine);
-
-    for (Vertex.RuntimeVertex v : context.getModel().getVertices()) {
-      str.append("    <node id=\"" + v.getId() + "\">").append(newLine);
-      str.append("      <data key=\"d0\" >").append(newLine);
-      str.append("        <y:ShapeNode >").append(newLine);
-      str.append("          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>").append(newLine);
-      str.append("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>").append(newLine);
-      str.append("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
-      str.append("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
-        + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-        + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
-        + v.getName());
-
-      str.append("</y:NodeLabel>").append(newLine);
-      str.append("          <y:Shape type=\"rectangle\"/>").append(newLine);
-      str.append("        </y:ShapeNode>").append(newLine);
-      str.append("      </data>").append(newLine);
-      str.append("    </node>").append(newLine);
-    }
-
-    for (Edge.RuntimeEdge e : context.getModel().getEdges()) {
-      Vertex.RuntimeVertex src = e.getSourceVertex();
-      Vertex.RuntimeVertex dest = e.getTargetVertex();
-
-      if (src == null || dest == null) {
-        continue;
-      }
-
-      str.append("    <edge id=\"" + e.getId() + "\" source=\"" + src.getId() + "\" target=\"" + dest.getId() + "\">").append(newLine);
-      str.append("      <data key=\"d1\" >").append(newLine);
-      str.append("        <y:PolyLineEdge >").append(newLine);
-      str.append("          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">").append(newLine);
-      str.append("            <y:Point x=\"273.3125\" y=\"95.0\"/>").append(newLine);
-      str.append("            <y:Point x=\"209.5625\" y=\"95.0\"/>").append(newLine);
-      str.append("            <y:Point x=\"209.5625\" y=\"143.701171875\"/>").append(newLine);
-      str.append("            <y:Point x=\"265.625\" y=\"143.701171875\"/>").append(newLine);
-      str.append("          </y:Path>").append(newLine);
-      str.append("          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
-      str.append("          <y:Arrows source=\"none\" target=\"standard\"/>").append(newLine);
-
-      if (!e.getName().isEmpty()) {
-        String label = e.getName();
-
-        if (e.hasGuard()) {
-          label += newLine + "[" + e.getGuard().getScript() + "]";
-        }
-        if (e.hasActions()) {
-          label += newLine + "/";
-          for (Action action : e.getActions()) {
-            label += action.getScript();
-          }
-        }
-
-        label = label.replaceAll("&", "&amp;");
-        label = label.replaceAll("<", "&lt;");
-        label = label.replaceAll(">", "&gt;");
-        label = label.replaceAll("'", "&apos;");
-        label = label.replaceAll("\"", "&quot;");
-
-        str.append("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
+      for (Vertex.RuntimeVertex v : context.getModel().getVertices()) {
+        str.append("    <node id=\"" + v.getId() + "\">").append(newLine);
+        str.append("      <data key=\"d0\" >").append(newLine);
+        str.append("        <y:ShapeNode >").append(newLine);
+        str.append("          <y:Geometry  x=\"241.875\" y=\"158.701171875\" width=\"95.0\" height=\"30.0\"/>").append(newLine);
+        str.append("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>").append(newLine);
+        str.append("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
+        str.append("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
           + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-          + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
-          + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
-        str.append("</y:EdgeLabel>").append(newLine);
+          + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
+          + v.getName());
+
+        str.append("</y:NodeLabel>").append(newLine);
+        str.append("          <y:Shape type=\"rectangle\"/>").append(newLine);
+        str.append("        </y:ShapeNode>").append(newLine);
+        str.append("      </data>").append(newLine);
+        str.append("    </node>").append(newLine);
       }
 
-      str.append("          <y:BendStyle smoothed=\"false\"/>").append(newLine);
-      str.append("        </y:PolyLineEdge>").append(newLine);
-      str.append("      </data>").append(newLine);
-      str.append("    </edge>").append(newLine);
+      for (Edge.RuntimeEdge e : context.getModel().getEdges()) {
+        Vertex.RuntimeVertex src = e.getSourceVertex();
+        Vertex.RuntimeVertex dest = e.getTargetVertex();
 
+        if (src == null || dest == null) {
+          continue;
+        }
+
+        str.append("    <edge id=\"" + e.getId() + "\" source=\"" + src.getId() + "\" target=\"" + dest.getId() + "\">").append(newLine);
+        str.append("      <data key=\"d1\" >").append(newLine);
+        str.append("        <y:PolyLineEdge >").append(newLine);
+        str.append("          <y:Path sx=\"-23.75\" sy=\"15.0\" tx=\"-23.75\" ty=\"-15.0\">").append(newLine);
+        str.append("            <y:Point x=\"273.3125\" y=\"95.0\"/>").append(newLine);
+        str.append("            <y:Point x=\"209.5625\" y=\"95.0\"/>").append(newLine);
+        str.append("            <y:Point x=\"209.5625\" y=\"143.701171875\"/>").append(newLine);
+        str.append("            <y:Point x=\"265.625\" y=\"143.701171875\"/>").append(newLine);
+        str.append("          </y:Path>").append(newLine);
+        str.append("          <y:LineStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
+        str.append("          <y:Arrows source=\"none\" target=\"standard\"/>").append(newLine);
+
+        if (!e.getName().isEmpty()) {
+          String label = e.getName();
+
+          if (e.hasGuard()) {
+            label += newLine + "[" + e.getGuard().getScript() + "]";
+          }
+          if (e.hasActions()) {
+            label += newLine + "/";
+            for (Action action : e.getActions()) {
+              label += action.getScript();
+            }
+          }
+
+          label = label.replaceAll("&", "&amp;");
+          label = label.replaceAll("<", "&lt;");
+          label = label.replaceAll(">", "&gt;");
+          label = label.replaceAll("'", "&apos;");
+          label = label.replaceAll("\"", "&quot;");
+
+          str.append("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
+            + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+            + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
+            + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
+          str.append("</y:EdgeLabel>").append(newLine);
+        }
+
+        str.append("          <y:BendStyle smoothed=\"false\"/>").append(newLine);
+        str.append("        </y:PolyLineEdge>").append(newLine);
+        str.append("      </data>").append(newLine);
+        str.append("    </edge>").append(newLine);
+
+      }
+
+      str.append("  </graph>").append(newLine);
+      str.append("</graphml>").append(newLine);
+
+      File folder = path.toFile().getAbsoluteFile();
+      Path graphmlFile = Paths.get(folder.toString(), context.getModel().getName() + ".graphml");
+      Files.newOutputStream(graphmlFile).write(String.valueOf(str).getBytes());
     }
-
-    str.append("  </graph>").append(newLine);
-    str.append("</graphml>").append(newLine);
-
-    Files.newOutputStream(path).write(String.valueOf(str).getBytes());
-    return context;
   }
 
-  private Vertex addVertices(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
+  private Vertex addVertices(Model model, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
     Vertex startVertex = null;
     Deque<XmlObject> workQueue = new ArrayDeque<>();
     workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
@@ -343,7 +324,7 @@ public final class YEdContextFactory implements ContextFactory {
     throw new ContextFactoryException("Unsupported node type: " + xml);
   }
 
-  private Edge addEdges(Model model, Context context, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
+  private Edge addEdges(Model model, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
     Edge startEdge = null;
     for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
       if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {

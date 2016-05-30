@@ -29,7 +29,6 @@ package org.graphwalker.io.factory.yed;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.DryRunContext;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
@@ -45,7 +44,10 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.hamcrest.core.Is.is;
@@ -56,40 +58,50 @@ import static org.hamcrest.core.Is.is;
 public class YEdContextFactoryTest {
 
   @Test(expected = ContextFactoryException.class)
-  public void fileDoesNotExistsOnFileSystem() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/LKHDIODSOSUBD.graphml"));
+  public void fileDoesNotExistsOnFileSystem() throws IOException {
+    new YEdContextFactory().create(Paths.get("graphml/LKHDIODSOSUBD.graphml"));
   }
 
   @Test
-  public void shared() {
-    Context sharedAContext = new YEdContextFactory().create(Paths.get("graphml/SharedA.graphml"));
-    Assert.assertNotNull(sharedAContext);
-    Assert.assertThat(sharedAContext.getModel().getVertices().size(), is(2));
-    Assert.assertThat(sharedAContext.getModel().getEdges().size(), is(6));
+  public void shared() throws IOException {
+    List<Context> sharedAContexts = new YEdContextFactory().create(Paths.get("graphml/SharedA.graphml"));
+    Assert.assertNotNull(sharedAContexts);
+    Assert.assertThat(sharedAContexts.size(), is(1));
 
-    Context sharedBContext = new YEdContextFactory().create(Paths.get("graphml/SharedB.graphml"));
-    Assert.assertNotNull(sharedBContext);
-    Assert.assertThat(sharedBContext.getModel().getVertices().size(), is(2));
-    Assert.assertThat(sharedBContext.getModel().getEdges().size(), is(1));
+    Assert.assertThat(sharedAContexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(sharedAContexts.get(0).getModel().getEdges().size(), is(6));
+
+    List<Context> sharedBContexts = new YEdContextFactory().create(Paths.get("graphml/SharedB.graphml"));
+    Assert.assertNotNull(sharedBContexts);
+    Assert.assertThat(sharedBContexts.size(), is(1));
+
+    Assert.assertThat(sharedBContexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(sharedBContexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test
-  public void login() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
-    Assert.assertThat(context.getModel().findVertices("v_ClientNotRunning").size(), is(1));
+  public void login() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/Login.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
 
-    Vertex.RuntimeVertex vertex = context.getModel().findVertices("v_ClientNotRunning").get(0);
+    Assert.assertThat(contexts.get(0).getModel().findVertices("v_ClientNotRunning").size(), is(1));
+
+    Vertex.RuntimeVertex vertex = contexts.get(0).getModel().findVertices("v_ClientNotRunning").get(0);
     Assert.assertNotNull(vertex);
     Assert.assertThat((String) vertex.getProperty("description"), is("Start the client process"));
 
-    Edge.RuntimeEdge edge = context.getModel().findEdges("e_ValidPremiumCredentials").get(0);
+    Edge.RuntimeEdge edge = contexts.get(0).getModel().findEdges("e_ValidPremiumCredentials").get(0);
     Assert.assertNotNull(edge);
     Assert.assertThat((String) edge.getProperty("description"), is("Log in a s Premium user, using valid credentials"));
   }
 
   @Test
-  public void uc01() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
+  public void uc01() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
 
     // Since the model id the Model.RuntimeModel,the Start vertex is removed from the graph.
     Assert.assertThat(context.getModel().getVertices().size(), is(7)); // one of the vertices is the start vertex and that shouldn't be a part of the model
@@ -118,118 +130,147 @@ public class YEdContextFactoryTest {
   }
 
   @Test
-  public void efsmWithReqtags1() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/reqtags/ShoppingCart.graphml"));
-    Assert.assertThat("Number of vertices", context.getModel().getVertices().size(), is(6));
-    Assert.assertThat("Number of edges", context.getModel().getEdges().size(), is(11));
+  public void efsmWithReqtags1() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/reqtags/ShoppingCart.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat("Number of vertices", contexts.get(0).getModel().getVertices().size(), is(6));
+    Assert.assertThat("Number of edges", contexts.get(0).getModel().getEdges().size(), is(11));
     // TODO Fix req
     //Assert.assertThat("Number of requirements", context.getRequirements().size(), is(5));
   }
 
   @Test
-  public void efsmWithReqtags2() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/reqtags/EFSM_with_REQTAGS.graphml"));
-    Assert.assertThat("Number of vertices", context.getModel().getVertices().size(), is(7));
-    Assert.assertThat("Number of edges", context.getModel().getEdges().size(), is(19));
+  public void efsmWithReqtags2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/reqtags/EFSM_with_REQTAGS.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat("Number of vertices", contexts.get(0).getModel().getVertices().size(), is(7));
+    Assert.assertThat("Number of edges", contexts.get(0).getModel().getEdges().size(), is(19));
     // TODO Fix req
     //Assert.assertThat("Number of requirements", context.getRequirements().size(), is(6));
   }
 
   @Test
-  public void guards() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/Guards.graphml"));
-    Assert.assertThat("Number of vertices", context.getModel().getVertices().size(), is(2));
-    Assert.assertThat("Number of edges", context.getModel().getEdges().size(), is(2));
+  public void guards() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/Guards.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat("Number of vertices", contexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat("Number of edges", contexts.get(0).getModel().getEdges().size(), is(2));
   }
 
   @Test
-  public void singleEdge() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(2));
+  public void singleEdge() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(2));
   }
 
   @Test
-  public void singleVertex() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(1));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
+  public void singleVertex() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(1));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test
-  public void singleVertex2() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(1));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
+  public void singleVertex2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(1));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test
-  public void readInit() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/init/init.graphml"));
-    Assert.assertThat(context.getModel().getActions().size(), is(2));
+  public void readInit() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/init/init.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getActions().size(), is(2));
   }
 
   @Test
-  public void readLoginAndCrashModels() {
+  public void readLoginAndCrashModels() throws IOException {
     ContextFactory factory = new YEdContextFactory();
-    Context login = factory.create(Paths.get("graphml/shared_state/Login.graphml"));
-    Context crash = factory.create(Paths.get("graphml/shared_state/Crash.graphml"));
-    for (RuntimeEdge edge : crash.getModel().getEdges()) {
+    List<Context> logins = factory.create(Paths.get("graphml/shared_state/Login.graphml"));
+    List<Context> crashs = factory.create(Paths.get("graphml/shared_state/Crash.graphml"));
+    for (RuntimeEdge edge : crashs.get(0).getModel().getEdges()) {
       Assert.assertNotNull(edge.getSourceVertex());
       Assert.assertNotNull(edge.getTargetVertex());
     }
   }
 
   @Test
-  public void blockedBranch1() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(3));
-    Assert.assertThat(context.getModel().getEdges().size(), is(3));
+  public void blockedBranch1() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(3));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(3));
   }
 
   @Test
-  public void blockedBranch2() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch2.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(3));
-    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+  public void blockedBranch2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch2.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(3));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(4));
   }
 
   @Test
-  public void blockedVertex1() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex1.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(2));
+  public void blockedVertex1() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex1.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(2));
   }
 
   @Test
-  public void blockedVertex2() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
+  public void blockedVertex2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test
-  public void blockedVertex3() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
+  public void blockedVertex3() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test
-  public void dryRun() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
-    context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
-    Machine machine = new SimpleMachine(context);
-    while (machine.hasNextStep()) {
-      machine.getNextStep();
-    }
-  }
+  public void dryRun() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
 
-  @Test
-  public void dryRunContext() {
-    Context context = new YEdContextFactory().create(Paths.get("graphml/UC01.graphml"));
-    context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
-    Machine machine = new SimpleMachine(new DryRunContext(context));
+    contexts.get(0).setPathGenerator(new RandomPath(new VertexCoverage(100)));
+    Machine machine = new SimpleMachine(contexts);
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
@@ -263,19 +304,21 @@ public class YEdContextFactoryTest {
     model.addEdge(new Edge().setSourceVertex(v_OtherBoughtBooks).setTargetVertex(v_SearchResult).setName("e_SearchBook")).setId("e10");
     model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_SearchResult).setName("e_SearchBook")).setId("e11");
 
-    File tempFile = testFolder.newFile("test.graphml");
     Context writeContext = new TestExecutionContext().setModel(model.build());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
 
     // Write the graphml file
-    new YEdContextFactory().write(writeContext, Paths.get(tempFile.getAbsolutePath()));
+    Path tmpFolder = testFolder.getRoot().toPath();
+    new YEdContextFactory().write(writeContexts, tmpFolder);
 
     // Read the graphml file
-    Context readCContext = new YEdContextFactory().create(Paths.get(tempFile.getAbsolutePath()));
+    List<Context> readCContexts = new YEdContextFactory().create(tmpFolder);
 
     // Compare
     Assert.assertThat(writeContext.getModel().getVertices().size() - 1, // The start vertex is removed automatically
-      is(readCContext.getModel().getVertices().size()));
+      is(readCContexts.get(0).getModel().getVertices().size()));
     Assert.assertThat(writeContext.getModel().getEdges().size(),
-      is(readCContext.getModel().getEdges().size()));
+      is(readCContexts.get(0).getModel().getEdges().size()));
   }
 }

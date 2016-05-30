@@ -34,6 +34,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Nils Olsson
@@ -57,7 +59,7 @@ public final class ResourceUtils {
       if (null != resource) {
         return new File(resource.getFile());
       }
-      throw new ResourceNotFoundException();
+      throw new ResourceNotFoundException("Could not read resource: " + filename);
     }
   }
 
@@ -68,7 +70,7 @@ public final class ResourceUtils {
         return new FileInputStream(file);
       } catch (FileNotFoundException e) {
         logger.error(e.getMessage());
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException("Could not read file: " + filename);
       }
     } else {
       InputStream resource = ResourceUtils.class.getResourceAsStream(filename);
@@ -78,7 +80,7 @@ public final class ResourceUtils {
       if (null != resource) {
         return resource;
       }
-      throw new ResourceNotFoundException();
+      throw new ResourceNotFoundException("Could not read resource: " + filename);
     }
   }
 
@@ -92,5 +94,10 @@ public final class ResourceUtils {
       createdFile = new File(createdFile, part);
     }
     return createdFile;
+  }
+
+  public static boolean isDirectory(Path path) {
+    File file = createFile(path.toString());
+    return file.isDirectory();
   }
 }

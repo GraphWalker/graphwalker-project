@@ -70,6 +70,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 public class CLI {
@@ -342,16 +343,16 @@ public class CLI {
     String outputFileName = convert.input.get(1);
 
     ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
-    Context context;
+    List<Context> contexts;
     try {
-      context = inputFactory.create(Paths.get(inputFileName));
+      contexts = inputFactory.create(Paths.get(inputFileName));
     } catch (DslException e) {
       System.err.println("When parsing model: '" + inputFileName + "' " + e.getMessage() + System.lineSeparator());
       throw new Exception("Model syntax error");
     }
 
     ContextFactory outputFactory = ContextFactoryScanner.get(Paths.get(outputFileName));
-    outputFactory.write(context, Paths.get(outputFileName));
+    outputFactory.write(contexts, Paths.get(outputFileName));
   }
 
   private void RunCommandSource() throws Exception {
@@ -360,64 +361,60 @@ public class CLI {
 
     // Read the model
     ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(modelFileName));
-    Context context;
+    List<Context> contexts;
     try {
-      if (inputFactory instanceof JsonContextFactory) {
-        List<Context> contexts = inputFactory.createMultiple(Paths.get(modelFileName));
-        if (isNotNullOrEmpty(contexts)) {
-          context = contexts.get(0);
-        } else {
-          logger.error("No valid models found in: " + modelFileName);
-          throw new RuntimeException("No valid models found in: " + modelFileName);
-        }
-      } else {
-        context = inputFactory.create(Paths.get(modelFileName));
+      contexts = inputFactory.create(Paths.get(modelFileName));
+      if (isNullOrEmpty(contexts)) {
+        logger.error("No valid models found in: " + modelFileName);
+        throw new RuntimeException("No valid models found in: " + modelFileName);
       }
     } catch (DslException e) {
       System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
       throw new Exception("Model syntax error");
     }
-    SortedSet<String> names = new TreeSet<>();
-    for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-      if (vertex.hasName()) {
-        names.add(vertex.getName());
+
+    for (Context context : contexts) {
+      SortedSet<String> names = new TreeSet<>();
+      for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+        if (vertex.hasName()) {
+          names.add(vertex.getName());
+        }
       }
-    }
-    for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-      if (edge.hasName()) {
-        names.add(edge.getName());
+      for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+        if (edge.hasName()) {
+          names.add(edge.getName());
+        }
       }
-    }
 
-    // Read the template
-    StringBuilder templateStrBuilder = new StringBuilder();
-    String line;
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(templateFileName)))) {
-      while ((line = reader.readLine()) != null) {
-        templateStrBuilder.append(line).append("\n");
+      // Read the template
+      StringBuilder templateStrBuilder = new StringBuilder();
+      String line;
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(templateFileName)))) {
+        while ((line = reader.readLine()) != null) {
+          templateStrBuilder.append(line).append("\n");
+        }
+      } catch (IOException e) {
+        logger.error(e.getMessage());
+        throw new RuntimeException("Could not read the file: " + templateFileName);
       }
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-      throw new RuntimeException("Could not read the file: " + templateFileName);
-    }
-    String templateStr = templateStrBuilder.toString();
+      String templateStr = templateStrBuilder.toString();
 
-    // Apply the template and generate the source code to std out
-    String header = "", body = "", footer = "";
-    Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
-    Matcher m = p.matcher(templateStr);
-    if (m.find()) {
-      header = m.group(1);
-      body = m.group(2);
-      footer = m.group(3);
-    }
+      // Apply the template and generate the source code to std out
+      String header = "", body = "", footer = "";
+      Pattern p = Pattern.compile("HEADER<\\{\\{([.\\s\\S]+)\\}\\}>HEADER([.\\s\\S]+)FOOTER<\\{\\{([.\\s\\S]+)\\}\\}>FOOTER");
+      Matcher m = p.matcher(templateStr);
+      if (m.find()) {
+        header = m.group(1);
+        body = m.group(2);
+        footer = m.group(3);
+      }
 
-    System.out.println(header);
-    for (String name : names) {
-      System.out.println(body.replaceAll("\\{LABEL\\}", name));
+      System.out.println(header);
+      for (String name : names) {
+        System.out.println(body.replaceAll("\\{LABEL\\}", name));
+      }
+      System.out.println(footer);
     }
-    System.out.println(footer);
-
   }
 
   private void RunCommandOffline() throws Exception {
@@ -433,7 +430,8 @@ public class CLI {
       });
       executor.execute();
     } else if (!offline.gw3.isEmpty()) {
-      SimpleMachine machine = new SimpleMachine(new JsonContextFactory().createMultiple(Paths.get(offline.gw3)));
+      //TODO Fix gw3. Should not be there
+      SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get(offline.gw3)));
       while (machine.hasNextStep()) {
         machine.getNextStep();
         System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
@@ -447,14 +445,15 @@ public class CLI {
     while (itr.hasNext()) {
       String modelFileName = (String) itr.next();
       ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
-      Context context;
+      List<Context> contexts;
       try {
-        context = factory.create(Paths.get(modelFileName));
+        contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
         System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
         throw new Exception("Model syntax error");
       }
-      context.setPathGenerator(GeneratorFactory.parse((String) itr.next()));
+      // TODO fix all occurences of get(0) is not safe
+      contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
       if (triggerOnce &&
         (!offline.startElement.isEmpty() ||
@@ -463,9 +462,9 @@ public class CLI {
 
         List<Element> elements = null;
         if (command == Command.OFFLINE) {
-          elements = context.getModel().findElements(offline.startElement);
+          elements = contexts.get(0).getModel().findElements(offline.startElement);
         } else if (command == Command.ONLINE) {
-          elements = context.getModel().findElements(online.startElement);
+          elements = contexts.get(0).getModel().findElements(online.startElement);
         }
 
         if (elements == null) {
@@ -473,10 +472,10 @@ public class CLI {
         } else if (elements.size() > 1) {
           throw new ParameterException("--start-element There are more than one matching element in the model: " + modelFileName);
         }
-        context.setNextElement(elements.get(0));
+        contexts.get(0).setNextElement(elements.get(0));
       }
 
-      executionContexts.add(context);
+      executionContexts.addAll(contexts);
     }
     return executionContexts;
   }
@@ -486,27 +485,16 @@ public class CLI {
     while (itr.hasNext()) {
       String modelFileName = (String) itr.next();
       ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
-      Context context;
+      List<Context> contexts;
       try {
-        context = factory.create(Paths.get(modelFileName));
+        contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
         System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
         throw new Exception("Model syntax error");
       }
-      executionContexts.add(context);
+      executionContexts.addAll(contexts);
     }
     return executionContexts;
-  }
-
-  private void verifyModel(RuntimeModel model) {
-    // Verify that the model has more than 1 vertex
-    if (model.getVertices().size() < 1) {
-      throw new RuntimeException("Model has less than 1 vertices. [Excluding the Start vertex]");
-    }
-    // Verify that the model has more than 0 edges
-    if (model.getEdges().size() < 1) {
-      throw new RuntimeException("Model has less than 1 edge.");
-    }
   }
 
   private String printVersionInformation() {
@@ -532,25 +520,5 @@ public class CLI {
       }
     }
     return properties.getProperty("graphwalker.version");
-  }
-
-  private String generateListOfValidGenerators() {
-    return "";
-  }
-
-  private String generateListOfValidStopConditions() {
-    return "";
-  }
-
-  private boolean helpNeeded(String module, boolean condition, String message) {
-    if (condition) {
-      System.out.println(message);
-      System.out.println("Type 'java -jar graphwalker.jar help " + module + "' for help.");
-    }
-    return condition;
-  }
-
-  public Online getOnline() {
-    return online;
   }
 }

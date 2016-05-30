@@ -87,7 +87,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
   }
 
   @Test
-  public void TestRun() {
+  public void TestRun() throws IOException {
     Result result = new TestExecutor(getClass()).execute(true);
     if (result.hasErrors()) {
       for (String error : result.getErrors()) {
