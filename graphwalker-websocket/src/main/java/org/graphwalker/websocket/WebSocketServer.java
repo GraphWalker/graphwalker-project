@@ -289,7 +289,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         response.put("success", false);
         List<Context> gw3Contexts = null;
         try {
-          gw3Contexts = new JsonContextFactory().createMultiple(root.getJSONObject("gw3").toString());
+          gw3Contexts = new JsonContextFactory().create(root.getJSONObject("gw3").toString());
           Machine machine = new SimpleMachine(gw3Contexts);
           machine.addObserver(this);
           machines.put(socket, machine);

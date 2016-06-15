@@ -37,6 +37,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -60,7 +61,7 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
   }
 
   @Test
-  public void TestRun() {
+  public void TestRun() throws IOException {
     Result result = new TestExecutor(getClass()).execute(true);
     if (result.hasErrors()) {
       for (String error : result.getErrors()) {

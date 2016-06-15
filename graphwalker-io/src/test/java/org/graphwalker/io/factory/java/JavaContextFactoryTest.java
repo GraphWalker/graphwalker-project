@@ -1,8 +1,8 @@
-package org.graphwalker.java.test;
+package org.graphwalker.io.factory.java;
 
 /*
  * #%L
- * GraphWalker Java
+ * GraphWalker Input/Output
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -27,66 +27,37 @@ package org.graphwalker.java.test;
  */
 
 import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.CombinedPath;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.*;
+import org.graphwalker.io.TestExecutionContext;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
+import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Kristian Karl
  */
-public class CombinedGeneratorTest extends ExecutionContext implements CombinedGeneratorModel {
+public class JavaContextFactoryTest {
+  private static final Logger logger = LoggerFactory.getLogger(JavaContextFactoryTest.class);
 
-  public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/CombinedGeneratorModel.graphml");
-
-  public int count = 0;
-
-  @Override
-  public void v_1() {
-    count++;
-  }
-
-  @Override
-  public void v_2() {
-    count++;
-  }
-
-  @Override
-  public void e_1() {
-    count++;
-  }
-
-  @Override
-  public void e_2() {
-    count++;
-  }
-
-  @Override
-  public void e_3() {
-    count++;
-  }
-
-  @Override
-  public void e_4() {
-    count++;
-  }
-
-  @Test
-  public void run() throws IOException {
-    CombinedGeneratorTest context = new CombinedGeneratorTest();
-    CombinedPath combinedPath = new CombinedPath();
-    combinedPath.addPathGenerator(new RandomPath(new VertexCoverage(100)));
-    combinedPath.addPathGenerator(new RandomPath(new EdgeCoverage(100)));
-    new TestBuilder()
-      .addContext(context.setPathGenerator(combinedPath).setNextElement(new Edge().setName("e_1").build()), MODEL_PATH)
-      .execute();
-    Assert.assertTrue(context.count >= 6);
+  @Test (expected = ContextFactoryException.class)
+  public void create()  {
+    new JavaContextFactory().create(Paths.get("java/java.java"));
   }
 }

@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +26,8 @@ public class ResultTest {
    * Verifies statistics with multiple models execution.
    */
   @Test
-  public void PetClinic() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/PetClinic.json"));
+  public void PetClinic() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/PetClinic.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 
@@ -50,8 +51,8 @@ public class ResultTest {
    * Verifies statistics model with requirements.
    */
   @Test
-  public void UC01() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/UC01.json"));
+  public void UC01() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/UC01.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 
@@ -92,8 +93,8 @@ public class ResultTest {
    * Verifies statistics multiple with model that has run failures.
    */
   @Test
-  public void DualPathModel() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("org/graphwalker/java/test/DualPathModel.json"));
+  public void DualPathModel() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/DualPathModel.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 

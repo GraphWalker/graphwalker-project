@@ -37,6 +37,7 @@ import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.comments.LineComment;
 import japa.parser.ast.expr.*;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
+import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.cache.CacheEntry;
@@ -100,32 +101,40 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     }
   }
 
-  private static void write(ContextFactory factory, SourceFile file) {
-    try {
-      RuntimeModel model = factory.create(file.getInputPath()).getModel();
-      String source = generator.generate(file, model);
-      Files.createDirectories(file.getOutputPath().getParent());
-      Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))
-        , StandardOpenOption.CREATE
-        , StandardOpenOption.TRUNCATE_EXISTING);
-    } catch (Throwable t) {
-      logger.error(t.getMessage());
-      throw new CodeGeneratorException(t);
+  private static void write(ContextFactory factory, SourceFile file) throws IOException {
+    List<Context> contexts = factory.create(file.getInputPath());
+    for (Context context : contexts ) {
+      try {
+        RuntimeModel model = context.getModel();
+        String source = generator.generate(file, model);
+        Files.createDirectories(file.getOutputPath().getParent());
+        Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))
+          , StandardOpenOption.CREATE
+          , StandardOpenOption.TRUNCATE_EXISTING);
+      } catch (Throwable t) {
+        logger.error(t.getMessage());
+        throw new CodeGeneratorException(t);
+      }
     }
   }
 
-  public String generate(String file) {
+  public String generate(String file) throws IOException {
     return generate(Paths.get(file));
   }
 
-  public String generate(File file) {
+  public String generate(File file) throws IOException {
     return generate(file.toPath());
   }
 
-  public String generate(Path path) {
+  public String generate(Path path) throws IOException {
     ContextFactory factory = ContextFactoryScanner.get(path);
     SourceFile sourceFile = new SourceFile(path);
-    return generate(sourceFile, factory.create(path).getModel());
+    List<Context> contexts = factory.create(path);
+    String sourceStr = "";
+    for (Context context : contexts ) {
+      sourceStr += generate(sourceFile, context.getModel());
+    }
+    return sourceStr;
   }
 
   public String generate(SourceFile sourceFile, RuntimeModel model) {

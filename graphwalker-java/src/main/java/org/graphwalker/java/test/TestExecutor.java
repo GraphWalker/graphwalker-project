@@ -46,8 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.nio.file.Path;
@@ -55,6 +54,9 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.*;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
@@ -87,13 +89,13 @@ public final class TestExecutor implements Executor {
   private final Machine machine;
   private Result result;
 
-  public TestExecutor(Configuration configuration) {
+  public TestExecutor(Configuration configuration) throws IOException {
     this.configuration = configuration;
     this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
     this.machine = createMachine(machineConfiguration);
   }
 
-  public TestExecutor(Class<?>... tests) {
+  public TestExecutor(Class<?>... tests) throws IOException {
     this.configuration = new Configuration();
     this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
     this.machine = createMachine(machineConfiguration);
@@ -129,7 +131,7 @@ public final class TestExecutor implements Executor {
     return machineConfiguration;
   }
 
-  private Collection<Context> createContexts(MachineConfiguration machineConfiguration) {
+  private Collection<Context> createContexts(MachineConfiguration machineConfiguration) throws IOException {
     Set<Context> contexts = new HashSet<>();
     for (ContextConfiguration contextConfiguration : machineConfiguration.getContextConfigurations()) {
       Context context = createContext(contextConfiguration.getTestClass());
@@ -148,12 +150,19 @@ public final class TestExecutor implements Executor {
     }
   }
 
-  private void configureContext(Context context) {
+  private void configureContext(Context context) throws IOException {
     Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
     GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
     if (!models.isEmpty()) {
       Path path = Paths.get(models.iterator().next().file());
-      ContextFactoryScanner.get(reflections, path).create(path, context);
+      List<Context> contexts = ContextFactoryScanner.get(reflections, path).create(path);
+      if (isNullOrEmpty(contexts)) {
+        throw new TestExecutionException("Could not read the model: " + path.toString());
+      } else if (contexts.size() > 1) {
+        throw new TestExecutionException("The model path: " + path.toString() + ", has more models than 1. Can only handle 1 model.");
+      }
+      context.setModel(contexts.get(0).getModel());
+      context.setNextElement(contexts.get(0).getNextElement());
     }
     if (!"".equals(annotation.value())) {
       context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
@@ -165,7 +174,8 @@ public final class TestExecutor implements Executor {
     }
   }
 
-  private Machine createMachine(MachineConfiguration machineConfiguration) {
+
+  private Machine createMachine(MachineConfiguration machineConfiguration) throws IOException {
     Collection<Context> contexts = createContexts(machineConfiguration);
     Machine machine = new SimpleMachine(contexts);
     for (Context context : machine.getContexts()) {
