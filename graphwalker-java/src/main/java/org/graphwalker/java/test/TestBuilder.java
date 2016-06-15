@@ -35,10 +35,13 @@ import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
 
 /**
  * @author Nils Olsson
@@ -49,65 +52,20 @@ public final class TestBuilder {
 
   private List<Context> contexts = new ArrayList<>();
 
-  public TestBuilder addModel(String model) {
-    return addModel(Paths.get(model));
-  }
-
-  public TestBuilder addModel(Path model) {
-    contexts.add(createContext(model, null, null, null));
-    return this;
-  }
-
-  public TestBuilder addModel(String model, PathGenerator pathGenerator) {
-    return addModel(Paths.get(model), pathGenerator);
-  }
-
-  public TestBuilder addModel(Path model, PathGenerator pathGenerator) {
-    contexts.add(createContext(model, null, pathGenerator, null));
-    return this;
-  }
-
-  public TestBuilder addModel(String model, PathGenerator pathGenerator, String start) {
-    return addModel(Paths.get(model), pathGenerator, start);
-  }
-
-  public TestBuilder addModel(Path model, PathGenerator pathGenerator, String start) {
-    contexts.add(createContext(model, null, pathGenerator, start));
-    return this;
-  }
-
-  public TestBuilder addModel(String model, Context context) {
-    return addModel(Paths.get(model), context);
-  }
-
-  public TestBuilder addModel(Path model, Context context) {
-    contexts.add(createContext(model, context, null, null));
-    return this;
-  }
-
-  private Context createContext(Path model, Context context, PathGenerator pathGenerator, String start) {
-    ContextFactory factory = ContextFactoryScanner.get(model);
-    Context newContext;
-    try {
-      if (null != context) {
-        newContext = factory.create(model, context);
-      } else {
-        newContext = factory.create(model);
-      }
-      if (null != pathGenerator) {
-        newContext.setPathGenerator(pathGenerator);
-      }
-      if (null != start) {
-        newContext.setNextElement(newContext.getModel().findElements(start).get(0));
-      }
-    } catch (Throwable t) {
-      logger.error(t.getMessage());
-      throw new ContextFactoryException("Failed to create context", t);
-    }
-    return newContext;
-  }
-
   public TestBuilder addContext(Context context) {
+    contexts.add(context);
+    return this;
+  }
+
+  public TestBuilder addContext(Context context, Path path) throws IOException {
+    List<Context> pathContexts = ContextFactoryScanner.get(path).create(path);
+    if (isNullOrEmpty(pathContexts)) {
+      throw new TestExecutionException("Could not read the model: " + path.toString());
+    } else if (pathContexts.size() > 1) {
+      throw new TestExecutionException("The model path: " + path.toString() + ", has more models than 1. Can only handle 1 model.");
+    }
+    context.setModel(pathContexts.get(0).getModel());
+    context.setNextElement(pathContexts.get(0).getNextElement());
     contexts.add(context);
     return this;
   }
@@ -138,66 +96,10 @@ public final class TestBuilder {
   }
 
   public Result execute(boolean ignoreError) {
-    if (contexts.isEmpty()) {
-      return new TestExecutor(build()).execute(ignoreError);
-    } else {
-      return new TestExecutor(contexts).execute(ignoreError);
-    }
+    return new TestExecutor(contexts).execute(ignoreError);
   }
 
   public Result execute() {
     return execute(false);
   }
-
-  @Deprecated
-  private Path model;
-  @Deprecated
-  private Context context;
-  @Deprecated
-  private PathGenerator generator;
-  @Deprecated
-  private String start;
-
-  @Deprecated
-  public TestBuilder setModel(String model) {
-    return setModel(Paths.get(model));
-  }
-
-  @Deprecated
-  public TestBuilder setModel(Path model) {
-    this.model = model;
-    return this;
-  }
-
-  @Deprecated
-  public TestBuilder setContext(Context context) {
-    this.context = context;
-    return this;
-  }
-
-  @Deprecated
-  public TestBuilder setPathGenerator(PathGenerator generator) {
-    this.generator = generator;
-    return this;
-  }
-
-  @Deprecated
-  public TestBuilder setStart(String start) {
-    this.start = start;
-    return this;
-  }
-
-  @Deprecated
-  public Context build() {
-    ContextFactory factory = ContextFactoryScanner.get(model);
-    try {
-      return factory.create(model, context)
-        .setPathGenerator(generator)
-        .setNextElement(context.getModel().findElements(start).get(0));
-    } catch (Throwable t) {
-      logger.error(t.getMessage());
-      throw new ContextFactoryException("Failed to create context", t);
-    }
-  }
-
 }

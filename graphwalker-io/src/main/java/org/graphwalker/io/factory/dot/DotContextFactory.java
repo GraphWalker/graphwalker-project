@@ -45,10 +45,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
@@ -59,10 +62,6 @@ public final class DotContextFactory implements ContextFactory {
   private static final Logger logger = LoggerFactory.getLogger(DotContextFactory.class);
   private static final String FILE_TYPE = "dot";
   private static final Set<String> SUPPORTED_TYPE = new HashSet<>(Arrays.asList("**/*.dot"));
-
-  private Vertex startVertex = null;
-  private Edge startEdge = null;
-  private Map<String, Vertex> elements = new HashMap<>();
 
   @Override
   public Set<String> getSupportedFileTypes() {
@@ -75,18 +74,22 @@ public final class DotContextFactory implements ContextFactory {
   }
 
   @Override
-  public Context create(Path path) {
-    return create(path, new DotContext());
+  public List<Context> create(Path path) throws IOException {
+    List<Context> contexts = new ArrayList<>();
+
+    if (ResourceUtils.isDirectory(path)) {
+      DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
+      for (Path file : directoryStream) {
+        contexts.add(read(file));
+      }
+    } else {
+      contexts.add(read(path));
+    }
+    return contexts;
   }
 
-  @Override
-  public List<Context> createMultiple(Path path) {
-    return null;
-  }
-
-  @Override
-  public <T extends Context> T create(Path path, T context) {
-
+  private Context read(Path path) {
+    Context context = new DotContext();
     Model model = new Model();
 
     StringBuilder out = new StringBuilder();
@@ -125,7 +128,7 @@ public final class DotContextFactory implements ContextFactory {
       model.addEdge(edge);
     }
 
-    model.setName(path.toString());
+    model.setName(FilenameUtils.removeExtension(path.getFileName().toString()));
     context.setModel(model.build());
     if (null != startEdge) {
       context.setNextElement(startEdge);
@@ -141,43 +144,40 @@ public final class DotContextFactory implements ContextFactory {
   }
 
   @Override
-  public <T extends List<Context>> T write(T contexts, Path path) throws IOException {
-    return null;
-  }
+  public void write(List<Context> contexts, Path path) throws IOException {
+    for (Context context : contexts) {
+      String newLine = System.getProperty("line.separator");
+      StringBuilder str = new StringBuilder();
 
-  @Override
-  public <T extends Context> T write(T context, Path path) throws IOException {
-    String newLine = System.getProperty("line.separator");
-    StringBuilder str = new StringBuilder();
-
-    str.append("digraph " + FilenameUtils.getBaseName(path.toString())).append(" {").append(newLine);
-    for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
-      if (edge.getSourceVertex() != null) {
-        str.append(edge.getSourceVertex().getName());
-      } else {
-        str.append("Start");
-      }
-
-      str.append(" -> ");
-      if (edge.getTargetVertex() != null)
-        str.append(edge.getTargetVertex().getName());
-      str.append(" [label=\"");
-      str.append(edge.getName());
-      if (edge.hasGuard()) {
-        str.append("\\n[").append(edge.getGuard().getScript()).append("]");
-      }
-      if (edge.hasActions()) {
-        str.append("\\n/");
-        for (Action action : edge.getActions()) {
-          str.append(action.getScript());
+      str.append("digraph " + FilenameUtils.getBaseName(path.toString())).append(" {").append(newLine);
+      for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
+        if (edge.getSourceVertex() != null) {
+          str.append(edge.getSourceVertex().getName());
+        } else {
+          str.append("Start");
         }
+
+        str.append(" -> ");
+        if (edge.getTargetVertex() != null)
+          str.append(edge.getTargetVertex().getName());
+        str.append(" [label=\"");
+        str.append(edge.getName());
+        if (edge.hasGuard()) {
+          str.append("\\n[").append(edge.getGuard().getScript()).append("]");
+        }
+        if (edge.hasActions()) {
+          str.append("\\n/");
+          for (Action action : edge.getActions()) {
+            str.append(action.getScript());
+          }
+        }
+        str.append("\"];").append(newLine);
       }
-      str.append("\"];").append(newLine);
+      str.append("}").append(newLine);
+
+      File folder = path.toFile().getAbsoluteFile();
+      Path dotFile = Paths.get(folder.toString(), context.getModel().getName() + ".dot");
+      Files.newOutputStream(dotFile).write(String.valueOf(str).getBytes());
     }
-    str.append("}").append(newLine);
-
-    Files.newOutputStream(path).write(String.valueOf(str).getBytes());
-
-    return context;
   }
 }

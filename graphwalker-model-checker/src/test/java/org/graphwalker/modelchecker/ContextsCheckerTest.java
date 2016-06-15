@@ -5,6 +5,7 @@ import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -15,8 +16,8 @@ import static org.hamcrest.core.Is.is;
  */
 public class ContextsCheckerTest {
   @Test
-  public void testDefault() {
-    List<Context> contexts = new JsonContextFactory().createMultiple(Paths.get("json/petClinic.json"));
+  public void testDefault() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/petClinic.json"));
     List<String> issues = ContextsChecker.hasIssues(contexts);
     Assert.assertThat(issues.size(), is(2));
   }
