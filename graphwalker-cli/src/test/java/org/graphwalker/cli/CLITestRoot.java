@@ -49,17 +49,18 @@ public abstract class CLITestRoot {
     System.setOut(outStream);
     System.setErr(errStream);
 
-    CLI.main(args);
+    try {
+      CLI.main(args);
+    } finally {
+      System.setOut(oldOutStream);
+      System.setErr(oldErrStream);
 
-    System.setOut(oldOutStream);
-    System.setErr(oldErrStream);
-
-    String outMsg = stdOutput.toString();
-    String errMsg = errOutput.toString();
-    logger.info("stdout: " + outMsg);
-    logger.info("stderr: " + errMsg);
-
-    return new Result(outMsg, errMsg);
+      String outMsg = stdOutput.toString();
+      String errMsg = errOutput.toString();
+      logger.info("stdout: " + outMsg);
+      logger.info("stderr: " + errMsg);
+      return new Result(outMsg, errMsg);
+    }
   }
 
   public class RedirectStream extends OutputStream {
