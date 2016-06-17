@@ -58,26 +58,26 @@ public abstract class Util {
     }
     if (machine.getCurrentContext().getCurrentElement().hasName()) {
       object.put("currentElementName", machine.getCurrentContext().getCurrentElement().getName());
-      if (verbose) {
-        object.put("currentElementID", machine.getCurrentContext().getCurrentElement().getId());
+    }
+    if (verbose) {
+      object.put("currentElementID", machine.getCurrentContext().getCurrentElement().getId());
 
-        JSONArray jsonKeys = new JSONArray();
-        for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
-          JSONObject jsonKey = new JSONObject();
-          jsonKey.put(key.getKey(), key.getValue());
-          jsonKeys.put(jsonKey);
-        }
-        object.put("data", jsonKeys);
-
-        JSONArray jsonProperties = new JSONArray();
-        RuntimeBase runtimeBase = (RuntimeBase) machine.getCurrentContext().getCurrentElement();
-        for (Map.Entry<String, Object> key : runtimeBase.getProperties().entrySet()) {
-          JSONObject jsonKey = new JSONObject();
-          jsonKey.put(key.getKey(), key.getValue());
-          jsonProperties.put(jsonKey);
-        }
-        object.put("properties", jsonProperties);
+      JSONArray jsonKeys = new JSONArray();
+      for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
+        JSONObject jsonKey = new JSONObject();
+        jsonKey.put(key.getKey(), key.getValue());
+        jsonKeys.put(jsonKey);
       }
+      object.put("data", jsonKeys);
+
+      JSONArray jsonProperties = new JSONArray();
+      RuntimeBase runtimeBase = (RuntimeBase) machine.getCurrentContext().getCurrentElement();
+      for (Map.Entry<String, Object> key : runtimeBase.getProperties().entrySet()) {
+        JSONObject jsonKey = new JSONObject();
+        jsonKey.put(key.getKey(), key.getValue());
+        jsonProperties.put(jsonKey);
+      }
+      object.put("properties", jsonProperties);
     }
     if (showUnvisited) {
       Context context = machine.getCurrentContext();
