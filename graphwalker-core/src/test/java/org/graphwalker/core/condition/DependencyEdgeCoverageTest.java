@@ -107,4 +107,29 @@ public class DependencyEdgeCoverageTest {
     context.getProfiler().stop(context);
     assertTrue(condition.isFulfilled());
   }
+  
+  @Test
+  public void testIsFulfilledHighDependencyTreshold() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.8);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Model model = new Model().addEdge(e2).addEdge(e1);
+    StopCondition condition = new DependencyEdgeCoverage(100,85);
+    Context context = new TestExecutionContext(model, new RandomPath(condition));
+    context.setProfiler(new Profiler());
+    assertFalse(condition.isFulfilled());
+    context.setCurrentElement(e1.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    assertFalse(condition.isFulfilled());
+    context.setCurrentElement(e2.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    assertFalse(condition.isFulfilled());
+    context.setCurrentElement(v1.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    assertTrue(condition.isFulfilled());
+  }
 }
