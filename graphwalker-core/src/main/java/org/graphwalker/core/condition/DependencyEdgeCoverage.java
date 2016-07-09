@@ -46,25 +46,33 @@ public final class DependencyEdgeCoverage extends DependencyCoverageStopConditio
 
 	@Override
 	public boolean isFulfilled() {
-		boolean temp = super.isFulfilled();
-		return getFulfilment() >= super.getPercentAsDouble() && super.isFulfilled();
+		return getFulfilment() >= super.getDependencyAsDouble() && super.isFulfilled();
 	}
 
 	@Override
 	public double getFulfilment() {
 		Context context = getContext();
-
+		long totalDependencyEdgesCount = 0;
+		long visitedDependencyEdgesCount = 0;
 		long totalEdgesCount = 0;
 		long visitedEdgesCount = 0;
 		for (RuntimeEdge edge : context.getModel().getEdges()) {
+			totalEdgesCount++;
 			if (edge.getDependency() >= super.getDependencyAsDouble()) {
-				totalEdgesCount++;
+				totalDependencyEdgesCount++;
 			}
-			if (context.getProfiler().isVisited(edge) && edge.getDependency() >= super.getDependencyAsDouble()) {
+			if (context.getProfiler().isVisited(edge)) {
 				visitedEdgesCount++;
+				if (edge.getDependency() >= super.getDependencyAsDouble()) {
+					visitedDependencyEdgesCount++;
+				}
+
 			}
 		}
 
-		return ((double) visitedEdgesCount / totalEdgesCount) / getPercentAsDouble();
+		if (totalDependencyEdgesCount > 0) {
+			return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
+		}
+		return ((double) visitedEdgesCount / totalEdgesCount);
 	}
 }
