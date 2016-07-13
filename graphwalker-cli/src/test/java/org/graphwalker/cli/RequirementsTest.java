@@ -1,8 +1,6 @@
-package org.graphwalker.cli.util;
-
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,20 +24,36 @@ package org.graphwalker.cli.util;
  * #L%
  */
 
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
+package org.graphwalker.cli;
 
-/**
- * @author Nils Olsson
- */
-public abstract class LoggerUtil {
+import org.junit.Assert;
+import org.junit.Test;
 
-  public enum Level {
-    OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
-  }
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-  public static void setLogLevel(Level level) {
-    Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-    root.setLevel(ch.qos.logback.classic.Level.valueOf(level.name()));
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
+
+
+public class RequirementsTest extends CLITestRoot {
+
+  @Test
+  public void requirements() throws IOException {
+    String args[] = {"requirements", "-m", "graphml/online/ShoppingCart.graphml"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+
+    List<String> array = Arrays.asList(result.getOutput().split("\n"));
+    for (int i = 0; i < array.size(); i++) {
+      array.set(i, array.get(i).trim());
+    }
+    Assert.assertThat(array,
+      containsInAnyOrder("UC01 2.2.1",
+        "UC01 2.2.2",
+        "UC01 2.2.3",
+        "UC01 2.3",
+        "UC01 2.4"));
   }
 }

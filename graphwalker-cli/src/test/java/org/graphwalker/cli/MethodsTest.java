@@ -1,8 +1,6 @@
-package org.graphwalker.cli.util;
-
 /*
  * #%L
- * GraphWalker Core
+ * GraphWalker Command Line Interface
  * %%
  * Copyright (C) 2005 - 2014 GraphWalker
  * %%
@@ -26,20 +24,30 @@ package org.graphwalker.cli.util;
  * #L%
  */
 
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
+package org.graphwalker.cli;
 
-/**
- * @author Nils Olsson
- */
-public abstract class LoggerUtil {
+import org.junit.Assert;
+import org.junit.Test;
 
-  public enum Level {
-    OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
-  }
+import java.io.IOException;
+import java.util.Arrays;
 
-  public static void setLogLevel(Level level) {
-    Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-    root.setLevel(ch.qos.logback.classic.Level.valueOf(level.name()));
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
+
+
+public class MethodsTest extends CLITestRoot {
+
+  @Test
+  public void methods() throws IOException {
+    String args[] = {"methods", "-m", "json/example.json"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+      containsInAnyOrder("e_AnotherAction",
+        "e_FirstAction",
+        "e_SomeOtherAction",
+        "v_VerifySomeAction",
+        "v_VerifySomeOtherAction"));
   }
 }
