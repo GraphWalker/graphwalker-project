@@ -65,7 +65,7 @@ public class OnlineTest extends CLITestRoot {
     try {
       future.get(5, TimeUnit.SECONDS);
     } catch (TimeoutException e) {
-      ;
+      ; // ignore
     }
 
     String actualOutput = "";
