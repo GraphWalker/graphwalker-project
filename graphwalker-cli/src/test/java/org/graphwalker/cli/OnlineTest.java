@@ -105,7 +105,7 @@ public class OnlineTest extends CLITestRoot {
     executor.shutdown();
 
     try {
-      future.get(5, TimeUnit.SECONDS);
+      future.get(10, TimeUnit.SECONDS);
     } catch (TimeoutException e) {
       ;
     }
