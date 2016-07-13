@@ -120,7 +120,9 @@ public class OnlineTest extends CLITestRoot {
       actualOutput = runOnlineService.getResult().getOutput();
     }
 
-    Assert.assertThat(actualOutput, containsString("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext\n" +
+    Assert.assertThat(actualOutput,
+      containsString("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext" +
+      System.lineSeparator() +
       "Press Control+C to end..."));
   }
 }
