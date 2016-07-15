@@ -47,19 +47,13 @@ public class DependencyEdgeCoverageTest {
 
   @Test
   public void testConstructor() {
-    DependencyEdgeCoverage edgeCoverage = new DependencyEdgeCoverage(200,100);
-    assertThat(edgeCoverage.getPercent(), is(200));
+    DependencyEdgeCoverage edgeCoverage = new DependencyEdgeCoverage(100);
     assertThat(edgeCoverage.getDependency(), is(100));
-  }
-
-  @Test(expected = StopConditionException.class)
-  public void testNegativePercent() {
-    new DependencyEdgeCoverage(-55,1);
   }
   
   @Test(expected = StopConditionException.class)
   public void testNegativeDependency() {
-    new DependencyEdgeCoverage(1,-55);
+    new DependencyEdgeCoverage(-55);
   }
 
   @Test
@@ -69,7 +63,7 @@ public class DependencyEdgeCoverageTest {
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
     Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
     Model model = new Model().addEdge(e1).addEdge(e2);
-    StopCondition condition = new DependencyEdgeCoverage(100,85);
+    StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setProfiler(new Profiler());
     assertThat(condition.getFulfilment(), is(0.0));
@@ -90,7 +84,7 @@ public class DependencyEdgeCoverageTest {
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
     Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
     Model model = new Model().addEdge(e2).addEdge(e1);
-    StopCondition condition = new DependencyEdgeCoverage(100,85);
+    StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setProfiler(new Profiler());
     assertFalse(condition.isFulfilled());
@@ -115,7 +109,7 @@ public class DependencyEdgeCoverageTest {
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.8);
     Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
     Model model = new Model().addEdge(e2).addEdge(e1);
-    StopCondition condition = new DependencyEdgeCoverage(100,85);
+    StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
     context.setProfiler(new Profiler());
     assertFalse(condition.isFulfilled());
@@ -130,6 +124,6 @@ public class DependencyEdgeCoverageTest {
     context.setCurrentElement(v1.build());
     context.getProfiler().start(context);
     context.getProfiler().stop(context);
-    assertTrue(condition.isFulfilled());
+    assertFalse(condition.isFulfilled());
   }
 }

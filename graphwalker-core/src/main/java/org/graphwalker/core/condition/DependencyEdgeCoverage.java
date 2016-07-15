@@ -40,8 +40,8 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
  */
 public final class DependencyEdgeCoverage extends DependencyCoverageStopConditionBase {
 
-	public DependencyEdgeCoverage(int percent, int dependency) {
-		super(percent, dependency);
+	public DependencyEdgeCoverage(int dependency) {
+		super(dependency);
 	}
 
 	@Override
@@ -54,25 +54,20 @@ public final class DependencyEdgeCoverage extends DependencyCoverageStopConditio
 		Context context = getContext();
 		long totalDependencyEdgesCount = 0;
 		long visitedDependencyEdgesCount = 0;
-		long totalEdgesCount = 0;
-		long visitedEdgesCount = 0;
 		for (RuntimeEdge edge : context.getModel().getEdges()) {
-			totalEdgesCount++;
 			if (edge.getDependency() >= super.getDependencyAsDouble()) {
 				totalDependencyEdgesCount++;
 			}
 			if (context.getProfiler().isVisited(edge)) {
-				visitedEdgesCount++;
 				if (edge.getDependency() >= super.getDependencyAsDouble()) {
 					visitedDependencyEdgesCount++;
 				}
-
 			}
 		}
 
-		if (totalDependencyEdgesCount > 0) {
-			return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
+		if (totalDependencyEdgesCount == 0) {
+			return totalDependencyEdgesCount;
 		}
-		return ((double) visitedEdgesCount / totalEdgesCount);
+		return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
 	}
 }
