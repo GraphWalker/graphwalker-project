@@ -64,7 +64,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
 			stopConditions.add(new EdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
 		} else if (ctx.getChild(0).getText().equalsIgnoreCase("dependency_edge_coverage")
 				|| ctx.getChild(0).getText().equalsIgnoreCase("dependencyedgecoverage")) {
-			stopConditions.add(new DependencyEdgeCoverage(100,Integer.parseInt(ctx.getChild(2).getText())));
+			stopConditions.add(new DependencyEdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
 		} else if (ctx.getChild(0).getText().equalsIgnoreCase("vertex_coverage")
 				|| ctx.getChild(0).getText().equalsIgnoreCase("vertexcoverage")) {
 			stopConditions.add(new VertexCoverage(Integer.parseInt(ctx.getChild(2).getText())));
