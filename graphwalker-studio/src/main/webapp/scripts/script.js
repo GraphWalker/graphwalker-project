@@ -163,7 +163,7 @@ export function onResetModel() {
   console.log('onResetModel: ' + currentModelId);
   defaultUI();
 
-  issues.innerHTML = 'Ready';
+  document.getElementById('issues').innerHTML = 'Ready';
 
   for (var modelId in graphs) {
     if (!graphs.hasOwnProperty(modelId)) {
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
    **/
   //readGraphsFromFile('Login.gw3');
   //readGraphsFromFile('UC01.gw3');
-  //readGraphsFromFile('petClinic.gw3');
+  //readGraphsFromFile('PetClinic.gw3');
 });
 
 
@@ -918,7 +918,7 @@ function onMessage(event) {
       break;
     case 'start':
       if (message.success) {
-        issues.innerHTML = 'No issues';
+        document.getElementById('issues').innerHTML = 'No issues';
         console.log('Command start ok');
         document.dispatchEvent(startEvent);
       } else {
@@ -926,15 +926,15 @@ function onMessage(event) {
       }
       break;
     case 'issues':
-      issues.innerHTML = message.issues;
+      document.getElementById('issues').innerHTML = message.issues;
       break;
     case 'noIssues':
-      issues.innerHTML = 'No issues';
+      document.getElementById('issues').innerHTML = 'No issues';
       break;
     case 'visitedElement':
       console.log('Command visitedElement. Will color green on (modelId, elementId): ' +
         message.modelId + ', ' + message.elementId);
-      issues.innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
+      document.getElementById('issues').innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
         (message.stopConditionFulfillment * 100).toFixed(0) +
         '%, data: ' + JSON.stringify(message.data);
 
