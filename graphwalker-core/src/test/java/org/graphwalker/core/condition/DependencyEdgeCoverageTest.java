@@ -57,7 +57,7 @@ public class DependencyEdgeCoverageTest {
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilmentOneEdgeBelowDependency() {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
@@ -77,6 +77,27 @@ public class DependencyEdgeCoverageTest {
     assertThat(condition.getFulfilment(), is(1.0));
   }
 
+  @Test
+  public void testFulfilment() {
+    Vertex v1 = new Vertex();
+    Vertex v2 = new Vertex();
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Model model = new Model().addEdge(e1).addEdge(e2);
+    StopCondition condition = new DependencyEdgeCoverage(75);
+    Context context = new TestExecutionContext(model, new RandomPath(condition));
+    context.setProfiler(new Profiler());
+    assertThat(condition.getFulfilment(), is(0.0));
+    context.setCurrentElement(e1.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    assertThat(condition.getFulfilment(), is(0.5));
+    context.setCurrentElement(e2.build());
+    context.getProfiler().start(context);
+    context.getProfiler().stop(context);
+    assertThat(condition.getFulfilment(), is(1.0));
+  }
+  
   @Test
   public void testIsFulfilled() {
     Vertex v1 = new Vertex();
