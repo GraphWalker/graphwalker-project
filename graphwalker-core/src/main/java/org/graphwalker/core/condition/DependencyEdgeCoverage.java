@@ -31,9 +31,9 @@ import org.graphwalker.core.machine.Context;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 /**
- * <h1>DependencyEdgeCoverage</h1> The EdgeCoverage stop condition is fulfilled
- * when the percentage of visited edges in the model is greater than, or equal,
- * to the percentage given as a parameter to the constructor.
+ * <h1>DependencyEdgeCoverage</h1> The DependencyEdgeCoverage stop condition is fulfilled
+ * when all the edges with dependency greater than, or equal,
+ * to the dependency given as a parameter to the constructor, are visited.
  * </p>
  *
  * @author Miroslav Janeski
@@ -46,7 +46,7 @@ public final class DependencyEdgeCoverage extends DependencyCoverageStopConditio
 
 	@Override
 	public boolean isFulfilled() {
-		return getFulfilment() >= super.getDependencyAsDouble() && super.isFulfilled();
+		return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
 	}
 
 	@Override
@@ -67,7 +67,8 @@ public final class DependencyEdgeCoverage extends DependencyCoverageStopConditio
 
 		if (totalDependencyEdgesCount == 0) {
 			return totalDependencyEdgesCount;
+		} else {
+			return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
 		}
-		return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
 	}
 }

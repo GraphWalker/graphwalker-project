@@ -208,15 +208,29 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
     return new RuntimeEdge(this);
   }
 
+  /**
+   * Gets the dependency of the edge.
+   *
+   * @return The dependency as double.
+   * @see Edge#setDependenct
+   */
   public Double getDependency() {
 	return dependency;
-}
+  }
 
-public Edge setDependency(Double dependency) {
+  /**
+   * The dependency shows how much targetVertex depends on sourceVertex.
+   * One way to obtain the dependency is by using
+   *  process mining to generate a model out of log files.
+   *
+   * @param dependency a double between 0 and 1
+   * @return The edge
+   */
+  public Edge setDependency(Double dependency) {
 	this.dependency = dependency;
 	invalidateCache();
 	return this;
-}
+  }
 
 /**
    * <h1>RuntimeEdge</h1>
@@ -330,6 +344,12 @@ public Edge setDependency(Double dependency) {
         Objects.equals(dependency, that.dependency);
     }
 
+    /**
+     * Gets the dependency of the edge.
+     *
+     * @return The dependency as double.
+     * @see Edge#setDependency
+     */
 	public double getDependency() {
 		return dependency;
 	}
