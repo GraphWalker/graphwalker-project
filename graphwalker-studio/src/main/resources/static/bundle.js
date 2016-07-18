@@ -527,11 +527,45 @@ var graphwalker =
 	var currentElement;
 
 	function onLoadModel() {
-	  $('<input type="file" class="ui-helper-hidden-accessible" />').appendTo('body').focus().trigger('click').remove();
+	  console.log('onLoadModel');
+	  $('<input type="file" class="ui-helper-hidden-accessible" />').appendTo('body').focus().trigger('click').remove().change(function (evt) {
+	    //      console.log('File to read: ' + this.files[0].name);
+	    //      readGraphsFromFile(this.files[0].name);
+	    var files = evt.target.files; // FileList object
+
+	    // files is a FileList of File objects. List some properties.
+	    var output = [];
+	    for (var i = 0, f; f = files[i]; i++) {
+	      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ', f.size, ' bytes, last modified: ', f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a', '</li>');
+	      var fr = new FileReader();
+	      fr.onload = function (e) {
+	        // e.target.result should contain the text
+	        readGraphFromJSON(JSON.parse(e.target.result));
+	        console.log('readGraphsFromFile: first complete');
+	        var tabs = $('#tabs');
+	        tabs.show();
+	        for (var modelId in graphs) {
+	          if (!graphs.hasOwnProperty(modelId)) {
+	            continue;
+	          }
+	          console.log('readGraphsFromFile: resize graph: ' + modelId);
+	          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+	          tabs.tabs('option', 'active', index);
+	          graphs[modelId].resize();
+	          graphs[modelId].fit();
+	        }
+	        defaultUI();
+	      };
+	      fr.readAsText(f);
+	      //readGraphsFromFile(f);
+	    }
+	    //    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+	    console.log(output.join(''));
+	  });
 	}
 
 	function onSaveModel() {
-	  console.log('onSaveModel called');
+	  console.log('onSaveModel');
 	}
 
 	function onPausePlayExecution(element) {
@@ -589,7 +623,7 @@ var graphwalker =
 
 	  var start = {
 	    command: 'start',
-	    gw3: {
+	    gw: {
 	      name: 'GraphWalker Studio',
 	      models: []
 	    }
@@ -663,7 +697,7 @@ var graphwalker =
 	      };
 	      model.edges.push(newEdge);
 	    });
-	    start.gw3.models.push(model);
+	    start.gw.models.push(model);
 	  }
 
 	  doSend(JSON.stringify(start));
@@ -674,7 +708,7 @@ var graphwalker =
 	  console.log('onResetModel: ' + currentModelId);
 	  defaultUI();
 
-	  issues.innerHTML = 'Ready';
+	  document.getElementById('issues').innerHTML = 'Ready';
 
 	  for (var modelId in graphs) {
 	    if (!graphs.hasOwnProperty(modelId)) {
@@ -848,14 +882,6 @@ var graphwalker =
 	      graphs[currentModelId].requirements = modelRequirements.val();
 	    }
 	  });
-
-	  /**
-	   * Place the gw3 files in:
-	   * graphwalker-studio/src/main/resources/static/
-	   **/
-	  //readGraphsFromFile('Login.gw3');
-	  //readGraphsFromFile('UC01.gw3');
-	  //readGraphsFromFile('petClinic.gw3');
 	});
 
 	function createTab(modelId, modelName) {
@@ -1419,7 +1445,7 @@ var graphwalker =
 	      break;
 	    case 'start':
 	      if (message.success) {
-	        issues.innerHTML = 'No issues';
+	        document.getElementById('issues').innerHTML = 'No issues';
 	        console.log('Command start ok');
 	        document.dispatchEvent(startEvent);
 	      } else {
@@ -1427,14 +1453,14 @@ var graphwalker =
 	      }
 	      break;
 	    case 'issues':
-	      issues.innerHTML = message.issues;
+	      document.getElementById('issues').innerHTML = message.issues;
 	      break;
 	    case 'noIssues':
-	      issues.innerHTML = 'No issues';
+	      document.getElementById('issues').innerHTML = 'No issues';
 	      break;
 	    case 'visitedElement':
 	      console.log('Command visitedElement. Will color green on (modelId, elementId): ' + message.modelId + ', ' + message.elementId);
-	      issues.innerHTML = 'Steps: ' + message.totalCount + ', Done: ' + (message.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(message.data);
+	      document.getElementById('issues').innerHTML = 'Steps: ' + message.totalCount + ', Done: ' + (message.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(message.data);
 
 	      currentModelId = message.modelId;
 	      graphs[currentModelId].nodes().unselect();

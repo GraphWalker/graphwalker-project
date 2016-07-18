@@ -287,16 +287,16 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
       case "START":
         response.put("command", "start");
         response.put("success", false);
-        List<Context> gw3Contexts = null;
+        List<Context> contexts = null;
         try {
-          gw3Contexts = new JsonContextFactory().create(root.getJSONObject("gw3").toString());
-          Machine machine = new SimpleMachine(gw3Contexts);
+          contexts = new JsonContextFactory().create(root.getJSONObject("gw").toString());
+          Machine machine = new SimpleMachine(contexts);
           machine.addObserver(this);
           machines.put(socket, machine);
           response.put("success", true);
         } catch (Exception e) {
           logger.error(e.getMessage());
-          List<String> issues = checkContexts(socket, gw3Contexts);
+          List<String> issues = checkContexts(socket, contexts);
           issues.add(e.getMessage());
           sendIssues(socket, issues);
         }
