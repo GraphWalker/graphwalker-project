@@ -156,4 +156,12 @@ public class GeneratorFactoryTest {
     Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
     Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
   }
+  
+  @Test // Single stop condition
+  public void test13() {
+	    PathGenerator generator = GeneratorFactory.parse("random(dependency_edge_coverage(80))");
+	    Assert.assertThat(generator, instanceOf(RandomPath.class));
+	    Assert.assertThat(generator.getStopCondition(), instanceOf(DependencyEdgeCoverage.class));
+	    Assert.assertThat(((DependencyEdgeCoverage) generator.getStopCondition()).getDependency(), is(80));
+	  }
 }
