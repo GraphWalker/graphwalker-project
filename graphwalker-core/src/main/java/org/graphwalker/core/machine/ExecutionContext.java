@@ -272,7 +272,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   public boolean isAvailable(RuntimeEdge edge) {
     if (edge.hasGuard()) {
-      LOG.debug("Execute {} {}", edge.getGuard(), edge.getGuard().getScript());
+      LOG.debug("Execute: '{}' in model: '{}'", edge.getGuard().getScript(), getModel().getName());
       try {
         return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());
       } catch (ScriptException e) {
@@ -284,7 +284,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   public void execute(Action action) {
-    LOG.debug("Execute {}", action.getScript());
+    LOG.debug("Execute: '{}' in model: '{}'", action.getScript(), getModel().getName());
     try {
       getScriptEngine().eval(action.getScript());
     } catch (ScriptException e) {
@@ -294,7 +294,6 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   public void execute(String name) {
-    LOG.debug("Execute {}", name);
     try {
       getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
       getScriptEngine().eval(name + "()");
