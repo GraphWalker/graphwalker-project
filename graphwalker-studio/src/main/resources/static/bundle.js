@@ -529,26 +529,19 @@ var graphwalker =
 	function onLoadModel() {
 	  console.log('onLoadModel');
 	  $('<input type="file" class="ui-helper-hidden-accessible" />').appendTo('body').focus().trigger('click').remove().change(function (evt) {
-	    //      console.log('File to read: ' + this.files[0].name);
-	    //      readGraphsFromFile(this.files[0].name);
 	    var files = evt.target.files; // FileList object
 
 	    // files is a FileList of File objects. List some properties.
-	    var output = [];
 	    for (var i = 0, f; f = files[i]; i++) {
-	      output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ', f.size, ' bytes, last modified: ', f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a', '</li>');
 	      var fr = new FileReader();
 	      fr.onload = function (e) {
-	        // e.target.result should contain the text
 	        readGraphFromJSON(JSON.parse(e.target.result));
-	        console.log('readGraphsFromFile: first complete');
 	        var tabs = $('#tabs');
 	        tabs.show();
 	        for (var modelId in graphs) {
 	          if (!graphs.hasOwnProperty(modelId)) {
 	            continue;
 	          }
-	          console.log('readGraphsFromFile: resize graph: ' + modelId);
 	          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
 	          tabs.tabs('option', 'active', index);
 	          graphs[modelId].resize();
@@ -557,10 +550,7 @@ var graphwalker =
 	        defaultUI();
 	      };
 	      fr.readAsText(f);
-	      //readGraphsFromFile(f);
 	    }
-	    //    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
-	    console.log(output.join(''));
 	  });
 	}
 
@@ -654,12 +644,18 @@ var graphwalker =
 	    if (graphs[modelId].startElementId !== undefined) {
 	      model.startElementId = graphs[modelId].startElementId;
 	    }
+
+	    /**
+	    * Iterate ove all nodes in the graph, and create a json
+	    * representation of the vertex
+	    */
 	    graphs[modelId].nodes().each(function (index, node) {
 
 	      actions = [];
 	      if (node.data().actions) {
 	        actions.push(node.data().actions);
 	      }
+
 	      requirements = [];
 	      if (node.data().requirements) {
 	        requirements = node.data().requirements.split(',');
@@ -675,11 +671,18 @@ var graphwalker =
 	      };
 	      model.vertices.push(vertex);
 	    });
+
+	    /**
+	    * Iterate ove all edges in the graph, and create a json
+	    * representation of the edge
+	    */
 	    graphs[modelId].edges().each(function (index, edge) {
+
 	      actions = [];
 	      if (edge.data().actions) {
 	        actions.push(edge.data().actions);
 	      }
+
 	      requirements = [];
 	      if (edge.data().requirements) {
 	        requirements = edge.data().requirements.split(',');
@@ -697,6 +700,7 @@ var graphwalker =
 	      };
 	      model.edges.push(newEdge);
 	    });
+
 	    start.gw.models.push(model);
 	  }
 
@@ -1165,35 +1169,6 @@ var graphwalker =
 	  return graph;
 	}
 
-	function readGraphsFromFile(fileName) {
-	  console.log('readGraphFromFile - ' + fileName);
-	  // Assign handlers immediately after making the request,
-	  // and remember the jqxhr object for this request
-	  var tabs = $('#tabs');
-	  $.getJSON(fileName, function () {
-	    console.log('readGraphsFromFile: success');
-	  }).done(function (jsonGraphs) {
-	    console.log('readGraphsFromFile: done');
-	    readGraphFromJSON(jsonGraphs);
-	  }).fail(function () {
-	    console.log('readGraphsFromFile: error');
-	  }).always(function () {
-	    console.log('readGraphsFromFile: first complete');
-	    tabs.show();
-	    for (var modelId in graphs) {
-	      if (!graphs.hasOwnProperty(modelId)) {
-	        continue;
-	      }
-	      console.log('readGraphsFromFile: resize graph: ' + modelId);
-	      var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
-	      tabs.tabs('option', 'active', index);
-	      graphs[modelId].resize();
-	      graphs[modelId].fit();
-	    }
-	    defaultUI();
-	  });
-	}
-
 	function readGraphFromJSON(jsonGraphs) {
 	  var jsonModels = jsonGraphs.models;
 	  var graphs = [];
@@ -1240,8 +1215,9 @@ var graphwalker =
 	        jsonVertex.properties = {};
 	      }
 
-	      var vertexActions;
-	      var vertexRequirements;
+	      var vertexActions = '';
+	      var vertexRequirements = '';
+
 	      if (jsonVertex.hasOwnProperty('actions')) {
 	        vertexActions = jsonVertex.actions.join('');
 	      }
@@ -1295,8 +1271,9 @@ var graphwalker =
 	        });
 	      }
 
-	      var edgeActions;
-	      var edgeRequirements;
+	      var edgeActions = '';
+	      var edgeRequirements = '';
+
 	      if (jsonEdge.hasOwnProperty('actions')) {
 	        edgeActions = jsonEdge.actions.join('');
 	      }
