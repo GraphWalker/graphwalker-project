@@ -294,6 +294,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   public void execute(String name) {
+    LOG.debug("Execute: '{}' in model: '{}'", name, getModel().getName());
     try {
       getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
       getScriptEngine().eval(name + "()");
