@@ -235,4 +235,10 @@ public class JsonContextFactoryTest {
       logger.debug(e.getName());
     }
   }
+  
+  @Test
+  public void acceptDependencyJsonTest() {
+    ContextFactory factory = new JsonContextFactory();
+    Assert.assertTrue(factory.accept(Paths.get("json/DependencyModel.json")));
+  }
 }
