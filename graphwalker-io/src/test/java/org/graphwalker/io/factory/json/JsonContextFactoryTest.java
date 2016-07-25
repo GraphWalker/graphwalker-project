@@ -237,8 +237,26 @@ public class JsonContextFactoryTest {
   }
   
   @Test
-  public void acceptDependencyJsonTest() {
-    ContextFactory factory = new JsonContextFactory();
-    Assert.assertTrue(factory.accept(Paths.get("json/DependencyModel.json")));
+  public void acceptDependencyJsonTest() throws IOException {
+	    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/DependencyModel.json"));
+	    Assert.assertNotNull(contexts);
+	    Assert.assertThat(contexts.size(), is(1));
+
+	    Context context = contexts.get(0);
+
+	    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+	    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+
+	    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
+	    Assert.assertThat(e.getDependency(), is(100d));
+
+	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e1");
+	    Assert.assertThat(e.getDependency(), is(100d));
+
+	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e2");
+	    Assert.assertThat(e.getDependency(), is(85d));
+
+	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e3");
+	    Assert.assertThat(e.getDependency(), is(15d));
   }
 }
