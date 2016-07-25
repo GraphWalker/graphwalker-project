@@ -26,16 +26,13 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.concurrent.*;
-
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.core.Is.is;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 public class OnlineTest extends CLITestRoot {
@@ -54,31 +51,26 @@ public class OnlineTest extends CLITestRoot {
     }
   }
 
-  @Test
+  @Test(timeout=60000)
   public void websocket() throws IOException, ExecutionException, InterruptedException {
 
     RunOnlineWebsocketService runOnlineService = new RunOnlineWebsocketService();
     final ExecutorService executor = Executors.newSingleThreadExecutor();
-    final Future future = executor.submit(runOnlineService);
-    executor.shutdown();
-
-    try {
-      future.get(5, TimeUnit.SECONDS);
-    } catch (TimeoutException e) {
-      ; // ignore
-    }
 
     String actualOutput = "";
+    do {
+      Thread.sleep(100);
+      if (runOnlineService != null && runOnlineService.getResult() != null) {
+        actualOutput = runOnlineService.getResult().getOutput();
+      }
+    } while (actualOutput.contains("GraphWalkerServer started on port:"));
+
+    executor.shutdown();
+
     if (!executor.isTerminated()) {
       executor.shutdownNow();
       executor.awaitTermination(5, TimeUnit.SECONDS);
-      Assert.assertNotNull(runOnlineService);
-      Assert.assertNotNull(runOnlineService.getResult());
-      Assert.assertNotNull(runOnlineService.getResult().getOutput());
-      actualOutput = runOnlineService.getResult().getOutput();
     }
-
-    Assert.assertThat(actualOutput, containsString("GraphWalkerServer started on port:"));
   }
 
 
@@ -96,33 +88,28 @@ public class OnlineTest extends CLITestRoot {
     }
   }
 
-  @Test
+  @Test(timeout=60000)
   public void restful() throws IOException, ExecutionException, InterruptedException {
 
     RunOnlineRestfulService runOnlineService = new RunOnlineRestfulService();
     final ExecutorService executor = Executors.newSingleThreadExecutor();
-    final Future future = executor.submit(runOnlineService);
-    executor.shutdown();
-
-    try {
-      future.get(60, TimeUnit.SECONDS);
-    } catch (TimeoutException e) {
-      ;
-    }
 
     String actualOutput = "";
+    do {
+      Thread.sleep(100);
+      if (runOnlineService != null && runOnlineService.getResult() != null) {
+        actualOutput = runOnlineService.getResult().getOutput();
+      }
+    }
+    while (actualOutput.contains("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext" +
+      System.lineSeparator() +
+      "Press Control+C to end..."));
+
+    executor.shutdown();
+
     if (!executor.isTerminated()) {
       executor.shutdownNow();
       executor.awaitTermination(5, TimeUnit.SECONDS);
-      Assert.assertNotNull(runOnlineService);
-      Assert.assertNotNull(runOnlineService.getResult());
-      Assert.assertNotNull(runOnlineService.getResult().getOutput());
-      actualOutput = runOnlineService.getResult().getOutput();
     }
-
-    Assert.assertThat(actualOutput,
-      containsString("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext" +
-      System.lineSeparator() +
-      "Press Control+C to end..."));
   }
 }
