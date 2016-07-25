@@ -1,1 +1,195 @@
-{"name":"VISMODEL","models":[{"name":"Login","id":"01292806-585e-45c6-a257-c413680dc8cf","generator":"random(edge_coverage(100))","vertices":[{"id":"08af39de-eb56-4cef-8b8e-6913dd266dd7","name":"v_AppNotRunning","sharedState":"","actions":[""],"requirements":[""],"properties":{"blocked":false,"x":227.508056640625,"y":108.1875}},{"id":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec","name":"v_Login","sharedState":"","actions":[""],"requirements":[""],"properties":{"blocked":false,"x":376.008056640625,"y":247.1875}},{"id":"11dd00e5-9071-4b08-b64c-727fa67052b9","name":"v_Browse","sharedState":"","actions":[""],"requirements":[""],"properties":{"blocked":false,"x":225.65625,"y":398.1875}}],"edges":[{"id":"c8d3e7f1-0f64-4ba5-8a51-fc5ec538aaa9","name":"e_Start","guard":"validCredentials && rememberMe","actions":[""],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"08af39de-eb56-4cef-8b8e-6913dd266dd7","targetVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec"},{"id":"cb8d327e-b394-48ed-8fda-969353e45ccc","name":"e_ValidCredentials","guard":"","actions":["validCredentials = true;"],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec","targetVertexId":"11dd00e5-9071-4b08-b64c-727fa67052b9"},{"id":"4a991507-d294-4b13-b2be-721c3dfac5b9","name":"e_Start","guard":"!validCredentials || !rememberMe","actions":[""],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"08af39de-eb56-4cef-8b8e-6913dd266dd7","targetVertexId":"11dd00e5-9071-4b08-b64c-727fa67052b9"},{"id":"84522ead-744f-4f18-b524-d860f2ed7a61","name":"e_Logout","guard":"","actions":[""],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"11dd00e5-9071-4b08-b64c-727fa67052b9","targetVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec"},{"id":"daf1cfbe-e0a5-473f-872b-953e1123a349","name":"e_Close","guard":"","actions":[""],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec","targetVertexId":"08af39de-eb56-4cef-8b8e-6913dd266dd7"},{"id":"5b88ffb8-3454-4e84-87ef-45beb911bcdc","name":"e_Exit","guard":"","actions":[""],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"11dd00e5-9071-4b08-b64c-727fa67052b9","targetVertexId":"08af39de-eb56-4cef-8b8e-6913dd266dd7"},{"id":"00e3d072-80f3-4332-9099-ee56edc92ccc","name":"e_RememberMe","guard":"","actions":["rememberMe = !rememberMe;"],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec","targetVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec"},{"id":"7528b9d9-51f2-4d6f-9a73-18787898b4a7","name":"e_InvalidCredentials","guard":"","actions":["validCredentials = false;"],"requirements":[""],"properties":{"blocked":false},"sourceVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec","targetVertexId":"7fb53ccb-6991-46e2-bab6-5ba6bc28faec"}]}]}
+{
+  "name": "VISMODEL",
+  "models": [
+    {
+      "name": "Login",
+      "id": "01292806-585e-45c6-a257-c413680dc8cf",
+      "generator": "random(edge_coverage(100))",
+      "actions": [
+        "validCredentials = false;",
+        "rememberMe = false;"
+      ],
+      "vertices": [
+        {
+          "id": "08af39de-eb56-4cef-8b8e-6913dd266dd7",
+          "name": "v_AppNotRunning",
+          "sharedState": "",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false,
+            "x": 227.508056640625,
+            "y": 108.1875
+          }
+        },
+        {
+          "id": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec",
+          "name": "v_Login",
+          "sharedState": "",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false,
+            "x": 376.008056640625,
+            "y": 247.1875
+          }
+        },
+        {
+          "id": "11dd00e5-9071-4b08-b64c-727fa67052b9",
+          "name": "v_Browse",
+          "sharedState": "",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false,
+            "x": 225.65625,
+            "y": 398.1875
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "c8d3e7f1-0f64-4ba5-8a51-fc5ec538aaa9",
+          "name": "e_Start",
+          "guard": "validCredentials && rememberMe",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "08af39de-eb56-4cef-8b8e-6913dd266dd7",
+          "targetVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec"
+        },
+        {
+          "id": "cb8d327e-b394-48ed-8fda-969353e45ccc",
+          "name": "e_ValidCredentials",
+          "guard": "",
+          "actions": [
+            "validCredentials = true;"
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec",
+          "targetVertexId": "11dd00e5-9071-4b08-b64c-727fa67052b9"
+        },
+        {
+          "id": "4a991507-d294-4b13-b2be-721c3dfac5b9",
+          "name": "e_Start",
+          "guard": "!validCredentials || !rememberMe",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "08af39de-eb56-4cef-8b8e-6913dd266dd7",
+          "targetVertexId": "11dd00e5-9071-4b08-b64c-727fa67052b9"
+        },
+        {
+          "id": "84522ead-744f-4f18-b524-d860f2ed7a61",
+          "name": "e_Logout",
+          "guard": "",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "11dd00e5-9071-4b08-b64c-727fa67052b9",
+          "targetVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec"
+        },
+        {
+          "id": "daf1cfbe-e0a5-473f-872b-953e1123a349",
+          "name": "e_Close",
+          "guard": "",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec",
+          "targetVertexId": "08af39de-eb56-4cef-8b8e-6913dd266dd7"
+        },
+        {
+          "id": "5b88ffb8-3454-4e84-87ef-45beb911bcdc",
+          "name": "e_Exit",
+          "guard": "",
+          "actions": [
+            ""
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "11dd00e5-9071-4b08-b64c-727fa67052b9",
+          "targetVertexId": "08af39de-eb56-4cef-8b8e-6913dd266dd7"
+        },
+        {
+          "id": "00e3d072-80f3-4332-9099-ee56edc92ccc",
+          "name": "e_RememberMe",
+          "guard": "",
+          "actions": [
+            "rememberMe = !rememberMe;"
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec",
+          "targetVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec"
+        },
+        {
+          "id": "7528b9d9-51f2-4d6f-9a73-18787898b4a7",
+          "name": "e_InvalidCredentials",
+          "guard": "",
+          "actions": [
+            "validCredentials = false;"
+          ],
+          "requirements": [
+            ""
+          ],
+          "properties": {
+            "blocked": false
+          },
+          "sourceVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec",
+          "targetVertexId": "7fb53ccb-6991-46e2-bab6-5ba6bc28faec"
+        }
+      ],
+      "startElementId": "08af39de-eb56-4cef-8b8e-6913dd266dd7"
+    }
+  ]
+}

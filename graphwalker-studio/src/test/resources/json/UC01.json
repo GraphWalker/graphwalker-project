@@ -1,1 +1,150 @@
-{"name":"VISMODEL","models":[{"name":"UC01","id":"e918f0f7-dc56-4aa3-97fb-3660654309f6","generator":"random(edge_coverage(100))","vertices":[{"id":"n1","name":"v_BrowserStarted","properties":{"x":159.98095238095237,"y":155.93750000000006}},{"id":"n2","name":"v_BaseURL","properties":{"x":177.66112816220237,"y":233.9062500000001}},{"id":"n3","name":"v_SearchResult","properties":{"x":177.7709271143353,"y":356.1279296875001}},{"id":"n4","name":"v_BrowserStopped","properties":{"x":156.48095238095237,"y":77.96875000000007}},{"id":"n5","name":"v_BookInformation","properties":{"x":195.17720114087302,"y":463.3496093750001}},{"id":"n6","name":"v_OtherBoughtBooks","properties":{"x":373.93650793650795,"y":585.5712890625002}},{"id":"n7","name":"v_ShoppingCart","properties":{"x":159.4831783234127,"y":693.5400390625002}}],"edges":[{"id":"e0","name":"e_init","actions":[" num_of_books = 0;"," MAX_BOOKS = 5;"],"targetVertexId":"n4"},{"id":"e1","name":"e_EnterBaseURL","sourceVertexId":"n1","targetVertexId":"n2"},{"id":"e2","name":"e_SearchBook","sourceVertexId":"n2","targetVertexId":"n3"},{"id":"e3","name":"e_StartBrowser","sourceVertexId":"n4","targetVertexId":"n1"},{"id":"e4","name":"e_ClickBook","sourceVertexId":"n3","targetVertexId":"n5"},{"id":"e5","name":"e_AddBookToCart","guard":"num_of_books<=MAX_BOOKS","actions":[" num_of_books++;"],"sourceVertexId":"n5","targetVertexId":"n6"},{"id":"e6","name":"e_ShoppingCart","sourceVertexId":"n6","targetVertexId":"n7"},{"id":"e7","name":"e_ShoppingCart","sourceVertexId":"n3","targetVertexId":"n7"},{"id":"e8","name":"e_ShoppingCart","sourceVertexId":"n5","targetVertexId":"n7"},{"id":"e9","name":"e_SearchBook","sourceVertexId":"n7","targetVertexId":"n3"},{"id":"e10","name":"e_SearchBook","sourceVertexId":"n6","targetVertexId":"n3"},{"id":"e11","name":"e_SearchBook","sourceVertexId":"n5","targetVertexId":"n3"}],"startElementId":"e0"}]}
+{
+  "name": "VISMODEL",
+  "models": [
+    {
+      "name": "UC01",
+      "id": "e918f0f7-dc56-4aa3-97fb-3660654309f6",
+      "generator": "random(edge_coverage(100))",
+      "vertices": [
+        {
+          "id": "n1",
+          "name": "v_BrowserStarted",
+          "properties": {
+            "x": 159.98095238095237,
+            "y": 155.93750000000006
+          }
+        },
+        {
+          "id": "n2",
+          "name": "v_BaseURL",
+          "properties": {
+            "x": 177.66112816220237,
+            "y": 233.9062500000001
+          }
+        },
+        {
+          "id": "n3",
+          "name": "v_SearchResult",
+          "properties": {
+            "x": 177.7709271143353,
+            "y": 356.1279296875001
+          }
+        },
+        {
+          "id": "n4",
+          "name": "v_BrowserStopped",
+          "properties": {
+            "x": 156.48095238095237,
+            "y": 77.96875000000007
+          }
+        },
+        {
+          "id": "n5",
+          "name": "v_BookInformation",
+          "properties": {
+            "x": 195.17720114087302,
+            "y": 463.3496093750001
+          }
+        },
+        {
+          "id": "n6",
+          "name": "v_OtherBoughtBooks",
+          "properties": {
+            "x": 373.93650793650795,
+            "y": 585.5712890625002
+          }
+        },
+        {
+          "id": "n7",
+          "name": "v_ShoppingCart",
+          "properties": {
+            "x": 159.4831783234127,
+            "y": 693.5400390625002
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e0",
+          "name": "e_init",
+          "actions": [
+            " num_of_books = 0;",
+            " MAX_BOOKS = 5;"
+          ],
+          "targetVertexId": "n4"
+        },
+        {
+          "id": "e1",
+          "name": "e_EnterBaseURL",
+          "sourceVertexId": "n1",
+          "targetVertexId": "n2"
+        },
+        {
+          "id": "e2",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n2",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e3",
+          "name": "e_StartBrowser",
+          "sourceVertexId": "n4",
+          "targetVertexId": "n1"
+        },
+        {
+          "id": "e4",
+          "name": "e_ClickBook",
+          "sourceVertexId": "n3",
+          "targetVertexId": "n5"
+        },
+        {
+          "id": "e5",
+          "name": "e_AddBookToCart",
+          "guard": "num_of_books<=MAX_BOOKS",
+          "actions": [
+            " num_of_books++;"
+          ],
+          "sourceVertexId": "n5",
+          "targetVertexId": "n6"
+        },
+        {
+          "id": "e6",
+          "name": "e_ShoppingCart",
+          "sourceVertexId": "n6",
+          "targetVertexId": "n7"
+        },
+        {
+          "id": "e7",
+          "name": "e_ShoppingCart",
+          "sourceVertexId": "n3",
+          "targetVertexId": "n7"
+        },
+        {
+          "id": "e8",
+          "name": "e_ShoppingCart",
+          "sourceVertexId": "n5",
+          "targetVertexId": "n7"
+        },
+        {
+          "id": "e9",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n7",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e10",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n6",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e11",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n5",
+          "targetVertexId": "n3"
+        }
+      ],
+      "startElementId": "e0"
+    }
+  ]
+}

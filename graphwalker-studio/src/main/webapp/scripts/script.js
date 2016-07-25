@@ -11,15 +11,40 @@ var issues;
 var currentElement;
 
 export function onLoadModel() {
+  console.log('onLoadModel');
   $('<input type="file" class="ui-helper-hidden-accessible" />')
     .appendTo('body')
     .focus()
     .trigger('click')
-    .remove();
+    .remove()
+    .change(function(evt) {
+      var files = evt.target.files; // FileList object
+
+      // files is a FileList of File objects. List some properties.
+      for (var i = 0, f; f = files[i]; i++) {
+        var fr = new FileReader();
+        fr.onload = function(e) {
+            readGraphFromJSON(JSON.parse(e.target.result));
+            var tabs = $('#tabs');
+            tabs.show();
+            for (var modelId in graphs) {
+              if (!graphs.hasOwnProperty(modelId)) {
+                continue;
+              }
+              var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+              tabs.tabs('option', 'active', index);
+              graphs[modelId].resize();
+              graphs[modelId].fit();
+            }
+            defaultUI();
+        };
+        fr.readAsText(f);
+      }
+    });
 }
 
 export function onSaveModel() {
-  console.log('onSaveModel called');
+  console.log('onSaveModel');
 }
 
 export function onPausePlayExecution(element) {
@@ -78,7 +103,7 @@ export function onRunModel() {
 
   var start = {
     command: 'start',
-    gw3: {
+    gw: {
       name: 'GraphWalker Studio',
       models: []
     }
@@ -109,12 +134,19 @@ export function onRunModel() {
     if (graphs[modelId].startElementId !== undefined) {
       model.startElementId = graphs[modelId].startElementId;
     }
+
+
+    /**
+    * Iterate ove all nodes in the graph, and create a json
+    * representation of the vertex
+    */
     graphs[modelId].nodes().each(function( index, node) {
 
       actions = [];
       if (node.data().actions) {
         actions.push(node.data().actions);
       }
+
       requirements = [];
       if (node.data().requirements) {
         requirements = node.data().requirements.split(',');
@@ -129,12 +161,21 @@ export function onRunModel() {
         properties: node.data().properties
       };
       model.vertices.push(vertex);
+
     });
+
+
+    /**
+    * Iterate ove all edges in the graph, and create a json
+    * representation of the edge
+    */
     graphs[modelId].edges().each(function(index, edge) {
+
       actions = [];
       if (edge.data().actions) {
         actions.push(edge.data().actions);
       }
+
       requirements = [];
       if (edge.data().requirements) {
         requirements = edge.data().requirements.split(',');
@@ -151,8 +192,10 @@ export function onRunModel() {
         targetVertexId: edge.data().target
       };
       model.edges.push(newEdge);
+
     });
-    start.gw3.models.push(model);
+
+    start.gw.models.push(model);
   }
 
   doSend(JSON.stringify(start));
@@ -163,7 +206,7 @@ export function onResetModel() {
   console.log('onResetModel: ' + currentModelId);
   defaultUI();
 
-  issues.innerHTML = 'Ready';
+  document.getElementById('issues').innerHTML = 'Ready';
 
   for (var modelId in graphs) {
     if (!graphs.hasOwnProperty(modelId)) {
@@ -340,14 +383,6 @@ document.addEventListener('DOMContentLoaded', function () {
       graphs[currentModelId].requirements = modelRequirements.val();
     }
   });
-
-  /**
-   * Place the gw3 files in:
-   * graphwalker-studio/src/main/resources/static/
-   **/
-  //readGraphsFromFile('Login.gw3');
-  //readGraphsFromFile('UC01.gw3');
-  //readGraphsFromFile('petClinic.gw3');
 });
 
 
@@ -635,38 +670,6 @@ function createGraph(currentModelId) {
   return graph;
 }
 
-function readGraphsFromFile(fileName) {
-  console.log('readGraphFromFile - ' + fileName);
-  // Assign handlers immediately after making the request,
-  // and remember the jqxhr object for this request
-  var tabs = $('#tabs');
-  $.getJSON(fileName, function () {
-      console.log('readGraphsFromFile: success');
-    })
-    .done(function (jsonGraphs) {
-      console.log('readGraphsFromFile: done');
-      readGraphFromJSON(jsonGraphs);
-    })
-    .fail(function () {
-      console.log('readGraphsFromFile: error');
-    })
-    .always(function () {
-      console.log('readGraphsFromFile: first complete');
-      tabs.show();
-      for (var modelId in graphs) {
-        if (!graphs.hasOwnProperty(modelId)) {
-          continue;
-        }
-        console.log('readGraphsFromFile: resize graph: ' + modelId);
-        var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
-        tabs.tabs('option', 'active', index);
-        graphs[modelId].resize();
-        graphs[modelId].fit();
-      }
-      defaultUI();
-    });
-}
-
 function readGraphFromJSON(jsonGraphs) {
   var jsonModels = jsonGraphs.models;
   var graphs = [];
@@ -712,8 +715,9 @@ function readGraphFromJSON(jsonGraphs) {
         jsonVertex.properties = {};
       }
 
-      var vertexActions;
-      var vertexRequirements;
+      var vertexActions = '';
+      var vertexRequirements = '';
+
       if (jsonVertex.hasOwnProperty('actions')) {
         vertexActions = jsonVertex.actions.join('');
       }
@@ -767,8 +771,9 @@ function readGraphFromJSON(jsonGraphs) {
         });
       }
 
-      var edgeActions;
-      var edgeRequirements;
+      var edgeActions = '';
+      var edgeRequirements = '';
+
       if (jsonEdge.hasOwnProperty('actions')) {
         edgeActions = jsonEdge.actions.join('');
       }
@@ -918,7 +923,7 @@ function onMessage(event) {
       break;
     case 'start':
       if (message.success) {
-        issues.innerHTML = 'No issues';
+        document.getElementById('issues').innerHTML = 'No issues';
         console.log('Command start ok');
         document.dispatchEvent(startEvent);
       } else {
@@ -926,15 +931,15 @@ function onMessage(event) {
       }
       break;
     case 'issues':
-      issues.innerHTML = message.issues;
+      document.getElementById('issues').innerHTML = message.issues;
       break;
     case 'noIssues':
-      issues.innerHTML = 'No issues';
+      document.getElementById('issues').innerHTML = 'No issues';
       break;
     case 'visitedElement':
       console.log('Command visitedElement. Will color green on (modelId, elementId): ' +
         message.modelId + ', ' + message.elementId);
-      issues.innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
+      document.getElementById('issues').innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
         (message.stopConditionFulfillment * 100).toFixed(0) +
         '%, data: ' + JSON.stringify(message.data);
 
