@@ -1001,9 +1001,12 @@ function onMessage(event) {
     case 'visitedElement':
       console.log('Command visitedElement. Will color green on (modelId, elementId): ' +
         message.modelId + ', ' + message.elementId);
-      document.getElementById('issues').innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
-        (message.stopConditionFulfillment * 100).toFixed(0) +
-        '%, data: ' + JSON.stringify(message.data);
+      var str = 'Steps: ' + message.totalCount + ', Fulfilment: ' +
+                           (message.stopConditionFulfillment * 100).toFixed(0) + '%';
+      if (!jQuery.isEmptyObject(message.data)) {
+        str += ', Data: ' + JSON.stringify(message.data);
+      }
+      document.getElementById('issues').innerHTML = str;
 
       currentModelId = message.modelId;
       graphs[currentModelId].nodes().unselect();
