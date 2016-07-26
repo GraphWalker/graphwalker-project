@@ -40,11 +40,148 @@ export function onLoadModel() {
         };
         fr.readAsText(f);
       }
-    });
+  });
 }
 
 export function onSaveModel() {
   console.log('onSaveModel');
+  var link = document.createElement('a');
+  link.setAttribute('download', graphs.name + '.json');
+  link.href = makeJsonGraphFile();
+  document.body.appendChild(link);
+
+  // wait for the link to be added to the document
+  window.requestAnimationFrame(function () {
+    var event = new MouseEvent('click');
+    link.dispatchEvent(event);
+    document.body.removeChild(link);
+  });
+}
+
+export function makeJsonGraphFile() {
+  console.log('makeJsonGraphFile');
+  var jsonFile = null;
+  var data = new Blob([JSON.stringify(generateJsonGraph())], {type: 'text/plain'});
+
+  // If we are replacing a previously generated file we need to
+  // manually revoke the object URL to avoid memory leaks.
+  if (jsonFile !== null) {
+    window.URL.revokeObjectURL(jsonFile);
+  }
+
+  jsonFile = window.URL.createObjectURL(data);
+
+  return jsonFile;
+}
+
+export function generateJsonGraph() {
+  var jsonGraphs = {
+    name: graphs.name,
+    models: []
+  };
+  for (var modelId in graphs) {
+    if (!graphs.hasOwnProperty(modelId)) {
+      continue;
+    }
+
+    var actions = [];
+    if (graphs[modelId].actions) {
+      actions.push(graphs[modelId].actions);
+    }
+    var requirements = [];
+    if (graphs[modelId].requirements) {
+      requirements = graphs[modelId].requirements.split(',');
+    }
+
+    var model = {
+      name: graphs[modelId].name,
+      id: modelId,
+      generator: graphs[modelId].generator,
+      actions: actions,
+      vertices: [],
+      edges: []
+    };
+
+    if (graphs[modelId].startElementId !== undefined) {
+      model.startElementId = graphs[modelId].startElementId;
+    }
+
+
+    /**
+    * Iterate ove all nodes in the graph, and create a json
+    * representation of the vertex
+    */
+    graphs[modelId].nodes().each(function( index, node) {
+
+      var actions = [];
+      if (node.data().actions) {
+        actions.push(node.data().actions);
+      }
+
+      var requirements = [];
+      if (node.data().requirements) {
+        requirements = node.data().requirements.split(',');
+      }
+
+      var properties = {};
+      if (node.data().properties) {
+        properties = node.data().properties;
+      }
+      properties['x'] = node.position().x;
+      properties['y'] = node.position().y;
+
+      var vertex = {
+        id: node.data().id,
+        name: node.data().label,
+        sharedState: node.data().sharedState,
+        actions: actions,
+        requirements: requirements,
+        properties: properties
+      };
+      model.vertices.push(vertex);
+
+    });
+
+
+    /**
+    * Iterate over all edges in the graph, and create a json
+    * representation of the edge
+    */
+    graphs[modelId].edges().each(function(index, edge) {
+
+      var actions = [];
+      if (edge.data().actions) {
+        actions.push(edge.data().actions);
+      }
+
+      var requirements = [];
+      if (edge.data().requirements) {
+        requirements = edge.data().requirements.split(',');
+      }
+
+      var properties = [];
+      if (edge.data().properties) {
+        properties = edge.data().properties;
+      }
+
+      var newEdge = {
+        id: edge.data().id,
+        name: edge.data().label,
+        guard: edge.data().guard,
+        actions: actions,
+        requirements: requirements,
+        properties: properties,
+        sourceVertexId: edge.data().source,
+        targetVertexId: edge.data().target
+      };
+      model.edges.push(newEdge);
+
+    });
+
+    jsonGraphs.models.push(model);
+  }
+
+  return jsonGraphs;
 }
 
 export function onPausePlayExecution(element) {
@@ -91,6 +228,10 @@ export function onStepExecution() {
 // Run the execution of the state machine
 export function onRunModel() {
   console.log('onRunModel: ' + currentModelId);
+
+  // Reset any previous runs
+  onResetModel();
+
   $('.ui-panel').panel('close');
 
   document.getElementById('runModel').disabled = true;
@@ -103,101 +244,9 @@ export function onRunModel() {
 
   var start = {
     command: 'start',
-    gw: {
-      name: 'GraphWalker Studio',
-      models: []
-    }
   };
-  for (var modelId in graphs) {
-    if (!graphs.hasOwnProperty(modelId)) {
-      continue;
-    }
 
-    var actions = [];
-    if (graphs[modelId].actions) {
-      actions.push(graphs[modelId].actions);
-    }
-    var requirements = [];
-    if (graphs[modelId].requirements) {
-      requirements = graphs[modelId].requirements.split(',');
-    }
-
-    var model = {
-      name: graphs[modelId].name,
-      id: modelId,
-      generator: graphs[modelId].generator,
-      actions: actions,
-      vertices: [],
-      edges: []
-    };
-
-    if (graphs[modelId].startElementId !== undefined) {
-      model.startElementId = graphs[modelId].startElementId;
-    }
-
-
-    /**
-    * Iterate ove all nodes in the graph, and create a json
-    * representation of the vertex
-    */
-    graphs[modelId].nodes().each(function( index, node) {
-
-      actions = [];
-      if (node.data().actions) {
-        actions.push(node.data().actions);
-      }
-
-      requirements = [];
-      if (node.data().requirements) {
-        requirements = node.data().requirements.split(',');
-      }
-
-      var vertex = {
-        id: node.data().id,
-        name: node.data().label,
-        sharedState: node.data().sharedState,
-        actions: actions,
-        requirements: requirements,
-        properties: node.data().properties
-      };
-      model.vertices.push(vertex);
-
-    });
-
-
-    /**
-    * Iterate ove all edges in the graph, and create a json
-    * representation of the edge
-    */
-    graphs[modelId].edges().each(function(index, edge) {
-
-      actions = [];
-      if (edge.data().actions) {
-        actions.push(edge.data().actions);
-      }
-
-      requirements = [];
-      if (edge.data().requirements) {
-        requirements = edge.data().requirements.split(',');
-      }
-
-      var newEdge = {
-        id: edge.data().id,
-        name: edge.data().label,
-        guard: edge.data().guard,
-        actions: actions,
-        requirements: requirements,
-        properties: edge.data().properties,
-        sourceVertexId: edge.data().source,
-        targetVertexId: edge.data().target
-      };
-      model.edges.push(newEdge);
-
-    });
-
-    start.gw.models.push(model);
-  }
-
+  start.gw = generateJsonGraph();
   doSend(JSON.stringify(start));
 }
 
@@ -666,6 +715,9 @@ function createGraph(currentModelId) {
     }
   });
 
+  // Set default values.
+  graph.generator = 'random(edge_coverage(100))';
+
   graphs[currentModelId] = graph;
   return graph;
 }
@@ -932,6 +984,7 @@ function onMessage(event) {
       break;
     case 'issues':
       document.getElementById('issues').innerHTML = message.issues;
+      defaultUI();
       break;
     case 'noIssues':
       document.getElementById('issues').innerHTML = 'No issues';
