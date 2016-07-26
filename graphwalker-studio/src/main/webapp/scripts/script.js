@@ -587,6 +587,7 @@ function createGraph(currentModelId) {
     currentElement = null;
 
     $('#label').val('').textinput('disable');
+    $('#elementId').val('').textinput('disable');
     $('#sharedStateName').val('').textinput('disable');
     $('#guard').val('').textinput('disable');
     $('#actions').val('').textinput('disable');
@@ -597,6 +598,7 @@ function createGraph(currentModelId) {
   graph.on('tap', 'node', function() {
     currentElement = this;
     $('#label').textinput('enable').val(this.data().label);
+    $('#elementId').textinput('enable').val(this.data().id);
     $('#sharedStateName').textinput('enable').val(this.data().sharedState);
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
@@ -611,6 +613,7 @@ function createGraph(currentModelId) {
   graph.on('tap', 'edge', function() {
     currentElement = this;
     $('#label').textinput('enable').val(this.data().label);
+    $('#elementId').textinput('enable').val(this.data().id);
     $('#guard').textinput('enable').val(this.data().guard);
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
@@ -632,6 +635,12 @@ function createGraph(currentModelId) {
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
+    }
+  });
+
+  $('#elementId').on('input', function() {
+    if (currentElement) {
+      currentElement.data('id', $('#elementId').val());
     }
   });
 
