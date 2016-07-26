@@ -296,9 +296,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
           response.put("success", true);
         } catch (Exception e) {
           logger.error(e.getMessage());
-          List<String> issues = checkContexts(socket, contexts);
-          issues.add(e.getMessage());
-          sendIssues(socket, issues);
+          sendIssue(socket, e.getMessage());
         }
 
         break;
@@ -315,9 +313,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
-            List<String> issues = checkContexts(socket, machine.getContexts());
-            issues.add(e.getMessage());
-            sendIssues(socket, issues);
+            sendIssue(socket, e.getMessage());
           }
         } else {
           response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
@@ -341,9 +337,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
           }
         } catch (Exception e) {
           logger.error(e.getMessage());
-          List<String> issues = checkContexts(socket, machine.getContexts());
-          issues.add(e.getMessage());
-          sendIssues(socket, issues);
+          sendIssue(socket, e.getMessage());
         }
 
         break;
@@ -366,9 +360,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
-            List<String> issues = checkContexts(socket, machine.getContexts());
-            issues.add(e.getMessage());
-            sendIssues(socket, issues);
+            sendIssue(socket, e.getMessage());
           }
         } else {
           response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
@@ -392,6 +384,12 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
       return new ArrayList<>();
     }
     return ContextsChecker.hasIssues(contexts);
+  }
+
+  private void sendIssue(WebSocket socket, String issue) {
+    List<String> issues = new ArrayList<>();
+    issues.add(issue);
+    sendIssues(socket, issues);
   }
 
   private void sendIssues(WebSocket socket, List<String> issues) {
