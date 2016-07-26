@@ -40,77 +40,44 @@ export function onLoadModel() {
         };
         fr.readAsText(f);
       }
-    });
+  });
 }
 
 export function onSaveModel() {
   console.log('onSaveModel');
+  var link = document.createElement('a');
+  link.setAttribute('download', graphs.name + '.json');
+  link.href = makeJsonGraphFile();
+  document.body.appendChild(link);
+
+  // wait for the link to be added to the document
+  window.requestAnimationFrame(function () {
+    var event = new MouseEvent('click');
+    link.dispatchEvent(event);
+    document.body.removeChild(link);
+  });
 }
 
-export function onPausePlayExecution(element) {
-  console.log('pausePlayExecution: ' + element.innerHTML +
-    ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
-  stepExecution = false;
+export function makeJsonGraphFile() {
+  console.log('makeJsonGraphFile');
+  var jsonFile = null;
+  var data = new Blob([JSON.stringify(generateJsonGraph())], {type: 'text/plain'});
 
-  if (pauseExecution) {
-    document.getElementById('runModel').disabled = true;
-    document.getElementById('resetModel').disabled = true;
-    document.getElementById('pausePlayExecution').disabled = false;
-    document.getElementById('stepExecution').disabled = true;
-    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
-    pauseExecution = false;
-
-    var hasNext = {
-      command: 'hasNext'
-    };
-    doSend(JSON.stringify(hasNext));
-  } else {
-    document.getElementById('runModel').disabled = true;
-    document.getElementById('resetModel').disabled = false;
-    document.getElementById('pausePlayExecution').disabled = false;
-    document.getElementById('stepExecution').disabled = false;
-    document.getElementById('pausePlayExecution').innerHTML = 'Run';
-    pauseExecution = true;
+  // If we are replacing a previously generated file we need to
+  // manually revoke the object URL to avoid memory leaks.
+  if (jsonFile !== null) {
+    window.URL.revokeObjectURL(jsonFile);
   }
+
+  jsonFile = window.URL.createObjectURL(data);
+
+  return jsonFile;
 }
 
-export function onStepExecution() {
-  console.log('onStepExecution: ' + currentModelId);
-  document.getElementById('runModel').disabled = true;
-  document.getElementById('resetModel').disabled = false;
-  document.getElementById('pausePlayExecution').disabled = false;
-  document.getElementById('stepExecution').disabled = false;
-  stepExecution = true;
-
-  var hasNext = {
-    command: 'hasNext'
-  };
-  doSend(JSON.stringify(hasNext));
-}
-
-// Run the execution of the state machine
-export function onRunModel() {
-  console.log('onRunModel: ' + currentModelId);
-
-  // Reset any previous runs
-  onResetModel();
-
-  $('.ui-panel').panel('close');
-
-  document.getElementById('runModel').disabled = true;
-  document.getElementById('resetModel').disabled = true;
-  document.getElementById('pausePlayExecution').disabled = false;
-  document.getElementById('stepExecution').disabled = true;
-  document.getElementById('addModel').disabled = true;
-  stepExecution = false;
-  pauseExecution = false;
-
-  var start = {
-    command: 'start',
-    gw: {
-      name: 'GraphWalker Studio',
-      models: []
-    }
+export function generateJsonGraph() {
+  var jsonGraphs = {
+    name: graphs.name,
+    models: []
   };
   for (var modelId in graphs) {
     if (!graphs.hasOwnProperty(modelId)) {
@@ -199,9 +166,75 @@ export function onRunModel() {
 
     });
 
-    start.gw.models.push(model);
+    jsonGraphs.models.push(model);
   }
 
+  return jsonGraphs;
+}
+
+export function onPausePlayExecution(element) {
+  console.log('pausePlayExecution: ' + element.innerHTML +
+    ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
+  stepExecution = false;
+
+  if (pauseExecution) {
+    document.getElementById('runModel').disabled = true;
+    document.getElementById('resetModel').disabled = true;
+    document.getElementById('pausePlayExecution').disabled = false;
+    document.getElementById('stepExecution').disabled = true;
+    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
+    pauseExecution = false;
+
+    var hasNext = {
+      command: 'hasNext'
+    };
+    doSend(JSON.stringify(hasNext));
+  } else {
+    document.getElementById('runModel').disabled = true;
+    document.getElementById('resetModel').disabled = false;
+    document.getElementById('pausePlayExecution').disabled = false;
+    document.getElementById('stepExecution').disabled = false;
+    document.getElementById('pausePlayExecution').innerHTML = 'Run';
+    pauseExecution = true;
+  }
+}
+
+export function onStepExecution() {
+  console.log('onStepExecution: ' + currentModelId);
+  document.getElementById('runModel').disabled = true;
+  document.getElementById('resetModel').disabled = false;
+  document.getElementById('pausePlayExecution').disabled = false;
+  document.getElementById('stepExecution').disabled = false;
+  stepExecution = true;
+
+  var hasNext = {
+    command: 'hasNext'
+  };
+  doSend(JSON.stringify(hasNext));
+}
+
+// Run the execution of the state machine
+export function onRunModel() {
+  console.log('onRunModel: ' + currentModelId);
+
+  // Reset any previous runs
+  onResetModel();
+
+  $('.ui-panel').panel('close');
+
+  document.getElementById('runModel').disabled = true;
+  document.getElementById('resetModel').disabled = true;
+  document.getElementById('pausePlayExecution').disabled = false;
+  document.getElementById('stepExecution').disabled = true;
+  document.getElementById('addModel').disabled = true;
+  stepExecution = false;
+  pauseExecution = false;
+
+  var start = {
+    command: 'start',
+  };
+
+  start.gw = generateJsonGraph();
   doSend(JSON.stringify(start));
 }
 
