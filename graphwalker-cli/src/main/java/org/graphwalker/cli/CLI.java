@@ -328,6 +328,9 @@ public class CLI {
       try {
         server.start();
         Thread.currentThread().join();
+      } catch (InterruptedException e) {
+        // Typically the user pressed Ctrl+C
+        ;
       } catch (Exception e) {
         logger.error("An error occurred when running command online: ", e);
       } finally {

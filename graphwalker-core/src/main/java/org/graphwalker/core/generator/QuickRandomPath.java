@@ -33,6 +33,8 @@ import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +58,7 @@ import static org.graphwalker.core.common.Objects.isNull;
  */
 public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(QuickRandomPath.class);
   private final List<Element> elements = new ArrayList<>();
   private Element target = null;
 
@@ -77,6 +80,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
       } else {
         orderElementsUnvisitedFirst(elements);
         target = elements.get(0);
+        LOG.debug("New selected target is: {} - {}", target.getId(), target.getName());
       }
     }
     Element nextElement = context.getAlgorithm(AStar.class).getNextElement(context.getCurrentElement(), target);
