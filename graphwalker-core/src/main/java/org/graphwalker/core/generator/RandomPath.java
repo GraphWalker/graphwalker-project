@@ -67,7 +67,11 @@ public final class RandomPath extends PathGeneratorBase<StopCondition> {
     if (elements.isEmpty()) {
       LOG.error("currentElement: " + currentElement);
       LOG.error("context.getModel().getElements(): " + context.getModel().getElements());
-      throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
+      throw new NoPathFoundException("Could not find a valid path from element: " +
+        currentElement.getName() +
+        " (" +
+        currentElement.getId() +
+        ")");
     }
     context.setCurrentElement(elements.get(random.nextInt(elements.size())));
     return context;
