@@ -113,15 +113,22 @@ export function generateJsonGraph() {
     */
     graphs[modelId].nodes().each(function( index, node) {
 
-      actions = [];
+      var actions = [];
       if (node.data().actions) {
         actions.push(node.data().actions);
       }
 
-      requirements = [];
+      var requirements = [];
       if (node.data().requirements) {
         requirements = node.data().requirements.split(',');
       }
+
+      var properties = {};
+      if (node.data().properties) {
+        properties = node.data().properties;
+      }
+      properties['x'] = node.position().x;
+      properties['y'] = node.position().y;
 
       var vertex = {
         id: node.data().id,
@@ -129,7 +136,7 @@ export function generateJsonGraph() {
         sharedState: node.data().sharedState,
         actions: actions,
         requirements: requirements,
-        properties: node.data().properties
+        properties: properties
       };
       model.vertices.push(vertex);
 
@@ -137,19 +144,24 @@ export function generateJsonGraph() {
 
 
     /**
-    * Iterate ove all edges in the graph, and create a json
+    * Iterate over all edges in the graph, and create a json
     * representation of the edge
     */
     graphs[modelId].edges().each(function(index, edge) {
 
-      actions = [];
+      var actions = [];
       if (edge.data().actions) {
         actions.push(edge.data().actions);
       }
 
-      requirements = [];
+      var requirements = [];
       if (edge.data().requirements) {
         requirements = edge.data().requirements.split(',');
+      }
+
+      var properties = [];
+      if (edge.data().properties) {
+        properties = edge.data().properties;
       }
 
       var newEdge = {
@@ -158,7 +170,7 @@ export function generateJsonGraph() {
         guard: edge.data().guard,
         actions: actions,
         requirements: requirements,
-        properties: edge.data().properties,
+        properties: properties,
         sourceVertexId: edge.data().source,
         targetVertexId: edge.data().target
       };
