@@ -91,6 +91,10 @@ export function onStepExecution() {
 // Run the execution of the state machine
 export function onRunModel() {
   console.log('onRunModel: ' + currentModelId);
+
+  // Reset any previous runs
+  onResetModel();
+
   $('.ui-panel').panel('close');
 
   document.getElementById('runModel').disabled = true;
@@ -666,6 +670,9 @@ function createGraph(currentModelId) {
     }
   });
 
+  // Set default values.
+  graph.generator = 'random(edge_coverage(100))';
+
   graphs[currentModelId] = graph;
   return graph;
 }
@@ -932,6 +939,7 @@ function onMessage(event) {
       break;
     case 'issues':
       document.getElementById('issues').innerHTML = message.issues;
+      defaultUI();
       break;
     case 'noIssues':
       document.getElementById('issues').innerHTML = 'No issues';
