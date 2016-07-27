@@ -10,6 +10,18 @@ var keys = {};
 var issues;
 var currentElement;
 
+export function onConnectModel() {
+  console.log('onConnectModel');
+
+  websocket.close();
+  testWebSocket('ws://localhost:8888');
+
+  var getModel = {
+    command: 'getModel'
+  };
+  doSend(JSON.stringify(getModel));
+}
+
 export function onLoadModel() {
   console.log('onLoadModel');
   $('<input type="file" class="ui-helper-hidden-accessible" />')
@@ -387,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Hide the tab component. It will get visible when the graps are loaded.
+  // Hide the tab component. It will get visible when the graphs are loaded.
   tabs.hide();
 
   $(document).keyup(function(e) {
@@ -926,12 +938,11 @@ function formatElementName(jsonObj) {
  * WEBSOCKET CLIENT TO GRAPHWALKER
  *
  *************************************************************************/
-var wsUri = 'ws://localhost:9999';
 var websocket;
-var messageState = testWebSocket();
+testWebSocket('ws://localhost:9999');
 
-function testWebSocket() {
-  websocket = new WebSocket(wsUri);
+function testWebSocket(wsuri) {
+  websocket = new WebSocket(wsuri);
   websocket.onopen = function (evt) {
     onOpen(evt);
   };
@@ -991,6 +1002,41 @@ function onMessage(event) {
         defaultUI();
       }
       break;
+    case 'getmodel':
+      if (message.success) {
+        document.getElementById('issues').innerHTML = 'No issues';
+        console.log('Command getModel ok');
+
+
+        $('#tabs > ul > li').each(function() {
+          $(this).remove();
+        });
+
+        $('#tabs > div').each(function() {
+          var id = $(this).attr('id').substr(2);
+          $(this).remove();
+          $('#A-' + id).remove();
+          removeModel(id);
+        });
+
+        var tabs = $('#tabs');
+        tabs.tabs('refresh');
+        tabs.hide();
+
+        readGraphFromJSON(JSON.parse(message.models));
+        tabs.show();
+        for (var modelId in graphs) {
+          if (!graphs.hasOwnProperty(modelId)) {
+            continue;
+          }
+          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+          tabs.tabs('option', 'active', index);
+          graphs[modelId].resize();
+          graphs[modelId].fit();
+        }
+      }
+      defaultUI();
+      break;
     case 'issues':
       document.getElementById('issues').innerHTML = message.issues;
       defaultUI();
@@ -1030,6 +1076,25 @@ function onError(evt) {
 
 function doSend(message) {
   console.log('Sending msgs: ' + message);
-  websocket.send(message);
+
+  // Wait until the state of the socket is not ready and send the message when it is...
+  waitForSocketConnection(websocket, function(){
+    websocket.send(message);
+  });
 }
 
+// Make the function wait until the connection is made...
+function waitForSocketConnection(socket, callback){
+  setTimeout(
+    function () {
+      if (socket.readyState === 1) {
+        console.log("Connection is made")
+        if(callback != null){
+          callback();
+        }
+        return;
+      } else {
+        waitForSocketConnection(socket, callback);
+      }
+    }, 5); // wait 5 milisecond for the connection...
+}

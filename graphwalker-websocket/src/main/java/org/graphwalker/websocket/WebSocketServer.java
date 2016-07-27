@@ -45,189 +45,10 @@ import org.slf4j.LoggerFactory;
 import java.net.InetSocketAddress;
 import java.util.*;
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * A WebSocketServer with an API for working with GraphWalker as a service.
- * <p/>
- * The websocket API has the following methods:
- * <ul>
- * <li> <strong><code>loadModel</code></strong><br>
- * Loads a model into the service. The model must use JSON notation for a GraphWalker model.
- * The notation has the following format:<br>
- * <code><pre>
- * {
- * "command":"loadModel",
- * "model":{
- * "name":"Small model",
- * "id":"m1",
- * "generator":"random(edge_coverage(100))",
- * "startElementId":"e0",
- * "vertices":[
- * {
- * "name":"v_VerifySomeAction",
- * "id":"n0",
- * "requirements":[
- * "UC01 2.2.1"
- * ]
- * },
- * {
- * "name":"v_VerifySomeOtherAction",
- * "id":"n1"
- * }
- * ],
- * "edges":[
- * {
- * "name":"e_FirstAction",
- * "id":"e0",
- * "actions":[
- * "index = 0;",
- * "str = '';"
- * ],
- * "targetVertexId":"n0"
- * },
- * {
- * "name":"e_AnotherAction",
- * "id":"e1",
- * "guard":"index <= 3",
- * "sourceVertexId":"n0",
- * "targetVertexId":"n1"
- * },
- * {
- * "name":"e_SomeOtherAction",
- * "id":"e2",
- * "actions":[
- * "index++;"
- * ],
- * "sourceVertexId":"n1",
- * "targetVertexId":"n1"
- * },
- * {
- * "id":"e3",
- * "sourceVertexId":"n1",
- * "targetVertexId":"n0"
- * }
- * ]
- * }
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>getModel</code></strong><br>
- * Will return the model with the given id <code><strong>modelId</code></strong> from the service.<br>
- * <code><pre>
- * {
- * "command":"getModel",
- * "modelId":"someId"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>start</code></strong><br>
- * Tells the service to get the machine ready to execute the model(s).
- * <code><pre>
- * {
- * "command":"start"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>getNext</code></strong><br>
- * Asks the service for the next element to be executed.
- * <code><pre>
- * {
- * "command":"getNext"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>hasNext</code></strong><br>
- * Asks the service if all conditions for all generators has been met or not.
- * <code><pre>
- * {
- * "command":"hasNext"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>restart</code></strong><br>
- * Requests the service to reset the execution of the the models to the initial state.
- * <code><pre>
- * {
- * "command":"restart"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>getData</code></strong><br>
- * Asks the service for the value of the given attribute.
- * <code><pre>
- * {
- * "command":"getData"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>addModel</code></strong><br>
- * Asks the service to create a new empty model with the given <strong><code>id</code></strong>.
- * <code><pre>
- * {
- * "command": "addModel",
- * "id": "someModelId"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>removeModel</code></strong><br>
- * Removes the model with the given modelId from the service.
- * <code><pre>
- * {
- * "command":"removeModel"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>addVertex</code></strong><br>
- * Adds a vertex to the model with the given <strong><code>modelId</code></strong> and
- * <strong><code>vertexId</code></strong> to the service.
- * <code><pre>
- * {
- * "command": "addVertex",
- * "modelId": "somModelId",
- * "vertexId": "someVertexId"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>addEdge</code></strong><br>
- * Adds an edge to the model with the given modelId to the service.
- * <code><pre>
- * {
- * "command":"addEdge"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>updateVertex</code></strong><br>
- * Updates attribute(s) to the vertex with given id and modelId from the service.
- * <code><pre>
- * {
- * "command":"updateVertex"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>updateEdge</code></strong><br>
- * Updates attribute(s) to the edge with given id and modelId from the service.
- * <code><pre>
- * {
- * "command":"updateEdge"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>removeVertex</code></strong><br>
- * Removes the vertex with the given id from and modelId from the service.
- * <code><pre>
- * {
- * "command":"removeVertex"
- * }
- *      </pre></code>
- * <p/>
- * <li> <strong><code>removeEdge</code></strong><br>
- * Removes the edge with the given id from and modelId from the service.
- * <code><pre>
- * {
- * "command":"removeEdge"
- * }
- *      </pre></code>
- * <p/>
- * </ul>
  */
 
 public class WebSocketServer extends org.java_websocket.server.WebSocketServer implements Observer {
@@ -236,6 +57,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
   private Set<WebSocket> sockets;
   private Map<WebSocket, Machine> machines;
+  private Machine machine = null;
 
   public WebSocketServer(int port) {
     super(new InetSocketAddress(port));
@@ -249,10 +71,25 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     machines = new HashMap<>();
   }
 
+  /**
+   * This is used for connecting to an execution, where a user can real time
+   * information of the run.
+   * @param port
+   * @param machine
+     */
+  public WebSocketServer(int port, Machine machine) {
+    super(new InetSocketAddress(port));
+    sockets = new HashSet<>();
+    machines = new HashMap<>();
+    this.machine = machine;
+    this.machine.addObserver(this);
+    sockets = new HashSet<>();
+  }
+
   @Override
   public void onOpen(WebSocket socket, ClientHandshake handshake) {
     sockets.add(socket);
-    machines.put(socket, null);
+    machines.put(socket, machine);
     logger.info(socket.getRemoteSocketAddress().getAddress().getHostAddress() + " is now connected");
   }
 
@@ -357,6 +194,27 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             obj.put("data", data);
             obj.put("result", "ok");
             response.put("data", data);
+            response.put("success", true);
+          } catch (Exception e) {
+            logger.error(e.getMessage());
+            sendIssue(socket, e.getMessage());
+          }
+        } else {
+          response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+        }
+        break;
+      }
+      case "GETMODEL": {
+        response.put("command", "getmodel");
+        response.put("success", false);
+        Machine machine = machines.get(socket);
+        if (machine != null) {
+          JSONObject obj = new JSONObject();
+          try {
+            JSONObject jsonMachine = new JSONObject();
+            jsonMachine.put("name", "WebSocketListner");
+            response.put("models", new JsonContextFactory().getJsonFromContexts(machine.getContexts()));
+            response.put("getmodel", jsonMachine);
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
