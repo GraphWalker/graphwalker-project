@@ -209,12 +209,38 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         response.put("success", false);
         Machine machine = machines.get(socket);
         if (machine != null) {
-          JSONObject obj = new JSONObject();
           try {
             JSONObject jsonMachine = new JSONObject();
             jsonMachine.put("name", "WebSocketListner");
             response.put("models", new JsonContextFactory().getJsonFromContexts(machine.getContexts()));
             response.put("getmodel", jsonMachine);
+            response.put("success", true);
+          } catch (Exception e) {
+            logger.error(e.getMessage());
+            sendIssue(socket, e.getMessage());
+          }
+        } else {
+          response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+        }
+        break;
+      }
+      case "UPDATEALLELEMENTS": {
+        response.put("command", "updateallelements");
+        response.put("success", false);
+        Machine machine = machines.get(socket);
+        if (machine != null) {
+          try {
+            JSONArray jsonElements = new JSONArray();
+            for (Context context : machine.getContexts()) {
+              for (Element element : context.getModel().getElements()) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("modelId", context.getModel().getId());
+                jsonObject.put("elementId", element.getId());
+                jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
+                jsonElements.put(jsonObject);
+              }
+            }
+            response.put("elements", jsonElements);
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
