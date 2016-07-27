@@ -364,6 +364,16 @@ document.addEventListener('getNextEvent', function (e) {
   }, $('#executionSpeedSlider').val());
 });
 
+var getModelEvent = new CustomEvent('getModelEvent', {});
+document.addEventListener('getModelEvent', function (e) {
+  console.log('getModelEvent');
+
+  var updateAllElements = {
+    command: 'updateAllElements'
+  };
+  doSend(JSON.stringify(updateAllElements));
+});
+
 function removeModel(modelId) {
   console.log('Remove model with id: ' + modelId);
   delete graphs[modelId];
@@ -1036,6 +1046,16 @@ function onMessage(event) {
         }
       }
       defaultUI();
+      document.dispatchEvent(getModelEvent);
+      break;
+    case 'updateallelements':
+      if (message.success) {
+        for (var index in message.elements) {
+          if (message.elements[index].visitedCount>0) {
+            graphs[message.elements[index].modelId].$('#'+message.elements[index].elementId).data('color', 'lightgreen');
+          }
+        }
+      }
       break;
     case 'issues':
       document.getElementById('issues').innerHTML = message.issues;
