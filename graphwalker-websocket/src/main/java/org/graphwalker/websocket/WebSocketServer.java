@@ -42,6 +42,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.*;
 
@@ -58,17 +60,25 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
   private Set<WebSocket> sockets;
   private Map<WebSocket, Machine> machines;
   private Machine machine = null;
+  private MODE mode;
+
+  enum MODE {
+    EDITOR,
+    PLAYBACK
+  };
 
   public WebSocketServer(int port) {
     super(new InetSocketAddress(port));
     sockets = new HashSet<>();
     machines = new HashMap<>();
+    mode = MODE.EDITOR;
   }
 
   public WebSocketServer(InetSocketAddress address) {
     super(address);
     sockets = new HashSet<>();
     machines = new HashMap<>();
+    mode = MODE.EDITOR;
   }
 
   /**
@@ -84,6 +94,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     this.machine = machine;
     this.machine.addObserver(this);
     sockets = new HashSet<>();
+    mode = MODE.PLAYBACK;
   }
 
   @Override
@@ -121,6 +132,20 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
     String command = root.getString("command").toUpperCase();
     switch (command) {
+      case "MODE":
+        response.put("command", "mode");
+        switch (mode) {
+          case EDITOR:
+            response.put("mode", "EDITOR");
+            break;
+          case PLAYBACK:
+            response.put("mode", "PLAYBACK");
+            break;
+        }
+        response.put("version", getVersionString());
+        response.put("success", true);
+
+        break;
       case "START":
         response.put("command", "start");
         response.put("success", false);
@@ -368,5 +393,19 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
 
   public Map<WebSocket, Machine> getMachines() {
     return machines;
+  }
+
+  private String getVersionString() {
+    Properties properties = new Properties();
+    InputStream inputStream = getClass().getResourceAsStream("/version.properties");
+    if (null != inputStream) {
+      try {
+        properties.load(inputStream);
+      } catch (IOException e) {
+        logger.error("An error occurred when trying to get the version string", e);
+        return "unknown";
+      }
+    }
+    return properties.getProperty("graphwalker.version");
   }
 }

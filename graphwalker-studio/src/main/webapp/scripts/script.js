@@ -9,17 +9,26 @@ var stepExecution = false;
 var keys = {};
 var issues;
 var currentElement;
+$('#location').val('ws://localhost:9999');
 
-export function onConnectModel() {
-  console.log('onConnectModel');
+export function onConnect() {
+  console.log('onConnect');
 
-  websocket.close();
-  testWebSocket('ws://localhost:8888');
+  onDisconnect();
 
-  var getModel = {
-    command: 'getModel'
-  };
-  doSend(JSON.stringify(getModel));
+  var wsUri = $('#location').val();
+  try {
+    testWebSocket(wsUri);
+  } catch(err) {
+    document.getElementById('issues').innerHTML = err.message;
+  }
+}
+
+export function onDisconnect() {
+  console.log('onDisconnect');
+  if (websocket) {
+    websocket.close();
+  }
 }
 
 export function onLoadModel() {
@@ -315,6 +324,16 @@ export function onDoLayout() {
  * CREATE SOME CUSTOM EVENTS THAT HANDLES MODEL EXECUTION
  ************************************************************************
  */
+var playbackEvent = new CustomEvent('playbackEvent', {});
+document.addEventListener('playbackEvent', function () {
+  console.log('playbackEvent');
+
+  var getModel = {
+    command: 'getModel'
+  };
+  doSend(JSON.stringify(getModel));
+});
+
 var startEvent = new CustomEvent('startEvent', {});
 document.addEventListener('startEvent', function () {
   console.log('startEvent: ' + currentModelId);
@@ -949,10 +968,11 @@ function formatElementName(jsonObj) {
  *
  *************************************************************************/
 var websocket;
-testWebSocket('ws://localhost:9999');
+var studioMode;
 
-function testWebSocket(wsuri) {
-  websocket = new WebSocket(wsuri);
+function testWebSocket(wsUri) {
+  console.log('testWebSocket: ' + wsUri);
+  websocket = new WebSocket(wsUri);
   websocket.onopen = function (evt) {
     onOpen(evt);
   };
@@ -969,10 +989,16 @@ function testWebSocket(wsuri) {
 
 function onOpen(evt) {
   console.log('onOpen: ' + evt.data);
+  document.getElementById('issues').innerHTML = 'Connected';
+  var mode = {
+    command: 'mode'
+  };
+  doSend(JSON.stringify(mode));
 }
 
 function onClose(evt) {
   console.log('onClose: ' + evt.data);
+  document.getElementById('issues').innerHTML = 'Connection closed';
 }
 
 function onMessage(event) {
@@ -980,6 +1006,21 @@ function onMessage(event) {
   var message = JSON.parse(event.data);
 
   switch (message.command) {
+    case 'mode':
+      if (message.success) {
+        studioMode = message.mode;
+        switch (message.mode) {
+          case 'EDITOR':
+            break;
+          case 'PLAYBACK':
+            document.dispatchEvent(playbackEvent);
+            break;
+        }
+        document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+      } else {
+        defaultUI();
+      }
+      break;
     case 'hasNext':
       if (message.success) {
         console.log('Command hasNext: ' + message.hasNext);
@@ -1092,6 +1133,7 @@ function onMessage(event) {
 
 function onError(evt) {
   console.error('Error: ' + evt.data);
+  document.getElementById('issues').innerHTML = 'Error while connecting';
 }
 
 function doSend(message) {
