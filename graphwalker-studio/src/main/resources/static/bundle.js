@@ -184,7 +184,7 @@ var graphwalker =
 
 
 	// module
-	exports.push([module.id, "body {\n  font: 14px helvetica neue, helvetica, arial, sans-serif;\n  margin: 0;\n  padding: 0;\n}\n\n#tabs {\n  position: absolute;\n  top: 0;\n  bottom:0;\n  left: 0;\n  right: 0;\n  overflow:hidden;\n}\n\n#tabs div {\n  height: 100%;\n}\n\n#tabs li .ui-icon-close {\n  float: left;\n  margin: 0.4em 0.2em 0 0;\n  cursor: pointer;\n}\n\n.ui-tabs .ui-tabs-panel {\n  padding: 0;\n}\n", ""]);
+	exports.push([module.id, "body {\n  font: 14px helvetica neue, helvetica, arial, sans-serif;\n  margin: 0;\n  padding: 0;\n}\n\n#tabs {\n  position: absolute;\n  top: 0;\n  bottom:0;\n  left: 0;\n  right: 0;\n  overflow:hidden;\n}\n\n#tabs div {\n  height: 100%;\n}\n\n#tabs li .ui-icon-close {\n  float: left;\n  margin: 0.4em 0.2em 0 0;\n  cursor: pointer;\n}\n\n.ui-tabs .ui-tabs-panel {\n  padding: 0;\n}\n\n.ui-panel.ui-panel-open {\n  position:fixed;\n}\n\n.ui-panel-inner {\n  position: absolute;\n  top: 1px;\n  left: 0;\n  right: 0;\n  bottom: 0px;\n  overflow: scroll;\n  -webkit-overflow-scrolling: touch;\n}\n", ""]);
 
 	// exports
 
@@ -506,8 +506,12 @@ var graphwalker =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.onConnect = onConnect;
+	exports.onDisconnect = onDisconnect;
 	exports.onLoadModel = onLoadModel;
 	exports.onSaveModel = onSaveModel;
+	exports.makeJsonGraphFile = makeJsonGraphFile;
+	exports.generateJsonGraph = generateJsonGraph;
 	exports.onPausePlayExecution = onPausePlayExecution;
 	exports.onStepExecution = onStepExecution;
 	exports.onRunModel = onRunModel;
@@ -525,6 +529,27 @@ var graphwalker =
 	var keys = {};
 	var issues;
 	var currentElement;
+	$('#location').val('ws://localhost:9999');
+
+	function onConnect() {
+	  console.log('onConnect');
+
+	  onDisconnect();
+
+	  var wsUri = $('#location').val();
+	  try {
+	    testWebSocket(wsUri);
+	  } catch (err) {
+	    document.getElementById('issues').innerHTML = err.message;
+	  }
+	}
+
+	function onDisconnect() {
+	  console.log('onDisconnect');
+	  if (websocket) {
+	    websocket.close();
+	  }
+	}
 
 	function onLoadModel() {
 	  console.log('onLoadModel');
@@ -556,6 +581,139 @@ var graphwalker =
 
 	function onSaveModel() {
 	  console.log('onSaveModel');
+	  var link = document.createElement('a');
+	  link.setAttribute('download', graphs.name + '.json');
+	  link.href = makeJsonGraphFile();
+	  document.body.appendChild(link);
+
+	  // wait for the link to be added to the document
+	  window.requestAnimationFrame(function () {
+	    var event = new MouseEvent('click');
+	    link.dispatchEvent(event);
+	    document.body.removeChild(link);
+	  });
+	}
+
+	function makeJsonGraphFile() {
+	  console.log('makeJsonGraphFile');
+	  var jsonFile = null;
+	  var data = new Blob([JSON.stringify(generateJsonGraph())], { type: 'text/plain' });
+
+	  // If we are replacing a previously generated file we need to
+	  // manually revoke the object URL to avoid memory leaks.
+	  if (jsonFile !== null) {
+	    window.URL.revokeObjectURL(jsonFile);
+	  }
+
+	  jsonFile = window.URL.createObjectURL(data);
+
+	  return jsonFile;
+	}
+
+	function generateJsonGraph() {
+	  var jsonGraphs = {
+	    name: graphs.name,
+	    models: []
+	  };
+	  for (var modelId in graphs) {
+	    if (!graphs.hasOwnProperty(modelId)) {
+	      continue;
+	    }
+
+	    var actions = [];
+	    if (graphs[modelId].actions) {
+	      actions.push(graphs[modelId].actions);
+	    }
+	    var requirements = [];
+	    if (graphs[modelId].requirements) {
+	      requirements = graphs[modelId].requirements.split(',');
+	    }
+
+	    var model = {
+	      name: graphs[modelId].name,
+	      id: modelId,
+	      generator: graphs[modelId].generator,
+	      actions: actions,
+	      vertices: [],
+	      edges: []
+	    };
+
+	    if (graphs[modelId].startElementId !== undefined) {
+	      model.startElementId = graphs[modelId].startElementId;
+	    }
+
+	    /**
+	    * Iterate ove all nodes in the graph, and create a json
+	    * representation of the vertex
+	    */
+	    graphs[modelId].nodes().each(function (index, node) {
+
+	      var actions = [];
+	      if (node.data().actions) {
+	        actions.push(node.data().actions);
+	      }
+
+	      var requirements = [];
+	      if (node.data().requirements) {
+	        requirements = node.data().requirements.split(',');
+	      }
+
+	      var properties = {};
+	      if (node.data().properties) {
+	        properties = node.data().properties;
+	      }
+	      properties['x'] = node.position().x;
+	      properties['y'] = node.position().y;
+
+	      var vertex = {
+	        id: node.data().id,
+	        name: node.data().label,
+	        sharedState: node.data().sharedState,
+	        actions: actions,
+	        requirements: requirements,
+	        properties: properties
+	      };
+	      model.vertices.push(vertex);
+	    });
+
+	    /**
+	    * Iterate over all edges in the graph, and create a json
+	    * representation of the edge
+	    */
+	    graphs[modelId].edges().each(function (index, edge) {
+
+	      var actions = [];
+	      if (edge.data().actions) {
+	        actions.push(edge.data().actions);
+	      }
+
+	      var requirements = [];
+	      if (edge.data().requirements) {
+	        requirements = edge.data().requirements.split(',');
+	      }
+
+	      var properties = [];
+	      if (edge.data().properties) {
+	        properties = edge.data().properties;
+	      }
+
+	      var newEdge = {
+	        id: edge.data().id,
+	        name: edge.data().label,
+	        guard: edge.data().guard,
+	        actions: actions,
+	        requirements: requirements,
+	        properties: properties,
+	        sourceVertexId: edge.data().source,
+	        targetVertexId: edge.data().target
+	      };
+	      model.edges.push(newEdge);
+	    });
+
+	    jsonGraphs.models.push(model);
+	  }
+
+	  return jsonGraphs;
 	}
 
 	function onPausePlayExecution(element) {
@@ -601,6 +759,10 @@ var graphwalker =
 	// Run the execution of the state machine
 	function onRunModel() {
 	  console.log('onRunModel: ' + currentModelId);
+
+	  // Reset any previous runs
+	  onResetModel();
+
 	  $('.ui-panel').panel('close');
 
 	  document.getElementById('runModel').disabled = true;
@@ -612,98 +774,10 @@ var graphwalker =
 	  pauseExecution = false;
 
 	  var start = {
-	    command: 'start',
-	    gw: {
-	      name: 'GraphWalker Studio',
-	      models: []
-	    }
+	    command: 'start'
 	  };
-	  for (var modelId in graphs) {
-	    if (!graphs.hasOwnProperty(modelId)) {
-	      continue;
-	    }
 
-	    var actions = [];
-	    if (graphs[modelId].actions) {
-	      actions.push(graphs[modelId].actions);
-	    }
-	    var requirements = [];
-	    if (graphs[modelId].requirements) {
-	      requirements = graphs[modelId].requirements.split(',');
-	    }
-
-	    var model = {
-	      name: graphs[modelId].name,
-	      id: modelId,
-	      generator: graphs[modelId].generator,
-	      actions: actions,
-	      vertices: [],
-	      edges: []
-	    };
-
-	    if (graphs[modelId].startElementId !== undefined) {
-	      model.startElementId = graphs[modelId].startElementId;
-	    }
-
-	    /**
-	    * Iterate ove all nodes in the graph, and create a json
-	    * representation of the vertex
-	    */
-	    graphs[modelId].nodes().each(function (index, node) {
-
-	      actions = [];
-	      if (node.data().actions) {
-	        actions.push(node.data().actions);
-	      }
-
-	      requirements = [];
-	      if (node.data().requirements) {
-	        requirements = node.data().requirements.split(',');
-	      }
-
-	      var vertex = {
-	        id: node.data().id,
-	        name: node.data().label,
-	        sharedState: node.data().sharedState,
-	        actions: actions,
-	        requirements: requirements,
-	        properties: node.data().properties
-	      };
-	      model.vertices.push(vertex);
-	    });
-
-	    /**
-	    * Iterate ove all edges in the graph, and create a json
-	    * representation of the edge
-	    */
-	    graphs[modelId].edges().each(function (index, edge) {
-
-	      actions = [];
-	      if (edge.data().actions) {
-	        actions.push(edge.data().actions);
-	      }
-
-	      requirements = [];
-	      if (edge.data().requirements) {
-	        requirements = edge.data().requirements.split(',');
-	      }
-
-	      var newEdge = {
-	        id: edge.data().id,
-	        name: edge.data().label,
-	        guard: edge.data().guard,
-	        actions: actions,
-	        requirements: requirements,
-	        properties: edge.data().properties,
-	        sourceVertexId: edge.data().source,
-	        targetVertexId: edge.data().target
-	      };
-	      model.edges.push(newEdge);
-	    });
-
-	    start.gw.models.push(model);
-	  }
-
+	  start.gw = generateJsonGraph();
 	  doSend(JSON.stringify(start));
 	}
 
@@ -759,6 +833,16 @@ var graphwalker =
 	 * CREATE SOME CUSTOM EVENTS THAT HANDLES MODEL EXECUTION
 	 ************************************************************************
 	 */
+	var playbackEvent = new CustomEvent('playbackEvent', {});
+	document.addEventListener('playbackEvent', function () {
+	  console.log('playbackEvent');
+
+	  var getModel = {
+	    command: 'getModel'
+	  };
+	  doSend(JSON.stringify(getModel));
+	});
+
 	var startEvent = new CustomEvent('startEvent', {});
 	document.addEventListener('startEvent', function () {
 	  console.log('startEvent: ' + currentModelId);
@@ -806,6 +890,16 @@ var graphwalker =
 	  }, $('#executionSpeedSlider').val());
 	});
 
+	var getModelEvent = new CustomEvent('getModelEvent', {});
+	document.addEventListener('getModelEvent', function (e) {
+	  console.log('getModelEvent');
+
+	  var updateAllElements = {
+	    command: 'updateAllElements'
+	  };
+	  doSend(JSON.stringify(updateAllElements));
+	});
+
 	function removeModel(modelId) {
 	  console.log('Remove model with id: ' + modelId);
 	  delete graphs[modelId];
@@ -840,7 +934,7 @@ var graphwalker =
 	    }
 	  });
 
-	  // Hide the tab component. It will get visible when the graps are loaded.
+	  // Hide the tab component. It will get visible when the graphs are loaded.
 	  tabs.hide();
 
 	  $(document).keyup(function (e) {
@@ -1037,6 +1131,7 @@ var graphwalker =
 	    currentElement = null;
 
 	    $('#label').val('').textinput('disable');
+	    $('#elementId').val('').textinput('disable');
 	    $('#sharedStateName').val('').textinput('disable');
 	    $('#guard').val('').textinput('disable');
 	    $('#actions').val('').textinput('disable');
@@ -1047,6 +1142,7 @@ var graphwalker =
 	  graph.on('tap', 'node', function () {
 	    currentElement = this;
 	    $('#label').textinput('enable').val(this.data().label);
+	    $('#elementId').textinput('enable').val(this.data().id);
 	    $('#sharedStateName').textinput('enable').val(this.data().sharedState);
 	    $('#actions').textinput('enable').val(this.data().actions);
 	    $('#requirements').textinput('enable').val(this.data().requirements);
@@ -1061,6 +1157,7 @@ var graphwalker =
 	  graph.on('tap', 'edge', function () {
 	    currentElement = this;
 	    $('#label').textinput('enable').val(this.data().label);
+	    $('#elementId').textinput('enable').val(this.data().id);
 	    $('#guard').textinput('enable').val(this.data().guard);
 	    $('#actions').textinput('enable').val(this.data().actions);
 	    $('#requirements').textinput('enable').val(this.data().requirements);
@@ -1082,6 +1179,12 @@ var graphwalker =
 	        actions: currentElement.data().actions,
 	        requirements: currentElement.data().requirements
 	      }));
+	    }
+	  });
+
+	  $('#elementId').on('input', function () {
+	    if (currentElement) {
+	      currentElement.data('id', $('#elementId').val());
 	    }
 	  });
 
@@ -1164,6 +1267,9 @@ var graphwalker =
 	      graph.resize();
 	    }
 	  });
+
+	  // Set default values.
+	  graph.generator = 'random(edge_coverage(100))';
 
 	  graphs[currentModelId] = graph;
 	  return graph;
@@ -1364,11 +1470,11 @@ var graphwalker =
 	 * WEBSOCKET CLIENT TO GRAPHWALKER
 	 *
 	 *************************************************************************/
-	var wsUri = 'ws://localhost:9999';
 	var websocket;
-	var messageState = testWebSocket();
+	var studioMode;
 
-	function testWebSocket() {
+	function testWebSocket(wsUri) {
+	  console.log('testWebSocket: ' + wsUri);
 	  websocket = new WebSocket(wsUri);
 	  websocket.onopen = function (evt) {
 	    onOpen(evt);
@@ -1386,10 +1492,16 @@ var graphwalker =
 
 	function onOpen(evt) {
 	  console.log('onOpen: ' + evt.data);
+	  document.getElementById('issues').innerHTML = 'Connected';
+	  var mode = {
+	    command: 'mode'
+	  };
+	  doSend(JSON.stringify(mode));
 	}
 
 	function onClose(evt) {
 	  console.log('onClose: ' + evt.data);
+	  document.getElementById('issues').innerHTML = 'Connection closed';
 	}
 
 	function onMessage(event) {
@@ -1397,6 +1509,21 @@ var graphwalker =
 	  var message = JSON.parse(event.data);
 
 	  switch (message.command) {
+	    case 'mode':
+	      if (message.success) {
+	        studioMode = message.mode;
+	        switch (message.mode) {
+	          case 'EDITOR':
+	            break;
+	          case 'PLAYBACK':
+	            document.dispatchEvent(playbackEvent);
+	            break;
+	        }
+	        document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+	      } else {
+	        defaultUI();
+	      }
+	      break;
 	    case 'hasNext':
 	      if (message.success) {
 	        console.log('Command hasNext: ' + message.hasNext);
@@ -1429,15 +1556,64 @@ var graphwalker =
 	        defaultUI();
 	      }
 	      break;
+	    case 'getmodel':
+	      if (message.success) {
+	        document.getElementById('issues').innerHTML = 'No issues';
+	        console.log('Command getModel ok');
+
+	        $('#tabs > ul > li').each(function () {
+	          $(this).remove();
+	        });
+
+	        $('#tabs > div').each(function () {
+	          var id = $(this).attr('id').substr(2);
+	          $(this).remove();
+	          $('#A-' + id).remove();
+	          removeModel(id);
+	        });
+
+	        var tabs = $('#tabs');
+	        tabs.tabs('refresh');
+	        tabs.hide();
+
+	        readGraphFromJSON(JSON.parse(message.models));
+	        tabs.show();
+	        for (var modelId in graphs) {
+	          if (!graphs.hasOwnProperty(modelId)) {
+	            continue;
+	          }
+	          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+	          tabs.tabs('option', 'active', index);
+	          graphs[modelId].resize();
+	          graphs[modelId].fit();
+	        }
+	      }
+	      defaultUI();
+	      document.dispatchEvent(getModelEvent);
+	      break;
+	    case 'updateallelements':
+	      if (message.success) {
+	        for (var index in message.elements) {
+	          if (message.elements[index].visitedCount > 0) {
+	            graphs[message.elements[index].modelId].$('#' + message.elements[index].elementId).data('color', 'lightgreen');
+	          }
+	        }
+	      }
+	      break;
 	    case 'issues':
 	      document.getElementById('issues').innerHTML = message.issues;
+	      defaultUI();
 	      break;
 	    case 'noIssues':
 	      document.getElementById('issues').innerHTML = 'No issues';
 	      break;
 	    case 'visitedElement':
 	      console.log('Command visitedElement. Will color green on (modelId, elementId): ' + message.modelId + ', ' + message.elementId);
-	      document.getElementById('issues').innerHTML = 'Steps: ' + message.totalCount + ', Done: ' + (message.stopConditionFulfillment * 100).toFixed(0) + '%, data: ' + JSON.stringify(message.data);
+	      var str = 'Steps: ' + message.totalCount + ', Fulfilment: ' + (message.stopConditionFulfillment * 100).toFixed(0) + '%';
+	      if (!jQuery.isEmptyObject(message.data)) {
+	        str += ', Data: ' + JSON.stringify(message.data);
+	      }
+	      document.getElementById('issues').innerHTML = str;
 
 	      currentModelId = message.modelId;
 	      graphs[currentModelId].nodes().unselect();
@@ -1457,11 +1633,31 @@ var graphwalker =
 
 	function onError(evt) {
 	  console.error('Error: ' + evt.data);
+	  document.getElementById('issues').innerHTML = 'Error while connecting';
 	}
 
 	function doSend(message) {
 	  console.log('Sending msgs: ' + message);
-	  websocket.send(message);
+
+	  // Wait until the state of the socket is not ready and send the message when it is...
+	  waitForSocketConnection(websocket, function () {
+	    websocket.send(message);
+	  });
+	}
+
+	// Make the function wait until the connection is made...
+	function waitForSocketConnection(socket, callback) {
+	  setTimeout(function () {
+	    if (socket.readyState === 1) {
+	      console.log("Connection is made");
+	      if (callback != null) {
+	        callback();
+	      }
+	      return;
+	    } else {
+	      waitForSocketConnection(socket, callback);
+	    }
+	  }, 5); // wait 5 milisecond for the connection...
 	}
 
 /***/ },

@@ -9,6 +9,27 @@ var stepExecution = false;
 var keys = {};
 var issues;
 var currentElement;
+$('#location').val('ws://localhost:9999');
+
+export function onConnect() {
+  console.log('onConnect');
+
+  onDisconnect();
+
+  var wsUri = $('#location').val();
+  try {
+    testWebSocket(wsUri);
+  } catch(err) {
+    document.getElementById('issues').innerHTML = err.message;
+  }
+}
+
+export function onDisconnect() {
+  console.log('onDisconnect');
+  if (websocket) {
+    websocket.close();
+  }
+}
 
 export function onLoadModel() {
   console.log('onLoadModel');
@@ -303,6 +324,16 @@ export function onDoLayout() {
  * CREATE SOME CUSTOM EVENTS THAT HANDLES MODEL EXECUTION
  ************************************************************************
  */
+var playbackEvent = new CustomEvent('playbackEvent', {});
+document.addEventListener('playbackEvent', function () {
+  console.log('playbackEvent');
+
+  var getModel = {
+    command: 'getModel'
+  };
+  doSend(JSON.stringify(getModel));
+});
+
 var startEvent = new CustomEvent('startEvent', {});
 document.addEventListener('startEvent', function () {
   console.log('startEvent: ' + currentModelId);
@@ -352,6 +383,16 @@ document.addEventListener('getNextEvent', function (e) {
   }, $('#executionSpeedSlider').val());
 });
 
+var getModelEvent = new CustomEvent('getModelEvent', {});
+document.addEventListener('getModelEvent', function (e) {
+  console.log('getModelEvent');
+
+  var updateAllElements = {
+    command: 'updateAllElements'
+  };
+  doSend(JSON.stringify(updateAllElements));
+});
+
 function removeModel(modelId) {
   console.log('Remove model with id: ' + modelId);
   delete graphs[modelId];
@@ -387,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Hide the tab component. It will get visible when the graps are loaded.
+  // Hide the tab component. It will get visible when the graphs are loaded.
   tabs.hide();
 
   $(document).keyup(function(e) {
@@ -587,6 +628,7 @@ function createGraph(currentModelId) {
     currentElement = null;
 
     $('#label').val('').textinput('disable');
+    $('#elementId').val('').textinput('disable');
     $('#sharedStateName').val('').textinput('disable');
     $('#guard').val('').textinput('disable');
     $('#actions').val('').textinput('disable');
@@ -597,6 +639,7 @@ function createGraph(currentModelId) {
   graph.on('tap', 'node', function() {
     currentElement = this;
     $('#label').textinput('enable').val(this.data().label);
+    $('#elementId').textinput('enable').val(this.data().id);
     $('#sharedStateName').textinput('enable').val(this.data().sharedState);
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
@@ -611,6 +654,7 @@ function createGraph(currentModelId) {
   graph.on('tap', 'edge', function() {
     currentElement = this;
     $('#label').textinput('enable').val(this.data().label);
+    $('#elementId').textinput('enable').val(this.data().id);
     $('#guard').textinput('enable').val(this.data().guard);
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
@@ -632,6 +676,12 @@ function createGraph(currentModelId) {
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
+    }
+  });
+
+  $('#elementId').on('input', function() {
+    if (currentElement) {
+      currentElement.data('id', $('#elementId').val());
     }
   });
 
@@ -917,11 +967,11 @@ function formatElementName(jsonObj) {
  * WEBSOCKET CLIENT TO GRAPHWALKER
  *
  *************************************************************************/
-var wsUri = 'ws://localhost:9999';
 var websocket;
-var messageState = testWebSocket();
+var studioMode;
 
-function testWebSocket() {
+function testWebSocket(wsUri) {
+  console.log('testWebSocket: ' + wsUri);
   websocket = new WebSocket(wsUri);
   websocket.onopen = function (evt) {
     onOpen(evt);
@@ -939,10 +989,16 @@ function testWebSocket() {
 
 function onOpen(evt) {
   console.log('onOpen: ' + evt.data);
+  document.getElementById('issues').innerHTML = 'Connected';
+  var mode = {
+    command: 'mode'
+  };
+  doSend(JSON.stringify(mode));
 }
 
 function onClose(evt) {
   console.log('onClose: ' + evt.data);
+  document.getElementById('issues').innerHTML = 'Connection closed';
 }
 
 function onMessage(event) {
@@ -950,6 +1006,21 @@ function onMessage(event) {
   var message = JSON.parse(event.data);
 
   switch (message.command) {
+    case 'mode':
+      if (message.success) {
+        studioMode = message.mode;
+        switch (message.mode) {
+          case 'EDITOR':
+            break;
+          case 'PLAYBACK':
+            document.dispatchEvent(playbackEvent);
+            break;
+        }
+        document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+      } else {
+        defaultUI();
+      }
+      break;
     case 'hasNext':
       if (message.success) {
         console.log('Command hasNext: ' + message.hasNext);
@@ -982,6 +1053,51 @@ function onMessage(event) {
         defaultUI();
       }
       break;
+    case 'getmodel':
+      if (message.success) {
+        document.getElementById('issues').innerHTML = 'No issues';
+        console.log('Command getModel ok');
+
+
+        $('#tabs > ul > li').each(function() {
+          $(this).remove();
+        });
+
+        $('#tabs > div').each(function() {
+          var id = $(this).attr('id').substr(2);
+          $(this).remove();
+          $('#A-' + id).remove();
+          removeModel(id);
+        });
+
+        var tabs = $('#tabs');
+        tabs.tabs('refresh');
+        tabs.hide();
+
+        readGraphFromJSON(JSON.parse(message.models));
+        tabs.show();
+        for (var modelId in graphs) {
+          if (!graphs.hasOwnProperty(modelId)) {
+            continue;
+          }
+          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+          tabs.tabs('option', 'active', index);
+          graphs[modelId].resize();
+          graphs[modelId].fit();
+        }
+      }
+      defaultUI();
+      document.dispatchEvent(getModelEvent);
+      break;
+    case 'updateallelements':
+      if (message.success) {
+        for (var index in message.elements) {
+          if (message.elements[index].visitedCount>0) {
+            graphs[message.elements[index].modelId].$('#'+message.elements[index].elementId).data('color', 'lightgreen');
+          }
+        }
+      }
+      break;
     case 'issues':
       document.getElementById('issues').innerHTML = message.issues;
       defaultUI();
@@ -992,9 +1108,12 @@ function onMessage(event) {
     case 'visitedElement':
       console.log('Command visitedElement. Will color green on (modelId, elementId): ' +
         message.modelId + ', ' + message.elementId);
-      document.getElementById('issues').innerHTML = 'Steps: ' + message.totalCount + ', Done: ' +
-        (message.stopConditionFulfillment * 100).toFixed(0) +
-        '%, data: ' + JSON.stringify(message.data);
+      var str = 'Steps: ' + message.totalCount + ', Fulfilment: ' +
+                           (message.stopConditionFulfillment * 100).toFixed(0) + '%';
+      if (!jQuery.isEmptyObject(message.data)) {
+        str += ', Data: ' + JSON.stringify(message.data);
+      }
+      document.getElementById('issues').innerHTML = str;
 
       currentModelId = message.modelId;
       graphs[currentModelId].nodes().unselect();
@@ -1014,10 +1133,30 @@ function onMessage(event) {
 
 function onError(evt) {
   console.error('Error: ' + evt.data);
+  document.getElementById('issues').innerHTML = 'Error while connecting';
 }
 
 function doSend(message) {
   console.log('Sending msgs: ' + message);
-  websocket.send(message);
+
+  // Wait until the state of the socket is not ready and send the message when it is...
+  waitForSocketConnection(websocket, function(){
+    websocket.send(message);
+  });
 }
 
+// Make the function wait until the connection is made...
+function waitForSocketConnection(socket, callback){
+  setTimeout(
+    function () {
+      if (socket.readyState === 1) {
+        console.log("Connection is made")
+        if(callback != null){
+          callback();
+        }
+        return;
+      } else {
+        waitForSocketConnection(socket, callback);
+      }
+    }, 5); // wait 5 milisecond for the connection...
+}
