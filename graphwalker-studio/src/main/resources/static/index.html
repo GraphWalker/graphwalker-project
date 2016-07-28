@@ -37,8 +37,8 @@
       <h4 id="issues">Fixed footer</h4>
     </div>
 
-    <div data-role="panel" data-position-fixed="true" data-theme="a" id="nav-panel" data-dismissible="false">
-      <ul data-role="listview" data-theme="a" class="nav-search">
+    <div data-role="panel" data-position-fixed="true" data-theme="b" id="nav-panel" data-dismissible="false">
+      <ul data-role="listview" data-theme="b" class="nav-search">
         <li data-icon="delete">
           <a href="#" data-rel="close">Close menu</a>
         </li>
@@ -71,7 +71,7 @@
           <button type='button' id="doLayout" onclick="graphwalker.studio.onDoLayout()">Do layout</button>
         </li>
       </ul>
-      <ul data-role="listview" data-theme="a" class="nav-search">
+      <ul data-role="listview" data-theme="b" class="nav-search">
         <li>
           <label for="modelName">Model name</label>
           <input type="text" id="modelName" value=""/>
@@ -91,6 +91,10 @@
         <li>
           <label for="label">Element name</label>
           <input type="text" id="label" value=""/>
+        </li>
+        <li>
+          <label for="label">Element id</label>
+          <input type="text" id="elementId" value="" readonly/>
         </li>
         <li>
           <label for="sharedStateName">Shared state name</label>
@@ -117,17 +121,15 @@
 
     <div id="add-form" data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="b">
       <form class="userform">
-        <h2>Login</h2>
-        <label for="name">Username:</label>
-        <input type="text" name="name" id="name" value="" data-clear-btn="true" data-mini="true">
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" value="" data-clear-btn="true" autocomplete="off" data-mini="true">
+        <h2>Connection</h2>
+        <label for="location">Location:</label>
+        <input type="text" name="location" id="location" value="" data-clear-btn="true" data-mini="true">
         <div class="ui-grid-a">
           <div class="ui-block-a">
-            <a href="#" data-rel="close" data-role="button" data-theme="c" data-mini="true">Cancel</a>
+            <a href="#" data-rel="close" data-role="button" data-theme="c" data-mini="true" onclick="graphwalker.studio.onConnect()">Connect</a>
           </div>
           <div class="ui-block-b">
-            <a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true">Save</a>
+            <a href="#" data-rel="close" data-role="button" data-theme="b" data-mini="true" onclick="graphwalker.studio.onDisconnect()">Disconnect</a>
           </div>
         </div>
       </form>
