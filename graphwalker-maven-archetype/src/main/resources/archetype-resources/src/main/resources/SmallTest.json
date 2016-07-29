@@ -1,0 +1,81 @@
+{
+  "models": [
+    {
+      "name": "New model",
+      "id": "cbca8c67-6d0c-40b4-8afb-032b069a4bc1",
+      "generator": "random(edge_coverage(100))",
+      "actions": [],
+      "vertices": [
+        {
+          "id": "d9c15804-24de-47ca-9430-9cb93202d9ff",
+          "name": "v_VerifyInitialState",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "x": 206.9166717529297,
+            "y": 54.41667175292969
+          }
+        },
+        {
+          "id": "fd4435f7-6a42-4a8b-a522-49c6b91a85e1",
+          "name": "v_VerifyFirstAction",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "x": 348.9166717529297,
+            "y": 368.4166717529297
+          }
+        },
+        {
+          "id": "3dbb2cf6-1ac9-4858-9fd8-bc6b874c1daf",
+          "name": "v_NewVertex",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "x": 98.91667175292969,
+            "y": 228.4166717529297
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "9a6b8be2-3e0c-4e8d-bb38-21107b66a4d3",
+          "name": "e_FirstAction",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "d9c15804-24de-47ca-9430-9cb93202d9ff",
+          "targetVertexId": "fd4435f7-6a42-4a8b-a522-49c6b91a85e1"
+        },
+        {
+          "id": "6034d0f8-9850-4d67-9ddf-02a24c35890e",
+          "name": "e_AnotherAction",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fd4435f7-6a42-4a8b-a522-49c6b91a85e1",
+          "targetVertexId": "3dbb2cf6-1ac9-4858-9fd8-bc6b874c1daf"
+        },
+        {
+          "id": "71d24b33-fe8e-49ab-9fcc-10cc985dcdeb",
+          "name": "e_SomeAction",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "3dbb2cf6-1ac9-4858-9fd8-bc6b874c1daf",
+          "targetVertexId": "fd4435f7-6a42-4a8b-a522-49c6b91a85e1"
+        },
+        {
+          "id": "2d241ce5-ac46-4f23-85b8-2253c4ce8bed",
+          "name": "e_SomeOtherAction",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "3dbb2cf6-1ac9-4858-9fd8-bc6b874c1daf",
+          "targetVertexId": "3dbb2cf6-1ac9-4858-9fd8-bc6b874c1daf"
+        }
+      ],
+      "startElementId": "d9c15804-24de-47ca-9430-9cb93202d9ff"
+    }
+  ]
+}
