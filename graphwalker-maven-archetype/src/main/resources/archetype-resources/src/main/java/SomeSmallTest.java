@@ -48,12 +48,17 @@ public class SomeSmallTest extends ExecutionContext implements SmallTest {
   }
 
   @Override
-  public void v_VerifySomeAction() {
-    System.out.println("Running: v_VerifySomeAction");
+  public void v_VerifyInitialState() {
+    System.out.println("Running: v_VerifyInitialState");
   }
 
   @Override
-  public void v_VerifySomeOtherAction() {
-    System.out.println("Running: v_VerifySomeOtherAction");
+  public void v_VerifyFirstAction() {
+    System.out.println("Running: v_VerifyFirstAction");
+  }
+
+  @Override
+  public void v_NewVertex() {
+    System.out.println("Running: v_NewVertex");
   }
 }
