@@ -40,7 +40,7 @@
     <fileSet filtered="true" packaged="true" encoding="UTF-8">
       <directory>src/main/resources</directory>
       <includes>
-        <include>**/*.graphml</include>
+        <include>**/*.json</include>
       </includes>
     </fileSet>
   </fileSets>
