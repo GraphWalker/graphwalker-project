@@ -59,7 +59,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>1.6</version>
+        <version>1.9</version>
         <configuration>
           <licenseName>mit</licenseName>
         </configuration>
