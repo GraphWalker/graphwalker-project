@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var cytoscape = require('cytoscape');
+// http://www.cs.bilkent.edu.tr/~ivis/Cytoscape_LayoutDemo/#
 
 // Hash array that holds all graphs/models.
 var graphs =[];
@@ -313,6 +314,7 @@ export function onDoLayout() {
     var layout = graphs[currentModelId].makeLayout({
       name: 'dagre',
       animate: true,
+      edgeSep: 4,
       minLen: function() {
         return 2;
       }
@@ -539,8 +541,8 @@ function createGraph(currentModelId) {
       .css({
         'content': 'data(name)',
         'text-wrap': 'wrap',
-//                        'curve-style' : 'unbundled-bezier',
-//                        'edge-text-rotation': 'autorotate',
+        'curve-style' : 'bezier',
+        'text-rotation': 'autorotate',
         'target-arrow-shape': 'triangle',
         'width': '4',
         'line-color': 'data(color)',
