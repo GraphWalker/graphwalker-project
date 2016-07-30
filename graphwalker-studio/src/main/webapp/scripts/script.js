@@ -27,7 +27,9 @@ export function onConnect() {
 export function onDisconnect() {
   console.log('onDisconnect');
   if (websocket) {
-    websocket.close();
+    // http://stackoverflow.com/questions/25779831/how-to-catch-websocket-connection-to-ws-xxxnn-failed-connection-closed-be
+    // https://jsfiddle.net/lamarant/ry0ty52n/
+    websocket.close(3001);
   }
 }
 
@@ -972,7 +974,14 @@ var studioMode;
 
 function testWebSocket(wsUri) {
   console.log('testWebSocket: ' + wsUri);
-  websocket = new WebSocket(wsUri);
+
+  try {
+    websocket = new WebSocket(wsUri);
+  } catch (err) {
+    document.getElementById('issues').style.backgroundColor = "lightred";
+    document.getElementById('issues').innerHTML = err.message;
+  }
+
   websocket.onopen = function (evt) {
     onOpen(evt);
   };
@@ -989,6 +998,7 @@ function testWebSocket(wsUri) {
 
 function onOpen(evt) {
   console.log('onOpen: ' + evt.data);
+  document.getElementById('issues').style.backgroundColor = "green";
   document.getElementById('issues').innerHTML = 'Connected';
   var mode = {
     command: 'mode'
@@ -997,8 +1007,16 @@ function onOpen(evt) {
 }
 
 function onClose(evt) {
-  console.log('onClose: ' + evt.data);
-  document.getElementById('issues').innerHTML = 'Connection closed';
+  console.log('onClose');
+  if (evt.code == 3001) {
+    console.log('ws closed');
+    document.getElementById('issues').style.backgroundColor = "black";
+    document.getElementById('issues').innerHTML = 'Connection closed';
+  } else {
+    console.log('ws connection error');
+    document.getElementById('issues').style.backgroundColor = "red";
+    document.getElementById('issues').innerHTML = 'Connection error while connecting to: ' + $('#location').val();
+  }
 }
 
 function onMessage(event) {
@@ -1011,12 +1029,18 @@ function onMessage(event) {
         studioMode = message.mode;
         switch (message.mode) {
           case 'EDITOR':
+            document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+            document.getElementById('issues').style.backgroundColor = "green";
             break;
           case 'PLAYBACK':
+            document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+            document.getElementById('issues').style.backgroundColor = "green";
             document.dispatchEvent(playbackEvent);
             break;
+          default:
+            document.getElementById('issues').innerHTML = 'Not connected';
+            document.getElementById('issues').style.backgroundColor = "lightred";
         }
-        document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
       } else {
         defaultUI();
       }
@@ -1132,12 +1156,18 @@ function onMessage(event) {
 }
 
 function onError(evt) {
-  console.error('Error: ' + evt.data);
-  document.getElementById('issues').innerHTML = 'Error while connecting';
+  console.error('onError');
+  document.getElementById('issues').style.backgroundColor = "lightred";
+  if (websocket.readyState == 1) {
+    console.error('ws normal error: ' + evt.type);
+    document.getElementById('issues').innerHTML = evt.type;
+  } else {
+    document.getElementById('issues').innerHTML = 'Error while connecting';
+  }
 }
 
 function doSend(message) {
-  console.log('Sending msgs: ' + message);
+  console.log('doSend: ' + message);
 
   // Wait until the state of the socket is not ready and send the message when it is...
   waitForSocketConnection(websocket, function(){
@@ -1160,3 +1190,7 @@ function waitForSocketConnection(socket, callback){
       }
     }, 5); // wait 5 milisecond for the connection...
 }
+
+$( document ).ready(function() {
+  onConnect();
+});
