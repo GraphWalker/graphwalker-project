@@ -95,12 +95,13 @@ public final class YEdContextFactory implements ContextFactory {
     return contexts;
   }
 
-  private Context read(Path path) {
-    Context context = new YEdContext();
+  public List<Context> create(String graphmlStr) {
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(read(graphmlStr));
+    return contexts;
+  }
 
-    Edge startEdge;
-    Map<String, Vertex> elements = new HashMap<>();
-    Model model = new Model();
+  private Context read(Path path) {
     GraphmlDocument document = null;
     try {
       document = GraphmlDocument.Factory.parse(ResourceUtils.getResourceAsStream(path.toString()));
@@ -114,6 +115,25 @@ public final class YEdContextFactory implements ContextFactory {
       logger.error(e.getMessage());
       throw new ContextFactoryException("Could not read the file.");
     }
+    return read(document, FilenameUtils.getBaseName(path.toString()));
+  }
+
+  private Context read(String graphmlStr) {
+    GraphmlDocument document = null;
+    try {
+      document = GraphmlDocument.Factory.parse(graphmlStr);
+    } catch (XmlException e) {
+      logger.error(e.getMessage());
+      throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
+    }
+    return read(document, "");
+  }
+
+  private Context read(GraphmlDocument document, String name) {
+    Context context = new YEdContext();
+    Edge startEdge;
+    Map<String, Vertex> elements = new HashMap<>();
+    Model model = new Model();
     try {
       Vertex startVertex = addVertices(model, document, elements);
       startEdge = addEdges(model, document, elements, startVertex);
@@ -122,14 +142,13 @@ public final class YEdContextFactory implements ContextFactory {
       throw new ContextFactoryException("The file seems not to be of valid yEd format.");
     }
 
-    model.setName(FilenameUtils.getBaseName(path.toString()));
+    model.setName(name);
     context.setModel(model.build());
     if (null != startEdge) {
       context.setNextElement(startEdge);
     }
 
-    return context;
-  }
+    return context;  }
 
   @Override
   public void write(List<Context> contexts, Path path) throws IOException {
