@@ -48,8 +48,8 @@
         </li>
           <fieldset data-role="fieldcontain">
             <button type='button' data-mini="true" id="newTest" onclick="graphwalker.studio.onNewTest()">New test</button>
-            <button type='button' data-mini="true" id="loadModel" onclick="graphwalker.studio.onLoadModel()">Load model</button>
-            <button type='button' data-mini="true" id="saveModel" onclick="graphwalker.studio.onSaveModel()">Save model</button>
+            <button type='button' data-mini="true" id="loadTest" onclick="graphwalker.studio.onLoadTest()">Load test</button>
+            <button type='button' data-mini="true" id="saveTest" onclick="graphwalker.studio.onSaveTest()">Save test</button>
           </fieldset>
          </li>
       </ul>
@@ -57,8 +57,8 @@
       <ul data-role="listview" data-theme="b" class="nav-search">
         </li>
         <fieldset data-role="fieldcontain">
-          <button type='button' data-mini="true" id="runModel" onclick="graphwalker.studio.onRunModel()">Run model</button>
-          <button type='button' data-mini="true" id="resetModel" onclick="graphwalker.studio.onResetModel()">Reset</button>
+          <button type='button' data-mini="true" id="runTest" onclick="graphwalker.studio.onRunTest()">Run test</button>
+          <button type='button' data-mini="true" id="resetTest" onclick="graphwalker.studio.onResetTest()">Reset test</button>
           <button type='button' data-mini="true" id="pausePlayExecution" onclick="graphwalker.studio.onPausePlayExecution(this)" value="Pause">Pause</button>
           <button type='button' data-mini="true" id="stepExecution" onclick="graphwalker.studio.onStepExecution()">Step</button>
         </fieldset>
@@ -101,7 +101,7 @@
           <input type="text" data-mini="true" id="sharedStateName" value="" value="" placeholder="element shared name"/>
 
           <label for="guard">Guard:</label>
-          <input type="text" data-mini="true" id="guard" value="" value="" placeholder="elemendt guard"/>
+          <input type="text" data-mini="true" id="guard" value="" value="" placeholder="element guard"/>
 
           <label for="actions">Actions:</label>
           <input type="text" data-mini="true" id="actions" value="" value="" placeholder="element action(s)"/>
