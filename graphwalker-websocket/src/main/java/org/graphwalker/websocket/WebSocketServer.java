@@ -33,6 +33,7 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -235,10 +236,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         Machine machine = machines.get(socket);
         if (machine != null) {
           try {
-            JSONObject jsonMachine = new JSONObject();
-            jsonMachine.put("name", "WebSocketListner");
             response.put("models", new JsonContextFactory().getJsonFromContexts(machine.getContexts()));
-            response.put("getmodel", jsonMachine);
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
@@ -273,6 +271,19 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
           }
         } else {
           response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+        }
+        break;
+      }
+      case "CONVERTGRAPHML": {
+        response.put("command", "convertGraphml");
+        response.put("success", false);
+        try {
+          List<Context> yedContexts = new YEdContextFactory().create(root.getString("graphml"));
+          response.put("models", new JsonContextFactory().getJsonFromContexts(yedContexts));
+          response.put("success", true);
+        } catch (Exception e) {
+          logger.error(e.getMessage());
+          sendIssue(socket, e.getMessage());
         }
         break;
       }

@@ -54,25 +54,47 @@ export function onLoadTest() {
     .change(function(evt) {
       var files = evt.target.files; // FileList object
 
+
       // files is a FileList of File objects. List some properties.
       for (var i = 0, f; f = files[i]; i++) {
-        var fr = new FileReader();
-        fr.onload = function(e) {
-            readGraphFromJSON(JSON.parse(e.target.result));
-            var tabs = $('#tabs');
-            tabs.show();
-            for (var modelId in graphs) {
-              if (!graphs.hasOwnProperty(modelId)) {
-                continue;
+        var fileExt = f.name.split('.').pop();
+
+        switch (fileExt) {
+          case 'graphml':
+            var fr = new FileReader();
+            fr.onload = function(e) {
+              var convertGraphml = {
+                command: 'convertGraphml',
+                graphml: e.target.result
+              };
+              doSend(JSON.stringify(convertGraphml));
+            };
+            fr.readAsText(f);
+          break;
+
+          case 'json':
+            var fr = new FileReader();
+            fr.onload = function(e) {
+              readGraphFromJSON(JSON.parse(e.target.result));
+              var tabs = $('#tabs');
+              tabs.show();
+              for (var modelId in graphs) {
+                if (!graphs.hasOwnProperty(modelId)) {
+                  continue;
+                }
+                var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+                tabs.tabs('option', 'active', index);
+                graphs[modelId].resize();
+                graphs[modelId].fit();
               }
-              var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
-              tabs.tabs('option', 'active', index);
-              graphs[modelId].resize();
-              graphs[modelId].fit();
-            }
-            defaultUI();
-        };
-        fr.readAsText(f);
+              defaultUI();
+            };
+            fr.readAsText(f);
+          break;
+
+          default:
+          console.error('Unsupported file extension/format: ' + fileExt);
+        }
       }
   });
 }
@@ -1169,6 +1191,30 @@ function onMessage(event) {
 
       graphs[currentModelId].$('#'+message.elementId).data('color', 'lightgreen');
       graphs[currentModelId].$('#'+message.elementId).select();
+      break;
+    case 'convertGraphml':
+      if (message.success) {
+        document.getElementById('issues').innerHTML = 'No issues';
+        console.log('Command getModel ok');
+
+        removeTest();
+
+        readGraphFromJSON(JSON.parse(message.models));
+
+        var tabs = $('#tabs');
+        tabs.show();
+        for (var modelId in graphs) {
+          if (!graphs.hasOwnProperty(modelId)) {
+            continue;
+          }
+          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+          tabs.tabs('option', 'active', index);
+          graphs[modelId].resize();
+          graphs[modelId].fit();
+        }
+      }
+      defaultUI();
+      document.dispatchEvent(getModelEvent);
       break;
     default:
       break;
