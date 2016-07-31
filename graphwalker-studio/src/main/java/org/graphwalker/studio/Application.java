@@ -71,11 +71,11 @@ public class Application {
 
       SpringApplication application = new SpringApplication(Application.class);
       Environment environment = application.run(args).getEnvironment();
-      logger.info("Access URLs:\n----------------------------------------------------------\n\t" +
-          "Local web service: \t\t\t\thttp://127.0.0.1:" + options.browserPort + "\n\t" +
-          "External web service: \t\t\thttp://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.browserPort + "\n\t" +
-          "Local websocket service: \t\thttp://127.0.0.1:" + options.wsPort + "\n\t" +
-          "External websocket service: \thttp://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.wsPort + "\n----------------------------------------------------------");
+      logger.info("Access URLs:\n----------------------------------------------------------\n" +
+          "  Local web service:          http://127.0.0.1:" + options.browserPort + "\n" +
+          "  External web service:       http://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.browserPort + "\n" +
+          "  Local websocket service:    http://127.0.0.1:" + options.wsPort + "\n" +
+          "  External websocket service: http://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.wsPort + "\n----------------------------------------------------------");
 
     } catch (ParameterException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));

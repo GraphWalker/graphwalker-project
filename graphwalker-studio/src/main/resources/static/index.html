@@ -42,79 +42,75 @@
         <li data-icon="delete">
           <a href="#" data-rel="close">Close menu</a>
         </li>
-        <li>
-          <button type='button' id="loadModel" onclick="graphwalker.studio.onLoadModel()">Load model</button>
+      </ul>
+
+      <ul data-role="listview" data-theme="b" class="nav-search">
         </li>
-        <li>
-          <button type='button' id="saveModel" onclick="graphwalker.studio.onSaveModel()">Save model</button>
+          <fieldset data-role="fieldcontain">
+            <button type='button' data-mini="true" id="newTest" onclick="graphwalker.studio.onNewTest()">New test</button>
+            <button type='button' data-mini="true" id="loadTest" onclick="graphwalker.studio.onLoadTest()">Load test</button>
+            <button type='button' data-mini="true" id="saveTest" onclick="graphwalker.studio.onSaveTest()">Save test</button>
+          </fieldset>
+         </li>
+      </ul>
+
+      <ul data-role="listview" data-theme="b" class="nav-search">
         </li>
-        <li>
-          <button type='button' id="runModel" onclick="graphwalker.studio.onRunModel()">Run model</button>
-        </li>
-        <li>
+        <fieldset data-role="fieldcontain">
+          <button type='button' data-mini="true" id="runTest" onclick="graphwalker.studio.onRunTest()">Run test</button>
+          <button type='button' data-mini="true" id="resetTest" onclick="graphwalker.studio.onResetTest()">Reset test</button>
+          <button type='button' data-mini="true" id="pausePlayExecution" onclick="graphwalker.studio.onPausePlayExecution(this)" value="Pause">Pause</button>
+          <button type='button' data-mini="true" id="stepExecution" onclick="graphwalker.studio.onStepExecution()">Step</button>
+        </fieldset>
+
           <label for="executionSpeedSlider">Execution delay (ms)</label>
           <input type="range" id="executionSpeedSlider" value="0" min="0" max="500" data-highlight="true"/>
         </li>
-        <li>
-          <button type='button' id="resetModel" onclick="graphwalker.studio.onResetModel()">Reset</button>
+      </ul>
+
+      <ul data-role="listview" data-theme="b" class="nav-search">
         </li>
-        <li>
-          <button type='button' id="pausePlayExecution" onclick="graphwalker.studio.onPausePlayExecution(this)" value="Pause">Pause</button>
-        </li>
-        <li>
-          <button type='button' id="stepExecution" onclick="graphwalker.studio.onStepExecution()">Step</button>
-        </li>
-        <li>
-          <button type='button' id="addModel" onclick="graphwalker.studio.onAddModel()">Add Model</button>
-        </li>
-        <li>
-          <button type='button' id="doLayout" onclick="graphwalker.studio.onDoLayout()">Do layout</button>
+        <fieldset data-role="fieldcontain">
+          <button type='button' data-mini="true" id="addModel" onclick="graphwalker.studio.onAddModel()">Add Model</button>
+          <button type='button' data-mini="true" id="doLayout" onclick="graphwalker.studio.onDoLayout()">Do layout</button>
+        </fieldset>
         </li>
       </ul>
+
       <ul data-role="listview" data-theme="b" class="nav-search">
-        <li>
-          <label for="modelName">Model name</label>
-          <input type="text" id="modelName" value=""/>
         </li>
-        <li>
-          <label for="generator">Model generator</label>
-          <input type="text" id="generator" value=""/>
-        </li>
-        <li>
-          <label for="modelActions">Model actions</label>
-          <input type="text" id="modelActions" value=""/>
-        </li>
-        <li>
-          <label for="modelRequirement">Model requirement</label>
-          <input type="text" id="modelRequirement" value=""/>
-        </li>
-        <li>
-          <label for="label">Element name</label>
-          <input type="text" id="label" value=""/>
-        </li>
-        <li>
-          <label for="label">Element id</label>
-          <input type="text" id="elementId" value="" readonly/>
-        </li>
-        <li>
-          <label for="sharedStateName">Shared state name</label>
-          <input type="text" id="sharedStateName" value=""/>
-        </li>
-        <li>
-          <label for="guard">Guard</label>
-          <input type="text" id="guard" value=""/>
-        </li>
-        <li>
-          <label for="actions">Actions</label>
-          <input type="text" id="actions" value=""/>
-        </li>
-        <li>
-          <label for="requirements">Requirements</label>
-          <input type="text" id="requirements" value=""/>
-        </li>
-        <li>
-          <input type="checkbox" id="checkboxStartElement" class="custom"/>
-          <label for="checkboxStartElement">Start element</label>
+          <label for="modelName">Model name:</label>
+          <input type="text" data-mini="true" id="modelName" value="" placeholder="model name"/>
+
+          <label for="generator">Model generator:</label>
+          <input type="text" data-mini="true" id="generator" value="" value="" placeholder="generator(s)"/>
+
+          <label for="modelActions">Model actions:</label>
+          <input type="text" data-mini="true" id="modelActions" value="" value="" placeholder="model action(s)"/>
+
+          <label for="modelRequirement">Model requirement:</label>
+          <input type="text" data-mini="true" id="modelRequirement" value="" value="" placeholder="model requirement(s)"/>
+
+          <label for="label">Element name:</label>
+          <input type="text" data-mini="true" id="label" value="" value="" placeholder="element name"/>
+
+          <label for="label">Element id:</label>
+          <input type="text" data-mini="true" id="elementId" value="" readonly/>
+
+          <label for="sharedStateName">Shared name:</label>
+          <input type="text" data-mini="true" id="sharedStateName" value="" value="" placeholder="element shared name"/>
+
+          <label for="guard">Guard:</label>
+          <input type="text" data-mini="true" id="guard" value="" value="" placeholder="element guard"/>
+
+          <label for="actions">Actions:</label>
+          <input type="text" data-mini="true" id="actions" value="" value="" placeholder="element action(s)"/>
+
+          <label for="requirements">Requirements:</label>
+          <input type="text" data-mini="true" id="requirements" value="" value="" placeholder="element requirement(s)"/>
+
+          <label for="checkboxStartElement">Start element:</label>
+          <input type="checkbox" data-mini="true" id="checkboxStartElement" class="custom"/>
         </li>
       </ul>
     </div>
@@ -138,9 +134,9 @@
 
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.12.0.js"></script>
-  <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.6.1/cytoscape.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.7.6/cytoscape.min.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js"></script>
   <script type="text/javascript" src="https://cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js"></script>
   <script type="text/javascript" src="bundle.js"></script>

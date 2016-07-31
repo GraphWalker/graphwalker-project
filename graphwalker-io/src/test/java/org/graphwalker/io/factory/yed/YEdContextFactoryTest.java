@@ -26,6 +26,7 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
+import org.apache.commons.io.IOUtils;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
@@ -35,6 +36,7 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.TestExecutionContext;
+import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
@@ -44,6 +46,9 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -320,5 +325,19 @@ public class YEdContextFactoryTest {
       is(readCContexts.get(0).getModel().getVertices().size()));
     Assert.assertThat(writeContext.getModel().getEdges().size(),
       is(readCContexts.get(0).getModel().getEdges().size()));
+  }
+
+  @Test
+  public void createfromString() throws IOException {
+    StringWriter writer = new StringWriter();
+    IOUtils.copy(ResourceUtils.getResourceAsStream("graphml/blocked/blockedVertex2.graphml"), writer, StandardCharsets.UTF_8);
+    String grapmlStr = writer.toString();
+
+    List<Context> contexts = new YEdContextFactory().create(grapmlStr);
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
+    Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 }
