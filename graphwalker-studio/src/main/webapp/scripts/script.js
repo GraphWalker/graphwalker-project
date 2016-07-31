@@ -41,8 +41,8 @@ export function onNewTest() {
   defaultUI();
 }
 
-export function onLoadModel() {
-  console.log('onLoadModel');
+export function onLoadTest() {
+  console.log('onLoadTest');
 
   removeTest();
 
@@ -77,8 +77,8 @@ export function onLoadModel() {
   });
 }
 
-export function onSaveModel() {
-  console.log('onSaveModel');
+export function onSaveTest() {
+  console.log('onSaveTest');
   var link = document.createElement('a');
   link.setAttribute('download', graphs.name + '.json');
   link.href = makeJsonGraphFile();
@@ -243,8 +243,8 @@ export function onPausePlayExecution(element) {
   stepExecution = false;
 
   if (pauseExecution) {
-    document.getElementById('runModel').disabled = true;
-    document.getElementById('resetModel').disabled = true;
+    document.getElementById('runTest').disabled = true;
+    document.getElementById('resetTest').disabled = true;
     document.getElementById('pausePlayExecution').disabled = false;
     document.getElementById('stepExecution').disabled = true;
     document.getElementById('pausePlayExecution').innerHTML = 'Pause';
@@ -255,8 +255,8 @@ export function onPausePlayExecution(element) {
     };
     doSend(JSON.stringify(hasNext));
   } else {
-    document.getElementById('runModel').disabled = true;
-    document.getElementById('resetModel').disabled = false;
+    document.getElementById('runTest').disabled = true;
+    document.getElementById('resetTest').disabled = false;
     document.getElementById('pausePlayExecution').disabled = false;
     document.getElementById('stepExecution').disabled = false;
     document.getElementById('pausePlayExecution').innerHTML = 'Run';
@@ -266,8 +266,8 @@ export function onPausePlayExecution(element) {
 
 export function onStepExecution() {
   console.log('onStepExecution: ' + currentModelId);
-  document.getElementById('runModel').disabled = true;
-  document.getElementById('resetModel').disabled = false;
+  document.getElementById('runTest').disabled = true;
+  document.getElementById('resetTest').disabled = false;
   document.getElementById('pausePlayExecution').disabled = false;
   document.getElementById('stepExecution').disabled = false;
   stepExecution = true;
@@ -279,16 +279,16 @@ export function onStepExecution() {
 }
 
 // Run the execution of the state machine
-export function onRunModel() {
-  console.log('onRunModel: ' + currentModelId);
+export function onRunTest() {
+  console.log('onRunTest: ' + currentModelId);
 
   // Reset any previous runs
-  onResetModel();
+  onResetTest();
 
   $('.ui-panel').panel('close');
 
-  document.getElementById('runModel').disabled = true;
-  document.getElementById('resetModel').disabled = true;
+  document.getElementById('runTest').disabled = true;
+  document.getElementById('resetTest').disabled = true;
   document.getElementById('pausePlayExecution').disabled = false;
   document.getElementById('stepExecution').disabled = true;
   document.getElementById('addModel').disabled = true;
@@ -304,8 +304,8 @@ export function onRunModel() {
 }
 
 // Reset the state machine to it's initial state
-export function onResetModel() {
-  console.log('onResetModel: ' + currentModelId);
+export function onResetTest() {
+  console.log('onResetTest: ' + currentModelId);
   defaultUI();
 
   document.getElementById('issues').innerHTML = 'Ready';
@@ -374,8 +374,8 @@ document.addEventListener('startEvent', function () {
   console.log('startEvent: ' + currentModelId);
 
   // Change some UI elements
-  document.getElementById('runModel').disabled = true;
-  document.getElementById('resetModel').disabled = true;
+  document.getElementById('runTest').disabled = true;
+  document.getElementById('resetTest').disabled = true;
   document.getElementById('pausePlayExecution').disabled = false;
   document.getElementById('stepExecution').disabled = true;
 
@@ -947,15 +947,15 @@ function readGraphFromJSON(jsonGraphs) {
 function defaultUI() {
   console.log('defaultUI');
   if (Object.keys(graphs).length > 0 && currentModelId !== undefined) {
-    document.getElementById('runModel').disabled = false;
-    document.getElementById('resetModel').disabled = true;
+    document.getElementById('runTest').disabled = false;
+    document.getElementById('resetTest').disabled = true;
     document.getElementById('stepExecution').disabled = true;
     document.getElementById('pausePlayExecution').innerHTML = 'Pause';
     document.getElementById('pausePlayExecution').disabled = true;
     document.getElementById('addModel').disabled = false;
   } else {
-    document.getElementById('runModel').disabled = false;
-    document.getElementById('resetModel').disabled = false;
+    document.getElementById('runTest').disabled = false;
+    document.getElementById('resetTest').disabled = false;
     document.getElementById('stepExecution').disabled = false;
     document.getElementById('pausePlayExecution').innerHTML = 'Pause';
     document.getElementById('pausePlayExecution').disabled = false;
@@ -1087,8 +1087,8 @@ function onMessage(event) {
           document.dispatchEvent(hasNextEvent);
         } else {
           defaultUI();
-          document.getElementById('runModel').disabled = true;
-          document.getElementById('resetModel').disabled = false;
+          document.getElementById('runTest').disabled = true;
+          document.getElementById('resetTest').disabled = false;
         }
       } else {
         defaultUI();
