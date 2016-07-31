@@ -34,8 +34,18 @@ export function onDisconnect() {
   }
 }
 
+export function onNewTest() {
+  console.log('onNewTest');
+  removeTest();
+  emptyInitialControlStates();
+  defaultUI();
+}
+
 export function onLoadModel() {
   console.log('onLoadModel');
+
+  removeTest();
+
   $('<input type="file" class="ui-helper-hidden-accessible" />')
     .appendTo('body')
     .focus()
@@ -80,6 +90,25 @@ export function onSaveModel() {
     link.dispatchEvent(event);
     document.body.removeChild(link);
   });
+}
+
+export function removeTest() {
+  console.log('removeTest');
+
+  $('#tabs > ul > li').each(function() {
+    $(this).remove();
+  });
+
+  $('#tabs > div').each(function() {
+    var id = $(this).attr('id').substr(2);
+    $(this).remove();
+    $('#A-' + id).remove();
+    removeModel(id);
+  });
+
+  var tabs = $('#tabs');
+  tabs.tabs('refresh');
+  tabs.hide();
 }
 
 export function makeJsonGraphFile() {
@@ -299,6 +328,8 @@ export function onResetModel() {
 
 export function onAddModel() {
   console.log('onAddModel');
+  enableModelControls();
+
   var id = generateUUID();
   var graph = createTab(id, 'New model');
   graph.name = 'New model';
@@ -482,6 +513,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function createTab(modelId, modelName) {
   console.log('createTab: ' + modelId + ', ' + modelName);
+  enableModelControls();
 
   var tabs = $('#tabs').tabs();
   var ul = tabs.find('ul');
@@ -1084,21 +1116,7 @@ function onMessage(event) {
         document.getElementById('issues').innerHTML = 'No issues';
         console.log('Command getModel ok');
 
-
-        $('#tabs > ul > li').each(function() {
-          $(this).remove();
-        });
-
-        $('#tabs > div').each(function() {
-          var id = $(this).attr('id').substr(2);
-          $(this).remove();
-          $('#A-' + id).remove();
-          removeModel(id);
-        });
-
-        var tabs = $('#tabs');
-        tabs.tabs('refresh');
-        tabs.hide();
+        removeTest();
 
         readGraphFromJSON(JSON.parse(message.models));
         tabs.show();
@@ -1193,6 +1211,48 @@ function waitForSocketConnection(socket, callback){
     }, 5); // wait 5 milisecond for the connection...
 }
 
+function enableModelControls() {
+  $('#modelName').textinput('enable');
+  $('#generator').textinput('enable');
+  $('#modelActions').textinput('enable');
+  $('#modelRequirements').textinput('enable');
+}
+
+function emptyInitialControlStates() {
+  $('#modelName').val('');
+  $('#modelName').textinput('disable');
+
+  $('#generator').val('');
+  $('#generator').textinput('disable');
+
+  $('#modelActions').val('');
+  $('#modelActions').textinput('disable');
+
+  $('#modelRequirements').val('');
+  $('#modelRequirements').textinput('disable');
+
+  $('#label').val('');
+  $('#label').val('').textinput('disable');
+
+  $('#elementId').val('');
+  $('#elementId').val('').textinput('disable');
+
+  $('#sharedStateName').val('');
+  $('#sharedStateName').val('').textinput('disable');
+
+  $('#guard').val('');
+  $('#guard').val('').textinput('disable');
+
+  $('#actions').val('');
+  $('#actions').val('').textinput('disable');
+
+  $('#requirements').val('');
+  $('#requirements').val('').textinput('disable');
+
+  $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
+}
+
 $( document ).ready(function() {
+  emptyInitialControlStates();
   onConnect();
 });
