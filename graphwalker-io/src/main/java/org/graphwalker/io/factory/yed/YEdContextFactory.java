@@ -148,7 +148,8 @@ public final class YEdContextFactory implements ContextFactory {
       context.setNextElement(startEdge);
     }
 
-    return context;  }
+    return context;
+  }
 
   @Override
   public void write(List<Context> contexts, Path path) throws IOException {
