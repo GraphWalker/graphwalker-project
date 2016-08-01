@@ -188,6 +188,10 @@ export function generateJsonGraph() {
     */
     graphs[modelId].nodes().each(function( index, node) {
 
+      if (node.data().startVertex === true) {
+        return true;
+      }
+
       var actions = [];
       if (node.data().actions) {
         actions.push(node.data().actions);
@@ -223,6 +227,10 @@ export function generateJsonGraph() {
     * representation of the edge
     */
     graphs[modelId].edges().each(function(index, edge) {
+
+      if (edge.data().source === 'Start') {
+        edge.data().source = null;
+      }
 
       var actions = [];
       if (edge.data().actions) {
@@ -913,7 +921,7 @@ function readGraphFromJSON(jsonGraphs) {
       var jsonEdge = jsonEdges[i];
 
       // If source vertex is undefined, assume start vertex
-      if (jsonEdge.sourceVertexId === undefined) {
+      if (jsonEdge.sourceVertexId === undefined || jsonEdge.sourceVertexId === null) {
         jsonEdge.sourceVertexId = 'Start';
 
         graph.add({
