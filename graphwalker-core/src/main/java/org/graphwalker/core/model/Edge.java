@@ -227,7 +227,11 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
    * @return The edge
    */
   public Edge setDependency(Double dependency) {
-	this.dependency = dependency;
+	if (dependency > 1 && dependency <= 100) {
+		this.dependency = dependency / 100;
+	} else {
+		this.dependency = dependency;
+	}
 	invalidateCache();
 	return this;
   }
