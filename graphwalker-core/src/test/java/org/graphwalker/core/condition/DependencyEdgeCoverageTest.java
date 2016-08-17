@@ -60,8 +60,8 @@ public class DependencyEdgeCoverageTest {
   public void testFulfilmentOneEdgeBelowDependency() {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
-    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
-    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(80);
     Model model = new Model().addEdge(e1).addEdge(e2);
     StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
@@ -81,8 +81,8 @@ public class DependencyEdgeCoverageTest {
   public void testFulfilment() {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
-    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
-    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(80);
     Model model = new Model().addEdge(e1).addEdge(e2);
     StopCondition condition = new DependencyEdgeCoverage(75);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
@@ -102,8 +102,8 @@ public class DependencyEdgeCoverageTest {
   public void testIsFulfilled() {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
-    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
-    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(80);
     Model model = new Model().addEdge(e2).addEdge(e1);
     StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
@@ -127,8 +127,8 @@ public class DependencyEdgeCoverageTest {
   public void testIsFulfilledHighDependencyTreshold() {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
-    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.8);
-    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(80);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(80);
     Model model = new Model().addEdge(e2).addEdge(e1);
     StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
@@ -152,8 +152,8 @@ public class DependencyEdgeCoverageTest {
   public void testIsFulfilledDependencyTreshold() {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
-    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(0.9);
-    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(0.8);
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
+    Edge e2 = new Edge().setSourceVertex(v2).setTargetVertex(v1).setDependency(80);
     Model model = new Model().addEdge(e2).addEdge(e1);
     StopCondition condition = new DependencyEdgeCoverage(85);
     Context context = new TestExecutionContext(model, new RandomPath(condition));

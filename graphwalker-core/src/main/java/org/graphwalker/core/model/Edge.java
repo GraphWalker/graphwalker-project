@@ -58,7 +58,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
   private Guard guard;
   private List<Action> actions = new ArrayList<>();
   private Double weight = 0.0;
-  private Double dependency = 0.0;
+  private Integer dependency = 0;
 
   /**
    * Sets the source vertex of the edge.
@@ -214,7 +214,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
    * @return The dependency as double.
    * @see Edge#setDependenct
    */
-  public Double getDependency() {
+  public Integer getDependency() {
 	return dependency;
   }
 
@@ -226,12 +226,8 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
    * @param dependency a double between 0 and 1
    * @return The edge
    */
-  public Edge setDependency(Double dependency) {
-	if (dependency > 1 && dependency <= 100) {
-		this.dependency = dependency / 100;
-	} else {
-		this.dependency = dependency;
-	}
+  public Edge setDependency(Integer dependency) {
+	this.dependency = dependency;
 	invalidateCache();
 	return this;
   }
@@ -250,7 +246,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
     private final RuntimeVertex targetVertex;
     private final Guard guard;
     private final Double weight;
-    private final Double dependency;
+    private final Integer dependency;
 
     private RuntimeEdge(Edge edge) {
       super(edge.getId(), edge.getName(), edge.getActions(), edge.getRequirements(), edge.getProperties());
@@ -351,11 +347,21 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
     /**
      * Gets the dependency of the edge.
      *
-     * @return The dependency as double.
+     * @return The dependency as Integer.
      * @see Edge#setDependency
      */
-	public double getDependency() {
+	public Integer getDependency() {
 		return dependency;
+	}
+	
+	 /**
+     * Gets the dependency of the edge.
+     *
+     * @return The dependency as Double.
+     * @see Edge#setDependency
+     */
+	public double getDependencyAsDouble() {
+		return (double)getDependency() / 100;
 	}
 
 

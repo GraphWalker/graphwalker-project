@@ -47,7 +47,7 @@ public class JsonEdge {
   private List<String> actions;
   private List<String> requirements;
   private Map<String, Object> properties;
-  private double dependency;
+  private Integer dependency;
   private String sourceVertexId;
   private String targetVertexId;
 
