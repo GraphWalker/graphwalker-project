@@ -248,15 +248,15 @@ public class JsonContextFactoryTest {
 	    Assert.assertThat(context.getModel().getEdges().size(), is(4));
 
 	    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
-	    Assert.assertThat(e.getDependency(), is(1d));
+	    Assert.assertThat(e.getDependency(), is(100));
 
 	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e1");
-	    Assert.assertThat(e.getDependency(), is(1d));
+	    Assert.assertThat(e.getDependency(), is(100));
 
 	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e2");
-	    Assert.assertThat(e.getDependency(), is(0.85d));
+	    Assert.assertThat(e.getDependency(), is(85));
 
 	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e3");
-	    Assert.assertThat(e.getDependency(), is(0.15d));
+	    Assert.assertThat(e.getDependency(), is(15));
   }
 }
