@@ -47,6 +47,7 @@ public class JsonEdge {
   private List<String> actions;
   private List<String> requirements;
   private Map<String, Object> properties;
+  private Integer dependency;
   private String sourceVertexId;
   private String targetVertexId;
 
@@ -62,6 +63,7 @@ public class JsonEdge {
     Edge edge = new Edge();
     edge.setId(id);
     edge.setName(name);
+    edge.setDependency(dependency);
     edge.setGuard(new Guard(guard));
 
     if (actions != null) {
@@ -86,6 +88,7 @@ public class JsonEdge {
   public void setEdge(Edge.RuntimeEdge edge) {
     id = edge.getId();
     name = edge.getName();
+    dependency = edge.getDependency();
     if (edge.hasGuard()) {
       guard = edge.getGuard().getScript();
     }
@@ -130,6 +133,8 @@ public class JsonEdge {
       edge.setName(name);
     }
 
+    edge.setDependency(dependency);
+    
     if (guard != null) {
       edge.setGuard(new Guard(guard));
     }
