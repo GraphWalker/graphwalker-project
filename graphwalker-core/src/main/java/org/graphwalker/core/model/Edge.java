@@ -58,6 +58,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
   private Guard guard;
   private List<Action> actions = new ArrayList<>();
   private Double weight = 0.0;
+  private Integer dependency = 0;
 
   /**
    * Sets the source vertex of the edge.
@@ -208,6 +209,30 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
   }
 
   /**
+   * Gets the dependency of the edge.
+   *
+   * @return The dependency as double.
+   * @see Edge#setDependenct
+   */
+  public Integer getDependency() {
+	return dependency;
+  }
+
+  /**
+   * The dependency shows how much targetVertex depends on sourceVertex.
+   * One way to obtain the dependency is by using
+   *  process mining to generate a model out of log files.
+   *
+   * @param dependency a double between 0 and 1
+   * @return The edge
+   */
+  public Edge setDependency(Integer dependency) {
+	this.dependency = dependency;
+	invalidateCache();
+	return this;
+  }
+
+/**
    * <h1>RuntimeEdge</h1>
    * Immutable class for Edge
    * </p>
@@ -221,6 +246,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
     private final RuntimeVertex targetVertex;
     private final Guard guard;
     private final Double weight;
+    private final Integer dependency;
 
     private RuntimeEdge(Edge edge) {
       super(edge.getId(), edge.getName(), edge.getActions(), edge.getRequirements(), edge.getProperties());
@@ -228,6 +254,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
       this.targetVertex = build(edge.getTargetVertex());
       this.guard = edge.getGuard();
       this.weight = edge.getWeight();
+      this.dependency = edge.getDependency();
     }
 
     private <T> T build(Builder<T> builder) {
@@ -299,6 +326,8 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
         + ((targetVertex == null) ? 0 : targetVertex.hashCode());
       result = prime * result
         + ((weight == null) ? 0 : weight.hashCode());
+      result = prime * result
+    	        + ((dependency == null) ? 0 : dependency.hashCode());
       return result;
     }
 
@@ -311,8 +340,29 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
       return Objects.equals(sourceVertex, that.sourceVertex) &&
         Objects.equals(targetVertex, that.targetVertex) &&
         Objects.equals(guard, that.guard) &&
-        Objects.equals(weight, that.weight);
+        Objects.equals(weight, that.weight) &&
+        Objects.equals(dependency, that.dependency);
     }
+
+    /**
+     * Gets the dependency of the edge.
+     *
+     * @return The dependency as Integer.
+     * @see Edge#setDependency
+     */
+	public Integer getDependency() {
+		return dependency;
+	}
+	
+	 /**
+     * Gets the dependency of the edge.
+     *
+     * @return The dependency as Double.
+     * @see Edge#setDependency
+     */
+	public double getDependencyAsDouble() {
+		return (double)getDependency() / 100;
+	}
 
 
   }
