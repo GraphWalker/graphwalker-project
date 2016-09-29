@@ -51,8 +51,8 @@ public class ResultTest {
    * Verifies statistics model with requirements.
    */
   @Test
-  public void UC01() throws IOException {
-    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/UC01.json"));
+  public void Login() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/Login.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
 
@@ -63,26 +63,26 @@ public class ResultTest {
     Assert.assertThat("totalNotExecutedNumberOfModels", results.getInt("totalNotExecutedNumberOfModels"), is(0));
 
     Assert.assertThat("vertexCoverage", results.getInt("vertexCoverage"), is(100));
-    Assert.assertThat("totalNumberOfEdges", results.getInt("totalNumberOfEdges"), is(12));
-    Assert.assertThat("totalNumberOfVisitedVertices", results.getInt("totalNumberOfVisitedVertices"), is(7));
+    Assert.assertThat("totalNumberOfEdges", results.getInt("totalNumberOfEdges"), is(9));
+    Assert.assertThat("totalNumberOfVisitedVertices", results.getInt("totalNumberOfVisitedVertices"), is(3));
     Assert.assertThat("totalNumberOfUnvisitedVertices", results.getInt("totalNumberOfUnvisitedVertices"), is(0));
-    Assert.assertThat("totalNumberOfVisitedEdges", results.getInt("totalNumberOfVisitedEdges"), is(12));
+    Assert.assertThat("totalNumberOfVisitedEdges", results.getInt("totalNumberOfVisitedEdges"), is(9));
     Assert.assertThat("edgeCoverage", results.getInt("edgeCoverage"), is(100));
-    Assert.assertThat("totalNumberOfVertices", results.getInt("totalNumberOfVertices"), is(7));
+    Assert.assertThat("totalNumberOfVertices", results.getInt("totalNumberOfVertices"), is(3));
     Assert.assertThat("totalNumberOfUnvisitedEdges", results.getInt("totalNumberOfUnvisitedEdges"), is(0));
 
 
     // The requirement part
-    Assert.assertThat("totalNumberOfRequirement", results.getInt("totalNumberOfRequirement"), is(4));
+    Assert.assertThat("totalNumberOfRequirement", results.getInt("totalNumberOfRequirement"), is(3));
     Assert.assertThat("totalNumberOfUncoveredRequirement", results.getInt("totalNumberOfUncoveredRequirement"), is(0));
-    Assert.assertThat("totalNumberOfPassedRequirement", results.getInt("totalNumberOfPassedRequirement"), is(4));
+    Assert.assertThat("totalNumberOfPassedRequirement", results.getInt("totalNumberOfPassedRequirement"), is(3));
 
-    Assert.assertThat("requirementsPassed", results.getJSONArray("requirementsPassed").length(), is(4));
+    Assert.assertThat("requirementsPassed", results.getJSONArray("requirementsPassed").length(), is(3));
     List<String> requirements = new ArrayList<>();
     for (int index = 0; index <  results.getJSONArray("requirementsPassed").length(); index++ ) {
       requirements.add(results.getJSONArray("requirementsPassed").getJSONObject(index).getString("requirementKey"));
     }
-    List<String> expectedRequirements = Arrays.asList("UC01 2.2.1", "UC01 2.2.2", "UC01 2.2.3", "UC01 2.3");
+    List<String> expectedRequirements = Arrays.asList("Req 1", "Req 2", "Req 3");
     Collections.sort(requirements);
     Assert.assertThat("requirementsPassed list", requirements.toArray(), is(expectedRequirements.toArray()));
 

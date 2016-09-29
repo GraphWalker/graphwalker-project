@@ -85,8 +85,8 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void UC01WithSimpleMachine() throws IOException {
-    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/UC01.json")));
+  public void LoginWithSimpleMachine() throws IOException {
+    SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/Login.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
     }

@@ -1,0 +1,155 @@
+{
+  "models": [
+    {
+      "name": "Login",
+      "id": "853429e2-0528-48b9-97b3-7725eafbb8b5",
+      "generator": "random(edge_coverage(100))",
+      "actions": [],
+      "vertices": [
+        {
+          "id": "n1",
+          "name": "v_ClientNotRunning",
+          "sharedState": "CLIENT_NOT_RUNNNG",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "x": 232,
+            "description": "Start the client process",
+            "y": 165
+          }
+        },
+        {
+          "id": "n2",
+          "name": "v_LoginPrompted",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "x": -64.33185840707965,
+            "description": "Thus shla be prompted for user credentilas",
+            "y": 311
+          }
+        },
+        {
+          "id": "n3",
+          "name": "v_Browse",
+          "sharedState": "LOGGED_IN",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "x": 236,
+            "description": "A successful login is expected.\nThe user is presented with the initial view of the client.",
+            "y": 457
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e0",
+          "name": "e_Init",
+          "actions": [
+            "validLogin=false;rememberMe=false;"
+          ],
+          "requirements": [],
+          "properties": {
+            "description": "Remove all cache and user settings from file system."
+          },
+          "sourceVertexId": "Start",
+          "targetVertexId": "n1"
+        },
+        {
+          "id": "e1",
+          "name": "e_StartClient",
+          "guard": "!rememberMe||!validLogin",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "n1",
+          "targetVertexId": "n2"
+        },
+        {
+          "id": "e2",
+          "name": "e_ValidPremiumCredentials",
+          "actions": [
+            "validLogin=true;"
+          ],
+          "requirements": [],
+          "properties": {
+            "description": "Log in a s Premium user, using valid credentials"
+          },
+          "sourceVertexId": "n2",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e3",
+          "name": "e_Logout",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "description": "Logout current user from Spotify"
+          },
+          "sourceVertexId": "n3",
+          "targetVertexId": "n2"
+        },
+        {
+          "id": "e4",
+          "name": "e_Exit",
+          "actions": [],
+          "requirements": [],
+          "properties": {
+            "description": "Exit and shutdown the client process"
+          },
+          "sourceVertexId": "n3",
+          "targetVertexId": "n1"
+        },
+        {
+          "id": "e5",
+          "name": "e_ToggleRememberMe",
+          "actions": [
+            "rememberMe=!rememberMe;"
+          ],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "n2",
+          "targetVertexId": "n2"
+        },
+        {
+          "id": "e6",
+          "name": "e_Close",
+          "actions": [],
+          "requirements": [
+            "Req 1"
+          ],
+          "properties": [],
+          "sourceVertexId": "n2",
+          "targetVertexId": "n1"
+        },
+        {
+          "id": "e7",
+          "name": "e_StartClient",
+          "guard": "rememberMe&&validLogin",
+          "actions": [],
+          "requirements": [
+            "Req 2"
+          ],
+          "properties": [],
+          "sourceVertexId": "n1",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e8",
+          "name": "e_InvalidCredentials",
+          "actions": [
+            "validLogin=false;"
+          ],
+          "requirements": [
+            "Req 3"
+          ],
+          "properties": [],
+          "sourceVertexId": "n2",
+          "targetVertexId": "n2"
+        }
+      ],
+      "startElementId": "e0"
+    }
+  ]
+}
