@@ -162,6 +162,8 @@ public class ConvertionContextFactoryTest {
 
     Path tmpFolder = testFolder.getRoot().toPath();
     new JavaContextFactory().write(yEdContexts, tmpFolder);
+
+    Assert.assertThat("File doesn't exist", new File(tmpFolder.toString() + "/UC01_GW2.java").exists(), is(true));
   }
 
   @Test

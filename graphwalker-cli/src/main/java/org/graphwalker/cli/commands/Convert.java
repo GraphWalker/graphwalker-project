@@ -28,15 +28,17 @@ package org.graphwalker.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 
 @Parameters(commandDescription = "Convert a graph in file format, to some other format. See http://graphwalker.org/docs/command_line_syntax")
 public class Convert {
 
-  @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
-    description = "This command requires an input file, and an output file. " +
+  @Parameter(names = {"--input", "-i"}, required = true, arity = 1,
+    description = "This command requires an input file." +
       "See http://graphwalker.org/docs/command_line_syntax")
-  public List<String> input = new ArrayList<>();
+  public String input = "";
+
+  @Parameter(names = {"--format", "-f"}, required = false, arity = 1,
+    description = "Which format to convert into. Valid key words are: JSON [default], GRAPHML, DOT or JAVA")
+  public String format = ContextFactoryScanner.JSON;
 }

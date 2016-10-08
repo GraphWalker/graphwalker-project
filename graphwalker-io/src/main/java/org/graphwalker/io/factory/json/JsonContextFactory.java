@@ -63,14 +63,14 @@ public final class JsonContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path jsonFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".json");
-    Files.newOutputStream(jsonFile).write(String.valueOf(getJsonFromContexts(contexts)).getBytes());
+    Files.newOutputStream(jsonFile).write(String.valueOf(getAsString(contexts)).getBytes());
   }
 
   public String getJsonFromModel(Model model) {
     return new Gson().toJson(model);
   }
 
-  public String getJsonFromContexts(List<Context> contexts) {
+  public String getAsString(List<Context> contexts) {
     JsonMultimodel jsonMultimodel = new JsonMultimodel();
     for (Context context : contexts) {
       JsonModel jsonModel = new JsonModel();

@@ -236,7 +236,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         Machine machine = machines.get(socket);
         if (machine != null) {
           try {
-            response.put("models", new JsonContextFactory().getJsonFromContexts(machine.getContexts()));
+            response.put("models", new JsonContextFactory().getAsString(machine.getContexts()));
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
@@ -279,7 +279,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         response.put("success", false);
         try {
           List<Context> yedContexts = new YEdContextFactory().create(root.getString("graphml"));
-          response.put("models", new JsonContextFactory().getJsonFromContexts(yedContexts));
+          response.put("models", new JsonContextFactory().getAsString(yedContexts));
           response.put("success", true);
         } catch (Exception e) {
           logger.error(e.getMessage());

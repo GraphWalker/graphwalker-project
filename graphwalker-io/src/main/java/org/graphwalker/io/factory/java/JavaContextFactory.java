@@ -42,7 +42,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Kristian Karl
@@ -104,10 +107,11 @@ public final class JavaContextFactory implements ContextFactory {
     "}");
 
   @Override
-  public void write(List<Context> contexts, Path path) throws IOException {
+  public String getAsString(List<Context> contexts) {
+    String javaStr = "";
     for (Context context : contexts) {
       String template = StringUtils.join(javaCodeTemplate.toArray(), "\n");
-      template = template.replaceAll("\\{CLASS_NAME\\}", FilenameUtils.getBaseName(path.toString()));
+      template = template.replaceAll("\\{CLASS_NAME\\}", context.getModel().getName());
 
       int index = 0;
       String add_vertices = "";
@@ -154,8 +158,14 @@ public final class JavaContextFactory implements ContextFactory {
       template = template.replace("{ADD_EDGES}", add_edges);
       template = template.replace("{START_ELEMENT_NAME}", context.getNextElement().getName());
 
-      Path javaFile = Paths.get( path.getParent().toString(), context.getModel().getName());
-      Files.newOutputStream(javaFile).write(String.valueOf(template).getBytes());
+      javaStr += template;
     }
+    return javaStr;
+  }
+
+  @Override
+  public void write(List<Context> contexts, Path path) throws IOException {
+    Path javaFile = Paths.get(path.toString(), contexts.get(0).getModel().getName() + ".java");
+    Files.newOutputStream(javaFile).write(getAsString(contexts).getBytes());
   }
 }

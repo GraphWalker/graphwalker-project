@@ -27,20 +27,14 @@
 package org.graphwalker.cli;
 
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.core.Is.is;
 
 
 public class ConvertFilesTest extends CLITestRoot {
-
-  @Rule
-  public TemporaryFolder testFolder = new TemporaryFolder();
 
   /**
    * The java file generated, can be compiled with the cli jar, like:
@@ -52,8 +46,7 @@ public class ConvertFilesTest extends CLITestRoot {
    */
   @Test
   public void convertGraphmlToJava() throws IOException {
-    File tempFile = testFolder.newFile("UC01_GW2.java");
-    String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", tempFile.getPath()};
+    String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", "--format", "java"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     //TODO:Fix test
