@@ -60,10 +60,7 @@ import org.graphwalker.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -342,8 +339,7 @@ public class CLI {
   }
 
   private void RunCommandConvert() throws Exception {
-    String inputFileName = convert.input.get(0);
-    String outputFileName = convert.input.get(1);
+    String inputFileName = convert.input;
 
     ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
     List<Context> contexts;
@@ -354,8 +350,8 @@ public class CLI {
       throw new Exception("Model syntax error");
     }
 
-    ContextFactory outputFactory = ContextFactoryScanner.get(Paths.get(outputFileName));
-    outputFactory.write(contexts, Paths.get(outputFileName));
+    ContextFactory outputFactory = ContextFactoryScanner.get(new File("foo." + convert.format).toPath());
+    System.out.println(outputFactory.getAsString(contexts));
   }
 
   private void RunCommandSource() throws Exception {

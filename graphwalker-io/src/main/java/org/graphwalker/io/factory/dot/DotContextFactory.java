@@ -144,12 +144,14 @@ public final class DotContextFactory implements ContextFactory {
   }
 
   @Override
-  public void write(List<Context> contexts, Path path) throws IOException {
+  public String getAsString(List<Context> contexts) {
+    StringBuilder dotStr = new StringBuilder();
+
     for (Context context : contexts) {
       String newLine = System.getProperty("line.separator");
       StringBuilder str = new StringBuilder();
 
-      str.append("digraph " + FilenameUtils.getBaseName(path.toString())).append(" {").append(newLine);
+      str.append("digraph " + FilenameUtils.getBaseName(context.getModel().getName())).append(" {").append(newLine);
       for (Edge.RuntimeEdge edge : context.getModel().getEdges()) {
         if (edge.getSourceVertex() != null) {
           str.append(edge.getSourceVertex().getName());
@@ -174,10 +176,15 @@ public final class DotContextFactory implements ContextFactory {
         str.append("\"];").append(newLine);
       }
       str.append("}").append(newLine);
-
-      File folder = path.toFile().getAbsoluteFile();
-      Path dotFile = Paths.get(folder.toString(), context.getModel().getName() + ".dot");
-      Files.newOutputStream(dotFile).write(String.valueOf(str).getBytes());
+      dotStr.append(str);
     }
+    return dotStr.toString();
+  }
+
+  @Override
+  public void write(List<Context> contexts, Path path) throws IOException {
+    File folder = path.toFile().getAbsoluteFile();
+    Path dotFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".dot");
+    Files.newOutputStream(dotFile).write(String.valueOf(getAsString(contexts)).getBytes());
   }
 }

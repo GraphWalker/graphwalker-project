@@ -152,7 +152,8 @@ public final class YEdContextFactory implements ContextFactory {
   }
 
   @Override
-  public void write(List<Context> contexts, Path path) throws IOException {
+  public String getAsString(List<Context> contexts) {
+    StringBuilder graphmlStr = new StringBuilder();
     for (Context context : contexts) {
       String newLine = System.getProperty("line.separator");
       StringBuilder str = new StringBuilder();
@@ -240,10 +241,16 @@ public final class YEdContextFactory implements ContextFactory {
       str.append("  </graph>").append(newLine);
       str.append("</graphml>").append(newLine);
 
-      File folder = path.toFile().getAbsoluteFile();
-      Path graphmlFile = Paths.get(folder.toString(), context.getModel().getName() + ".graphml");
-      Files.newOutputStream(graphmlFile).write(String.valueOf(str).getBytes());
+      graphmlStr.append(str);
     }
+    return graphmlStr.toString();
+  }
+
+  @Override
+  public void write(List<Context> contexts, Path path) throws IOException {
+    File folder = path.toFile().getAbsoluteFile();
+    Path graphmlFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".graphml");
+    Files.newOutputStream(graphmlFile).write(String.valueOf(getAsString(contexts)).getBytes());
   }
 
   private Vertex addVertices(Model model, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {

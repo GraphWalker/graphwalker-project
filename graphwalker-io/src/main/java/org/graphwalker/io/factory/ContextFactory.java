@@ -40,6 +40,7 @@ public interface ContextFactory {
 
   List<Context> create(Path path) throws IOException;
 
+  String getAsString(List<Context> contexts);
   void write(List<Context> contexts, Path path) throws IOException;
 
   boolean accept(Path path);

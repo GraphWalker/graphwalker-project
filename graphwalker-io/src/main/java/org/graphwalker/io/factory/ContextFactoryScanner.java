@@ -43,6 +43,11 @@ import java.util.*;
  */
 public final class ContextFactoryScanner {
 
+  public static final String JAVA = "JAVA";
+  public static final String GRAPHML = "GRAPHML";
+  public static final String DOT = "DOT";
+  public static final String JSON = "JSON";
+
   private ContextFactoryScanner() {
   }
 
