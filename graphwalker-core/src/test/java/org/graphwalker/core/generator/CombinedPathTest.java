@@ -28,10 +28,13 @@ package org.graphwalker.core.generator;
 
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.statistics.Profiler;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -54,9 +57,11 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     Context context = new TestExecutionContext(model, generator);
+    context.setProfiler(new Profiler());
     context.setCurrentElement(start.build());
-    while (context.getPathGenerator().hasNextStep()) {
-      context.getPathGenerator().getNextStep();
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
     }
   }
 

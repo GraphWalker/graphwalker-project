@@ -28,6 +28,8 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
@@ -64,16 +66,12 @@ public class AlternativeConditionTest {
       .addStopCondition(new VertexCoverage(100))
       .addStopCondition(new ReachedEdge("e1"));
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    context.setProfiler(new Profiler());
-    assertThat(condition.getFulfilment(), is(0.0));
     context.setCurrentElement(v1.build());
-    context.getProfiler().start(context);
-    context.getProfiler().stop(context);
-    assertThat(condition.getFulfilment(), is(0.5));
-    context.setCurrentElement(e1.build());
+    Machine machine = new SimpleMachine(context);
+    assertThat(condition.getFulfilment(), is(0.0));
+    machine.getNextStep();
     assertThat(condition.getFulfilment(), is(1.0));
     assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
-
   }
 
   @Test
@@ -86,13 +84,10 @@ public class AlternativeConditionTest {
       .addStopCondition(new VertexCoverage(100))
       .addStopCondition(new ReachedEdge("e1"));
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    context.setProfiler(new Profiler());
-    assertFalse(condition.isFulfilled());
     context.setCurrentElement(v1.build());
-    context.getProfiler().start(context);
-    context.getProfiler().stop(context);
-    assertFalse(condition.isFulfilled());
-    context.setCurrentElement(e1.build());
+    Machine machine = new SimpleMachine(context);
+    assertThat(condition.getFulfilment(), is(0.0));
+    machine.getNextStep();
     assertTrue(condition.isFulfilled());
     assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
   }
