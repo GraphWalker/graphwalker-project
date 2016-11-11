@@ -120,7 +120,7 @@ var graphwalker =
 	  function Editor() {
 	    _classCallCheck(this, Editor);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Editor).call(this));
+	    return _possibleConstructorReturn(this, (Editor.__proto__ || Object.getPrototypeOf(Editor)).call(this));
 	  }
 
 	  _createClass(Editor, [{
@@ -508,18 +508,21 @@ var graphwalker =
 	});
 	exports.onConnect = onConnect;
 	exports.onDisconnect = onDisconnect;
-	exports.onLoadModel = onLoadModel;
-	exports.onSaveModel = onSaveModel;
+	exports.onNewTest = onNewTest;
+	exports.onLoadTest = onLoadTest;
+	exports.onSaveTest = onSaveTest;
+	exports.removeTest = removeTest;
 	exports.makeJsonGraphFile = makeJsonGraphFile;
 	exports.generateJsonGraph = generateJsonGraph;
 	exports.onPausePlayExecution = onPausePlayExecution;
 	exports.onStepExecution = onStepExecution;
-	exports.onRunModel = onRunModel;
-	exports.onResetModel = onResetModel;
+	exports.onRunTest = onRunTest;
+	exports.onResetTest = onResetTest;
 	exports.onAddModel = onAddModel;
 	exports.onDoLayout = onDoLayout;
 	var $ = __webpack_require__(10);
 	var cytoscape = __webpack_require__(4);
+	// http://www.cs.bilkent.edu.tr/~ivis/Cytoscape_LayoutDemo/#
 
 	// Hash array that holds all graphs/models.
 	var graphs = [];
@@ -547,40 +550,74 @@ var graphwalker =
 	function onDisconnect() {
 	  console.log('onDisconnect');
 	  if (websocket) {
-	    websocket.close();
+	    // http://stackoverflow.com/questions/25779831/how-to-catch-websocket-connection-to-ws-xxxnn-failed-connection-closed-be
+	    // https://jsfiddle.net/lamarant/ry0ty52n/
+	    websocket.close(3001);
 	  }
 	}
 
-	function onLoadModel() {
-	  console.log('onLoadModel');
+	function onNewTest() {
+	  console.log('onNewTest');
+	  removeTest();
+	  emptyInitialControlStates();
+	  defaultUI();
+	}
+
+	function onLoadTest() {
+	  console.log('onLoadTest');
+
+	  removeTest();
+
 	  $('<input type="file" class="ui-helper-hidden-accessible" />').appendTo('body').focus().trigger('click').remove().change(function (evt) {
 	    var files = evt.target.files; // FileList object
 
+
 	    // files is a FileList of File objects. List some properties.
 	    for (var i = 0, f; f = files[i]; i++) {
-	      var fr = new FileReader();
-	      fr.onload = function (e) {
-	        readGraphFromJSON(JSON.parse(e.target.result));
-	        var tabs = $('#tabs');
-	        tabs.show();
-	        for (var modelId in graphs) {
-	          if (!graphs.hasOwnProperty(modelId)) {
-	            continue;
-	          }
-	          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
-	          tabs.tabs('option', 'active', index);
-	          graphs[modelId].resize();
-	          graphs[modelId].fit();
-	        }
-	        defaultUI();
-	      };
-	      fr.readAsText(f);
+	      var fileExt = f.name.split('.').pop();
+
+	      switch (fileExt) {
+	        case 'graphml':
+	          var fr = new FileReader();
+	          fr.onload = function (e) {
+	            var convertGraphml = {
+	              command: 'convertGraphml',
+	              graphml: e.target.result
+	            };
+	            doSend(JSON.stringify(convertGraphml));
+	          };
+	          fr.readAsText(f);
+	          break;
+
+	        case 'json':
+	          var fr = new FileReader();
+	          fr.onload = function (e) {
+	            readGraphFromJSON(JSON.parse(e.target.result));
+	            var tabs = $('#tabs');
+	            tabs.show();
+	            for (var modelId in graphs) {
+	              if (!graphs.hasOwnProperty(modelId)) {
+	                continue;
+	              }
+	              var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+	              tabs.tabs('option', 'active', index);
+	              graphs[modelId].resize();
+	              graphs[modelId].fit();
+	            }
+	            defaultUI();
+	          };
+	          fr.readAsText(f);
+	          break;
+
+	        default:
+	          console.error('Unsupported file extension/format: ' + fileExt);
+	      }
 	    }
 	  });
 	}
 
-	function onSaveModel() {
-	  console.log('onSaveModel');
+	function onSaveTest() {
+	  console.log('onSaveTest');
 	  var link = document.createElement('a');
 	  link.setAttribute('download', graphs.name + '.json');
 	  link.href = makeJsonGraphFile();
@@ -592,6 +629,25 @@ var graphwalker =
 	    link.dispatchEvent(event);
 	    document.body.removeChild(link);
 	  });
+	}
+
+	function removeTest() {
+	  console.log('removeTest');
+
+	  $('#tabs > ul > li').each(function () {
+	    $(this).remove();
+	  });
+
+	  $('#tabs > div').each(function () {
+	    var id = $(this).attr('id').substr(2);
+	    $(this).remove();
+	    $('#A-' + id).remove();
+	    removeModel(id);
+	  });
+
+	  var tabs = $('#tabs');
+	  tabs.tabs('refresh');
+	  tabs.hide();
 	}
 
 	function makeJsonGraphFile() {
@@ -648,6 +704,10 @@ var graphwalker =
 	    */
 	    graphs[modelId].nodes().each(function (index, node) {
 
+	      if (node.data().startVertex === true) {
+	        return true;
+	      }
+
 	      var actions = [];
 	      if (node.data().actions) {
 	        actions.push(node.data().actions);
@@ -681,6 +741,10 @@ var graphwalker =
 	    * representation of the edge
 	    */
 	    graphs[modelId].edges().each(function (index, edge) {
+
+	      if (edge.data().source === 'Start') {
+	        edge.data().source = null;
+	      }
 
 	      var actions = [];
 	      if (edge.data().actions) {
@@ -721,8 +785,8 @@ var graphwalker =
 	  stepExecution = false;
 
 	  if (pauseExecution) {
-	    document.getElementById('runModel').disabled = true;
-	    document.getElementById('resetModel').disabled = true;
+	    document.getElementById('runTest').disabled = true;
+	    document.getElementById('resetTest').disabled = true;
 	    document.getElementById('pausePlayExecution').disabled = false;
 	    document.getElementById('stepExecution').disabled = true;
 	    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
@@ -733,8 +797,8 @@ var graphwalker =
 	    };
 	    doSend(JSON.stringify(hasNext));
 	  } else {
-	    document.getElementById('runModel').disabled = true;
-	    document.getElementById('resetModel').disabled = false;
+	    document.getElementById('runTest').disabled = true;
+	    document.getElementById('resetTest').disabled = false;
 	    document.getElementById('pausePlayExecution').disabled = false;
 	    document.getElementById('stepExecution').disabled = false;
 	    document.getElementById('pausePlayExecution').innerHTML = 'Run';
@@ -744,8 +808,8 @@ var graphwalker =
 
 	function onStepExecution() {
 	  console.log('onStepExecution: ' + currentModelId);
-	  document.getElementById('runModel').disabled = true;
-	  document.getElementById('resetModel').disabled = false;
+	  document.getElementById('runTest').disabled = true;
+	  document.getElementById('resetTest').disabled = false;
 	  document.getElementById('pausePlayExecution').disabled = false;
 	  document.getElementById('stepExecution').disabled = false;
 	  stepExecution = true;
@@ -757,16 +821,16 @@ var graphwalker =
 	}
 
 	// Run the execution of the state machine
-	function onRunModel() {
-	  console.log('onRunModel: ' + currentModelId);
+	function onRunTest() {
+	  console.log('onRunTest: ' + currentModelId);
 
 	  // Reset any previous runs
-	  onResetModel();
+	  onResetTest();
 
 	  $('.ui-panel').panel('close');
 
-	  document.getElementById('runModel').disabled = true;
-	  document.getElementById('resetModel').disabled = true;
+	  document.getElementById('runTest').disabled = true;
+	  document.getElementById('resetTest').disabled = true;
 	  document.getElementById('pausePlayExecution').disabled = false;
 	  document.getElementById('stepExecution').disabled = true;
 	  document.getElementById('addModel').disabled = true;
@@ -782,8 +846,8 @@ var graphwalker =
 	}
 
 	// Reset the state machine to it's initial state
-	function onResetModel() {
-	  console.log('onResetModel: ' + currentModelId);
+	function onResetTest() {
+	  console.log('onResetTest: ' + currentModelId);
 	  defaultUI();
 
 	  document.getElementById('issues').innerHTML = 'Ready';
@@ -805,6 +869,8 @@ var graphwalker =
 
 	function onAddModel() {
 	  console.log('onAddModel');
+	  enableModelControls();
+
 	  var id = generateUUID();
 	  var graph = createTab(id, 'New model');
 	  graph.name = 'New model';
@@ -820,6 +886,7 @@ var graphwalker =
 	    var layout = graphs[currentModelId].makeLayout({
 	      name: 'dagre',
 	      animate: true,
+	      edgeSep: 4,
 	      minLen: function minLen() {
 	        return 2;
 	      }
@@ -848,8 +915,8 @@ var graphwalker =
 	  console.log('startEvent: ' + currentModelId);
 
 	  // Change some UI elements
-	  document.getElementById('runModel').disabled = true;
-	  document.getElementById('resetModel').disabled = true;
+	  document.getElementById('runTest').disabled = true;
+	  document.getElementById('resetTest').disabled = true;
 	  document.getElementById('pausePlayExecution').disabled = false;
 	  document.getElementById('stepExecution').disabled = true;
 
@@ -984,6 +1051,7 @@ var graphwalker =
 
 	function createTab(modelId, modelName) {
 	  console.log('createTab: ' + modelId + ', ' + modelName);
+	  enableModelControls();
 
 	  var tabs = $('#tabs').tabs();
 	  var ul = tabs.find('ul');
@@ -1037,8 +1105,8 @@ var graphwalker =
 	    }).selector('edge').css({
 	      'content': 'data(name)',
 	      'text-wrap': 'wrap',
-	      //                        'curve-style' : 'unbundled-bezier',
-	      //                        'edge-text-rotation': 'autorotate',
+	      'curve-style': 'bezier',
+	      'text-rotation': 'autorotate',
 	      'target-arrow-shape': 'triangle',
 	      'width': '4',
 	      'line-color': 'data(color)',
@@ -1359,7 +1427,7 @@ var graphwalker =
 	      var jsonEdge = jsonEdges[i];
 
 	      // If source vertex is undefined, assume start vertex
-	      if (jsonEdge.sourceVertexId === undefined) {
+	      if (jsonEdge.sourceVertexId === undefined || jsonEdge.sourceVertexId === null) {
 	        jsonEdge.sourceVertexId = 'Start';
 
 	        graph.add({
@@ -1415,15 +1483,15 @@ var graphwalker =
 	function defaultUI() {
 	  console.log('defaultUI');
 	  if (Object.keys(graphs).length > 0 && currentModelId !== undefined) {
-	    document.getElementById('runModel').disabled = false;
-	    document.getElementById('resetModel').disabled = true;
+	    document.getElementById('runTest').disabled = false;
+	    document.getElementById('resetTest').disabled = true;
 	    document.getElementById('stepExecution').disabled = true;
 	    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
 	    document.getElementById('pausePlayExecution').disabled = true;
 	    document.getElementById('addModel').disabled = false;
 	  } else {
-	    document.getElementById('runModel').disabled = false;
-	    document.getElementById('resetModel').disabled = false;
+	    document.getElementById('runTest').disabled = false;
+	    document.getElementById('resetTest').disabled = false;
 	    document.getElementById('stepExecution').disabled = false;
 	    document.getElementById('pausePlayExecution').innerHTML = 'Pause';
 	    document.getElementById('pausePlayExecution').disabled = false;
@@ -1475,7 +1543,14 @@ var graphwalker =
 
 	function testWebSocket(wsUri) {
 	  console.log('testWebSocket: ' + wsUri);
-	  websocket = new WebSocket(wsUri);
+
+	  try {
+	    websocket = new WebSocket(wsUri);
+	  } catch (err) {
+	    document.getElementById('issues').style.backgroundColor = "lightred";
+	    document.getElementById('issues').innerHTML = err.message;
+	  }
+
 	  websocket.onopen = function (evt) {
 	    onOpen(evt);
 	  };
@@ -1492,6 +1567,7 @@ var graphwalker =
 
 	function onOpen(evt) {
 	  console.log('onOpen: ' + evt.data);
+	  document.getElementById('issues').style.backgroundColor = "green";
 	  document.getElementById('issues').innerHTML = 'Connected';
 	  var mode = {
 	    command: 'mode'
@@ -1500,8 +1576,16 @@ var graphwalker =
 	}
 
 	function onClose(evt) {
-	  console.log('onClose: ' + evt.data);
-	  document.getElementById('issues').innerHTML = 'Connection closed';
+	  console.log('onClose');
+	  if (evt.code == 3001) {
+	    console.log('ws closed');
+	    document.getElementById('issues').style.backgroundColor = "black";
+	    document.getElementById('issues').innerHTML = 'Connection closed';
+	  } else {
+	    console.log('ws connection error');
+	    document.getElementById('issues').style.backgroundColor = "red";
+	    document.getElementById('issues').innerHTML = 'Connection error while connecting to: ' + $('#location').val();
+	  }
 	}
 
 	function onMessage(event) {
@@ -1514,12 +1598,18 @@ var graphwalker =
 	        studioMode = message.mode;
 	        switch (message.mode) {
 	          case 'EDITOR':
+	            document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+	            document.getElementById('issues').style.backgroundColor = "green";
 	            break;
 	          case 'PLAYBACK':
+	            document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
+	            document.getElementById('issues').style.backgroundColor = "green";
 	            document.dispatchEvent(playbackEvent);
 	            break;
+	          default:
+	            document.getElementById('issues').innerHTML = 'Not connected';
+	            document.getElementById('issues').style.backgroundColor = "lightred";
 	        }
-	        document.getElementById('issues').innerHTML = 'Connected as ' + message.mode + ', ' + message.version;
 	      } else {
 	        defaultUI();
 	      }
@@ -1532,8 +1622,8 @@ var graphwalker =
 	          document.dispatchEvent(hasNextEvent);
 	        } else {
 	          defaultUI();
-	          document.getElementById('runModel').disabled = true;
-	          document.getElementById('resetModel').disabled = false;
+	          document.getElementById('runTest').disabled = true;
+	          document.getElementById('resetTest').disabled = false;
 	        }
 	      } else {
 	        defaultUI();
@@ -1561,20 +1651,7 @@ var graphwalker =
 	        document.getElementById('issues').innerHTML = 'No issues';
 	        console.log('Command getModel ok');
 
-	        $('#tabs > ul > li').each(function () {
-	          $(this).remove();
-	        });
-
-	        $('#tabs > div').each(function () {
-	          var id = $(this).attr('id').substr(2);
-	          $(this).remove();
-	          $('#A-' + id).remove();
-	          removeModel(id);
-	        });
-
-	        var tabs = $('#tabs');
-	        tabs.tabs('refresh');
-	        tabs.hide();
+	        removeTest();
 
 	        readGraphFromJSON(JSON.parse(message.models));
 	        tabs.show();
@@ -1626,18 +1703,48 @@ var graphwalker =
 	      graphs[currentModelId].$('#' + message.elementId).data('color', 'lightgreen');
 	      graphs[currentModelId].$('#' + message.elementId).select();
 	      break;
+	    case 'convertGraphml':
+	      if (message.success) {
+	        document.getElementById('issues').innerHTML = 'No issues';
+	        console.log('Command getModel ok');
+
+	        removeTest();
+
+	        readGraphFromJSON(JSON.parse(message.models));
+
+	        var tabs = $('#tabs');
+	        tabs.show();
+	        for (var modelId in graphs) {
+	          if (!graphs.hasOwnProperty(modelId)) {
+	            continue;
+	          }
+	          var index = $('#tabs').find('a[href="#A-' + modelId + '"]').parent().index();
+	          tabs.tabs('option', 'active', index);
+	          graphs[modelId].resize();
+	          graphs[modelId].fit();
+	        }
+	      }
+	      defaultUI();
+	      document.dispatchEvent(getModelEvent);
+	      break;
 	    default:
 	      break;
 	  }
 	}
 
 	function onError(evt) {
-	  console.error('Error: ' + evt.data);
-	  document.getElementById('issues').innerHTML = 'Error while connecting';
+	  console.error('onError');
+	  document.getElementById('issues').style.backgroundColor = "lightred";
+	  if (websocket.readyState == 1) {
+	    console.error('ws normal error: ' + evt.type);
+	    document.getElementById('issues').innerHTML = evt.type;
+	  } else {
+	    document.getElementById('issues').innerHTML = 'Error while connecting';
+	  }
 	}
 
 	function doSend(message) {
-	  console.log('Sending msgs: ' + message);
+	  console.log('doSend: ' + message);
 
 	  // Wait until the state of the socket is not ready and send the message when it is...
 	  waitForSocketConnection(websocket, function () {
@@ -1659,6 +1766,52 @@ var graphwalker =
 	    }
 	  }, 5); // wait 5 milisecond for the connection...
 	}
+
+	function enableModelControls() {
+	  $('#modelName').textinput('enable');
+	  $('#generator').textinput('enable');
+	  $('#modelActions').textinput('enable');
+	  $('#modelRequirements').textinput('enable');
+	}
+
+	function emptyInitialControlStates() {
+	  $('#modelName').val('');
+	  $('#modelName').textinput('disable');
+
+	  $('#generator').val('');
+	  $('#generator').textinput('disable');
+
+	  $('#modelActions').val('');
+	  $('#modelActions').textinput('disable');
+
+	  $('#modelRequirements').val('');
+	  $('#modelRequirements').textinput('disable');
+
+	  $('#label').val('');
+	  $('#label').val('').textinput('disable');
+
+	  $('#elementId').val('');
+	  $('#elementId').val('').textinput('disable');
+
+	  $('#sharedStateName').val('');
+	  $('#sharedStateName').val('').textinput('disable');
+
+	  $('#guard').val('');
+	  $('#guard').val('').textinput('disable');
+
+	  $('#actions').val('');
+	  $('#actions').val('').textinput('disable');
+
+	  $('#requirements').val('');
+	  $('#requirements').val('').textinput('disable');
+
+	  $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
+	}
+
+	$(document).ready(function () {
+	  emptyInitialControlStates();
+	  onConnect();
+	});
 
 /***/ },
 /* 10 */

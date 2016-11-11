@@ -1,6 +1,6 @@
 {
   "name": "graphwalker-studio",
-  "version" : "4.0.0",
+  "version": "4.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-react": "^6.5.0",
     "css-loader": "^0.23.1",
+    "eslint": "^3.9.1",
     "eslint-loader": "^1.3.0",
     "eslint-plugin-react": "^5.1.1",
     "style-loader": "^0.13.1",
