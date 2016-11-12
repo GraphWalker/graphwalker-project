@@ -33,8 +33,7 @@ java -jar graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar
 * Install [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
 * Run following commands: 
 * `cd graphwalker-studio/src/main/webapp`
-* `sudo npm install -g`
-* `sudo npm install webpack -g`
+* `npm install`
 * `webpack`
 
 ```bash
