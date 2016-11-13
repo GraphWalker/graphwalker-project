@@ -693,12 +693,12 @@ function createGraph(currentModelId) {
 
     currentElement = null;
 
-    $('#label').val('').textinput('disable');
-    $('#elementId').val('').textinput('disable');
-    $('#sharedStateName').val('').textinput('disable');
-    $('#guard').val('').textinput('disable');
-    $('#actions').val('').textinput('disable');
-    $('#requirements').val('').textinput('disable');
+    $('#label').val('').prop('disabled', true);
+    $('#elementId').val('').prop('disabled', true);
+    $('#sharedStateName').val('').prop('disabled', true);
+    $('#guard').val('').prop('disabled', true);
+    $('#actions').val('').prop('disabled', true);
+    $('#requirements').val('').prop('disabled', true);
     $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
   });
 
@@ -1266,42 +1266,46 @@ function waitForSocketConnection(socket, callback){
 }
 
 function enableModelControls() {
-  $('#modelName').textinput('enable');
-  $('#generator').textinput('enable');
-  $('#modelActions').textinput('enable');
-  $('#modelRequirements').textinput('enable');
+  $('#modelName').prop('disabled', false);
+  $('#generator-builder').prop('disabled', false);
+  $('#generator').prop('disabled', false);
+  $('#modelActions').prop('disabled', false);
+  $('#modelRequirements').prop('disabled', false);
 }
 
 function emptyInitialControlStates() {
   $('#modelName').val('');
-  $('#modelName').textinput('disable');
+  $('#modelName').prop('disabled', true);
+
+  $('#generator-builder').val('');
+  $('#generator-builder').prop('disabled', true);
 
   $('#generator').val('');
-  $('#generator').textinput('disable');
+  $('#generator').prop('disabled', true);
 
   $('#modelActions').val('');
-  $('#modelActions').textinput('disable');
+  $('#modelActions').prop('disabled', true);
 
   $('#modelRequirements').val('');
-  $('#modelRequirements').textinput('disable');
+  $('#modelRequirements').prop('disabled', true);
 
   $('#label').val('');
-  $('#label').val('').textinput('disable');
+  $('#label').val('').prop('disabled', true);
 
   $('#elementId').val('');
-  $('#elementId').val('').textinput('disable');
+  $('#elementId').val('').prop('disabled', true);
 
   $('#sharedStateName').val('');
-  $('#sharedStateName').val('').textinput('disable');
+  $('#sharedStateName').val('').prop('disabled', true);
 
   $('#guard').val('');
-  $('#guard').val('').textinput('disable');
+  $('#guard').val('').prop('disabled', true);
 
   $('#actions').val('');
-  $('#actions').val('').textinput('disable');
+  $('#actions').val('').prop('disabled', true);
 
   $('#requirements').val('');
-  $('#requirements').val('').textinput('disable');
+  $('#requirements').val('').prop('disabled', true);
 
   $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
 }
@@ -1309,4 +1313,142 @@ function emptyInitialControlStates() {
 $( document ).ready(function() {
   emptyInitialControlStates();
   onConnect();
+
+    var generators = [
+      "random",
+      "quick_random",
+      "a_star"
+    ];
+
+    var stop_conditions = [
+      "edge_coverage",
+      "vertex_coverage",
+      "reached_vertex",
+      "reached_edge",
+      "time_duration",
+      "never",
+      "dependency_edge_coverage"
+    ];
+
+    var current_state = "generator";
+    var result = "";
+    var availableTags = generators;
+    var autocompleteDisabled = false;
+
+    $("#generator-builder").on('keypress', function(e) {
+      if (e.which == 13 && $("#generator-builder").autocomplete("option", "disabled")) {
+        e.preventDefault();
+        result += $("#generator-builder").val() + ")";
+        $("#generator-builder").val("");
+        current_state = "stop_condition_closed";
+        availableTags = [];
+        availableTags.push(")");
+        availableTags.push("OR");
+        availableTags.push("AND");
+        $("#generator").val(result);
+        $("#generator-builder").autocomplete("option", "disabled", false);
+      }
+    });
+
+
+    $("#generator-builder").autocomplete({
+      minLength: 0,
+      source: function(request, resolve) {
+        resolve(availableTags);
+      },
+      messages: {
+        noResults: '',
+        results: function() {}
+      },
+      select: function(e, ui) {
+        switch (current_state) {
+          case "generator":
+            result += ui.item.value + "(";
+            if (ui.item.value == "a_star") {
+              availableTags = [];
+              availableTags.push("reached_vertex");
+              availableTags.push("reached_edge");
+            } else {
+  	          availableTags = stop_conditions;
+            }
+            current_state = "stop_condition";
+            break;
+
+          case "stop_condition":
+            switch (ui.item.value) {
+              case "edge_coverage":
+              case "vertex_coverage":
+                result += ui.item.value + "(";
+                current_state = "number";
+                $("#generator-builder").autocomplete("option", "disabled", true);
+                break;
+
+              case "reached_edge":
+                result += ui.item.value + "(";
+                current_state = "edge_or_vertex_name";
+                availableTags = [];
+                graphs[currentModelId].edges().each(function( index, edge) {
+                  availableTags.push(edge.data().label);
+                 }
+                );
+                break;
+
+              case "reached_vertex":
+                result += ui.item.value + "(";
+                current_state = "edge_or_vertex_name";
+                availableTags = [];
+                graphs[currentModelId].nodes().each(function( index, node) {
+                  if (node.data().startVertex === true) {
+                    return true;
+                  }
+                  availableTags.push(node.data().label);
+                 }
+                );
+                break;
+
+              case "time_duration":
+                result += ui.item.value + "(";
+                current_state = "number";
+                $("#generator-builder").autocomplete("option", "disabled", true);
+                break;
+
+              case "never":
+                result += ui.item.value + ") ";
+                current_state = "generator";
+                availableTags = generators;
+                break;
+            }
+            break;
+
+          case "edge_or_vertex_name":
+            result += ui.item.value + ")";
+            availableTags = [];
+            availableTags.push(")");
+            availableTags.push("OR");
+            availableTags.push("AND");
+            current_state = "stop_condition_closed";
+            break;
+
+          case "stop_condition_closed":
+            switch (ui.item.value) {
+              case "OR":
+              case "AND":
+                result += " " + ui.item.value + " ";
+                availableTags = stop_conditions;
+                current_state = "stop_condition";
+                break;
+
+              default:
+                result += ") ";
+                availableTags = generators;
+                current_state = "generator";
+            }
+            break;
+        }
+        this.value = "";
+        $("#generator").val(result);
+        return false;
+      }
+    });
+
 });
