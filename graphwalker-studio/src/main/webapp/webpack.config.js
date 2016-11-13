@@ -31,7 +31,8 @@ module.exports = {
         {
           presets:['react']
         }
-      }, {
+      },
+      {
         test: /\.css$/,
         loader: 'style!css'
       }
