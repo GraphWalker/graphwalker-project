@@ -11,7 +11,8 @@ GraphWalker Studio
 * `webpack`
 
 ```bash
-mvn package -pl graphwalker-studio -am
+# cd to the root of the studio module
+mvn package
 ```
 
 The jar is in:
