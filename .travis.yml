@@ -38,7 +38,7 @@ install:
   - sudo apt-get update -qq
 
 script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn deploy --settings deploy.xml || mvn test'
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn clean deploy --settings deploy.xml || mvn clean test'
 
 after_success:
   - codecov
