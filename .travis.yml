@@ -17,7 +17,12 @@ env:
     - secure: "UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g="
 
 addons:
-  coverity_scan:
+  # https://github.com/travis-ci/travis-ci/issues/5227#issuecomment-165131913
+  hosts:
+    - myshorthost
+  hostname: myshorthost
+  
+ coverity_scan:
     project:
       name: "GraphWalker/graphwalker-project"
       description: "Build submitted via Travis CI"
