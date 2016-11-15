@@ -26,7 +26,7 @@ addons:
     project:
       name: "GraphWalker/graphwalker-project"
       description: "Build submitted via Travis CI"
-    notification_email: nils.olsson@arcticblue.com
+    notification_email: nils.olsson@arcticblue.se
     build_command: "mvn clean compile -DskipTests=true"
     branch_pattern: coverity_scan
 
