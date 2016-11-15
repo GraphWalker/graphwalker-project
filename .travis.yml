@@ -26,10 +26,9 @@ addons:
     project:
       name: "GraphWalker/graphwalker-project"
       description: "Build submitted via Travis CI"
-    notification_email: nilols@spotify.com
-    build_command_prepend: "mvn clean"
-    build_command: "mvn -DskipTests=true compile"
-    branch_pattern: master
+    notification_email: nils.olsson@arcticblue.com
+    build_command: "mvn clean compile -DskipTests=true"
+    branch_pattern: coverity_scan
 
 before_install:
   - pip install --user codecov
@@ -38,7 +37,13 @@ install:
   - sudo apt-get update -qq
 
 script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn clean deploy --settings deploy.xml || mvn clean test'
+  - 'if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then
+         if ["${TRAVIS_PULL_REQUEST}" = "false"]; then
+             mvn clean deploy --settings deploy.xml
+         else
+             mvn clean test
+         fi
+     fi'
 
 after_success:
   - codecov
