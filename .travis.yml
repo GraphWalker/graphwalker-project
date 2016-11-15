@@ -16,30 +16,28 @@ env:
     - secure: "fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE="
     - secure: "UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g="
 
+# https://github.com/travis-ci/travis-ci/issues/5227#issuecomment-165131913
 addons:
+  hosts:
+    - myshorthost
+  hostname: myshorthost
+
   coverity_scan:
     project:
       name: "GraphWalker/graphwalker-project"
       description: "Build submitted via Travis CI"
-    notification_email: nilols@spotify.com
-    build_command_prepend: "mvn clean"
-    build_command: "mvn -DskipTests=true compile"
-    branch_pattern: master
+    notification_email: nils.olsson@arcticblue.se
+    build_command: "mvn clean compile -DskipTests=true"
+    branch_pattern: coverity_scan
 
-# Workaround for bug where hostname longer than 64 chars and running OpenJDK 7
-# http://bugs.java.com/bugdatabase/view_bug.do?bug_id=7089443
 before_install:
   - pip install --user codecov
-  - cat /etc/hosts # optionally check the content *before*
-  - sudo hostname "$(hostname | cut -c1-63)"
-  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts | sudo tee /etc/hosts
-  - cat /etc/hosts # optionally check the content *after*
 
 install:
   - sudo apt-get update -qq
 
 script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && mvn deploy --settings deploy.xml || mvn test'
+  - 'if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then mvn clean deploy --settings deploy.xml; else mvn clean test; fi fi'
 
 after_success:
   - codecov
