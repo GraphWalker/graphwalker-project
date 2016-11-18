@@ -28,18 +28,24 @@ package org.graphwalker.java.test;
 
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
-import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.java.annotation.AfterElement;
+import org.graphwalker.java.annotation.AfterExecution;
+import org.graphwalker.java.annotation.BeforeElement;
+import org.graphwalker.java.annotation.BeforeExecution;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -49,6 +55,7 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
   public final static Path MODEL_PATH = Paths.get("org/graphwalker/java/test/SimpleModel.graphml");
 
   public int count = 0;
+  private Deque<String> elements = new ArrayDeque<>(Arrays.asList("edge", "edge", "vertex", "vertex"));
 
   @Override
   public void vertex() {
@@ -66,7 +73,7 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
     context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
     context.setNextElement(new Edge().setName("edge").build());
     new TestBuilder().addContext(context, MODEL_PATH).execute();
-    Assert.assertThat(context.count, is(2));
+    assertThat(context.count, is(2));
   }
 
   @Test
@@ -74,6 +81,26 @@ public class SimpleTest extends ExecutionContext implements SimpleModel {
     SimpleTest context = new SimpleTest();
     context.setPathGenerator(new RandomPath(new VertexCoverage(100)));
     Result result = new TestBuilder().addContext(context ,MODEL_PATH).execute();
-    Assert.assertThat(result.getResults().getInt("totalCompletedNumberOfModels"), is(1));
+    assertThat(result.getResults().getInt("totalCompletedNumberOfModels"), is(1));
+  }
+
+  @BeforeExecution
+  public void before() {
+    assertThat(elements.size(), is(4));
+  }
+
+  @AfterExecution
+  public void after() {
+    assertThat(elements.size(), is(0));
+  }
+
+  @BeforeElement
+  public void beforeElement() {
+    assertThat(getCurrentElement().getName(), is(elements.pop()));
+  }
+
+  @AfterElement
+  public void afterElement() {
+    assertThat(getCurrentElement().getName(), is(elements.pop()));
   }
 }
