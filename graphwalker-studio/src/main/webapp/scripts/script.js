@@ -218,7 +218,6 @@ export function generateJsonGraph() {
         properties: properties
       };
       model.vertices.push(vertex);
-
     });
 
 
@@ -347,11 +346,16 @@ export function onResetTest() {
 
     graphs[modelId].nodes().unselect();
     graphs[modelId].edges().unselect();
-    graphs[modelId].nodes().data('color', 'LightSteelBlue');
     graphs[modelId].edges().data('color', 'LightSteelBlue');
+    graphs[modelId].nodes().data('color', 'LightSteelBlue');
     graphs[modelId].nodes().filterFn(function( ele ){
       return ele.data('startVertex') === true;
     }).data('color', 'LightGreen');
+    graphs[modelId].nodes().filterFn(function( ele ){
+      return ele.data('sharedState') !== undefined &&
+        ele.data('sharedState') != null &&
+        ele.data('sharedState').length > 0;
+    }).data('color', 'LightSalmon');
   }
 
 }
@@ -613,9 +617,10 @@ function createGraph(currentModelId) {
       })
       .selector(':selected')
       .css({
-        'background-color': 'MediumSlateBlue ',
-        'line-color': 'MediumSlateBlue ',
-        'target-arrow-color': 'MediumSlateBlue '
+        'border-width': 4,
+        'border-color': 'black',
+        'line-color': 'black',
+        'target-arrow-color': 'black'
       })
   });
 
@@ -699,7 +704,8 @@ function createGraph(currentModelId) {
     $('#guard').val('').prop('disabled', true);
     $('#actions').val('').prop('disabled', true);
     $('#requirements').val('').prop('disabled', true);
-    $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
+    $('#checkboxStartElement').checkboxradio('disable');
+    $('#checkboxStartElement').prop('checked', false).checkboxradio('refresh');
   });
 
   graph.on('tap', 'node', function() {
@@ -710,10 +716,9 @@ function createGraph(currentModelId) {
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
 
-    var checkboxStartElement = $('#checkboxStartElement');
-    checkboxStartElement.checkboxradio('enable');
+    $('#checkboxStartElement').checkboxradio('enable');
     if (graph.startElementId === this.id()) {
-      checkboxStartElement.prop('checked', true).checkboxradio('refresh');
+      $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
     }
   });
 
@@ -725,10 +730,9 @@ function createGraph(currentModelId) {
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
 
-    var checkboxStartElement = $('#checkboxStartElement');
-    checkboxStartElement.checkboxradio('enable');
+    $('#checkboxStartElement').checkboxradio('enable');
     if (graph.startElementId === this.id()) {
-      checkboxStartElement.prop('checked', true).checkboxradio('refresh');
+      $('#checkboxStartElement').prop('checked', true).checkboxradio('refresh');
     }
   });
 
@@ -808,7 +812,7 @@ function createGraph(currentModelId) {
         graph.startElementId = currentElement.id();
       }
     } else {
-      if (currentElement === graph.data().startElementId) {
+      if (currentElement === graph.startElementId) {
         graph.startElementId = undefined;
       }
     }
@@ -969,6 +973,11 @@ function readGraphFromJSON(jsonGraphs) {
         }
       });
     }
+    graph.nodes().filterFn(function( ele ){
+      return ele.data('sharedState') !== undefined &&
+        ele.data('sharedState') != null &&
+        ele.data('sharedState').length > 0;
+    }).data('color', 'LightSalmon');
     graphs[graph.id] = graph;
   }
   return graphs;
@@ -1007,24 +1016,33 @@ function generateUUID() {
   return uuid;
 }
 
+var simpleFormat = true;
+
 function formatElementName(jsonObj) {
   var str = '';
-  if (jsonObj.name) {
-    str += 'Name: ' + jsonObj.name + '\n';
+  if (simpleFormat) {
+    if (jsonObj.name) {
+      return jsonObj.name;
+    }
+  } else {
+    if (jsonObj.name) {
+      str += 'Name: ' + jsonObj.name + '\n';
+    }
+    if (jsonObj.sharedState) {
+      str += 'Shared state name: ' + jsonObj.sharedState + '\n';
+    }
+    if (jsonObj.guard) {
+      str += 'Guard: ' + jsonObj.guard + '\n';
+    }
+    if (jsonObj.actions) {
+      str += 'Actions: ' + jsonObj.actions + '\n';
+    }
+    if (jsonObj.requirements) {
+      str += 'Requirements: ' + jsonObj.requirements + '\n';
+    }
+    return str.slice(0, -1);
   }
-  if (jsonObj.sharedState) {
-    str += 'Shared state name: ' + jsonObj.sharedState + '\n';
-  }
-  if (jsonObj.guard) {
-    str += 'Guard: ' + jsonObj.guard + '\n';
-  }
-  if (jsonObj.actions) {
-    str += 'Actions: ' + jsonObj.actions + '\n';
-  }
-  if (jsonObj.requirements) {
-    str += 'Requirements: ' + jsonObj.requirements + '\n';
-  }
-  return str.slice(0, -1);
+  return '';
 }
 
 
@@ -1307,7 +1325,7 @@ function emptyInitialControlStates() {
   $('#requirements').val('');
   $('#requirements').val('').prop('disabled', true);
 
-  $('#checkboxStartElement').attr('checked', false).checkboxradio('refresh').checkboxradio('disable');
+  $('#checkboxStartElement').prop('checked', false).checkboxradio('refresh').checkboxradio('disable');
 }
 
 $( document ).ready(function() {
