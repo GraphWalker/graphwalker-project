@@ -26,6 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -54,15 +55,13 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.*;
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.common.Objects.isNullOrEmpty;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
  */
-public final class TestExecutor implements Executor {
+public final class TestExecutor implements Executor, Observer {
 
   private static final Logger logger = LoggerFactory.getLogger(TestExecutor.class);
 
@@ -93,24 +92,28 @@ public final class TestExecutor implements Executor {
     this.configuration = configuration;
     this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
     this.machine = createMachine(machineConfiguration);
+    this.machine.addObserver(this);
   }
 
   public TestExecutor(Class<?>... tests) throws IOException {
     this.configuration = new Configuration();
     this.machineConfiguration = createMachineConfiguration(Arrays.asList(tests));
     this.machine = createMachine(machineConfiguration);
+    this.machine.addObserver(this);
   }
 
   public TestExecutor(Context... contexts) {
     this.configuration = new Configuration();
     this.machineConfiguration = new MachineConfiguration();
     this.machine = new SimpleMachine(contexts);
+    this.machine.addObserver(this);
   }
 
   public TestExecutor(Collection<Context> contexts) {
     this.configuration = new Configuration();
     this.machineConfiguration = new MachineConfiguration();
     this.machine = new SimpleMachine(contexts);
+    this.machine.addObserver(this);
   }
 
   @Override
@@ -201,13 +204,8 @@ public final class TestExecutor implements Executor {
     result = new Result();
     executeAnnotation(BeforeExecution.class, machine);
     try {
-      Context context = null;
       while (machine.hasNextStep()) {
-        if (null != context) {
-          executeAnnotation(BeforeElement.class, context);
-        }
-        context = machine.getNextStep();
-        executeAnnotation(AfterElement.class, context);
+        machine.getNextStep();
       }
     } catch (MachineException e) {
       logger.error(e.getMessage());
@@ -291,6 +289,20 @@ public final class TestExecutor implements Executor {
     new XMLReportGenerator(startTime, properties).writeReport(file, this);
     if (!getFailures().isEmpty()) {
       throw new TestExecutionException(MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
+    }
+  }
+
+  @Override
+  public void update(Machine machine, Element element, EventType type) {
+    switch (type) {
+      case BEFORE_ELEMENT: {
+        executeAnnotation(BeforeElement.class, machine.getCurrentContext());
+      }
+      break;
+      case AFTER_ELEMENT: {
+        executeAnnotation(AfterElement.class, machine.getCurrentContext());
+      }
+      break;
     }
   }
 }
