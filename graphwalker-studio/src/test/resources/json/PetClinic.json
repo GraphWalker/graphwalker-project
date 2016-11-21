@@ -1,32 +1,38 @@
 {
-  "name": "VISMODEL",
   "models": [
     {
       "name": "FindOwnersSharedState",
       "id": "476fb419-3d7d-4492-802e-6695fe93f595",
       "generator": "random(edge_coverage(100))",
+      "actions": [],
       "vertices": [
         {
-          "id": "n0",
+          "id": "4662348a-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_FindOwners",
           "sharedState": "FindOwners",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 0,
             "y": 0
           }
         },
         {
-          "id": "n1",
+          "id": "4662378c-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_NewOwner",
           "sharedState": "NewOwner",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 120.65625,
             "y": -157.8125
           }
         },
         {
-          "id": "n2",
+          "id": "46623930-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_Owners",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -219.34375,
             "y": -187.8125
@@ -35,57 +41,77 @@
       ],
       "edges": [
         {
-          "id": "e0",
+          "id": "466247e0-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_AddOwner",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "4662348a-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "4662378c-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e1",
+          "id": "46624952-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_FindOwners",
-          "sourceVertexId": "n1",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "4662378c-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "4662348a-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e2",
+          "id": "46624aba-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_Search",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n2"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "4662348a-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "46623930-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e3",
+          "id": "46624e84-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_FindOwners",
-          "sourceVertexId": "n2",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "46623930-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "4662348a-ae4d-11e6-80f5-76304dec7eb7"
         }
-      ]
+      ],
+      "startElementId": "66e424c4-ae4e-11e6-80f5-76304dec7eb7"
     },
     {
       "name": "NewOwnerSharedState",
       "id": "b23d193c-287a-4eb9-a318-52ead7680ff7",
       "generator": "random(edge_coverage(100))",
+      "actions": [],
       "vertices": [
         {
-          "id": "n0",
+          "id": "46624074-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_NewOwner",
           "sharedState": "NewOwner",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 0,
             "y": 0
           }
         },
         {
-          "id": "n1",
+          "id": "4662427c-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_IncorrectData",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 131.65625,
             "y": -205.3125
           }
         },
         {
-          "id": "n2",
+          "id": "46624664-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_OwnerInformation",
           "sharedState": "OwnerInformation",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -284.34375,
             "y": -143.3125
@@ -94,23 +120,33 @@
       ],
       "edges": [
         {
-          "id": "e0",
+          "id": "46625028-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_IncorrectData",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "46624074-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "4662427c-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e1",
-          "sourceVertexId": "n1",
-          "targetVertexId": "n0"
+          "id": "466251ae-ae4d-11e6-80f5-76304dec7eb7",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "4662427c-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "46624074-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e2",
+          "id": "46625366-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_CorrectData",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n2"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "46624074-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "46624664-ae4d-11e6-80f5-76304dec7eb7"
         }
-      ]
+      ],
+      "startElementId": "66e424c4-ae4e-11e6-80f5-76304dec7eb7"
     },
     {
       "name": "OwnerInformationSharedState",
@@ -121,42 +157,52 @@
       ],
       "vertices": [
         {
-          "id": "n0",
+          "id": "fc848344-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_OwnerInformation",
           "sharedState": "OwnerInformation",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -23.34375,
             "y": -51.8125
           }
         },
         {
-          "id": "n1",
+          "id": "fc84860a-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_NewPet",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -27.34375,
             "y": 118.1875
           }
         },
         {
-          "id": "n2",
+          "id": "fc848858-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_Pet",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -317.34375,
             "y": 7.1875
           }
         },
         {
-          "id": "n3",
+          "id": "fc848a6a-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_NewVisit",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 139.65625,
             "y": -195.8125
           }
         },
         {
-          "id": "n4",
+          "id": "fc848bbe-ae4d-11e6-80f5-76304dec7eb7",
           "name": "v_FindOwners",
           "sharedState": "FindOwners",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -270.34375,
             "y": -181.8125
@@ -165,93 +211,127 @@
       ],
       "edges": [
         {
-          "id": "e0",
+          "id": "fc848cfe-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_AddPetSuccessfully",
           "actions": [
             " numOfPets++;"
           ],
-          "sourceVertexId": "n1",
-          "targetVertexId": "n0"
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc84860a-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e1",
+          "id": "fc848e0c-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_AddNewPet",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc84860a-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e2",
+          "id": "fc848f74-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_EditPet",
           "guard": "numOfPets>0",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n2"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848858-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e3",
+          "id": "fc8490aa-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_UpdatePet",
-          "sourceVertexId": "n2",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848858-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e4",
+          "id": "fc849230-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_AddPetFailed",
-          "sourceVertexId": "n1",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc84860a-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc84860a-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e5",
+          "id": "fc849316-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_AddVisit",
           "guard": "numOfPets>0",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n3"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848a6a-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e6",
+          "id": "fc84944c-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_VisitAddedSuccessfully",
-          "sourceVertexId": "n3",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848a6a-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e7",
+          "id": "fc849596-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_VisitAddedFailed",
-          "sourceVertexId": "n3",
-          "targetVertexId": "n3"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848a6a-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848a6a-ae4d-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e8",
+          "id": "fc8496ae-ae4d-11e6-80f5-76304dec7eb7",
           "name": "e_FindOwners",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n4"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "fc848344-ae4d-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "fc848bbe-ae4d-11e6-80f5-76304dec7eb7"
         }
-      ]
+      ],
+      "startElementId": "66e424c4-ae4e-11e6-80f5-76304dec7eb7"
     },
     {
       "name": "PetClinicSharedState",
       "id": "3f6b365f-7011-4db6-b0cc-e19aa453d9b8",
       "generator": "random(edge_coverage(100))",
+      "actions": [],
       "vertices": [
         {
-          "id": "n0",
+          "id": "66e4140c-ae4e-11e6-80f5-76304dec7eb7",
           "name": "v_HomePage",
           "sharedState": "HomePage",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 0,
             "y": 0
           }
         },
         {
-          "id": "n1",
+          "id": "66e41a24-ae4e-11e6-80f5-76304dec7eb7",
           "name": "v_FindOwners",
           "sharedState": "FindOwners",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 112.65625,
             "y": -180.8125
           }
         },
         {
-          "id": "n2",
+          "id": "66e41b6e-ae4e-11e6-80f5-76304dec7eb7",
           "name": "v_Veterinarians",
           "sharedState": "Veterinarians",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -246.34375,
             "y": -153.8125
@@ -260,66 +340,93 @@
       ],
       "edges": [
         {
-          "id": "e0",
+          "id": "66e41c54-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_FindOwners",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "66e4140c-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "66e41a24-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e1",
+          "id": "66e41d30-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_HomePage",
-          "sourceVertexId": "n1",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "66e41a24-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "66e4140c-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e2",
+          "id": "66e41df8-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_Veterinarians",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n2"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "66e4140c-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "66e41b6e-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e3",
+          "id": "66e41eca-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_HomePage",
-          "sourceVertexId": "n2",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "66e41b6e-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "66e4140c-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e4",
+          "id": "66e41f92-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_Veterinarians",
-          "sourceVertexId": "n1",
-          "targetVertexId": "n2"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "66e41a24-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "66e41b6e-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e5",
+          "id": "66e423ca-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_FindOwners",
-          "sourceVertexId": "n2",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "66e41b6e-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "66e41a24-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e6",
+          "id": "66e424c4-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_StartBrowser",
-          "targetVertexId": "n0"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": null,
+          "targetVertexId": "66e4140c-ae4e-11e6-80f5-76304dec7eb7"
         }
       ],
-      "startElementId": "e6"
+      "startElementId": "66e424c4-ae4e-11e6-80f5-76304dec7eb7"
     },
     {
       "name": "VeterinariensSharedState",
       "id": "368a9635-c59a-4285-ad01-cf75b0baa978",
       "generator": "random(edge_coverage(100))",
+      "actions": [],
       "vertices": [
         {
-          "id": "n0",
+          "id": "a1f982ca-ae4e-11e6-80f5-76304dec7eb7",
           "name": "v_Veterinarians",
           "sharedState": "Veterinarians",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": 0,
             "y": 0
           }
         },
         {
-          "id": "n1",
+          "id": "a1f984e6-ae4e-11e6-80f5-76304dec7eb7",
           "name": "v_SearchResult",
+          "actions": [],
+          "requirements": [],
           "properties": {
             "x": -213.34375,
             "y": -138.8125
@@ -328,17 +435,24 @@
       ],
       "edges": [
         {
-          "id": "e0",
+          "id": "a1f985d6-ae4e-11e6-80f5-76304dec7eb7",
           "name": "e_Search",
-          "sourceVertexId": "n0",
-          "targetVertexId": "n1"
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "a1f982ca-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "a1f984e6-ae4e-11e6-80f5-76304dec7eb7"
         },
         {
-          "id": "e1",
-          "sourceVertexId": "n1",
-          "targetVertexId": "n0"
+          "id": "a1f986a8-ae4e-11e6-80f5-76304dec7eb7",
+          "actions": [],
+          "requirements": [],
+          "properties": [],
+          "sourceVertexId": "a1f984e6-ae4e-11e6-80f5-76304dec7eb7",
+          "targetVertexId": "a1f982ca-ae4e-11e6-80f5-76304dec7eb7"
         }
-      ]
+      ],
+      "startElementId": "66e424c4-ae4e-11e6-80f5-76304dec7eb7"
     }
   ]
 }
