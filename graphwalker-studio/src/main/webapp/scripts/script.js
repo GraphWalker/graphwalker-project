@@ -765,16 +765,38 @@ function createGraph(currentModelId) {
           var isBreakPointEnabled = breakPoints.some(function(e) {
             return e.data().id === rightClickedElement.data().id
           });
+
           var breakpointStr;
           if (isBreakPointEnabled) {
             breakpointStr = 'Disable breakpoint';
           } else {
             breakpointStr = 'Enable breakpoint';
           }
+
+          var startElementtStr;
+          if (rightClickedElement.data().id === getStartingElementId()) {
+            startElementtStr = 'Disable start element';
+          } else {
+            startElementtStr = 'Enable start element';
+          }
+
           context.attach('#A-' + currentModelId, [{
             header: 'Name: ' + mouseoverElement.data().name,
           }, {
             divider: true
+          }, {
+            text: startElementtStr,
+            action: function(event) {
+              if (rightClickedElement.data().id === getStartingElementId()) {
+                graph.startElementId = undefined;
+              } else {
+                for (var modelId in graphs) {
+                  graphs[modelId].startElementId = undefined;
+                }
+                graph.startElementId = rightClickedElement.data().id;
+              }
+              setElementsColor();
+            }
           }, {
             text: breakpointStr,
             action: function(event) {
@@ -1114,6 +1136,15 @@ function readGraphFromJSON(jsonGraphs) {
   }
   setElementsColor();
   return graphs;
+}
+
+function getStartingElementId() {
+  for (var modelId in graphs) {
+    if (graphs[modelId].startElementId !== undefined) {
+      return graphs[modelId].startElementId;
+    }
+  }
+  return undefined;
 }
 
 function setElementsColor() {
