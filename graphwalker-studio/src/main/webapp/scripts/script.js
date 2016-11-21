@@ -1,15 +1,21 @@
 var $ = require('jquery');
 var cytoscape = require('cytoscape');
-// http://www.cs.bilkent.edu.tr/~ivis/Cytoscape_LayoutDemo/#
+
 
 // Hash array that holds all graphs/models.
 var graphs =[];
 var currentModelId;
 var pauseExecution = false;
 var stepExecution = false;
+var isTestRunning = false;
 var keys = {};
 var issues;
 var currentElement;
+var currentExecutingElementId;
+var mouseoverElement;
+var rightClickedElement;
+var rightClickedRenderedPosition;
+var breakPoints =[];
 $('#location').val('ws://localhost:9999');
 
 export function onConnect() {
@@ -17,7 +23,7 @@ export function onConnect() {
 
   onDisconnect();
 
-  var wsUri = $('#location').val();
+  var wsUri = $.trim($('#location').val());
   try {
     testWebSocket(wsUri);
   } catch(err) {
@@ -313,6 +319,7 @@ export function onRunTest() {
 
   // Reset any previous runs
   onResetTest();
+  isTestRunning = true;
 
   $('.ui-panel').panel('close');
 
@@ -335,6 +342,7 @@ export function onRunTest() {
 // Reset the state machine to it's initial state
 export function onResetTest() {
   console.log('onResetTest: ' + currentModelId);
+  isTestRunning = false;
   defaultUI();
 
   document.getElementById('issues').innerHTML = 'Ready';
@@ -346,18 +354,8 @@ export function onResetTest() {
 
     graphs[modelId].nodes().unselect();
     graphs[modelId].edges().unselect();
-    graphs[modelId].edges().data('color', 'LightSteelBlue');
-    graphs[modelId].nodes().data('color', 'LightSteelBlue');
-    graphs[modelId].nodes().filterFn(function( ele ){
-      return ele.data('startVertex') === true;
-    }).data('color', 'LightGreen');
-    graphs[modelId].nodes().filterFn(function( ele ){
-      return ele.data('sharedState') !== undefined &&
-        ele.data('sharedState') != null &&
-        ele.data('sharedState').length > 0;
-    }).data('color', 'LightSalmon');
   }
-
+  setElementsColor();
 }
 
 export function onAddModel() {
@@ -439,6 +437,11 @@ document.addEventListener('getNextEvent', function (e) {
   console.log('getNextEvent: ' + e.id + ': ' + e.name + 'pauseExecution: ' + pauseExecution +
     ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
 
+  if (breakPoints.some(function(e) {return e.data().id === currentExecutingElementId})) {
+    onPausePlayExecution(currentExecutingElementId);
+    return;
+  }
+
   if (stepExecution) {
     stepExecution = false;
     return;
@@ -449,7 +452,7 @@ document.addEventListener('getNextEvent', function (e) {
   };
   setTimeout(function () {
     doSend(JSON.stringify(hasNext));
-  }, $('#executionSpeedSlider').val());
+  }, $.trim($('#executionSpeedSlider').val()));
 });
 
 var getModelEvent = new CustomEvent('getModelEvent', {});
@@ -518,28 +521,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
   modelName.on('input', function() {
     if (graphs[currentModelId]) {
-      graphs[currentModelId].name = modelName.val();
+      graphs[currentModelId].name = $.trim(modelName.val());
       var tabs = $('#tabs');
       var selectedTab = tabs.tabs('option', 'selected');
-      tabs.find('ul li a').eq(selectedTab).text(modelName.val());
+      tabs.find('ul li a').eq(selectedTab).text($.trim(modelName.val()));
     }
   });
 
   generator.on('input', function() {
     if (graphs[currentModelId]) {
-      graphs[currentModelId].generator = generator.val();
+      graphs[currentModelId].generator = $.trim(generator.val());
     }
   });
 
   modelActions.on('input', function() {
     if (graphs[currentModelId]) {
-      graphs[currentModelId].actions = modelActions.val();
+      graphs[currentModelId].actions = $.trim(modelActions.val());
     }
   });
 
   modelRequirements.on('input', function() {
     if (graphs[currentModelId]) {
-      graphs[currentModelId].requirements = modelRequirements.val();
+      graphs[currentModelId].requirements = $.trim(modelRequirements.val());
     }
   });
 });
@@ -736,9 +739,120 @@ function createGraph(currentModelId) {
     }
   });
 
+  $('#A-' + currentModelId).mousedown(function(event) {
+    context.destroy('#A-' + currentModelId);
+    switch (event.which) {
+        case 1:
+            //alert('Left Mouse button pressed.');
+            break;
+        case 2:
+            //alert('Middle Mouse button pressed.');
+            break;
+        case 3:
+            //alert('Right Mouse button pressed.');
+            if (mouseoverElement !== undefined) {
+              console.log("Mouse over: " + mouseoverElement.data().id);
+              rightClickedElement = mouseoverElement;
+              var isBreakPointEnabled = breakPoints.some(function(e) {return e.data().id === rightClickedElement.data().id});
+              var breakpointStr;
+              if (isBreakPointEnabled) {
+               breakpointStr = 'Disable breakpoint';
+              } else {
+               breakpointStr = 'Enable breakpoint';
+              }
+              context.attach('#A-' + currentModelId, [
+                {
+                  header: 'Name: ' + mouseoverElement.data().name,
+                },
+                {
+                  divider: true
+                },
+                {
+                  text: breakpointStr,
+                  action: function (event) {
+                    if (isBreakPointEnabled) {
+                      console.log("Removing break point at: " + rightClickedElement.data().id);
+                      breakPoints.splice(rightClickedElement, 1);
+                    } else {
+                      console.log("Adding break point at: " + rightClickedElement.data().id);
+                      breakPoints.push(rightClickedElement);
+                    }
+                    setElementsColor();
+                  }
+                },
+                {
+                  divider: true
+                },
+                {
+                  text: 'Remove',
+                  action: function (event) {
+                    console.log("Removing element: " + rightClickedElement.data().id);
+                    graph.remove(rightClickedElement);
+                  }
+                }
+              ]);
+            } else {
+              context.attach('#A-' + currentModelId, [
+              {
+                text: 'Add vertex',
+                action: function (event) {
+                  console.log("Adding element");
+                  var id = generateUUID();
+                  graph.add({
+                    group: 'nodes',
+                    data: {
+                      id: id,
+                      label: 'v_NewVertex',
+                      name: formatElementName({
+                        name: 'v_NewVertex'
+                      }),
+                      color: 'LightSteelBlue'
+                    },
+                    renderedPosition: rightClickedRenderedPosition
+                  });
+                }
+              },
+              {
+                text: 'Run test',
+                action: function (event) {
+                  onRunTest();
+                }
+              }
+            ]);
+          }
+          break;
+
+        default:
+            alert('You have a strange Mouse!');
+    }
+  });
+
+  graph.on('mouseover', function(event) {
+    mouseoverElement = this;
+    rightClickedRenderedPosition = {
+                        x: event.cyRenderedPosition.x,
+                        y: event.cyRenderedPosition.y
+                      };
+  });
+
+  graph.on('mouseover', 'node', function() {
+    mouseoverElement = this;
+  });
+
+  graph.on('mouseover', 'edge', function() {
+    mouseoverElement = this;
+  });
+
+  graph.on('mouseout', function() {
+    mouseoverElement = undefined;
+  });
+
+  graph.on('cxttap', 'node', function() {
+  });
+
   $('#label').on('input', function() {
     if (currentElement) {
-      currentElement.data('label', $('#label').val());
+      currentElement.data('label', $.trim($('#label').val()));
       currentElement.data('name', formatElementName({
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
@@ -751,13 +865,13 @@ function createGraph(currentModelId) {
 
   $('#elementId').on('input', function() {
     if (currentElement) {
-      currentElement.data('id', $('#elementId').val());
+      currentElement.data('id', $.trim($('#elementId').val()));
     }
   });
 
   $('#sharedStateName').on('input', function() {
     if (currentElement) {
-      currentElement.data('sharedState', $('#sharedStateName').val());
+      currentElement.data('sharedState', $.trim($('#sharedStateName').val()));
       currentElement.data('name', formatElementName({
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
@@ -770,7 +884,7 @@ function createGraph(currentModelId) {
 
   $('#guard').on('input', function() {
     if (currentElement) {
-      currentElement.data('guard', $('#guard').val());
+      currentElement.data('guard', $.trim($('#guard').val()));
       currentElement.data('name', formatElementName({
         name: currentElement.data().label,
         guard: currentElement.data().guard,
@@ -782,7 +896,7 @@ function createGraph(currentModelId) {
 
   $('#actions').on('input', function() {
     if (currentElement) {
-      currentElement.data('actions', $('#actions').val());
+      currentElement.data('actions', $.trim($('#actions').val()));
       currentElement.data('name', formatElementName({
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
@@ -795,7 +909,7 @@ function createGraph(currentModelId) {
 
   $('#requirements').on('input', function() {
     if (currentElement) {
-      currentElement.data('requirements', $('#requirements').val());
+      currentElement.data('requirements', $.trim($('#requirements').val()));
       currentElement.data('name', formatElementName({
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
@@ -809,6 +923,9 @@ function createGraph(currentModelId) {
   $('#checkboxStartElement').change(function() {
     if ($(this).is(':checked')) {
       if (currentElement) {
+        for (var modelId in graphs) {
+          graphs[modelId].startElementId = undefined;
+        }
         graph.startElementId = currentElement.id();
       }
     } else {
@@ -816,6 +933,7 @@ function createGraph(currentModelId) {
         graph.startElementId = undefined;
       }
     }
+    setElementsColor();
   });
 
   graph.on('doubleTap', function() {
@@ -973,14 +1091,47 @@ function readGraphFromJSON(jsonGraphs) {
         }
       });
     }
-    graph.nodes().filterFn(function( ele ){
-      return ele.data('sharedState') !== undefined &&
-        ele.data('sharedState') != null &&
-        ele.data('sharedState').length > 0;
-    }).data('color', 'LightSalmon');
     graphs[graph.id] = graph;
   }
+  setElementsColor();
   return graphs;
+}
+
+function setElementsColor() {
+  for (var modelId in graphs) {
+    if (!isTestRunning) {
+      graphs[modelId].edges().data('color', 'LightSteelBlue');
+      graphs[modelId].nodes().data('color', 'LightSteelBlue');
+    }
+
+    graphs[modelId].nodes().filterFn(function( ele ){
+      return ele.data('startVertex') === true;
+    }).data('color', 'LightGreen');
+
+    if (!isTestRunning) {
+      graphs[modelId].nodes().filterFn(function( ele ){
+        return ele.data('sharedState') !== undefined &&
+          ele.data('sharedState') != null &&
+          ele.data('sharedState').length > 0;
+      }).data('color', 'LightSalmon');
+
+      graphs[modelId].edges().filterFn(function( ele ){
+        return ele.data('id') === graphs[modelId].startElementId;
+      }).data('color', 'LightGreen');
+
+      graphs[modelId].nodes().filterFn(function( ele ){
+        return ele.data('id') === graphs[modelId].startElementId;
+      }).data('color', 'LightGreen');
+    }
+
+    graphs[modelId].nodes().filterFn(function( ele ){
+      return breakPoints.some(function(e) {return e.data().id === ele.data('id')});
+    }).data('color', 'Red');
+
+    graphs[modelId].edges().filterFn(function( ele ){
+      return breakPoints.some(function(e) {return e.data().id === ele.data('id')});
+    }).data('color', 'Red');
+  }
 }
 
 function defaultUI() {
@@ -1097,7 +1248,7 @@ function onClose(evt) {
   } else {
     console.log('ws connection error');
     document.getElementById('issues').style.backgroundColor = "red";
-    document.getElementById('issues').innerHTML = 'Connection error while connecting to: ' + $('#location').val();
+    document.getElementById('issues').innerHTML = 'Connection error while connecting to: ' + $.trim($('#location').val());
   }
 }
 
@@ -1145,6 +1296,7 @@ function onMessage(event) {
     case 'getNext':
       if (message.success) {
         console.log('Command getNext ok');
+        currentExecutingElementId = message.elementId;
         document.dispatchEvent(getNextEvent, message.modelId, message.elementId, message.name);
       } else {
         defaultUI();
@@ -1215,7 +1367,9 @@ function onMessage(event) {
       var index = tabs.find('a[href="#A-' + currentModelId + '"]').parent().index();
       tabs.tabs('option', 'active', index);
 
-      graphs[currentModelId].$('#'+message.elementId).data('color', 'lightgreen');
+      if (!breakPoints.some(function(e) {return e.data().id === message.elementId})) {
+        graphs[currentModelId].$('#'+message.elementId).data('color', 'lightgreen');
+      }
       graphs[currentModelId].$('#'+message.elementId).select();
       break;
     case 'convertGraphml':
@@ -1324,13 +1478,20 @@ function emptyInitialControlStates() {
 
   $('#requirements').val('');
   $('#requirements').val('').prop('disabled', true);
-
-  $('#checkboxStartElement').prop('checked', false).checkboxradio('refresh').checkboxradio('disable');
 }
 
 $( document ).ready(function() {
   emptyInitialControlStates();
   onConnect();
+
+  context.init({
+    fadeSpeed: 100,
+    filter: function ($obj){},
+    above: 'auto',
+    preventDoubleContext: true,
+    compress: false
+  });
+
 
     var generators = [
       "random",
@@ -1356,7 +1517,7 @@ $( document ).ready(function() {
     $("#generator-builder").on('keypress', function(e) {
       if (e.which == 13 && $("#generator-builder").autocomplete("option", "disabled")) {
         e.preventDefault();
-        result += $("#generator-builder").val() + ")";
+        result += $.trim($("#generator-builder").val()) + ")";
         $("#generator-builder").val("");
         current_state = "stop_condition_closed";
         availableTags = [];
