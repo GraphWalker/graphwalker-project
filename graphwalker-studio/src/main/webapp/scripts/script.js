@@ -273,8 +273,7 @@ export function generateJsonGraph() {
 }
 
 export function onPausePlayExecution(element) {
-  console.log('pausePlayExecution: ' + element.innerHTML +
-    ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
+  console.log('pausePlayExecution: pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
   stepExecution = false;
 
   if (pauseExecution) {
@@ -813,9 +812,30 @@ function createGraph(currentModelId) {
                 }
               },
               {
-                text: 'Run test',
+                divider: true
+              },
+              {
+                text: 'Run',
                 action: function (event) {
                   onRunTest();
+                }
+              },
+              {
+                text: 'Pause',
+                action: function (event) {
+                  onPausePlayExecution();
+                }
+              },
+              {
+                text: 'Step',
+                action: function (event) {
+                  onStepExecution();
+                }
+              },
+              {
+                text: 'Reset',
+                action: function (event) {
+                  onResetTest();
                 }
               }
             ]);
@@ -828,7 +848,7 @@ function createGraph(currentModelId) {
   });
 
   graph.on('mouseover', function(event) {
-    mouseoverElement = this;
+    mouseoverElement = undefined;
     rightClickedRenderedPosition = {
                         x: event.cyRenderedPosition.x,
                         y: event.cyRenderedPosition.y
