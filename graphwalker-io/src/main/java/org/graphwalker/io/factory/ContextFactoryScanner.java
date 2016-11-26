@@ -88,7 +88,7 @@ public final class ContextFactoryScanner {
         return factory;
       }
     }
-    throw new ContextFactoryException("No suitable context factory found");
+    throw new ContextFactoryException("No suitable context factory found for file: " + path.toString());
   }
 
   private static ContextFactory create(Class<? extends ContextFactory> factoryClass) {
