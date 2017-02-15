@@ -107,7 +107,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
       ctx.getChild(0).getText().equalsIgnoreCase("quickrandompath")) {
       pathGenerators.add(new QuickRandomPath(stopCondition));
     } else if (ctx.getChild(0).getText().equalsIgnoreCase("a_star") ||
-      ctx.getChild(0).getText().equalsIgnoreCase("astartpath")) {
+      ctx.getChild(0).getText().equalsIgnoreCase("astarpath")) {
       pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
     } else if (ctx.getChild(0).getText().equalsIgnoreCase("shortest_all_paths") ||
       ctx.getChild(0).getText().equalsIgnoreCase("shortestallpaths")) {
