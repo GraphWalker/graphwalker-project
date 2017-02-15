@@ -3,7 +3,7 @@ var cytoscape = require('cytoscape');
 
 
 // Hash array that holds all graphs/models.
-var graphs =[];
+var graphs = [];
 var currentModelId;
 var pauseExecution = false;
 var stepExecution = false;
@@ -15,7 +15,7 @@ var currentExecutingElementId;
 var mouseoverElement;
 var rightClickedElement;
 var rightClickedRenderedPosition;
-var breakPoints =[];
+var breakPoints = [];
 $('#location').val('ws://localhost:9999');
 
 export function onConnect() {
@@ -26,7 +26,7 @@ export function onConnect() {
   var wsUri = $.trim($('#location').val());
   try {
     testWebSocket(wsUri);
-  } catch(err) {
+  } catch (err) {
     document.getElementById('issues').innerHTML = err.message;
   }
 }
@@ -76,7 +76,7 @@ export function onLoadTest() {
               doSend(JSON.stringify(convertGraphml));
             };
             fr.readAsText(f);
-          break;
+            break;
 
           case 'json':
             var fr = new FileReader();
@@ -96,13 +96,13 @@ export function onLoadTest() {
               defaultUI();
             };
             fr.readAsText(f);
-          break;
+            break;
 
           default:
-          console.error('Unsupported file extension/format: ' + fileExt);
+            console.error('Unsupported file extension/format: ' + fileExt);
         }
       }
-  });
+    });
 }
 
 export function onSaveTest() {
@@ -113,7 +113,7 @@ export function onSaveTest() {
   document.body.appendChild(link);
 
   // wait for the link to be added to the document
-  window.requestAnimationFrame(function () {
+  window.requestAnimationFrame(function() {
     var event = new MouseEvent('click');
     link.dispatchEvent(event);
     document.body.removeChild(link);
@@ -142,7 +142,9 @@ export function removeTest() {
 export function makeJsonGraphFile() {
   console.log('makeJsonGraphFile');
   var jsonFile = null;
-  var data = new Blob([JSON.stringify(generateJsonGraph())], {type: 'text/plain'});
+  var data = new Blob([JSON.stringify(generateJsonGraph())], {
+    type: 'text/plain'
+  });
 
   // If we are replacing a previously generated file we need to
   // manually revoke the object URL to avoid memory leaks.
@@ -189,10 +191,10 @@ export function generateJsonGraph() {
 
 
     /**
-    * Iterate ove all nodes in the graph, and create a json
-    * representation of the vertex
-    */
-    graphs[modelId].nodes().each(function( index, node) {
+     * Iterate ove all nodes in the graph, and create a json
+     * representation of the vertex
+     */
+    graphs[modelId].nodes().each(function(index, node) {
 
       if (node.data().startVertex === true) {
         return true;
@@ -228,9 +230,9 @@ export function generateJsonGraph() {
 
 
     /**
-    * Iterate over all edges in the graph, and create a json
-    * representation of the edge
-    */
+     * Iterate over all edges in the graph, and create a json
+     * representation of the edge
+     */
     graphs[modelId].edges().each(function(index, edge) {
 
       if (edge.data().source === 'Start') {
@@ -273,8 +275,7 @@ export function generateJsonGraph() {
 }
 
 export function onPausePlayExecution(element) {
-  console.log('pausePlayExecution: ' + element.innerHTML +
-    ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
+  console.log('pausePlayExecution: pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
   stepExecution = false;
 
   if (pauseExecution) {
@@ -392,7 +393,7 @@ export function onDoLayout() {
  ************************************************************************
  */
 var playbackEvent = new CustomEvent('playbackEvent', {});
-document.addEventListener('playbackEvent', function () {
+document.addEventListener('playbackEvent', function() {
   console.log('playbackEvent');
 
   var getModel = {
@@ -402,7 +403,7 @@ document.addEventListener('playbackEvent', function () {
 });
 
 var startEvent = new CustomEvent('startEvent', {});
-document.addEventListener('startEvent', function () {
+document.addEventListener('startEvent', function() {
   console.log('startEvent: ' + currentModelId);
 
   // Change some UI elements
@@ -432,12 +433,18 @@ document.addEventListener('hasNextEvent', function() {
   doSend(JSON.stringify(getNext));
 });
 
-var getNextEvent = new CustomEvent('getNextEvent', {"modelId": "", "elementId": "", "name": ""});
-document.addEventListener('getNextEvent', function (e) {
+var getNextEvent = new CustomEvent('getNextEvent', {
+  "modelId": "",
+  "elementId": "",
+  "name": ""
+});
+document.addEventListener('getNextEvent', function(e) {
   console.log('getNextEvent: ' + e.id + ': ' + e.name + 'pauseExecution: ' + pauseExecution +
     ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
 
-  if (breakPoints.some(function(e) {return e.data().id === currentExecutingElementId})) {
+  if (breakPoints.some(function(e) {
+      return e.data().id === currentExecutingElementId
+    })) {
     onPausePlayExecution(currentExecutingElementId);
     return;
   }
@@ -450,13 +457,13 @@ document.addEventListener('getNextEvent', function (e) {
   var hasNext = {
     command: 'hasNext'
   };
-  setTimeout(function () {
+  setTimeout(function() {
     doSend(JSON.stringify(hasNext));
   }, $.trim($('#executionSpeedSlider').val()));
 });
 
 var getModelEvent = new CustomEvent('getModelEvent', {});
-document.addEventListener('getModelEvent', function (e) {
+document.addEventListener('getModelEvent', function(e) {
   console.log('getModelEvent');
 
   var updateAllElements = {
@@ -471,14 +478,14 @@ function removeModel(modelId) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
   var tabs = $('#tabs');
   var modelRequirements = $('#modelRequirements');
   var modelActions = $('#modelActions');
   var modelName = $('#modelName');
   var generator = $('#generator');
 
-  tabs.delegate('span.ui-icon-close', 'click', function () {
+  tabs.delegate('span.ui-icon-close', 'click', function() {
     var id = $(this).closest('li').remove().attr('aria-controls').substr(2);
     $('#A-' + id).remove();
     tabs.tabs('refresh');
@@ -489,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   tabs.tabs({
-    activate: function (event, ui) {
+    activate: function(event, ui) {
       currentModelId = ui.newPanel.attr('id').substr(2);
       console.log('tabs activate: ' + currentModelId);
       graphs[currentModelId].resize();
@@ -512,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('key down: ' + e.which);
     keys[e.which] = true;
 
-    if (keys[46]) {  // Delete key is pressed
+    if (keys[46]) { // Delete key is pressed
       if (graphs[currentModelId] !== undefined) {
         graphs[currentModelId].remove(':selected');
       }
@@ -610,7 +617,7 @@ function createGraph(currentModelId) {
       .css({
         'content': 'data(name)',
         'text-wrap': 'wrap',
-        'curve-style' : 'bezier',
+        'curve-style': 'bezier',
         'text-rotation': 'autorotate',
         'target-arrow-shape': 'triangle',
         'width': '4',
@@ -629,7 +636,7 @@ function createGraph(currentModelId) {
 
   var srcNode = null;
   graph.on('tapstart', 'node', function() {
-    if (keys[69]) {  // e key is pressed
+    if (keys[69]) { // e key is pressed
       console.log('tapstart with e key pressed on node: ' + this.id());
       srcNode = this;
       graph.autoungrabify(true);
@@ -638,7 +645,7 @@ function createGraph(currentModelId) {
 
   var dstNode = null;
   graph.on('tapend', 'node', function() {
-    if (keys[69]) {  // e key is pressed
+    if (keys[69]) { // e key is pressed
       console.log('tapend with e key pressed on node: ' + this.id());
       dstNode = this;
       graph.autoungrabify(false);
@@ -670,15 +677,17 @@ function createGraph(currentModelId) {
     if (tappedTimeout && tappedBefore) {
       clearTimeout(tappedTimeout);
     }
-    if(tappedBefore === tappedNow) {
+    if (tappedBefore === tappedNow) {
       tappedNow.trigger('doubleTap');
       tappedBefore = null;
     } else {
-      tappedTimeout = setTimeout(function(){ tappedBefore = null; }, 300);
+      tappedTimeout = setTimeout(function() {
+        tappedBefore = null;
+      }, 300);
       tappedBefore = tappedNow;
     }
 
-    if (keys[86]) {  // v key is pressed
+    if (keys[86]) { // v key is pressed
       console.log('tap and v key pressed');
       var id = generateUUID();
       graph.add({
@@ -742,97 +751,129 @@ function createGraph(currentModelId) {
   $('#A-' + currentModelId).mousedown(function(event) {
     context.destroy('#A-' + currentModelId);
     switch (event.which) {
-        case 1:
-            //alert('Left Mouse button pressed.');
-            break;
-        case 2:
-            //alert('Middle Mouse button pressed.');
-            break;
-        case 3:
-            //alert('Right Mouse button pressed.');
-            if (mouseoverElement !== undefined) {
-              console.log("Mouse over: " + mouseoverElement.data().id);
-              rightClickedElement = mouseoverElement;
-              var isBreakPointEnabled = breakPoints.some(function(e) {return e.data().id === rightClickedElement.data().id});
-              var breakpointStr;
-              if (isBreakPointEnabled) {
-               breakpointStr = 'Disable breakpoint';
-              } else {
-               breakpointStr = 'Enable breakpoint';
-              }
-              context.attach('#A-' + currentModelId, [
-                {
-                  header: 'Name: ' + mouseoverElement.data().name,
-                },
-                {
-                  divider: true
-                },
-                {
-                  text: breakpointStr,
-                  action: function (event) {
-                    if (isBreakPointEnabled) {
-                      console.log("Removing break point at: " + rightClickedElement.data().id);
-                      breakPoints.splice(rightClickedElement, 1);
-                    } else {
-                      console.log("Adding break point at: " + rightClickedElement.data().id);
-                      breakPoints.push(rightClickedElement);
-                    }
-                    setElementsColor();
-                  }
-                },
-                {
-                  divider: true
-                },
-                {
-                  text: 'Remove',
-                  action: function (event) {
-                    console.log("Removing element: " + rightClickedElement.data().id);
-                    graph.remove(rightClickedElement);
-                  }
-                }
-              ]);
-            } else {
-              context.attach('#A-' + currentModelId, [
-              {
-                text: 'Add vertex',
-                action: function (event) {
-                  console.log("Adding element");
-                  var id = generateUUID();
-                  graph.add({
-                    group: 'nodes',
-                    data: {
-                      id: id,
-                      label: 'v_NewVertex',
-                      name: formatElementName({
-                        name: 'v_NewVertex'
-                      }),
-                      color: 'LightSteelBlue'
-                    },
-                    renderedPosition: rightClickedRenderedPosition
-                  });
-                }
-              },
-              {
-                text: 'Run test',
-                action: function (event) {
-                  onRunTest();
-                }
-              }
-            ]);
-          }
-          break;
+      case 1:
+        //alert('Left Mouse button pressed.');
+        break;
+      case 2:
+        //alert('Middle Mouse button pressed.');
+        break;
+      case 3:
+        //alert('Right Mouse button pressed.');
+        if (mouseoverElement !== undefined) {
+          console.log("Mouse over: " + mouseoverElement.data().id);
+          rightClickedElement = mouseoverElement;
+          var isBreakPointEnabled = breakPoints.some(function(e) {
+            return e.data().id === rightClickedElement.data().id
+          });
 
-        default:
-            alert('You have a strange Mouse!');
+          var breakpointStr;
+          if (isBreakPointEnabled) {
+            breakpointStr = 'Disable breakpoint';
+          } else {
+            breakpointStr = 'Enable breakpoint';
+          }
+
+          var startElementtStr;
+          if (rightClickedElement.data().id === getStartingElementId()) {
+            startElementtStr = 'Disable start element';
+          } else {
+            startElementtStr = 'Enable start element';
+          }
+
+          context.attach('#A-' + currentModelId, [{
+            header: 'Name: ' + mouseoverElement.data().name,
+          }, {
+            divider: true
+          }, {
+            text: startElementtStr,
+            action: function(event) {
+              if (rightClickedElement.data().id === getStartingElementId()) {
+                graph.startElementId = undefined;
+              } else {
+                for (var modelId in graphs) {
+                  graphs[modelId].startElementId = undefined;
+                }
+                graph.startElementId = rightClickedElement.data().id;
+              }
+              setElementsColor();
+            }
+          }, {
+            text: breakpointStr,
+            action: function(event) {
+              if (isBreakPointEnabled) {
+                console.log("Removing break point at: " + rightClickedElement.data().id);
+                breakPoints.splice(rightClickedElement, 1);
+              } else {
+                console.log("Adding break point at: " + rightClickedElement.data().id);
+                breakPoints.push(rightClickedElement);
+              }
+              setElementsColor();
+            }
+          }, {
+            divider: true
+          }, {
+            text: 'Remove',
+            action: function(event) {
+              console.log("Removing element: " + rightClickedElement.data().id);
+              graph.remove(rightClickedElement);
+            }
+          }]);
+        } else {
+          context.attach('#A-' + currentModelId, [{
+            text: 'Add vertex',
+            action: function(event) {
+              console.log("Adding element");
+              var id = generateUUID();
+              graph.add({
+                group: 'nodes',
+                data: {
+                  id: id,
+                  label: 'v_NewVertex',
+                  name: formatElementName({
+                    name: 'v_NewVertex'
+                  }),
+                  color: 'LightSteelBlue'
+                },
+                renderedPosition: rightClickedRenderedPosition
+              });
+            }
+          }, {
+            divider: true
+          }, {
+            text: 'Run',
+            action: function(event) {
+              onRunTest();
+            }
+          }, {
+            text: 'Pause',
+            action: function(event) {
+              onPausePlayExecution();
+            }
+          }, {
+            text: 'Step',
+            action: function(event) {
+              onStepExecution();
+            }
+          }, {
+            text: 'Reset',
+            action: function(event) {
+              onResetTest();
+            }
+          }]);
+        }
+        break;
+
+      default:
+        alert('You have a strange Mouse!');
     }
   });
 
   graph.on('mouseover', function(event) {
-    mouseoverElement = this;
+    mouseoverElement = undefined;
     rightClickedRenderedPosition = {
-                        x: event.cyRenderedPosition.x,
-                        y: event.cyRenderedPosition.y
-                      };
+      x: event.cyRenderedPosition.x,
+      y: event.cyRenderedPosition.y
+    };
   });
 
   graph.on('mouseover', 'node', function() {
@@ -847,8 +888,7 @@ function createGraph(currentModelId) {
     mouseoverElement = undefined;
   });
 
-  graph.on('cxttap', 'node', function() {
-  });
+  graph.on('cxttap', 'node', function() {});
 
   $('#label').on('input', function() {
     if (currentElement) {
@@ -993,7 +1033,8 @@ function readGraphFromJSON(jsonGraphs) {
     var jsonVertices = jsonModel.vertices;
     for (var i = 0; i < jsonVertices.length; i++) {
       var jsonVertex = jsonVertices[i];
-      var x = 0, y = 0;
+      var x = 0,
+        y = 0;
       if (jsonVertex.properties !== undefined) {
         if (jsonVertex.properties.x !== undefined) {
           x = jsonVertex.properties.x;
@@ -1097,6 +1138,15 @@ function readGraphFromJSON(jsonGraphs) {
   return graphs;
 }
 
+function getStartingElementId() {
+  for (var modelId in graphs) {
+    if (graphs[modelId].startElementId !== undefined) {
+      return graphs[modelId].startElementId;
+    }
+  }
+  return undefined;
+}
+
 function setElementsColor() {
   for (var modelId in graphs) {
     if (!isTestRunning) {
@@ -1104,32 +1154,36 @@ function setElementsColor() {
       graphs[modelId].nodes().data('color', 'LightSteelBlue');
     }
 
-    graphs[modelId].nodes().filterFn(function( ele ){
+    graphs[modelId].nodes().filterFn(function(ele) {
       return ele.data('startVertex') === true;
     }).data('color', 'LightGreen');
 
     if (!isTestRunning) {
-      graphs[modelId].nodes().filterFn(function( ele ){
+      graphs[modelId].nodes().filterFn(function(ele) {
         return ele.data('sharedState') !== undefined &&
           ele.data('sharedState') != null &&
           ele.data('sharedState').length > 0;
       }).data('color', 'LightSalmon');
 
-      graphs[modelId].edges().filterFn(function( ele ){
+      graphs[modelId].edges().filterFn(function(ele) {
         return ele.data('id') === graphs[modelId].startElementId;
       }).data('color', 'LightGreen');
 
-      graphs[modelId].nodes().filterFn(function( ele ){
+      graphs[modelId].nodes().filterFn(function(ele) {
         return ele.data('id') === graphs[modelId].startElementId;
       }).data('color', 'LightGreen');
     }
 
-    graphs[modelId].nodes().filterFn(function( ele ){
-      return breakPoints.some(function(e) {return e.data().id === ele.data('id')});
+    graphs[modelId].nodes().filterFn(function(ele) {
+      return breakPoints.some(function(e) {
+        return e.data().id === ele.data('id')
+      });
     }).data('color', 'Red');
 
-    graphs[modelId].edges().filterFn(function( ele ){
-      return breakPoints.some(function(e) {return e.data().id === ele.data('id')});
+    graphs[modelId].edges().filterFn(function(ele) {
+      return breakPoints.some(function(e) {
+        return e.data().id === ele.data('id')
+      });
     }).data('color', 'Red');
   }
 }
@@ -1157,7 +1211,7 @@ function generateUUID() {
   /*jslint bitwise: true */
   console.log('generateUUID');
   var d = new Date().getTime();
-  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
     return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
@@ -1215,16 +1269,16 @@ function testWebSocket(wsUri) {
     document.getElementById('issues').innerHTML = err.message;
   }
 
-  websocket.onopen = function (evt) {
+  websocket.onopen = function(evt) {
     onOpen(evt);
   };
-  websocket.onclose = function (evt) {
+  websocket.onclose = function(evt) {
     onClose(evt);
   };
-  websocket.onmessage = function (evt) {
+  websocket.onmessage = function(evt) {
     onMessage(evt);
   };
-  websocket.onerror = function (evt) {
+  websocket.onerror = function(evt) {
     onError(evt);
   };
 }
@@ -1336,8 +1390,8 @@ function onMessage(event) {
     case 'updateallelements':
       if (message.success) {
         for (var index in message.elements) {
-          if (message.elements[index].visitedCount>0) {
-            graphs[message.elements[index].modelId].$('#'+message.elements[index].elementId).data('color', 'lightgreen');
+          if (message.elements[index].visitedCount > 0) {
+            graphs[message.elements[index].modelId].$('#' + message.elements[index].elementId).data('color', 'lightgreen');
           }
         }
       }
@@ -1353,7 +1407,7 @@ function onMessage(event) {
       console.log('Command visitedElement. Will color green on (modelId, elementId): ' +
         message.modelId + ', ' + message.elementId);
       var str = 'Steps: ' + message.totalCount + ', Fulfilment: ' +
-                           (message.stopConditionFulfillment * 100).toFixed(0) + '%';
+        (message.stopConditionFulfillment * 100).toFixed(0) + '%';
       if (!jQuery.isEmptyObject(message.data)) {
         str += ', Data: ' + JSON.stringify(message.data);
       }
@@ -1367,10 +1421,12 @@ function onMessage(event) {
       var index = tabs.find('a[href="#A-' + currentModelId + '"]').parent().index();
       tabs.tabs('option', 'active', index);
 
-      if (!breakPoints.some(function(e) {return e.data().id === message.elementId})) {
-        graphs[currentModelId].$('#'+message.elementId).data('color', 'lightgreen');
+      if (!breakPoints.some(function(e) {
+          return e.data().id === message.elementId
+        })) {
+        graphs[currentModelId].$('#' + message.elementId).data('color', 'lightgreen');
       }
-      graphs[currentModelId].$('#'+message.elementId).select();
+      graphs[currentModelId].$('#' + message.elementId).select();
       break;
     case 'convertGraphml':
       if (message.success) {
@@ -1416,18 +1472,18 @@ function doSend(message) {
   console.log('doSend: ' + message);
 
   // Wait until the state of the socket is not ready and send the message when it is...
-  waitForSocketConnection(websocket, function(){
+  waitForSocketConnection(websocket, function() {
     websocket.send(message);
   });
 }
 
 // Make the function wait until the connection is made...
-function waitForSocketConnection(socket, callback){
+function waitForSocketConnection(socket, callback) {
   setTimeout(
-    function () {
+    function() {
       if (socket.readyState === 1) {
         console.log("Connection is made")
-        if(callback != null){
+        if (callback != null) {
           callback();
         }
         return;
@@ -1480,154 +1536,152 @@ function emptyInitialControlStates() {
   $('#requirements').val('').prop('disabled', true);
 }
 
-$( document ).ready(function() {
+$(document).ready(function() {
   emptyInitialControlStates();
   onConnect();
 
   context.init({
     fadeSpeed: 100,
-    filter: function ($obj){},
+    filter: function($obj) {},
     above: 'auto',
     preventDoubleContext: true,
     compress: false
   });
 
 
-    var generators = [
-      "random",
-      "quick_random",
-      "a_star"
-    ];
+  var generators = [
+    "random",
+    "quick_random",
+    "a_star"
+  ];
 
-    var stop_conditions = [
-      "edge_coverage",
-      "vertex_coverage",
-      "reached_vertex",
-      "reached_edge",
-      "time_duration",
-      "never",
-      "dependency_edge_coverage"
-    ];
+  var stop_conditions = [
+    "edge_coverage",
+    "vertex_coverage",
+    "reached_vertex",
+    "reached_edge",
+    "time_duration",
+    "never",
+    "dependency_edge_coverage"
+  ];
 
-    var current_state = "generator";
-    var result = "";
-    var availableTags = generators;
-    var autocompleteDisabled = false;
+  var current_state = "generator";
+  var result = "";
+  var availableTags = generators;
+  var autocompleteDisabled = false;
 
-    $("#generator-builder").on('keypress', function(e) {
-      if (e.which == 13 && $("#generator-builder").autocomplete("option", "disabled")) {
-        e.preventDefault();
-        result += $.trim($("#generator-builder").val()) + ")";
-        $("#generator-builder").val("");
-        current_state = "stop_condition_closed";
-        availableTags = [];
-        availableTags.push(")");
-        availableTags.push("OR");
-        availableTags.push("AND");
-        $("#generator").val(result);
-        $("#generator-builder").autocomplete("option", "disabled", false);
-      }
-    });
+  $("#generator-builder").on('keypress', function(e) {
+    if (e.which == 13 && $("#generator-builder").autocomplete("option", "disabled")) {
+      e.preventDefault();
+      result += $.trim($("#generator-builder").val()) + ")";
+      $("#generator-builder").val("");
+      current_state = "stop_condition_closed";
+      availableTags = [];
+      availableTags.push(")");
+      availableTags.push("OR");
+      availableTags.push("AND");
+      $("#generator").val(result);
+      $("#generator-builder").autocomplete("option", "disabled", false);
+    }
+  });
 
 
-    $("#generator-builder").autocomplete({
-      minLength: 0,
-      source: function(request, resolve) {
-        resolve(availableTags);
-      },
-      messages: {
-        noResults: '',
-        results: function() {}
-      },
-      select: function(e, ui) {
-        switch (current_state) {
-          case "generator":
-            result += ui.item.value + "(";
-            if (ui.item.value == "a_star") {
-              availableTags = [];
-              availableTags.push("reached_vertex");
-              availableTags.push("reached_edge");
-            } else {
-  	          availableTags = stop_conditions;
-            }
-            current_state = "stop_condition";
-            break;
-
-          case "stop_condition":
-            switch (ui.item.value) {
-              case "edge_coverage":
-              case "vertex_coverage":
-                result += ui.item.value + "(";
-                current_state = "number";
-                $("#generator-builder").autocomplete("option", "disabled", true);
-                break;
-
-              case "reached_edge":
-                result += ui.item.value + "(";
-                current_state = "edge_or_vertex_name";
-                availableTags = [];
-                graphs[currentModelId].edges().each(function( index, edge) {
-                  availableTags.push(edge.data().label);
-                 }
-                );
-                break;
-
-              case "reached_vertex":
-                result += ui.item.value + "(";
-                current_state = "edge_or_vertex_name";
-                availableTags = [];
-                graphs[currentModelId].nodes().each(function( index, node) {
-                  if (node.data().startVertex === true) {
-                    return true;
-                  }
-                  availableTags.push(node.data().label);
-                 }
-                );
-                break;
-
-              case "time_duration":
-                result += ui.item.value + "(";
-                current_state = "number";
-                $("#generator-builder").autocomplete("option", "disabled", true);
-                break;
-
-              case "never":
-                result += ui.item.value + ") ";
-                current_state = "generator";
-                availableTags = generators;
-                break;
-            }
-            break;
-
-          case "edge_or_vertex_name":
-            result += ui.item.value + ")";
+  $("#generator-builder").autocomplete({
+    minLength: 0,
+    source: function(request, resolve) {
+      resolve(availableTags);
+    },
+    messages: {
+      noResults: '',
+      results: function() {}
+    },
+    select: function(e, ui) {
+      switch (current_state) {
+        case "generator":
+          result += ui.item.value + "(";
+          if (ui.item.value == "a_star") {
             availableTags = [];
-            availableTags.push(")");
-            availableTags.push("OR");
-            availableTags.push("AND");
-            current_state = "stop_condition_closed";
-            break;
+            availableTags.push("reached_vertex");
+            availableTags.push("reached_edge");
+          } else {
+            availableTags = stop_conditions;
+          }
+          current_state = "stop_condition";
+          break;
 
-          case "stop_condition_closed":
-            switch (ui.item.value) {
-              case "OR":
-              case "AND":
-                result += " " + ui.item.value + " ";
-                availableTags = stop_conditions;
-                current_state = "stop_condition";
-                break;
+        case "stop_condition":
+          switch (ui.item.value) {
+            case "edge_coverage":
+            case "vertex_coverage":
+              result += ui.item.value + "(";
+              current_state = "number";
+              $("#generator-builder").autocomplete("option", "disabled", true);
+              break;
 
-              default:
-                result += ") ";
-                availableTags = generators;
-                current_state = "generator";
-            }
-            break;
-        }
-        this.value = "";
-        $("#generator").val(result);
-        return false;
+            case "reached_edge":
+              result += ui.item.value + "(";
+              current_state = "edge_or_vertex_name";
+              availableTags = [];
+              graphs[currentModelId].edges().each(function(index, edge) {
+                availableTags.push(edge.data().label);
+              });
+              break;
+
+            case "reached_vertex":
+              result += ui.item.value + "(";
+              current_state = "edge_or_vertex_name";
+              availableTags = [];
+              graphs[currentModelId].nodes().each(function(index, node) {
+                if (node.data().startVertex === true) {
+                  return true;
+                }
+                availableTags.push(node.data().label);
+              });
+              break;
+
+            case "time_duration":
+              result += ui.item.value + "(";
+              current_state = "number";
+              $("#generator-builder").autocomplete("option", "disabled", true);
+              break;
+
+            case "never":
+              result += ui.item.value + ") ";
+              current_state = "generator";
+              availableTags = generators;
+              break;
+          }
+          break;
+
+        case "edge_or_vertex_name":
+          result += ui.item.value + ")";
+          availableTags = [];
+          availableTags.push(")");
+          availableTags.push("OR");
+          availableTags.push("AND");
+          current_state = "stop_condition_closed";
+          break;
+
+        case "stop_condition_closed":
+          switch (ui.item.value) {
+            case "OR":
+            case "AND":
+              result += " " + ui.item.value + " ";
+              availableTags = stop_conditions;
+              current_state = "stop_condition";
+              break;
+
+            default:
+              result += ") ";
+              availableTags = generators;
+              current_state = "generator";
+          }
+          break;
       }
-    });
+      this.value = "";
+      $("#generator").val(result);
+      return false;
+    }
+  });
 
 });
