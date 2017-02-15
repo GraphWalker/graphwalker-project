@@ -259,4 +259,43 @@ public class JsonContextFactoryTest {
 	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e3");
 	    Assert.assertThat(e.getDependency(), is(15));
   }
+
+  @Test
+  public void weightWriteReadJsonTest() throws IOException {
+    Vertex v_BookInformation = new Vertex().setName("v_BookInformation").setId("n5");
+    Vertex v_OtherBoughtBooks = new Vertex().setName("v_OtherBoughtBooks").setId("n6");
+    Model model = new Model();
+    model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setWeight(0.5));
+
+    Context writeContext = new TestExecutionContext();
+    writeContext.setModel(model.build());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
+
+    Path tmpFolder = testFolder.getRoot().toPath();
+    ContextFactory factory = new JsonContextFactory();
+    factory.write(writeContexts, tmpFolder);
+
+    List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
+    Assert.assertNotNull(readContexts);
+    Assert.assertThat(readContexts.size(), is(1));
+    Context readContext = readContexts.get(0);
+
+    Assert.assertThat(model.getEdges().get(0).getWeight(), is(readContext.getModel().getEdges().get(0).getWeight()));
+  }
+
+  @Test
+  public void defaultWeightReadJsonTest() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/DependencyModel.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+
+    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+
+    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
+    Assert.assertThat(e.getWeight(), is(0.));
+  }
 }
