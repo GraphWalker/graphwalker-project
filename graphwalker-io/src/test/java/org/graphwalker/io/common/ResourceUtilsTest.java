@@ -26,8 +26,6 @@ package org.graphwalker.io.common;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,9 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
 
 /**
  * Created by krikar on 2015-11-04.
@@ -79,5 +74,15 @@ public class ResourceUtilsTest {
   @Test(expected = ResourceNotFoundException.class)
   public void getResourceAsStreamNotFound() {
     ResourceUtils.getResourceAsStream("json/kKJhdKJHJKhDGd.json");
+  }
+
+  @Test
+  public void isDirectory() {
+    Assert.assertTrue(ResourceUtils.isDirectory(Paths.get(testFolder.getRoot().getPath())));
+  }
+
+  @Test
+  public void isDirectoryException() {
+    Assert.assertFalse(ResourceUtils.isDirectory(Paths.get("/123456789")));
   }
 }

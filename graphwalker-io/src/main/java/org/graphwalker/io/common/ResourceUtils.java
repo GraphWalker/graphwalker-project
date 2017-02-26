@@ -49,7 +49,7 @@ public final class ResourceUtils {
 
   public static File getResourceAsFile(final String filename) {
     File file = createFile(filename);
-    if (file.exists()) {
+    if (file != null && file.exists()) {
       return file;
     } else {
       URL resource = ResourceUtils.class.getResource(filename);
@@ -65,7 +65,7 @@ public final class ResourceUtils {
 
   public static InputStream getResourceAsStream(final String filename) {
     File file = createFile(filename);
-    if (file.exists()) {
+    if (file != null && file.exists()) {
       try {
         return new FileInputStream(file);
       } catch (FileNotFoundException e) {
@@ -98,6 +98,6 @@ public final class ResourceUtils {
 
   public static boolean isDirectory(Path path) {
     File file = createFile(path.toString());
-    return file.isDirectory();
+    return (file != null && file.isDirectory());
   }
 }

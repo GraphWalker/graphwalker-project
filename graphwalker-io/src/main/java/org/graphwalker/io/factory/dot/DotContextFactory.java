@@ -26,6 +26,7 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
+import java.io.OutputStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -185,6 +186,8 @@ public final class DotContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path dotFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".dot");
-    Files.newOutputStream(dotFile).write(String.valueOf(getAsString(contexts)).getBytes());
+    OutputStream outputStream = Files.newOutputStream(dotFile);
+    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    outputStream.close();
   }
 }
