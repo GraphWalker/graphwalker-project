@@ -26,6 +26,7 @@ package org.graphwalker.maven.plugin;
  * #L%
  */
 
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
@@ -178,6 +179,8 @@ public final class TestMojo extends DefaultMojoBase {
       } catch (IOException e) {
         logger.error(e.getMessage());
         return "unknown";
+      } finally {
+        IOUtils.closeQuietly(inputStream);
       }
     }
     return properties.getProperty("graphwalker.version");

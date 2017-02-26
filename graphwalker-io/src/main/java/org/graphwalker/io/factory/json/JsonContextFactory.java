@@ -27,6 +27,7 @@ package org.graphwalker.io.factory.json;
  */
 
 import com.google.gson.Gson;
+import java.io.OutputStream;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
@@ -63,7 +64,9 @@ public final class JsonContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path jsonFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".json");
-    Files.newOutputStream(jsonFile).write(String.valueOf(getAsString(contexts)).getBytes());
+    OutputStream outputStream = Files.newOutputStream(jsonFile);
+    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    outputStream.close();
   }
 
   public String getJsonFromModel(Model model) {

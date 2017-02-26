@@ -29,6 +29,7 @@ package org.graphwalker.io.factory.yed;
 import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
+import java.io.OutputStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.FilenameUtils;
@@ -250,7 +251,9 @@ public final class YEdContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path graphmlFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".graphml");
-    Files.newOutputStream(graphmlFile).write(String.valueOf(getAsString(contexts)).getBytes());
+    OutputStream outputStream = Files.newOutputStream(graphmlFile);
+    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    outputStream.close();
   }
 
   private Vertex addVertices(Model model, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
