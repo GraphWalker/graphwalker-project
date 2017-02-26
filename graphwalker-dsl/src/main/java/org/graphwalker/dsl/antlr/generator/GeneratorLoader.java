@@ -65,8 +65,9 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
   public void exitBooleanAndExpression(@NotNull Generator_Parser.BooleanAndExpressionContext ctx) {
     if (ctx.AND().size() > 0) {
       CombinedCondition combinedCondition = new CombinedCondition();
-      combinedCondition.addStopCondition(stopConditions.get(0));
-      combinedCondition.addStopCondition(stopConditions.get(1));
+      for (int condition = 0; condition <= ctx.AND().size(); condition++) {
+        combinedCondition.addStopCondition(stopConditions.get(condition));
+      }
       stopCondition = combinedCondition;
     }
   }
@@ -105,8 +106,9 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
   public void exitLogicalExpression(@NotNull Generator_Parser.LogicalExpressionContext ctx) {
     if (ctx.OR().size() > 0) {
       AlternativeCondition alternativeCondition = new AlternativeCondition();
-      alternativeCondition.addStopCondition(stopConditions.get(0));
-      alternativeCondition.addStopCondition(stopConditions.get(1));
+      for (int condition = 0; condition <= ctx.OR().size(); condition++) {
+        alternativeCondition.addStopCondition(stopConditions.get(condition));
+      }
       stopCondition = alternativeCondition;
     }
   }
