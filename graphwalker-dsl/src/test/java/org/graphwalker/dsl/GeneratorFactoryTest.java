@@ -28,6 +28,7 @@ package org.graphwalker.dsl;
 
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.*;
+import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,6 +41,16 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
  */
 public class GeneratorFactoryTest {
 
+  @Test(expected = DslException.class)
+  public void unvalidGenerator() {
+    GeneratorFactory.parse("kskskdhfh(edge_coverage(100))");
+  }
+
+  @Test(expected = DslException.class)
+  public void unvalidStopCondition() {
+    GeneratorFactory.parse("random(dkshdgej(100))");
+  }
+
   @Test
   public void random_edge_coverage() {
     PathGenerator generator = GeneratorFactory.parse("random(edge_coverage(100))");
@@ -49,8 +60,72 @@ public class GeneratorFactoryTest {
   }
 
   @Test
+  public void random_edgecoverage() {
+    PathGenerator generator = GeneratorFactory.parse("random(edgecoverage(100))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void randompath_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("randompath(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void quick_random_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("quick_random(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(QuickRandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void quickrandom_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("quickrandom(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(QuickRandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void quickrandompath_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("quickrandompath(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(QuickRandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void shortest_all_paths_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("shortest_all_paths(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(ShortestAllPaths.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void shortestallpaths_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("shortestallpaths(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(ShortestAllPaths.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
   public void random_vertex_coverage() {
     PathGenerator generator = GeneratorFactory.parse("random(vertex_coverage(100))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(VertexCoverage.class));
+    Assert.assertThat(((VertexCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void random_vertexcoverage() {
+    PathGenerator generator = GeneratorFactory.parse("random(vertexcoverage(100))");
     Assert.assertThat(generator, instanceOf(RandomPath.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(VertexCoverage.class));
     Assert.assertThat(((VertexCoverage) generator.getStopCondition()).getPercent(), is(100));
@@ -156,18 +231,42 @@ public class GeneratorFactoryTest {
     Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
     Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
   }
-  
+
   @Test
-  public void random_dependency_edge_coverag() {
-	    PathGenerator generator = GeneratorFactory.parse("random(dependency_edge_coverage(80))");
-	    Assert.assertThat(generator, instanceOf(RandomPath.class));
-	    Assert.assertThat(generator.getStopCondition(), instanceOf(DependencyEdgeCoverage.class));
-	    Assert.assertThat(((DependencyEdgeCoverage) generator.getStopCondition()).getDependency(), is(80));
+  public void weightedrandompath_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("weightedrandompath(edge_coverage(100))");
+    Assert.assertThat(generator, instanceOf(WeightedRandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void random_dependency_edge_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("random(dependency_edge_coverage(80))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(DependencyEdgeCoverage.class));
+    Assert.assertThat(((DependencyEdgeCoverage) generator.getStopCondition()).getDependency(), is(80));
+  }
+
+  @Test
+  public void random_dependencyedgecoverage() {
+    PathGenerator generator = GeneratorFactory.parse("random(dependencyedgecoverage(80))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(DependencyEdgeCoverage.class));
+    Assert.assertThat(((DependencyEdgeCoverage) generator.getStopCondition()).getDependency(), is(80));
   }
 
   @Test
   public void random_requirement_coverage() {
     PathGenerator generator = GeneratorFactory.parse("random(requirement_coverage(100))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(RequirementCoverage.class));
+    Assert.assertThat(((RequirementCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+
+  @Test
+  public void random_requirementcoverage() {
+    PathGenerator generator = GeneratorFactory.parse("random(requirementcoverage(100))");
     Assert.assertThat(generator, instanceOf(RandomPath.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(RequirementCoverage.class));
     Assert.assertThat(((RequirementCoverage) generator.getStopCondition()).getPercent(), is(100));
