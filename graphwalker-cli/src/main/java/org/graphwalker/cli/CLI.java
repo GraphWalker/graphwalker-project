@@ -32,6 +32,7 @@ import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.cli.commands.*;
@@ -516,6 +517,8 @@ public class CLI {
       } catch (IOException e) {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
+      } finally {
+        IOUtils.closeQuietly(inputStream);
       }
     }
     return properties.getProperty("graphwalker.version");

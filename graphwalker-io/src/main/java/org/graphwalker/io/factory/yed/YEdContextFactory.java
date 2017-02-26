@@ -29,6 +29,7 @@ package org.graphwalker.io.factory.yed;
 import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
+import java.io.OutputStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.FilenameUtils;
@@ -250,7 +251,9 @@ public final class YEdContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path graphmlFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".graphml");
-    Files.newOutputStream(graphmlFile).write(String.valueOf(getAsString(contexts)).getBytes());
+    OutputStream outputStream = Files.newOutputStream(graphmlFile);
+    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    outputStream.close();
   }
 
   private Vertex addVertices(Model model, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {
@@ -269,13 +272,17 @@ public final class YEdContextFactory implements ContextFactory {
           String description = "";
           for (DataType data : node.getDataArray()) {
             if (0 < data.getDomNode().getChildNodes().getLength()) {
-              if (data.getKey().equals("d5")) {
+              String key =data.getKey();
+              if (key != null && key.equals("d5")) {
                 description = ((DataTypeImpl) data).getStringValue();
               }
               if (isSupportedNode(data.xmlText())) {
                 StringBuilder label = new StringBuilder();
-                for (NodeLabelType nodeLabel : getSupportedNode(data.xmlText()).getNodeLabelArray()) {
-                  label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
+                com.yworks.xml.graphml.NodeType nodeType = getSupportedNode(data.xmlText());
+                if (nodeType != null) {
+                  for (NodeLabelType nodeLabel : nodeType.getNodeLabelArray()) {
+                    label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
+                  }
                 }
                 YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
                 parser.removeErrorListeners();
@@ -359,13 +366,17 @@ public final class YEdContextFactory implements ContextFactory {
         String description = "";
         for (DataType data : edgeType.getDataArray()) {
           if (0 < data.getDomNode().getChildNodes().getLength()) {
-            if (data.getKey().equals("d9")) {
+            String key = data.getKey();
+            if (key != null && key.equals("d9")) {
               description = ((DataTypeImpl) data).getStringValue();
             }
             if (isSupportedEdge(data.xmlText())) {
               StringBuilder label = new StringBuilder();
-              for (EdgeLabelType edgeLabel : getSupportedEdge(data.xmlText()).getEdgeLabelArray()) {
-                label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
+              com.yworks.xml.graphml.EdgeType supportedEdge = getSupportedEdge(data.xmlText());
+              if (supportedEdge != null) {
+                for (EdgeLabelType edgeLabel : supportedEdge.getEdgeLabelArray()) {
+                  label.append(((EdgeLabelTypeImpl) edgeLabel).getStringValue());
+                }
               }
               YEdEdgeParser parser = new YEdEdgeParser(getTokenStream(label.toString()));
               parser.removeErrorListeners();

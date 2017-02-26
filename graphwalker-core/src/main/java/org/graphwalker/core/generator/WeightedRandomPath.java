@@ -109,7 +109,12 @@ public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
       }
     }
 
-    double rest = (1 - sum) / numberOfZeros;
+    double rest;
+    if (numberOfZeros > 0) {
+      rest = (1 - sum) / numberOfZeros;
+    } else {
+      rest = 1 - sum;
+    }
     int index = random.nextInt(100);
     double weight = 0;
     for (Element element : elements) {

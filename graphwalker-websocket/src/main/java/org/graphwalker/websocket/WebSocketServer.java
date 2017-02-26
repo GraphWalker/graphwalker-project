@@ -26,6 +26,7 @@ package org.graphwalker.websocket;
  * #L%
  */
 
+import org.apache.commons.io.IOUtils;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -415,6 +416,8 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
       } catch (IOException e) {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
+      } finally {
+        IOUtils.closeQuietly(inputStream);
       }
     }
     return properties.getProperty("graphwalker.version");

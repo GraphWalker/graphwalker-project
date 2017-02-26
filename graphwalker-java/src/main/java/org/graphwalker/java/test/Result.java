@@ -181,11 +181,17 @@ public final class Result {
     results.put("totalNumberOfEdges", totalNumberOfEdges);
     results.put("totalNumberOfUnvisitedEdges", totalNumberOfUnvisitedEdges);
     results.put("totalNumberOfVisitedEdges", machine.getProfiler().getVisitedEdges().size());
-    results.put("edgeCoverage", 100 * (totalNumberOfEdges - totalNumberOfUnvisitedEdges) / totalNumberOfEdges);
+    if (totalNumberOfEdges > 0) {
+      results.put("edgeCoverage",
+                  100 * (totalNumberOfEdges - totalNumberOfUnvisitedEdges) / totalNumberOfEdges);
+    }
     results.put("totalNumberOfVertices", totalNumberOfVertices);
     results.put("totalNumberOfUnvisitedVertices",totalNumberOfUnvisitedVertices);
     results.put("totalNumberOfVisitedVertices", machine.getProfiler().getVisitedVertices().size());
-    results.put("vertexCoverage", 100 * (totalNumberOfVertices - totalNumberOfUnvisitedVertices) / totalNumberOfVertices);
+    if (totalNumberOfVertices > 0) {
+      results.put("vertexCoverage", 100 * (totalNumberOfVertices - totalNumberOfUnvisitedVertices)
+                                    / totalNumberOfVertices);
+    }
 
     results.put("edgesNotVisited", edgesNotVisitedJson);
     results.put("verticesNotVisited", verticesNotVisitedJson);

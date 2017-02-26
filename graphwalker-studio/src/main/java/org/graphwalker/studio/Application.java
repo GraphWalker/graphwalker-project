@@ -2,6 +2,7 @@ package org.graphwalker.studio;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.studio.util.LoggerUtil;
 import org.graphwalker.websocket.WebSocketServer;
@@ -131,6 +132,8 @@ public class Application {
       } catch (IOException e) {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
+      } finally {
+        IOUtils.closeQuietly(inputStream);
       }
     }
     return properties.getProperty("graphwalker.version");
