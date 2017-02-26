@@ -67,7 +67,7 @@ public final class AStar implements Algorithm {
     openSet.put(origin, sourceNode);
     queue.add(sourceNode);
     AStarNode node = queue.poll();
-    if (node.getElement().equals(destination)) {
+    if (node != null && node.getElement().equals(destination)) {
       return node.getElement();
     } else {
       closeSet.put(node.getElement(), node);
