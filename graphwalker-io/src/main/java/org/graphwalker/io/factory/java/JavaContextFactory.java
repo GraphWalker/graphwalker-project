@@ -27,7 +27,9 @@ package org.graphwalker.io.factory.java;
  */
 
 import com.google.common.collect.ImmutableList;
+import java.io.OutputStream;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Action;
@@ -166,6 +168,8 @@ public final class JavaContextFactory implements ContextFactory {
   @Override
   public void write(List<Context> contexts, Path path) throws IOException {
     Path javaFile = Paths.get(path.toString(), contexts.get(0).getModel().getName() + ".java");
-    Files.newOutputStream(javaFile).write(getAsString(contexts).getBytes());
+    OutputStream outputStream = Files.newOutputStream(javaFile);
+    outputStream.write(getAsString(contexts).getBytes());
+    outputStream.close();
   }
 }
