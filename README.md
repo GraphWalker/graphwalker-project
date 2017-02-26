@@ -44,7 +44,7 @@ The jar is in:
 ```bash
 graphwalker-studio/target/graphwalker-cli-3.2.1.jar
 ```
-
+ 
 Run it like:
 ```bash
 java -jar graphwalker-studio/target/graphwalker-cli-4.0.0-SNAPSHOT.jar
