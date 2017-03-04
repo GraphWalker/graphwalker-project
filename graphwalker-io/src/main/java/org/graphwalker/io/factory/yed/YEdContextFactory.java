@@ -109,10 +109,7 @@ public final class YEdContextFactory implements ContextFactory {
     } catch (XmlException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-      throw new ContextFactoryException("Could not read the file.");
-    } catch (ResourceNotFoundException e) {
+    } catch (IOException | ResourceNotFoundException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("Could not read the file.");
     }
@@ -279,10 +276,12 @@ public final class YEdContextFactory implements ContextFactory {
               if (isSupportedNode(data.xmlText())) {
                 StringBuilder label = new StringBuilder();
                 com.yworks.xml.graphml.NodeType nodeType = getSupportedNode(data.xmlText());
-                if (nodeType != null) {
-                  for (NodeLabelType nodeLabel : nodeType.getNodeLabelArray()) {
-                    label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
-                  }
+                if (nodeType == null) {
+                  throw new XmlException("Expected a valid vertex");
+                }
+
+                for (NodeLabelType nodeLabel : nodeType.getNodeLabelArray()) {
+                  label.append(((NodeLabelTypeImpl) nodeLabel).getStringValue());
                 }
                 YEdVertexParser parser = new YEdVertexParser(getTokenStream(label.toString()));
                 parser.removeErrorListeners();
@@ -292,8 +291,8 @@ public final class YEdContextFactory implements ContextFactory {
                 if (!description.isEmpty()) {
                   vertex.setProperty("description", description);
                 }
-                vertex.setProperty("x", getSupportedNode(data.xmlText()).getGeometry().getX());
-                vertex.setProperty("y", getSupportedNode(data.xmlText()).getGeometry().getY());
+                vertex.setProperty("x", nodeType.getGeometry().getX());
+                vertex.setProperty("y", nodeType.getGeometry().getY());
                 boolean blocked = false;
                 if (null != parseContext.start()) {
                   elements.put(node.getId(), vertex);
@@ -363,6 +362,9 @@ public final class YEdContextFactory implements ContextFactory {
     for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
       if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
         org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType) object;
+        if (edgeType == null) {
+          throw new XmlException("Expected a valid edge");
+        }
         String description = "";
         for (DataType data : edgeType.getDataArray()) {
           if (0 < data.getDomNode().getChildNodes().getLength()) {
