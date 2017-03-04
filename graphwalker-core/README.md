@@ -8,7 +8,7 @@ This is the GraphWalker major version 3. For earlier versions of GraphWalker, se
 
 ### What is GraphWalker
 
-GraphWalker is a Model-based testing tool which uses directed graphs (finite state diagram). The graphs are expressions of a systems expected behavior. It's not a description of the actual system under test, rather than it is an expression of of the test design. See [Finite State Model-Based Testing on a Shoestring] as an example.
+GraphWalker is a Model-based testing tool which uses directed graphs (finite state diagram). The graphs are expressions of a systems expected behavior. It's not a description of the actual system under test, rather than it is an expression of the test design. See [Finite State Model-Based Testing on a Shoestring] as an example.
 
 GraphWalker generates test sequences from the graph. The test sequences are then used to run the actual tests.
 
