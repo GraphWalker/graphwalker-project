@@ -419,7 +419,9 @@ public final class YEdContextFactory implements ContextFactory {
                 }
               }
               if (!blocked && null != edge.getTargetVertex()) {
-                if (null != startVertex && edgeType.getSource().equals(startVertex.getId())) {
+                if (null != startVertex &&
+                    null != edgeType.getSource() &&
+                    edgeType.getSource().equals(startVertex.getId())) {
                   edge.setSourceVertex(null);
                   edge.setId(edgeType.getId());
                   model.addEdge(edge);
