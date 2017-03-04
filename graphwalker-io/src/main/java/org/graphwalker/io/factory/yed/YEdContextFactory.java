@@ -109,10 +109,7 @@ public final class YEdContextFactory implements ContextFactory {
     } catch (XmlException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("The file appears not to be valid yEd formatted.");
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-      throw new ContextFactoryException("Could not read the file.");
-    } catch (ResourceNotFoundException e) {
+    } catch (IOException | ResourceNotFoundException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("Could not read the file.");
     }
