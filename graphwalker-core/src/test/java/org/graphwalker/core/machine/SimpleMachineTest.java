@@ -356,4 +356,17 @@ public class SimpleMachineTest {
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
 
+  @Test
+  public void executeActionWithVariableNameContext() {
+    Vertex vertex1 = new Vertex();
+    Vertex vertex2 = new Vertex();
+    Model model = new Model()
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1));
+    model.addAction(new Action("context = 1;"));
+    Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+    context.setNextElement(vertex1);
+    Machine machine = new SimpleMachine(context);
+    assertThat(machine.getCurrentContext().getKeys().containsKey("context"), is(true));
+  }
 }

@@ -360,6 +360,6 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   private boolean isVariable(String key, List<String> methods) {
-    return !"impl".equals(key) && !methods.contains(key) && !"print".equals(key) && !"println".equals(key) && !"context".equals(key);
+    return !"impl".equals(key) && !methods.contains(key) && !"print".equals(key) && !"println".equals(key);
   }
 }
