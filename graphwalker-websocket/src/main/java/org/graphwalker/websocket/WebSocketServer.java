@@ -347,9 +347,8 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
   @Override
   public void update(Machine machine, Element element, EventType type) {
     logger.info("Received an update from a GraphWalker machine");
-    Iterator it = machines.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry pairs = (Map.Entry) it.next();
+    for (Object o : machines.entrySet()) {
+      Map.Entry pairs = (Map.Entry) o;
       if (machine == pairs.getValue()) {
         logger.info("Event: " + type);
         WebSocket conn = (WebSocket) pairs.getKey();

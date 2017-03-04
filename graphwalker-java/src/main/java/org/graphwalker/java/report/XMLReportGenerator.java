@@ -152,7 +152,7 @@ public class XMLReportGenerator {
     final StringWriter stringWriter = new StringWriter();
     final PrintWriter printWriter = new PrintWriter(stringWriter, true);
     throwable.printStackTrace(printWriter);
-    StringBuffer buffer = new StringBuffer().append(NEWLINE);
+    StringBuilder buffer = new StringBuilder().append(NEWLINE);
     for (String line : stringWriter.getBuffer().toString().split(NEWLINE)) {
       buffer.append(INDENT).append(INDENT).append(INDENT).append(INDENT).append(line).append(NEWLINE);
     }
