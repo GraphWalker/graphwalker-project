@@ -187,7 +187,10 @@ public final class DotContextFactory implements ContextFactory {
     File folder = path.toFile().getAbsoluteFile();
     Path dotFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".dot");
     OutputStream outputStream = Files.newOutputStream(dotFile);
-    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
-    outputStream.close();
+    try {
+      outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    } finally {
+      outputStream.close();
+    }
   }
 }

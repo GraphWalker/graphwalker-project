@@ -249,8 +249,11 @@ public final class YEdContextFactory implements ContextFactory {
     File folder = path.toFile().getAbsoluteFile();
     Path graphmlFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".graphml");
     OutputStream outputStream = Files.newOutputStream(graphmlFile);
-    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
-    outputStream.close();
+    try {
+      outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    } finally {
+      outputStream.close();
+    }
   }
 
   private Vertex addVertices(Model model, GraphmlDocument document, Map<String, Vertex> elements) throws XmlException {

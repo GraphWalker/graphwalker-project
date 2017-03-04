@@ -65,8 +65,11 @@ public final class JsonContextFactory implements ContextFactory {
     File folder = path.toFile().getAbsoluteFile();
     Path jsonFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".json");
     OutputStream outputStream = Files.newOutputStream(jsonFile);
-    outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
-    outputStream.close();
+    try {
+      outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
+    } finally {
+      outputStream.close();
+    }
   }
 
   public String getJsonFromModel(Model model) {
