@@ -1,0 +1,65 @@
+{
+  "models": [
+    {
+      "name": "Small model",
+      "generator": "random(edge_coverage(100))",
+      "startElementId": "e0",
+      "properties": {
+        "color": "grey"
+      },
+      "vertices": [
+        {
+          "name": "v_VerifySomeAction",
+          "id": "n0",
+          "properties": {
+            "color": "yellow"
+          }
+        },
+        {
+          "name": "v_VerifySomeOtherAction",
+          "id": "n1",
+          "properties": {
+            "color": "blue"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "name": "e_FirstAction",
+          "id": "e0",
+          "targetVertexId": "n0",
+          "properties": {
+            "color": "green"
+          }
+        },
+        {
+          "name": "e_AnotherAction",
+          "id": "e1",
+          "properties": {
+            "color": "red"
+          },
+          "sourceVertexId": "n0",
+          "targetVertexId": "n1"
+        },
+        {
+          "name": "e_SomeOtherAction",
+          "properties": {
+            "color": "black"
+          },
+          "id": "e2",
+          "sourceVertexId": "n1",
+          "targetVertexId": "n1"
+        },
+        {
+          "name": "e_SomeOtherAction",
+          "id": "e3",
+          "sourceVertexId": "n1",
+          "targetVertexId": "n0",
+          "properties": {
+            "color": "white"
+          }
+        }
+      ]
+    }
+  ]
+}

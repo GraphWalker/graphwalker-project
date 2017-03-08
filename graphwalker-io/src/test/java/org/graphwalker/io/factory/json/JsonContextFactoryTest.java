@@ -41,7 +41,6 @@ import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.Path;
@@ -297,5 +296,28 @@ public class JsonContextFactoryTest {
 
     Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
     Assert.assertThat(e.getWeight(), is(0.));
+  }
+
+  @Test
+  public void readProperties() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/ModelWithProperties.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+
+    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+
+    Assert.assertTrue(context.getModel().hasProperty("color"));
+    Assert.assertThat((String)context.getModel().getProperty("color"), is("grey"));
+
+    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
+    Assert.assertTrue(e.hasProperty("color"));
+    Assert.assertThat((String)e.getProperty("color"), is("green"));
+
+    Vertex.RuntimeVertex v = (Vertex.RuntimeVertex)context.getModel().getElementById("n0");
+    Assert.assertTrue(v.hasProperty("color"));
+    Assert.assertThat((String)v.getProperty("color"), is("yellow"));
   }
 }

@@ -129,6 +129,10 @@ public class JsonModel {
     model.setName(name);
     model.setId(id);
 
+    if (properties != null) {
+      model.setProperties(properties);
+    }
+
     if (actions != null) {
       for (String action : actions) {
         model.addAction(new Action(action));
