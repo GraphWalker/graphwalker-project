@@ -507,10 +507,60 @@ public class YEdContextFactoryTest {
   }
  
   
-  @Test @Ignore("Add custom properties to a subgraph")
+  @Test
   public void customProperties_07() throws IOException{
-	  
-	  
+	  /*
+	   * Graph with a subgraph. Nodes and edges with 3 custom properties each.
+	   * Interestingly the node default values appear in yED but the <data key=xx> does not appear in the .graphml
+	   *
+	   * node: 		y
+	   * edge: 		y
+	   * default: 	y CNP 1 & CNP 3; CEP 1 & CEP 3
+	   * overRide: 	y CNP 2; CEP 2
+	   * desc:		y
+	   * edge:      y
+	   */
+      Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph07.graphml");
+      RuntimeModel m = ctx.getModel();
+
+      List<RuntimeVertex> vertices = m.getVertices();
+      Assert.assertThat(vertices.size(),is(3));
+
+      for (RuntimeVertex v : vertices){
+          assertGeometryPropertiesAreOk(v);
+          Assert.assertTrue("CustomNodeProperty 1 is missing from Node.", v.hasProperty("CNP 1"));
+          Assert.assertEquals("Default Value 1", v.getProperty("CNP 1").toString());
+          Assert.assertTrue("CustomNodeProperty 2 is missing from Node.", v.hasProperty("CNP 2"));
+          Assert.assertEquals("OverRide 2", v.getProperty("CNP 2").toString());
+          Assert.assertTrue("CustomNodeProperty 3 is missing from Node.", v.hasProperty("CNP 3"));
+          Assert.assertEquals("OverRide 3", v.getProperty("CNP 3").toString());
+
+          Assert.assertTrue("Description is missing from Node.", v.hasProperty("description"));
+          Assert.assertEquals("Node Description", v.getProperty("description").toString());
+
+          Assert.assertFalse("CustomEdgeProperty 1 is erroneously on Node.", v.hasProperty("CEP 1"));
+          Assert.assertFalse("CustomEdgeProperty 2 is erroneously on Node.", v.hasProperty("CEP 2"));
+          Assert.assertFalse("CustomEdgeProperty 3 is erroneously on Node.", v.hasProperty("CEP 3"));
+      }
+
+      List<RuntimeEdge> edges = m.getEdges();
+      Assert.assertThat(edges.size(),is(2));
+
+      for (RuntimeEdge e : edges){
+          Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CEP 1"));
+          Assert.assertEquals("Default Value 1", e.getProperty("CEP 1").toString());
+          Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CEP 2"));
+          Assert.assertEquals("OverRide 2", e.getProperty("CEP 2").toString());
+          Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CEP 3"));
+          Assert.assertEquals("OverRide 3", e.getProperty("CEP 3").toString());
+
+          Assert.assertTrue("Description is missing from Edge.", e.hasProperty("description"));
+          Assert.assertEquals("Edge Description", e.getProperty("description").toString());
+
+          Assert.assertFalse("CustomNodeProperty 1 is erroneously on Node.", e.hasProperty("CNP 1"));
+          Assert.assertFalse("CustomNodeProperty 2 is erroneously on Node.", e.hasProperty("CNP 2"));
+          Assert.assertFalse("CustomNodeProperty 3 is erroneously on Node.", e.hasProperty("CNP 3"));
+      }
   }
   
   private Context getContextFromGraphml(String relPathToFile) throws IOException {
