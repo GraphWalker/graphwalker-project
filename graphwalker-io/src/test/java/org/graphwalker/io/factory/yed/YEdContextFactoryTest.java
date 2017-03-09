@@ -34,12 +34,15 @@ import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Model.RuntimeModel;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.Vertex.RuntimeVertex;
 import org.graphwalker.io.TestExecutionContext;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -340,4 +343,194 @@ public class YEdContextFactoryTest {
     Assert.assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
     Assert.assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
+  
+  @Test
+  public void customProperties_01() throws IOException{
+	  /*
+	   * node: 		y
+	   * edge: 		n
+	   * default: 	y
+	   * overRide: 	y
+	   * desc:		node: y edge: y
+	   */
+	    Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph01.graphml");
+	    RuntimeModel m = ctx.getModel();
+
+	    for (RuntimeVertex v : m.getVertices()){
+	    	assertGeometryPropertiesAreOk(v);
+	      	Assert.assertTrue("Node description is missing.", v.hasProperty("description"));
+	      	Assert.assertEquals("The node description", v.getProperty("description").toString());
+	    	Assert.assertTrue("CustomNodeProperty is not on Node.", v.hasProperty("CustomNodeProperty"));
+	    	Assert.assertEquals("OverRideNodeValue", v.getProperty("CustomNodeProperty").toString());
+	    }
+	    
+	    for (RuntimeEdge e : m.getEdges()){
+	      	Assert.assertTrue("Edge description is missing.", e.hasProperty("description"));
+	      	Assert.assertEquals("The edge description", e.getProperty("description").toString());
+	      	Assert.assertFalse("CustomNodeProperty is erroneously on Edge.", e.hasProperty("CustomNodeProperty"));
+	    }
+
+  }
+ 
+  @Test
+  public void customProperties_02() throws IOException{
+	  /*
+	   * node: 		n
+	   * edge: 		y
+	   * default: 	n
+	   * overRide: 	n
+	   * desc:		node: n edge: n
+	   */
+	    Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph02.graphml");
+	    RuntimeModel m = ctx.getModel();
+
+	    for (RuntimeVertex v : m.getVertices()){
+	    	assertGeometryPropertiesAreOk(v);
+	    	Assert.assertTrue("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
+	      	Assert.assertFalse("Description is erroneously on Node.", v.hasProperty("description"));
+	    }
+	    
+	    for (RuntimeEdge e : m.getEdges()){
+	      	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
+	      	Assert.assertFalse("CustomEdgeProperty is erroneously on Edge.", e.hasProperty("CustomEdgeProperty"));
+	    }
+
+  }
+  
+  @Test
+  public void customProperties_03() throws IOException{
+	  /*
+	   * node: 		y
+	   * edge: 		y
+	   * default: 	y
+	   * overRide: 	n
+	   * desc:		node: n edge: n
+	   */
+	    Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph03.graphml");
+	    RuntimeModel m = ctx.getModel();
+	    
+	    for (RuntimeVertex v : m.getVertices()){
+	    	assertGeometryPropertiesAreOk(v);
+	    	Assert.assertTrue("CustomNodeProperty is missing from Node.", v.hasProperty("CustomNodeProperty"));
+	    	Assert.assertEquals("DefaultNodeValue", v.getProperty("CustomNodeProperty").toString());
+	      	Assert.assertFalse("Description is erroneously on Node.", v.hasProperty("description"));
+	    	Assert.assertFalse("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
+	    }
+	    
+	    for (RuntimeEdge e : m.getEdges()){
+	      	Assert.assertTrue("CustomEdgeProperty is missing from  Edge.", e.hasProperty("CustomEdgeProperty"));
+	      	Assert.assertEquals("DefaultEdgeValue", e.getProperty("CustomEdgeProperty").toString());
+	    	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
+	    	Assert.assertFalse("CustomNodeProperty is erroneously on Edge.", e.hasProperty("CustomNodeProperty"));
+	    }
+  }
+
+  @Test
+  public void customProperties_04() throws IOException{
+	  /*
+	   * node: 		y
+	   * edge: 		y
+	   * default: 	n
+	   * overRide: 	y
+	   * desc:		node: n edge: n
+	   */
+	    Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph04.graphml");
+	    RuntimeModel m = ctx.getModel();
+
+	    for (RuntimeVertex v : m.getVertices()){
+	    	assertGeometryPropertiesAreOk(v);
+	    	Assert.assertTrue("CustomNodeProperty is missing from Node.", v.hasProperty("CustomNodeProperty"));
+	    	Assert.assertEquals("DefaultNodeValue", v.getProperty("CustomNodeProperty").toString());
+	      	Assert.assertFalse("Description is erroneously on Node.", v.hasProperty("description"));
+	    	Assert.assertFalse("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
+	    }
+	    
+	    for (RuntimeEdge e : m.getEdges()){
+	      	Assert.assertTrue("CustomEdgeProperty is missing from  Edge.", e.hasProperty("CustomEdgeProperty"));
+	      	Assert.assertEquals("DefaultEdgeValue", e.getProperty("CustomEdgeProperty").toString());
+	    	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
+	    	Assert.assertFalse("CustomNodeProperty is erroneously on Edge.", e.hasProperty("CustomNodeProperty"));
+	    }
+  }
+
+  @Test
+  public void customProperties_05() throws IOException{
+	  /*
+	   * node: 		n
+	   * edge: 		n
+	   * default: 	n
+	   * overRide: 	n
+	   * desc:		node: y edge: y
+	   */
+	    Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph05.graphml");
+	    RuntimeModel m = ctx.getModel();
+
+	    for (RuntimeVertex v : m.getVertices()){
+	    	assertGeometryPropertiesAreOk(v);
+	      	Assert.assertTrue("Node description is missing.", v.hasProperty("description"));
+	      	Assert.assertEquals("Node Description", v.getProperty("description").toString());
+	    	Assert.assertFalse("CustomNodeProperty is erroneously on Node.", v.hasProperty("CustomNodeProperty"));
+	    	Assert.assertFalse("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
+	    }
+	    
+	    for (RuntimeEdge e : m.getEdges()){
+	      	Assert.assertTrue("Edge description is missing.", e.hasProperty("description"));
+	      	Assert.assertEquals("Edge Description", e.getProperty("description").toString());
+	      	Assert.assertFalse("CustomEdgeProperty is erroneously on  Edge.", e.hasProperty("CustomEdgeProperty"));
+	    	Assert.assertFalse("CustomNodeProperty is erroneously on Edge.", e.hasProperty("CustomNodeProperty"));
+	    }
+  }
+
+  @Test
+  public void customProperties_06() throws IOException{
+	  /*
+	   * node: 		n
+	   * edge: 		y
+	   * default: 	y
+	   * overRide: 	y
+	   * desc:		node: n edge: n
+	   */
+	    Context ctx = getContextFromGraphml("graphml/customProp/Issue25_Graph06.graphml");
+	    RuntimeModel m = ctx.getModel();
+
+	    for (RuntimeVertex v : m.getVertices()){
+	    	assertGeometryPropertiesAreOk(v);
+	      	Assert.assertFalse("Description is erroneously on Node.", v.hasProperty("description"));
+	    	Assert.assertFalse("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
+	    }
+	    
+	    for (RuntimeEdge e : m.getEdges()){
+	      	Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CustomEdgeProperty"));
+	      	Assert.assertEquals("OverRideEdgeValue", e.getProperty("CustomEdgeProperty").toString());
+	    	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
+	    }
+  }
+ 
+  
+  @Test @Ignore("Add custom properties to a subgraph")
+  public void customProperties_07() throws IOException{
+	  
+	  
+  }
+  
+  private Context getContextFromGraphml(String relPathToFile) throws IOException {
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(ResourceUtils.getResourceAsStream(relPathToFile), writer, StandardCharsets.UTF_8);
+		String grapmlStr = writer.toString();
+
+		List<Context> contexts = new YEdContextFactory().create(grapmlStr);
+		Assert.assertNotNull(contexts);
+		Assert.assertThat(contexts.size(), is(1));
+		return contexts.get(0);
+	}
+  
+  private void assertGeometryPropertiesAreOk(RuntimeVertex v){
+  	Assert.assertTrue("X is missing.", v.hasProperty("x"));
+  	Assert.assertTrue(Double.valueOf(v.getProperty("x").toString()) > 0 );
+  	
+  	Assert.assertTrue("Y is missing.", v.hasProperty("y"));
+  	Assert.assertTrue(Double.valueOf(v.getProperty("y").toString()) > 0 );
+
+  }
+  
 }
