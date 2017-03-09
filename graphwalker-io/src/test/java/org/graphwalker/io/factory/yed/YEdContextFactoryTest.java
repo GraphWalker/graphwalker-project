@@ -33,6 +33,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Model.RuntimeModel;
 import org.graphwalker.core.model.Vertex;
@@ -42,7 +43,6 @@ import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -57,7 +57,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
+
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -505,8 +505,7 @@ public class YEdContextFactoryTest {
 	    	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
 	    }
   }
- 
-  
+
   @Test
   public void customProperties_07() throws IOException{
 	  /*
@@ -580,7 +579,6 @@ public class YEdContextFactoryTest {
   	
   	Assert.assertTrue("Y is missing.", v.hasProperty("y"));
   	Assert.assertTrue(Double.valueOf(v.getProperty("y").toString()) > 0 );
-
   }
   
 }
