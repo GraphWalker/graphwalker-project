@@ -385,9 +385,9 @@ public final class YEdContextFactory implements ContextFactory {
     List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
     HashMap<String,KeyType> propKeys = new HashMap<>();
     for (KeyType k : keys){
-        if(k.getFor() == KeyForTypeImpl.EDGE && !k.isSetYfilesType()){
-            propKeys.put(k.getId(),k);
-        }
+      if(k.getFor() == KeyForTypeImpl.EDGE && !k.isSetYfilesType()){
+          propKeys.put(k.getId(),k);
+      }
     }
 
     for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
@@ -398,20 +398,20 @@ public final class YEdContextFactory implements ContextFactory {
         }
         Edge edge = new Edge();
         for(Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
-            KeyType value = entry.getValue();
-            if(value.isSetDefault()){
-                edge.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
-            }
+          KeyType value = entry.getValue();
+          if(value.isSetDefault()){
+              edge.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
+          }
         }
         for (DataType data : edgeType.getDataArray()) {
           String propName;
           String propCurrentValue;
           String key =data.getKey();
           if(propKeys.containsKey(key)){
-              KeyType currentKey = propKeys.get(key);
-              propName = currentKey.getAttrName();
-              propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
-              edge.setProperty(propName, propCurrentValue);
+            KeyType currentKey = propKeys.get(key);
+            propName = currentKey.getAttrName();
+            propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
+            edge.setProperty(propName, propCurrentValue);
           }
           if (0 < data.getDomNode().getChildNodes().getLength()) {
             if (isSupportedEdge(data.xmlText())) {
