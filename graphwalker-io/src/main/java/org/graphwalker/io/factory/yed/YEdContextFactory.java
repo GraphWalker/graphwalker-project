@@ -404,15 +404,15 @@ public final class YEdContextFactory implements ContextFactory {
             }
         }
         for (DataType data : edgeType.getDataArray()) {
-            String propName;
-            String propCurrentValue;
-            String key =data.getKey();
-            if(propKeys.containsKey(key)){
-                KeyType currentKey = propKeys.get(key);
-                propName = currentKey.getAttrName();
-                propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
-                edge.setProperty(propName, propCurrentValue);
-            }
+          String propName;
+          String propCurrentValue;
+          String key =data.getKey();
+          if(propKeys.containsKey(key)){
+              KeyType currentKey = propKeys.get(key);
+              propName = currentKey.getAttrName();
+              propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
+              edge.setProperty(propName, propCurrentValue);
+          }
           if (0 < data.getDomNode().getChildNodes().getLength()) {
             if (isSupportedEdge(data.xmlText())) {
               StringBuilder label = new StringBuilder();
