@@ -359,7 +359,7 @@ public class YEdContextFactoryTest {
 	    for (RuntimeVertex v : m.getVertices()){
 	    	assertGeometryPropertiesAreOk(v);
 	      	Assert.assertTrue("Node description is missing.", v.hasProperty("description"));
-	      	Assert.assertEquals("The node description", v.getProperty("description").toString());
+	      	Assert.assertEquals("The description", v.getProperty("description").toString());
 	    	Assert.assertTrue("CustomNodeProperty is not on Node.", v.hasProperty("CustomNodeProperty"));
 	    	Assert.assertEquals("OverRideNodeValue", v.getProperty("CustomNodeProperty").toString());
 	    }
@@ -386,7 +386,7 @@ public class YEdContextFactoryTest {
 
 	    for (RuntimeVertex v : m.getVertices()){
 	    	assertGeometryPropertiesAreOk(v);
-	    	Assert.assertTrue("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
+	    	Assert.assertFalse("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
 	      	Assert.assertFalse("Description is erroneously on Node.", v.hasProperty("description"));
 	    }
 	    
@@ -440,7 +440,7 @@ public class YEdContextFactoryTest {
 	    for (RuntimeVertex v : m.getVertices()){
 	    	assertGeometryPropertiesAreOk(v);
 	    	Assert.assertTrue("CustomNodeProperty is missing from Node.", v.hasProperty("CustomNodeProperty"));
-	    	Assert.assertEquals("DefaultNodeValue", v.getProperty("CustomNodeProperty").toString());
+	    	Assert.assertEquals("OverRideNodeValue", v.getProperty("CustomNodeProperty").toString());
 	      	Assert.assertFalse("Description is erroneously on Node.", v.hasProperty("description"));
 	    	Assert.assertFalse("CustomEdgeProperty is erroneously on Node.", v.hasProperty("CustomEdgeProperty"));
 	    }
@@ -546,11 +546,11 @@ public class YEdContextFactoryTest {
       Assert.assertThat(edges.size(),is(2));
 
       for (RuntimeEdge e : edges){
-          Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CEP 1"));
+          Assert.assertTrue("CustomEdgeProperty 1 is missing from Edge.", e.hasProperty("CEP 1"));
           Assert.assertEquals("Default Value 1", e.getProperty("CEP 1").toString());
-          Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CEP 2"));
+          Assert.assertTrue("CustomEdgeProperty 2 is missing from Edge.", e.hasProperty("CEP 2"));
           Assert.assertEquals("OverRide 2", e.getProperty("CEP 2").toString());
-          Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CEP 3"));
+          Assert.assertTrue("CustomEdgeProperty 3 is missing from Edge.", e.hasProperty("CEP 3"));
           Assert.assertEquals("OverRide 3", e.getProperty("CEP 3").toString());
 
           Assert.assertTrue("Description is missing from Edge.", e.hasProperty("description"));
