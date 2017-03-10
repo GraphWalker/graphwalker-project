@@ -35,11 +35,11 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.graphdrawing.graphml.xmlns.DataType;
-import org.graphdrawing.graphml.xmlns.GraphType;
-import org.graphdrawing.graphml.xmlns.GraphmlDocument;
+import org.graphdrawing.graphml.xmlns.*;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphdrawing.graphml.xmlns.impl.DataTypeImpl;
+import org.graphdrawing.graphml.xmlns.impl.KeyForTypeImpl;
+import org.graphdrawing.graphml.xmlns.impl.KeyTypeImpl;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.*;
 import org.graphwalker.dsl.antlr.yed.YEdDescriptiveErrorListener;
@@ -60,6 +60,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+
 
 /**
  * @author Nils Olsson
@@ -260,6 +261,15 @@ public final class YEdContextFactory implements ContextFactory {
     Vertex startVertex = null;
     Deque<XmlObject> workQueue = new ArrayDeque<>();
     workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
+
+    List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
+    HashMap<String,KeyType> propKeys = new HashMap<>();
+    for (KeyType k : keys){
+      if(k.getFor() == KeyForTypeImpl.NODE && !k.isSetYfilesType()){
+        propKeys.put(k.getId(),k);
+      }
+    }
+
     while (!workQueue.isEmpty()) {
       XmlObject object = workQueue.pop();
       if (object instanceof NodeType) {
@@ -269,13 +279,25 @@ public final class YEdContextFactory implements ContextFactory {
             workQueue.addAll(Arrays.asList(subgraph.getNodeArray()));
           }
         } else {
-          String description = "";
+          Vertex vertex = new Vertex();
+          for(Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
+            KeyType value = entry.getValue();
+            if(value.isSetDefault()){
+              vertex.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
+            }
+          }
           for (DataType data : node.getDataArray()) {
+            String propName;
+            String propCurrentValue;
+            String key =data.getKey();
+            if(propKeys.containsKey(key)){
+              KeyType currentKey = propKeys.get(key);
+              propName = currentKey.getAttrName();
+              propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
+              vertex.setProperty(propName, propCurrentValue);
+            }
+
             if (0 < data.getDomNode().getChildNodes().getLength()) {
-              String key =data.getKey();
-              if (key != null && key.equals("d5")) {
-                description = ((DataTypeImpl) data).getStringValue();
-              }
               if (isSupportedNode(data.xmlText())) {
                 StringBuilder label = new StringBuilder();
                 com.yworks.xml.graphml.NodeType nodeType = getSupportedNode(data.xmlText());
@@ -290,10 +312,7 @@ public final class YEdContextFactory implements ContextFactory {
                 parser.removeErrorListeners();
                 parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
                 YEdVertexParser.ParseContext parseContext = parser.parse();
-                Vertex vertex = new Vertex();
-                if (!description.isEmpty()) {
-                  vertex.setProperty("description", description);
-                }
+
                 vertex.setProperty("x", nodeType.getGeometry().getX());
                 vertex.setProperty("y", nodeType.getGeometry().getY());
                 boolean blocked = false;
@@ -362,19 +381,39 @@ public final class YEdContextFactory implements ContextFactory {
 
   private Edge addEdges(Model model, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
     Edge startEdge = null;
+
+    List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
+    HashMap<String,KeyType> propKeys = new HashMap<>();
+    for (KeyType k : keys){
+        if(k.getFor() == KeyForTypeImpl.EDGE && !k.isSetYfilesType()){
+            propKeys.put(k.getId(),k);
+        }
+    }
+
     for (XmlObject object : document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:edge")) {
       if (object instanceof org.graphdrawing.graphml.xmlns.EdgeType) {
         org.graphdrawing.graphml.xmlns.EdgeType edgeType = (org.graphdrawing.graphml.xmlns.EdgeType) object;
         if (edgeType == null) {
           throw new XmlException("Expected a valid edge");
         }
-        String description = "";
-        for (DataType data : edgeType.getDataArray()) {
-          if (0 < data.getDomNode().getChildNodes().getLength()) {
-            String key = data.getKey();
-            if (key != null && key.equals("d9")) {
-              description = ((DataTypeImpl) data).getStringValue();
+        Edge edge = new Edge();
+        for(Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
+            KeyType value = entry.getValue();
+            if(value.isSetDefault()){
+                edge.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
             }
+        }
+        for (DataType data : edgeType.getDataArray()) {
+            String propName;
+            String propCurrentValue;
+            String key =data.getKey();
+            if(propKeys.containsKey(key)){
+                KeyType currentKey = propKeys.get(key);
+                propName = currentKey.getAttrName();
+                propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
+                edge.setProperty(propName, propCurrentValue);
+            }
+          if (0 < data.getDomNode().getChildNodes().getLength()) {
             if (isSupportedEdge(data.xmlText())) {
               StringBuilder label = new StringBuilder();
               com.yworks.xml.graphml.EdgeType supportedEdge = getSupportedEdge(data.xmlText());
@@ -388,10 +427,6 @@ public final class YEdContextFactory implements ContextFactory {
               parser.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);
               YEdEdgeParser.ParseContext parseContext = parser.parse();
 
-              Edge edge = new Edge();
-              if (!description.isEmpty()) {
-                edge.setProperty("description", description);
-              }
               if (null != elements.get(edgeType.getSource())) {
                 edge.setSourceVertex(elements.get(edgeType.getSource()));
               }

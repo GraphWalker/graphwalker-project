@@ -391,8 +391,9 @@ public class YEdContextFactoryTest {
 	    }
 	    
 	    for (RuntimeEdge e : m.getEdges()){
-	      	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
-	      	Assert.assertFalse("CustomEdgeProperty is erroneously on Edge.", e.hasProperty("CustomEdgeProperty"));
+	      	Assert.assertTrue("CustomEdgeProperty is missing from Edge.", e.hasProperty("CustomEdgeProperty"));
+            Assert.assertEquals("", e.getProperty("CustomEdgeProperty").toString());
+            Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
 	    }
 
   }
@@ -447,7 +448,7 @@ public class YEdContextFactoryTest {
 	    
 	    for (RuntimeEdge e : m.getEdges()){
 	      	Assert.assertTrue("CustomEdgeProperty is missing from  Edge.", e.hasProperty("CustomEdgeProperty"));
-	      	Assert.assertEquals("DefaultEdgeValue", e.getProperty("CustomEdgeProperty").toString());
+	      	Assert.assertEquals("OverRideEdgeValue", e.getProperty("CustomEdgeProperty").toString());
 	    	Assert.assertFalse("Description is erroneously on Edge.", e.hasProperty("description"));
 	    	Assert.assertFalse("CustomNodeProperty is erroneously on Edge.", e.hasProperty("CustomNodeProperty"));
 	    }
