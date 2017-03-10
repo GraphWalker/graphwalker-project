@@ -39,6 +39,7 @@ import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -47,10 +48,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson
@@ -58,7 +56,7 @@ import static org.junit.Assert.assertThat;
 public class SimpleMachineTest {
 
   @Test
-  public void simpleMachine() {
+  public void simpleMachine() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(new Vertex()));
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
@@ -72,7 +70,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void loopEdge() {
+  public void loopEdge() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
@@ -86,7 +84,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void noStartVertex() {
+  public void noStartVertex() throws Exception {
     Edge edge = new Edge().setTargetVertex(new Vertex());
     Model model = new Model().addEdge(edge);
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
@@ -100,7 +98,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void executeAction() {
+  public void executeAction() throws Exception {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
@@ -118,7 +116,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void executeActionInitBlock() {
+  public void executeActionInitBlock() throws Exception {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
@@ -137,7 +135,7 @@ public class SimpleMachineTest {
   }
 
   @Test(expected = MachineException.class)
-  public void honorGuard() {
+  public void honorGuard() throws Exception {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
@@ -153,7 +151,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void sharedState() {
+  public void sharedState() throws Exception {
     Vertex start = new Vertex();
     Vertex shared1 = new Vertex().setSharedState("MyState");
     Edge edge1 = new Edge().setSourceVertex(start).setTargetVertex(shared1);
@@ -175,7 +173,7 @@ public class SimpleMachineTest {
   }
 
   @Test(expected = MachineException.class)
-  public void singleSharedStates() {
+  public void singleSharedStates() throws Exception {
     Vertex start = new Vertex();
     Vertex shared1 = new Vertex().setSharedState("MyState1");
     Edge edge1 = new Edge().setSourceVertex(start).setTargetVertex(shared1);
@@ -194,7 +192,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void simpleShortestAllPaths() {
+  public void simpleShortestAllPaths() throws Exception {
     Vertex start = new Vertex().setName("Start");
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
@@ -221,7 +219,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void simpleShortestAllPaths2() {
+  public void simpleShortestAllPaths2() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Edge e1 = new Edge().setName("e1").setTargetVertex(v1);
     Edge e2 = new Edge().setName("e2").setSourceVertex(v1).setTargetVertex(v1);
@@ -238,7 +236,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void simpleShortestAllPaths3() {
+  public void simpleShortestAllPaths3() throws Exception {
     Vertex start = new Vertex().setName("Start");
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
@@ -274,7 +272,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void simpleAStar() {
+  public void simpleAStar() throws Exception {
     Vertex start = new Vertex().setName("Start");
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
@@ -316,7 +314,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void multipleStartVerticesA() {
+  public void multipleStartVerticesA() throws Exception {
     // It's not true that we can have several start elements, core only care about the actual start point
     Vertex firstStartVertex = new Vertex().setName("Start");
     Vertex secondStartVertex = new Vertex().setName("Second Start");
@@ -342,7 +340,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void simpleAllVerticesTest() {
+  public void simpleAllVerticesTest() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Edge e1 = new Edge().setName("e1").setTargetVertex(v1);
     Model model = new Model().addEdge(e1);
@@ -357,7 +355,7 @@ public class SimpleMachineTest {
   }
 
   @Test
-  public void executeActionWithVariableNameContext() {
+  public void executeActionWithVariableNameContext() throws Exception {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
@@ -368,5 +366,21 @@ public class SimpleMachineTest {
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
     assertThat(machine.getCurrentContext().getKeys().containsKey("context"), is(true));
+  }
+
+  @Test
+  public void executeActionWithFunction() throws Exception {
+    Vertex vertex1 = new Vertex();
+    Vertex vertex2 = new Vertex();
+    Model model = new Model()
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+      .addAction(new Action(" elements = [1,2,3]; value = 0; toString = function(){for(var i = 0;i<elements.length;i++){value+=elements[i]}return value};"));
+    Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
+    context.setNextElement(vertex1);
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    assertEquals((double)context.getScriptEngine().eval("toString()"), 6.0, 0.1);
   }
 }

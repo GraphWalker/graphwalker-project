@@ -108,7 +108,8 @@ public class GrammarTest {
     "WORD1\nweight=1",
     "word1[x=>y]/x=y;\nweight=0.3",
     "word1\nWEIGHT=0.33333",
-    "e_Init / DropUrl=\"https://a.b.c.org/x/y/z/items.aspx\";urlInfo=\"http://data/node\";REST=true;"
+    "e_Init / DropUrl=\"https://a.b.c.org/x/y/z/items.aspx\";urlInfo=\"http://data/node\";REST=true;",
+    "init / elements = [1,2,3]; value = 0; toString = function(){for(var i = 0; i<elements.length;i++){value+=elements[i]}return value};"
   );
 
   @Test
