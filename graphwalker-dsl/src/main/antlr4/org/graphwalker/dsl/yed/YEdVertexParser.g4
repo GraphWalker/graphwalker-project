@@ -44,7 +44,7 @@ actions
  ;
 
 action
- : ~(SEMICOLON)+ SEMICOLON
+ : .+ SEMICOLON
  ;
 
 reqtags
