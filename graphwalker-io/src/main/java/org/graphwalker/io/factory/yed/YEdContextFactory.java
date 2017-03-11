@@ -265,7 +265,7 @@ public final class YEdContextFactory implements ContextFactory {
     List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
     Map<String,KeyType> propKeys = new HashMap<>();
     for (KeyType key : keys){
-      if(key.getFor() == KeyForTypeImpl.NODE && !key.isSetYfilesType()){
+      if (key.getFor() == KeyForTypeImpl.NODE && !key.isSetYfilesType()){
         propKeys.put(key.getId(),key);
       }
     }
@@ -282,7 +282,7 @@ public final class YEdContextFactory implements ContextFactory {
           Vertex vertex = new Vertex();
           for (Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
             KeyType value = entry.getValue();
-            if(value.isSetDefault()){
+            if (value.isSetDefault()){
               vertex.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
             }
           }
@@ -290,7 +290,7 @@ public final class YEdContextFactory implements ContextFactory {
             String propName;
             String propCurrentValue;
             String key = data.getKey();
-            if(propKeys.containsKey(key)){
+            if (propKeys.containsKey(key)){
               KeyType currentKey = propKeys.get(key);
               propName = currentKey.getAttrName();
               propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
@@ -385,7 +385,7 @@ public final class YEdContextFactory implements ContextFactory {
     List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
     Map<String,KeyType> propKeys = new HashMap<>();
     for (KeyType key : keys){
-      if(key.getFor() == KeyForTypeImpl.EDGE && !key.isSetYfilesType()){
+      if (key.getFor() == KeyForTypeImpl.EDGE && !key.isSetYfilesType()){
         propKeys.put(key.getId(),key);
       }
     }
@@ -399,7 +399,7 @@ public final class YEdContextFactory implements ContextFactory {
         Edge edge = new Edge();
         for (Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
           KeyType value = entry.getValue();
-          if(value.isSetDefault()){
+          if (value.isSetDefault()){
               edge.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
           }
         }
@@ -407,7 +407,7 @@ public final class YEdContextFactory implements ContextFactory {
           String propName;
           String propCurrentValue;
           String key =data.getKey();
-          if(propKeys.containsKey(key)){
+          if (propKeys.containsKey(key)){
             KeyType currentKey = propKeys.get(key);
             propName = currentKey.getAttrName();
             propCurrentValue = ((DataTypeImpl) data).getStringValue().trim();
