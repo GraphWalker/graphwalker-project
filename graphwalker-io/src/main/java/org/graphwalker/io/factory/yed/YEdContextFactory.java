@@ -263,10 +263,10 @@ public final class YEdContextFactory implements ContextFactory {
     workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
 
     List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
-    HashMap<String,KeyType> propKeys = new HashMap<>();
-    for (KeyType k : keys){
-      if(k.getFor() == KeyForTypeImpl.NODE && !k.isSetYfilesType()){
-        propKeys.put(k.getId(),k);
+    Map<String,KeyType> propKeys = new HashMap<>();
+    for (KeyType key : keys){
+      if(key.getFor() == KeyForTypeImpl.NODE && !key.isSetYfilesType()){
+        propKeys.put(key.getId(),key);
       }
     }
 
@@ -280,7 +280,7 @@ public final class YEdContextFactory implements ContextFactory {
           }
         } else {
           Vertex vertex = new Vertex();
-          for(Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
+          for (Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
             KeyType value = entry.getValue();
             if(value.isSetDefault()){
               vertex.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
@@ -289,7 +289,7 @@ public final class YEdContextFactory implements ContextFactory {
           for (DataType data : node.getDataArray()) {
             String propName;
             String propCurrentValue;
-            String key =data.getKey();
+            String key = data.getKey();
             if(propKeys.containsKey(key)){
               KeyType currentKey = propKeys.get(key);
               propName = currentKey.getAttrName();
@@ -383,10 +383,10 @@ public final class YEdContextFactory implements ContextFactory {
     Edge startEdge = null;
 
     List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
-    HashMap<String,KeyType> propKeys = new HashMap<>();
-    for (KeyType k : keys){
-      if(k.getFor() == KeyForTypeImpl.EDGE && !k.isSetYfilesType()){
-          propKeys.put(k.getId(),k);
+    Map<String,KeyType> propKeys = new HashMap<>();
+    for (KeyType key : keys){
+      if(key.getFor() == KeyForTypeImpl.EDGE && !key.isSetYfilesType()){
+        propKeys.put(key.getId(),key);
       }
     }
 
@@ -397,7 +397,7 @@ public final class YEdContextFactory implements ContextFactory {
           throw new XmlException("Expected a valid edge");
         }
         Edge edge = new Edge();
-        for(Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
+        for (Map.Entry<String, KeyType> entry : propKeys.entrySet()) {
           KeyType value = entry.getValue();
           if(value.isSetDefault()){
               edge.setProperty(value.getAttrName(),( (KeyTypeImpl) value).getStringValue().trim());
