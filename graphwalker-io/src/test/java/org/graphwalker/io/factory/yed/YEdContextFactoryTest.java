@@ -42,28 +42,23 @@ import org.graphwalker.io.TestExecutionContext;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import static junit.framework.TestCase.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
+
 
 /**
  * @author Nils Olsson
