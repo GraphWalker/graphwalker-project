@@ -58,6 +58,8 @@ public abstract class Util {
     }
     if (machine.getCurrentContext().getCurrentElement().hasName()) {
       object.put("currentElementName", machine.getCurrentContext().getCurrentElement().getName());
+    } else {
+      object.put("currentElementName", "");
     }
     if (verbose) {
       object.put("currentElementID", machine.getCurrentContext().getCurrentElement().getId());
