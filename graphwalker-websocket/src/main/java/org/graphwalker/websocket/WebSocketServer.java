@@ -153,7 +153,11 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         response.put("success", false);
         List<Context> contexts = null;
         try {
-          contexts = new JsonContextFactory().create(root.getJSONObject("gw").toString());
+          try {
+            contexts = new JsonContextFactory().create(root.getJSONObject("gw").toString());
+          } catch (RuntimeException e) {
+            contexts = new JsonContextFactory().create(root.getJSONObject("gw3").toString());
+          }
           Machine machine = new SimpleMachine(contexts);
           machine.addObserver(this);
           machines.put(socket, machine);
