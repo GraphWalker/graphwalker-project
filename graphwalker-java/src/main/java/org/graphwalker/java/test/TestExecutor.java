@@ -214,7 +214,7 @@ public final class TestExecutor implements Executor, Observer {
     executeAnnotation(AfterExecution.class, machine);
     result.updateResults(machine, failures);
     if (!ignoreErrors && !failures.isEmpty()) {
-      throw new TestExecutionException("Test execution contains failures");
+      throw new TestExecutionException(result);
     }
     return result;
   }

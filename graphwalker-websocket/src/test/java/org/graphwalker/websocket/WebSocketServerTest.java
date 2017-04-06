@@ -29,7 +29,7 @@ package org.graphwalker.websocket;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
-import org.graphwalker.java.test.Result;
+import org.graphwalker.java.test.TestExecutionException;
 import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
 import org.junit.Assert;
@@ -62,12 +62,17 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
   @Test
   public void TestRun() throws IOException {
-    Result result = new TestExecutor(getClass()).execute(true);
-    if (result.hasErrors()) {
-      for (String error : result.getErrors()) {
-        System.out.println(error);
+    TestExecutor testExecutor = new TestExecutor(getClass());
+    try {
+      testExecutor.execute(false);
+    }
+    catch (TestExecutionException e) {
+      if (e.hasErrors()){
+        for (String error : e.getResult().getErrors()) {
+          System.err.println(error);
+        }
+        Assert.fail("Did not expect any errors");
       }
-      Assert.fail("Test run failed.");
     }
   }
 

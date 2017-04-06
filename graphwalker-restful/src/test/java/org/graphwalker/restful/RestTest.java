@@ -30,10 +30,11 @@ import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -44,11 +45,13 @@ import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.java.annotation.AfterExecution;
 import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
-import org.graphwalker.java.test.Result;
+import org.graphwalker.java.test.TestExecutionException;
 import org.graphwalker.java.test.TestExecutor;
 import org.hamcrest.core.StringContains;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,33 +91,37 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
   @Test
   public void TestRun() throws IOException {
-    Result result = new TestExecutor(getClass()).execute(true);
-    if (result.hasErrors()) {
-      for (String error : result.getErrors()) {
-        System.out.println(error);
-      }
-      Assert.fail("Test run failed.");
+    TestExecutor testExecutor = new TestExecutor(getClass());
+    try {
+      testExecutor.execute(false);
     }
+    catch (TestExecutionException e) {
+      if (e.hasErrors()){
+        for (String error : e.getResult().getErrors()) {
+          System.err.println(error);
+        }
+        Assert.fail("Did not expect any errors");
+      }
+    }
+  }
+
+  private CloseableHttpResponse httpExecute(HttpRequestBase request) {
+    try {
+      return HttpClientBuilder.create().build().execute(request);
+    } catch (IOException e) {
+      Assert.fail(e.getMessage());
+    }
+    return null;
   }
 
   @Override
   public void e_GetData() {
-    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getData");
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(new HttpGet("http://localhost:9191/graphwalker/getData"));
   }
 
   @Override
   public void e_SetData() {
-    HttpPut request = new HttpPut("http://localhost:9191/graphwalker/setData/MAX_BOOKS=6;");
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(new HttpPut("http://localhost:9191/graphwalker/setData/MAX_BOOKS=6;"));
   }
 
   @Override
@@ -125,32 +132,17 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
   @Override
   public void e_GetStatistics() {
-    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getStatistics");
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(new HttpGet("http://localhost:9191/graphwalker/getStatistics"));
   }
 
   @Override
   public void e_GetNext() {
-    HttpGet request = new HttpGet("http://localhost:9191/graphwalker/getNext");
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(new HttpGet("http://localhost:9191/graphwalker/getNext"));
   }
 
   @Override
   public void e_Restart() {
-    HttpPut request = new HttpPut("http://localhost:9191/graphwalker/restart");
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(new HttpPut("http://localhost:9191/graphwalker/restart"));
   }
 
   @Override
@@ -168,21 +160,13 @@ public class RestTest extends ExecutionContext implements RestFlow {
     HttpPost request = new HttpPost("http://localhost:9191/graphwalker/load");
     FileEntity fileEntity = new FileEntity(ResourceUtils.getResourceAsFile("gw3/UC01.json"), ContentType.TEXT_PLAIN);
     request.setEntity(fileEntity);
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(request);
   }
 
   @Override
   public void e_HasNext() {
     HttpGet request = new HttpGet("http://localhost:9191/graphwalker/hasNext");
-    try {
-      response = HttpClientBuilder.create().build().execute(request);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    response = httpExecute(request);
   }
 
   @Override
@@ -198,14 +182,12 @@ public class RestTest extends ExecutionContext implements RestFlow {
   }
 
   private String getResonseBody() {
-    ResponseHandler<String> handler = new BasicResponseHandler();
-    String body = null;
     try {
-      body = handler.handleResponse(response);
+      return new BasicResponseHandler().handleResponse(response);
     } catch (IOException e) {
-      e.printStackTrace();
+      Assert.fail(e.getMessage());
     }
-    return body;
+    return null;
   }
 
   @Override
@@ -213,13 +195,15 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, new StringContains("\"numberOfElements\":19"));
-    Assert.assertThat(body, new StringContains("\"result\":\"ok\""));
-    Assert.assertThat(body, new StringContains("\"modelName\":\"UC01_GW2\""));
-    Assert.assertThat(body, new StringContains("\"currentElementID\":\"e0\""));
-    Assert.assertThat(body, new StringContains("\"currentElementName\":\"e_init\""));
-    Assert.assertThat(body, new StringContains("\"data\":\\[\\{\"num_of_books\":\"0\"\\},\\{\"MAX_BOOKS\":\"5\"\\}\\]"));
-    Assert.assertThat(body, new StringContains("\"numberOfUnvisitedElements\":18"));
+    JSONObject responseJSON = new JSONObject(body);
+    JSONAssert.assertEquals("Wrong number of elements", "{numberOfElements:19}", responseJSON, false);
+    JSONAssert.assertEquals("Result should be ok", "{result:\"ok\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong model name", "{modelName:\"UC01_GW2\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong current element id", "{currentElementID:\"e0\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong current element name", "{currentElementName:\"e_init\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong data", "{data:[{num_of_books:\"0\"},{MAX_BOOKS:\"5\"}]}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of unvisited elements", "{numberOfUnvisitedElements:18}", responseJSON, false);
+
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
   }
@@ -229,15 +213,16 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, new StringContains("\"edgeCoverage\":8"));
-    Assert.assertThat(body, new StringContains("\"result\":\"ok\""));
-    Assert.assertThat(body, new StringContains("\"totalNumberOfVisitedEdges\":1"));
-    Assert.assertThat(body, new StringContains("\"totalNumberOfVisitedVertices\":0"));
-    Assert.assertThat(body, new StringContains("\"totalNumberOfVertices\":7"));
-    Assert.assertThat(body, new StringContains("\"totalNumberOfEdges\":12"));
-    Assert.assertThat(body, new StringContains("\"totalNumberOfUnvisitedVertices\":7"));
-    Assert.assertThat(body, new StringContains("\"vertexCoverage\":0"));
-    Assert.assertThat(body, new StringContains("\"totalNumberOfUnvisitedEdges\":11"));
+    JSONObject responseJSON = new JSONObject(body);
+    JSONAssert.assertEquals("Wrong number of edge coverage", "{edgeCoverage:8}", responseJSON, false);
+    JSONAssert.assertEquals("Result should be ok", "{result:\"ok\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of total visited edges", "{totalNumberOfVisitedEdges:1}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of total number of visited vertices", "{totalNumberOfVisitedVertices:0}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of vertices", "{totalNumberOfVertices:7}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of edges", "{totalNumberOfEdges:12}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of unvisited vertices", "{totalNumberOfUnvisitedVertices:7}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of vertex coverage", "{vertexCoverage:0}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of unvisited edges", "{totalNumberOfUnvisitedEdges:11}", responseJSON, false);
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
   }

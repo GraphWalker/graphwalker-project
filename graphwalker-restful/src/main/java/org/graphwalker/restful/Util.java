@@ -29,6 +29,7 @@ package org.graphwalker.restful;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.RuntimeBase;
 import org.json.JSONArray;
@@ -58,6 +59,8 @@ public abstract class Util {
     }
     if (machine.getCurrentContext().getCurrentElement().hasName()) {
       object.put("currentElementName", machine.getCurrentContext().getCurrentElement().getName());
+    } else {
+      object.put("currentElementName", "");
     }
     if (verbose) {
       object.put("currentElementID", machine.getCurrentContext().getCurrentElement().getId());
@@ -78,6 +81,16 @@ public abstract class Util {
         jsonProperties.put(jsonKey);
       }
       object.put("properties", jsonProperties);
+
+      JSONArray jsonActions = new JSONArray();
+      if (runtimeBase.hasActions()) {
+        for (Action action : runtimeBase.getActions()) {
+          JSONObject jsonAction = new JSONObject();
+          jsonAction.put("Action", action.getScript());
+          jsonActions.put(jsonAction);
+        }
+        object.put("actions", jsonActions);
+      }
     }
     if (showUnvisited) {
       Context context = machine.getCurrentContext();
