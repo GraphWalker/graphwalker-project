@@ -31,8 +31,14 @@ package org.graphwalker.java.test;
  */
 public class TestExecutionException extends RuntimeException {
 
+  private Result result;
+
   public TestExecutionException() {
     super();
+  }
+
+  public TestExecutionException(Result result) {
+    this.result = result;
   }
 
   public TestExecutionException(String message) {
@@ -41,5 +47,16 @@ public class TestExecutionException extends RuntimeException {
 
   public TestExecutionException(Throwable throwable) {
     super(throwable);
+  }
+
+  public boolean hasErrors() {
+    if ( result != null ) {
+      return result.hasErrors();
+    }
+    return false;
+  }
+
+  public Result getResult() {
+    return result;
   }
 }
