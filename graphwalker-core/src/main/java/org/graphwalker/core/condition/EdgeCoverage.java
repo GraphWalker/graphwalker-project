@@ -26,9 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
+
+import org.graphwalker.core.machine.Context;
 
 /**
  * <h1>EdgeCoverage</h1>

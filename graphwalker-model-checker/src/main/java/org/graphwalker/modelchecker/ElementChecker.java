@@ -1,11 +1,10 @@
 package org.graphwalker.modelchecker;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by krikar on 2015-11-08.

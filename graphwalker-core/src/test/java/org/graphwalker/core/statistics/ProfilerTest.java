@@ -26,6 +26,12 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
@@ -41,12 +47,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Nils Olsson
  */
@@ -56,11 +56,11 @@ public final class ProfilerTest {
 
   private static final Vertex start = new Vertex();
   private static final Context context = new TestExecutionContext()
-    .setModel(new Model()
-      .addEdge(new Edge()
-        .setSourceVertex(start)
-        .setTargetVertex(new Vertex())).build())
-    .setCurrentElement(start.build());
+      .setModel(new Model()
+                    .addEdge(new Edge()
+                                 .setSourceVertex(start)
+                                 .setTargetVertex(new Vertex())).build())
+      .setCurrentElement(start.build());
 
   @Test
   public void create() {
@@ -127,11 +127,11 @@ public final class ProfilerTest {
     }
 
     LOG.debug("\na: " + context1.getAttribute("a").toString() +
-      "\nb1: " + context1.getAttribute("b1").toString() +
-      "\nb2: " + context1.getAttribute("b2").toString() +
-      "\nd: " + context2.getAttribute("d").toString() +
-      "\nc1: " + context2.getAttribute("c1").toString() +
-      "\nc2: " + context2.getAttribute("c2").toString());
+              "\nb1: " + context1.getAttribute("b1").toString() +
+              "\nb2: " + context1.getAttribute("b2").toString() +
+              "\nd: " + context2.getAttribute("d").toString() +
+              "\nc1: " + context2.getAttribute("c1").toString() +
+              "\nc2: " + context2.getAttribute("c2").toString());
     assertTrue(Float.parseFloat(context1.getAttribute("a").toString()) >= 1);
     assertTrue(Float.parseFloat(context1.getAttribute("b1").toString()) >= 1);
     assertTrue(Float.parseFloat(context1.getAttribute("b2").toString()) >= 1);

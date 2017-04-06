@@ -26,6 +26,9 @@ package org.graphwalker.dsl.antlr.dot;
  * #L%
  */
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Vertex;
@@ -34,14 +37,11 @@ import org.graphwalker.dsl.dot.DOTParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
-
 /**
  * Created by krikar on 8/27/14.
  */
 public class AntlrDotListener extends DOTBaseListener {
+
   private static final Logger logger = LoggerFactory.getLogger(AntlrDotListener.class);
 
   private Map<String, Vertex> vertices = new HashMap<>();

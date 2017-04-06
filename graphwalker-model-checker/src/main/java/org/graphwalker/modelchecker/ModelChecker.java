@@ -1,14 +1,13 @@
 package org.graphwalker.modelchecker;
 
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
 
 /**
  * Created by krikar on 2015-11-08.
@@ -52,9 +51,9 @@ public class ModelChecker {
     // Check for unnamed selfloop edges.
     for (Edge.RuntimeEdge edge : model.getEdges()) {
       if (!edge.hasName() &&
-        null != edge.getSourceVertex() &&
-        null != edge.getTargetVertex() &&
-        edge.getSourceVertex().equals(edge.getTargetVertex())) {
+          null != edge.getSourceVertex() &&
+          null != edge.getTargetVertex() &&
+          edge.getSourceVertex().equals(edge.getTargetVertex())) {
         issues.add("Vertex: " + edge.getSourceVertex() + ", have a unnamed self loop edge.");
       }
     }

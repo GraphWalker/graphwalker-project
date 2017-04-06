@@ -26,13 +26,12 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.junit.Test;
-
-import java.util.concurrent.TimeUnit;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 /**
  * @author Nils Olsson

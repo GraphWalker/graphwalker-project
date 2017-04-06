@@ -26,8 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

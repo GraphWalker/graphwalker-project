@@ -26,6 +26,8 @@ package org.graphwalker.java.source;
  * #L%
  */
 
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
 import japa.parser.ASTHelper;
 import japa.parser.JavaParser;
 import japa.parser.ast.CompilationUnit;
@@ -35,8 +37,26 @@ import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.comments.LineComment;
-import japa.parser.ast.expr.*;
+import japa.parser.ast.expr.AnnotationExpr;
+import japa.parser.ast.expr.MemberValuePair;
+import japa.parser.ast.expr.NameExpr;
+import japa.parser.ast.expr.NormalAnnotationExpr;
+import japa.parser.ast.expr.StringLiteralExpr;
 import japa.parser.ast.visitor.VoidVisitorAdapter;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Modifier;
+import java.nio.charset.Charset;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
@@ -44,18 +64,6 @@ import org.graphwalker.java.source.cache.CacheEntry;
 import org.graphwalker.java.source.cache.SimpleCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Modifier;
-import java.nio.charset.Charset;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
@@ -103,14 +111,14 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
 
   private static void write(ContextFactory factory, SourceFile file) throws IOException {
     List<Context> contexts = factory.create(file.getInputPath());
-    for (Context context : contexts ) {
+    for (Context context : contexts) {
       try {
         RuntimeModel model = context.getModel();
         String source = generator.generate(file, model);
         Files.createDirectories(file.getOutputPath().getParent());
         Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))
-          , StandardOpenOption.CREATE
-          , StandardOpenOption.TRUNCATE_EXISTING);
+            , StandardOpenOption.CREATE
+            , StandardOpenOption.TRUNCATE_EXISTING);
       } catch (Throwable t) {
         logger.error(t.getMessage());
         throw new CodeGeneratorException(t);
@@ -131,7 +139,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
     SourceFile sourceFile = new SourceFile(path);
     List<Context> contexts = factory.create(path);
     String sourceStr = "";
-    for (Context context : contexts ) {
+    for (Context context : contexts) {
       sourceStr += generate(sourceFile, context.getModel());
     }
     return sourceStr;
@@ -162,9 +170,9 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
         compilationUnit.setPackage(createPackageDeclaration(sourceFile));
       }
       compilationUnit.setImports(Arrays.asList(
-        new ImportDeclaration(new NameExpr("org.graphwalker.java.annotation.Model"), false, false),
-        new ImportDeclaration(new NameExpr("org.graphwalker.java.annotation.Vertex"), false, false),
-        new ImportDeclaration(new NameExpr("org.graphwalker.java.annotation.Edge"), false, false)
+          new ImportDeclaration(new NameExpr("org.graphwalker.java.annotation.Model"), false, false),
+          new ImportDeclaration(new NameExpr("org.graphwalker.java.annotation.Vertex"), false, false),
+          new ImportDeclaration(new NameExpr("org.graphwalker.java.annotation.Edge"), false, false)
       ));
       ASTHelper.addTypeDeclaration(compilationUnit, getInterfaceName(sourceFile));
     }

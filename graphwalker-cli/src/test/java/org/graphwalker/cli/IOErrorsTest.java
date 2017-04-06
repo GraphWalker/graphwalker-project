@@ -26,13 +26,14 @@ package org.graphwalker.cli;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.hamcrest.core.Is.is;
-
 
 public class IOErrorsTest extends CLITestRoot {
+
   /**
    * Non existent file
    */
@@ -41,8 +42,8 @@ public class IOErrorsTest extends CLITestRoot {
     String args[] = {"offline", "-m", "sdsdtkdsjhsl.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is("An error occurred when running command: " +
-      "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
-      System.lineSeparator() + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
+                                            "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
+                                            System.lineSeparator() + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
     Assert.assertThat(result.getOutput(), is(""));
   }
 }

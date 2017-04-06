@@ -56,12 +56,12 @@ public class WeightedRandomPathTest {
 
   private final Edge back2SourceEdge = new Edge().setSourceVertex(target).setTargetVertex(source).setName("back2SourceEdge");
   private final Model model = new Model()
-    .addEdge(edge1)
-    .addEdge(edge2)
-    .addEdge(edge3)
-    .addEdge(edge4)
-    .addEdge(edge5)
-    .addEdge(back2SourceEdge);
+      .addEdge(edge1)
+      .addEdge(edge2)
+      .addEdge(edge3)
+      .addEdge(edge4)
+      .addEdge(edge5)
+      .addEdge(back2SourceEdge);
 
   @Test
   public void doesNotThrowForValidModel() {
@@ -78,13 +78,13 @@ public class WeightedRandomPathTest {
   @Test(expected = MachineException.class)
   public void throwsWhenTotalWeightHigherThanOne() {
     Model invalidModel = new Model()
-      .addEdge(edge1)
-      .addEdge(edge2)
-      .addEdge(edge3)
-      .addEdge(edge4)
-      .addEdge(edge5)
-      .addEdge(edge6)
-      .addEdge(back2SourceEdge);
+        .addEdge(edge1)
+        .addEdge(edge2)
+        .addEdge(edge3)
+        .addEdge(edge4)
+        .addEdge(edge5)
+        .addEdge(edge6)
+        .addEdge(back2SourceEdge);
     PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
     Context context = new TestExecutionContext(invalidModel, generator).setCurrentElement(source.build());
     SimpleMachine machine = new SimpleMachine(context);
@@ -118,12 +118,12 @@ public class WeightedRandomPathTest {
 
     Edge back2SourceEdge = new Edge().setSourceVertex(target).setTargetVertex(source).setName("back2SourceEdge");
     Model unweightedModel = new Model()
-      .addEdge(edge1)
-      .addEdge(edge2)
-      .addEdge(edge3)
-      .addEdge(edge4)
-      .addEdge(edge5)
-      .addEdge(back2SourceEdge);
+        .addEdge(edge1)
+        .addEdge(edge2)
+        .addEdge(edge3)
+        .addEdge(edge4)
+        .addEdge(edge5)
+        .addEdge(back2SourceEdge);
 
     PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
     Context context = new TestExecutionContext(unweightedModel, generator).setCurrentElement(source.build());

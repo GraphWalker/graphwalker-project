@@ -26,22 +26,19 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
-import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.graphwalker.core.common.Objects.isNullOrEmpty;
 
 /**
  * @author Nils Olsson

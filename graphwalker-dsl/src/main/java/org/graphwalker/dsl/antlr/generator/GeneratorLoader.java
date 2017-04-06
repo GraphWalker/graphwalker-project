@@ -91,7 +91,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
     } else if (ctx.getChild(0).getText().equalsIgnoreCase("time_duration") ||
                ctx.getChild(0).getText().equalsIgnoreCase("timeduration")) {
       stopConditions
-        .add(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
+          .add(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
     } else if (ctx.getChild(0).getText().equalsIgnoreCase("dependency_edge_coverage") ||
                ctx.getChild(0).getText().equalsIgnoreCase("dependencyedgecoverage")) {
       stopConditions.add(new DependencyEdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));

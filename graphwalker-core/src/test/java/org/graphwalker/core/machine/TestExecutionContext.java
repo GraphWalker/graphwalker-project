@@ -26,13 +26,12 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.model.Model;
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
-
-import static org.graphwalker.core.model.Model.RuntimeModel;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.model.Model;
 
 /**
  * @author Nils Olsson

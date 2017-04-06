@@ -26,14 +26,13 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
 
 /**
  * <h1>ReachedSharedState</h1>

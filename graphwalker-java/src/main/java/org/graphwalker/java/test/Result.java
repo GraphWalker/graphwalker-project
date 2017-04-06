@@ -26,6 +26,13 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
@@ -34,14 +41,6 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 
 /**
  * @author Nils Olsson
@@ -103,7 +102,6 @@ public final class Result {
     JSONArray requirementsPassedJson = new JSONArray();
     JSONArray requirementsFailedJson = new JSONArray();
 
-
     for (Context context : machine.getContexts()) {
       switch (context.getExecutionStatus()) {
         case COMPLETED: {
@@ -161,16 +159,15 @@ public final class Result {
       }
 
       modelCount++;
-      totalNumberOfEdges +=                  context.getModel().getEdges().size();
-      totalNumberOfVertices +=               context.getModel().getVertices().size();
-      totalNumberOfUnvisitedVertices +=      context.getProfiler().getUnvisitedVertices(context).size();
-      totalNumberOfUnvisitedEdges +=         context.getProfiler().getUnvisitedEdges(context).size();
-      totalNumberOfRequirements +=           context.getRequirements().size();
+      totalNumberOfEdges += context.getModel().getEdges().size();
+      totalNumberOfVertices += context.getModel().getVertices().size();
+      totalNumberOfUnvisitedVertices += context.getProfiler().getUnvisitedVertices(context).size();
+      totalNumberOfUnvisitedEdges += context.getProfiler().getUnvisitedEdges(context).size();
+      totalNumberOfRequirements += context.getRequirements().size();
       totalNumberOfRequirementsNotCovered += context.getRequirements(RequirementStatus.NOT_COVERED).size();
-      totalNumberOfRequirementsPassed +=     context.getRequirements(RequirementStatus.PASSED).size();
-      totalNumberOfRequirementsFailed +=     context.getRequirements(RequirementStatus.FAILED).size();
+      totalNumberOfRequirementsPassed += context.getRequirements(RequirementStatus.PASSED).size();
+      totalNumberOfRequirementsFailed += context.getRequirements(RequirementStatus.FAILED).size();
     }
-
 
     results = new JSONObject();
     results.put("totalNumberOfModels", modelCount);
@@ -186,7 +183,7 @@ public final class Result {
                   100 * (totalNumberOfEdges - totalNumberOfUnvisitedEdges) / totalNumberOfEdges);
     }
     results.put("totalNumberOfVertices", totalNumberOfVertices);
-    results.put("totalNumberOfUnvisitedVertices",totalNumberOfUnvisitedVertices);
+    results.put("totalNumberOfUnvisitedVertices", totalNumberOfUnvisitedVertices);
     results.put("totalNumberOfVisitedVertices", machine.getProfiler().getVisitedVertices().size());
     if (totalNumberOfVertices > 0) {
       results.put("vertexCoverage", 100 * (totalNumberOfVertices - totalNumberOfUnvisitedVertices)
@@ -195,7 +192,6 @@ public final class Result {
 
     results.put("edgesNotVisited", edgesNotVisitedJson);
     results.put("verticesNotVisited", verticesNotVisitedJson);
-
 
     if (totalNumberOfRequirements > 0) {
       results.put("totalNumberOfRequirement", totalNumberOfRequirements);

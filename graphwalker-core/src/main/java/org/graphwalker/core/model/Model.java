@@ -26,7 +26,12 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.common.Objects;
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableList;
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,13 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.common.Objects.unmodifiableList;
-import static org.graphwalker.core.common.Objects.unmodifiableMap;
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import org.graphwalker.core.common.Objects;
 
 /**
  * <h1>Model</h1>
@@ -435,9 +434,6 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
     /**
      * TODO: Add doc
-     *
-     * @param element
-     * @return
      */
     public List<Element> getElements(Element element) {
       return elementsByElementCache.get(element);
@@ -559,8 +555,6 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
     /**
      * TODO: Doc...
-     *
-     * @param visitor
      */
     @Override
     public void accept(ElementVisitor visitor) {
@@ -573,56 +567,62 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
       int result = 1;
       result = prime * result + ((edges == null) ? 0 : edges.hashCode());
       result = prime
-        * result
-        + ((edgesByNameCache == null) ? 0 : edgesByNameCache
-        .hashCode());
+               * result
+               + ((edgesByNameCache == null) ? 0 : edgesByNameCache
+          .hashCode());
       result = prime
-        * result
-        + ((elementsByElementCache == null) ? 0
-        : elementsByElementCache.hashCode());
+               * result
+               + ((elementsByElementCache == null) ? 0
+                                                   : elementsByElementCache.hashCode());
       result = prime
-        * result
-        + ((elementsByNameCache == null) ? 0 : elementsByNameCache
-        .hashCode());
+               * result
+               + ((elementsByNameCache == null) ? 0 : elementsByNameCache
+          .hashCode());
       result = prime * result
-        + ((elementsCache == null) ? 0 : elementsCache.hashCode());
+               + ((elementsCache == null) ? 0 : elementsCache.hashCode());
       result = prime
-        * result
-        + ((inEdgesByVertexCache == null) ? 0
-        : inEdgesByVertexCache.hashCode());
+               * result
+               + ((inEdgesByVertexCache == null) ? 0
+                                                 : inEdgesByVertexCache.hashCode());
       result = prime
-        * result
-        + ((outEdgesByVertexCache == null) ? 0
-        : outEdgesByVertexCache.hashCode());
+               * result
+               + ((outEdgesByVertexCache == null) ? 0
+                                                  : outEdgesByVertexCache.hashCode());
       result = prime
-        * result
-        + ((sharedStateCache == null) ? 0 : sharedStateCache
-        .hashCode());
+               * result
+               + ((sharedStateCache == null) ? 0 : sharedStateCache
+          .hashCode());
       result = prime * result
-        + ((vertices == null) ? 0 : vertices.hashCode());
+               + ((vertices == null) ? 0 : vertices.hashCode());
       result = prime
-        * result
-        + ((verticesByNameCache == null) ? 0 : verticesByNameCache
-        .hashCode());
+               * result
+               + ((verticesByNameCache == null) ? 0 : verticesByNameCache
+          .hashCode());
       return result;
     }
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (isNull(o) || getClass() != o.getClass()) return false;
-      if (!super.equals(o)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (isNull(o) || getClass() != o.getClass()) {
+        return false;
+      }
+      if (!super.equals(o)) {
+        return false;
+      }
       RuntimeModel that = (RuntimeModel) o;
       return Objects.equals(vertices, that.vertices) &&
-        Objects.equals(edges, that.edges) &&
-        Objects.equals(elementsCache, that.elementsCache) &&
-        Objects.equals(elementsByElementCache, that.elementsByElementCache) &&
-        Objects.equals(elementsByNameCache, that.elementsByNameCache) &&
-        Objects.equals(edgesByNameCache, that.edgesByNameCache) &&
-        Objects.equals(verticesByNameCache, that.verticesByNameCache) &&
-        Objects.equals(inEdgesByVertexCache, that.inEdgesByVertexCache) &&
-        Objects.equals(outEdgesByVertexCache, that.outEdgesByVertexCache) &&
-        Objects.equals(sharedStateCache, that.sharedStateCache);
+             Objects.equals(edges, that.edges) &&
+             Objects.equals(elementsCache, that.elementsCache) &&
+             Objects.equals(elementsByElementCache, that.elementsByElementCache) &&
+             Objects.equals(elementsByNameCache, that.elementsByNameCache) &&
+             Objects.equals(edgesByNameCache, that.edgesByNameCache) &&
+             Objects.equals(verticesByNameCache, that.verticesByNameCache) &&
+             Objects.equals(inEdgesByVertexCache, that.inEdgesByVertexCache) &&
+             Objects.equals(outEdgesByVertexCache, that.outEdgesByVertexCache) &&
+             Objects.equals(sharedStateCache, that.sharedStateCache);
     }
 
   }

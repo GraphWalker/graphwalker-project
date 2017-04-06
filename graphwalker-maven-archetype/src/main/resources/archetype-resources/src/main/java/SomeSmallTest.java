@@ -1,10 +1,10 @@
 #set($symbol_pound='#')
-  #set($symbol_dollar='$')
-  #set($symbol_escape='\' )
-  package ${package};
+    #set($symbol_dollar='$')
+    #set($symbol_escape='\' )
+    package ${package};
 
-  import org.graphwalker.core.machine.ExecutionContext;
-  import org.graphwalker.java.annotation.GraphWalker;
+    import org.graphwalker.core.machine.ExecutionContext;
+    import org.graphwalker.java.annotation.GraphWalker;
 
 /**
  * See: http://graphwalker.org/docs/maven_archetype for more details

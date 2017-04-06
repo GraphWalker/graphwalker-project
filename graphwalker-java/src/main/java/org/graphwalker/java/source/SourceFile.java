@@ -26,11 +26,10 @@ package org.graphwalker.java.source;
  * #L%
  */
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Nils Olsson
@@ -60,7 +59,7 @@ public final class SourceFile {
     this.relativePath = basePath.relativize(inputPath);
     if (null != this.relativePath.getParent()) {
       this.packageName = this.relativePath.getParent().toString()
-        .replace(File.separator, ".").replaceAll(" ", "_");
+          .replace(File.separator, ".").replaceAll(" ", "_");
     } else {
       this.packageName = "";
     }

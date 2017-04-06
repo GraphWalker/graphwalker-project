@@ -26,16 +26,38 @@ package org.graphwalker.cli;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.graphwalker.cli.commands.*;
+import org.graphwalker.cli.commands.Check;
+import org.graphwalker.cli.commands.Convert;
+import org.graphwalker.cli.commands.Methods;
+import org.graphwalker.cli.commands.Offline;
+import org.graphwalker.cli.commands.Online;
+import org.graphwalker.cli.commands.Requirements;
+import org.graphwalker.cli.commands.Source;
 import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
@@ -60,16 +82,6 @@ import org.graphwalker.restful.Util;
 import org.graphwalker.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-import static org.graphwalker.core.common.Objects.isNullOrEmpty;
-import static org.graphwalker.core.model.Model.RuntimeModel;
 
 public class CLI {
 
@@ -110,8 +122,6 @@ public class CLI {
 
   /**
    * Parses the command line.
-   *
-   * @param args
    */
   private void run(String[] args) {
     Options options = new Options();
@@ -157,7 +167,6 @@ public class CLI {
         System.out.println(printVersionInformation());
         return;
       }
-
 
       // Need to instantiate options again to avoid
       // ParameterException "Can only specify option --debug once."
@@ -318,10 +327,10 @@ public class CLI {
 
       HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
       System.out.println("Try http://localhost:"
-        + online.port
-        + "/graphwalker/hasNext or http://localhost:"
-        + online.port
-        + "/graphwalker/getNext");
+                         + online.port
+                         + "/graphwalker/hasNext or http://localhost:"
+                         + online.port
+                         + "/graphwalker/getNext");
       System.out.println("Press Control+C to end...");
       try {
         server.start();
@@ -456,8 +465,8 @@ public class CLI {
       contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
       if (triggerOnce &&
-        (!offline.startElement.isEmpty() ||
-          (!online.startElement.isEmpty()))) {
+          (!offline.startElement.isEmpty() ||
+           (!online.startElement.isEmpty()))) {
         triggerOnce = false;
 
         List<Element> elements = null;
@@ -503,7 +512,9 @@ public class CLI {
 
     version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
     version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
-    version += "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.getProperty("line.separator");
+    version +=
+        "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
+            .getProperty("line.separator");
 
     return version;
   }

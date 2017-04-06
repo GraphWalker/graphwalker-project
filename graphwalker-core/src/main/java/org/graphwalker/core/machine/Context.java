@@ -26,6 +26,13 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import javax.script.ScriptEngine;
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Action;
@@ -34,18 +41,11 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.statistics.Profiler;
 
-import javax.script.ScriptEngine;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Model.RuntimeModel;
-
 /**
  * @author Nils Olsson
  */
 public interface Context {
+
   ExecutionStatus getExecutionStatus();
 
   Context setExecutionStatus(ExecutionStatus executionStatus);

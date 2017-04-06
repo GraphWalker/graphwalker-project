@@ -1,12 +1,11 @@
 package org.graphwalker.modelchecker;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Vertex;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by krikar on 2015-11-08.
@@ -55,10 +54,10 @@ public class ContextChecker {
           }
           if (countNumOfCulDeSac > 1) {
             issues.add("The model has multiple cul-de-sacs, and is requested to run using a random " +
-              "path generator and 100% edge coverage. That will not work.");
+                       "path generator and 100% edge coverage. That will not work.");
           } else if (countNumOfCulDeSac == 1) {
             issues.add("The model has one cul-de-sacs, and is requested to run using a random " +
-              "path generator and 100% edge coverage. That might not work.");
+                       "path generator and 100% edge coverage. That might not work.");
           }
         }
       }

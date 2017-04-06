@@ -26,15 +26,14 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.generator.RandomPath;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.generator.RandomPath;
 
 /**
  * @author Nils Olsson
@@ -42,6 +41,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface GraphWalker {
+
   String value() default "";
 
   String start() default "";

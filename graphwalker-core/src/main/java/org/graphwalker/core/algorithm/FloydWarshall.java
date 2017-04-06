@@ -26,15 +26,14 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
+import java.util.Arrays;
+import java.util.List;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
 
 /**
  * @author Nils Olsson
@@ -77,8 +76,8 @@ public final class FloydWarshall implements Algorithm {
       for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
           if (distances[i][k] != Integer.MAX_VALUE
-            && distances[k][j] != Integer.MAX_VALUE
-            && distances[i][k] + distances[k][j] < distances[i][j]) {
+              && distances[k][j] != Integer.MAX_VALUE
+              && distances[i][k] + distances[k][j] < distances[i][j]) {
             distances[i][j] = distances[i][k] + distances[k][j];
             predecessors[i][j] = elements.get(k);
           }

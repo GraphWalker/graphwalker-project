@@ -26,10 +26,10 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.common.Objects;
-
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
+
+import org.graphwalker.core.common.Objects;
 
 /**
  * <h1>Vertex</h1>
@@ -127,8 +127,6 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
 
     /**
      * TODO Needs documentation
-     *
-     * @param visitor
      */
     @Override
     public void accept(ElementVisitor visitor) {
@@ -140,15 +138,21 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
       final int prime = 31;
       int result = super.hashCode();
       result = prime * result
-        + ((sharedState == null) ? 0 : sharedState.hashCode());
+               + ((sharedState == null) ? 0 : sharedState.hashCode());
       return result;
     }
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (isNull(o) || getClass() != o.getClass()) return false;
-      if (!super.equals(o)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (isNull(o) || getClass() != o.getClass()) {
+        return false;
+      }
+      if (!super.equals(o)) {
+        return false;
+      }
       RuntimeVertex that = (RuntimeVertex) o;
       return Objects.equals(sharedState, that.sharedState);
     }

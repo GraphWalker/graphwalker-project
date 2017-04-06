@@ -26,38 +26,21 @@ package org.graphwalker.io.factory.java;
  * #L%
  */
 
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.*;
-import org.graphwalker.io.TestExecutionContext;
-import org.graphwalker.io.factory.ContextFactory;
+import java.nio.file.Paths;
 import org.graphwalker.io.factory.ContextFactoryException;
-import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
 
 /**
  * @author Kristian Karl
  */
 public class JavaContextFactoryTest {
+
   private static final Logger logger = LoggerFactory.getLogger(JavaContextFactoryTest.class);
 
-  @Test (expected = ContextFactoryException.class)
-  public void create()  {
+  @Test(expected = ContextFactoryException.class)
+  public void create() {
     new JavaContextFactory().create(Paths.get("java/java.java"));
   }
 }

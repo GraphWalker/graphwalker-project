@@ -26,15 +26,14 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Requirement;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Requirement;
 
 /**
  * @author Nils Olsson
@@ -64,7 +63,7 @@ public class JsonEdge {
     Edge edge = new Edge();
     edge.setId(id);
     edge.setName(name);
-    
+
     if (weight != null) {
       edge.setWeight(weight);
     } else {
@@ -147,7 +146,7 @@ public class JsonEdge {
 
     edge.setWeight(weight);
     edge.setDependency(dependency);
-    
+
     if (guard != null) {
       edge.setGuard(new Guard(guard));
     }

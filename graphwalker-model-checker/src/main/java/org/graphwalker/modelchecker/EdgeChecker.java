@@ -1,10 +1,9 @@
 package org.graphwalker.modelchecker;
 
 import com.google.common.base.CharMatcher;
-import org.graphwalker.core.model.Edge;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.graphwalker.core.model.Edge;
 
 /**
  * Created by krikar on 2015-11-08.

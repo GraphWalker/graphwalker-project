@@ -26,11 +26,11 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.junit.Test;
-
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
 
 /**
  * @author Nils Olsson

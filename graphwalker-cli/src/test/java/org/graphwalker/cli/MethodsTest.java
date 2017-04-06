@@ -26,14 +26,13 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
 import java.util.Arrays;
-
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.core.Is.is;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class MethodsTest extends CLITestRoot {
@@ -44,10 +43,10 @@ public class MethodsTest extends CLITestRoot {
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
-      containsInAnyOrder("e_AnotherAction",
-        "e_FirstAction",
-        "e_SomeOtherAction",
-        "v_VerifySomeAction",
-        "v_VerifySomeOtherAction"));
+                      containsInAnyOrder("e_AnotherAction",
+                                         "e_FirstAction",
+                                         "e_SomeOtherAction",
+                                         "v_VerifySomeAction",
+                                         "v_VerifySomeOtherAction"));
   }
 }

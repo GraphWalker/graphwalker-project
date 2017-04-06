@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
@@ -34,11 +39,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Miroslav Janeski
@@ -50,7 +50,7 @@ public class DependencyEdgeCoverageTest {
     DependencyEdgeCoverage edgeCoverage = new DependencyEdgeCoverage(100);
     assertThat(edgeCoverage.getDependency(), is(100));
   }
-  
+
   @Test(expected = StopConditionException.class)
   public void testNegativeDependency() {
     new DependencyEdgeCoverage(-55);
@@ -97,7 +97,7 @@ public class DependencyEdgeCoverageTest {
     context.getProfiler().stop(context);
     assertThat(condition.getFulfilment(), is(1.0));
   }
-  
+
   @Test
   public void testIsFulfilled() {
     Vertex v1 = new Vertex();
@@ -122,7 +122,7 @@ public class DependencyEdgeCoverageTest {
     context.getProfiler().stop(context);
     assertTrue(condition.isFulfilled());
   }
-  
+
   @Test
   public void testIsFulfilledHighDependencyTreshold() {
     Vertex v1 = new Vertex();
@@ -147,7 +147,7 @@ public class DependencyEdgeCoverageTest {
     context.getProfiler().stop(context);
     assertFalse(condition.isFulfilled());
   }
-  
+
   @Test
   public void testIsFulfilledDependencyTreshold() {
     Vertex v1 = new Vertex();

@@ -1,5 +1,7 @@
 package org.graphwalker.core.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
@@ -11,9 +13,6 @@ import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Nils Olsson
@@ -34,15 +33,15 @@ public class ObjectMirrorTest extends ExecutionContext {
   public void verifyMirror() {
     Vertex start = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setName("edge1")
-        .setGuard(new Guard("contains('value1')"))
-        .setSourceVertex(start.setName("vertex1"))
-        .setTargetVertex(new Vertex().setName("vertex2")))
-      .addEdge(new Edge()
-        .setGuard(new Guard("!contains('value1')"))
-        .setSourceVertex(start)
-        .setTargetVertex(start)
-        .addAction(new Action("add('value1')")));
+        .addEdge(new Edge().setName("edge1")
+                     .setGuard(new Guard("contains('value1')"))
+                     .setSourceVertex(start.setName("vertex1"))
+                     .setTargetVertex(new Vertex().setName("vertex2")))
+        .addEdge(new Edge()
+                     .setGuard(new Guard("!contains('value1')"))
+                     .setSourceVertex(start)
+                     .setTargetVertex(start)
+                     .addAction(new Action("add('value1')")));
     this.setModel(model.build());
     this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
     setNextElement(start);

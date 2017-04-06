@@ -48,10 +48,10 @@
 
 package org.graphwalker.cli;
 
+import static org.hamcrest.core.Is.is;
+
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
 
 
 public class CorrectModelsTest extends CLITestRoot {
@@ -65,7 +65,7 @@ public class CorrectModelsTest extends CLITestRoot {
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
+                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
   /**
@@ -77,15 +77,15 @@ public class CorrectModelsTest extends CLITestRoot {
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"e4\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v4\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"e6\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"e3\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v3\"}" + System.lineSeparator()));
+                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"e4\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v4\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"e6\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"e3\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v3\"}" + System.lineSeparator()));
   }
 
   /**
@@ -107,8 +107,8 @@ public class CorrectModelsTest extends CLITestRoot {
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
-      "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
+                                             "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
   }
 }

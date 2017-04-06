@@ -26,15 +26,15 @@ package org.graphwalker.core;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson
@@ -261,7 +261,9 @@ public final class Assert<T> {
 
   private boolean areArrayElementsEqual(Object object1, Object object2) {
     for (int i = 0; i < Array.getLength(object1); i++) {
-      if (!areEqual(Array.get(object1, i), Array.get(object2, i))) return false;
+      if (!areEqual(Array.get(object1, i), Array.get(object2, i))) {
+        return false;
+      }
     }
     return true;
   }

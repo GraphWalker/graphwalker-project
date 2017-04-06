@@ -26,6 +26,17 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.model.Action;
@@ -34,18 +45,6 @@ import org.graphwalker.core.model.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * <h1>SimpleMachine</h1>
@@ -217,7 +216,8 @@ public class SimpleMachine extends MachineBase {
         sharedStates.add(new SharedStateTuple(getCurrentContext(), (RuntimeVertex) getCurrentContext().getCurrentElement()));
       } else if (!getCurrentContext().equals(context) && context.getModel().hasSharedState(sharedState)) {
         for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-          if ((!vertex.equals(lastElement) || getCurrentContext().getModel().getOutEdges((RuntimeVertex) getCurrentContext().getCurrentElement()).isEmpty()) && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
+          if ((!vertex.equals(lastElement) || getCurrentContext().getModel().getOutEdges((RuntimeVertex) getCurrentContext().getCurrentElement()).isEmpty())
+              && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
             sharedStates.add(new SharedStateTuple(context, vertex));
           }
         }
@@ -228,8 +228,8 @@ public class SimpleMachine extends MachineBase {
 
   private boolean hasOutEdges(Context context) {
     return isNotNull(context.getCurrentElement())
-      && context.getCurrentElement() instanceof RuntimeVertex
-      && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
+           && context.getCurrentElement() instanceof RuntimeVertex
+           && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
   }
 
   @Override

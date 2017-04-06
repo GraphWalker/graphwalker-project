@@ -1,16 +1,15 @@
 package org.graphwalker.core.machine;
 
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.statistics.Profiler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.graphwalker.core.common.Objects.isNotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.statistics.Profiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <h1>ReplayMachine</h1>

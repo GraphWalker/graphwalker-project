@@ -26,7 +26,20 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -44,16 +57,6 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
 
 /**
  * @author Kristian Karl
@@ -122,7 +125,7 @@ public final class DotContextFactory implements ContextFactory {
     }
     for (Edge edge : listener.getEdges()) {
       if (edge.getSourceVertex().getName() != null &&
-        edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
+          edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
         edge.setSourceVertex(null);
         startEdge = edge;
       }
@@ -161,8 +164,9 @@ public final class DotContextFactory implements ContextFactory {
         }
 
         str.append(" -> ");
-        if (edge.getTargetVertex() != null)
+        if (edge.getTargetVertex() != null) {
           str.append(edge.getTargetVertex().getName());
+        }
         str.append(" [label=\"");
         str.append(edge.getName());
         if (edge.hasGuard()) {

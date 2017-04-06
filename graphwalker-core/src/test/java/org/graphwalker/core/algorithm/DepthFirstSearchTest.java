@@ -26,14 +26,14 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -58,12 +58,12 @@ public class DepthFirstSearchTest {
   private static final Edge ee1 = new Edge().setName("e1").setSourceVertex(ve0).setTargetVertex(ve1);
 
   private static final Model model = new Model()
-    .addEdge(e1)
-    .addEdge(e2)
-    .addEdge(e3)
-    .addEdge(e4)
-    .addEdge(e5)
-    .addEdge(ee1);
+      .addEdge(e1)
+      .addEdge(e2)
+      .addEdge(e3)
+      .addEdge(e4)
+      .addEdge(e5)
+      .addEdge(ee1);
 
   @Test
   public void connectedComponent() {

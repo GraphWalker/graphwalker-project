@@ -26,9 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
+import org.graphwalker.core.machine.Context;
 
 /**
  * @author Nils Olsson

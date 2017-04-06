@@ -26,10 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import javax.script.ScriptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.script.ScriptException;
 
 /**
  * @author Nils Olsson

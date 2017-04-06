@@ -1,12 +1,12 @@
 package org.graphwalker.core.model;
 
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
+import static org.graphwalker.core.common.Objects.unmodifiableSet;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import static org.graphwalker.core.common.Objects.unmodifiableMap;
-import static org.graphwalker.core.common.Objects.unmodifiableSet;
 
 public abstract class BuilderBase<B, T> implements Builder<T> {
 

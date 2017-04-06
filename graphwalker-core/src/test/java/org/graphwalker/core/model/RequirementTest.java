@@ -26,6 +26,11 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.VertexCoverage;
@@ -36,11 +41,6 @@ import org.graphwalker.core.machine.RequirementStatus;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -76,8 +76,8 @@ public class RequirementTest {
     Vertex alt1 = new Vertex().setName("Alt1").addRequirement(new Requirement("ALT1"));
     Vertex alt2 = new Vertex().setName("Alt2").addRequirement(new Requirement("ALT2"));
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt1).addRequirement(new Requirement("road1")))
-      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt2).addRequirement(new Requirement("road2")));
+        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt1).addRequirement(new Requirement("road1")))
+        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(alt2).addRequirement(new Requirement("road2")));
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedVertex("Alt1"));
     condition.addStopCondition(new ReachedVertex("Alt2"));

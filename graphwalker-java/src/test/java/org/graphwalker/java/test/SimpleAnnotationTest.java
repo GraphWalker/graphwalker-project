@@ -26,11 +26,10 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import java.io.IOException;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author Nils Olsson

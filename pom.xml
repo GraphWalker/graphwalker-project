@@ -50,7 +50,8 @@
   <scm>
     <url>https://github.com/GraphWalker/graphwalker-project</url>
     <connection>scm:git:git://github.com:GraphWalker/graphwalker-project.git</connection>
-    <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git</developerConnection>
+    <developerConnection>scm:git:git@github.com:GraphWalker/graphwalker-project.git
+    </developerConnection>
   </scm>
 
   <distributionManagement>

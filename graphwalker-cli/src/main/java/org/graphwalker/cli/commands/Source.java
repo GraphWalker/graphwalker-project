@@ -28,7 +28,6 @@ package org.graphwalker.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import java.util.List;
 public class Source {
 
   @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
-    description = "This command requires an input model file, and an input template file. " +
-      "See http://graphwalker.org/docs/command_line_syntax")
+      description = "This command requires an input model file, and an input template file. " +
+                    "See http://graphwalker.org/docs/command_line_syntax")
   public List<String> input = new ArrayList<>();
 }

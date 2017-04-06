@@ -26,8 +26,23 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 import com.google.gson.Gson;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
@@ -38,18 +53,6 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-
-import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * Created by krikar on 9/24/14.
@@ -139,7 +142,7 @@ public final class JsonContextFactory implements ContextFactory {
     JsonMultimodel jsonMultimodel = new Gson().fromJson(jsonStr, JsonMultimodel.class);
 
     if (isNull(jsonMultimodel) || isNull(jsonMultimodel.getModels())) {
-      throw  new ContextFactoryException("The json file is not a valid GraphWalker model(s) file");
+      throw new ContextFactoryException("The json file is not a valid GraphWalker model(s) file");
     }
 
     for (JsonModel jsonModel : jsonMultimodel.getModels()) {

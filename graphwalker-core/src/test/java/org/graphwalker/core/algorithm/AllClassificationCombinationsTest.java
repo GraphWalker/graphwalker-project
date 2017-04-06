@@ -26,11 +26,11 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import static org.junit.Assert.assertNotNull;
+
 import org.graphwalker.core.model.Classification;
 import org.graphwalker.core.model.ClassificationTree;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Kristian Karl

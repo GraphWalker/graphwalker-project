@@ -28,7 +28,6 @@ package org.graphwalker.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import java.util.List;
 public class Check {
 
   @Parameter(names = {"--model", "-m"}, required = true, arity = 2,
-    description = "Model followed by generator with stop condition. " +
-      "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
+      description = "Model followed by generator with stop condition. " +
+                    "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
   public List<String> model = new ArrayList<>();
 }

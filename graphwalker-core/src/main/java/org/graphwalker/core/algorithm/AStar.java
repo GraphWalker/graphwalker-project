@@ -26,9 +26,8 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +36,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
 
 /**
  * <h1>AStar</h1>
@@ -86,7 +85,8 @@ public final class AStar implements Algorithm {
     throw new AlgorithmException();
   }
 
-  private void calculate(Element destination, Map<Element, AStarNode> openSet, PriorityQueue<AStarNode> queue, Map<Element, AStarNode> closeSet, FloydWarshall floydWarshall, AStarNode node, List<Element> neighbors) {
+  private void calculate(Element destination, Map<Element, AStarNode> openSet, PriorityQueue<AStarNode> queue, Map<Element, AStarNode> closeSet,
+                         FloydWarshall floydWarshall, AStarNode node, List<Element> neighbors) {
     for (Element neighbor : neighbors) {
       AStarNode visited = closeSet.get(neighbor);
       if (isNull(visited)) {

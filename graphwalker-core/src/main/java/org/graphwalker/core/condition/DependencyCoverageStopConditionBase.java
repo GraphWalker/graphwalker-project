@@ -5,21 +5,21 @@ package org.graphwalker.core.condition;
  */
 public abstract class DependencyCoverageStopConditionBase extends StopConditionBase {
 
-	private final int dependency;
+  private final int dependency;
 
-	protected DependencyCoverageStopConditionBase(int dependency) {
-		super(String.valueOf(dependency));
-		if (0 > dependency) {
-			throw new StopConditionException("A dependency cannot be negative");
-		}
-		this.dependency = dependency;
-	}
-	
-	public int getDependency() {
-		return dependency;
-	}
+  protected DependencyCoverageStopConditionBase(int dependency) {
+    super(String.valueOf(dependency));
+    if (0 > dependency) {
+      throw new StopConditionException("A dependency cannot be negative");
+    }
+    this.dependency = dependency;
+  }
 
-	protected double getDependencyAsDouble() {
-		return (double) getDependency() / 100;
-	}
+  public int getDependency() {
+    return dependency;
+  }
+
+  protected double getDependencyAsDouble() {
+    return (double) getDependency() / 100;
+  }
 }

@@ -26,11 +26,24 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Guard;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.TestExecutionContext;
 import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
@@ -41,18 +54,11 @@ import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Kristian Karl
  */
 public class JsonContextFactoryTest {
+
   private static final Logger logger = LoggerFactory.getLogger(JsonContextFactoryTest.class);
 
   @Rule
@@ -122,7 +128,7 @@ public class JsonContextFactoryTest {
     Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
   }
 
-  @Test(expected=ContextFactoryException.class)
+  @Test(expected = ContextFactoryException.class)
   public void acceptJsonTestFailure() throws IOException {
     ContextFactory factory = new JsonContextFactory();
     factory.create(Paths.get("json/NonModel.json"));
@@ -133,7 +139,8 @@ public class JsonContextFactoryTest {
     Vertex v_BookInformation = new Vertex().setName("v_BookInformation").setId("n5");
     Vertex v_OtherBoughtBooks = new Vertex().setName("v_OtherBoughtBooks").setId("n6");
     Model model = new Model();
-    model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
+    model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5")
+                      .setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
 
     Context writeContext = new TestExecutionContext();
     writeContext.setModel(model.build());
@@ -156,7 +163,8 @@ public class JsonContextFactoryTest {
   public void actions() throws IOException {
     Vertex v_BrowserStopped = new Vertex().setName("v_BrowserStopped").setId("n4");
     Model model = new Model();
-    model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
+    model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;"))
+                      .addAction(new Action(" MAX_BOOKS = 5;")));
 
     Context writeContext = new TestExecutionContext();
     writeContext.setModel(model.build());
@@ -186,12 +194,14 @@ public class JsonContextFactoryTest {
     Vertex v_ShoppingCart = new Vertex().setName("v_ShoppingCart").setId("n7").addRequirement(new Requirement("UC01 2.3"));
 
     Model model = new Model();
-    model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;")).addAction(new Action(" MAX_BOOKS = 5;")));
+    model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;"))
+                      .addAction(new Action(" MAX_BOOKS = 5;")));
     model.addEdge(new Edge().setSourceVertex(v_BrowserStarted).setTargetVertex(v_BaseURL).setName("e_EnterBaseURL").setId("e1"));
     model.addEdge(new Edge().setSourceVertex(v_BaseURL).setTargetVertex(v_SearchResult).setName("e_SearchBook").setId("e2"));
     model.addEdge(new Edge().setSourceVertex(v_BrowserStopped).setTargetVertex(v_BrowserStarted).setName("e_StartBrowser").setId("e3"));
     model.addEdge(new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_BookInformation).setName("e_ClickBook").setId("e4"));
-    model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5").setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
+    model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_OtherBoughtBooks).setName("e_AddBookToCart").setId("e5")
+                      .setGuard(new Guard("num_of_books<=MAX_BOOKS")).addAction(new Action(" num_of_books++;")));
     model.addEdge(new Edge().setSourceVertex(v_OtherBoughtBooks).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e6"));
     model.addEdge(new Edge().setSourceVertex(v_SearchResult).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e7"));
     model.addEdge(new Edge().setSourceVertex(v_BookInformation).setTargetVertex(v_ShoppingCart).setName("e_ShoppingCart").setId("e8"));
@@ -234,29 +244,29 @@ public class JsonContextFactoryTest {
       logger.debug(e.getName());
     }
   }
-  
+
   @Test
   public void acceptDependencyJsonTest() throws IOException {
-	    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/DependencyModel.json"));
-	    Assert.assertNotNull(contexts);
-	    Assert.assertThat(contexts.size(), is(1));
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/DependencyModel.json"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
 
-	    Context context = contexts.get(0);
+    Context context = contexts.get(0);
 
-	    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-	    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+    Assert.assertThat(context.getModel().getEdges().size(), is(4));
 
-	    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
-	    Assert.assertThat(e.getDependency(), is(100));
+    Edge.RuntimeEdge e = (Edge.RuntimeEdge) context.getModel().getElementById("e0");
+    Assert.assertThat(e.getDependency(), is(100));
 
-	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e1");
-	    Assert.assertThat(e.getDependency(), is(100));
+    e = (Edge.RuntimeEdge) context.getModel().getElementById("e1");
+    Assert.assertThat(e.getDependency(), is(100));
 
-	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e2");
-	    Assert.assertThat(e.getDependency(), is(85));
+    e = (Edge.RuntimeEdge) context.getModel().getElementById("e2");
+    Assert.assertThat(e.getDependency(), is(85));
 
-	    e = (Edge.RuntimeEdge)context.getModel().getElementById("e3");
-	    Assert.assertThat(e.getDependency(), is(15));
+    e = (Edge.RuntimeEdge) context.getModel().getElementById("e3");
+    Assert.assertThat(e.getDependency(), is(15));
   }
 
   @Test
@@ -294,7 +304,7 @@ public class JsonContextFactoryTest {
     Assert.assertThat(context.getModel().getVertices().size(), is(2));
     Assert.assertThat(context.getModel().getEdges().size(), is(4));
 
-    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
+    Edge.RuntimeEdge e = (Edge.RuntimeEdge) context.getModel().getElementById("e0");
     Assert.assertThat(e.getWeight(), is(0.));
   }
 
@@ -310,14 +320,14 @@ public class JsonContextFactoryTest {
     Assert.assertThat(context.getModel().getEdges().size(), is(4));
 
     Assert.assertTrue(context.getModel().hasProperty("color"));
-    Assert.assertThat((String)context.getModel().getProperty("color"), is("grey"));
+    Assert.assertThat((String) context.getModel().getProperty("color"), is("grey"));
 
-    Edge.RuntimeEdge e = (Edge.RuntimeEdge)context.getModel().getElementById("e0");
+    Edge.RuntimeEdge e = (Edge.RuntimeEdge) context.getModel().getElementById("e0");
     Assert.assertTrue(e.hasProperty("color"));
-    Assert.assertThat((String)e.getProperty("color"), is("green"));
+    Assert.assertThat((String) e.getProperty("color"), is("green"));
 
-    Vertex.RuntimeVertex v = (Vertex.RuntimeVertex)context.getModel().getElementById("n0");
+    Vertex.RuntimeVertex v = (Vertex.RuntimeVertex) context.getModel().getElementById("n0");
     Assert.assertTrue(v.hasProperty("color"));
-    Assert.assertThat((String)v.getProperty("color"), is("yellow"));
+    Assert.assertThat((String) v.getProperty("color"), is("yellow"));
   }
 }

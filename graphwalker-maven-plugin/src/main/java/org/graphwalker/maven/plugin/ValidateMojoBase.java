@@ -26,9 +26,8 @@ package org.graphwalker.maven.plugin;
  * #L%
  */
 
-import org.apache.maven.model.Resource;
-
 import java.util.List;
+import org.apache.maven.model.Resource;
 
 /**
  * @author Nils Olsson

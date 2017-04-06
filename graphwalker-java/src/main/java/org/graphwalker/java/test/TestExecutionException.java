@@ -50,7 +50,7 @@ public class TestExecutionException extends RuntimeException {
   }
 
   public boolean hasErrors() {
-    if ( result != null ) {
+    if (result != null) {
       return result.hasErrors();
     }
     return false;

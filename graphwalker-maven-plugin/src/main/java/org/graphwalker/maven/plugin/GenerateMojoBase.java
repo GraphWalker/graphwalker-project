@@ -26,11 +26,10 @@ package org.graphwalker.maven.plugin;
  * #L%
  */
 
-import org.apache.maven.model.Resource;
-import org.graphwalker.java.source.CodeGenerator;
-
 import java.io.File;
 import java.util.List;
+import org.apache.maven.model.Resource;
+import org.graphwalker.java.source.CodeGenerator;
 
 
 /**

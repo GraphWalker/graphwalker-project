@@ -26,11 +26,10 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.graphwalker.core.machine.Context;
 
 /**
  * <h1>AlternativeCondition</h1>

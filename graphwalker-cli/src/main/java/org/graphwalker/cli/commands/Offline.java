@@ -28,7 +28,6 @@ package org.graphwalker.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,23 +35,23 @@ import java.util.List;
 public class Offline {
 
   @Parameter(names = {"--verbose", "-o"}, required = false,
-    description = "Will print more details to stdout")
+      description = "Will print more details to stdout")
   public boolean verbose = false;
 
   @Parameter(names = {"--unvisited", "-u"}, required = false,
-    description = "Will also print the remaining unvisited elements in the model.")
+      description = "Will also print the remaining unvisited elements in the model.")
   public boolean unvisited = false;
 
   @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
-    description = "The model, as a graphml file followed by generator with stop condition. " +
-      "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
+      description = "The model, as a graphml file followed by generator with stop condition. " +
+                    "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
   public List<String> model = new ArrayList<>();
 
   @Parameter(names = {"--gw3", "-g"}, required = false, arity = 1,
-    description = "The model, as a single gw3 file")
+      description = "The model, as a single gw3 file")
   public String gw3 = "";
 
   @Parameter(names = {"--start-element", "-e"}, required = false,
-    description = "Sets the starting element in the [first] model.")
+      description = "Sets the starting element in the [first] model.")
   public String startElement = "";
 }

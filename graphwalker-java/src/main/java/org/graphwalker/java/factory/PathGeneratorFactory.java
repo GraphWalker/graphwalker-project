@@ -26,6 +26,7 @@ package org.graphwalker.java.factory;
  * #L%
  */
 
+import java.lang.reflect.Constructor;
 import org.graphwalker.core.condition.ReachedStopCondition;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.PathGenerator;
@@ -33,8 +34,6 @@ import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Constructor;
 
 /**
  * @author Nils Olsson

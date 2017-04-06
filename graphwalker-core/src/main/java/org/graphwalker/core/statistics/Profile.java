@@ -26,11 +26,10 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
-
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
 
 /**
  * @author Nils Olsson

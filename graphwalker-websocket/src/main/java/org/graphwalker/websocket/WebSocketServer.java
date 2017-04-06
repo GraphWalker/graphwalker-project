@@ -26,6 +26,16 @@ package org.graphwalker.websocket;
  * #L%
  */
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
@@ -44,13 +54,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.util.*;
-
-import static org.graphwalker.core.common.Objects.isNull;
-
 /**
  * A WebSocketServer with an API for working with GraphWalker as a service.
  */
@@ -67,7 +70,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
   enum MODE {
     EDITOR,
     PLAYBACK
-  };
+  }
+
+  ;
 
   public WebSocketServer(int port) {
     super(new InetSocketAddress(port));
@@ -86,9 +91,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
   /**
    * This is used for connecting to an execution, where a user can real time
    * information of the run.
-   * @param port
-   * @param machine
-     */
+   */
   public WebSocketServer(int port, Machine machine) {
     super(new InetSocketAddress(port));
     sockets = new HashSet<>();
@@ -116,9 +119,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
   @Override
   public void onMessage(WebSocket socket, String message) {
     logger.debug("Received message from: "
-      + socket.getRemoteSocketAddress().getAddress().getHostAddress()
-      + " : "
-      + message);
+                 + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                 + " : "
+                 + message);
 
     JSONObject response = new JSONObject();
     JSONObject root;
@@ -298,9 +301,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         break;
     }
     logger.debug("Sending response to: "
-      + socket.getRemoteSocketAddress().getAddress().getHostAddress()
-      + " : "
-      + response.toString());
+                 + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                 + " : "
+                 + response.toString());
     socket.send(response.toString());
   }
 
@@ -328,17 +331,17 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
       }
       jsonIssue.put("issues", jsonIssues);
       logger.debug("Sending response to: "
-        + socket.getRemoteSocketAddress().getAddress().getHostAddress()
-        + " : "
-        + jsonIssue.toString());
+                   + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                   + " : "
+                   + jsonIssue.toString());
       socket.send(jsonIssue.toString());
     } else {
       JSONObject jsonIssue = new JSONObject();
       jsonIssue.put("command", "noIssues");
       logger.debug("Sending response to: "
-        + socket.getRemoteSocketAddress().getAddress().getHostAddress()
-        + " : "
-        + jsonIssue.toString());
+                   + socket.getRemoteSocketAddress().getAddress().getHostAddress()
+                   + " : "
+                   + jsonIssue.toString());
       socket.send(jsonIssue.toString());
     }
   }

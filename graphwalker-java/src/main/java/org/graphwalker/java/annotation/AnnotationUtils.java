@@ -26,16 +26,15 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.reflections.Reflections;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
+import org.graphwalker.core.machine.Context;
+import org.reflections.Reflections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Nils Olsson

@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import static org.junit.Assert.assertArrayEquals;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -38,12 +43,6 @@ import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Nils Olsson
@@ -88,11 +87,11 @@ public class ReachedSharedStateTest {
       machine.getNextStep();
     }
     List<Element> expectedPath = Arrays.<Element>asList(
-      start.build(),
-      e1.build(),
-      v2.build(),
-      e6.build(),
-      v4.build());
+        start.build(),
+        e1.build(),
+        v2.build(),
+        e6.build(),
+        v4.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
@@ -118,23 +117,23 @@ public class ReachedSharedStateTest {
       machine.getNextStep();
     }
     List<Element> expectedPath = Arrays.<Element>asList(
-      start.build(),
-      e1.build(),
-      v2.build(),
-      e2.build(),
-      v1.build(),
-      e3.build(),
-      v2.build(),
-      e2.build(),
-      v1.build(),
-      e3.build(),
-      v2.build(),
-      e2.build(),
-      v1.build(),
-      e3.build(),
-      v2.build(),
-      e4.build(),
-      v3.build());
+        start.build(),
+        e1.build(),
+        v2.build(),
+        e2.build(),
+        v1.build(),
+        e3.build(),
+        v2.build(),
+        e2.build(),
+        v1.build(),
+        e3.build(),
+        v2.build(),
+        e2.build(),
+        v1.build(),
+        e3.build(),
+        v2.build(),
+        e4.build(),
+        v3.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
