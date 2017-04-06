@@ -212,6 +212,7 @@ public final class Result {
     if (isNotNullOrEmpty(failures)) {
       JSONArray jsonFailures = new JSONArray();
       for (MachineException exception : failures.values()) {
+        addError(getStackTrace(exception.getCause()));
         JSONObject jsonFailure = new JSONObject();
         jsonFailure.put("failure", getStackTrace(exception.getCause()));
         jsonFailures.put(jsonFailure);
