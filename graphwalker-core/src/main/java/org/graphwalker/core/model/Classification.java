@@ -26,12 +26,11 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.common.Objects;
+import static org.graphwalker.core.common.Objects.isNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.graphwalker.core.common.Objects.isNull;
+import org.graphwalker.core.common.Objects;
 
 /**
  * @author Nils Olsson
@@ -75,9 +74,15 @@ public final class Classification extends CachedBuilder<Classification, Classifi
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (isNull(o) || getClass() != o.getClass()) return false;
-      if (!super.equals(o)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (isNull(o) || getClass() != o.getClass()) {
+        return false;
+      }
+      if (!super.equals(o)) {
+        return false;
+      }
       RuntimeClassification that = (RuntimeClassification) o;
       return Objects.equals(classifications, that.classifications);
     }

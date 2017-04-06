@@ -26,6 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -37,11 +42,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Nils Olsson
  */
@@ -51,8 +51,8 @@ public class InternalStateTest {
   public void testIsFulfilled() {
     Vertex vertex = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
-      .addAction(new Action("var index = 0"));
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
+        .addAction(new Action("var index = 0"));
     StopCondition condition = new InternalState("index == 99");
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
     Machine machine = new SimpleMachine(context);
@@ -71,8 +71,8 @@ public class InternalStateTest {
     Vertex start = new Vertex();
     Vertex vertex = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
-      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
     StopCondition condition = new InternalState("index == 99");
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
@@ -91,8 +91,8 @@ public class InternalStateTest {
     Vertex start = new Vertex();
     Vertex vertex = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
-      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
     StopCondition condition = new InternalState("var test = 'test'");
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);

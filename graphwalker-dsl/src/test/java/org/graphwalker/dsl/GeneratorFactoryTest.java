@@ -26,15 +26,30 @@ package org.graphwalker.dsl;
  * #L%
  */
 
-import org.graphwalker.core.condition.*;
-import org.graphwalker.core.generator.*;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+
+import org.graphwalker.core.condition.AlternativeCondition;
+import org.graphwalker.core.condition.CombinedCondition;
+import org.graphwalker.core.condition.DependencyEdgeCoverage;
+import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.ReachedEdge;
+import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.condition.RequirementCoverage;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.condition.TimeDuration;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.AStarPath;
+import org.graphwalker.core.generator.CombinedPath;
+import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.generator.QuickRandomPath;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.ShortestAllPaths;
+import org.graphwalker.core.generator.WeightedRandomPath;
 import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 /**
  * Created by krikar on 5/14/14.
@@ -204,7 +219,6 @@ public class GeneratorFactoryTest {
     AlternativeCondition alternativeCondition = (AlternativeCondition) condition;
     Assert.assertThat(alternativeCondition.getStopConditions().get(0), instanceOf(EdgeCoverage.class));
     Assert.assertThat(alternativeCondition.getStopConditions().get(1), instanceOf(TimeDuration.class));
-
 
     condition = combinedPath.getPathGenerators().get(1).getStopCondition();
     Assert.assertThat(condition, instanceOf(ReachedVertex.class));

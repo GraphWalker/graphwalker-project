@@ -33,5 +33,6 @@ import org.graphwalker.core.model.Element;
  * @author Nils Olsson
  */
 public interface Observer {
+
   void update(Machine machine, Element element, EventType type);
 }

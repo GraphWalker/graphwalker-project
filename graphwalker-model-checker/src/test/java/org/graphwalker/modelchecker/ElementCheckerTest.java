@@ -1,5 +1,8 @@
 package org.graphwalker.modelchecker;
 
+import static org.hamcrest.core.Is.is;
+
+import java.util.List;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Requirement;
@@ -7,14 +10,11 @@ import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * Created by krikar on 2015-11-08.
  */
 public class ElementCheckerTest {
+
   @Test
   public void testDefault() {
     List<String> issues = ElementChecker.hasIssues(new Vertex().build());

@@ -26,19 +26,19 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Properties;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.MachineException;
 
 /**
  * @author Nils Olsson
  */
 public interface Executor {
+
   Result execute();
 
   Result execute(boolean ignoreErrors);

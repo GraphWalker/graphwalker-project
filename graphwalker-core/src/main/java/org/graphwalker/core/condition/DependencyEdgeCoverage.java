@@ -26,9 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
+
+import org.graphwalker.core.machine.Context;
 
 /**
  * <h1>DependencyEdgeCoverage</h1> The DependencyEdgeCoverage stop condition is fulfilled
@@ -40,33 +40,33 @@ import static org.graphwalker.core.model.Edge.RuntimeEdge;
  */
 public final class DependencyEdgeCoverage extends DependencyCoverageStopConditionBase {
 
-	public DependencyEdgeCoverage(int dependency) {
-		super(dependency);
-	}
+  public DependencyEdgeCoverage(int dependency) {
+    super(dependency);
+  }
 
-	@Override
-	public boolean isFulfilled() {
-		return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
-	}
+  @Override
+  public boolean isFulfilled() {
+    return getFulfilment() >= FULFILLMENT_LEVEL && super.isFulfilled();
+  }
 
-	@Override
-	public double getFulfilment() {
-		Context context = getContext();
-		long totalDependencyEdgesCount = 0;
-		long visitedDependencyEdgesCount = 0;
-		for (RuntimeEdge edge : context.getModel().getEdges()) {
-			if (edge.getDependencyAsDouble() >= super.getDependencyAsDouble()) {
-				totalDependencyEdgesCount++;
-				if (context.getProfiler().isVisited(edge)) {
-					visitedDependencyEdgesCount++;
-				}				
-			}	
-		}
+  @Override
+  public double getFulfilment() {
+    Context context = getContext();
+    long totalDependencyEdgesCount = 0;
+    long visitedDependencyEdgesCount = 0;
+    for (RuntimeEdge edge : context.getModel().getEdges()) {
+      if (edge.getDependencyAsDouble() >= super.getDependencyAsDouble()) {
+        totalDependencyEdgesCount++;
+        if (context.getProfiler().isVisited(edge)) {
+          visitedDependencyEdgesCount++;
+        }
+      }
+    }
 
-		if (totalDependencyEdgesCount == 0) {
-			return totalDependencyEdgesCount;
-		} else {
-			return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
-		}
-	}
+    if (totalDependencyEdgesCount == 0) {
+      return totalDependencyEdgesCount;
+    } else {
+      return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
+    }
+  }
 }

@@ -26,6 +26,29 @@ package org.graphwalker.maven.plugin;
  * #L%
  */
 
+import static com.sun.nio.file.SensitivityWatchEventModifier.HIGH;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -42,20 +65,6 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.graphwalker.java.source.CodeGenerator;
 import org.graphwalker.java.source.SourceFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import static com.sun.nio.file.SensitivityWatchEventModifier.HIGH;
-import static java.nio.file.StandardWatchEventKinds.*;
-import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
@@ -172,7 +181,7 @@ public final class WatchMojo extends AbstractMojo {
 
   private boolean isModified(Path outputPath, Path path) throws IOException {
     return Files.getLastModifiedTime(outputPath).to(TimeUnit.MILLISECONDS)
-      < Files.getLastModifiedTime(path).to(TimeUnit.MILLISECONDS);
+           < Files.getLastModifiedTime(path).to(TimeUnit.MILLISECONDS);
   }
 
   private boolean isSupportedFileType(Path path) throws IOException {
@@ -181,33 +190,33 @@ public final class WatchMojo extends AbstractMojo {
 
   private void generate(SourceFile sourceFile) throws IOException {
     File outputFile = sourceFile.getOutputPath().toFile();
-      ContextFactory contextFactory = ContextFactoryScanner.get(sourceFile.getInputPath());
-      List<Context> contexts = contextFactory.create(sourceFile.getInputPath());
-      for ( Context context : contexts ){
-        try {
-          RuntimeModel model = context.getModel();
-          String source = codeGenerator.generate(sourceFile, model);
-          if (Files.exists(sourceFile.getOutputPath())) {
-            String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
-            if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
-              return;
-            }
-          }
-          if (getLog().isInfoEnabled()) {
-            getLog().info("Generate: " + sourceFile.getOutputPath());
-          }
-          FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
-          FileUtils.fileDelete(outputFile.getAbsolutePath());
-          FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
-        } catch (Throwable t) {
-          if (getLog().isInfoEnabled()) {
-            getLog().info("Error: Generate: " + sourceFile.getOutputPath());
-          }
-          if (getLog().isDebugEnabled()) {
-            getLog().debug("Error: Generate: " + sourceFile.getOutputPath(), t);
+    ContextFactory contextFactory = ContextFactoryScanner.get(sourceFile.getInputPath());
+    List<Context> contexts = contextFactory.create(sourceFile.getInputPath());
+    for (Context context : contexts) {
+      try {
+        RuntimeModel model = context.getModel();
+        String source = codeGenerator.generate(sourceFile, model);
+        if (Files.exists(sourceFile.getOutputPath())) {
+          String existingSource = StringUtils.removeDuplicateWhitespace(FileUtils.fileRead(outputFile, getEncoding()));
+          if (existingSource.equals(StringUtils.removeDuplicateWhitespace(new String(source.getBytes(), getEncoding())))) {
+            return;
           }
         }
+        if (getLog().isInfoEnabled()) {
+          getLog().info("Generate: " + sourceFile.getOutputPath());
+        }
+        FileUtils.mkdir(sourceFile.getOutputPath().getParent().toFile().getAbsolutePath());
+        FileUtils.fileDelete(outputFile.getAbsolutePath());
+        FileUtils.fileWrite(outputFile.getAbsolutePath(), getEncoding(), source);
+      } catch (Throwable t) {
+        if (getLog().isInfoEnabled()) {
+          getLog().info("Error: Generate: " + sourceFile.getOutputPath());
+        }
+        if (getLog().isDebugEnabled()) {
+          getLog().debug("Error: Generate: " + sourceFile.getOutputPath(), t);
+        }
       }
+    }
   }
 
   private void update(Path root, Path path) throws IOException {

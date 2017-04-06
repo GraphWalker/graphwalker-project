@@ -26,6 +26,16 @@ package org.graphwalker.core.event;
  * #L%
  */
 
+import static org.graphwalker.core.event.EventType.AFTER_ELEMENT;
+import static org.graphwalker.core.event.EventType.BEFORE_ELEMENT;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
@@ -38,17 +48,6 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.graphwalker.core.event.EventType.AFTER_ELEMENT;
-import static org.graphwalker.core.event.EventType.BEFORE_ELEMENT;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -89,9 +88,9 @@ public class ObserverTest implements Observer {
       machine.getNextStep();
     }
     assertArrayEquals(new Object[]{
-      BEFORE_ELEMENT, AFTER_ELEMENT
-      , BEFORE_ELEMENT, AFTER_ELEMENT
-      , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
+        BEFORE_ELEMENT, AFTER_ELEMENT
+        , BEFORE_ELEMENT, AFTER_ELEMENT
+        , BEFORE_ELEMENT, AFTER_ELEMENT}, types.toArray());
   }
 
   @Test

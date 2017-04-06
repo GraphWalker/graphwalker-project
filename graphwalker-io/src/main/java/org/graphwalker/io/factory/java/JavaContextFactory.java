@@ -27,9 +27,16 @@ package org.graphwalker.io.factory.java;
  */
 
 import com.google.common.collect.ImmutableList;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Action;
@@ -39,15 +46,6 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Kristian Karl
@@ -74,39 +72,39 @@ public final class JavaContextFactory implements ContextFactory {
   }
 
   public static final List<String>
-    javaCodeTemplate = ImmutableList.of(
-    "import org.graphwalker.core.condition.*;",
-    "import org.graphwalker.core.generator.*;",
-    "import org.graphwalker.core.machine.*;",
-    "import org.graphwalker.core.model.*;",
-    "",
-    "public class {CLASS_NAME} {",
-    "",
-    "  public final class ModelTestContext extends ExecutionContext {",
-    "  }",
-    "",
-    "  public static void main(String... aArgs) {",
-    "    {CLASS_NAME} modeltest = new {CLASS_NAME}();",
-    "    modeltest.run();",
-    "  }",
-    "",
-    "  private void run() {",
-    "    {ADD_VERTICES}",
-    "",
-    "    Model model = new Model();",
-    "    {ADD_EDGES}",
-    "",
-    "    Context context = new ModelTestContext();",
-    "    context.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));",
-    "    context.setNextElement(context.getModel().findElements(\"{START_ELEMENT_NAME}\").get(0));",
-    "",
-    "    Machine machine = new SimpleMachine(context);",
-    "    while (machine.hasNextStep()) {",
-    "      machine.getNextStep();",
-    "      System.out.println(context.getCurrentElement().getName());",
-    "    }",
-    "  }",
-    "}");
+      javaCodeTemplate = ImmutableList.of(
+      "import org.graphwalker.core.condition.*;",
+      "import org.graphwalker.core.generator.*;",
+      "import org.graphwalker.core.machine.*;",
+      "import org.graphwalker.core.model.*;",
+      "",
+      "public class {CLASS_NAME} {",
+      "",
+      "  public final class ModelTestContext extends ExecutionContext {",
+      "  }",
+      "",
+      "  public static void main(String... aArgs) {",
+      "    {CLASS_NAME} modeltest = new {CLASS_NAME}();",
+      "    modeltest.run();",
+      "  }",
+      "",
+      "  private void run() {",
+      "    {ADD_VERTICES}",
+      "",
+      "    Model model = new Model();",
+      "    {ADD_EDGES}",
+      "",
+      "    Context context = new ModelTestContext();",
+      "    context.setModel(model.build()).setPathGenerator(new RandomPath(new EdgeCoverage(100)));",
+      "    context.setNextElement(context.getModel().findElements(\"{START_ELEMENT_NAME}\").get(0));",
+      "",
+      "    Machine machine = new SimpleMachine(context);",
+      "    while (machine.hasNextStep()) {",
+      "      machine.getNextStep();",
+      "      System.out.println(context.getCurrentElement().getName());",
+      "    }",
+      "  }",
+      "}");
 
   @Override
   public String getAsString(List<Context> contexts) {

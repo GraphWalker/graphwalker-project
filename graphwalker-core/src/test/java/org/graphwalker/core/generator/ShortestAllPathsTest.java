@@ -26,6 +26,12 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
 import org.graphwalker.core.algorithm.AlgorithmException;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.machine.Context;
@@ -37,13 +43,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
 import org.junit.Test;
-
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -65,7 +64,7 @@ public class ShortestAllPathsTest {
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
     Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-      Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
+        Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
     );
     context.setNextElement(v1);
     execute(context, expectedElements);
@@ -87,7 +86,7 @@ public class ShortestAllPathsTest {
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
     context.setProfiler(new Profiler());
     Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-      Arrays.asList(e1, v2, e2, v3, e3, v1)
+        Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
     context.setNextElement(v1);
     execute(context, expectedElements);
@@ -106,7 +105,7 @@ public class ShortestAllPathsTest {
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
     Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-      Arrays.asList(e1, v2, e2, v3, e3, v1)
+        Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
     context.setNextElement(v1);
     execute(context, expectedElements);

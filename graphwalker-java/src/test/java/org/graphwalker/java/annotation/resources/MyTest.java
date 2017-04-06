@@ -29,16 +29,22 @@ package org.graphwalker.java.annotation.resources;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.*;
+import org.graphwalker.java.annotation.AfterElement;
+import org.graphwalker.java.annotation.AfterExecution;
+import org.graphwalker.java.annotation.BeforeElement;
+import org.graphwalker.java.annotation.BeforeExecution;
+import org.graphwalker.java.annotation.Edge;
+import org.graphwalker.java.annotation.GraphWalker;
+import org.graphwalker.java.annotation.Vertex;
 
 /**
  * @author Nils Olsson
  */
 @GraphWalker(start = "vertex1"
-  , groups = "MyTests"
-  , pathGenerator = RandomPath.class
-  , stopCondition = VertexCoverage.class
-  , stopConditionValue = "100")
+    , groups = "MyTests"
+    , pathGenerator = RandomPath.class
+    , stopCondition = VertexCoverage.class
+    , stopConditionValue = "100")
 public class MyTest extends ExecutionContext implements MyModel {
 
   private int count = 0;

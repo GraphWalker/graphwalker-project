@@ -2,6 +2,11 @@ package org.graphwalker.studio;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.graphwalker.studio.util.LoggerUtil;
@@ -12,12 +17,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Properties;
 
 /**
  * @author Nils Olsson
@@ -73,10 +72,11 @@ public class Application {
       SpringApplication application = new SpringApplication(Application.class);
       Environment environment = application.run(args).getEnvironment();
       logger.info("Access URLs:\n----------------------------------------------------------\n" +
-          "  Local web service:          http://127.0.0.1:" + options.browserPort + "\n" +
-          "  External web service:       http://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.browserPort + "\n" +
-          "  Local websocket service:    http://127.0.0.1:" + options.wsPort + "\n" +
-          "  External websocket service: http://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.wsPort + "\n----------------------------------------------------------");
+                  "  Local web service:          http://127.0.0.1:" + options.browserPort + "\n" +
+                  "  External web service:       http://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.browserPort + "\n" +
+                  "  Local websocket service:    http://127.0.0.1:" + options.wsPort + "\n" +
+                  "  External websocket service: http://" + InetAddress.getLocalHost().getHostAddress() + ":" + options.wsPort
+                  + "\n----------------------------------------------------------");
 
     } catch (ParameterException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
@@ -118,7 +118,9 @@ public class Application {
 
     version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
     version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
-    version += "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.getProperty("line.separator");
+    version +=
+        "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
+            .getProperty("line.separator");
 
     return version;
   }

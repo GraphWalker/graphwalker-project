@@ -26,6 +26,17 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.VertexCoverage;
@@ -39,16 +50,7 @@ import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson
@@ -102,8 +104,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
-      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
+        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
@@ -120,8 +122,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
     model.addAction(new Action("var i = 1;"));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
@@ -139,8 +141,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
-      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i == 0")));
+        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
+        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i == 0")));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
@@ -168,7 +170,9 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     // the profiler path is a stack so the first element is the last visited, therefore we create the list in reverse order
-    Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build(), shared1.build(), edge1.build(), start.build()));
+    Path<Element>
+        expectedPath =
+        new Path<>(Arrays.<Element>asList(stop.build(), edge2.build(), shared2.build(), shared1.build(), edge1.build(), start.build()));
     assertArrayEquals(expectedPath.toArray(), machine.getProfiler().getPath().toArray());
   }
 
@@ -212,8 +216,8 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     List<Element> expectedPath = Arrays.<Element>asList(start.build(), e1.build(), v2.build(), e2.build()
-      , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
-      , e5.build(), v2.build(), e6.build(), v3b.build());
+        , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
+        , e5.build(), v2.build(), e6.build(), v3b.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
@@ -256,17 +260,17 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     List<Element> expectedPath = Arrays.<Element>asList(
-      start.build(),
-      e1.build(),
-      v1.build(),
-      e2.build(),
-      v2.build(),
-      e4.build(),
-      v4.build(),
-      e6.build(),
-      v1.build(),
-      e3.build(),
-      v3.build());
+        start.build(),
+        e1.build(),
+        v1.build(),
+        e2.build(),
+        v2.build(),
+        e4.build(),
+        v4.build(),
+        e6.build(),
+        v1.build(),
+        e3.build(),
+        v3.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
@@ -292,23 +296,23 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     List<Element> expectedPath = Arrays.<Element>asList(
-      start.build(),
-      e1.build(),
-      v2.build(),
-      e2.build(),
-      v1.build(),
-      e3.build(),
-      v2.build(),
-      e2.build(),
-      v1.build(),
-      e3.build(),
-      v2.build(),
-      e2.build(),
-      v1.build(),
-      e3.build(),
-      v2.build(),
-      e4.build(),
-      v3a.build());
+        start.build(),
+        e1.build(),
+        v2.build(),
+        e2.build(),
+        v1.build(),
+        e3.build(),
+        v2.build(),
+        e2.build(),
+        v1.build(),
+        e3.build(),
+        v2.build(),
+        e2.build(),
+        v1.build(),
+        e3.build(),
+        v2.build(),
+        e4.build(),
+        v3a.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
   }
@@ -330,9 +334,9 @@ public class SimpleMachineTest {
     }
     // We should start at "Second Start" and then walk the path to the end
     List<Element> expectedPath = Arrays.<Element>asList(
-      secondStartVertex.build(),
-      e2.build(),
-      endVertex.build());
+        secondStartVertex.build(),
+        e2.build(),
+        endVertex.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
     assertFalse(context.getProfiler().isVisited(firstStartVertex.build()));
@@ -359,8 +363,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1));
+        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1));
     model.addAction(new Action("context = 1;"));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
@@ -373,14 +377,14 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-      .addAction(new Action(" elements = [1,2,3]; value = 0; toString = function(){for(var i = 0;i<elements.length;i++){value+=elements[i]}return value};"));
+        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+        .addAction(new Action(" elements = [1,2,3]; value = 0; toString = function(){for(var i = 0;i<elements.length;i++){value+=elements[i]}return value};"));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    assertEquals((double)context.getScriptEngine().eval("toString()"), 6.0, 0.1);
+    assertEquals((double) context.getScriptEngine().eval("toString()"), 6.0, 0.1);
   }
 }

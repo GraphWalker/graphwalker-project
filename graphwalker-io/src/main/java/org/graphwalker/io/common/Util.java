@@ -26,13 +26,12 @@ package org.graphwalker.io.common;
  * #L%
  */
 
+import java.util.List;
+import java.util.ListIterator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-
-import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Created by krikar on 2015-11-04.

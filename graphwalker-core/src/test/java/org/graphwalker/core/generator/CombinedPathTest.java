@@ -26,6 +26,8 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import static org.junit.Assert.assertEquals;
+
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -37,8 +39,6 @@ import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author Nils Olsson
  */
@@ -48,8 +48,8 @@ public class CombinedPathTest {
   Vertex v1 = new Vertex().setName("v1");
   Vertex v2 = new Vertex().setName("v2");
   Model model = new Model()
-    .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1))
-    .addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1))
+      .addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
 
   @Test
   public void simpleTest() {

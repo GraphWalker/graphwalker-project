@@ -26,12 +26,11 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
-
-import static org.hamcrest.core.Is.is;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class SourceTest extends CLITestRoot {

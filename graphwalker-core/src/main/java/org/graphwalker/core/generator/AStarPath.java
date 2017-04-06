@@ -26,13 +26,12 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import java.util.List;
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.condition.ReachedStopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
-
-import java.util.List;
 
 /**
  * <h1>AStarPath</h1>

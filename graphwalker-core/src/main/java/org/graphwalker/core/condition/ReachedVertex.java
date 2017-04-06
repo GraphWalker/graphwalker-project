@@ -26,15 +26,14 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
 
 /**
  * <h1>ReachedVertex</h1>
@@ -61,11 +60,11 @@ public final class ReachedVertex extends ReachedStopConditionBase {
   @Override
   public double getFulfilment() {
     Context context = getContext();
-    if ( context.getProfiler() == null ) {
+    if (context.getProfiler() == null) {
       return super.getFulfilment();
     }
     for (Element target : getTargetElements()) {
-      if ( context.getProfiler().isVisited(target) ) {
+      if (context.getProfiler().isVisited(target)) {
         return 1;
       } else {
         return 0;

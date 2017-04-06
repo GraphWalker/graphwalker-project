@@ -26,17 +26,16 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.common.Objects;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.common.Objects.unmodifiableList;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.graphwalker.core.common.Objects;
 
 /**
  * <h1>Edge</h1>
@@ -215,24 +214,24 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
    * @see Edge#setDependenct
    */
   public Integer getDependency() {
-	return dependency;
+    return dependency;
   }
 
   /**
    * The dependency shows how much targetVertex depends on sourceVertex.
    * One way to obtain the dependency is by using
-   *  process mining to generate a model out of log files.
+   * process mining to generate a model out of log files.
    *
    * @param dependency a double between 0 and 1
    * @return The edge
    */
   public Edge setDependency(Integer dependency) {
-	this.dependency = dependency;
-	invalidateCache();
-	return this;
+    this.dependency = dependency;
+    invalidateCache();
+    return this;
   }
 
-/**
+  /**
    * <h1>RuntimeEdge</h1>
    * Immutable class for Edge
    * </p>
@@ -307,8 +306,6 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
 
     /**
      * TODO Needs documentation
-     *
-     * @param visitor 
      */
     @Override
     public void accept(ElementVisitor visitor) {
@@ -321,27 +318,33 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
       int result = 1;
       result = prime * result + ((guard == null) ? 0 : guard.hashCode());
       result = prime * result
-        + ((sourceVertex == null) ? 0 : sourceVertex.hashCode());
+               + ((sourceVertex == null) ? 0 : sourceVertex.hashCode());
       result = prime * result
-        + ((targetVertex == null) ? 0 : targetVertex.hashCode());
+               + ((targetVertex == null) ? 0 : targetVertex.hashCode());
       result = prime * result
-        + ((weight == null) ? 0 : weight.hashCode());
+               + ((weight == null) ? 0 : weight.hashCode());
       result = prime * result
-    	        + ((dependency == null) ? 0 : dependency.hashCode());
+               + ((dependency == null) ? 0 : dependency.hashCode());
       return result;
     }
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) return true;
-      if (isNull(o) || getClass() != o.getClass()) return false;
-      if (!super.equals(o)) return false;
+      if (this == o) {
+        return true;
+      }
+      if (isNull(o) || getClass() != o.getClass()) {
+        return false;
+      }
+      if (!super.equals(o)) {
+        return false;
+      }
       RuntimeEdge that = (RuntimeEdge) o;
       return Objects.equals(sourceVertex, that.sourceVertex) &&
-        Objects.equals(targetVertex, that.targetVertex) &&
-        Objects.equals(guard, that.guard) &&
-        Objects.equals(weight, that.weight) &&
-        Objects.equals(dependency, that.dependency);
+             Objects.equals(targetVertex, that.targetVertex) &&
+             Objects.equals(guard, that.guard) &&
+             Objects.equals(weight, that.weight) &&
+             Objects.equals(dependency, that.dependency);
     }
 
     /**
@@ -350,19 +353,19 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
      * @return The dependency as Integer.
      * @see Edge#setDependency
      */
-	public Integer getDependency() {
-		return dependency;
-	}
-	
-	 /**
+    public Integer getDependency() {
+      return dependency;
+    }
+
+    /**
      * Gets the dependency of the edge.
      *
      * @return The dependency as Double.
      * @see Edge#setDependency
      */
-	public double getDependencyAsDouble() {
-		return (double)getDependency() / 100;
-	}
+    public double getDependencyAsDouble() {
+      return (double) getDependency() / 100;
+    }
 
 
   }

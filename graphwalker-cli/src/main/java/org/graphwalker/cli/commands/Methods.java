@@ -28,7 +28,6 @@ package org.graphwalker.cli.commands;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +35,6 @@ import java.util.List;
 public class Methods {
 
   @Parameter(names = {"--model", "-m"}, required = true,
-    description = "The model(s)")
+      description = "The model(s)")
   public List<String> model = new ArrayList<>();
 }

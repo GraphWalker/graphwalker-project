@@ -26,16 +26,15 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.common.ResourceNotFoundException;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-
-import static org.hamcrest.core.Is.is;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.common.ResourceNotFoundException;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Kristian Karl
@@ -88,7 +87,6 @@ public class DotContextFactoryTest {
 
     Assert.assertThat(context.getModel().getVertices().size(), is(3));
     Assert.assertThat(context.getModel().getEdges().size(), is(2));
-
 
     Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
     Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));

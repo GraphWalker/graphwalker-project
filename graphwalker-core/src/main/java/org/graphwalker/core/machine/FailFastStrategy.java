@@ -26,10 +26,10 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
-
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 /**
  * <h1>FailFastStrategy</h1>

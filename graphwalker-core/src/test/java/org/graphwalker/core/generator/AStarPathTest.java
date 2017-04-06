@@ -59,12 +59,12 @@ public class AStarPathTest {
   private final Edge e6 = new Edge().setName("e6").setSourceVertex(v5).setTargetVertex(v1);
 
   private final Model model = new Model()
-    .addEdge(e1)
-    .addEdge(e2)
-    .addEdge(e3)
-    .addEdge(e4)
-    .addEdge(e5)
-    .addEdge(e6);
+      .addEdge(e1)
+      .addEdge(e2)
+      .addEdge(e3)
+      .addEdge(e4)
+      .addEdge(e5)
+      .addEdge(e6);
 
   @Test(expected = MachineException.class)
   public void failTest() {

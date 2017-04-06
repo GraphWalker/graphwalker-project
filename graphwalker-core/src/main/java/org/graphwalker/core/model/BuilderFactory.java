@@ -26,10 +26,10 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.graphwalker.core.common.Objects.unmodifiableList;
 
 /**
  * @author Nils Olsson

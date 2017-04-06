@@ -26,18 +26,8 @@ package org.graphwalker.java.report;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.graphwalker.java.test.Executor;
-import org.graphwalker.java.test.TestExecutor;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
-import org.hamcrest.core.IsEqual;
-import org.hamcrest.xml.HasXPath;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.junit.Assert.assertThat;
+import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -47,9 +37,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
-import static org.junit.Assert.assertThat;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.java.test.Executor;
+import org.graphwalker.java.test.TestExecutor;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Nils Olsson
@@ -64,7 +58,7 @@ public class ReportTest {
     Date date = new Date();
     DateFormat formatter = new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS");
     Path reportName = Paths.get(testFolder.getRoot().toPath().toString(),
-      "TEST-GraphWalker-" + formatter.format(date) + ".xml");
+                                "TEST-GraphWalker-" + formatter.format(date) + ".xml");
     XMLReportGenerator xmlReportGenerator = new XMLReportGenerator(date, System.getProperties());
 
     List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/PetClinic.json"));

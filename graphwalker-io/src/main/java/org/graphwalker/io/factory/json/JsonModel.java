@@ -26,12 +26,15 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
-import org.graphwalker.core.model.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.Vertex;
 
 /**
  * @author Nils Olsson

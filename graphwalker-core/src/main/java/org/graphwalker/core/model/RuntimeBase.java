@@ -26,7 +26,11 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.graphwalker.core.common.Objects;
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.unmodifiableList;
+import static org.graphwalker.core.common.Objects.unmodifiableMap;
+import static org.graphwalker.core.common.Objects.unmodifiableSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,12 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.common.Objects.unmodifiableList;
-import static org.graphwalker.core.common.Objects.unmodifiableMap;
-import static org.graphwalker.core.common.Objects.unmodifiableSet;
+import org.graphwalker.core.common.Objects;
 
 /**
  * @author Nils Olsson
@@ -143,22 +142,26 @@ public abstract class RuntimeBase implements Element {
     result = prime * result + ((id == null) ? 0 : id.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result
-      + ((properties == null) ? 0 : properties.hashCode());
+             + ((properties == null) ? 0 : properties.hashCode());
     result = prime * result
-      + ((requirements == null) ? 0 : requirements.hashCode());
+             + ((requirements == null) ? 0 : requirements.hashCode());
     return result;
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (isNull(o) || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (isNull(o) || getClass() != o.getClass()) {
+      return false;
+    }
     RuntimeBase that = (RuntimeBase) o;
     return Objects.equals(id, that.id) &&
-      Objects.equals(name, that.name) &&
-      Objects.equals(actions, that.actions) &&
-      Objects.equals(requirements, that.requirements) &&
-      Objects.equals(properties, that.properties);
+           Objects.equals(name, that.name) &&
+           Objects.equals(actions, that.actions) &&
+           Objects.equals(requirements, that.requirements) &&
+           Objects.equals(properties, that.properties);
   }
 
 }

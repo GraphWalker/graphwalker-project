@@ -1,5 +1,8 @@
 package org.graphwalker.core.machine;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.model.Action;
@@ -7,9 +10,6 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -40,8 +40,8 @@ public class AccessModelTest {
   private ExecutionContext createContext() {
     Model model = new Model();
     model.addEdge(new Edge()
-      .setSourceVertex(new Vertex())
-      .setTargetVertex(new Vertex()));
+                      .setSourceVertex(new Vertex())
+                      .setTargetVertex(new Vertex()));
     ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
     context.execute(new Action("x = 1;"));
     return context;

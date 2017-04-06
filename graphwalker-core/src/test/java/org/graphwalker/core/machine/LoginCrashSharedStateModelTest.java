@@ -26,6 +26,12 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.junit.Assert.assertArrayEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.CombinedCondition;
 import org.graphwalker.core.condition.EdgeCoverage;
@@ -42,13 +48,6 @@ import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertArrayEquals;
 
 /**
  * This is a programatic implementaion of the models:
@@ -68,24 +67,34 @@ public class LoginCrashSharedStateModelTest {
 
   Edge e_Close = new Edge().setName("e_Close").setSourceVertex(v_LoginPrompted).setTargetVertex(v_ClientNotRunning);
   Edge e_Exit = new Edge().setName("e_Exit").setSourceVertex(v_Browse).setTargetVertex(v_ClientNotRunning);
-  Edge e_InvalidCredentials = new Edge().setName("e_InvalidCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("validLogin=false"));
+  Edge
+      e_InvalidCredentials =
+      new Edge().setName("e_InvalidCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("validLogin=false"));
   Edge e_Logout = new Edge().setName("e_Logout").setSourceVertex(v_Browse).setTargetVertex(v_LoginPrompted);
-  Edge e_StartClient_1 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_LoginPrompted).setGuard(new Guard("!rememberMe||!validLogin"));
-  Edge e_StartClient_2 = new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_Browse).setGuard(new Guard("rememberMe&&validLogin"));
-  Edge e_ToggleRememberMe = new Edge().setName("e_ToggleRememberMe").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("rememberMe=true"));
-  Edge e_ValidPremiumCredentials = new Edge().setName("e_ValidPremiumCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_Browse).addAction(new Action("validLogin=true"));
+  Edge
+      e_StartClient_1 =
+      new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_LoginPrompted).setGuard(new Guard("!rememberMe||!validLogin"));
+  Edge
+      e_StartClient_2 =
+      new Edge().setName("e_StartClient").setSourceVertex(v_ClientNotRunning).setTargetVertex(v_Browse).setGuard(new Guard("rememberMe&&validLogin"));
+  Edge
+      e_ToggleRememberMe =
+      new Edge().setName("e_ToggleRememberMe").setSourceVertex(v_LoginPrompted).setTargetVertex(v_LoginPrompted).addAction(new Action("rememberMe=true"));
+  Edge
+      e_ValidPremiumCredentials =
+      new Edge().setName("e_ValidPremiumCredentials").setSourceVertex(v_LoginPrompted).setTargetVertex(v_Browse).addAction(new Action("validLogin=true"));
 
   Model loginModel = new Model().addEdge(e_Close)
-    .addEdge(e_Exit)
-    .addEdge(e_InvalidCredentials)
-    .addEdge(e_Logout)
-    .addEdge(e_StartClient_1)
-    .addEdge(e_StartClient_2)
-    .addEdge(e_ToggleRememberMe)
-    .addEdge(e_ValidPremiumCredentials)
-    //.addAction(new Action("e_Init()"))
-    .addAction(new Action("validLogin=false"))
-    .addAction(new Action("rememberMe=false"));
+      .addEdge(e_Exit)
+      .addEdge(e_InvalidCredentials)
+      .addEdge(e_Logout)
+      .addEdge(e_StartClient_1)
+      .addEdge(e_StartClient_2)
+      .addEdge(e_ToggleRememberMe)
+      .addEdge(e_ValidPremiumCredentials)
+      //.addAction(new Action("e_Init()"))
+      .addAction(new Action("validLogin=false"))
+      .addAction(new Action("rememberMe=false"));
 
   /**
    * The crash Model
@@ -98,8 +107,8 @@ public class LoginCrashSharedStateModelTest {
   Edge lastEdge = new Edge().setName("e_Exit").setSourceVertex(v_CrashDumpFilesGenerated).setTargetVertex(lastVertex);
 
   Model crashModel = new Model()
-    .addEdge(e_CrashSpotify)
-    .addEdge(lastEdge);
+      .addEdge(e_CrashSpotify)
+      .addEdge(lastEdge);
 
 
   //Test
@@ -158,12 +167,12 @@ public class LoginCrashSharedStateModelTest {
     }
 
     List<Element> expectedPath = Arrays.<Element>asList(
-      v_ClientNotRunning.build(),
-      e_StartClient_1.build(),
-      v_LoginPrompted.build(),
-      e_ValidPremiumCredentials.build(),
-      v_Browse.build(),
-      e_Exit.build());
+        v_ClientNotRunning.build(),
+        e_StartClient_1.build(),
+        v_LoginPrompted.build(),
+        e_ValidPremiumCredentials.build(),
+        v_Browse.build(),
+        e_Exit.build());
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), machine.getCurrentContext().getProfiler().getPath().toArray());
   }

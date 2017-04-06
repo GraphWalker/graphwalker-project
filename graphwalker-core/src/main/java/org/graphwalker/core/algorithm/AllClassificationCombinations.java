@@ -26,11 +26,10 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.model.Classification;
-import org.graphwalker.core.model.ClassificationTree;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.graphwalker.core.model.Classification;
+import org.graphwalker.core.model.ClassificationTree;
 
 /**
  * <h1>All combinations from given classification tree</h1>

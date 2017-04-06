@@ -26,14 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.java.annotation.GraphWalker;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.core.Is.is;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,8 +36,14 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.hamcrest.core.Is.is;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.java.annotation.GraphWalker;
+import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Nils Olsson
@@ -53,11 +52,12 @@ public class TestExecutorTest {
 
   @GraphWalker(start = "myStartElement")
   public static class MultipleStartElements extends ExecutionContext {
+
     public MultipleStartElements() {
       Vertex vertex = new Vertex();
       Model model = new Model()
-        .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
-        .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
+          .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
+          .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
 
     }
@@ -71,11 +71,12 @@ public class TestExecutorTest {
 
   @GraphWalker(start = "myOnlyStartElement")
   public static class SingleStartElements extends ExecutionContext {
+
     public SingleStartElements() {
       Vertex vertex = new Vertex().setName("myOnlyStartElement");
       Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
   }
@@ -88,11 +89,12 @@ public class TestExecutorTest {
 
   @GraphWalker(start = "nonExistingStartElement")
   public static class NonExistingStartElement extends ExecutionContext {
+
     public NonExistingStartElement() {
       Vertex vertex = new Vertex();
       Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
   }
@@ -105,11 +107,12 @@ public class TestExecutorTest {
 
   @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
   public static class DSLConfiguredTest extends ExecutionContext {
+
     public DSLConfiguredTest() {
       Vertex vertex = new Vertex().setName("myStartElement");
       Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
   }
@@ -147,11 +150,12 @@ public class TestExecutorTest {
 
   @GraphWalker(start = "throwException")
   public static class ThrowExceptionTest extends ExecutionContext {
+
     public ThrowExceptionTest() {
       Vertex vertex = new Vertex().setName("throwException");
       Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
 

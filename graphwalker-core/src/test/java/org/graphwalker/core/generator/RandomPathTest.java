@@ -26,6 +26,13 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import static org.graphwalker.core.Models.findEdge;
+import static org.graphwalker.core.Models.findVertex;
+import static org.graphwalker.core.Models.simpleModel;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.machine.Context;
@@ -34,13 +41,6 @@ import org.graphwalker.core.model.Edge.RuntimeEdge;
 import org.graphwalker.core.model.Model.RuntimeModel;
 import org.graphwalker.core.model.Vertex.RuntimeVertex;
 import org.junit.Test;
-
-import static org.graphwalker.core.Models.findEdge;
-import static org.graphwalker.core.Models.findVertex;
-import static org.graphwalker.core.Models.simpleModel;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson

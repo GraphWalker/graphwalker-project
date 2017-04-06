@@ -1,11 +1,6 @@
 package org.graphwalker.java.test;
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.hamcrest.core.StringStartsWith;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -13,8 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.hamcrest.core.Is.is;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.hamcrest.core.StringStartsWith;
+import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 /**
@@ -71,7 +70,6 @@ public class ResultTest {
     Assert.assertThat("totalNumberOfVertices", results.getInt("totalNumberOfVertices"), is(3));
     Assert.assertThat("totalNumberOfUnvisitedEdges", results.getInt("totalNumberOfUnvisitedEdges"), is(0));
 
-
     // The requirement part
     Assert.assertThat("totalNumberOfRequirement", results.getInt("totalNumberOfRequirement"), is(3));
     Assert.assertThat("totalNumberOfUncoveredRequirement", results.getInt("totalNumberOfUncoveredRequirement"), is(0));
@@ -79,7 +77,7 @@ public class ResultTest {
 
     Assert.assertThat("requirementsPassed", results.getJSONArray("requirementsPassed").length(), is(3));
     List<String> requirements = new ArrayList<>();
-    for (int index = 0; index <  results.getJSONArray("requirementsPassed").length(); index++ ) {
+    for (int index = 0; index < results.getJSONArray("requirementsPassed").length(); index++) {
       requirements.add(results.getJSONArray("requirementsPassed").getJSONObject(index).getString("requirementKey"));
     }
     List<String> expectedRequirements = Arrays.asList("Req 1", "Req 2", "Req 3");
@@ -113,22 +111,20 @@ public class ResultTest {
     Assert.assertThat("totalNumberOfVertices", results.getInt("totalNumberOfVertices"), is(4));
     Assert.assertThat("totalNumberOfUnvisitedEdges", results.getInt("totalNumberOfUnvisitedEdges"), is(2));
 
-
     // Verify the list of unvisited vertices
     Assert.assertThat("verticesNotVisited", results.getJSONArray("verticesNotVisited").length(), is(1));
     List<String> unvisitedVertices = new ArrayList<>();
-    for (int index = 0; index <  results.getJSONArray("verticesNotVisited").length(); index++ ) {
+    for (int index = 0; index < results.getJSONArray("verticesNotVisited").length(); index++) {
       unvisitedVertices.add(results.getJSONArray("verticesNotVisited").getJSONObject(index).getString("vertexName"));
       unvisitedVertices.add(results.getJSONArray("verticesNotVisited").getJSONObject(index).getString("vertexId"));
     }
     List<String> expectedUnvisitedVertices = Arrays.asList("v3", "n3");
     Assert.assertThat("verticesNotVisited list", unvisitedVertices.toArray(), is(expectedUnvisitedVertices.toArray()));
 
-
     // Verify the list of unvisited edges
     Assert.assertThat("edgesNotVisited", results.getJSONArray("edgesNotVisited").length(), is(2));
     List<String> unvisitedEdges = new ArrayList<>();
-    for (int index = 0; index <  results.getJSONArray("edgesNotVisited").length(); index++ ) {
+    for (int index = 0; index < results.getJSONArray("edgesNotVisited").length(); index++) {
       unvisitedEdges.add(results.getJSONArray("edgesNotVisited").getJSONObject(index).getString("edgeName"));
       unvisitedEdges.add(results.getJSONArray("edgesNotVisited").getJSONObject(index).getString("edgeId"));
     }
@@ -136,6 +132,7 @@ public class ResultTest {
     Assert.assertThat("edgesNotVisited list", unvisitedEdges.toArray(), is(expectedUnvisitedEdges.toArray()));
 
     Assert.assertThat("failures", results.getJSONArray("failures").length(), is(1));
-    Assert.assertThat("failure text", results.getJSONArray("failures").getJSONObject(0).getString("failure"), new StringStartsWith("org.graphwalker.core.generator.NoPathFoundException: Could not find a valid path from element: v2"));
+    Assert.assertThat("failure text", results.getJSONArray("failures").getJSONObject(0).getString("failure"),
+                      new StringStartsWith("org.graphwalker.core.generator.NoPathFoundException: Could not find a valid path from element: v2"));
   }
 }

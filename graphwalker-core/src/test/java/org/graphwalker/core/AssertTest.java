@@ -26,15 +26,14 @@ package org.graphwalker.core;
  * #L%
  */
 
-import org.junit.Test;
+import static org.graphwalker.core.Assert.expect;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.graphwalker.core.Assert.expect;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 /**
  * @author Nils Olsson
@@ -285,17 +284,17 @@ public class AssertTest {
   @Test
   public void testChain() {
     expect(1).to.be.of.type(Integer.class)
-      .and.not.of.type(Long.class, null)
-      .and.have.a.property("MAX_VALUE").that.is(0x7fffffff)
-      .and.not(0x80000000);
+        .and.not.of.type(Long.class, null)
+        .and.have.a.property("MAX_VALUE").that.is(0x7fffffff)
+        .and.not(0x80000000);
   }
 
   @Test(expected = AssertionError.class)
   public void testChainFailure() {
     expect(1).to.be.of.type(Integer.class)
-      .and.not.of.type(Long.class, "wrong type")
-      .and.have.a.property("MAX_VALUE").that.is.not(0x80000000)
-      .and.is(0x7ffffffe);
+        .and.not.of.type(Long.class, "wrong type")
+        .and.have.a.property("MAX_VALUE").that.is.not(0x80000000)
+        .and.is(0x7ffffffe);
   }
 
   @Test(expected = AssertionError.class)

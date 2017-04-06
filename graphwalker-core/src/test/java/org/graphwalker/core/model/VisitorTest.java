@@ -26,11 +26,6 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Test;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
@@ -39,19 +34,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
 public class VisitorTest {
 
   RuntimeModel model = new Model().addEdge(
-    new Edge()
-      .setName("edge1")
-      .setSourceVertex(new Vertex()
-        .setName("vertex1"))
-      .setTargetVertex(new Vertex()
-        .setName("vertex2")))
-    .build();
+      new Edge()
+          .setName("edge1")
+          .setSourceVertex(new Vertex()
+                               .setName("vertex1"))
+          .setTargetVertex(new Vertex()
+                               .setName("vertex2")))
+      .build();
 
   @Test
   public void visitVertex() {
@@ -77,9 +76,9 @@ public class VisitorTest {
     Vertex startVertex = new Vertex().setName("start");
     Vertex endVertex = new Vertex().setName("end");
     RuntimeModel pseudograph = new Model()
-      .addEdge(new Edge().setSourceVertex(startVertex).setTargetVertex(endVertex))
-      .addEdge(new Edge().setSourceVertex(endVertex).setTargetVertex(endVertex))
-      .build();
+        .addEdge(new Edge().setSourceVertex(startVertex).setTargetVertex(endVertex))
+        .addEdge(new Edge().setSourceVertex(endVertex).setTargetVertex(endVertex))
+        .build();
     MyLoopEdgeFinder visitor = new MyLoopEdgeFinder();
     pseudograph.accept(visitor);
     assertThat(visitor.count, is(1));
@@ -92,7 +91,7 @@ public class VisitorTest {
     Vertex v2 = new Vertex().setName("V2");
     Edge e1 = new Edge().setSourceVertex(start).setTargetVertex(v2);
     Model model = new Model().addEdge(e1)
-      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1));
+        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(v1));
 
     MyVertexCounter count1 = new MyVertexCounter(model.build());
     MyVertexCounter count2 = new MyVertexCounter(model.build(), e1.build());

@@ -1,5 +1,8 @@
 package org.graphwalker.modelchecker;
 
+import static org.hamcrest.core.Is.is;
+
+import java.util.List;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
@@ -10,14 +13,11 @@ import org.graphwalker.io.factory.json.JsonContext;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * Created by krikar on 2015-11-08.
  */
 public class ContextCheckerTest {
+
   @Test
   public void testDefault() {
     Context context = new JsonContext();
@@ -60,7 +60,7 @@ public class ContextCheckerTest {
     List<String> issues = ContextChecker.hasIssues(context);
     Assert.assertThat(issues.size(), is(1));
     Assert.assertThat(issues.get(0), is("The model has multiple cul-de-sacs, and is requested to run using a random " +
-      "path generator and 100% edge coverage. That will not work."));
+                                        "path generator and 100% edge coverage. That will not work."));
 
     model.addEdge(new Edge().setSourceVertex(v4).setTargetVertex(v2).setName("e4").setId("e4"));
     context = new JsonContext();
@@ -70,6 +70,6 @@ public class ContextCheckerTest {
     issues = ContextChecker.hasIssues(context);
     Assert.assertThat(issues.size(), is(1));
     Assert.assertThat(issues.get(0), is("The model has one cul-de-sacs, and is requested to run using a random " +
-      "path generator and 100% edge coverage. That might not work."));
+                                        "path generator and 100% edge coverage. That might not work."));
   }
 }

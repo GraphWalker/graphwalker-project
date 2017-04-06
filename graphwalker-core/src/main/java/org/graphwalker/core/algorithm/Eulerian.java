@@ -26,15 +26,14 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
 
 /**
  * @author Nils Olsson

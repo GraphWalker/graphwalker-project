@@ -26,17 +26,16 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Test;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 /**
  * @author Nils Olsson
@@ -50,7 +49,7 @@ public class ModelTest {
     Edge e1 = new Edge().setId("THREE");
     Edge e2 = new Edge().setId("FOUR");
     Model.RuntimeModel model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
-      .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2)).build();
+        .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2)).build();
     Element element = model.getElementById("THREE");
     assertTrue(element.equals(e1.build()));
   }
@@ -101,7 +100,7 @@ public class ModelTest {
     Edge e1 = new Edge();
     Edge e2 = new Edge();
     Model model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
-      .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2));
+        .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2));
     assertThat(model, notNullValue());
     assertThat(model.getEdges().size(), is(2));
     assertThat(model.getVertices().size(), is(2));
@@ -138,11 +137,11 @@ public class ModelTest {
     Edge e5 = new Edge();
     Edge e6 = new Edge();
     Model model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
-      .addEdge(e2.setSourceVertex(v1).setTargetVertex(v3))
-      .addEdge(e3.setSourceVertex(v1).setTargetVertex(v1))
-      .addEdge(e4.setSourceVertex(v2).setTargetVertex(v2))
-      .addEdge(e5.setSourceVertex(v3).setTargetVertex(v3))
-      .addEdge(e6.setSourceVertex(v3).setTargetVertex(v1));
+        .addEdge(e2.setSourceVertex(v1).setTargetVertex(v3))
+        .addEdge(e3.setSourceVertex(v1).setTargetVertex(v1))
+        .addEdge(e4.setSourceVertex(v2).setTargetVertex(v2))
+        .addEdge(e5.setSourceVertex(v3).setTargetVertex(v3))
+        .addEdge(e6.setSourceVertex(v3).setTargetVertex(v1));
     assertThat(model, notNullValue());
     assertThat(model.getVertices().size(), is(3));
     assertThat(model.getEdges().size(), is(6));
@@ -201,9 +200,9 @@ public class ModelTest {
   @Test
   public void buildClassificationWithLeafs() {
     Classification classification = new Classification()
-      .setName("classification")
-      .addClassification(new Classification().setName("leaf1"))
-      .addClassification(new Classification().setName("leaf2"));
+        .setName("classification")
+        .addClassification(new Classification().setName("leaf1"))
+        .addClassification(new Classification().setName("leaf2"));
     assertThat(classification, notNullValue());
     assertThat(classification.getName(), is("classification"));
     assertThat(classification.getClassifications(), notNullValue());
@@ -232,8 +231,8 @@ public class ModelTest {
     Classification leaf1 = new Classification().setName("leaf1");
     Classification leaf2 = new Classification().setName("leaf2");
     ClassificationTree classificationTree = new ClassificationTree()
-      .addClassification(leaf1)
-      .addClassification(leaf2);
+        .addClassification(leaf1)
+        .addClassification(leaf2);
     assertThat(classificationTree, notNullValue());
     assertThat(classificationTree.getRoot(), notNullValue());
     assertThat(classificationTree.getRoot().getClassifications(), notNullValue());
@@ -255,8 +254,8 @@ public class ModelTest {
       int source = random.nextInt(model.getVertices().size());
       int target = random.nextInt(model.getVertices().size());
       model.addEdge(new Edge()
-        .setSourceVertex(model.getVertices().get(source))
-        .setTargetVertex(model.getVertices().get(target)));
+                        .setSourceVertex(model.getVertices().get(source))
+                        .setTargetVertex(model.getVertices().get(target)));
     }
     final long stopTime = System.nanoTime();
     Model.RuntimeModel runtimeModel = model.build();

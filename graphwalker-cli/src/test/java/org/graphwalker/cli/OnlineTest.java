@@ -26,18 +26,18 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 
 public class OnlineTest extends CLITestRoot {
 
   final class RunOnlineWebsocketService extends Thread {
+
     String args[] = {"-d", "all", "online"};
     Result result;
 
@@ -51,7 +51,7 @@ public class OnlineTest extends CLITestRoot {
     }
   }
 
-  @Test(timeout=60000)
+  @Test(timeout = 60000)
   public void websocket() throws IOException, ExecutionException, InterruptedException {
 
     RunOnlineWebsocketService runOnlineService = new RunOnlineWebsocketService();
@@ -75,6 +75,7 @@ public class OnlineTest extends CLITestRoot {
 
 
   final class RunOnlineRestfulService extends Thread {
+
     String args[] = {"-d", "all", "online", "-s", "RESTFUL", "-p", "9999"};
     Result result;
 
@@ -88,7 +89,7 @@ public class OnlineTest extends CLITestRoot {
     }
   }
 
-  @Test(timeout=60000)
+  @Test(timeout = 60000)
   public void restful() throws IOException, ExecutionException, InterruptedException {
 
     RunOnlineRestfulService runOnlineService = new RunOnlineRestfulService();
@@ -102,8 +103,8 @@ public class OnlineTest extends CLITestRoot {
       }
     }
     while (actualOutput.contains("Try http://localhost:9999/graphwalker/hasNext or http://localhost:9999/graphwalker/getNext" +
-      System.lineSeparator() +
-      "Press Control+C to end..."));
+                                 System.lineSeparator() +
+                                 "Press Control+C to end..."));
 
     executor.shutdown();
 

@@ -26,6 +26,13 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -37,13 +44,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson
@@ -65,7 +65,7 @@ public class RequirementCoverageTest {
   public void testFulfilment() {
     Vertex vertex = new Vertex().addRequirement(new Requirement("1"));
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex)
-      .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
+                                          .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
     Context context = new TestExecutionContext(model, new RandomPath(new RequirementCoverage(100)));
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);
@@ -81,7 +81,7 @@ public class RequirementCoverageTest {
   public void testIsFulfilled() {
     Vertex vertex = new Vertex().addRequirement(new Requirement("1"));
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex)
-      .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
+                                          .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
     Context context = new TestExecutionContext(model, new RandomPath(new RequirementCoverage(100)));
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);

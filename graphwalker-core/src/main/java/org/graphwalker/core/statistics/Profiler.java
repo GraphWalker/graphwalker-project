@@ -26,11 +26,7 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
-import org.graphwalker.core.model.Vertex;
+import static org.graphwalker.core.common.Objects.isNotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,8 +34,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.graphwalker.core.common.Objects.isNotNull;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Element;
+import org.graphwalker.core.model.Path;
+import org.graphwalker.core.model.Vertex;
 
 
 /**

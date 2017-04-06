@@ -36,6 +36,7 @@ import java.util.Set;
  * @author Nils Olsson
  */
 public interface Element {
+
   String getId();
 
   boolean hasId();

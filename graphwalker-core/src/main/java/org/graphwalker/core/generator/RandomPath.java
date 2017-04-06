@@ -26,16 +26,15 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNull;
+
+import java.util.List;
+import java.util.Random;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Random;
-
-import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>RandomPath</h1>
@@ -68,10 +67,10 @@ public final class RandomPath extends PathGeneratorBase<StopCondition> {
       LOG.error("currentElement: " + currentElement);
       LOG.error("context.getModel().getElements(): " + context.getModel().getElements());
       throw new NoPathFoundException("Could not find a valid path from element: " +
-        currentElement.getName() +
-        " (" +
-        currentElement.getId() +
-        ")");
+                                     currentElement.getName() +
+                                     " (" +
+                                     currentElement.getId() +
+                                     ")");
     }
     context.setCurrentElement(elements.get(random.nextInt(elements.size())));
     return context;

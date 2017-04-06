@@ -26,8 +26,6 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Test;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
@@ -37,6 +35,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+
 /**
  * @author Nils Olsson
  */
@@ -45,10 +45,10 @@ public class VertexTest {
   @Test
   public void create() {
     Vertex vertex = new Vertex()
-      .setName("vertex")
-      .setSharedState("MY_STATE")
-      .addRequirement(new Requirement("REQ1"))
-      .addRequirement(new Requirement("REQ2"));
+        .setName("vertex")
+        .setSharedState("MY_STATE")
+        .addRequirement(new Requirement("REQ1"))
+        .addRequirement(new Requirement("REQ2"));
     assertNotNull(vertex);
     assertNotNull(vertex.getName());
     assertEquals(vertex.getName(), "vertex");

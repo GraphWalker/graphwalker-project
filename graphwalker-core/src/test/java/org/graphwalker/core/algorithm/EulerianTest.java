@@ -26,14 +26,14 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
@@ -46,10 +46,10 @@ public class EulerianTest {
 
   private Model createModel() {
     return new Model()
-      .addEdge(new Edge().setSourceVertex(A).setTargetVertex(B))
-      .addEdge(new Edge().setSourceVertex(B).setTargetVertex(C))
-      .addEdge(new Edge().setSourceVertex(C).setTargetVertex(A))
-      .addEdge(new Edge().setSourceVertex(B).setTargetVertex(A));
+        .addEdge(new Edge().setSourceVertex(A).setTargetVertex(B))
+        .addEdge(new Edge().setSourceVertex(B).setTargetVertex(C))
+        .addEdge(new Edge().setSourceVertex(C).setTargetVertex(A))
+        .addEdge(new Edge().setSourceVertex(B).setTargetVertex(A));
   }
 
   @Test

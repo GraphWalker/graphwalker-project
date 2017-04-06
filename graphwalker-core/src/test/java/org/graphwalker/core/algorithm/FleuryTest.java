@@ -26,6 +26,9 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import static org.junit.Assert.assertArrayEquals;
+
+import java.util.Arrays;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
@@ -34,10 +37,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import java.util.Arrays;
-
-import static org.junit.Assert.assertArrayEquals;
 
 /**
  * @author Nils Olsson
@@ -60,18 +59,18 @@ public class FleuryTest {
   private static final Edge e7 = new Edge().setName("e7").setSourceVertex(v6).setTargetVertex(v4);
 
   private static final Model model = new Model()
-    .addEdge(e1)
-    .addEdge(e2)
-    .addEdge(e3)
-    .addEdge(e4)
-    .addEdge(e5)
-    .addEdge(e6)
-    .addEdge(e7);
+      .addEdge(e1)
+      .addEdge(e2)
+      .addEdge(e3)
+      .addEdge(e4)
+      .addEdge(e5)
+      .addEdge(e6)
+      .addEdge(e7);
 
 
   private static final Path<Element> expectedPath = new Path<>(Arrays.<Element>asList(
-    e1.build(), v2.build(), e2.build(), v3.build(), e3.build(), v1.build()
-    , e4.build(), v4.build(), e5.build(), v5.build(), e6.build(), v6.build(), e7.build(), v4.build()
+      e1.build(), v2.build(), e2.build(), v3.build(), e3.build(), v1.build()
+      , e4.build(), v4.build(), e5.build(), v5.build(), e6.build(), v6.build(), e7.build(), v4.build()
   ));
 
   @Test

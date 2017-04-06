@@ -26,6 +26,10 @@ package org.graphwalker.dsl;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+
+import java.util.Arrays;
+import java.util.List;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.dsl.generator.Generator_Parser;
@@ -33,35 +37,30 @@ import org.graphwalker.dsl.generator.Logical_Lexer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Nils Olsson
  */
 public class GrammarTest {
 
   private List<String> generators = Arrays.asList(
-    "random(never)",
-    "a_star(never)",
-    "quick_random(never)",
-    "weighted_random(vertex_coverage(100))",
-    "random(vertex_coverage(100))",
-    "random(edge_coverage(100))",
-    "random(reached_vertex(v_SomeVertex))",
-    "random(reached_vertex(e_SomeEdge))",
-    "random(requirement_coverage(100))",
-    "random(time(500))",
-    "random(length(24))",
-    "random(edge_coverage(100) or time(500))",
-    "random(edge_coverage(100) || time(500))",
-    "random(reached_vertex(e_SomeEdge) && edge_coverage(100))",
-    "random(reached_vertex(e_SomeEdge) and edge_coverage(100))",
-    "random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))",
-    "random(edge_coverage(100) and never) a_star(reached_vertex(v_SomeName) || edge_coverage(90))",
-    "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))"
+      "random(never)",
+      "a_star(never)",
+      "quick_random(never)",
+      "weighted_random(vertex_coverage(100))",
+      "random(vertex_coverage(100))",
+      "random(edge_coverage(100))",
+      "random(reached_vertex(v_SomeVertex))",
+      "random(reached_vertex(e_SomeEdge))",
+      "random(requirement_coverage(100))",
+      "random(time(500))",
+      "random(length(24))",
+      "random(edge_coverage(100) or time(500))",
+      "random(edge_coverage(100) || time(500))",
+      "random(reached_vertex(e_SomeEdge) && edge_coverage(100))",
+      "random(reached_vertex(e_SomeEdge) and edge_coverage(100))",
+      "random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))",
+      "random(edge_coverage(100) and never) a_star(reached_vertex(v_SomeName) || edge_coverage(90))",
+      "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))"
   );
 
   @Test

@@ -26,9 +26,12 @@ package org.graphwalker.restful;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -54,10 +57,6 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
-import static org.hamcrest.core.Is.is;
 
 /**
  * Created by krikar on 10/10/14.
@@ -94,9 +93,8 @@ public class RestTest extends ExecutionContext implements RestFlow {
     TestExecutor testExecutor = new TestExecutor(getClass());
     try {
       testExecutor.execute(false);
-    }
-    catch (TestExecutionException e) {
-      if (e.hasErrors()){
+    } catch (TestExecutionException e) {
+      if (e.hasErrors()) {
         for (String error : e.getResult().getErrors()) {
           System.err.println(error);
         }

@@ -26,14 +26,13 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author Kristian Karl
@@ -49,9 +48,9 @@ public class MultipleModelTest {
     MultipleModel_2 model_2 = new MultipleModel_2();
 
     new TestBuilder()
-      .addContext(model_1.setPathGenerator(new RandomPath(new EdgeCoverage(100))), MODEL_PATH_1)
-      .addContext(model_2.setPathGenerator(new RandomPath(new EdgeCoverage(100))), MODEL_PATH_2)
-      .execute();
+        .addContext(model_1.setPathGenerator(new RandomPath(new EdgeCoverage(100))), MODEL_PATH_1)
+        .addContext(model_2.setPathGenerator(new RandomPath(new EdgeCoverage(100))), MODEL_PATH_2)
+        .execute();
     Assert.assertTrue(model_1.count >= 4);
     Assert.assertTrue(model_2.count >= 3);
   }

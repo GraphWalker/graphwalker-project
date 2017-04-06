@@ -26,6 +26,10 @@ package org.graphwalker.io.label.yed;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+
+import java.util.Arrays;
+import java.util.List;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.dsl.yed.YEdEdgeParser;
@@ -34,11 +38,6 @@ import org.graphwalker.dsl.yed.YEdVertexParser;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Nils Olsson
  */
@@ -46,24 +45,24 @@ public class YEdLabelTest {
 
 
   private List<String> vertexLabels = Arrays.asList(
-    "",
-    "Label",
-    "/* multi\nline\ncomment */                  Label",
-    "",
-    "v_vertex  \nSHARED:MyState",
-    "SHARED: MyState"
+      "",
+      "Label",
+      "/* multi\nline\ncomment */                  Label",
+      "",
+      "v_vertex  \nSHARED:MyState",
+      "SHARED: MyState"
   );
 
   private List<String> edgeLabels = Arrays.asList(
-    "",
-    "Label",
-    "e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
-    "e_init / num_of_books = 0; MAX_BOOKS = 5;",
-    "name /* multi\nline\ncomment */ / i++; [i==0]",
-    "BLOCKED",
-    "e_AddBookToCart BLOCKED [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
-    "[ i ]",
-    "e_Init/validLogin=false;rememberMe=false;"
+      "",
+      "Label",
+      "e_AddBookToCart [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
+      "e_init / num_of_books = 0; MAX_BOOKS = 5;",
+      "name /* multi\nline\ncomment */ / i++; [i==0]",
+      "BLOCKED",
+      "e_AddBookToCart BLOCKED [num_of_books<=\nMAX_BOOKS] / num_of_books++; /* test */",
+      "[ i ]",
+      "e_Init/validLogin=false;rememberMe=false;"
   );
 
   @Test

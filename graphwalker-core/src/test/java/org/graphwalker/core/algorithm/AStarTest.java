@@ -26,6 +26,10 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -33,10 +37,6 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson

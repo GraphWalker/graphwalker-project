@@ -26,10 +26,6 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import org.junit.Test;
-
-import java.util.Arrays;
-
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
@@ -37,6 +33,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import org.junit.Test;
 
 /**
  * @author Nils Olsson
@@ -46,13 +45,13 @@ public class EdgeTest {
   @Test
   public void create() {
     Edge edge = new Edge()
-      .setGuard(new Guard("script"))
-      .setName("name")
-      .setSourceVertex(new Vertex())
-      .setTargetVertex(new Vertex())
-      .setActions(Arrays.asList(new Action("action2"), new Action("action3")))
-      .addAction(new Action("action1"))
-      .setWeight(.5);
+        .setGuard(new Guard("script"))
+        .setName("name")
+        .setSourceVertex(new Vertex())
+        .setTargetVertex(new Vertex())
+        .setActions(Arrays.asList(new Action("action2"), new Action("action3")))
+        .addAction(new Action("action1"))
+        .setWeight(.5);
     assertNotNull(edge);
     assertEquals("name", edge.getName());
     assertEquals("name", edge.build().getName());

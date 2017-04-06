@@ -26,6 +26,13 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.dot.DotContextFactory;
 import org.graphwalker.io.factory.java.JavaContextFactory;
@@ -38,18 +45,11 @@ import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-
 /**
  * @author Kristian Karl
  */
 public class ConvertionContextFactoryTest {
+
   private static final Logger logger = LoggerFactory.getLogger(ConvertionContextFactoryTest.class);
 
   @Rule
