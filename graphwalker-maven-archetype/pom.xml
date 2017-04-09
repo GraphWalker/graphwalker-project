@@ -26,14 +26,14 @@
             <extension>
                 <groupId>org.apache.maven.archetype</groupId>
                 <artifactId>archetype-packaging</artifactId>
-                <version>2.4</version>
+                <version>3.0.0</version>
             </extension>
         </extensions>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>1.9</version>
+                <version>1.12</version>
                 <configuration>
                     <licenseName>mit</licenseName>
                 </configuration>
