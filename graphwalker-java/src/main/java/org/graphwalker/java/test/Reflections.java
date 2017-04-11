@@ -54,7 +54,7 @@ public abstract class Reflections {
     try {
       return loadClass(classLoader, type).newInstance();
     } catch (InstantiationException | IllegalAccessException e) {
-      logger.error(e.getMessage());
+      logger.error(e.getCause().getMessage());
       throw new RuntimeException(e);
     }
   }
@@ -63,7 +63,7 @@ public abstract class Reflections {
     try {
       return constructor.newInstance(arguments);
     } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-      logger.error(e.getMessage());
+      logger.error(e.getCause().getMessage());
       throw new RuntimeException(e);
     }
   }
@@ -72,7 +72,7 @@ public abstract class Reflections {
     try {
       return method.invoke(object, arguments);
     } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-      logger.error(e.getMessage());
+      logger.error(e.getCause().getMessage());
       throw new RuntimeException(e);
     }
   }

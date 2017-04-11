@@ -50,7 +50,6 @@ import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutionException;
 import org.graphwalker.java.test.TestExecutor;
-import org.hamcrest.core.StringContains;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -172,9 +171,10 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, new StringContains("\"result\":\"ok\""));
-    Assert.assertThat(body, new StringContains("\"num_of_books\":\"0\""));
-    Assert.assertThat(body, new StringContains("\"MAX_BOOKS\":\"5\""));
+    JSONObject responseJSON = new JSONObject(body);
+    JSONAssert.assertEquals("Result should be ok", "{result:\"ok\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong value of num_of_books", "{data:{num_of_books:\"0\"}}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong value of MAX_BOOKS", "{data:{MAX_BOOKS:\"5\"}}", responseJSON, false);
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
   }
