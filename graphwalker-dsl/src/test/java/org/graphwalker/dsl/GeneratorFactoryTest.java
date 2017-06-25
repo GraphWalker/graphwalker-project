@@ -33,6 +33,7 @@ import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.CombinedCondition;
 import org.graphwalker.core.condition.DependencyEdgeCoverage;
 import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.Length;
 import org.graphwalker.core.condition.ReachedEdge;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.RequirementCoverage;
@@ -284,5 +285,13 @@ public class GeneratorFactoryTest {
     Assert.assertThat(generator, instanceOf(RandomPath.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(RequirementCoverage.class));
     Assert.assertThat(((RequirementCoverage) generator.getStopCondition()).getPercent(), is(100));
+  }
+  
+  @Test
+  public void randompath_length_coverage() {
+    PathGenerator generator = GeneratorFactory.parse("randompath(length(80))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(Length.class));
+    Assert.assertThat(((Length) generator.getStopCondition()).getLength(), is(80l));
   }
 }
