@@ -29,11 +29,13 @@ package org.graphwalker.dsl.antlr.generator;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+
 import org.antlr.v4.runtime.misc.NotNull;
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.CombinedCondition;
 import org.graphwalker.core.condition.DependencyEdgeCoverage;
 import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.Length;
 import org.graphwalker.core.condition.Never;
 import org.graphwalker.core.condition.ReachedEdge;
 import org.graphwalker.core.condition.ReachedStopCondition;
@@ -98,6 +100,8 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
     } else if (ctx.getChild(0).getText().equalsIgnoreCase("requirement_coverage") ||
                ctx.getChild(0).getText().equalsIgnoreCase("requirementcoverage")) {
       stopConditions.add(new RequirementCoverage(Integer.parseInt(ctx.getChild(2).getText())));
+    } else if (ctx.getChild(0).getText().equalsIgnoreCase("length")) {
+    	stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
     }
   }
 
