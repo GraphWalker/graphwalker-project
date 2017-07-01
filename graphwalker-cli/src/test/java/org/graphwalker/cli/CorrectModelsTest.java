@@ -111,4 +111,30 @@ public class CorrectModelsTest extends CLITestRoot {
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
   }
+
+  /**
+   * Don't use blocked feature
+   */
+  @Test
+  public void dontUseBlocked() {
+    String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v2\"}" + System.lineSeparator()));
+  }
+
+  /**
+   * Use blocked feature
+   */
+  @Test
+  public void useBlocked() {
+    String args[] = {"-b", "offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
+  }
 }

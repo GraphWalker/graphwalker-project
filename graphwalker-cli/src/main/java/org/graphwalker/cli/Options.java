@@ -38,4 +38,7 @@ public class Options {
 
   @Parameter(names = {"--debug", "-d"}, description = "Sets the log level: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Default is OFF")
   public String debug = "OFF";
+
+  @Parameter(names = {"--blocked", "-b"}, description = "Use the feature BLOCKED. Will discard all elements with property BLOCKED set to true.")
+  public boolean blocked = false;
 }

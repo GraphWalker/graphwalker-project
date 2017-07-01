@@ -39,14 +39,43 @@ public class MethodsTest extends CLITestRoot {
 
   @Test
   public void methods() throws IOException {
-    String args[] = {"methods", "-m", "json/example.json"};
+    String args[] = {"methods", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
-                      containsInAnyOrder("e_AnotherAction",
-                                         "e_FirstAction",
-                                         "e_SomeOtherAction",
-                                         "v_VerifySomeAction",
-                                         "v_VerifySomeOtherAction"));
+                      containsInAnyOrder("e1",
+                                         "e2",
+                                         "e3",
+                                         "e4",
+                                         "e5",
+                                         "e6",
+                                         "e7",
+                                         "e8",
+                                         "e9",
+                                         "e10",
+                                         "v1",
+                                         "v2",
+                                         "v3",
+                                         "v4",
+                                         "v5"));
+  }
+
+  @Test
+  public void methodsUseBlockedFeature() throws IOException {
+    String args[] = {"-b", "methods", "-m", "json/graphWithBlockedElements.json"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+                      containsInAnyOrder("e1",
+                                         "e2",
+                                         "e3",
+                                         "e4",
+                                         "e7",
+                                         "e8",
+                                         "e9",
+                                         "v1",
+                                         "v2",
+                                         "v3",
+                                         "v4"));
   }
 }

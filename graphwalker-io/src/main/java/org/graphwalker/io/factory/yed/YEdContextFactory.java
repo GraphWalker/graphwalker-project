@@ -343,7 +343,6 @@ public final class YEdContextFactory implements ContextFactory {
 
                 vertex.setProperty("x", nodeType.getGeometry().getX());
                 vertex.setProperty("y", nodeType.getGeometry().getY());
-                boolean blocked = false;
                 if (null != parseContext.start()) {
                   elements.put(node.getId(), vertex);
                   vertex.setId(node.getId());
@@ -363,14 +362,12 @@ public final class YEdContextFactory implements ContextFactory {
                       model.addActions(convertVertexAction(field.actions().action()));
                     }
                     if (null != field.blocked()) {
-                      blocked = true;
+                      vertex.setProperty("blocked", true);
                     }
                   }
-                  if (!blocked) {
-                    elements.put(node.getId(), vertex);
-                    vertex.setId(node.getId());
-                    model.addVertex(vertex);
-                  }
+                  elements.put(node.getId(), vertex);
+                  vertex.setId(node.getId());
+                  model.addVertex(vertex);
                 }
               }
             }
@@ -461,7 +458,6 @@ public final class YEdContextFactory implements ContextFactory {
               if (null != elements.get(edgeType.getTarget())) {
                 edge.setTargetVertex(elements.get(edgeType.getTarget()));
               }
-              boolean blocked = false;
               for (YEdEdgeParser.FieldContext field : parseContext.field()) {
                 if (null != field.names()) {
                   edge.setName(field.names().getText());
@@ -478,10 +474,10 @@ public final class YEdContextFactory implements ContextFactory {
                   edge.setRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));
                 }
                 if (null != field.blocked()) {
-                  blocked = true;
+                  edge.setProperty("blocked", true);
                 }
               }
-              if (!blocked && null != edge.getTargetVertex()) {
+              if (null != edge.getTargetVertex()) {
                 if (null != startVertex &&
                     null != edgeType.getSource() &&
                     edgeType.getSource().equals(startVertex.getId())) {
