@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public class XMLReportGenerator {
 
   private static final Logger logger = LoggerFactory.getLogger(XMLReportGenerator.class);
-
+  private static final String TESTSUITE_NAME = "GraphWalker";
   private static final String NEWLINE = "\n";
   private static final String INDENT = "    ";
 
@@ -81,6 +81,7 @@ public class XMLReportGenerator {
       property.setValue(systemProperties.getProperty(name));
       properties.getProperty().add(property);
     }
+    testsuite.setName(TESTSUITE_NAME);
     testsuite.setProperties(properties);
     testsuite.setTests(report.getTestsAsString());
     testsuite.setFailures(report.getFailuresAsString());
