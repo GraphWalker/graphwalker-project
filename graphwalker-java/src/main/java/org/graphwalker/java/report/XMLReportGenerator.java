@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public class XMLReportGenerator {
 
   private static final Logger logger = LoggerFactory.getLogger(XMLReportGenerator.class);
-  private static final String TESTSUITE_NAME = "GraohWalker";
+  private static final String TESTSUITE_NAME = "GraphWalker";
   private static final String NEWLINE = "\n";
   private static final String INDENT = "    ";
 
