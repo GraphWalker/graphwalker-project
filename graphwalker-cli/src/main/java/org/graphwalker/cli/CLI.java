@@ -472,7 +472,13 @@ public class CLI {
       executor.execute();
     } else if (!offline.gw3.isEmpty()) {
       //TODO Fix gw3. Should not be there
-      SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get(offline.gw3)));
+      List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw3));
+
+      if (options.blocked) {
+        org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+      }
+
+      SimpleMachine machine = new SimpleMachine(contexts);
       while (machine.hasNextStep()) {
         machine.getNextStep();
         System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());

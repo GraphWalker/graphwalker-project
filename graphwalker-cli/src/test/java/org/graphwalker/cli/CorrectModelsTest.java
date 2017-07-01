@@ -48,8 +48,11 @@
 
 package org.graphwalker.cli;
 
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 
+import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -136,5 +139,58 @@ public class CorrectModelsTest extends CLITestRoot {
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
+  }
+
+  /**
+   * Don't use blocked feature with a json file
+   */
+  @Test
+  public void dontUseBlockedJson() {
+    String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+                      hasItems("{\"currentElementName\":\"e1\"}",
+                               "{\"currentElementName\":\"e2\"}",
+                               "{\"currentElementName\":\"e3\"}",
+                               "{\"currentElementName\":\"e4\"}",
+                               "{\"currentElementName\":\"e5\"}",
+                               "{\"currentElementName\":\"e6\"}",
+                               "{\"currentElementName\":\"e7\"}",
+                               "{\"currentElementName\":\"e8\"}",
+                               "{\"currentElementName\":\"e9\"}",
+                               "{\"currentElementName\":\"e10\"}",
+                               "{\"currentElementName\":\"v1\"}",
+                               "{\"currentElementName\":\"v2\"}",
+                               "{\"currentElementName\":\"v3\"}",
+                               "{\"currentElementName\":\"v4\"}",
+                               "{\"currentElementName\":\"v5\"}"));
+  }
+
+  /**
+   * Use blocked feature with a json file
+   */
+  @Test
+  public void useBlockedJson() {
+    String args[] = {"-b", "offline", "-g", "json/graphWithBlockedElements.json"};
+    Result result = runCommand(args);
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+                      hasItems("{\"currentElementName\":\"e1\"}",
+                               "{\"currentElementName\":\"e2\"}",
+                               "{\"currentElementName\":\"e3\"}",
+                               "{\"currentElementName\":\"e4\"}",
+                               "{\"currentElementName\":\"e7\"}",
+                               "{\"currentElementName\":\"e8\"}",
+                               "{\"currentElementName\":\"e9\"}",
+                               "{\"currentElementName\":\"v1\"}",
+                               "{\"currentElementName\":\"v2\"}",
+                               "{\"currentElementName\":\"v3\"}",
+                               "{\"currentElementName\":\"v4\"}"));
+
+    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+                      not(hasItems("{\"currentElementName\":\"e5\"}",
+                                   "{\"currentElementName\":\"e6\"}",
+                                   "{\"currentElementName\":\"v5\"}")));
   }
 }
