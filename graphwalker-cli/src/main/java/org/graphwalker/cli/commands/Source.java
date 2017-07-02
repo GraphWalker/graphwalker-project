@@ -39,6 +39,7 @@ public class Source {
                   "See http://graphwalker.org/docs/command_line_syntax")
   public List<String> input = new ArrayList<>();
 
-  @Parameter(names = {"--blocked", "-b"}, description = "Use the feature BLOCKED. Will discard all elements with property BLOCKED set to true.")
-  public boolean blocked = false;
+  @Parameter(names = {"--blocked",
+                      "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
+  public boolean blocked = true;
 }

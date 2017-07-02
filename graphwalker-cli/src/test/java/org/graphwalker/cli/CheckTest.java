@@ -46,7 +46,7 @@ public class CheckTest extends CLITestRoot {
 
   @Test
   public void checkWithBlocked() throws IOException {
-    String args[] = {"check", "-b", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
+    String args[] = {"check", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), containsString("No issues found with the model(s)."));

@@ -120,7 +120,7 @@ public class CorrectModelsTest extends CLITestRoot {
    */
   @Test
   public void dontUseBlocked() {
-    String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
+    String args[] = {"offline", "-b", "false", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
@@ -134,7 +134,7 @@ public class CorrectModelsTest extends CLITestRoot {
    */
   @Test
   public void useBlocked() {
-    String args[] = {"offline", "-b", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
+    String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
@@ -146,7 +146,7 @@ public class CorrectModelsTest extends CLITestRoot {
    */
   @Test
   public void dontUseBlockedJson() {
-    String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
+    String args[] = {"offline", "-b", "false", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
@@ -172,7 +172,7 @@ public class CorrectModelsTest extends CLITestRoot {
    */
   @Test
   public void useBlockedJson() {
-    String args[] = {"offline", "-b", "-g", "json/graphWithBlockedElements.json"};
+    String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),

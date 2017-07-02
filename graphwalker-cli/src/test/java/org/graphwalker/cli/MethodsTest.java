@@ -38,8 +38,8 @@ import org.junit.Test;
 public class MethodsTest extends CLITestRoot {
 
   @Test
-  public void methods() throws IOException {
-    String args[] = {"methods", "-m", "json/graphWithBlockedElements.json"};
+  public void methodsDontUseBlockedFeature() throws IOException {
+    String args[] = {"methods", "-b", "false", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
@@ -62,7 +62,7 @@ public class MethodsTest extends CLITestRoot {
 
   @Test
   public void methodsUseBlockedFeature() throws IOException {
-    String args[] = {"methods", "-b", "-m", "json/graphWithBlockedElements.json"};
+    String args[] = {"methods", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
