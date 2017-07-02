@@ -56,14 +56,16 @@ public class Util {
       ListIterator<Edge> e_it = edges.listIterator();
       while (e_it.hasNext()) {
         Edge edge = e_it.next();
-        if (edge.hasProperty("blocked")) {
+        if (edge.hasProperty("blocked") &&
+            (boolean) edge.getProperty("blocked")) {
           e_it.remove();
         }
       }
       ListIterator<Vertex> v_it = vertices.listIterator();
       while (v_it.hasNext()) {
         Vertex vertex = v_it.next();
-        if (vertex.hasProperty("blocked")) {
+        if (vertex.hasProperty("blocked") &&
+            (boolean) vertex.getProperty("blocked")) {
           e_it = edges.listIterator();
           while (e_it.hasNext()) {
             Edge e = e_it.next();

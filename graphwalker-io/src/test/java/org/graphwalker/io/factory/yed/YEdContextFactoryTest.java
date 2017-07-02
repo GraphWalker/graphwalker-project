@@ -174,36 +174,6 @@ public class YEdContextFactoryTest {
   }
 
   @Test
-  public void singleEdge() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(2));
-  }
-
-  @Test
-  public void singleVertex() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(1));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
-  }
-
-  @Test
-  public void singleVertex2() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(1));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
-  }
-
-  @Test
   public void readInit() throws IOException {
     List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/init/init.graphml"));
     assertNotNull(contexts);
@@ -231,56 +201,6 @@ public class YEdContextFactoryTest {
       assertNotNull(edge.getSourceVertex());
       assertNotNull(edge.getTargetVertex());
     }
-  }
-
-  @Test
-  public void blockedBranch1() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(3));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(3));
-  }
-
-  @Test
-  public void blockedBranch2() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch2.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(3));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(4));
-  }
-
-  @Test
-  public void blockedVertex1() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex1.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(2));
-  }
-
-  @Test
-  public void blockedVertex2() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
-  }
-
-  @Test
-  public void blockedVertex3() throws IOException {
-    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test
@@ -340,20 +260,6 @@ public class YEdContextFactoryTest {
                is(readCContexts.get(0).getModel().getVertices().size()));
     assertThat(writeContext.getModel().getEdges().size(),
                is(readCContexts.get(0).getModel().getEdges().size()));
-  }
-
-  @Test
-  public void createfromString() throws IOException {
-    StringWriter writer = new StringWriter();
-    IOUtils.copy(ResourceUtils.getResourceAsStream("graphml/blocked/blockedVertex2.graphml"), writer, StandardCharsets.UTF_8);
-    String grapmlStr = writer.toString();
-
-    List<Context> contexts = new YEdContextFactory().create(grapmlStr);
-    assertNotNull(contexts);
-    assertThat(contexts.size(), is(1));
-
-    assertThat(contexts.get(0).getModel().getVertices().size(), is(2));
-    assertThat(contexts.get(0).getModel().getEdges().size(), is(1));
   }
 
   @Test

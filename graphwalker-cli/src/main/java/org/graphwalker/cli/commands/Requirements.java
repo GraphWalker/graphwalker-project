@@ -35,6 +35,9 @@ import java.util.List;
 public class Requirements {
 
   @Parameter(names = {"--model", "-m"}, required = true,
-      description = "The model(s)")
+    description = "The model(s)")
   public List<String> model = new ArrayList<>();
+
+  @Parameter(names = {"--blocked", "-b"}, description = "Use the feature BLOCKED. Will discard all elements with property BLOCKED set to true.")
+  public boolean blocked = false;
 }
