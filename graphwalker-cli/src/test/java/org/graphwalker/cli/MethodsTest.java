@@ -62,7 +62,7 @@ public class MethodsTest extends CLITestRoot {
 
   @Test
   public void methodsUseBlockedFeature() throws IOException {
-    String args[] = {"-b", "methods", "-m", "json/graphWithBlockedElements.json"};
+    String args[] = {"methods", "-b", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),

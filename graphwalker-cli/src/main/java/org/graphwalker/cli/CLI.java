@@ -199,25 +199,25 @@ public class CLI {
       if (jc.getParsedCommand() != null) {
         if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
           command = Command.OFFLINE;
-          RunCommandOffline(options);
+          RunCommandOffline();
         } else if (jc.getParsedCommand().equalsIgnoreCase("online")) {
           command = Command.ONLINE;
-          RunCommandOnline(options);
+          RunCommandOnline();
         } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
           command = Command.METHODS;
-          RunCommandMethods(options);
+          RunCommandMethods();
         } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
           command = Command.REQUIREMENTS;
-          RunCommandRequirements(options);
+          RunCommandRequirements();
         } else if (jc.getParsedCommand().equalsIgnoreCase("convert")) {
           command = Command.CONVERT;
-          RunCommandConvert(options);
+          RunCommandConvert();
         } else if (jc.getParsedCommand().equalsIgnoreCase("source")) {
           command = Command.SOURCE;
-          RunCommandSource(options);
+          RunCommandSource();
         } else if (jc.getParsedCommand().equalsIgnoreCase("check")) {
           command = Command.SOURCE;
-          RunCommandCheck(options);
+          RunCommandCheck();
         }
       }
 
@@ -262,9 +262,9 @@ public class CLI {
     }
   }
 
-  private void RunCommandCheck(Options options) throws Exception {
+  private void RunCommandCheck() throws Exception {
     List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
-    if (options.blocked) {
+    if (check.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
@@ -278,10 +278,10 @@ public class CLI {
     }
   }
 
-  private void RunCommandRequirements(Options options) throws Exception {
+  private void RunCommandRequirements() throws Exception {
     SortedSet<String> reqs = new TreeSet<>();
     List<Context> contexts = getContexts(requirements.model.iterator());
-    if (options.blocked) {
+    if (requirements.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
@@ -295,10 +295,10 @@ public class CLI {
     }
   }
 
-  private void RunCommandMethods(Options options) throws Exception {
+  private void RunCommandMethods() throws Exception {
     SortedSet<String> names = new TreeSet<>();
     List<Context> contexts = getContexts(methods.model.iterator());
-    if (options.blocked) {
+    if (methods.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
@@ -320,7 +320,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOnline(Options options) throws Exception {
+  private void RunCommandOnline() throws Exception {
     if (online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
       WebSocketServer GraphWalkerWebSocketServer = new WebSocketServer(online.port);
       try {
@@ -332,7 +332,7 @@ public class CLI {
       ResourceConfig rc = new DefaultResourceConfig();
       try {
         List<Context> contexts = getContextsWithPathGenerators(online.model.iterator());
-        if (options.blocked) {
+        if (online.blocked) {
           org.graphwalker.io.common.Util.filterBlockedElements(contexts);
         }
 
@@ -367,7 +367,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandConvert(Options options) throws Exception {
+  private void RunCommandConvert() throws Exception {
     String inputFileName = convert.input;
 
     ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
@@ -379,7 +379,7 @@ public class CLI {
       throw new Exception("Model syntax error");
     }
 
-    if (options.blocked) {
+    if (convert.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
@@ -387,7 +387,7 @@ public class CLI {
     System.out.println(outputFactory.getAsString(contexts));
   }
 
-  private void RunCommandSource(Options options) throws Exception {
+  private void RunCommandSource() throws Exception {
     String modelFileName = source.input.get(0);
     String templateFileName = source.input.get(1);
 
@@ -405,7 +405,7 @@ public class CLI {
       throw new Exception("Model syntax error");
     }
 
-    if (options.blocked) {
+    if (source.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
@@ -453,10 +453,10 @@ public class CLI {
     }
   }
 
-  private void RunCommandOffline(Options options) throws Exception {
+  private void RunCommandOffline() throws Exception {
     if (offline.model.size() > 0) {
       List<Context> contexts = getContextsWithPathGenerators(offline.model.iterator());
-      if (options.blocked) {
+      if (offline.blocked) {
         org.graphwalker.io.common.Util.filterBlockedElements(contexts);
       }
 
@@ -474,7 +474,7 @@ public class CLI {
       //TODO Fix gw3. Should not be there
       List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw3));
 
-      if (options.blocked) {
+      if (offline.blocked) {
         org.graphwalker.io.common.Util.filterBlockedElements(contexts);
       }
 

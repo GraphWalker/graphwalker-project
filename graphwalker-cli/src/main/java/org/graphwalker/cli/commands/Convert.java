@@ -34,11 +34,14 @@ import org.graphwalker.io.factory.ContextFactoryScanner;
 public class Convert {
 
   @Parameter(names = {"--input", "-i"}, required = true, arity = 1,
-      description = "This command requires an input file." +
-                    "See http://graphwalker.org/docs/command_line_syntax")
+    description = "This command requires an input file." +
+                  "See http://graphwalker.org/docs/command_line_syntax")
   public String input = "";
 
   @Parameter(names = {"--format", "-f"}, required = false, arity = 1,
-      description = "Which format to convert into. Valid key words are: JSON [default], GRAPHML, DOT or JAVA")
+    description = "Which format to convert into. Valid key words are: JSON [default], GRAPHML, DOT or JAVA")
   public String format = ContextFactoryScanner.JSON;
+
+  @Parameter(names = {"--blocked", "-b"}, description = "Use the feature BLOCKED. Will discard all elements with property BLOCKED set to true.")
+  public boolean blocked = false;
 }
