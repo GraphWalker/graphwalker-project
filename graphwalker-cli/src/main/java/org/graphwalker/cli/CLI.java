@@ -264,6 +264,10 @@ public class CLI {
 
   private void RunCommandCheck() throws Exception {
     List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
+    if (check.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
     List<String> issues = ContextsChecker.hasIssues(contexts);
     if (!issues.isEmpty()) {
       for (String issue : issues) {
@@ -276,7 +280,12 @@ public class CLI {
 
   private void RunCommandRequirements() throws Exception {
     SortedSet<String> reqs = new TreeSet<>();
-    for (Context context : getContexts(requirements.model.iterator())) {
+    List<Context> contexts = getContexts(requirements.model.iterator());
+    if (requirements.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
+    for (Context context : contexts) {
       for (Requirement req : context.getRequirements()) {
         reqs.add(req.getKey());
       }
@@ -288,7 +297,12 @@ public class CLI {
 
   private void RunCommandMethods() throws Exception {
     SortedSet<String> names = new TreeSet<>();
-    for (Context context : getContexts(methods.model.iterator())) {
+    List<Context> contexts = getContexts(methods.model.iterator());
+    if (methods.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
+    for (Context context : contexts) {
       for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
         if (null != vertex.getName()) {
           names.add(vertex.getName());
@@ -317,7 +331,12 @@ public class CLI {
     } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
       ResourceConfig rc = new DefaultResourceConfig();
       try {
-        rc.getSingletons().add(new Restful(getContextsWithPathGenerators(online.model.iterator()), online.verbose, online.unvisited));
+        List<Context> contexts = getContextsWithPathGenerators(online.model.iterator());
+        if (online.blocked) {
+          org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+        }
+
+        rc.getSingletons().add(new Restful(contexts, online.verbose, online.unvisited));
       } catch (MachineException e) {
         System.err.println("Was the argument --model correctly?");
         throw e;
@@ -360,6 +379,10 @@ public class CLI {
       throw new Exception("Model syntax error");
     }
 
+    if (convert.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
     ContextFactory outputFactory = ContextFactoryScanner.get(new File("foo." + convert.format).toPath());
     System.out.println(outputFactory.getAsString(contexts));
   }
@@ -380,6 +403,10 @@ public class CLI {
     } catch (DslException e) {
       System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
       throw new Exception("Model syntax error");
+    }
+
+    if (source.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
     for (Context context : contexts) {
@@ -428,7 +455,12 @@ public class CLI {
 
   private void RunCommandOffline() throws Exception {
     if (offline.model.size() > 0) {
-      TestExecutor executor = new TestExecutor(getContextsWithPathGenerators(offline.model.iterator()));
+      List<Context> contexts = getContextsWithPathGenerators(offline.model.iterator());
+      if (offline.blocked) {
+        org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+      }
+
+      TestExecutor executor = new TestExecutor(contexts);
       executor.getMachine().addObserver(new Observer() {
         @Override
         public void update(Machine machine, Element element, EventType type) {
@@ -440,7 +472,13 @@ public class CLI {
       executor.execute();
     } else if (!offline.gw3.isEmpty()) {
       //TODO Fix gw3. Should not be there
-      SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get(offline.gw3)));
+      List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw3));
+
+      if (offline.blocked) {
+        org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+      }
+
+      SimpleMachine machine = new SimpleMachine(contexts);
       while (machine.hasNextStep()) {
         machine.getNextStep();
         System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
@@ -513,8 +551,8 @@ public class CLI {
     version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
     version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
     version +=
-        "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
-            .getProperty("line.separator");
+      "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
+        .getProperty("line.separator");
 
     return version;
   }
