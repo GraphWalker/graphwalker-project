@@ -26,11 +26,31 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Model;
 
 /**
  * @author Kristian Karl
  */
 public final class DotContext extends ExecutionContext {
 
+  private static final Bindings bindings = new SimpleBindings();
+
+  public DotContext() {
+    super();
+    getScriptEngine().put("global", bindings);
+  }
+
+  public DotContext(Model model, PathGenerator generator) {
+    super(model, generator);
+    getScriptEngine().put("global", bindings);
+  }
+
+  public DotContext(Model.RuntimeModel model, PathGenerator generator) {
+    super(model, generator);
+    getScriptEngine().put("global", bindings);
+  }
 }
