@@ -35,7 +35,6 @@ import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,6 +58,7 @@ import org.graphwalker.cli.commands.Online;
 import org.graphwalker.cli.commands.Requirements;
 import org.graphwalker.cli.commands.Source;
 import org.graphwalker.cli.util.LoggerUtil;
+import org.graphwalker.cli.util.UnsupportedFileFormat;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -73,8 +73,10 @@ import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.graphwalker.io.factory.dot.DotContextFactory;
+import org.graphwalker.io.factory.java.JavaContextFactory;
 import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.java.test.TestExecutor;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.graphwalker.restful.Restful;
@@ -226,6 +228,8 @@ public class CLI {
         throw new MissingCommandException("Missing a command. Add '--help'");
       }
 
+    } catch (UnsupportedFileFormat e) {
+      System.err.println(e.getMessage() + System.lineSeparator());
     } catch (MissingCommandException e) {
       System.err.println(e.getMessage() + System.lineSeparator());
     } catch (ParameterException e) {
@@ -262,7 +266,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandCheck() throws Exception {
+  private void RunCommandCheck() throws Exception, UnsupportedFileFormat {
     List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
     if (check.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
@@ -278,7 +282,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandRequirements() throws Exception {
+  private void RunCommandRequirements() throws Exception, UnsupportedFileFormat {
     SortedSet<String> reqs = new TreeSet<>();
     List<Context> contexts = getContexts(requirements.model.iterator());
     if (requirements.blocked) {
@@ -295,7 +299,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandMethods() throws Exception {
+  private void RunCommandMethods() throws Exception, UnsupportedFileFormat {
     SortedSet<String> names = new TreeSet<>();
     List<Context> contexts = getContexts(methods.model.iterator());
     if (methods.blocked) {
@@ -320,7 +324,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOnline() throws Exception {
+  private void RunCommandOnline() throws Exception, UnsupportedFileFormat {
     if (online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
       WebSocketServer GraphWalkerWebSocketServer = new WebSocketServer(online.port);
       try {
@@ -367,10 +371,10 @@ public class CLI {
     }
   }
 
-  private void RunCommandConvert() throws Exception {
+  private void RunCommandConvert() throws Exception, UnsupportedFileFormat {
     String inputFileName = convert.input;
 
-    ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
+    ContextFactory inputFactory = getContextFactory(inputFileName);
     List<Context> contexts;
     try {
       contexts = inputFactory.create(Paths.get(inputFileName));
@@ -383,16 +387,16 @@ public class CLI {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
-    ContextFactory outputFactory = ContextFactoryScanner.get(new File("foo." + convert.format).toPath());
+    ContextFactory outputFactory = getContextFactory("foo." + convert.format);
     System.out.println(outputFactory.getAsString(contexts));
   }
 
-  private void RunCommandSource() throws Exception {
+  private void RunCommandSource() throws Exception, UnsupportedFileFormat {
     String modelFileName = source.input.get(0);
     String templateFileName = source.input.get(1);
 
     // Read the model
-    ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(modelFileName));
+    ContextFactory inputFactory = getContextFactory(modelFileName);
     List<Context> contexts;
     try {
       contexts = inputFactory.create(Paths.get(modelFileName));
@@ -453,7 +457,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOffline() throws Exception {
+  private void RunCommandOffline() throws Exception, UnsupportedFileFormat {
     if (offline.model.size() > 0) {
       List<Context> contexts = getContextsWithPathGenerators(offline.model.iterator());
       if (offline.blocked) {
@@ -486,12 +490,12 @@ public class CLI {
     }
   }
 
-  public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
+  public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception, UnsupportedFileFormat {
     List<Context> executionContexts = new ArrayList<>();
     boolean triggerOnce = true;
     while (itr.hasNext()) {
       String modelFileName = (String) itr.next();
-      ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+      ContextFactory factory = getContextFactory(modelFileName);
       List<Context> contexts;
       try {
         contexts = factory.create(Paths.get(modelFileName));
@@ -527,11 +531,27 @@ public class CLI {
     return executionContexts;
   }
 
-  private List<Context> getContexts(Iterator itr) throws Exception {
+  private ContextFactory getContextFactory(String modelFileName) throws UnsupportedFileFormat {
+    ContextFactory factory;
+    if (new YEdContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new YEdContextFactory();
+    } else if (new JsonContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new JsonContextFactory();
+    } else if (new DotContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new DotContextFactory();
+    } else if (new JavaContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new JavaContextFactory();
+    } else {
+      throw new UnsupportedFileFormat(modelFileName);
+    }
+    return factory;
+  }
+
+  private List<Context> getContexts(Iterator itr) throws Exception, UnsupportedFileFormat {
     List<Context> executionContexts = new ArrayList<>();
     while (itr.hasNext()) {
       String modelFileName = (String) itr.next();
-      ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+      ContextFactory factory = getContextFactory(modelFileName);
       List<Context> contexts;
       try {
         contexts = factory.create(Paths.get(modelFileName));
