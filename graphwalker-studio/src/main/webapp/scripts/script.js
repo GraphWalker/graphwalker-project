@@ -1373,6 +1373,7 @@ function onMessage(event) {
         removeTest();
 
         readGraphFromJSON(JSON.parse(message.models));
+        var tabs = $('#tabs');
         tabs.show();
         for (var modelId in graphs) {
           if (!graphs.hasOwnProperty(modelId)) {
