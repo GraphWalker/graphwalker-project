@@ -1,4 +1,4 @@
-package org.graphwalker.java.source.cache;
+package org.graphwalker.java.utils;
 
 /*-
  * #%L
@@ -26,14 +26,53 @@ package org.graphwalker.java.source.cache;
  * #L%
  */
 
+import org.hamcrest.Description;
+import org.hamcrest.Factory;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
+
+import java.util.regex.Pattern;
+
 /**
- * @author Nils Olsson
+ * Inspired by http://www.shaunabram.com/hamcrest-matcher/
  */
-public interface Cache<K, V> {
+public class OccurrencesOfString extends TypeSafeMatcher {
 
-  void add(K key, V value);
+  private final String str;
+  private final int count;
 
-  V get(K key);
+  public OccurrencesOfString(String str, int count) {
+    this.str = str;
+    this.count = count;
+  }
 
-  boolean contains(K key);
+  @Override
+  protected boolean matchesSafely(Object o) {
+    if (!(o instanceof String)) {
+      return false;
+    }
+    String item = (String) o;
+    Pattern p = Pattern.compile(str);
+    java.util.regex.Matcher m = p.matcher(item);
+    int occurrences = 0;
+    while (m.find()) {
+      occurrences++;
+    }
+    if (occurrences == count) {
+      return true;
+    }
+    return false;
+  }
+
+  public void describeTo(Description description) {
+    description.appendText("String containing ")
+      .appendText(count + " occurrences of ")
+      .appendText(str);
+
+  }
+
+  @Factory
+  public static Matcher occurrencesOfString(String str, int count) {
+    return new OccurrencesOfString(str, count);
+  }
 }

@@ -26,9 +26,18 @@ package org.graphwalker.java.source;
  * #L%
  */
 
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.graphwalker.java.utils.OccurrencesOfString.occurrencesOfString;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -37,18 +46,89 @@ public class GenerateTest {
 
   @Test
   public void generate() throws IOException {
-    String source = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
-    Assert.assertTrue(source.contains("edge12"));
-    Assert.assertTrue(source.contains("vertex2"));
-    Assert.assertFalse(source.contains("SHARED"));
+    List<String> sources = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
+    Assert.assertThat(sources.size(), is(1));
+    Assert.assertThat(sources.get(0), containsString("edge12"));
+    Assert.assertThat(sources.get(0), containsString("vertex2"));
+    Assert.assertThat(sources.get(0), not(containsString("SHARED")));
   }
 
   @Test
   public void generatePathWithSpace() throws IOException {
-    String source = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
-    Assert.assertTrue(source.contains("edge12"));
-    Assert.assertTrue(source.contains("vertex2"));
-    Assert.assertFalse(source.contains("SHARED"));
-    Assert.assertTrue(source.contains("package org.graphwalker.java.path_with_space;"));
+    List<String> sources = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
+    Assert.assertThat(sources.size(), is(1));
+    Assert.assertThat(sources.get(0), containsString("edge12"));
+    Assert.assertThat(sources.get(0), containsString("vertex2"));
+    Assert.assertThat(sources.get(0), not(containsString("SHARED")));
+    Assert.assertThat(sources.get(0), containsString("package org.graphwalker.java.path_with_space;"));
+  }
+
+  @Test
+  public void generateMultiModelFile() throws IOException {
+    List<String> sources = new CodeGenerator().generate("/org/graphwalker/java/test/PetClinic.json");
+    Assert.assertThat(sources.size(), is(5));
+
+    Assert.assertThat(sources.get(0), containsString("public interface FindOwners {"));
+    Assert.assertThat(sources.get(0), occurrencesOfString("@Vertex()", 3));
+    Assert.assertThat(sources.get(0), occurrencesOfString("@Edge()", 3));
+    Assert.assertThat(sources.get(0), stringContainsInOrder(Arrays.asList(
+      "void e_AddOwner();",
+      "void v_FindOwners();",
+      "void e_Search();",
+      "void e_FindOwners();",
+      "void v_NewOwner();"
+    )));
+
+    Assert.assertThat(sources.get(1), containsString("public interface NewOwner {"));
+    Assert.assertThat(sources.get(1), occurrencesOfString("@Vertex()", 3));
+    Assert.assertThat(sources.get(1), occurrencesOfString("@Edge()", 2));
+    Assert.assertThat(sources.get(1), stringContainsInOrder(Arrays.asList(
+      "void v_OwnerInformation();",
+      "void e_CorrectData();",
+      "void e_IncorrectData();",
+      "void v_IncorrectData();",
+      "void v_NewOwner();"
+    )));
+
+    Assert.assertThat(sources.get(2), containsString("public interface OwnerInformation {"));
+    Assert.assertThat(sources.get(2), occurrencesOfString("@Vertex()", 5));
+    Assert.assertThat(sources.get(2), occurrencesOfString("@Edge()", 9));
+    Assert.assertThat(sources.get(2), stringContainsInOrder(Arrays.asList(
+      "void v_OwnerInformation();",
+      "void e_UpdatePet();",
+      "void v_FindOwners();",
+      "void e_EditPet();",
+      "void e_AddNewPet();",
+      "void e_AddVisit();",
+      "void e_FindOwners();",
+      "void e_AddPetSuccessfully();",
+      "void v_NewPet();",
+      "void e_VisitAddedSuccessfully();",
+      "void v_NewVisit();",
+      "void v_Pet();",
+      "void e_AddPetFailed();",
+      "void e_VisitAddedFailed();"
+    )));
+
+    Assert.assertThat(sources.get(3), containsString("public interface PetClinic {"));
+    Assert.assertThat(sources.get(3), occurrencesOfString("@Vertex()", 3));
+    Assert.assertThat(sources.get(3), occurrencesOfString("@Edge()", 4));
+    Assert.assertThat(sources.get(3), stringContainsInOrder(Arrays.asList(
+      "void v_FindOwners();",
+      "void e_HomePage();",
+      "void e_StartBrowser();",
+      "void e_Veterinarians();",
+      "void e_FindOwners();",
+      "void v_HomePage();"
+    )));
+
+    Assert.assertThat(sources.get(4), containsString("public interface Veterinarians {"));
+    Assert.assertThat(sources.get(4), occurrencesOfString("@Vertex()", 2));
+    Assert.assertThat(sources.get(4), occurrencesOfString("@Edge()", 1));
+    Assert.assertThat(sources.get(4), stringContainsInOrder(Arrays.asList(
+      "void e_Search();",
+      "void v_SearchResult();",
+      "void v_Veterinarians();"
+    )));
   }
 }

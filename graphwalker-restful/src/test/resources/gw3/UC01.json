@@ -2,7 +2,7 @@
   "name":"This is the example project of PetClinic",
   "models":[
     {
-      "name": "UC01_GW2",
+      "name": "UC01",
       "id": "5ddf6a4d-fcca-4d22-a4ce-556fe63038d7",
       "generator":"random(edge_coverage(100))",
       "startElementId": "e0",
