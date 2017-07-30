@@ -163,6 +163,10 @@ public class GenerateTest {
 
     File cacheFile = new File(tmpFolder + "/cache.json");
     String jsonString = readFile(cacheFile.toPath(), StandardCharsets.UTF_8);
+
+    // If test runs on windows, replace all double back slashes with single forward slash
+    jsonString = jsonString.replaceAll("\\\\+", "/");
+
     jsonString = jsonString.replaceFirst(
       "\\{.*/CodeGenerator/graphml/org/graphwalker/java/graphml/MyModel\\.graphml",
       "{\"CodeGenerator/graphml/org/graphwalker/java/graphml/MyModel.graphml"
@@ -213,6 +217,10 @@ public class GenerateTest {
 
     File cacheFile = new File(tmpFolder + "/cache.json");
     String jsonString = readFile(cacheFile.toPath(), StandardCharsets.UTF_8);
+
+    // If test runs on windows, replace all double back slashes with single forward slash
+    jsonString = jsonString.replaceAll("\\\\+", "/");
+
     jsonString = jsonString.replaceFirst(
       "\\{.*/CodeGenerator/incorrect_graphml/org/graphwalker/java/graphml/MyModel\\.graphml",
       "{\"CodeGenerator/incorrect_graphml/org/graphwalker/java/graphml/MyModel.graphml"
