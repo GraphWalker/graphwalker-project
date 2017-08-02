@@ -26,24 +26,28 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Model;
+import org.graphwalker.core.model.Vertex;
+import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.java.annotation.GraphWalker;
+import org.json.JSONObject;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.java.annotation.GraphWalker;
-import org.json.JSONObject;
-import org.junit.Assert;
-import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -56,8 +60,8 @@ public class TestExecutorTest {
     public MultipleStartElements() {
       Vertex vertex = new Vertex();
       Model model = new Model()
-          .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
-          .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
+        .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setName("myStartElement").setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
 
     }
@@ -75,8 +79,8 @@ public class TestExecutorTest {
     public SingleStartElements() {
       Vertex vertex = new Vertex().setName("myOnlyStartElement");
       Model model = new Model()
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
   }
@@ -93,8 +97,8 @@ public class TestExecutorTest {
     public NonExistingStartElement() {
       Vertex vertex = new Vertex();
       Model model = new Model()
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
   }
@@ -111,8 +115,8 @@ public class TestExecutorTest {
     public DSLConfiguredTest() {
       Vertex vertex = new Vertex().setName("myStartElement");
       Model model = new Model()
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
   }
@@ -154,8 +158,8 @@ public class TestExecutorTest {
     public ThrowExceptionTest() {
       Vertex vertex = new Vertex().setName("throwException");
       Model model = new Model()
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
-          .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex))
+        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
       setModel(model.build());
     }
 
@@ -168,5 +172,18 @@ public class TestExecutorTest {
   public void ThrowExceptionExecutor() throws IOException {
     Executor executor = new TestExecutor(ThrowExceptionTest.class);
     executor.execute();
+  }
+
+  @Test
+  public void multilpeContexts() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/PetClinic.json"));
+    Executor executor = new TestExecutor(
+      contexts.get(0),
+      contexts.get(1),
+      contexts.get(2),
+      contexts.get(3),
+      contexts.get(4)
+    );
+    Assert.assertThat(executor.getMachine().getContexts().size(), is(5));
   }
 }

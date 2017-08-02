@@ -2,7 +2,7 @@
   "name": "A small test model",
   "models": [
     {
-      "name": "Small model",
+      "name": "SmallModel",
       "generator": "random(edge_coverage(100))",
       "startElementId": "e0",
       "vertices": [

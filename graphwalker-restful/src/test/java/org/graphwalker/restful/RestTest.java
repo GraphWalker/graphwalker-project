@@ -196,7 +196,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
     JSONObject responseJSON = new JSONObject(body);
     JSONAssert.assertEquals("Wrong number of elements", "{numberOfElements:19}", responseJSON, false);
     JSONAssert.assertEquals("Result should be ok", "{result:\"ok\"}", responseJSON, false);
-    JSONAssert.assertEquals("Wrong model name", "{modelName:\"UC01_GW2\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong model name", "{modelName:\"UC01\"}", responseJSON, false);
     JSONAssert.assertEquals("Wrong current element id", "{currentElementID:\"e0\"}", responseJSON, false);
     JSONAssert.assertEquals("Wrong current element name", "{currentElementName:\"e_init\"}", responseJSON, false);
     JSONAssert.assertEquals("Wrong data", "{data:[{num_of_books:\"0\"},{MAX_BOOKS:\"5\"}]}", responseJSON, false);
