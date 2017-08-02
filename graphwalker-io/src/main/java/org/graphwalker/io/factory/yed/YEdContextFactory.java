@@ -476,7 +476,9 @@ public final class YEdContextFactory implements ContextFactory {
                 if (null != field.blocked()) {
                   edge.setProperty("blocked", true);
                 }
-              }
+                if (null != field.weight() && null != field.weight().Value()) {
+                  edge.setWeight(Double.parseDouble(field.weight().Value().getText()));
+                }              }
               if (null != edge.getTargetVertex()) {
                 if (null != startVertex &&
                     null != edgeType.getSource() &&
