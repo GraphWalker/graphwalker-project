@@ -44,24 +44,12 @@ public final class SourceFile {
   private final String packageName;
   private final String className;
 
-  public SourceFile(File file) {
-    this("", file.toPath(), DEFAULT_PATH, DEFAULT_PATH);
-  }
-
   public SourceFile(String modelName, Path path) {
     this(modelName, path, DEFAULT_PATH, DEFAULT_PATH);
   }
 
-  public SourceFile(File file, File baseDirectory, File outputDirectory) {
-    this("", file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
-  }
-
   public SourceFile(Path inputPath, Path basePath, Path outputPath) {
-    this("", inputPath, basePath, outputPath);
-  }
-
-  public SourceFile(Path inputPath) {
-    this("", inputPath, DEFAULT_PATH, DEFAULT_PATH);
+    this(getModelName(inputPath), inputPath, basePath, outputPath);
   }
 
   public SourceFile(String modelName, Path inputPath, Path basePath, Path outputPath) {
@@ -93,12 +81,11 @@ public final class SourceFile {
     return this.packageName;
   }
 
-  public String getFileName() {
+  private static String getModelName(Path inputPath) {
     return removeExtension(inputPath.getFileName().toString());
   }
 
-
-  private String removeExtension(final String filename) {
+  private static String removeExtension(final String filename) {
     String ext = FilenameUtils.getExtension(filename);
     if ("".equals(ext)) {
       return filename;
