@@ -59,7 +59,7 @@ public final class Fleury implements Algorithm {
   }
 
   public Path<Element> getTrail(RuntimeVertex vertex) {
-    return getTrail(vertex, new HashSet<RuntimeEdge>());
+    return getTrail(vertex, new HashSet<>());
   }
 
   private Path<Element> getTrail(RuntimeVertex vertex, Set<RuntimeEdge> visitedEdges) {

@@ -78,12 +78,7 @@ public class ObserverTest implements Observer {
   public void verifyEvents() {
     Machine machine = createMachine();
     final List<EventType> types = new ArrayList<>();
-    machine.addObserver(new Observer() {
-      @Override
-      public void update(Machine observable, Element object, EventType type) {
-        types.add(type);
-      }
-    });
+    machine.addObserver((observable, object, type) -> types.add(type));
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }

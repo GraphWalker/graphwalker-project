@@ -166,11 +166,8 @@ public final class JavaContextFactory implements ContextFactory {
   @Override
   public void write(List<Context> contexts, Path path) throws IOException {
     Path javaFile = Paths.get(path.toString(), contexts.get(0).getModel().getName() + ".java");
-    OutputStream outputStream = Files.newOutputStream(javaFile);
-    try {
+    try (OutputStream outputStream = Files.newOutputStream(javaFile)) {
       outputStream.write(getAsString(contexts).getBytes());
-    } finally {
-      outputStream.close();
     }
   }
 }

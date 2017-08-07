@@ -228,9 +228,7 @@ public class CLI {
         throw new MissingCommandException("Missing a command. Add '--help'");
       }
 
-    } catch (UnsupportedFileFormat e) {
-      System.err.println(e.getMessage() + System.lineSeparator());
-    } catch (MissingCommandException e) {
+    } catch (UnsupportedFileFormat | MissingCommandException e) {
       System.err.println(e.getMessage() + System.lineSeparator());
     } catch (ParameterException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
@@ -465,12 +463,9 @@ public class CLI {
       }
 
       TestExecutor executor = new TestExecutor(contexts);
-      executor.getMachine().addObserver(new Observer() {
-        @Override
-        public void update(Machine machine, Element element, EventType type) {
-          if (EventType.BEFORE_ELEMENT.equals(type)) {
-            System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
-          }
+      executor.getMachine().addObserver((machine, element, type) -> {
+        if (EventType.BEFORE_ELEMENT.equals(type)) {
+          System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
         }
       });
       executor.execute();

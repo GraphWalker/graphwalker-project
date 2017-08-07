@@ -386,14 +386,11 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
     logger.info("GraphWalkerServer started on port: " + getPort());
 
     // Shutdown event
-    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-      @Override
-      public void run() {
-        System.out.println();
-        System.out.println("GraphWalkerServer shutting down");
-        System.out.println();
-        logger.info("GraphWalkerServer shutting down");
-      }
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      System.out.println();
+      System.out.println("GraphWalkerServer shutting down");
+      System.out.println();
+      logger.info("GraphWalkerServer shutting down");
     }));
 
     while (true) {

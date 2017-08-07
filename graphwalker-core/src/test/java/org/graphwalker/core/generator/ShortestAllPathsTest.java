@@ -63,8 +63,8 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
-    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-        Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
     );
     context.setNextElement(v1);
     execute(context, expectedElements);
@@ -85,8 +85,8 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
     context.setProfiler(new Profiler());
-    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-        Arrays.asList(e1, v2, e2, v3, e3, v1)
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
     context.setNextElement(v1);
     execute(context, expectedElements);
@@ -104,8 +104,8 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
-    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-        Arrays.asList(e1, v2, e2, v3, e3, v1)
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
     context.setNextElement(v1);
     execute(context, expectedElements);
