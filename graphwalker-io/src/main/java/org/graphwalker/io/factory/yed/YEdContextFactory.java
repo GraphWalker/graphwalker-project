@@ -259,7 +259,7 @@ public final class YEdContextFactory implements ContextFactory {
     Deque<XmlObject> workQueue = new ArrayDeque<>();
     workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
 
-    List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
+    List<KeyType> keys = getKeyArray(document);
     Map<String, KeyType> propKeys = new HashMap<>();
     for (KeyType key : keys) {
       if (key.getFor() == KeyForTypeImpl.NODE && !key.isSetYfilesType()) {
@@ -373,10 +373,17 @@ public final class YEdContextFactory implements ContextFactory {
     throw new ContextFactoryException("Unsupported node type: " + xml);
   }
 
+  private List<KeyType> getKeyArray(GraphmlDocument document) {
+    if (document.getGraphml() != null) {
+      return Arrays.asList(document.getGraphml().getKeyArray());
+    }
+    return Collections.emptyList();
+  }
+
   private Edge addEdges(Model model, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
     Edge startEdge = null;
 
-    List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
+    List<KeyType> keys = getKeyArray(document);
     Map<String, KeyType> propKeys = new HashMap<>();
     for (KeyType key : keys) {
       if (key.getFor() == KeyForTypeImpl.EDGE && !key.isSetYfilesType()) {
