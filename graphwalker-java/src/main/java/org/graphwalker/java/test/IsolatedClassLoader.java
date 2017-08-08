@@ -47,7 +47,15 @@ public final class IsolatedClassLoader extends URLClassLoader {
   }
 
   public IsolatedClassLoader(URL[] urls) {
-    super(urls, ClassLoader.getSystemClassLoader().getParent());
+    super(urls, getParentClassLoader());
+  }
+
+  private static ClassLoader getParentClassLoader() {
+    ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+    if (systemClassLoader != null) {
+      return systemClassLoader.getParent();
+    }
+    return null;
   }
 
   private static URL[] convert(List<String> urls) {
