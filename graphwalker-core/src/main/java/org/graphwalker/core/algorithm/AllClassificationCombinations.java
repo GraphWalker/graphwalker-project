@@ -83,7 +83,7 @@ public final class AllClassificationCombinations implements Algorithm {
     }
 
     combinations = new ArrayList<>();
-    getCombinations(treeData, 0, new ArrayList<Classification.RuntimeClassification>());
+    getCombinations(treeData, 0, new ArrayList<>());
     return combinations;
   }
 
