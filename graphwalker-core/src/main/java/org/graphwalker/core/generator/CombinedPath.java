@@ -107,7 +107,7 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
     while (iterator.hasNext()) {
       builder = iterator.next().toString(builder);
       if (iterator.hasNext()) {
-        builder.append(" AND ");
+        builder.append(" ");
       }
     }
     return builder;
