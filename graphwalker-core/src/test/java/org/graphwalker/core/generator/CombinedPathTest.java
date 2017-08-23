@@ -88,6 +88,6 @@ public class CombinedPathTest {
     assertEquals("RandomPath(ReachedVertex(v1))", generator.toString());
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     assertEquals(generator.getPathGenerators().size(), 2);
-    assertEquals("RandomPath(ReachedVertex(v1)) AND RandomPath(ReachedVertex(v2))", generator.toString());
+    assertEquals("RandomPath(ReachedVertex(v1)) RandomPath(ReachedVertex(v2))", generator.toString());
   }
 }
