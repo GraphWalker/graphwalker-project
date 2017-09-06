@@ -27,6 +27,8 @@ package org.graphwalker.core.statistics;
  */
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
@@ -37,9 +39,19 @@ import org.graphwalker.core.model.Path;
 public final class Profile extends HashMap<Element, ProfileUnit> {
 
   private final Path<Element> path = new Path<>();
+  private final Set<Element> visited = new HashSet<>();
+
+  public void reset() {
+    visited.clear();
+  }
+
+  public boolean isVisited(Element element) {
+    return visited.contains(element);
+  }
 
   public void addExecution(Element element, Execution execution) {
     path.push(element);
+    visited.add(element);
     if (!containsKey(element)) {
       put(element, new ProfileUnit(execution));
     } else {

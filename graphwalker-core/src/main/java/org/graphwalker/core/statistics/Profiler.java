@@ -52,6 +52,10 @@ public final class Profiler {
   private final Map<Element, Context> elementContextMap = new HashMap<>();
   private final Set<Context> contexts = new HashSet<>();
 
+  public void reset() {
+    getProfile().reset();
+  }
+
   public Context getContext(Element element) {
     return elementContextMap.get(element);
   }
@@ -74,7 +78,7 @@ public final class Profiler {
   }
 
   public boolean isVisited(Element element) {
-    return profile.containsKey(element);
+    return getProfile().isVisited(element);
   }
 
   public long getTotalVisitCount() {
@@ -87,9 +91,9 @@ public final class Profiler {
 
   public List<Element> getUnvisitedElements(Context context) {
     List<Element> elementList = new ArrayList<>();
-    for (Element e : context.getModel().getElements()) {
-      if (!isVisited(e)) {
-        elementList.add(e);
+    for (Element element: context.getModel().getElements()) {
+      if (!getProfile().containsKey(element)) {
+        elementList.add(element);
       }
     }
     return elementList;
@@ -97,10 +101,10 @@ public final class Profiler {
 
   public List<Element> getUnvisitedElements() {
     List<Element> elementList = new ArrayList<>();
-    for (Context context : getContexts()) {
-      for (Element e : context.getModel().getElements()) {
-        if (!isVisited(e)) {
-          elementList.add(e);
+    for (Context context: getContexts()) {
+      for (Element element: context.getModel().getElements()) {
+        if (!getProfile().containsKey(element)) {
+          elementList.add(element);
         }
       }
     }
@@ -109,10 +113,10 @@ public final class Profiler {
 
   public List<Element> getVisitedEdges() {
     List<Element> elementList = new ArrayList<>();
-    for (Context context : getContexts()) {
-      for (Element e : context.getModel().getElements()) {
-        if (isVisited(e) && e instanceof Edge.RuntimeEdge) {
-          elementList.add(e);
+    for (Context context: getContexts()) {
+      for (Element element: context.getModel().getElements()) {
+        if (getProfile().containsKey(element) && element instanceof Edge.RuntimeEdge) {
+          elementList.add(element);
         }
       }
     }
@@ -121,9 +125,9 @@ public final class Profiler {
 
   public List<Element> getUnvisitedEdges(Context context) {
     List<Element> elementList = new ArrayList<>();
-    for (Element e : context.getModel().getElements()) {
-      if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
-        elementList.add(e);
+    for (Element element: context.getModel().getElements()) {
+      if (!getProfile().containsKey(element) && element instanceof Edge.RuntimeEdge) {
+        elementList.add(element);
       }
     }
     return elementList;
@@ -131,10 +135,10 @@ public final class Profiler {
 
   public List<Element> getUnvisitedEdges() {
     List<Element> elementList = new ArrayList<>();
-    for (Context context : getContexts()) {
-      for (Element e : context.getModel().getElements()) {
-        if (!isVisited(e) && e instanceof Edge.RuntimeEdge) {
-          elementList.add(e);
+    for (Context context: getContexts()) {
+      for (Element element: context.getModel().getElements()) {
+        if (!getProfile().containsKey(element) && element instanceof Edge.RuntimeEdge) {
+          elementList.add(element);
         }
       }
     }
@@ -143,9 +147,9 @@ public final class Profiler {
 
   public List<Element> getUnvisitedVertices(Context context) {
     List<Element> elementList = new ArrayList<>();
-    for (Element e : context.getModel().getElements()) {
-      if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
-        elementList.add(e);
+    for (Element element: context.getModel().getElements()) {
+      if (!getProfile().containsKey(element) && element instanceof Vertex.RuntimeVertex) {
+        elementList.add(element);
       }
     }
     return elementList;
@@ -153,10 +157,10 @@ public final class Profiler {
 
   public List<Element> getUnvisitedVertices() {
     List<Element> elementList = new ArrayList<>();
-    for (Context context : getContexts()) {
-      for (Element e : context.getModel().getElements()) {
-        if (!isVisited(e) && e instanceof Vertex.RuntimeVertex) {
-          elementList.add(e);
+    for (Context context: getContexts()) {
+      for (Element element: context.getModel().getElements()) {
+        if (!getProfile().containsKey(element) && element instanceof Vertex.RuntimeVertex) {
+          elementList.add(element);
         }
       }
     }
@@ -166,9 +170,9 @@ public final class Profiler {
   public List<Element> getVisitedVertices() {
     List<Element> elementList = new ArrayList<>();
     for (Context context : getContexts()) {
-      for (Element e : context.getModel().getElements()) {
-        if (isVisited(e) && e instanceof Vertex.RuntimeVertex) {
-          elementList.add(e);
+      for (Element element : context.getModel().getElements()) {
+        if (getProfile().containsKey(element) && element instanceof Vertex.RuntimeVertex) {
+          elementList.add(element);
         }
       }
     }

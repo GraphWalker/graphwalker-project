@@ -71,6 +71,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     Context context = new TestExecutionContext(model, generator);
+    context.setProfiler(new Profiler());
     context.setCurrentElement(start.build());
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();
