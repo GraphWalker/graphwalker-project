@@ -44,13 +44,7 @@ import org.graphwalker.core.condition.RequirementCoverage;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.condition.TimeDuration;
 import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.CombinedPath;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.generator.QuickRandomPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.generator.WeightedRandomPath;
+import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.generator.Generator_Parser;
 import org.graphwalker.dsl.generator.Generator_ParserBaseListener;
 
@@ -121,7 +115,9 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
       stopCondition = stopConditions.get(0);
     }
 
-    if (ctx.getChild(0).getText().equalsIgnoreCase("random") ||
+    if (ctx.getChild(0).getText().equalsIgnoreCase("awesome")) {
+      pathGenerators.add(new AwesomePath(stopCondition));
+    } else if (ctx.getChild(0).getText().equalsIgnoreCase("random") ||
         ctx.getChild(0).getText().equalsIgnoreCase("randompath")) {
       pathGenerators.add(new RandomPath(stopCondition));
     } else if (ctx.getChild(0).getText().equalsIgnoreCase("weighted_random") ||
