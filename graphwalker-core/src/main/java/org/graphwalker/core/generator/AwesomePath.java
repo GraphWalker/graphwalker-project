@@ -3,10 +3,14 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
+import java.util.Arrays;
+
 import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 public class AwesomePath extends PathGeneratorBase<StopCondition> {
 
@@ -40,6 +44,9 @@ public class AwesomePath extends PathGeneratorBase<StopCondition> {
       } catch (Throwable t) {
         // ignore, try with the next unvisited element
       }
+    }
+    if (context.getCurrentElement() instanceof RuntimeEdge) {
+      return new Path<>(Arrays.asList(context.getCurrentElement(), ((RuntimeEdge) context.getCurrentElement()).getTargetVertex()));
     }
     throw new NoPathFoundException("Could not find a valid path from element: "
       + context.getCurrentElement().getName()
