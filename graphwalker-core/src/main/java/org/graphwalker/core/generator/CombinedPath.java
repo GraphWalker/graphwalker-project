@@ -97,6 +97,9 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
       if (getActivePathGenerator().hasNextStep()) {
         return true;
       }
+      if (index < generators.size() - 1) {
+        getContext().getProfiler().reset();
+      }
     }
     return false;
   }
