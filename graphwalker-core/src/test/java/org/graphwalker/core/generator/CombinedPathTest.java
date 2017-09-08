@@ -32,10 +32,7 @@ import static org.junit.Assert.assertEquals;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.ReachedEdge;
 import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
@@ -137,5 +134,19 @@ public class CombinedPathTest {
     );
     Collections.reverse(expectedPath);
     assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+  }
+
+  @Test(expected = MachineException.class)
+  public void negativeTest() {
+    CombinedPath generator = new CombinedPath();
+    generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
+    generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
+    Context context = new TestExecutionContext(model, generator);
+    context.setProfiler(new Profiler());
+    context.setCurrentElement(start.build());
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
   }
 }
