@@ -29,9 +29,6 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.StopConditionException;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
-import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
@@ -66,14 +63,10 @@ public class AStarPathTest {
       .addEdge(e5)
       .addEdge(e6);
 
-  @Test(expected = MachineException.class)
+  @Test(expected = NoPathFoundException.class)
   public void failTest() {
     Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("end")));
-    Machine machine = new SimpleMachine(context);
-    // Missing a start point, shall generate an exception
-    while (machine.hasNextStep()) {
-      machine.getNextStep();
-    }
+    context.getPathGenerator().getNextStep();
   }
 
   @Test(expected = StopConditionException.class)
@@ -83,5 +76,16 @@ public class AStarPathTest {
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();
     }
+  }
+
+  @Test(expected = NoPathFoundException.class)
+  public void noPath() {
+    Model blockedModel = new Model().addEdge(new Edge()
+      .setGuard(new Guard("false"))
+      .setSourceVertex(new Vertex().setId("start"))
+      .setTargetVertex(new Vertex().setName("end")));
+    Context context = new TestExecutionContext(blockedModel, new AStarPath(new ReachedVertex("end")));
+    context.setCurrentElement(context.getModel().getElementById("start"));
+    context.getPathGenerator().getNextStep();
   }
 }
