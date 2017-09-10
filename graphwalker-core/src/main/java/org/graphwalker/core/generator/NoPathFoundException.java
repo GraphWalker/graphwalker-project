@@ -26,6 +26,9 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+
 /**
  * @author Nils Olsson
  */
@@ -38,4 +41,7 @@ public final class NoPathFoundException extends RuntimeException {
     super(message);
   }
 
+  public NoPathFoundException(Element element) {
+    super("Could not find a valid path from element: " + element.getName() + " (" + element.getId() + ")");
+  }
 }

@@ -67,7 +67,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    Context context = getContext();
+    Context context = super.getNextStep();
     if (elements.isEmpty()) {
       elements.addAll(context.getModel().getElements());
       elements.remove(context.getCurrentElement());
@@ -75,7 +75,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
     }
     if (isNull(target) || target.equals(context.getCurrentElement())) {
       if (elements.isEmpty()) {
-        throw new NoPathFoundException();
+        throw new NoPathFoundException(context.getCurrentElement());
       } else {
         orderElementsUnvisitedFirst(elements);
         target = elements.get(0);

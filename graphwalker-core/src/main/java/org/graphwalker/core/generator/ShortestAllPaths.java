@@ -49,7 +49,7 @@ public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    Context context = getContext();
+    Context context = super.getNextStep();
     if (isNull(path)) {
       path = getPath(context);
     }
