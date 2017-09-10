@@ -59,9 +59,6 @@ public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
 
   private Path<Element> getPath(Context context) {
     Element element = context.getCurrentElement();
-    if (isNull(element)) {
-      element = context.getNextElement();
-    }
     if (element instanceof RuntimeVertex) {
       return context.getAlgorithm(Eulerian.class).getEulerPath((RuntimeVertex) element);
     } else {
