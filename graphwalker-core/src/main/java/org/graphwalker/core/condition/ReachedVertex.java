@@ -26,7 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 import java.util.HashSet;
@@ -55,6 +57,13 @@ public final class ReachedVertex extends ReachedStopConditionBase {
       elements.addAll(vertices);
     }
     return elements;
+  }
+
+  @Override
+  protected void validate(Context context) {
+    if (isNotNull(context) && isNull(context.getModel().findVertices(getValue()))) {
+      throw new StopConditionException("Vertex [" + getValue() + "] not found");
+    }
   }
 
   @Override

@@ -31,6 +31,9 @@ import java.util.Set;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * <h1>ReachedEdge</h1>
  * The ReachedEdge stop condition is fulfilled when the traversing of the model reaches the named edge.
@@ -48,6 +51,13 @@ public final class ReachedEdge extends ReachedStopConditionBase {
     Set<Element> elements = new HashSet<>();
     elements.addAll(getContext().getModel().findEdges(getValue()));
     return elements;
+  }
+
+  @Override
+  protected void validate(Context context) {
+    if (isNotNull(context) && isNull(context.getModel().findEdges(getValue()))) {
+      throw new StopConditionException("Edge [" + getValue() + "] not found");
+    }
   }
 
   @Override
