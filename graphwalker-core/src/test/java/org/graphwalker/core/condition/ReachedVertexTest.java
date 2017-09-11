@@ -54,6 +54,16 @@ public class ReachedVertexTest {
     new TestExecutionContext(model, new RandomPath(condition));
   }
 
+  @Test(expected = StopConditionException.class)
+  public void testWrongVertexName() {
+    Vertex v1 = new Vertex().setName("v1");
+    Vertex v2 = new Vertex().setName("v2");
+    Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("A_EDGE");
+    Model model = new Model().addEdge(e1);
+    StopCondition condition = new ReachedVertex("A_EDGE");
+    new TestExecutionContext(model, new RandomPath(condition));
+  }
+
   @Test
   public void testFulfilment() {
     Vertex v1 = new Vertex().setName("v1");
