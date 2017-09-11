@@ -112,4 +112,13 @@ public class ObserverTest implements Observer {
     assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
     assertThat(counter, is(1));
   }
+
+  @Test
+  public void removeObservers() throws Exception {
+    Machine machine = createMachine();
+    machine.addObserver(this);
+    assertThat(machine.getObservers().size(), is(1));
+    machine.deleteObservers();
+    assertThat(machine.getObservers().size(), is(0));
+  }
 }
