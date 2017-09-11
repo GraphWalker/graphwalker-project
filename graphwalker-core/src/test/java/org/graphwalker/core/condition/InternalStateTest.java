@@ -48,7 +48,7 @@ import org.junit.Test;
 public class InternalStateTest {
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model()
         .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
@@ -67,7 +67,7 @@ public class InternalStateTest {
   }
 
   @Test
-  public void testIsFulfilledWithInitEdge() {
+  public void testIsFulfilledWithInitEdge() throws Exception {
     Vertex start = new Vertex();
     Vertex vertex = new Vertex();
     Model model = new Model()
@@ -87,7 +87,7 @@ public class InternalStateTest {
   }
 
   @Test(expected = StopConditionException.class)
-  public void testWrongTypeOfExpression() {
+  public void testWrongTypeOfExpression() throws Exception {
     Vertex start = new Vertex();
     Vertex vertex = new Vertex();
     Model model = new Model()

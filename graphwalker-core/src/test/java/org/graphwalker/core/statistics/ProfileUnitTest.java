@@ -38,7 +38,7 @@ import org.junit.Test;
 public final class ProfileUnitTest {
 
   @Test
-  public void measure() {
+  public void measure() throws Exception {
     ProfileUnit profileUnit = new ProfileUnit(new Execution(0L, 350L));
     profileUnit.addExecution(new Execution(350L, 150L));
     assertNotNull(profileUnit);

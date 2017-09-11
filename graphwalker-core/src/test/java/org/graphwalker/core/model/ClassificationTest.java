@@ -40,7 +40,7 @@ import org.junit.Test;
 public class ClassificationTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Classification root = new Classification();
     root.setName("root");
     root.addClassification(new Classification().setName("leaf1"));

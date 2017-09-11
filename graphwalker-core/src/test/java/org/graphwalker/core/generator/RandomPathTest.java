@@ -48,7 +48,7 @@ import org.junit.Test;
 public class RandomPathTest {
 
   @Test
-  public void simpleTest() {
+  public void simpleTest() throws Exception {
     RuntimeModel model = simpleModel().build();
     RuntimeVertex source = findVertex(model, "A");
     RuntimeVertex target = findVertex(model, "B");
@@ -66,7 +66,7 @@ public class RandomPathTest {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void newStopConditionTest() {
+  public void newStopConditionTest() throws Exception {
     RuntimeModel model = simpleModel().build();
     RuntimeVertex source = findVertex(model, "A");
     RuntimeVertex target = findVertex(model, "B");
@@ -82,7 +82,7 @@ public class RandomPathTest {
   }
 
   @Test(expected = NoPathFoundException.class)
-  public void failTest() {
+  public void failTest() throws Exception {
     RuntimeModel model = simpleModel().build();
     RuntimeVertex source = findVertex(model, "A");
     RuntimeVertex target = findVertex(model, "B");

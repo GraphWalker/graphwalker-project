@@ -38,7 +38,7 @@ import org.junit.Test;
 public class AllClassificationCombinationsTest {
 
   @Test
-  public void simpleTree() {
+  public void simpleTree() throws Exception {
     Classification branchA = new Classification().setName("Branch A");
     branchA.addClassification(new Classification().setName("Leaf 1"));
     branchA.addClassification(new Classification().setName("Leaf 2"));
@@ -66,7 +66,7 @@ public class AllClassificationCombinationsTest {
   }
 
   @Test
-  public void timeSheetEntry() {
+  public void timeSheetEntry() throws Exception {
         /*
          * Populate tre according to the time sheet entry example at:
          * https://mattarcherblog.wordpress.com/2012/03/07/software-test-case-design-with-the-classification-tree-technique-sample-book-chapter/

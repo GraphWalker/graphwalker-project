@@ -53,26 +53,26 @@ public class VisitorTest {
       .build();
 
   @Test
-  public void visitVertex() {
+  public void visitVertex() throws Exception {
     ElementVisitor visitor = new MyElementVisitor();
     new Vertex().setName("vertex").build().accept(visitor);
   }
 
   @Test
-  public void visitVertices() {
+  public void visitVertices() throws Exception {
     MyNamedVertexCounter visitor = new MyNamedVertexCounter();
     model.accept(visitor);
     assertThat(visitor.count, is(2));
   }
 
   @Test
-  public void visitEdge() {
+  public void visitEdge() throws Exception {
     ElementVisitor visitor = new MyEdgeVisitor();
     new Edge().setName("edge1").setSourceVertex(new Vertex()).setTargetVertex(new Vertex()).build().accept(visitor);
   }
 
   @Test
-  public void visitEdges() {
+  public void visitEdges() throws Exception {
     Vertex startVertex = new Vertex().setName("start");
     Vertex endVertex = new Vertex().setName("end");
     RuntimeModel pseudograph = new Model()
@@ -85,7 +85,7 @@ public class VisitorTest {
   }
 
   @Test
-  public void detectBridge() {
+  public void detectBridge() throws Exception {
     Vertex start = new Vertex();
     Vertex v1 = new Vertex().setName("V1");
     Vertex v2 = new Vertex().setName("V2");

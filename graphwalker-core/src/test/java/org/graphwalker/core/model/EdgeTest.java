@@ -43,7 +43,7 @@ import org.junit.Test;
 public class EdgeTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Edge edge = new Edge()
         .setGuard(new Guard("script"))
         .setName("name")

@@ -64,7 +64,7 @@ public class WeightedRandomPathTest {
       .addEdge(back2SourceEdge);
 
   @Test
-  public void doesNotThrowForValidModel() {
+  public void doesNotThrowForValidModel() throws Exception {
     PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
     Context context = new TestExecutionContext(model, generator).setCurrentElement(source.build());
     SimpleMachine machine = new SimpleMachine(context);
@@ -76,7 +76,7 @@ public class WeightedRandomPathTest {
   }
 
   @Test(expected = MachineException.class)
-  public void throwsWhenTotalWeightHigherThanOne() {
+  public void throwsWhenTotalWeightHigherThanOne() throws Exception {
     Model invalidModel = new Model()
         .addEdge(edge1)
         .addEdge(edge2)
@@ -96,7 +96,7 @@ public class WeightedRandomPathTest {
   }
 
   @Test(expected = MachineException.class)
-  public void throwsWhenModelEmpty() {
+  public void throwsWhenModelEmpty() throws Exception {
     Model emptyModel = new Model();
     PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
     Context context = new TestExecutionContext(emptyModel, generator).setCurrentElement(source.build());
@@ -109,7 +109,7 @@ public class WeightedRandomPathTest {
   }
 
   @Test
-  public void doesNotThrowWhenNoWeightsSpecified() {
+  public void doesNotThrowWhenNoWeightsSpecified() throws Exception {
     Edge edge1 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge1");
     Edge edge2 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge2");
     Edge edge3 = new Edge().setSourceVertex(source).setTargetVertex(target).setName("edge3");

@@ -66,7 +66,7 @@ public class DepthFirstSearchTest {
       .addEdge(ee1);
 
   @Test
-  public void connectedComponent() {
+  public void connectedComponent() throws Exception {
     DepthFirstSearch depthFirstSearch = new DepthFirstSearch(new TestExecutionContext().setModel(model.build()));
     assertThat(depthFirstSearch.getConnectedComponent(v00.build()).size(), is(10));
     assertThat(depthFirstSearch.getConnectedComponent(ve0.build()).size(), is(3));

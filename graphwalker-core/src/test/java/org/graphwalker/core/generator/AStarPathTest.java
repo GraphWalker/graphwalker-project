@@ -64,13 +64,13 @@ public class AStarPathTest {
       .addEdge(e6);
 
   @Test(expected = NoPathFoundException.class)
-  public void failTest() {
+  public void failTest() throws Exception {
     Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("end")));
     context.getPathGenerator().getNextStep();
   }
 
   @Test(expected = StopConditionException.class)
-  public void failTest2() {
+  public void failTest2() throws Exception {
     Context context = new TestExecutionContext(new Model().addEdge(e1), new AStarPath(new ReachedVertex("end")));
     context.setNextElement(v1);
     while (context.getPathGenerator().hasNextStep()) {
@@ -79,7 +79,7 @@ public class AStarPathTest {
   }
 
   @Test(expected = NoPathFoundException.class)
-  public void noPath() {
+  public void noPath() throws Exception {
     Model blockedModel = new Model().addEdge(new Edge()
       .setGuard(new Guard("false"))
       .setSourceVertex(new Vertex().setId("start"))

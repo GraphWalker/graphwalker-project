@@ -46,18 +46,18 @@ import org.junit.Test;
 public class VertexCoverageTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     VertexCoverage vertexCoverage = new VertexCoverage(55);
     assertThat(vertexCoverage.getPercent(), is(55));
   }
 
   @Test(expected = StopConditionException.class)
-  public void testNegativePercent() {
+  public void testNegativePercent() throws Exception {
     new VertexCoverage(-55);
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
@@ -76,7 +76,7 @@ public class VertexCoverageTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));

@@ -30,7 +30,7 @@ public class ObjectMirrorTest extends ExecutionContext {
   }
 
   @Test
-  public void verifyMirror() {
+  public void verifyMirror() throws Exception {
     Vertex start = new Vertex();
     Model model = new Model()
         .addEdge(new Edge().setName("edge1")

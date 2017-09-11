@@ -39,7 +39,7 @@ import org.junit.Test;
 public class ExecutionTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Execution execution = new Execution(100000000L, 50000L);
     assertNotNull(execution);
     assertThat(execution.getTime(), is(100000000L));

@@ -74,7 +74,7 @@ public class FleuryTest {
   ));
 
   @Test
-  public void findTrail() {
+  public void findTrail() throws Exception {
     Context context = new TestExecutionContext(model, null);
     Fleury fleury = new Fleury(context);
     Path<Element> path = fleury.getTrail(v1.build());

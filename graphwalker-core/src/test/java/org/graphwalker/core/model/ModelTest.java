@@ -43,7 +43,7 @@ import org.junit.Test;
 public class ModelTest {
 
   @Test
-  public void getElementById() {
+  public void getElementById() throws Exception {
     Vertex v1 = new Vertex().setId("ONE");
     Vertex v2 = new Vertex().setId("TWO");
     Edge e1 = new Edge().setId("THREE");
@@ -55,7 +55,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildVertex() {
+  public void buildVertex() throws Exception {
     Vertex vertex = new Vertex().setName("test");
     assertThat(vertex, notNullValue());
     assertThat(vertex.getName(), is("test"));
@@ -64,7 +64,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildEdge() {
+  public void buildEdge() throws Exception {
     Vertex vertex1 = new Vertex().setName("vertex1");
     Vertex vertex2 = new Vertex().setName("vertex2");
     Edge edge = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).setName("edge1");
@@ -83,7 +83,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildEFSM() {
+  public void buildEFSM() throws Exception {
     Model efsm = new Model().addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
     assertThat(efsm, notNullValue());
     assertThat(efsm.getEdges().size(), is(1));
@@ -94,7 +94,7 @@ public class ModelTest {
   }
 
   @Test
-  public void deleteElement() {
+  public void deleteElement() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge();
@@ -126,7 +126,7 @@ public class ModelTest {
   }
 
   @Test
-  public void deleteVertex() {
+  public void deleteVertex() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
@@ -153,7 +153,7 @@ public class ModelTest {
   }
 
   @Test
-  public void recreateModel() {
+  public void recreateModel() throws Exception {
     Model model1 = new Model().setId("m1").addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
     Model model2 = new Model(model1.build());
     assertEquals(model1.getId(), model2.getId());
@@ -161,7 +161,7 @@ public class ModelTest {
   }
 
   @Test
-  public void updateBuilder() {
+  public void updateBuilder() throws Exception {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Edge edge1 = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2);
@@ -177,7 +177,7 @@ public class ModelTest {
   }
 
   @Test
-  public void singleVertex() {
+  public void singleVertex() throws Exception {
     Model efsm = new Model().addVertex(new Vertex().setName("test"));
     assertThat(efsm, notNullValue());
     assertThat(efsm.getEdges().size(), is(0));
@@ -189,7 +189,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildClassification() {
+  public void buildClassification() throws Exception {
     Classification classification = new Classification().setName("classification");
     assertThat(classification, notNullValue());
     assertThat(classification.getName(), is("classification"));
@@ -198,7 +198,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildClassificationWithLeafs() {
+  public void buildClassificationWithLeafs() throws Exception {
     Classification classification = new Classification()
         .setName("classification")
         .addClassification(new Classification().setName("leaf1"))
@@ -214,7 +214,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildClassificationTree() {
+  public void buildClassificationTree() throws Exception {
     ClassificationTree classificationTree = new ClassificationTree();
     assertThat(classificationTree, notNullValue());
     assertThat(classificationTree.getRoot(), notNullValue());
@@ -227,7 +227,7 @@ public class ModelTest {
   }
 
   @Test
-  public void buildLargerClassificationTree() {
+  public void buildLargerClassificationTree() throws Exception {
     Classification leaf1 = new Classification().setName("leaf1");
     Classification leaf2 = new Classification().setName("leaf2");
     ClassificationTree classificationTree = new ClassificationTree()
@@ -243,7 +243,7 @@ public class ModelTest {
   }
 
   @Test
-  public void createLargeModel() {
+  public void createLargeModel() throws Exception {
     final long startTime = System.nanoTime();
     final Random random = new Random(System.nanoTime());
     final Model model = new Model();
@@ -267,7 +267,7 @@ public class ModelTest {
   }
 
   @Test
-  public void modelWithSharedState() {
+  public void modelWithSharedState() throws Exception {
     Model model = new Model();
     assertFalse(model.build().hasSharedStates());
     assertFalse(model.build().hasSharedState("SHARED"));

@@ -43,7 +43,7 @@ import org.junit.Test;
 public class VertexTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Vertex vertex = new Vertex()
         .setName("vertex")
         .setSharedState("MY_STATE")

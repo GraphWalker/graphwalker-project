@@ -18,7 +18,7 @@ import org.junit.Test;
 public class ReplayMachineTest {
 
   @Test
-  public void replayMachine() {
+  public void replayMachine() throws Exception {
     Machine machine = createMachineExecution();
     Machine replayMachine = new ReplayMachine(machine.getProfiler());
     while (replayMachine.hasNextStep()) {

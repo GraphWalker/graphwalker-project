@@ -58,7 +58,7 @@ public class AStarTest {
   private static final Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
 
   @Test
-  public void astar() {
+  public void astar() throws Exception {
     AStar aStar = new AStar(new TestExecutionContext().setModel(model.build()));
     Path<Element> path = aStar.getShortestPath(v00.build(), v31.build());
     assertNotNull(path);

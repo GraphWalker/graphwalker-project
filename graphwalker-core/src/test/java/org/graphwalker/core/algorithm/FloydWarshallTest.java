@@ -55,19 +55,19 @@ public final class FloydWarshallTest {
   private static final Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
 
   @Test
-  public void shortestDistance() {
+  public void shortestDistance() throws Exception {
     FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model.build()));
     assertThat(floydWarshall.getShortestDistance(v00.build(), v31.build()), is(4));
   }
 
   @Test
-  public void maximumDistance() {
+  public void maximumDistance() throws Exception {
     FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model.build()));
     assertThat(floydWarshall.getMaximumDistance(v31.build()), is(5));
   }
 
   @Test
-  public void noDistance() {
+  public void noDistance() throws Exception {
     FloydWarshall floydWarshall = new FloydWarshall(new TestExecutionContext().setModel(model.build()));
     assertThat(floydWarshall.getShortestDistance(v00.build(), v00.build()), is(0));
     assertThat(floydWarshall.getShortestDistance(e1.build(), e1.build()), is(0));

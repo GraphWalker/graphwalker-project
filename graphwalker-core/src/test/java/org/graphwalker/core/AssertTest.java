@@ -41,7 +41,7 @@ import org.junit.Test;
 public class AssertTest {
 
   @Test
-  public void testSize() {
+  public void testSize() throws Exception {
     List<Integer> list = new ArrayList<>();
     expect(list).to.have.size(0);
     list.add(1);
@@ -49,33 +49,33 @@ public class AssertTest {
   }
 
   @Test
-  public void testArraySize() {
+  public void testArraySize() throws Exception {
     int[] array = new int[]{1, 2, 3};
     expect(array).to.have.size(3);
   }
 
   @Test(expected = AssertionError.class)
-  public void testSizeFailure() {
+  public void testSizeFailure() throws Exception {
     expect(new ArrayList<>()).to.be.of.size(1);
   }
 
   @Test
-  public void testA() {
+  public void testA() throws Exception {
     expect(0).to.be.a(Integer.class);
   }
 
   @Test(expected = AssertionError.class)
-  public void testANull() {
+  public void testANull() throws Exception {
     expect(0).to.be.a(null);
   }
 
   @Test
-  public void testAMessage() {
+  public void testAMessage() throws Exception {
     expect(0).to.be.a(Integer.class, "message");
   }
 
   @Test
-  public void testAEmptyMessage() {
+  public void testAEmptyMessage() throws Exception {
     expect(0).to.be.a(Integer.class, null);
   }
 
@@ -85,22 +85,22 @@ public class AssertTest {
   }
 
   @Test
-  public void testAn() {
+  public void testAn() throws Exception {
     expect(0).to.be.an(Integer.class);
   }
 
   @Test
-  public void testAnMessage() {
+  public void testAnMessage() throws Exception {
     expect(0).to.be.an(Integer.class, "message");
   }
 
   @Test(expected = AssertionError.class)
-  public void testAnFailure() {
+  public void testAnFailure() throws Exception {
     expect(0L).to.be.an(Double.class);
   }
 
   @Test
-  public void testEqualNullMessage() {
+  public void testEqualNullMessage() throws Exception {
     expect(1).to.equal(1, null);
   }
 
@@ -110,179 +110,179 @@ public class AssertTest {
   }
 
   @Test(expected = AssertionError.class)
-  public void testNull() {
+  public void testNull() throws Exception {
     expect(1).to.equal(null);
   }
 
   @Test
-  public void testEqual1() {
+  public void testEqual1() throws Exception {
     expect(1).to.be.equal(1);
   }
 
   @Test
-  public void testEqual2() {
+  public void testEqual2() throws Exception {
     expect(2L).to.equal(2L);
   }
 
   @Test
-  public void testEqual3() {
+  public void testEqual3() throws Exception {
     expect(3.0f).to.equal(3.0f);
   }
 
   @Test
-  public void testEqual4() {
+  public void testEqual4() throws Exception {
     expect(4.0).to.equal(4.0);
   }
 
   @Test
-  public void testEqual5() {
+  public void testEqual5() throws Exception {
     int[] array1 = new int[]{1, 2, 3};
     int[] array2 = new int[]{1, 2, 3};
     expect(array1).to.equal(array2);
   }
 
   @Test
-  public void testEqual6() {
+  public void testEqual6() throws Exception {
     List<Integer> list1 = Arrays.asList(1, 2, 3);
     List<Integer> list2 = Arrays.asList(1, 2, 3);
     expect(list1).to.equal(list2);
   }
 
   @Test
-  public void testEqual7() {
+  public void testEqual7() throws Exception {
     expect(true).to.equal(true);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure1() {
+  public void testEqualFailure1() throws Exception {
     expect(1).to.equal(2);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure2() {
+  public void testEqualFailure2() throws Exception {
     expect(2L).to.equal(3L);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure3() {
+  public void testEqualFailure3() throws Exception {
     expect(3.0f).to.equal(3.1f);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure4() {
+  public void testEqualFailure4() throws Exception {
     expect(4.0).to.equal(4.1);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure5a() {
+  public void testEqualFailure5a() throws Exception {
     int[] array1 = new int[]{1, 2, 3};
     int[] array2 = new int[]{1, 2};
     expect(array1).to.equal(array2);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure5b() {
+  public void testEqualFailure5b() throws Exception {
     int[] array1 = new int[]{1, 2, 3};
     int[] array2 = new int[]{1, 2, 3, 4};
     expect(array1).to.equal(array2);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure6a() {
+  public void testEqualFailure6a() throws Exception {
     List<Integer> list1 = Arrays.asList(1, 2, 3);
     List<Integer> list2 = Arrays.asList(1, 2);
     expect(list1).to.equal(list2);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure6b() {
+  public void testEqualFailure6b() throws Exception {
     List<Integer> list1 = Arrays.asList(1, 2, 3);
     List<Integer> list2 = Arrays.asList(1, 2, 3, 4);
     expect(list1).to.equal(list2);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure7() {
+  public void testEqualFailure7() throws Exception {
     expect(true).to.equal(false);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailure() {
+  public void testEqualFailure() throws Exception {
     expect(2).to.be.a(Integer.class).and.equal(4);
   }
 
   @Test(expected = AssertionError.class)
-  public void testEqualFailureNullMessage() {
+  public void testEqualFailureNullMessage() throws Exception {
     expect(2).to.be.a(Integer.class).and.equal(4, null);
   }
 
   @Test
-  public void testIs() {
+  public void testIs() throws Exception {
     expect(2).is(2);
   }
 
   @Test(expected = AssertionError.class)
-  public void testIsMessage() {
+  public void testIsMessage() throws Exception {
     expect(2).is(4, "Wrong value");
   }
 
   @Test
-  public void testProperty() {
+  public void testProperty() throws Exception {
     expect(new ArrayList<>()).to.have.property("size");
   }
 
   @Test
-  public void testProperty1() {
+  public void testProperty1() throws Exception {
     expect(new MyPropertyTest()).to.have.property("value1");
   }
 
   @Test
-  public void testProperty2() {
+  public void testProperty2() throws Exception {
     expect(new MyPropertyTest()).to.have.property("value2");
   }
 
   @Test
-  public void testProperty3a() {
+  public void testProperty3a() throws Exception {
     expect(new MyPropertyTest()).to.have.property("value3");
   }
 
   @Test
-  public void testProperty3b() {
+  public void testProperty3b() throws Exception {
     expect(new MyPropertyTest()).to.have.property("getValue3");
   }
 
   @Test(expected = AssertionError.class)
-  public void testProperty4() {
+  public void testProperty4() throws Exception {
     expect(new MyPropertyTest()).to.have.property("value4");
   }
 
   @Test(expected = AssertionError.class)
-  public void testProperty5() {
+  public void testProperty5() throws Exception {
     expect(new MyPropertyTest()).to.have.property("value5");
   }
 
   @Test(expected = AssertionError.class)
-  public void testProperty6() {
+  public void testProperty6() throws Exception {
     expect(new MyPropertyTest()).to.have.property("value6");
   }
 
   @Test(expected = AssertionError.class)
-  public void testPropertyFailure() {
+  public void testPropertyFailure() throws Exception {
     expect(new ArrayList<>()).to.have.property("length");
   }
 
   @Test
-  public void testNot() {
+  public void testNot() throws Exception {
     expect(new ArrayList<>()).to.not.have.property("length");
   }
 
   @Test
-  public void testNotNullMessage() {
+  public void testNotNullMessage() throws Exception {
     expect(new ArrayList<>()).to.not.have.property("length", null);
   }
 
   @Test
-  public void testChain() {
+  public void testChain() throws Exception {
     expect(1).to.be.of.type(Integer.class)
         .and.not.of.type(Long.class, null)
         .and.have.a.property("MAX_VALUE").that.is(0x7fffffff)
@@ -290,7 +290,7 @@ public class AssertTest {
   }
 
   @Test(expected = AssertionError.class)
-  public void testChainFailure() {
+  public void testChainFailure() throws Exception {
     expect(1).to.be.of.type(Integer.class)
         .and.not.of.type(Long.class, "wrong type")
         .and.have.a.property("MAX_VALUE").that.is.not(0x80000000)
@@ -298,12 +298,12 @@ public class AssertTest {
   }
 
   @Test(expected = AssertionError.class)
-  public void testNotFailure() {
+  public void testNotFailure() throws Exception {
     expect(new ArrayList<>()).to.not.have.property("size");
   }
 
   @Test
-  public void verifyEqualMessage() {
+  public void verifyEqualMessage() throws Exception {
     String message = null;
     try {
       expect(1).to.equal(2);
@@ -314,7 +314,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifyNotEqualMessage() {
+  public void verifyNotEqualMessage() throws Exception {
     String message = null;
     try {
       expect(1).not.to.equal(1);
@@ -325,7 +325,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifyTypeMessage() {
+  public void verifyTypeMessage() throws Exception {
     String message = null;
     try {
       expect(Integer.class).to.equal(Long.class);
@@ -336,7 +336,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifyWrongTypeMessage() {
+  public void verifyWrongTypeMessage() throws Exception {
     String message = null;
     try {
       expect(Integer.class).not.to.equal(Integer.class);
@@ -347,7 +347,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifySizeMessage() {
+  public void verifySizeMessage() throws Exception {
     String message = null;
     try {
       expect(new int[]{1}).to.have.size(2);
@@ -358,7 +358,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifyWrongSizeMessage() {
+  public void verifyWrongSizeMessage() throws Exception {
     String message = null;
     try {
       expect(new int[]{1}).not.to.have.size(1);
@@ -369,7 +369,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifyPropertyNotFoundMessage() {
+  public void verifyPropertyNotFoundMessage() throws Exception {
     String message = null;
     try {
       expect(Integer.class).have.property("myMethods");
@@ -380,7 +380,7 @@ public class AssertTest {
   }
 
   @Test
-  public void verifyPropertyFoundMessage() {
+  public void verifyPropertyFoundMessage() throws Exception {
     String message = null;
     try {
       expect(Integer.class).not.have.property("methods");

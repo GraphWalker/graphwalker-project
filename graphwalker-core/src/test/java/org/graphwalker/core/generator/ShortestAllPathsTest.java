@@ -50,7 +50,7 @@ import org.junit.Test;
 public class ShortestAllPathsTest {
 
   @Test
-  public void bridge() {
+  public void bridge() throws Exception {
     Vertex v1 = new Vertex().setId("start");
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
@@ -72,7 +72,7 @@ public class ShortestAllPathsTest {
   }
 
   @Test
-  public void bridgeNotCompleted() {
+  public void bridgeNotCompleted() throws Exception {
     Vertex v1 = new Vertex().setId("start");;
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
@@ -94,7 +94,7 @@ public class ShortestAllPathsTest {
   }
 
   @Test
-  public void circle() {
+  public void circle() throws Exception {
     Vertex v1 = new Vertex().setId("start");;
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
@@ -122,7 +122,7 @@ public class ShortestAllPathsTest {
   }
 
   @Test(expected = AlgorithmException.class)
-  public void tree() {
+  public void tree() throws Exception {
     Vertex v1 = new Vertex().setId("start");;
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();

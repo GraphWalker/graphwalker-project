@@ -74,7 +74,7 @@ public class ExampleTest extends ExecutionContext {
   }
 
   @Test
-  public void success() {
+  public void success() throws Exception {
     Vertex start = new Vertex();
     Model model = new Model().addEdge(new Edge()
                                           .setName("edge1")
@@ -94,7 +94,7 @@ public class ExampleTest extends ExecutionContext {
   }
 
   @Test(expected = MachineException.class)
-  public void failure() {
+  public void failure() throws Exception {
     Vertex start = new Vertex();
     Model model = new Model().addEdge(new Edge()
                                           .setName("edge1")
@@ -113,7 +113,7 @@ public class ExampleTest extends ExecutionContext {
   }
 
   @Test
-  public void exception() {
+  public void exception() throws Exception {
     Vertex start = new Vertex();
     Model model = new Model().addEdge(new Edge()
                                           .setName("edge1")

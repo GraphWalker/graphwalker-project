@@ -75,7 +75,7 @@ public class ObserverTest implements Observer {
   }
 
   @Test
-  public void verifyEvents() {
+  public void verifyEvents() throws Exception {
     Machine machine = createMachine();
     final List<EventType> types = new ArrayList<>();
     machine.addObserver((observable, object, type) -> types.add(type));
@@ -89,7 +89,7 @@ public class ObserverTest implements Observer {
   }
 
   @Test
-  public void updateCounter() {
+  public void updateCounter() throws Exception {
     Machine machine = createMachine();
     machine.addObserver(this);
     Context context = machine.getContexts().get(0);
@@ -101,7 +101,7 @@ public class ObserverTest implements Observer {
   }
 
   @Test
-  public void removeObserver() {
+  public void removeObserver() throws Exception {
     Machine machine = createMachine();
     machine.addObserver(this);
     Context context = machine.getContexts().get(0);

@@ -63,7 +63,7 @@ public final class ProfilerTest {
       .setCurrentElement(start.build());
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Profiler profiler = new Profiler();
     assertNotNull(profiler);
     assertFalse(profiler.isVisited(start.build()));
@@ -91,7 +91,7 @@ public final class ProfilerTest {
    * The failure was intermittent because of the random path generator.
    */
   @Test
-  public void multiModel() {
+  public void multiModel() throws Exception {
     Vertex A = new Vertex().setName("A").setId("n1");
     Vertex B = new Vertex().setName("B").setId("n2").setSharedState("shared_state");
 
