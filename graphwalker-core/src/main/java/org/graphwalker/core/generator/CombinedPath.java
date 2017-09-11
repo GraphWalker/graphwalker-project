@@ -85,10 +85,7 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    if (hasNextStep()) {
-      return getActivePathGenerator().getNextStep();
-    }
-    throw new NoPathFoundException();
+    return getActivePathGenerator().getNextStep();
   }
 
   @Override

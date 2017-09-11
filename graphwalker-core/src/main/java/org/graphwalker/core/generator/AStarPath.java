@@ -51,10 +51,10 @@ public final class AStarPath extends PathGeneratorBase<ReachedStopCondition> {
 
   @Override
   public Context getNextStep() {
-    Context context = getContext();
+    Context context = super.getNextStep();
     List<Element> elements = context.filter(context.getModel().getElements(context.getCurrentElement()));
     if (elements.isEmpty()) {
-      throw new NoPathFoundException();
+      throw new NoPathFoundException(context.getCurrentElement());
     }
     Element target = null;
     int distance = Integer.MAX_VALUE;

@@ -85,6 +85,19 @@ public class SimpleMachineTest {
     assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
   }
 
+  @Test(expected = MachineException.class)
+  public void missingStartElement() throws Exception {
+    Edge edge = new Edge().setTargetVertex(new Vertex());
+    Model model = new Model().addEdge(edge);
+    Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+    }
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+  }
+
   @Test
   public void noStartVertex() throws Exception {
     Edge edge = new Edge().setTargetVertex(new Vertex());

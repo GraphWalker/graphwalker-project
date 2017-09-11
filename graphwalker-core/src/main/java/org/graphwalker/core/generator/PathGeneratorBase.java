@@ -27,6 +27,7 @@ package org.graphwalker.core.generator;
  */
 
 import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
@@ -59,6 +60,13 @@ public abstract class PathGeneratorBase<T extends StopCondition> implements Path
     if (isNotNull(getContext())) {
       this.stopCondition.setContext(getContext());
     }
+  }
+
+  public Context getNextStep() {
+    if (isNull(getContext().getCurrentElement())) {
+      throw new NoPathFoundException("Execution context has no current element set");
+    }
+    return getContext();
   }
 
   @Override
