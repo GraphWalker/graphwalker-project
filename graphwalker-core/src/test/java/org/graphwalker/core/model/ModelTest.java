@@ -27,14 +27,15 @@ package org.graphwalker.core.model;
  */
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import org.graphwalker.core.model.Model.RuntimeModel;
 import org.junit.Test;
 
 /**
@@ -48,7 +49,7 @@ public class ModelTest {
     Vertex v2 = new Vertex().setId("TWO");
     Edge e1 = new Edge().setId("THREE");
     Edge e2 = new Edge().setId("FOUR");
-    Model.RuntimeModel model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
+    RuntimeModel model = new Model().addEdge(e1.setSourceVertex(v1).setTargetVertex(v2))
         .addEdge(e2.setSourceVertex(v1).setTargetVertex(v2)).build();
     Element element = model.getElementById("THREE");
     assertTrue(element.equals(e1.build()));
@@ -258,7 +259,7 @@ public class ModelTest {
                         .setTargetVertex(model.getVertices().get(target)));
     }
     final long stopTime = System.nanoTime();
-    Model.RuntimeModel runtimeModel = model.build();
+    RuntimeModel runtimeModel = model.build();
     assertThat(model.getVertices().size(), is(50000));
     assertThat(model.getEdges().size(), is(50000));
     assertThat(runtimeModel.getVertices().size(), is(50000));
@@ -275,5 +276,72 @@ public class ModelTest {
     assertTrue(model.addVertex(new Vertex().setSharedState("SHARED")).build().hasSharedStates());
     assertTrue(model.addVertex(new Vertex().setSharedState("SHARED")).build().hasSharedState("SHARED"));
     assertFalse(model.build().getSharedStates().isEmpty());
+  }
+
+  @Test
+  public void modelWithAction() throws Exception {
+    Model model = new Model();
+    assertFalse(model.build().hasActions());
+    assertTrue(model.build().getActions().isEmpty());
+    assertTrue(model.addAction(new Action("")).build().hasActions());
+    assertTrue(model.addActions(new Action("")).build().hasActions());
+    assertTrue(model.setActions(Arrays.asList(new Action(""))).build().hasActions());
+    assertFalse(model.build().getActions().isEmpty());
+  }
+
+  @Test
+  public void nonExistingElement() throws Exception {
+    Model model = new Model();
+    assertNull(model.build().getElementById("NOT_EXISTING"));
+  }
+
+  @Test
+  public void modelId() throws Exception {
+    Model model = new Model().setId("id");
+    assertTrue(model.build().hasId());
+    assertTrue(new Model().build().hasId());
+  }
+
+  @Test
+  public void modelProperty() throws Exception {
+    Model model = new Model().setProperty("key", "value");
+    assertTrue(model.hasProperty("key"));
+    assertTrue(model.build().hasProperties());
+    assertTrue(model.build().hasProperty("key"));
+    assertFalse(model.build().hasProperty("unknown_key"));
+    assertFalse(new Model().build().hasProperties());
+  }
+
+  @Test
+  public void noInEdges() throws Exception {
+    Vertex vertex = new Vertex();
+    Model model = new Model().addVertex(vertex);
+    assertTrue(model.build().getInEdges(vertex.build()).isEmpty());
+  }
+
+  @Test
+  public void inEdges() throws Exception {
+    Vertex vertex = new Vertex();
+    Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
+    assertThat(model.build().getInEdges(vertex.build()).size(), is(1));
+  }
+
+  @Test
+  public void testEquality() throws Exception {
+    Model model1 = new Model().setId("ID1");
+    Model model2 = new Model().setId("ID1");
+    assertThat(model1.build(), is(model2.build()));
+    assertThat(model1.build().hashCode(), is(model2.build().hashCode()));
+    RuntimeModel model = model1.build();
+    assertThat(model, is(model));
+  }
+
+  @Test
+  public void testInequality() throws Exception {
+    Model model1 = new Model().setId("ID1");
+    Model model2 = new Model().setId("ID2");
+    assertThat(model1.build(), not(model2.build()));
+    assertFalse(model1.build().equals(null));
+    assertThat(model1.build(), not(model1));
   }
 }

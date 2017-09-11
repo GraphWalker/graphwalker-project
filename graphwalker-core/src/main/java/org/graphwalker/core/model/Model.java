@@ -597,12 +597,6 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (isNull(o) || getClass() != o.getClass()) {
-        return false;
-      }
       if (!super.equals(o)) {
         return false;
       }

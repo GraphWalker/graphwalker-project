@@ -74,6 +74,17 @@ public class EdgeTest {
   }
 
   @Test
+  public void edgeWithAction() throws Exception {
+    Edge edge = new Edge();
+    assertFalse(edge.build().hasActions());
+    assertTrue(edge.build().getActions().isEmpty());
+    assertTrue(edge.addAction(new Action("")).build().hasActions());
+    assertTrue(edge.addActions(new Action("")).build().hasActions());
+    assertTrue(edge.setActions(Arrays.asList(new Action(""))).build().hasActions());
+    assertFalse(edge.build().getActions().isEmpty());
+  }
+
+  @Test
   public void testEquality() throws Exception {
     Edge e1 = new Edge().setId("ID1");
     Edge e2 = new Edge().setId("ID1");
