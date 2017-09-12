@@ -48,18 +48,18 @@ import org.junit.Test;
 public class TimeDurationTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     TimeDuration timeDuration = new TimeDuration(100, TimeUnit.SECONDS);
     assertThat(timeDuration.getDuration(), is(100L));
   }
 
   @Test(expected = StopConditionException.class)
-  public void testNegativeTime() {
+  public void testNegativeTime() throws Exception {
     new TimeDuration(-100, TimeUnit.SECONDS);
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
     Context context = new TestExecutionContext(model, new RandomPath(new TimeDuration(1000L, TimeUnit.MILLISECONDS)));

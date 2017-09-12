@@ -57,7 +57,7 @@ public class CombinedPathTest {
       .addEdge(new Edge().setSourceVertex(v1).setTargetVertex(v2));
 
   @Test
-  public void simpleTest() {
+  public void simpleTest() throws Exception {
     CombinedPath generator = new CombinedPath();
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
@@ -71,7 +71,7 @@ public class CombinedPathTest {
   }
 
   @Test(expected = NoPathFoundException.class)
-  public void failTest() {
+  public void failTest() throws Exception {
     CombinedPath generator = new CombinedPath();
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
@@ -85,7 +85,7 @@ public class CombinedPathTest {
   }
 
   @Test
-  public void toStringTest() {
+  public void toStringTest() throws Exception {
     CombinedPath generator = new CombinedPath();
     assertEquals(generator.getPathGenerators().size(), 0);
     assertEquals(generator.toString(), "");
@@ -98,7 +98,7 @@ public class CombinedPathTest {
   }
 
   @Test
-  public void generatePath() {
+  public void generatePath() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
     Vertex v3 = new Vertex().setName("v3");
@@ -137,7 +137,7 @@ public class CombinedPathTest {
   }
 
   @Test(expected = MachineException.class)
-  public void negativeTest() {
+  public void negativeTest() throws Exception {
     CombinedPath generator = new CombinedPath();
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));

@@ -48,14 +48,14 @@ import org.junit.Test;
 public class RequirementTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Requirement requirement = new Requirement("REQ");
     assertNotNull(requirement);
     assertEquals("REQ", requirement.getKey());
   }
 
   @Test
-  public void executeWithSingleRequirement() {
+  public void executeWithSingleRequirement() throws Exception {
     Model model = new Model().addVertex(new Vertex().addRequirement(new Requirement("REQ1")).setName("CHECK_REQ"));
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
     context.setNextElement(model.getVertices().get(0));
@@ -71,7 +71,7 @@ public class RequirementTest {
   }
 
   @Test
-  public void executeWithMultipleRequirements() {
+  public void executeWithMultipleRequirements() throws Exception {
     Vertex start = new Vertex().addRequirement(new Requirement("FIRST_STEP"));
     Vertex alt1 = new Vertex().setName("Alt1").addRequirement(new Requirement("ALT1"));
     Vertex alt2 = new Vertex().setName("Alt2").addRequirement(new Requirement("ALT2"));

@@ -48,7 +48,7 @@ public class FailedEdgeRequirementTest extends ExecutionContext {
   }
 
   @Test
-  public void failEdgeRequirement() {
+  public void failEdgeRequirement() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).setName("fail").addRequirement(new Requirement("REQ1")));
     StopCondition stopCondition = new RequirementCoverage(100);

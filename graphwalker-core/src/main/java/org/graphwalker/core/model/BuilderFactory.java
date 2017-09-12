@@ -34,10 +34,7 @@ import java.util.List;
 /**
  * @author Nils Olsson
  */
-public final class BuilderFactory {
-
-  private BuilderFactory() {
-  }
+public abstract class BuilderFactory {
 
   public static <T> List<T> build(List<? extends Builder<T>> builders) {
     List<T> objects = new ArrayList<>();

@@ -37,7 +37,7 @@ import org.junit.Test;
 public class GuardTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Guard guard = new Guard("i < 0");
     assertNotNull(guard);
     assertEquals("i < 0", guard.getScript());

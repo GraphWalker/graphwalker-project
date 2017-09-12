@@ -59,6 +59,11 @@ public abstract class MachineBase implements Machine {
   }
 
   @Override
+  public List<Observer> getObservers() {
+    return observers;
+  }
+
+  @Override
   public void addObserver(Observer observer) {
     if (isNotNull(observer) && !observers.contains(observer)) {
       observers.add(observer);

@@ -39,7 +39,7 @@ import org.junit.Test;
 public final class ProfileTest {
 
   @Test
-  public void measure() {
+  public void measure() throws Exception {
     Profile profile = new Profile();
     profile.addExecution(new Edge().build(), new Execution(0L, 350));
     profile.addExecution(new Edge().build(), new Execution(350L, 150));

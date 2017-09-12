@@ -38,7 +38,7 @@ import org.junit.Test;
 public class CombinedConditionTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     CombinedCondition condition = new CombinedCondition();
     assertNotNull(condition);
     assertNotNull(condition.getStopConditions());
@@ -46,7 +46,7 @@ public class CombinedConditionTest {
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new Never());
     assertThat("Should be zero", condition.getFulfilment(), is(0.0));
@@ -54,7 +54,7 @@ public class CombinedConditionTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new Never());
     assertThat("Should be false", condition.isFulfilled(), is(false));

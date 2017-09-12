@@ -39,19 +39,19 @@ import org.junit.Test;
 public class NeverTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     Never never = new Never();
     assertNotNull(never);
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     StopCondition condition = new Never();
     assertThat(condition.getFulfilment(), is(0.0));
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     StopCondition condition = new Never();
     assertFalse(condition.isFulfilled());
   }

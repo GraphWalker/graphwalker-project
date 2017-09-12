@@ -65,7 +65,7 @@ public class ComplexConditionsTest {
                   .addAction(new Action("valdiLogin=false;")));
 
   @Test
-  public void combinedCondition_2_vertices() {
+  public void combinedCondition_2_vertices() throws Exception {
     Context context = new TestExecutionContext();
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -81,7 +81,7 @@ public class ComplexConditionsTest {
   }
 
   @Test
-  public void combinedCondition_2_edges() {
+  public void combinedCondition_2_edges() throws Exception {
     Context context = new TestExecutionContext();
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new ReachedEdge("e_ToggleRememberMe"));
@@ -97,7 +97,7 @@ public class ComplexConditionsTest {
   }
 
   @Test
-  public void combinedCondition_vertex_edge() {
+  public void combinedCondition_vertex_edge() throws Exception {
     Context context = new TestExecutionContext();
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -113,7 +113,7 @@ public class ComplexConditionsTest {
   }
 
   @Test
-  public void alternativeCondition_2_vertices() {
+  public void alternativeCondition_2_vertices() throws Exception {
     Context context = new TestExecutionContext();
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -129,7 +129,7 @@ public class ComplexConditionsTest {
   }
 
   @Test
-  public void alternativeCondition_2_edges() {
+  public void alternativeCondition_2_edges() throws Exception {
     Context context = new TestExecutionContext();
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedEdge("e_ToggleRememberMe"));
@@ -145,7 +145,7 @@ public class ComplexConditionsTest {
   }
 
   @Test
-  public void alternativeCondition_vertex_edge() {
+  public void alternativeCondition_vertex_edge() throws Exception {
     Context context = new TestExecutionContext();
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));

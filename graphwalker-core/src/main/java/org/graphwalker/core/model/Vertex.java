@@ -144,18 +144,11 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (isNull(o) || getClass() != o.getClass()) {
-        return false;
-      }
       if (!super.equals(o)) {
         return false;
       }
       RuntimeVertex that = (RuntimeVertex) o;
       return Objects.equals(sharedState, that.sharedState);
     }
-
   }
 }

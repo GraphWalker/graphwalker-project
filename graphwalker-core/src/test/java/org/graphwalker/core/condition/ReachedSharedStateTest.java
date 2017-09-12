@@ -50,7 +50,7 @@ import org.junit.Test;
 public class ReachedSharedStateTest {
 
   @Test(expected = StopConditionException.class)
-  public void testMissingSharedState() {
+  public void testMissingSharedState() throws Exception {
     Vertex start = new Vertex().setName("Start");
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
@@ -67,7 +67,7 @@ public class ReachedSharedStateTest {
   }
 
   @Test
-  public void simpleAStarWithSharedState() {
+  public void simpleAStarWithSharedState() throws Exception {
     Vertex start = new Vertex().setName("Start");
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
@@ -97,7 +97,7 @@ public class ReachedSharedStateTest {
   }
 
   @Test
-  public void simpleAStarWithSharedStateBehindGuard() {
+  public void simpleAStarWithSharedStateBehindGuard() throws Exception {
     Vertex start = new Vertex().setName("Start");
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");

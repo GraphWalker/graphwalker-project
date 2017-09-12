@@ -45,7 +45,7 @@ import org.junit.Test;
 public class ReachedVertexTest {
 
   @Test(expected = StopConditionException.class)
-  public void testMissingVertex() {
+  public void testMissingVertex() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
@@ -55,7 +55,7 @@ public class ReachedVertexTest {
   }
 
   @Test(expected = StopConditionException.class)
-  public void testWrongVertexName() {
+  public void testWrongVertexName() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("A_EDGE");
@@ -65,7 +65,7 @@ public class ReachedVertexTest {
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
@@ -81,7 +81,7 @@ public class ReachedVertexTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex v1 = new Vertex().setName("v1");
     Vertex v2 = new Vertex().setName("v2");
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);

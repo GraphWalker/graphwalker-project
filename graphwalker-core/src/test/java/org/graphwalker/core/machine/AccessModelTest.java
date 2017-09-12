@@ -17,7 +17,7 @@ import org.junit.Test;
 public class AccessModelTest {
 
   @Test
-  public void read() {
+  public void read() throws Exception {
     ExecutionContext context = createContext();
     assertThat(round(context.getAttribute("x")), is(1));
   }
@@ -31,7 +31,7 @@ public class AccessModelTest {
   }
 
   @Test
-  public void write() {
+  public void write() throws Exception {
     ExecutionContext context = createContext();
     context.setAttribute("y", 2);
     assertThat((Integer) context.getAttribute("y"), is(2));

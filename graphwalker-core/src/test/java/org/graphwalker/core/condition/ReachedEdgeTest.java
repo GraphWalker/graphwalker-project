@@ -45,7 +45,7 @@ import org.junit.Test;
 public class ReachedEdgeTest {
 
   @Test(expected = StopConditionException.class)
-  public void testMissingEdge() {
+  public void testMissingEdge() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
@@ -56,7 +56,7 @@ public class ReachedEdgeTest {
   }
 
   @Test(expected = StopConditionException.class)
-  public void testWrongEdgeName() {
+  public void testWrongEdgeName() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex().setName("A_VERTEX");
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
@@ -67,7 +67,7 @@ public class ReachedEdgeTest {
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
@@ -86,7 +86,7 @@ public class ReachedEdgeTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
@@ -103,7 +103,7 @@ public class ReachedEdgeTest {
 
 
   @Test
-  public void testInterface() {
+  public void testInterface() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
