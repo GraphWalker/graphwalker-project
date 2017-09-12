@@ -43,6 +43,12 @@ public final class GenerateMainMojo extends GenerateMojoBase {
   @Parameter(property = "graphwalker.generate.directory", defaultValue = "${project.build.directory}/generated-sources/graphwalker")
   private File generatedSourcesDirectory;
 
+  @Parameter(property = "graphwalker.generate.include.production.resources", defaultValue = "true")
+  private boolean includeProductionResources;
+
+  @Parameter(property = "graphwalker.generate.include.test.resources", defaultValue = "false")
+  private boolean includeTestResources;
+
   @Override
   protected File getGeneratedSourcesDirectory() {
     return generatedSourcesDirectory;
@@ -50,7 +56,14 @@ public final class GenerateMainMojo extends GenerateMojoBase {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    generate(getMavenProject().getResources());
+    if (includeProductionResources) {
+      getLog().info("Generating based on maven production resources");
+      generate(getMavenProject().getResources());
+    }
+    if (includeTestResources) {
+      getLog().info("Generating based on maven test resources");
+      generate(getMavenProject().getTestResources());
+    }
     if (getGeneratedSourcesDirectory().exists()) {
       getMavenProject().addCompileSourceRoot(getGeneratedSourcesDirectory().getPath());
     }
