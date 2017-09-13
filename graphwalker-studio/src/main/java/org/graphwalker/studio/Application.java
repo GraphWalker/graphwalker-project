@@ -125,11 +125,13 @@ public class Application {
   }
 
   private String getVersionString() {
-    Properties properties = new Properties();
+    String versionStr = "";
     InputStream inputStream = getClass().getResourceAsStream("/version.properties");
     if (null != inputStream) {
       try {
+        Properties properties = new Properties();
         properties.load(inputStream);
+        versionStr = properties.getProperty("graphwalker.version");
       } catch (IOException e) {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
@@ -137,6 +139,19 @@ public class Application {
         IOUtils.closeQuietly(inputStream);
       }
     }
-    return properties.getProperty("graphwalker.version");
+    inputStream = getClass().getResourceAsStream("/git.properties");
+    if (null != inputStream) {
+      try {
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        versionStr += "-" + properties.getProperty("git.commit.id.abbrev");
+      } catch (IOException e) {
+        logger.error("An error occurred when trying to get the version string", e);
+        return "unknown";
+      } finally {
+        IOUtils.closeQuietly(inputStream);
+      }
+    }
+    return versionStr;
   }
 }

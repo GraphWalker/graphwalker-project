@@ -97,6 +97,9 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.graphwalker.cli.CLI</mainClass>
+                                  <manifestEntries>
+                                    <Build-Number>123</Build-Number>
+                                  </manifestEntries>
                                 </transformer>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -147,21 +150,22 @@
                 </executions>
             </plugin>
           <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>buildnumber-maven-plugin</artifactId>
-            <version>1.4</version>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <version>2.2.3</version>
             <executions>
               <execution>
-                <phase>validate</phase>
                 <goals>
-                  <goal>create</goal>
+                  <goal>revision</goal>
                 </goals>
               </execution>
             </executions>
             <configuration>
-              <doCheck>true</doCheck>
-              <doUpdate>true</doUpdate>
-              <shortRevisionLength>5</shortRevisionLength>
+              <prefix>git</prefix>
+              <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+              <injectAllReactorProjects>true</injectAllReactorProjects>
+              <generateGitPropertiesFile>true</generateGitPropertiesFile>
+              <generateGitPropertiesFilename>target/classes/git.properties</generateGitPropertiesFilename>
             </configuration>
           </plugin>
         </plugins>
