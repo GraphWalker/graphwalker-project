@@ -152,7 +152,7 @@ public final class DotContextFactory implements ContextFactory {
     StringBuilder dotStr = new StringBuilder();
 
     for (Context context : contexts) {
-      String newLine = System.getProperty("line.separator");
+      String newLine = System.lineSeparator();
       StringBuilder str = new StringBuilder();
 
       str.append("digraph " + FilenameUtils.getBaseName(context.getModel().getName())).append(" {").append(newLine);

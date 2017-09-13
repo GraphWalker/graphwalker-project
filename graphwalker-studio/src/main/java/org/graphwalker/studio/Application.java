@@ -113,24 +113,25 @@ public class Application {
   }
 
   private String printVersionInformation() {
-    String version = "org.graphwalker version: " + getVersionString() + System.getProperty("line.separator");
-    version += System.getProperty("line.separator");
+    String version = "org.graphwalker version: " + getVersionString() + System.lineSeparator();
+    version += System.lineSeparator();
 
-    version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
-    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
+    version += "org.graphwalker is open source software licensed under MIT license" + System.lineSeparator();
+    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.lineSeparator();
     version +=
-        "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
-            .getProperty("line.separator");
+        "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.lineSeparator();
 
     return version;
   }
 
   private String getVersionString() {
-    Properties properties = new Properties();
+    String versionStr = "";
     InputStream inputStream = getClass().getResourceAsStream("/version.properties");
     if (null != inputStream) {
       try {
+        Properties properties = new Properties();
         properties.load(inputStream);
+        versionStr = properties.getProperty("graphwalker.version");
       } catch (IOException e) {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
@@ -138,6 +139,19 @@ public class Application {
         IOUtils.closeQuietly(inputStream);
       }
     }
-    return properties.getProperty("graphwalker.version");
+    inputStream = getClass().getResourceAsStream("/git.properties");
+    if (null != inputStream) {
+      try {
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        versionStr += "-" + properties.getProperty("git.commit.id.abbrev");
+      } catch (IOException e) {
+        logger.error("An error occurred when trying to get the version string", e);
+        return "unknown";
+      } finally {
+        IOUtils.closeQuietly(inputStream);
+      }
+    }
+    return versionStr;
   }
 }

@@ -97,6 +97,9 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>org.graphwalker.cli.CLI</mainClass>
+                                  <manifestEntries>
+                                    <Build-Number>123</Build-Number>
+                                  </manifestEntries>
                                 </transformer>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -146,6 +149,25 @@
                     </execution>
                 </executions>
             </plugin>
+          <plugin>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <version>2.2.3</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>revision</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <prefix>git</prefix>
+              <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+              <injectAllReactorProjects>true</injectAllReactorProjects>
+              <generateGitPropertiesFile>true</generateGitPropertiesFile>
+              <generateGitPropertiesFilename>target/classes/git.properties</generateGitPropertiesFilename>
+            </configuration>
+          </plugin>
         </plugins>
     </build>
 </project>
