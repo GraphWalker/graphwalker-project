@@ -350,6 +350,7 @@
           <licenseName>mit</licenseName>
           <excludes>
             <exclude>**/webapp/components/**/*</exclude>
+            <exclude>**/webapp/node_modules/**/*</exclude>
             <exclude>**/webapp/dist/**/*</exclude>
           </excludes>
         </configuration>
