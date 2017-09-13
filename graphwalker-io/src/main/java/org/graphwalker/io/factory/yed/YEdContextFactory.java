@@ -154,7 +154,7 @@ public final class YEdContextFactory implements ContextFactory {
   public String getAsString(List<Context> contexts) {
     StringBuilder graphmlStr = new StringBuilder();
     for (Context context : contexts) {
-      String newLine = System.getProperty("line.separator");
+      String newLine = System.lineSeparator();
       StringBuilder str = new StringBuilder();
 
       str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);

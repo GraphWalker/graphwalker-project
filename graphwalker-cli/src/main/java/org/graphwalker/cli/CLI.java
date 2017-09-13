@@ -560,14 +560,13 @@ public class CLI {
   }
 
   private String printVersionInformation() {
-    String version = "org.graphwalker version: " + getVersionString() + System.getProperty("line.separator");
-    version += System.getProperty("line.separator");
+    String version = "org.graphwalker version: " + getVersionString() + System.lineSeparator();
+    version += System.lineSeparator();
 
-    version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
-    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
+    version += "org.graphwalker is open source software licensed under MIT license" + System.lineSeparator();
+    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.lineSeparator();
     version +=
-      "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
-        .getProperty("line.separator");
+      "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.lineSeparator();
 
     return version;
   }
