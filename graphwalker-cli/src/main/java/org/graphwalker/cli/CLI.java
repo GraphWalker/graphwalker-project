@@ -489,8 +489,7 @@ public class CLI {
       contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
       if (triggerOnce &&
-        (!offline.startElement.isEmpty() ||
-          (!online.startElement.isEmpty()))) {
+        (!offline.startElement.isEmpty() || !online.startElement.isEmpty())) {
         triggerOnce = false;
 
         List<Element> elements = null;
