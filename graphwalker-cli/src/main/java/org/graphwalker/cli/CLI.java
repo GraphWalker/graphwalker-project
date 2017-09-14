@@ -26,43 +26,19 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNullOrEmpty;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.graphwalker.cli.commands.Check;
-import org.graphwalker.cli.commands.Convert;
-import org.graphwalker.cli.commands.Methods;
-import org.graphwalker.cli.commands.Offline;
-import org.graphwalker.cli.commands.Online;
-import org.graphwalker.cli.commands.Requirements;
-import org.graphwalker.cli.commands.Source;
+import org.graphwalker.cli.commands.*;
 import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.cli.util.UnsupportedFileFormat;
 import org.graphwalker.core.event.EventType;
-import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
@@ -84,6 +60,17 @@ import org.graphwalker.restful.Util;
 import org.graphwalker.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
+import static org.graphwalker.io.common.Util.printVersionInformation;
 
 public class CLI {
 
@@ -348,10 +335,10 @@ public class CLI {
 
       HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
       System.out.println("Try http://localhost:"
-                         + online.port
-                         + "/graphwalker/hasNext or http://localhost:"
-                         + online.port
-                         + "/graphwalker/getNext");
+        + online.port
+        + "/graphwalker/hasNext or http://localhost:"
+        + online.port
+        + "/graphwalker/getNext");
       System.out.println("Press Control+C to end...");
       try {
         server.start();
@@ -502,8 +489,8 @@ public class CLI {
       contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
       if (triggerOnce &&
-          (!offline.startElement.isEmpty() ||
-           (!online.startElement.isEmpty()))) {
+        (!offline.startElement.isEmpty() ||
+          (!online.startElement.isEmpty()))) {
         triggerOnce = false;
 
         List<Element> elements = null;
@@ -557,48 +544,5 @@ public class CLI {
       executionContexts.addAll(contexts);
     }
     return executionContexts;
-  }
-
-  private String printVersionInformation() {
-    String version = "org.graphwalker version: " + getVersionString() + System.lineSeparator();
-    version += System.lineSeparator();
-
-    version += "org.graphwalker is open source software licensed under MIT license" + System.lineSeparator();
-    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.lineSeparator();
-    version +=
-      "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.lineSeparator();
-
-    return version;
-  }
-
-  private String getVersionString() {
-    String versionStr = "";
-    InputStream inputStream = getClass().getResourceAsStream("/version.properties");
-    if (null != inputStream) {
-      try {
-        Properties properties = new Properties();
-        properties.load(inputStream);
-        versionStr = properties.getProperty("graphwalker.version");
-      } catch (IOException e) {
-        logger.error("An error occurred when trying to get the version string", e);
-        return "unknown";
-      } finally {
-        IOUtils.closeQuietly(inputStream);
-      }
-    }
-    inputStream = getClass().getResourceAsStream("/git.properties");
-    if (null != inputStream) {
-      try {
-        Properties properties = new Properties();
-        properties.load(inputStream);
-        versionStr += "-" + properties.getProperty("git.commit.id.abbrev");
-      } catch (IOException e) {
-        logger.error("An error occurred when trying to get the version string", e);
-        return "unknown";
-      } finally {
-        IOUtils.closeQuietly(inputStream);
-      }
-    }
-    return versionStr;
   }
 }
