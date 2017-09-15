@@ -1,0 +1,27 @@
+{                                                                                                                                                                                              
+  "package": {
+    "name": "GraphWalker-Dev-Jars",
+    "repo": "graphwalker",
+    "subject": "graphwalker"
+  },
+  "version": {
+    "name": "4.0.0"
+  },
+  "files": [
+    {
+      "includePattern": "graphwalker-cli/target/(.*\.jar)",
+      "uploadPattern": "$1"
+    },
+    {
+      "includePattern": "graphwalker-studio/target/(.*\.jar)",
+      "uploadPattern": "$1"
+    },
+    {
+      "matrixParams":
+      {
+        "override": 1
+      }
+    }
+  ],
+  "publish": true
+}
