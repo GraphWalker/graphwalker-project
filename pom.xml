@@ -43,7 +43,7 @@
     <developer>
       <id>krikar</id>
       <name>Kristian Karl</name>
-      <email>krikar@spotify.com</email>
+      <email>kristian.hermann.karl@gmail.com</email>
       <roles>
         <role>developer</role>
       </roles>
@@ -350,6 +350,7 @@
           <licenseName>mit</licenseName>
           <excludes>
             <exclude>**/webapp/components/**/*</exclude>
+            <exclude>**/webapp/node_modules/**/*</exclude>
             <exclude>**/webapp/dist/**/*</exclude>
           </excludes>
         </configuration>
@@ -389,6 +390,25 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>2.2.3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <prefix>git</prefix>
+          <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+          <injectAllReactorProjects>true</injectAllReactorProjects>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>target/classes/git.properties</generateGitPropertiesFilename>
+        </configuration>
       </plugin>
     </plugins>
 
