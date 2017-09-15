@@ -10,7 +10,7 @@
   "files": [
     {
       "includePattern": "graphwalker-cli/target/(graphwalker-.*\\.jar)",
-      "uploadPattern": "$1",
+      "uploadPattern": "SNAPSHOTS/$1",
       "matrixParams":
       {
         "override": 1
@@ -18,7 +18,7 @@
     },
     {
       "includePattern": "graphwalker-studio/target/(graphwalker-.*\\.jar)",
-      "uploadPattern": "$1",
+      "uploadPattern": "SNAPSHOTS/$1",
       "matrixParams":
       {
         "override": 1
