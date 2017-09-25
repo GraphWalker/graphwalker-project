@@ -42,6 +42,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
 /**
@@ -62,7 +63,7 @@ public class ShortestAllPathsTest {
     Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
       Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
     );
@@ -84,7 +85,7 @@ public class ShortestAllPathsTest {
     Edge e5 = new Edge().setSourceVertex(v4).setTargetVertex(v1);
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
       Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
@@ -103,7 +104,7 @@ public class ShortestAllPathsTest {
     Edge e3 = new Edge().setSourceVertex(v3).setTargetVertex(v1);
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
       Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
@@ -130,7 +131,7 @@ public class ShortestAllPathsTest {
     Edge e2 = new Edge().setSourceVertex(v1).setTargetVertex(v3);
     Model model = new Model().addEdge(e1).addEdge(e2);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(context.getModel().getElementById("start"));
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();

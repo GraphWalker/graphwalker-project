@@ -38,6 +38,7 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
 /**
@@ -65,7 +66,7 @@ public class EdgeCoverageTest {
     Model model = new Model().addEdge(e1).addEdge(e2);
     StopCondition condition = new EdgeCoverage(100);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     assertThat(condition.getFulfilment(), is(0.0));
     context.setCurrentElement(e1.build());
     context.getProfiler().start(context);
@@ -86,7 +87,7 @@ public class EdgeCoverageTest {
     Model model = new Model().addEdge(e1).addEdge(e2);
     StopCondition condition = new EdgeCoverage(100);
     Context context = new TestExecutionContext(model, new RandomPath(condition));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     assertFalse(condition.isFulfilled());
     context.setCurrentElement(e1.build());
     context.getProfiler().start(context);

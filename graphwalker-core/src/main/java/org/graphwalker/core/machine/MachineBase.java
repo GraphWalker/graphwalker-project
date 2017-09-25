@@ -34,6 +34,7 @@ import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 
 /**
  * <h1>MachineBase</h1>
@@ -48,7 +49,7 @@ public abstract class MachineBase implements Machine {
 
   private final List<Context> contexts = new ArrayList<>();
   private final List<Observer> observers = new ArrayList<>();
-  private final Profiler profiler = new Profiler();
+  private final Profiler profiler = new SimpleProfiler();
 
   private ExceptionStrategy exceptionStrategy = new FailFastStrategy();
   private Context currentContext;

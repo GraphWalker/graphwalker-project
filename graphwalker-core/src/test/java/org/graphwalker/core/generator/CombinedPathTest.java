@@ -38,6 +38,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -62,7 +63,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     Context context = new TestExecutionContext(model, generator);
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
@@ -76,7 +77,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     Context context = new TestExecutionContext(model, generator);
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(start.build());
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();
@@ -142,7 +143,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     Context context = new TestExecutionContext(model, generator);
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {

@@ -64,7 +64,7 @@ public final class ProfilerTest {
 
   @Test
   public void create() throws Exception {
-    Profiler profiler = new Profiler();
+    Profiler profiler = new SimpleProfiler();
     assertNotNull(profiler);
     assertFalse(profiler.isVisited(start.build()));
     assertThat(profiler.getTotalVisitCount(), is(0L));
@@ -139,4 +139,60 @@ public final class ProfilerTest {
     assertTrue(Float.parseFloat(context2.getAttribute("c1").toString()) >= 1);
     assertTrue(Float.parseFloat(context2.getAttribute("c2").toString()) >= 1);
   }
+/*
+  @Test
+  public void visited() throws Exception {
+    Vertex vertex = new Vertex().setName("a_vertex");
+    Model model = new Model().addVertex(vertex);
+    Profiler profiler = new SimpleProfiler();
+    Context contextA = new TestExecutionContext()
+      .setModel(model.build())
+      .setProfiler(profiler)
+      .setCurrentElement(vertex.build());
+    Context contextB = new TestExecutionContext()
+      .setModel(model.build())
+      .setProfiler(profiler)
+      .setCurrentElement(vertex.build());
+    assertFalse(profiler.isVisited(vertex.build()));
+    profiler.start(contextA);
+    profiler.stop(contextA);
+    assertTrue(profiler.isVisited(contextA.getCurrentElement()));
+    assertFalse(profiler.isVisited(contextB.getCurrentElement()));
+    assertThat(profiler.getTotalVisitCount(), is(1L));
+    assertThat(profiler.getVisitedEdges().size(), is(0));
+    assertThat(profiler.getVisitedVertices().size(), is(1));
+    assertThat(profiler.getUnvisitedElements().size(), is(1));
+    assertThat(profiler.getUnvisitedEdges().size(), is(0));
+    assertThat(profiler.getUnvisitedVertices().size(), is(1));
+    assertThat(profiler.getUnvisitedVertices(contextA).size(), is(0));
+    assertThat(profiler.getUnvisitedVertices(contextB).size(), is(1));
+    assertThat(profiler.getUnvisitedEdges(contextA).size(), is(0));
+    assertThat(profiler.getUnvisitedEdges(contextB).size(), is(0));
+  }
+
+  @Test
+  public void unvisited() throws Exception {
+    Vertex vertex = new Vertex().setName("a_vertex");
+    Model model = new Model().addVertex(vertex);
+    Profiler profiler = new SimpleProfiler();
+    Context contextA = new TestExecutionContext()
+      .setModel(model.build())
+      .setProfiler(profiler)
+      .setCurrentElement(vertex.build());
+    Context contextB = new TestExecutionContext()
+      .setModel(model.build())
+      .setProfiler(profiler)
+      .setCurrentElement(vertex.build());
+    assertThat(profiler.getTotalVisitCount(), is(0L));
+    assertThat(profiler.getVisitedEdges().size(), is(0));
+    assertThat(profiler.getVisitedVertices().size(), is(0));
+    assertThat(profiler.getUnvisitedElements().size(), is(2));
+    assertThat(profiler.getUnvisitedEdges().size(), is(0));
+    assertThat(profiler.getUnvisitedVertices().size(), is(2));
+    assertThat(profiler.getUnvisitedVertices(contextA).size(), is(1));
+    assertThat(profiler.getUnvisitedVertices(contextB).size(), is(1));
+    assertThat(profiler.getUnvisitedEdges(contextA).size(), is(0));
+    assertThat(profiler.getUnvisitedEdges(contextB).size(), is(0));
+  }
+  */
 }
