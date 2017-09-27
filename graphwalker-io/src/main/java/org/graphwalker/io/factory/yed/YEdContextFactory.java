@@ -217,7 +217,7 @@ public final class YEdContextFactory implements ContextFactory {
             }
           }
           
-          if (e.getDependency()!=null) {
+          if (e.getDependency()!=0) {
         	  	label +=  "\ndependency=" + e.getDependency();
           }
           
