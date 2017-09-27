@@ -455,6 +455,9 @@ public final class YEdContextFactory implements ContextFactory {
                 if (null != field.weight() && null != field.weight().Value()) {
                   edge.setWeight(Double.parseDouble(field.weight().Value().getText()));
                 }
+                if (null != field.dependency() && null != field.dependency().Value()) {
+                    edge.setDependency(Integer.parseInt((field.dependency().Value().getText())));
+                  }
               }
               if (null != edge.getTargetVertex()) {
                 if (null != startVertex &&

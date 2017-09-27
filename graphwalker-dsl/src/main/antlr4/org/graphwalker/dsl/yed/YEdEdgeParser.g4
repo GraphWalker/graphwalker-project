@@ -16,6 +16,7 @@ field
  | {!$parse::fields.contains("blocked")}? blocked {$parse::fields.add("blocked");}
  | {!$parse::fields.contains("reqtags")}? reqtags {$parse::fields.add("reqtags");}
  | {!$parse::fields.contains("weight")}? weight {$parse::fields.add("weight");}
+ | {!$parse::fields.contains("dependency")}? dependency {$parse::fields.add("dependency");}
  | WHITESPACE
  ;
 
@@ -55,6 +56,10 @@ name
  : Identifier (DOT Identifier)*
  ;
 
+dependency
+ : DEPENDENCY WHITESPACE* ASSIGN WHITESPACE* Value
+ ;
+ 
 weight
  : WEIGHT WHITESPACE* ASSIGN WHITESPACE* Value
  ;
