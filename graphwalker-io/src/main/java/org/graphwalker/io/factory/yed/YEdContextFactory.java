@@ -206,7 +206,7 @@ public final class YEdContextFactory implements ContextFactory {
 
         if (!e.getName().isEmpty()) {
           String label = e.getName();
-
+          
           if (e.hasGuard()) {
             label += newLine + "[" + e.getGuard().getScript() + "]";
           }
@@ -216,7 +216,11 @@ public final class YEdContextFactory implements ContextFactory {
               label += action.getScript();
             }
           }
-
+          
+          if (e.getDependency()!=null) {
+        	  	label +=  "\ndependency=" + e.getDependency();
+          }
+          
           label = label.replaceAll("&", "&amp;");
           label = label.replaceAll("<", "&lt;");
           label = label.replaceAll(">", "&gt;");
