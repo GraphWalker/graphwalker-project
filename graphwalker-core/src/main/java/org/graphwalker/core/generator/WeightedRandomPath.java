@@ -61,16 +61,12 @@ public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    Context context = getContext();
+    Context context = super.getNextStep();
     Element currentElement = context.getCurrentElement();
-    if (isNull(currentElement)) {
-      throw new NoPathFoundException("Execution context has no current element set");
-    }
     List<Element> elements = context.filter(context.getModel().getElements(currentElement));
     if (elements.isEmpty()) {
-      throw new NoPathFoundException("Could not find a valid path from element: " + currentElement.getName());
+      throw new NoPathFoundException(context.getCurrentElement());
     }
-
     if (currentElement instanceof Vertex.RuntimeVertex) {
       context.setCurrentElement(getWeightedEdge(elements, currentElement));
     } else {

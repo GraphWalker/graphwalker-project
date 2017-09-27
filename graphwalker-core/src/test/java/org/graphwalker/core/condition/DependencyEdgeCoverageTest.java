@@ -46,18 +46,18 @@ import org.junit.Test;
 public class DependencyEdgeCoverageTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     DependencyEdgeCoverage edgeCoverage = new DependencyEdgeCoverage(100);
     assertThat(edgeCoverage.getDependency(), is(100));
   }
 
   @Test(expected = StopConditionException.class)
-  public void testNegativeDependency() {
+  public void testNegativeDependency() throws Exception {
     new DependencyEdgeCoverage(-55);
   }
 
   @Test
-  public void testFulfilmentOneEdgeBelowDependency() {
+  public void testFulfilmentOneEdgeBelowDependency() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
@@ -78,7 +78,7 @@ public class DependencyEdgeCoverageTest {
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
@@ -99,7 +99,7 @@ public class DependencyEdgeCoverageTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);
@@ -124,7 +124,7 @@ public class DependencyEdgeCoverageTest {
   }
 
   @Test
-  public void testIsFulfilledHighDependencyTreshold() {
+  public void testIsFulfilledHighDependencyTreshold() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(80);
@@ -149,7 +149,7 @@ public class DependencyEdgeCoverageTest {
   }
 
   @Test
-  public void testIsFulfilledDependencyTreshold() {
+  public void testIsFulfilledDependencyTreshold() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setDependency(90);

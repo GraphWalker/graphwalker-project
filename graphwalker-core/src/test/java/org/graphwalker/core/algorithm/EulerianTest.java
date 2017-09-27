@@ -53,14 +53,14 @@ public class EulerianTest {
   }
 
   @Test
-  public void verifyNotEulerian() {
+  public void verifyNotEulerian() throws Exception {
     Model model = createModel().addEdge(new Edge().setSourceVertex(C).setTargetVertex(A));
     Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
     assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.NOT_EULERIAN));
   }
 
   @Test(expected = AlgorithmException.class)
-  public void verifyNotEulerianPathFromVertex() {
+  public void verifyNotEulerianPathFromVertex() throws Exception {
     Model model = createModel().addEdge(new Edge().setSourceVertex(C).setTargetVertex(A));
     Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
     assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.NOT_EULERIAN));
@@ -68,7 +68,7 @@ public class EulerianTest {
   }
 
   @Test(expected = AlgorithmException.class)
-  public void verifyNotEulerianPathFromEdge() {
+  public void verifyNotEulerianPathFromEdge() throws Exception {
     Model model = createModel().addEdge(new Edge().setSourceVertex(C).setTargetVertex(A));
     Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
     assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.NOT_EULERIAN));
@@ -76,13 +76,13 @@ public class EulerianTest {
   }
 
   @Test
-  public void verifySemiEulerian() {
+  public void verifySemiEulerian() throws Exception {
     Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(createModel().build()));
     assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.SEMI_EULERIAN));
   }
 
   @Test
-  public void verifyEulerian() {
+  public void verifyEulerian() throws Exception {
     Model model = createModel().addEdge(new Edge().setSourceVertex(A).setTargetVertex(B));
     Eulerian eulerian = new Eulerian(new TestExecutionContext().setModel(model.build()));
     assertThat(eulerian.getEulerianType(), is(Eulerian.EulerianType.EULERIAN));

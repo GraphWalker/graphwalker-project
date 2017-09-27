@@ -26,43 +26,19 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNullOrEmpty;
-
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.MissingCommandException;
 import com.beust.jcommander.ParameterException;
 import com.sun.jersey.api.container.grizzly2.GrizzlyServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.graphwalker.cli.commands.Check;
-import org.graphwalker.cli.commands.Convert;
-import org.graphwalker.cli.commands.Methods;
-import org.graphwalker.cli.commands.Offline;
-import org.graphwalker.cli.commands.Online;
-import org.graphwalker.cli.commands.Requirements;
-import org.graphwalker.cli.commands.Source;
+import org.graphwalker.cli.commands.*;
 import org.graphwalker.cli.util.LoggerUtil;
+import org.graphwalker.cli.util.UnsupportedFileFormat;
 import org.graphwalker.core.event.EventType;
-import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Edge;
@@ -73,8 +49,10 @@ import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.common.ResourceUtils;
 import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.graphwalker.io.factory.dot.DotContextFactory;
+import org.graphwalker.io.factory.java.JavaContextFactory;
 import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.graphwalker.java.test.TestExecutor;
 import org.graphwalker.modelchecker.ContextsChecker;
 import org.graphwalker.restful.Restful;
@@ -82,6 +60,17 @@ import org.graphwalker.restful.Util;
 import org.graphwalker.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.graphwalker.core.common.Objects.isNullOrEmpty;
+import static org.graphwalker.io.common.Util.printVersionInformation;
 
 public class CLI {
 
@@ -226,7 +215,7 @@ public class CLI {
         throw new MissingCommandException("Missing a command. Add '--help'");
       }
 
-    } catch (MissingCommandException e) {
+    } catch (UnsupportedFileFormat | MissingCommandException e) {
       System.err.println(e.getMessage() + System.lineSeparator());
     } catch (ParameterException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
@@ -262,8 +251,12 @@ public class CLI {
     }
   }
 
-  private void RunCommandCheck() throws Exception {
+  private void RunCommandCheck() throws Exception, UnsupportedFileFormat {
     List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
+    if (check.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
     List<String> issues = ContextsChecker.hasIssues(contexts);
     if (!issues.isEmpty()) {
       for (String issue : issues) {
@@ -274,9 +267,14 @@ public class CLI {
     }
   }
 
-  private void RunCommandRequirements() throws Exception {
+  private void RunCommandRequirements() throws Exception, UnsupportedFileFormat {
     SortedSet<String> reqs = new TreeSet<>();
-    for (Context context : getContexts(requirements.model.iterator())) {
+    List<Context> contexts = getContexts(requirements.model.iterator());
+    if (requirements.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
+    for (Context context : contexts) {
       for (Requirement req : context.getRequirements()) {
         reqs.add(req.getKey());
       }
@@ -286,9 +284,14 @@ public class CLI {
     }
   }
 
-  private void RunCommandMethods() throws Exception {
+  private void RunCommandMethods() throws Exception, UnsupportedFileFormat {
     SortedSet<String> names = new TreeSet<>();
-    for (Context context : getContexts(methods.model.iterator())) {
+    List<Context> contexts = getContexts(methods.model.iterator());
+    if (methods.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
+    for (Context context : contexts) {
       for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
         if (null != vertex.getName()) {
           names.add(vertex.getName());
@@ -306,7 +309,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOnline() throws Exception {
+  private void RunCommandOnline() throws Exception, UnsupportedFileFormat {
     if (online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
       WebSocketServer GraphWalkerWebSocketServer = new WebSocketServer(online.port);
       try {
@@ -317,7 +320,12 @@ public class CLI {
     } else if (online.service.equalsIgnoreCase(Online.SERVICE_RESTFUL)) {
       ResourceConfig rc = new DefaultResourceConfig();
       try {
-        rc.getSingletons().add(new Restful(getContextsWithPathGenerators(online.model.iterator()), online.verbose, online.unvisited));
+        List<Context> contexts = getContextsWithPathGenerators(online.model.iterator());
+        if (online.blocked) {
+          org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+        }
+
+        rc.getSingletons().add(new Restful(contexts, online.verbose, online.unvisited));
       } catch (MachineException e) {
         System.err.println("Was the argument --model correctly?");
         throw e;
@@ -327,10 +335,10 @@ public class CLI {
 
       HttpServer server = GrizzlyServerFactory.createHttpServer(url, rc);
       System.out.println("Try http://localhost:"
-                         + online.port
-                         + "/graphwalker/hasNext or http://localhost:"
-                         + online.port
-                         + "/graphwalker/getNext");
+        + online.port
+        + "/graphwalker/hasNext or http://localhost:"
+        + online.port
+        + "/graphwalker/getNext");
       System.out.println("Press Control+C to end...");
       try {
         server.start();
@@ -348,10 +356,10 @@ public class CLI {
     }
   }
 
-  private void RunCommandConvert() throws Exception {
+  private void RunCommandConvert() throws Exception, UnsupportedFileFormat {
     String inputFileName = convert.input;
 
-    ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(inputFileName));
+    ContextFactory inputFactory = getContextFactory(inputFileName);
     List<Context> contexts;
     try {
       contexts = inputFactory.create(Paths.get(inputFileName));
@@ -360,16 +368,20 @@ public class CLI {
       throw new Exception("Model syntax error");
     }
 
-    ContextFactory outputFactory = ContextFactoryScanner.get(new File("foo." + convert.format).toPath());
+    if (convert.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
+
+    ContextFactory outputFactory = getContextFactory("foo." + convert.format);
     System.out.println(outputFactory.getAsString(contexts));
   }
 
-  private void RunCommandSource() throws Exception {
+  private void RunCommandSource() throws Exception, UnsupportedFileFormat {
     String modelFileName = source.input.get(0);
     String templateFileName = source.input.get(1);
 
     // Read the model
-    ContextFactory inputFactory = ContextFactoryScanner.get(Paths.get(modelFileName));
+    ContextFactory inputFactory = getContextFactory(modelFileName);
     List<Context> contexts;
     try {
       contexts = inputFactory.create(Paths.get(modelFileName));
@@ -380,6 +392,10 @@ public class CLI {
     } catch (DslException e) {
       System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
       throw new Exception("Model syntax error");
+    }
+
+    if (source.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
     }
 
     for (Context context : contexts) {
@@ -426,21 +442,29 @@ public class CLI {
     }
   }
 
-  private void RunCommandOffline() throws Exception {
+  private void RunCommandOffline() throws Exception, UnsupportedFileFormat {
     if (offline.model.size() > 0) {
-      TestExecutor executor = new TestExecutor(getContextsWithPathGenerators(offline.model.iterator()));
-      executor.getMachine().addObserver(new Observer() {
-        @Override
-        public void update(Machine machine, Element element, EventType type) {
-          if (EventType.BEFORE_ELEMENT.equals(type)) {
-            System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
-          }
+      List<Context> contexts = getContextsWithPathGenerators(offline.model.iterator());
+      if (offline.blocked) {
+        org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+      }
+
+      TestExecutor executor = new TestExecutor(contexts);
+      executor.getMachine().addObserver((machine, element, type) -> {
+        if (EventType.BEFORE_ELEMENT.equals(type)) {
+          System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
         }
       });
       executor.execute();
     } else if (!offline.gw3.isEmpty()) {
       //TODO Fix gw3. Should not be there
-      SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get(offline.gw3)));
+      List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw3));
+
+      if (offline.blocked) {
+        org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+      }
+
+      SimpleMachine machine = new SimpleMachine(contexts);
       while (machine.hasNextStep()) {
         machine.getNextStep();
         System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
@@ -448,12 +472,12 @@ public class CLI {
     }
   }
 
-  public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception {
+  public List<Context> getContextsWithPathGenerators(Iterator itr) throws Exception, UnsupportedFileFormat {
     List<Context> executionContexts = new ArrayList<>();
     boolean triggerOnce = true;
     while (itr.hasNext()) {
       String modelFileName = (String) itr.next();
-      ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+      ContextFactory factory = getContextFactory(modelFileName);
       List<Context> contexts;
       try {
         contexts = factory.create(Paths.get(modelFileName));
@@ -465,8 +489,7 @@ public class CLI {
       contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
       if (triggerOnce &&
-          (!offline.startElement.isEmpty() ||
-           (!online.startElement.isEmpty()))) {
+        (!offline.startElement.isEmpty() || !online.startElement.isEmpty())) {
         triggerOnce = false;
 
         List<Element> elements = null;
@@ -489,11 +512,27 @@ public class CLI {
     return executionContexts;
   }
 
-  private List<Context> getContexts(Iterator itr) throws Exception {
+  private ContextFactory getContextFactory(String modelFileName) throws UnsupportedFileFormat {
+    ContextFactory factory;
+    if (new YEdContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new YEdContextFactory();
+    } else if (new JsonContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new JsonContextFactory();
+    } else if (new DotContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new DotContextFactory();
+    } else if (new JavaContextFactory().accept(Paths.get(modelFileName))) {
+      factory = new JavaContextFactory();
+    } else {
+      throw new UnsupportedFileFormat(modelFileName);
+    }
+    return factory;
+  }
+
+  private List<Context> getContexts(Iterator itr) throws Exception, UnsupportedFileFormat {
     List<Context> executionContexts = new ArrayList<>();
     while (itr.hasNext()) {
       String modelFileName = (String) itr.next();
-      ContextFactory factory = ContextFactoryScanner.get(Paths.get(modelFileName));
+      ContextFactory factory = getContextFactory(modelFileName);
       List<Context> contexts;
       try {
         contexts = factory.create(Paths.get(modelFileName));
@@ -504,34 +543,5 @@ public class CLI {
       executionContexts.addAll(contexts);
     }
     return executionContexts;
-  }
-
-  private String printVersionInformation() {
-    String version = "org.graphwalker version: " + getVersionString() + System.getProperty("line.separator");
-    version += System.getProperty("line.separator");
-
-    version += "org.graphwalker is open source software licensed under MIT license" + System.getProperty("line.separator");
-    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.getProperty("line.separator");
-    version +=
-        "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System
-            .getProperty("line.separator");
-
-    return version;
-  }
-
-  private String getVersionString() {
-    Properties properties = new Properties();
-    InputStream inputStream = getClass().getResourceAsStream("/version.properties");
-    if (null != inputStream) {
-      try {
-        properties.load(inputStream);
-      } catch (IOException e) {
-        logger.error("An error occurred when trying to get the version string", e);
-        return "unknown";
-      } finally {
-        IOUtils.closeQuietly(inputStream);
-      }
-    }
-    return properties.getProperty("graphwalker.version");
   }
 }

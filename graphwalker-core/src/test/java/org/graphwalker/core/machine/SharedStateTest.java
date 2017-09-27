@@ -50,7 +50,7 @@ import org.junit.Test;
 public class SharedStateTest {
 
   @Test
-  public void singleSharedStates() {
+  public void singleSharedStates() throws Exception {
     Vertex vertex = new Vertex().setName("A").setSharedState("CUSTOM_STATE");
     Edge edge = new Edge().setName("B").setSourceVertex(vertex).setTargetVertex(vertex);
     Model model = new Model().addEdge(edge);
@@ -68,7 +68,7 @@ public class SharedStateTest {
   }
 
   @Test
-  public void multipleSharedStates() {
+  public void multipleSharedStates() throws Exception {
     Vertex shared1 = new Vertex().setName("A");
     Vertex shared2 = new Vertex().setName("B");
     Vertex shared3 = new Vertex().setName("E");
@@ -102,7 +102,7 @@ public class SharedStateTest {
   }
 
   @Test
-  public void issue7() {
+  public void issue7() throws Exception {
     Vertex v_HomePage = new Vertex().setName("v_HomePage").setSharedState("HomePage");
     Vertex v_FindOwners = new Vertex().setName("v_FindOwners").setSharedState("FindOwners");
     Vertex v_Veterinarians = new Vertex().setName("v_Veterinarians").setSharedState("Veterinarians");
@@ -140,14 +140,14 @@ public class SharedStateTest {
   }
 
   @Test
-  public void accessAttribute() {
+  public void accessAttribute() throws Exception {
     Vertex shared1 = new Vertex().setName("A");
     Vertex shared2 = new Vertex().setName("B");
     Model model1 = new Model()
         .addVertex(shared1)
         .addEdge(new Edge()
                      .setName("I")
-                     .addAction(new Action("global.put('myVariable', true)"))
+                     .addAction(new Action("global.myVariable = true"))
                      .setSourceVertex(shared1)
                      .setTargetVertex(new Vertex()
                                           .setName("H")
@@ -156,7 +156,7 @@ public class SharedStateTest {
         .addVertex(shared2.setSharedState("SHARED1"))
         .addEdge(new Edge()
                      .setName("C")
-                     .setGuard(new Guard("global.get('myVariable')"))
+                     .setGuard(new Guard("global.myVariable"))
                      .setSourceVertex(shared2)
                      .setTargetVertex(new Vertex()
                                           .setName("D")));

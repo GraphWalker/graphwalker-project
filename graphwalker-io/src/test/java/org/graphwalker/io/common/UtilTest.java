@@ -26,6 +26,7 @@ package org.graphwalker.io.common;
  * #L%
  */
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,7 +44,128 @@ import org.junit.Test;
 public class UtilTest {
 
   @Test
-  public void filterBlockedElements() throws IOException {
+  public void filterBlockedElementsGrapmlVertex1() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex1.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(3));
+    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(2));
+  }
+
+  @Test
+  public void filterBlockedElementsGrapmlVertex2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex2.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(3));
+    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(1));
+  }
+
+  @Test
+  public void filterBlockedElementsGrapmlVertex3() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedVertex3.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(3));
+    Assert.assertThat(context.getModel().getEdges().size(), is(3));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(1));
+  }
+
+  @Test
+  public void filterBlockedElementsGrapmlBranch1() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch1.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(3));
+    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(3));
+    assertThat(context.getModel().getEdges().size(), is(3));
+  }
+
+  @Test
+  public void filterBlockedElementsGrapmlBranch2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/blockedBranch2.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(3));
+    Assert.assertThat(context.getModel().getEdges().size(), is(5));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(3));
+    assertThat(context.getModel().getEdges().size(), is(4));
+  }
+
+  @Test
+  public void filterBlockedElementsGrapmlSingleEdge() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleEdge.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+    Assert.assertThat(context.getModel().getEdges().size(), is(3));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(2));
+  }
+
+  @Test
+  public void filterBlockedElementsGrapmlSingleVertex() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+    Assert.assertThat(context.getModel().getEdges().size(), is(2));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(1));
+    assertThat(context.getModel().getEdges().size(), is(1));
+  }
+
+
+  @Test
+  public void filterBlockedElementsGrapmlSingleVertex2() throws IOException {
+    List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/blocked/singleVertex2.graphml"));
+    Assert.assertNotNull(contexts);
+    Assert.assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+    Assert.assertThat(context.getModel().getVertices().size(), is(2));
+    Assert.assertThat(context.getModel().getEdges().size(), is(3));
+
+    Util.filterBlockedElements(contexts);
+    assertThat(context.getModel().getVertices().size(), is(1));
+    assertThat(context.getModel().getEdges().size(), is(1));
+  }
+
+  @Test
+  public void filterBlockedElementsJson() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/graphWithBlockedElements.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));

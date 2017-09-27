@@ -46,18 +46,18 @@ import org.junit.Test;
 public class EdgeCoverageTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     EdgeCoverage edgeCoverage = new EdgeCoverage(200);
     assertThat(edgeCoverage.getPercent(), is(200));
   }
 
   @Test(expected = StopConditionException.class)
-  public void testNegativePercent() {
+  public void testNegativePercent() throws Exception {
     new EdgeCoverage(-55);
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
@@ -78,7 +78,7 @@ public class EdgeCoverageTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);

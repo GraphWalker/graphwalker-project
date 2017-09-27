@@ -43,7 +43,7 @@ var graphwalker =
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -74,21 +74,21 @@ var graphwalker =
 	  editor: __webpack_require__(3)
 	};
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = React;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = ReactDOM;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -143,15 +143,15 @@ var graphwalker =
 
 	exports.default = Editor;
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = cytoscape;
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
@@ -165,8 +165,8 @@ var graphwalker =
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./style.css", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./style.css");
+			module.hot.accept("!!../node_modules/css-loader/index.js!./style.css", function() {
+				var newContent = require("!!../node_modules/css-loader/index.js!./style.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -175,9 +175,9 @@ var graphwalker =
 		module.hot.dispose(function() { update(); });
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(7)();
 	// imports
@@ -189,9 +189,9 @@ var graphwalker =
 	// exports
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/*
 		MIT License http://www.opensource.org/licenses/mit-license.php
@@ -245,9 +245,9 @@ var graphwalker =
 	};
 
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/*
 		MIT License http://www.opensource.org/licenses/mit-license.php
@@ -262,7 +262,7 @@ var graphwalker =
 			};
 		},
 		isOldIE = memoize(function() {
-			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+			return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
 		}),
 		getHeadElement = memoize(function () {
 			return document.head || document.getElementsByTagName("head")[0];
@@ -497,9 +497,9 @@ var graphwalker =
 	}
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -658,7 +658,9 @@ var graphwalker =
 	function makeJsonGraphFile() {
 	  console.log('makeJsonGraphFile');
 	  var jsonFile = null;
-	  var data = new Blob([JSON.stringify(generateJsonGraph())], { type: 'text/plain' });
+	  var data = new Blob([JSON.stringify(generateJsonGraph())], {
+	    type: 'text/plain'
+	  });
 
 	  // If we are replacing a previously generated file we need to
 	  // manually revoke the object URL to avoid memory leaks.
@@ -704,9 +706,9 @@ var graphwalker =
 	    }
 
 	    /**
-	    * Iterate ove all nodes in the graph, and create a json
-	    * representation of the vertex
-	    */
+	     * Iterate ove all nodes in the graph, and create a json
+	     * representation of the vertex
+	     */
 	    graphs[modelId].nodes().each(function (index, node) {
 
 	      if (node.data().startVertex === true) {
@@ -742,9 +744,9 @@ var graphwalker =
 	    });
 
 	    /**
-	    * Iterate over all edges in the graph, and create a json
-	    * representation of the edge
-	    */
+	     * Iterate over all edges in the graph, and create a json
+	     * representation of the edge
+	     */
 	    graphs[modelId].edges().each(function (index, edge) {
 
 	      if (edge.data().source === 'Start') {
@@ -786,7 +788,7 @@ var graphwalker =
 	}
 
 	function onPausePlayExecution(element) {
-	  console.log('pausePlayExecution: ' + element.innerHTML + ', pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
+	  console.log('pausePlayExecution: pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
 	  stepExecution = false;
 
 	  if (pauseExecution) {
@@ -943,7 +945,11 @@ var graphwalker =
 	  doSend(JSON.stringify(getNext));
 	});
 
-	var getNextEvent = new CustomEvent('getNextEvent', { "modelId": "", "elementId": "", "name": "" });
+	var getNextEvent = new CustomEvent('getNextEvent', {
+	  "modelId": "",
+	  "elementId": "",
+	  "name": ""
+	});
 	document.addEventListener('getNextEvent', function (e) {
 	  console.log('getNextEvent: ' + e.id + ': ' + e.name + 'pauseExecution: ' + pauseExecution + ', stepExecution: ' + stepExecution + ' : modelId ' + currentModelId);
 
@@ -1264,16 +1270,38 @@ var graphwalker =
 	          var isBreakPointEnabled = breakPoints.some(function (e) {
 	            return e.data().id === rightClickedElement.data().id;
 	          });
+
 	          var breakpointStr;
 	          if (isBreakPointEnabled) {
 	            breakpointStr = 'Disable breakpoint';
 	          } else {
 	            breakpointStr = 'Enable breakpoint';
 	          }
+
+	          var startElementtStr;
+	          if (rightClickedElement.data().id === getStartingElementId()) {
+	            startElementtStr = 'Disable start element';
+	          } else {
+	            startElementtStr = 'Enable start element';
+	          }
+
 	          context.attach('#A-' + currentModelId, [{
 	            header: 'Name: ' + mouseoverElement.data().name
 	          }, {
 	            divider: true
+	          }, {
+	            text: startElementtStr,
+	            action: function action(event) {
+	              if (rightClickedElement.data().id === getStartingElementId()) {
+	                graph.startElementId = undefined;
+	              } else {
+	                for (var modelId in graphs) {
+	                  graphs[modelId].startElementId = undefined;
+	                }
+	                graph.startElementId = rightClickedElement.data().id;
+	              }
+	              setElementsColor();
+	            }
 	          }, {
 	            text: breakpointStr,
 	            action: function action(event) {
@@ -1315,9 +1343,26 @@ var graphwalker =
 	              });
 	            }
 	          }, {
-	            text: 'Run test',
+	            divider: true
+	          }, {
+	            text: 'Run',
 	            action: function action(event) {
 	              onRunTest();
+	            }
+	          }, {
+	            text: 'Pause',
+	            action: function action(event) {
+	              onPausePlayExecution();
+	            }
+	          }, {
+	            text: 'Step',
+	            action: function action(event) {
+	              onStepExecution();
+	            }
+	          }, {
+	            text: 'Reset',
+	            action: function action(event) {
+	              onResetTest();
 	            }
 	          }]);
 	        }
@@ -1329,7 +1374,7 @@ var graphwalker =
 	  });
 
 	  graph.on('mouseover', function (event) {
-	    mouseoverElement = this;
+	    mouseoverElement = undefined;
 	    rightClickedRenderedPosition = {
 	      x: event.cyRenderedPosition.x,
 	      y: event.cyRenderedPosition.y
@@ -1598,6 +1643,15 @@ var graphwalker =
 	  return graphs;
 	}
 
+	function getStartingElementId() {
+	  for (var modelId in graphs) {
+	    if (graphs[modelId].startElementId !== undefined) {
+	      return graphs[modelId].startElementId;
+	    }
+	  }
+	  return undefined;
+	}
+
 	function setElementsColor() {
 	  for (var modelId in graphs) {
 	    if (!isTestRunning) {
@@ -1821,6 +1875,7 @@ var graphwalker =
 	        removeTest();
 
 	        readGraphFromJSON(JSON.parse(message.models));
+	        var tabs = $('#tabs');
 	        tabs.show();
 	        for (var modelId in graphs) {
 	          if (!graphs.hasOwnProperty(modelId)) {
@@ -2116,11 +2171,11 @@ var graphwalker =
 	  });
 	});
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = jQuery;
 
-/***/ }
+/***/ })
 /******/ ]);

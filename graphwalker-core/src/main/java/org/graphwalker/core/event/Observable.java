@@ -28,6 +28,8 @@ package org.graphwalker.core.event;
 
 import org.graphwalker.core.model.Element;
 
+import java.util.List;
+
 /**
  * @author Nils Olsson
  */
@@ -36,6 +38,8 @@ public interface Observable {
   void addObserver(Observer observer);
 
   void deleteObserver(Observer observer);
+
+  List<Observer> getObservers();
 
   void deleteObservers();
 

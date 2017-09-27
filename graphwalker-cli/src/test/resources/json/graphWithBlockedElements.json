@@ -1,0 +1,98 @@
+{
+  "models": [
+    {
+      "name": "Small_model",
+      "generator": "random(edge_coverage(100))",
+      "startElementId": "e1",
+      "vertices": [
+        {
+          "name": "v1",
+          "id": "v1"
+        },
+        {
+          "name": "v2",
+          "id": "v2"
+        },
+        {
+          "name": "v3",
+          "id": "v3"
+        },
+        {
+          "name": "v4",
+          "id": "v4"
+        },
+        {
+          "name": "v5",
+          "id": "v5",
+          "properties": {
+            "blocked": true
+          }
+        }
+      ],
+      "edges": [
+        {
+          "name": "e1",
+          "id": "e1",
+          "targetVertexId": "v1"
+        },
+        {
+          "name": "e2",
+          "id": "e2",
+          "sourceVertexId": "v1",
+          "targetVertexId": "v2"
+        },
+        {
+          "name": "e3",
+          "id": "e3",
+          "sourceVertexId": "v2",
+          "targetVertexId": "v3"
+        },
+        {
+          "name": "e4",
+          "id": "e4",
+          "sourceVertexId": "v3",
+          "targetVertexId": "v4"
+        },
+        {
+          "name": "e5",
+          "id": "e5",
+          "sourceVertexId": "v4",
+          "targetVertexId": "v5"
+        },
+        {
+          "name": "e6",
+          "id": "e6",
+          "sourceVertexId": "v5",
+          "targetVertexId": "v4"
+        },
+        {
+          "name": "e7",
+          "id": "e7",
+          "sourceVertexId": "v4",
+          "targetVertexId": "v3"
+        },
+        {
+          "name": "e8",
+          "id": "e8",
+          "sourceVertexId": "v3",
+          "targetVertexId": "v2"
+        },
+        {
+          "name": "e9",
+          "id": "e9",
+          "sourceVertexId": "v2",
+          "targetVertexId": "v1"
+        },
+        {
+          "name": "e10",
+          "id": "e10",
+          "sourceVertexId": "v1",
+          "targetVertexId": "v1",
+          "properties": {
+            "blocked": true
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,42 +1,39 @@
-language:
-  java
-  
+language: java
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 branches:
   only:
-    - master
-    - coverity_scan
-
+  - master
+  - coverity_scan
 env:
   global:
-    - secure: "NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI="
-    - secure: "fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE="
-    - secure: "UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g="
-
-# https://github.com/travis-ci/travis-ci/issues/5227#issuecomment-165131913
+  - secure: NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI=
+  - secure: fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE=
+  - secure: UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g=
 addons:
   hosts:
-    - myshorthost
+  - myshorthost
   hostname: myshorthost
-
   coverity_scan:
     project:
-      name: "GraphWalker/graphwalker-project"
-      description: "Build submitted via Travis CI"
+      name: GraphWalker/graphwalker-project
+      description: Build submitted via Travis CI
     notification_email: nils.olsson@arcticblue.se
-    build_command: "mvn clean compile -DskipTests=true"
+    build_command: mvn clean compile -DskipTests=true
     branch_pattern: coverity_scan
-
 before_install:
-  - pip install --user codecov
-
+- pip install --user codecov
 install:
-  - sudo apt-get update -qq
-
+- sudo apt-get update -qq
 script:
-  - 'if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then mvn clean deploy --settings deploy.xml; else mvn clean test; fi fi'
-
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"
+  ]; then mvn clean deploy --settings deploy.xml; else mvn clean test; fi fi
 after_success:
-  - codecov
+- codecov
+deploy:
+  provider: bintray
+  file: .bintray.json
+  user: graphwalker 
+  key:
+    secure: "G2SkTggt90Bhy51UaGGOxOcLOgk+EiFl+3OrdQqfTxxiVbcScthm8E9uOVyeYzCHYBYtMae1r4MHHdZrwU8/wl3SHGBGZHQDxfhfJ5vDNFhd3VzBwiE0xj3fIXg1ZHa1wZOMQD5E5A2e0KrVy9n9uRva+O6TY+zG2HIyj+x7CwU="
+

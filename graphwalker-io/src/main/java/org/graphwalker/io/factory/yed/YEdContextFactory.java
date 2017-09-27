@@ -26,58 +26,21 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
-import com.yworks.xml.graphml.ArcEdgeDocument;
-import com.yworks.xml.graphml.BezierEdgeDocument;
-import com.yworks.xml.graphml.EdgeLabelType;
-import com.yworks.xml.graphml.GenericEdgeDocument;
-import com.yworks.xml.graphml.GenericGroupNodeDocument;
-import com.yworks.xml.graphml.GenericNodeDocument;
-import com.yworks.xml.graphml.GroupNodeDocument;
-import com.yworks.xml.graphml.ImageNodeDocument;
-import com.yworks.xml.graphml.NodeLabelType;
-import com.yworks.xml.graphml.PolyLineEdgeDocument;
-import com.yworks.xml.graphml.QuadCurveEdgeDocument;
-import com.yworks.xml.graphml.ShapeNodeDocument;
-import com.yworks.xml.graphml.SplineEdgeDocument;
-import com.yworks.xml.graphml.TableNodeDocument;
+import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
-import org.graphdrawing.graphml.xmlns.DataType;
-import org.graphdrawing.graphml.xmlns.GraphType;
-import org.graphdrawing.graphml.xmlns.GraphmlDocument;
-import org.graphdrawing.graphml.xmlns.KeyType;
+import org.graphdrawing.graphml.xmlns.*;
 import org.graphdrawing.graphml.xmlns.NodeType;
 import org.graphdrawing.graphml.xmlns.impl.DataTypeImpl;
 import org.graphdrawing.graphml.xmlns.impl.KeyForTypeImpl;
 import org.graphdrawing.graphml.xmlns.impl.KeyTypeImpl;
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.dsl.antlr.yed.YEdDescriptiveErrorListener;
 import org.graphwalker.dsl.yed.YEdEdgeParser;
 import org.graphwalker.dsl.yed.YEdLabelLexer;
@@ -88,6 +51,15 @@ import org.graphwalker.io.factory.ContextFactory;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 
 /**
@@ -182,13 +154,13 @@ public final class YEdContextFactory implements ContextFactory {
   public String getAsString(List<Context> contexts) {
     StringBuilder graphmlStr = new StringBuilder();
     for (Context context : contexts) {
-      String newLine = System.getProperty("line.separator");
+      String newLine = System.lineSeparator();
       StringBuilder str = new StringBuilder();
 
       str.append("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>").append(newLine);
       str.append("<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  " + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                 + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
-                 + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
+        + "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns " + "http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd\" "
+        + "xmlns:y=\"http://www.yworks.com/xml/graphml\">").append(newLine);
       str.append("  <key id=\"d0\" for=\"node\" yfiles.type=\"nodegraphics\"/>").append(newLine);
       str.append("  <key id=\"d1\" for=\"edge\" yfiles.type=\"edgegraphics\"/>").append(newLine);
       str.append("  <graph id=\"G\" edgedefault=\"directed\">").append(newLine);
@@ -201,9 +173,9 @@ public final class YEdContextFactory implements ContextFactory {
         str.append("          <y:Fill color=\"#CCCCFF\"  transparent=\"false\"/>").append(newLine);
         str.append("          <y:BorderStyle type=\"line\" width=\"1.0\" color=\"#000000\" />").append(newLine);
         str.append("          <y:NodeLabel x=\"1.5\" y=\"5.6494140625\" width=\"92.0\" height=\"18.701171875\" "
-                   + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-                   + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
-                   + v.getName());
+          + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+          + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"internal\" modelPosition=\"c\" " + "autoSizePolicy=\"content\">"
+          + v.getName());
 
         str.append("</y:NodeLabel>").append(newLine);
         str.append("          <y:Shape type=\"rectangle\"/>").append(newLine);
@@ -252,9 +224,9 @@ public final class YEdContextFactory implements ContextFactory {
           label = label.replaceAll("\"", "&quot;");
 
           str.append("          <y:EdgeLabel x=\"-148.25\" y=\"30.000000000000014\" width=\"169.0\" height=\"18.701171875\" "
-                     + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
-                     + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
-                     + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
+            + "visible=\"true\" alignment=\"center\" fontFamily=\"Dialog\" fontSize=\"12\" "
+            + "fontStyle=\"plain\" textColor=\"#000000\" modelName=\"free\" modelPosition=\"anywhere\" "
+            + "preferredPlacement=\"on_edge\" distance=\"2.0\" ratio=\"0.5\">" + label);
           str.append("</y:EdgeLabel>").append(newLine);
         }
 
@@ -277,11 +249,8 @@ public final class YEdContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path graphmlFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".graphml");
-    OutputStream outputStream = Files.newOutputStream(graphmlFile);
-    try {
+    try (OutputStream outputStream = Files.newOutputStream(graphmlFile)) {
       outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
-    } finally {
-      outputStream.close();
     }
   }
 
@@ -290,7 +259,7 @@ public final class YEdContextFactory implements ContextFactory {
     Deque<XmlObject> workQueue = new ArrayDeque<>();
     workQueue.addAll(Arrays.asList(document.selectPath(NAMESPACE + "$this/xq:graphml/xq:graph/xq:node")));
 
-    List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
+    List<KeyType> keys = getKeyArray(document);
     Map<String, KeyType> propKeys = new HashMap<>();
     for (KeyType key : keys) {
       if (key.getFor() == KeyForTypeImpl.NODE && !key.isSetYfilesType()) {
@@ -343,7 +312,6 @@ public final class YEdContextFactory implements ContextFactory {
 
                 vertex.setProperty("x", nodeType.getGeometry().getX());
                 vertex.setProperty("y", nodeType.getGeometry().getY());
-                boolean blocked = false;
                 if (null != parseContext.start()) {
                   elements.put(node.getId(), vertex);
                   vertex.setId(node.getId());
@@ -363,14 +331,12 @@ public final class YEdContextFactory implements ContextFactory {
                       model.addActions(convertVertexAction(field.actions().action()));
                     }
                     if (null != field.blocked()) {
-                      blocked = true;
+                      vertex.setProperty("blocked", true);
                     }
                   }
-                  if (!blocked) {
-                    elements.put(node.getId(), vertex);
-                    vertex.setId(node.getId());
-                    model.addVertex(vertex);
-                  }
+                  elements.put(node.getId(), vertex);
+                  vertex.setId(node.getId());
+                  model.addVertex(vertex);
                 }
               }
             }
@@ -383,11 +349,11 @@ public final class YEdContextFactory implements ContextFactory {
 
   private boolean isSupportedNode(String xml) {
     return xml.contains("GenericNode")
-           || xml.contains("ShapeNode")
-           || xml.contains("GenericGroupNode")
-           || xml.contains("GroupNode")
-           || xml.contains("ImageNode")
-           || xml.contains("TableNode");
+      || xml.contains("ShapeNode")
+      || xml.contains("GenericGroupNode")
+      || xml.contains("GroupNode")
+      || xml.contains("ImageNode")
+      || xml.contains("TableNode");
   }
 
   private com.yworks.xml.graphml.NodeType getSupportedNode(String xml) throws XmlException {
@@ -407,10 +373,17 @@ public final class YEdContextFactory implements ContextFactory {
     throw new ContextFactoryException("Unsupported node type: " + xml);
   }
 
+  private List<KeyType> getKeyArray(GraphmlDocument document) {
+    if (document.getGraphml() != null) {
+      return Arrays.asList(document.getGraphml().getKeyArray());
+    }
+    return Collections.emptyList();
+  }
+
   private Edge addEdges(Model model, GraphmlDocument document, Map<String, Vertex> elements, Vertex startVertex) throws XmlException {
     Edge startEdge = null;
 
-    List<KeyType> keys = Arrays.asList(document.getGraphml().getKeyArray());
+    List<KeyType> keys = getKeyArray(document);
     Map<String, KeyType> propKeys = new HashMap<>();
     for (KeyType key : keys) {
       if (key.getFor() == KeyForTypeImpl.EDGE && !key.isSetYfilesType()) {
@@ -461,7 +434,6 @@ public final class YEdContextFactory implements ContextFactory {
               if (null != elements.get(edgeType.getTarget())) {
                 edge.setTargetVertex(elements.get(edgeType.getTarget()));
               }
-              boolean blocked = false;
               for (YEdEdgeParser.FieldContext field : parseContext.field()) {
                 if (null != field.names()) {
                   edge.setName(field.names().getText());
@@ -478,13 +450,16 @@ public final class YEdContextFactory implements ContextFactory {
                   edge.setRequirements(convertEdgeRequirement(field.reqtags().reqtagList().reqtag()));
                 }
                 if (null != field.blocked()) {
-                  blocked = true;
+                  edge.setProperty("blocked", true);
+                }
+                if (null != field.weight() && null != field.weight().Value()) {
+                  edge.setWeight(Double.parseDouble(field.weight().Value().getText()));
                 }
               }
-              if (!blocked && null != edge.getTargetVertex()) {
+              if (null != edge.getTargetVertex()) {
                 if (null != startVertex &&
-                    null != edgeType.getSource() &&
-                    edgeType.getSource().equals(startVertex.getId())) {
+                  null != edgeType.getSource() &&
+                  edgeType.getSource().equals(startVertex.getId())) {
                   edge.setSourceVertex(null);
                   edge.setId(edgeType.getId());
                   model.addEdge(edge);
@@ -504,11 +479,11 @@ public final class YEdContextFactory implements ContextFactory {
 
   private boolean isSupportedEdge(String xml) {
     return xml.contains("PolyLineEdge")
-           || xml.contains("GenericEdge")
-           || xml.contains("ArcEdge")
-           || xml.contains("QuadCurveEdge")
-           || xml.contains("SplineEdge")
-           || xml.contains("BezierEdge");
+      || xml.contains("GenericEdge")
+      || xml.contains("ArcEdge")
+      || xml.contains("QuadCurveEdge")
+      || xml.contains("SplineEdge")
+      || xml.contains("BezierEdge");
   }
 
   private com.yworks.xml.graphml.EdgeType getSupportedEdge(String xml) throws XmlException {

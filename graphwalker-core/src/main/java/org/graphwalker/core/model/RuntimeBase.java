@@ -53,15 +53,15 @@ public abstract class RuntimeBase implements Element {
   private final Map<String, Object> properties;
 
   protected RuntimeBase(String id, String name) {
-    this(id, name, new ArrayList<Action>(), new HashSet<Requirement>());
+    this(id, name, new ArrayList<>(), new HashSet<>());
   }
 
   protected RuntimeBase(String id, String name, Set<Requirement> requirements, Map<String, Object> properties) {
-    this(id, name, new ArrayList<Action>(), requirements, properties);
+    this(id, name, new ArrayList<>(), requirements, properties);
   }
 
   protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements) {
-    this(id, name, actions, requirements, new HashMap<String, Object>());
+    this(id, name, actions, requirements, new HashMap<>());
   }
 
   protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements, Map<String, Object> properties) {

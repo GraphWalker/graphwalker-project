@@ -152,7 +152,7 @@ public final class DotContextFactory implements ContextFactory {
     StringBuilder dotStr = new StringBuilder();
 
     for (Context context : contexts) {
-      String newLine = System.getProperty("line.separator");
+      String newLine = System.lineSeparator();
       StringBuilder str = new StringBuilder();
 
       str.append("digraph " + FilenameUtils.getBaseName(context.getModel().getName())).append(" {").append(newLine);
@@ -190,11 +190,8 @@ public final class DotContextFactory implements ContextFactory {
   public void write(List<Context> contexts, Path path) throws IOException {
     File folder = path.toFile().getAbsoluteFile();
     Path dotFile = Paths.get(folder.toString(), contexts.get(0).getModel().getName() + ".dot");
-    OutputStream outputStream = Files.newOutputStream(dotFile);
-    try {
+    try (OutputStream outputStream = Files.newOutputStream(dotFile)) {
       outputStream.write(String.valueOf(getAsString(contexts)).getBytes());
-    } finally {
-      outputStream.close();
     }
   }
 }

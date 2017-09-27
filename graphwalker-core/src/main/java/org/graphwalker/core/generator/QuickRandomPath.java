@@ -67,7 +67,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    Context context = getContext();
+    Context context = super.getNextStep();
     if (elements.isEmpty()) {
       elements.addAll(context.getModel().getElements());
       elements.remove(context.getCurrentElement());
@@ -75,7 +75,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
     }
     if (isNull(target) || target.equals(context.getCurrentElement())) {
       if (elements.isEmpty()) {
-        throw new NoPathFoundException();
+        throw new NoPathFoundException(context.getCurrentElement());
       } else {
         orderElementsUnvisitedFirst(elements);
         target = elements.get(0);
@@ -90,12 +90,7 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
   private void orderElementsUnvisitedFirst(List<Element> elements) {
     final Profiler profiler = getContext().getProfiler();
     if (isNotNull(profiler)) {
-      Collections.sort(elements, new Comparator<Element>() {
-        @Override
-        public int compare(Element a, Element b) {
-          return Boolean.compare(profiler.isVisited(a), profiler.isVisited(b));
-        }
-      });
+      elements.sort((a, b) -> Boolean.compare(profiler.isVisited(a), profiler.isVisited(b)));
     }
   }
 

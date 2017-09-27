@@ -26,11 +26,31 @@ package org.graphwalker.io.factory.java;
  * #L%
  */
 
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.model.Model;
 
 /**
  * @author Kristian Karl
  */
 public final class JavaContext extends ExecutionContext {
 
+  private static final Bindings bindings = new SimpleBindings();
+
+  public JavaContext() {
+    super();
+    getScriptEngine().put("global", bindings);
+  }
+
+  public JavaContext(Model model, PathGenerator generator) {
+    super(model, generator);
+    getScriptEngine().put("global", bindings);
+  }
+
+  public JavaContext(Model.RuntimeModel model, PathGenerator generator) {
+    super(model, generator);
+    getScriptEngine().put("global", bindings);
+  }
 }

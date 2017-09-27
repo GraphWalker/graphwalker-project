@@ -17,7 +17,7 @@ mvn package
 
 The jar is in:
 ```bash
-target/graphwalker-cli-3.2.1.jar
+target/graphwalker-studio-4.0.0-SNAPSHOT.jar
 ```
 
 Run it like:

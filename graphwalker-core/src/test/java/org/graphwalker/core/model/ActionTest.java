@@ -37,7 +37,7 @@ import org.junit.Test;
 public class ActionTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Action action = new Action("int i = 0;");
     assertNotNull(action);
     assertEquals("int i = 0;", action.getScript());

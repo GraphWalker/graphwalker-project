@@ -26,26 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNullOrEmpty;
-import static org.graphwalker.core.model.Model.RuntimeModel;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -55,13 +35,7 @@ import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
-import org.graphwalker.java.annotation.AfterElement;
-import org.graphwalker.java.annotation.AfterExecution;
-import org.graphwalker.java.annotation.AnnotationUtils;
-import org.graphwalker.java.annotation.BeforeElement;
-import org.graphwalker.java.annotation.BeforeExecution;
-import org.graphwalker.java.annotation.GraphWalker;
-import org.graphwalker.java.annotation.Model;
+import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.factory.PathGeneratorFactory;
 import org.graphwalker.java.report.XMLReportGenerator;
 import org.reflections.Reflections;
@@ -72,6 +46,18 @@ import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.MessageFormat;
+import java.util.*;
+
+import static org.graphwalker.core.common.Objects.*;
+import static org.graphwalker.core.model.Model.RuntimeModel;
+
 /**
  * @author Nils Olsson
  */
@@ -80,8 +66,8 @@ public final class TestExecutor implements Executor, Observer {
   private static final Logger logger = LoggerFactory.getLogger(TestExecutor.class);
 
   private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
-                                                                     .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
-                                                                     .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+    .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
+    .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
 
   private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
     Reflections.log = null;
@@ -173,20 +159,31 @@ public final class TestExecutor implements Executor, Observer {
     if (!models.isEmpty()) {
       Path path = Paths.get(models.iterator().next().file());
       List<Context> contexts = ContextFactoryScanner.get(reflections, path).create(path);
+
       if (isNullOrEmpty(contexts)) {
         throw new TestExecutionException("Could not read the model: " + path.toString());
-      } else if (contexts.size() > 1) {
-        throw new TestExecutionException("The model path: " + path.toString() + ", has more models than 1. Can only handle 1 model.");
+      } else if (contexts.size() == 1) {
+        context.setModel(contexts.get(0).getModel());
+        context.setNextElement(contexts.get(0).getNextElement());
+      } else {
+        for (Context examineContext : contexts) {
+          try {
+            if (Class.forName(path.getParent().toString().replace('/', '.') + "." + examineContext.getModel().getName()).isAssignableFrom(context.getClass())) {
+              context.setModel(examineContext.getModel());
+              context.setNextElement(examineContext.getNextElement());
+            }
+          } catch (ClassNotFoundException e) {
+            logger.error("Problem examine: " + examineContext.getModel().getName());
+          }
+        }
       }
-      context.setModel(contexts.get(0).getModel());
-      context.setNextElement(contexts.get(0).getNextElement());
     }
     if (!"".equals(annotation.value())) {
       context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
     } else {
       context.setPathGenerator(PathGeneratorFactory.createPathGenerator(annotation));
     }
-    if (!"".equals(annotation.start())) {
+    if (isNotNullOrEmpty(annotation.start()) && isNotNull(context.getModel())) {
       context.setNextElement(getElement(context.getModel(), annotation.start()));
     }
   }
@@ -303,7 +300,7 @@ public final class TestExecutor implements Executor, Observer {
     new XMLReportGenerator(startTime, properties).writeReport(file, this);
     if (!getFailures().isEmpty()) {
       throw new TestExecutionException(
-          MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
+        MessageFormat.format("There are test failures.\n\n Please refer to {0} for the individual test results.", file.getAbsolutePath()));
     }
   }
 

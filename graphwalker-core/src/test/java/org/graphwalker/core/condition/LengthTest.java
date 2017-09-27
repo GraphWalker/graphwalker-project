@@ -45,18 +45,18 @@ import org.junit.Test;
 public class LengthTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     Length length = new Length(333);
     assertThat(length.getLength(), is(333L));
   }
 
   @Test(expected = StopConditionException.class)
-  public void testNegativeLength() {
+  public void testNegativeLength() throws Exception {
     new Length(-55);
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addVertex(vertex);
     StopCondition condition = new Length(100);
@@ -71,7 +71,7 @@ public class LengthTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addVertex(vertex);
     StopCondition condition = new Length(100);

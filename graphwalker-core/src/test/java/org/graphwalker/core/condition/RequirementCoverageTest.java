@@ -51,18 +51,18 @@ import org.junit.Test;
 public class RequirementCoverageTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     RequirementCoverage requirementCoverage = new RequirementCoverage(66);
     assertThat(requirementCoverage.getPercent(), is(66));
   }
 
   @Test(expected = StopConditionException.class)
-  public void testNegativePercent() {
+  public void testNegativePercent() throws Exception {
     new RequirementCoverage(-55);
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex vertex = new Vertex().addRequirement(new Requirement("1"));
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex)
                                           .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
@@ -78,7 +78,7 @@ public class RequirementCoverageTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex vertex = new Vertex().addRequirement(new Requirement("1"));
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex)
                                           .setTargetVertex(vertex).addRequirement(new Requirement("2")));//.addRequirement(new Requirement("3"));
@@ -93,7 +93,7 @@ public class RequirementCoverageTest {
   }
 
   @Test
-  public void testNoRequirements() {
+  public void testNoRequirements() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
     Context context = new TestExecutionContext(model, new RandomPath(new RequirementCoverage(100)));
@@ -107,7 +107,7 @@ public class RequirementCoverageTest {
   }
 
   @Test
-  public void testEdgeRequirement() {
+  public void testEdgeRequirement() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addRequirement(new Requirement("REQ1")));
     StopCondition stopCondition = new RequirementCoverage(100);

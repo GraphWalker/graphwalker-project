@@ -162,13 +162,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
    * @return The model.
    */
   public Model deleteVertex(Vertex vertex) {
-    Iterator<Edge> iterator = edges.iterator();
-    while (iterator.hasNext()) {
-      Edge edge = iterator.next();
-      if (vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex())) {
-        iterator.remove();
-      }
-    }
+    edges.removeIf(edge -> vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex()));
     vertices.remove(vertex);
     return this;
   }
@@ -470,7 +464,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
       for (Element element : createElementCache()) {
         if (element.hasName()) {
           if (!elementsByElementCache.containsKey(element.getName())) {
-            elementsByElementCache.put(element.getName(), new ArrayList<Element>());
+            elementsByElementCache.put(element.getName(), new ArrayList<>());
           }
           elementsByElementCache.get(element.getName()).add(element);
         }
@@ -483,7 +477,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
       for (RuntimeEdge edge : edges) {
         if (edge.hasName()) {
           if (!edgesByNameCache.containsKey(edge.getName())) {
-            edgesByNameCache.put(edge.getName(), new ArrayList<RuntimeEdge>());
+            edgesByNameCache.put(edge.getName(), new ArrayList<>());
           }
           edgesByNameCache.get(edge.getName()).add(edge);
         }
@@ -496,7 +490,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
       for (RuntimeVertex vertex : vertices) {
         if (vertex.hasName()) {
           if (!verticesByNameCache.containsKey(vertex.getName())) {
-            verticesByNameCache.put(vertex.getName(), new ArrayList<RuntimeVertex>());
+            verticesByNameCache.put(vertex.getName(), new ArrayList<>());
           }
           verticesByNameCache.get(vertex.getName()).add(vertex);
         }
@@ -507,7 +501,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
     private Map<RuntimeVertex, List<RuntimeEdge>> createInEdgesByVertexCache() {
       Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache = new HashMap<>();
       for (RuntimeVertex vertex : vertices) {
-        inEdgesByVertexCache.put(vertex, new ArrayList<RuntimeEdge>());
+        inEdgesByVertexCache.put(vertex, new ArrayList<>());
       }
       for (RuntimeEdge edge : edges) {
         RuntimeVertex vertex = edge.getTargetVertex();
@@ -521,7 +515,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
     private Map<RuntimeVertex, List<RuntimeEdge>> createOutEdgesByVertexCache() {
       Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache = new HashMap<>();
       for (RuntimeVertex vertex : vertices) {
-        outEdgesByVertexCache.put(vertex, new ArrayList<RuntimeEdge>());
+        outEdgesByVertexCache.put(vertex, new ArrayList<>());
       }
       for (RuntimeEdge edge : edges) {
         RuntimeVertex vertex = edge.getSourceVertex();
@@ -537,7 +531,7 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
       for (RuntimeVertex vertex : vertices) {
         if (vertex.hasSharedState()) {
           if (!sharedStateCache.containsKey(vertex.getSharedState())) {
-            sharedStateCache.put(vertex.getSharedState(), new ArrayList<RuntimeVertex>());
+            sharedStateCache.put(vertex.getSharedState(), new ArrayList<>());
           }
           sharedStateCache.get(vertex.getSharedState()).add(vertex);
         }
@@ -603,12 +597,6 @@ public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
     @Override
     public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (isNull(o) || getClass() != o.getClass()) {
-        return false;
-      }
       if (!super.equals(o)) {
         return false;
       }

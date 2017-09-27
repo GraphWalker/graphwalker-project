@@ -57,20 +57,13 @@ public final class RandomPath extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    Context context = getContext();
+    Context context = super.getNextStep();
     Element currentElement = context.getCurrentElement();
-    if (isNull(currentElement)) {
-      throw new NoPathFoundException("Execution context has no current element set");
-    }
     List<Element> elements = context.filter(context.getModel().getElements(currentElement));
     if (elements.isEmpty()) {
       LOG.error("currentElement: " + currentElement);
       LOG.error("context.getModel().getElements(): " + context.getModel().getElements());
-      throw new NoPathFoundException("Could not find a valid path from element: " +
-                                     currentElement.getName() +
-                                     " (" +
-                                     currentElement.getId() +
-                                     ")");
+      throw new NoPathFoundException(context.getCurrentElement());
     }
     context.setCurrentElement(elements.get(random.nextInt(elements.size())));
     return context;

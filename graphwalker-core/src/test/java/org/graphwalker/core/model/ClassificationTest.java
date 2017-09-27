@@ -40,9 +40,11 @@ import org.junit.Test;
 public class ClassificationTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Classification root = new Classification();
     root.setName("root");
+    assertThat(root.build().getName(), is("root"));
+    assertThat(root.build().toString(), is("root"));
     root.addClassification(new Classification().setName("leaf1"));
     root.addClassification(new Classification().setName("leaf2"));
     assertNotNull(root);
@@ -59,5 +61,21 @@ public class ClassificationTest {
     assertNotNull(runtimeRoot.getClassifications().get(1).getName());
     assertNotNull(runtimeRoot.getClassifications().get(1).getClassifications());
     assertThat(runtimeRoot.getClassifications().get(1).getClassifications().size(), is(0));
+  }
+
+  @Test
+  public void testEquality() throws Exception {
+    Classification model1 = new Classification().setId("ID1");
+    Classification model2 = new Classification().setId("ID1");
+    assertThat(model1.build(), is(model2.build()));
+    assertThat(model1.build().hashCode(), is(model2.build().hashCode()));
+    RuntimeClassification model = model1.build();
+    assertThat(model, is(model));
+  }
+
+  @Test
+  public void visit() throws Exception {
+    Classification model = new Classification().setId("ID1");
+    model.build().accept(element -> assertThat(element.getId(), is("ID1")));
   }
 }

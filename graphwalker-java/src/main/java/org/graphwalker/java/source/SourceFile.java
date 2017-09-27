@@ -26,10 +26,11 @@ package org.graphwalker.java.source;
  * #L%
  */
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Nils Olsson
@@ -41,29 +42,27 @@ public final class SourceFile {
   private final Path relativePath;
   private final Path outputPath;
   private final String packageName;
+  private final String className;
 
-  public SourceFile(File file) {
-    this(file.toPath(), DEFAULT_PATH, DEFAULT_PATH);
-  }
-
-  public SourceFile(File file, File baseDirectory, File outputDirectory) {
-    this(file.toPath(), baseDirectory.toPath(), outputDirectory.toPath());
-  }
-
-  public SourceFile(Path inputPath) {
-    this(inputPath, DEFAULT_PATH, DEFAULT_PATH);
+  public SourceFile(String modelName, Path path) {
+    this(modelName, path, DEFAULT_PATH, DEFAULT_PATH);
   }
 
   public SourceFile(Path inputPath, Path basePath, Path outputPath) {
+    this(getModelName(inputPath), inputPath, basePath, outputPath);
+  }
+
+  public SourceFile(String modelName, Path inputPath, Path basePath, Path outputPath) {
+    this.className = modelName;
     this.inputPath = inputPath;
     this.relativePath = basePath.relativize(inputPath);
     if (null != this.relativePath.getParent()) {
       this.packageName = this.relativePath.getParent().toString()
-          .replace(File.separator, ".").replaceAll(" ", "_");
+        .replace(File.separator, ".").replaceAll(" ", "_");
     } else {
       this.packageName = "";
     }
-    this.outputPath = outputPath.resolve(this.relativePath).resolveSibling(getFileName() + ".java");
+    this.outputPath = outputPath.resolve(this.relativePath).resolveSibling(this.className + ".java");
   }
 
   public Path getInputPath() {
@@ -82,17 +81,20 @@ public final class SourceFile {
     return this.packageName;
   }
 
-  public String getFileName() {
+  private static String getModelName(Path inputPath) {
     return removeExtension(inputPath.getFileName().toString());
   }
 
-
-  private String removeExtension(final String filename) {
+  private static String removeExtension(final String filename) {
     String ext = FilenameUtils.getExtension(filename);
     if ("".equals(ext)) {
       return filename;
     }
     final int index = filename.lastIndexOf(ext) - 1;
     return filename.substring(0, index);
+  }
+
+  public String getClassName() {
+    return className;
   }
 }

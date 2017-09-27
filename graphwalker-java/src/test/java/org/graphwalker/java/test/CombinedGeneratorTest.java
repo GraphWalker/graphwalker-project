@@ -81,8 +81,8 @@ public class CombinedGeneratorTest extends ExecutionContext implements CombinedG
   public void run() throws IOException {
     CombinedGeneratorTest context = new CombinedGeneratorTest();
     CombinedPath combinedPath = new CombinedPath();
-    combinedPath.addPathGenerator(new RandomPath(new VertexCoverage(100)));
     combinedPath.addPathGenerator(new RandomPath(new EdgeCoverage(100)));
+    combinedPath.addPathGenerator(new RandomPath(new VertexCoverage(100)));
     new TestBuilder()
         .addContext(context.setPathGenerator(combinedPath).setNextElement(new Edge().setName("e_1").build()), MODEL_PATH)
         .execute();

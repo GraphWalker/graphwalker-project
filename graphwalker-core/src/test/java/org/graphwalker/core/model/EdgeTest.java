@@ -43,7 +43,7 @@ import org.junit.Test;
 public class EdgeTest {
 
   @Test
-  public void create() {
+  public void create() throws Exception {
     Edge edge = new Edge()
         .setGuard(new Guard("script"))
         .setName("name")
@@ -71,6 +71,17 @@ public class EdgeTest {
     assertThat(edge.build().getWeight(), is(.5));
     assertFalse(edge.setGuard(null).build().hasGuard());
     assertFalse(edge.setGuard(new Guard("")).build().hasGuard());
+  }
+
+  @Test
+  public void edgeWithAction() throws Exception {
+    Edge edge = new Edge();
+    assertFalse(edge.build().hasActions());
+    assertTrue(edge.build().getActions().isEmpty());
+    assertTrue(edge.addAction(new Action("")).build().hasActions());
+    assertTrue(edge.addActions(new Action("")).build().hasActions());
+    assertTrue(edge.setActions(Arrays.asList(new Action(""))).build().hasActions());
+    assertFalse(edge.build().getActions().isEmpty());
   }
 
   @Test

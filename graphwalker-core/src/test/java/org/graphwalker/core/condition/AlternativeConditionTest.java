@@ -47,7 +47,7 @@ import org.junit.Test;
 public class AlternativeConditionTest {
 
   @Test
-  public void testConstructor() {
+  public void testConstructor() throws Exception {
     AlternativeCondition alternativeCondition = new AlternativeCondition();
     assertNotNull(alternativeCondition);
     assertNotNull(alternativeCondition.getStopConditions());
@@ -55,7 +55,7 @@ public class AlternativeConditionTest {
   }
 
   @Test
-  public void testFulfilment() {
+  public void testFulfilment() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");
@@ -73,7 +73,7 @@ public class AlternativeConditionTest {
   }
 
   @Test
-  public void testIsFulfilled() {
+  public void testIsFulfilled() throws Exception {
     Vertex v1 = new Vertex();
     Vertex v2 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2).setName("e1");

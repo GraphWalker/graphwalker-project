@@ -50,8 +50,8 @@ import org.junit.Test;
 public class ShortestAllPathsTest {
 
   @Test
-  public void bridge() {
-    Vertex v1 = new Vertex();
+  public void bridge() throws Exception {
+    Vertex v1 = new Vertex().setId("start");
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
     Vertex v4 = new Vertex();
@@ -63,17 +63,17 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
-    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-        Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1, e4, v4, e5, v1)
     );
-    context.setNextElement(v1);
+    context.setCurrentElement(context.getModel().getElementById("start"));
     execute(context, expectedElements);
     assertTrue(expectedElements.isEmpty());
   }
 
   @Test
-  public void bridgeNotCompleted() {
-    Vertex v1 = new Vertex();
+  public void bridgeNotCompleted() throws Exception {
+    Vertex v1 = new Vertex().setId("start");;
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
     Vertex v4 = new Vertex();
@@ -85,17 +85,17 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3).addEdge(e4).addEdge(e5);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(50)));
     context.setProfiler(new Profiler());
-    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-        Arrays.asList(e1, v2, e2, v3, e3, v1)
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
-    context.setNextElement(v1);
+    context.setCurrentElement(context.getModel().getElementById("start"));
     execute(context, expectedElements);
     assertTrue(expectedElements.isEmpty());
   }
 
   @Test
-  public void circle() {
-    Vertex v1 = new Vertex();
+  public void circle() throws Exception {
+    Vertex v1 = new Vertex().setId("start");;
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
@@ -104,10 +104,10 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2).addEdge(e3);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
-    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<Builder<? extends Element>>(
-        Arrays.asList(e1, v2, e2, v3, e3, v1)
+    Deque<Builder<? extends Element>> expectedElements = new ArrayDeque<>(
+      Arrays.asList(e1, v2, e2, v3, e3, v1)
     );
-    context.setNextElement(v1);
+    context.setCurrentElement(context.getModel().getElementById("start"));
     execute(context, expectedElements);
     assertTrue(expectedElements.isEmpty());
   }
@@ -122,8 +122,8 @@ public class ShortestAllPathsTest {
   }
 
   @Test(expected = AlgorithmException.class)
-  public void tree() {
-    Vertex v1 = new Vertex();
+  public void tree() throws Exception {
+    Vertex v1 = new Vertex().setId("start");;
     Vertex v2 = new Vertex();
     Vertex v3 = new Vertex();
     Edge e1 = new Edge().setSourceVertex(v1).setTargetVertex(v2);
@@ -131,7 +131,7 @@ public class ShortestAllPathsTest {
     Model model = new Model().addEdge(e1).addEdge(e2);
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100)));
     context.setProfiler(new Profiler());
-    context.setNextElement(v1);
+    context.setCurrentElement(context.getModel().getElementById("start"));
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();
       context.getProfiler().start(context);

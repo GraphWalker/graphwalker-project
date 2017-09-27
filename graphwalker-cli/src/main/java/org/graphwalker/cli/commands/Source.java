@@ -35,7 +35,11 @@ import java.util.List;
 public class Source {
 
   @Parameter(names = {"--input", "-i"}, required = true, arity = 2,
-      description = "This command requires an input model file, and an input template file. " +
-                    "See http://graphwalker.org/docs/command_line_syntax")
+    description = "This command requires an input model file, and an input template file. " +
+                  "See http://graphwalker.org/docs/command_line_syntax")
   public List<String> input = new ArrayList<>();
+
+  @Parameter(names = {"--blocked",
+                      "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
+  public boolean blocked = true;
 }

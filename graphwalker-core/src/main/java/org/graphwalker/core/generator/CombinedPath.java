@@ -85,10 +85,7 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
 
   @Override
   public Context getNextStep() {
-    if (hasNextStep()) {
-      return getActivePathGenerator().getNextStep();
-    }
-    throw new NoPathFoundException();
+    return getActivePathGenerator().getNextStep();
   }
 
   @Override
@@ -96,6 +93,9 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
     for (; index < generators.size(); index++) {
       if (getActivePathGenerator().hasNextStep()) {
         return true;
+      }
+      if (index < generators.size() - 1) {
+        getContext().getProfiler().reset();
       }
     }
     return false;
@@ -107,7 +107,7 @@ public final class CombinedPath extends PathGeneratorBase<StopCondition> {
     while (iterator.hasNext()) {
       builder = iterator.next().toString(builder);
       if (iterator.hasNext()) {
-        builder.append(" AND ");
+        builder.append(" ");
       }
     }
     return builder;

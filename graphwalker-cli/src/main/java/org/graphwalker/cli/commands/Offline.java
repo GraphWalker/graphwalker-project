@@ -35,23 +35,27 @@ import java.util.List;
 public class Offline {
 
   @Parameter(names = {"--verbose", "-o"}, required = false,
-      description = "Will print more details to stdout")
+    description = "Will print more details to stdout")
   public boolean verbose = false;
 
   @Parameter(names = {"--unvisited", "-u"}, required = false,
-      description = "Will also print the remaining unvisited elements in the model.")
+    description = "Will also print the remaining unvisited elements in the model.")
   public boolean unvisited = false;
 
   @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
-      description = "The model, as a graphml file followed by generator with stop condition. " +
-                    "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
+    description = "The model, as a graphml file followed by generator with stop condition. " +
+                  "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
   public List<String> model = new ArrayList<>();
 
   @Parameter(names = {"--gw3", "-g"}, required = false, arity = 1,
-      description = "The model, as a single gw3 file")
+    description = "The model, as a single gw3 file")
   public String gw3 = "";
 
   @Parameter(names = {"--start-element", "-e"}, required = false,
-      description = "Sets the starting element in the [first] model.")
+    description = "Sets the starting element in the [first] model.")
   public String startElement = "";
+
+  @Parameter(names = {"--blocked",
+                      "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
+  public boolean blocked = true;
 }

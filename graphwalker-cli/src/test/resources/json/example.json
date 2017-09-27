@@ -1,7 +1,7 @@
 {
   "models": [
     {
-      "name": "Small model",
+      "name": "Small_model",
       "generator": "random(edge_coverage(100))",
       "startElementId": "n0",
       "vertices": [

@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -77,6 +78,19 @@ public class SimpleMachineTest {
     Model model = new Model().addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
     context.setNextElement(vertex);
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+      assertThat(context.getExecutionStatus(), is(ExecutionStatus.EXECUTING));
+    }
+    assertNotEquals(context.getProfiler().getTotalVisitCount(), 0);
+  }
+
+  @Test(expected = MachineException.class)
+  public void missingStartElement() throws Exception {
+    Edge edge = new Edge().setTargetVertex(new Vertex());
+    Model model = new Model().addEdge(edge);
+    Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
@@ -386,5 +400,21 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     assertEquals((double) context.getScriptEngine().eval("toString()"), 6.0, 0.1);
+  }
+
+  @Test
+  public void exceptionStrategy() throws Exception {
+    Machine machine = new SimpleMachine();
+    assertThat(machine.getExceptionStrategy(), instanceOf(FailFastStrategy.class));
+    machine.setExceptionStrategy(new TestExceptionStrategy());
+    assertThat(machine.getExceptionStrategy(), instanceOf(TestExceptionStrategy.class));
+  }
+
+  private class TestExceptionStrategy implements ExceptionStrategy {
+
+    @Override
+    public void handle(Machine machine, MachineException exception) {
+
+    }
   }
 }

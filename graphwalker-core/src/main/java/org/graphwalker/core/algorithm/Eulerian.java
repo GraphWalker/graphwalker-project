@@ -82,18 +82,11 @@ public final class Eulerian implements Algorithm {
     return EulerianType.NOT_EULERIAN;
   }
 
-  public Path<Element> getEulerPath(RuntimeVertex vertex) {
+  public Path<Element> getEulerPath(Element element) {
     if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
       throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
     }
-    return context.getAlgorithm(Fleury.class).getTrail(vertex);
-  }
-
-  public Path<Element> getEulerPath(RuntimeEdge edge) {
-    if (EulerianType.NOT_EULERIAN.equals(getEulerianType())) {
-      throw new AlgorithmException("The model is not eulerian or semi eulerian, no single path can cover the entire graph");
-    }
-    return context.getAlgorithm(Fleury.class).getTrail(edge);
+    return context.getAlgorithm(Fleury.class).getTrail(element);
   }
 
   class PolarityCounter {

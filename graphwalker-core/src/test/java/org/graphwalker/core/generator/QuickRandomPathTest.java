@@ -52,7 +52,7 @@ import org.junit.Test;
 public class QuickRandomPathTest {
 
   @Test
-  public void simpleTest() {
+  public void simpleTest() throws Exception {
     RuntimeModel model = simpleModel().build();
     RuntimeVertex source = findVertex(model, "A");
     RuntimeVertex target = findVertex(model, "B");
@@ -69,7 +69,7 @@ public class QuickRandomPathTest {
   }
 
   @Test(expected = AlgorithmException.class)
-  public void failTest() {
+  public void failTest() throws Exception {
     RuntimeModel model = simpleModel().build();
     RuntimeVertex source = findVertex(model, "A");
     RuntimeVertex target = findVertex(model, "B");
@@ -86,7 +86,7 @@ public class QuickRandomPathTest {
   }
 
   @Test(expected = NoPathFoundException.class)
-  public void singleTest() {
+  public void singleTest() throws Exception {
     RuntimeModel model = singleModel().build();
     RuntimeVertex source = findVertex(model, "A");
     Context context = new TestExecutionContext().setModel(model).setNextElement(source);
