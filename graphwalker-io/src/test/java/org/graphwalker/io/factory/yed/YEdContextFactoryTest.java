@@ -501,6 +501,14 @@ public class YEdContextFactoryTest {
     assertTrue(Double.valueOf(vertex.getProperty("y").toString()) > 0);
   }
 
+  @Test
+  public void readWeightValue() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/weight/model.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(100.0d, edge.getWeight().doubleValue(),0); 
+  }
   
   @Test
   public void readDepencyValue() throws IOException {
@@ -510,6 +518,16 @@ public class YEdContextFactoryTest {
 	  RuntimeEdge edge = model.getEdges().get(0);
 	  assertEquals(100, edge.getDependency().intValue()); 
   }
+  
+  @Test
+  public void readDepencyNoValue() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/dependency/modelWithoutDependency.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(0, edge.getDependency().intValue()); 
+  }
+  
   
   @Test
   public void readDepencyValueWithGuard() throws IOException {
