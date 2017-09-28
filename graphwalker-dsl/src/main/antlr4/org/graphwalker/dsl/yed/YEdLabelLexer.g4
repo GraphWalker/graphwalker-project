@@ -12,6 +12,7 @@ INIT      : 'INIT';
 START     : [Ss][Tt][Aa][Rr][Tt];
 REQTAG    : 'REQTAG';
 WEIGHT    : [Ww][Ee][Ii][Gg][Hh][Tt];
+DEPENDENCY    : [Dd][Ee][Pp][Ee][Nn][Dd][Ee][Nn][Cc][Yy];
 
 NestedBrackets
  :  '[' ( ~('[' | ']') | NestedBrackets )* ']'

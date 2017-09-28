@@ -206,7 +206,7 @@ public final class YEdContextFactory implements ContextFactory {
 
         if (!e.getName().isEmpty()) {
           String label = e.getName();
-
+          
           if (e.hasGuard()) {
             label += newLine + "[" + e.getGuard().getScript() + "]";
           }
@@ -216,7 +216,11 @@ public final class YEdContextFactory implements ContextFactory {
               label += action.getScript();
             }
           }
-
+          
+          if (e.getDependency()!=0) {
+        	  	label +=  "\ndependency=" + e.getDependency();
+          }
+          
           label = label.replaceAll("&", "&amp;");
           label = label.replaceAll("<", "&lt;");
           label = label.replaceAll(">", "&gt;");
@@ -455,6 +459,9 @@ public final class YEdContextFactory implements ContextFactory {
                 if (null != field.weight() && null != field.weight().Value()) {
                   edge.setWeight(Double.parseDouble(field.weight().Value().getText()));
                 }
+                if (null != field.dependency() && null != field.dependency().Value()) {
+                    edge.setDependency(Integer.parseInt((field.dependency().Value().getText())));
+                  }
               }
               if (null != edge.getTargetVertex()) {
                 if (null != startVertex &&

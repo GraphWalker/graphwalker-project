@@ -41,14 +41,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Edge.RuntimeEdge;
+import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Model.RuntimeModel;
 import org.graphwalker.core.model.Vertex;
@@ -498,4 +501,129 @@ public class YEdContextFactoryTest {
     assertTrue(Double.valueOf(vertex.getProperty("y").toString()) > 0);
   }
 
+  @Test
+  public void readWeightValue() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/weight/model.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(100.0d, edge.getWeight().doubleValue(),0); 
+  }
+  
+  @Test
+  public void readDepencyValue() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/dependency/model.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(100, edge.getDependency().intValue()); 
+  }
+  
+  @Test
+  public void readDepencyNoValue() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/dependency/modelWithoutDependency.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(0, edge.getDependency().intValue()); 
+  }
+  
+  
+  @Test
+  public void readDepencyValueWithGuard() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/dependency/modelwithguard.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(75, edge.getDependency().intValue()); 
+  }
+  
+  @Test
+  public void readDepencyValueWithAction() throws IOException {
+	  List<Context> contexts = new YEdContextFactory().create(Paths.get("graphml/dependency/modelwithaction.graphml"));
+	  Context context = contexts.get(0);
+	  RuntimeModel model = context.getModel();
+	  RuntimeEdge edge = model.getEdges().get(0);
+	  assertEquals(65, edge.getDependency().intValue()); 
+  }
+  
+  @Test
+  public void writeDependency() throws IOException {
+    Vertex v_Start = new Vertex().setName("Start").setId("n0");
+    Vertex v_BrowserStarted = new Vertex().setName("v_BrowserStarted").setId("n1");
+
+    Model model = new Model();
+    model.addEdge(new Edge().setSourceVertex(v_Start).setTargetVertex(v_BrowserStarted).setName("e_init").setDependency(75)).setId("e0");
+
+    Context writeContext = new TestExecutionContext().setModel(model.build());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
+
+    // Write the graphml file
+    Path tmpFolder = testFolder.getRoot().toPath();
+    new YEdContextFactory().write(writeContexts, tmpFolder);
+
+    // Read the graphml file
+    List<Context> readCContexts = new YEdContextFactory().create(tmpFolder);
+
+	Context context = readCContexts.get(0);
+	RuntimeEdge edge = context.getModel().getEdges().get(0);
+	assertEquals(75, edge.getDependency().intValue()); 
+    
+  }
+  
+  @Test
+  public void writeDependencyAndAction() throws IOException {
+    Vertex v_Start = new Vertex().setName("Start").setId("n0");
+    Vertex v_BrowserStarted = new Vertex().setName("v_BrowserStarted").setId("n1");
+
+
+    Model model = new Model();
+    List<Action> actions = new ArrayList<Action>();
+    actions.add(new Action("validLogin=false;rememberMe=false;"));
+    model.addEdge(new Edge().setSourceVertex(v_Start).setTargetVertex(v_BrowserStarted).setName("e_init").setActions(actions).setDependency(75)).setId("e0");
+
+    Context writeContext = new TestExecutionContext().setModel(model.build());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
+
+    // Write the graphml file
+    Path tmpFolder = testFolder.getRoot().toPath();
+    new YEdContextFactory().write(writeContexts, tmpFolder);
+
+    // Read the graphml file
+    List<Context> readCContexts = new YEdContextFactory().create(tmpFolder);
+
+	Context context = readCContexts.get(0);
+	RuntimeEdge edge = context.getModel().getEdges().get(0);
+	assertEquals(75, edge.getDependency().intValue()); 
+    
+  }
+  
+  @Test
+  public void writeDependencyAndGuard() throws IOException {
+    Vertex v_Start = new Vertex().setName("Start").setId("n0");
+    Vertex v_BrowserStarted = new Vertex().setName("v_BrowserStarted").setId("n1");
+
+
+    Model model = new Model();
+    
+    model.addEdge(new Edge().setSourceVertex(v_Start).setTargetVertex(v_BrowserStarted).setName("e_init").setGuard(new Guard("!neverWentThere")).setDependency(75)).setId("e0");
+
+    Context writeContext = new TestExecutionContext().setModel(model.build());
+    List<Context> writeContexts = new ArrayList<>();
+    writeContexts.add(writeContext);
+
+    // Write the graphml file
+    Path tmpFolder = testFolder.getRoot().toPath();
+    new YEdContextFactory().write(writeContexts, tmpFolder);
+
+    // Read the graphml file
+    List<Context> readCContexts = new YEdContextFactory().create(tmpFolder);
+
+	Context context = readCContexts.get(0);
+	RuntimeEdge edge = context.getModel().getEdges().get(0);
+	assertEquals(75, edge.getDependency().intValue()); 
+    
+  }
 }
