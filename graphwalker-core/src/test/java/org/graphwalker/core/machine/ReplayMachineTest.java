@@ -5,25 +5,30 @@ import static org.junit.Assert.assertThat;
 
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
+import org.graphwalker.core.statistics.Execution;
+import org.junit.Test;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Nils Olsson
  */
 public class ReplayMachineTest {
 
-  // @Test
+  @Test
   public void replayMachine() throws Exception {
     Machine machine = createMachineExecution();
-    Machine replayMachine = null; // new ReplayMachine(machine.getProfiler());
+    Machine replayMachine = new ReplayMachine(machine.getProfiler());
     while (replayMachine.hasNextStep()) {
       replayMachine.getNextStep();
     }
-    assertThat(replayMachine.getProfiler().getExecutionPath().toArray(), is(machine.getProfiler().getExecutionPath().toArray()));
+    List<Element> expectedPath = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    List<Element> replayedPath = replayMachine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(replayedPath, is(expectedPath));
   }
 
   private Machine createMachineExecution() {

@@ -57,13 +57,9 @@ public final class SimpleProfiler implements Profiler {
     }
   }
 
-  // public Context getContext(Element element) {
-  //  return elementContextMap.get(element);
-  //}
-
-  //public Set<Context> getContexts() {
-  //  return executions.keySet();
-  //}
+  public Set<Context> getContexts() {
+    return executions.keySet();
+  }
 
   public void start(Context context) {
     if (!executions.containsKey(context)) {

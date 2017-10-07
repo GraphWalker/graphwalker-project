@@ -8,6 +8,7 @@ import java.util.Set;
 
 public interface Profiler {
   void addContext(Context context);
+  Set<Context> getContexts();
   void start(Context context);
   void stop(Context context);
   long getTotalVisitCount();
