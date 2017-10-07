@@ -73,7 +73,7 @@ public final class ReachedVertex extends ReachedStopConditionBase {
       return super.getFulfilment();
     }
     for (Element target : getTargetElements()) {
-      if (context.getProfiler().isVisited(target)) {
+      if (context.getProfiler().isVisited(context, target)) {
         return 1;
       } else {
         return 0;

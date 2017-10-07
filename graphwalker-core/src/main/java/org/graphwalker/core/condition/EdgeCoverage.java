@@ -55,7 +55,7 @@ public final class EdgeCoverage extends CoverageStopConditionBase {
     long totalEdgesCount = context.getModel().getEdges().size();
     long visitedEdgesCount = 0;
     for (RuntimeEdge edge : context.getModel().getEdges()) {
-      if (context.getProfiler().isVisited(edge)) {
+      if (context.getProfiler().isVisited(context, edge)) {
         visitedEdgesCount++;
       }
     }

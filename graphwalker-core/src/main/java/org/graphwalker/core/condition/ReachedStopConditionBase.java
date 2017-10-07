@@ -33,6 +33,8 @@ import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */

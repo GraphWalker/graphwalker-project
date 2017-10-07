@@ -57,7 +57,7 @@ public final class DependencyEdgeCoverage extends DependencyCoverageStopConditio
     for (RuntimeEdge edge : context.getModel().getEdges()) {
       if (edge.getDependencyAsDouble() >= super.getDependencyAsDouble()) {
         totalDependencyEdgesCount++;
-        if (context.getProfiler().isVisited(edge)) {
+        if (context.getProfiler().isVisited(context, edge)) {
           visitedDependencyEdgesCount++;
         }
       }

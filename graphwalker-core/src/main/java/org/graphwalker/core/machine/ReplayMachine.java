@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Nils Olsson
  */
 public final class ReplayMachine extends SimpleMachine {
-
+/*
   private static final Logger LOG = LoggerFactory.getLogger(ReplayMachine.class);
 
   private final Profiler profiler;
@@ -36,7 +36,7 @@ public final class ReplayMachine extends SimpleMachine {
   public ReplayMachine(Profiler profiler) {
     super();
     this.profiler = profiler;
-    this.iterator = profiler.getPath().descendingIterator();
+    this.iterator = profiler.getExecutionPath().descendingIterator();
     getContexts().addAll(createContexts(profiler));
     setCurrentContext(chooseStartContext(getContexts()));
   }
@@ -47,7 +47,7 @@ public final class ReplayMachine extends SimpleMachine {
       try {
         Context newContext = context.getClass().newInstance();
         newContext.setModel(context.getModel());
-        newContext.setNextElement(profiler.getPath().getFirst());
+        newContext.setNextElement(profiler.getExecutionPath().getFirst());
         contexts.add(newContext);
       } catch (InstantiationException | IllegalAccessException e) {
         LOG.error(e.getMessage());
@@ -77,4 +77,5 @@ public final class ReplayMachine extends SimpleMachine {
     }
     throw new MachineException("No start context found");
   }
+*/
 }

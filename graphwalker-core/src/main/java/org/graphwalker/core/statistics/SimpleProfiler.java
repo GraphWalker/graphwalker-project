@@ -28,17 +28,16 @@ package org.graphwalker.core.statistics;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 
 /**
@@ -46,144 +45,127 @@ import org.graphwalker.core.model.Vertex;
  */
 public final class SimpleProfiler implements Profiler {
 
-  private final Profile profile = new Profile();
   private long startTime = 0;
 
-  private final Map<Element, Context> elementContextMap = new HashMap<>();
-  private final Set<Context> contexts = new HashSet<>();
+  private final Map<Context, Map<Element, List<Execution>>> executions = new HashMap<>();
+  private final List<Execution> executionPath = new ArrayList<>();
 
-  public void reset() {
-    getProfile().reset();
+  public void addContext(Context context) {
+    if (!executions.containsKey(context)) {
+      executions.put(context, new HashMap<>());
+    }
   }
 
-  public Context getContext(Element element) {
-    return elementContextMap.get(element);
-  }
+  // public Context getContext(Element element) {
+  //  return elementContextMap.get(element);
+  //}
 
-  public Set<Context> getContexts() {
-    return contexts;
-  }
+  //public Set<Context> getContexts() {
+  //  return executions.keySet();
+  //}
 
   public void start(Context context) {
-    contexts.add(context);
+    if (!executions.containsKey(context)) {
+      executions.put(context, new HashMap<>());
+    }
+    if (!executions.get(context).containsKey(context.getCurrentElement())) {
+      executions.get(context).put(context.getCurrentElement(), new ArrayList<>());
+    }
     startTime = System.nanoTime();
   }
 
   public void stop(Context context) {
-    Element element = context.getCurrentElement();
-    if (isNotNull(element)) {
-      profile.addExecution(element, new Execution(startTime, System.nanoTime() - startTime));
-      elementContextMap.put(element, context);
-    }
+    long stopTime = System.nanoTime();
+    Execution execution = new Execution(context, context.getCurrentElement(), startTime, stopTime - startTime);
+    executionPath.add(execution);
+    executions.get(context).get(context.getCurrentElement()).add(execution);
   }
 
-  public boolean isVisited(Element element) {
-    return getProfile().isVisited(element);
+  public boolean isVisited(Context context, Element element) {
+    return executions.containsKey(context) && executions.get(context).containsKey(element);
   }
 
   public long getTotalVisitCount() {
-    return profile.getTotalExecutionCount();
+    return executionPath.size();
   }
 
-  public long getVisitCount(Element element) {
-    return profile.getTotalExecutionCount(element);
+  public long getVisitCount(Context context, Element element) {
+    if (executions.containsKey(context) && executions.get(context).containsKey(element)) {
+      return executions.get(context).get(element).size();
+    }
+    return 0L;
   }
 
   public List<Element> getUnvisitedElements(Context context) {
-    List<Element> elementList = new ArrayList<>();
-    for (Element element: context.getModel().getElements()) {
-      if (!getProfile().containsKey(element)) {
-        elementList.add(element);
-      }
-    }
-    return elementList;
+    return context.getModel().getElements().stream()
+      .filter(element -> !executions.get(context).containsKey(element))
+      .collect(Collectors.toList());
   }
 
   public List<Element> getUnvisitedElements() {
-    List<Element> elementList = new ArrayList<>();
-    for (Context context: getContexts()) {
-      for (Element element: context.getModel().getElements()) {
-        if (!getProfile().containsKey(element)) {
-          elementList.add(element);
-        }
-      }
-    }
-    return elementList;
+    return executions.keySet().stream()
+      .map(this::getUnvisitedElements)
+      .flatMap(Collection::stream)
+      .collect(Collectors.toList());
+  }
+
+  public List<Element> getVisitedEdges(Context context) {
+    return context.getModel().getElements().stream()
+      .filter(element -> element instanceof RuntimeEdge)
+      .filter(element -> executions.get(context).containsKey(element))
+      .collect(Collectors.toList());
   }
 
   public List<Element> getVisitedEdges() {
-    List<Element> elementList = new ArrayList<>();
-    for (Context context: getContexts()) {
-      for (Element element: context.getModel().getElements()) {
-        if (getProfile().containsKey(element) && element instanceof Edge.RuntimeEdge) {
-          elementList.add(element);
-        }
-      }
-    }
-    return elementList;
+    return executions.keySet().stream()
+      .map(this::getVisitedEdges)
+      .flatMap(Collection::stream)
+      .collect(Collectors.toList());
   }
 
   public List<Element> getUnvisitedEdges(Context context) {
-    List<Element> elementList = new ArrayList<>();
-    for (Element element: context.getModel().getElements()) {
-      if (!getProfile().containsKey(element) && element instanceof Edge.RuntimeEdge) {
-        elementList.add(element);
-      }
-    }
-    return elementList;
+    return context.getModel().getElements().stream()
+      .filter(element -> element instanceof RuntimeEdge)
+      .filter(element -> !executions.get(context).containsKey(element))
+      .collect(Collectors.toList());
   }
 
   public List<Element> getUnvisitedEdges() {
-    List<Element> elementList = new ArrayList<>();
-    for (Context context: getContexts()) {
-      for (Element element: context.getModel().getElements()) {
-        if (!getProfile().containsKey(element) && element instanceof Edge.RuntimeEdge) {
-          elementList.add(element);
-        }
-      }
-    }
-    return elementList;
+    return executions.keySet().stream()
+      .map(this::getUnvisitedEdges)
+      .flatMap(Collection::stream)
+      .collect(Collectors.toList());
   }
 
   public List<Element> getUnvisitedVertices(Context context) {
-    List<Element> elementList = new ArrayList<>();
-    for (Element element: context.getModel().getElements()) {
-      if (!getProfile().containsKey(element) && element instanceof Vertex.RuntimeVertex) {
-        elementList.add(element);
-      }
-    }
-    return elementList;
+    return context.getModel().getElements().stream()
+      .filter(element -> element instanceof RuntimeVertex)
+      .filter(element -> !executions.get(context).containsKey(element))
+      .collect(Collectors.toList());
   }
 
   public List<Element> getUnvisitedVertices() {
-    List<Element> elementList = new ArrayList<>();
-    for (Context context: getContexts()) {
-      for (Element element: context.getModel().getElements()) {
-        if (!getProfile().containsKey(element) && element instanceof Vertex.RuntimeVertex) {
-          elementList.add(element);
-        }
-      }
-    }
-    return elementList;
+    return executions.keySet().stream()
+      .map(this::getUnvisitedVertices)
+      .flatMap(Collection::stream)
+      .collect(Collectors.toList());
+  }
+
+  public List<Element> getVisitedVertices(Context context) {
+    return context.getModel().getElements().stream()
+      .filter(element -> element instanceof RuntimeVertex)
+      .filter(element -> executions.get(context).containsKey(element))
+      .collect(Collectors.toList());
   }
 
   public List<Element> getVisitedVertices() {
-    List<Element> elementList = new ArrayList<>();
-    for (Context context : getContexts()) {
-      for (Element element : context.getModel().getElements()) {
-        if (getProfile().containsKey(element) && element instanceof Vertex.RuntimeVertex) {
-          elementList.add(element);
-        }
-      }
-    }
-    return elementList;
+    return executions.keySet().stream()
+      .map(this::getVisitedVertices)
+      .flatMap(Collection::stream)
+      .collect(Collectors.toList());
   }
 
-  public Path<Element> getPath() {
-    return profile.getPath();
-  }
-
-  public Profile getProfile() {
-    return profile;
+  public List<Execution> getExecutionPath() {
+    return executionPath;
   }
 }

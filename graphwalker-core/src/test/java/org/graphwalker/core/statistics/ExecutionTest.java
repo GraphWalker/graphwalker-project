@@ -40,7 +40,7 @@ public class ExecutionTest {
 
   @Test
   public void create() throws Exception {
-    Execution execution = new Execution(100000000L, 50000L);
+    Execution execution = new Execution(null, null, 100000000L, 50000L);
     assertNotNull(execution);
     assertThat(execution.getTime(), is(100000000L));
     assertThat(execution.getDuration(), is(50000L));
