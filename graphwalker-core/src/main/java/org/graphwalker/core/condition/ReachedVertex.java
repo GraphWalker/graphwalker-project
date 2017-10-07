@@ -65,20 +65,4 @@ public final class ReachedVertex extends ReachedStopConditionBase {
       throw new StopConditionException("Vertex [" + getValue() + "] not found");
     }
   }
-
-  @Override
-  public double getFulfilment() {
-    Context context = getContext();
-    if (context.getProfiler() == null) {
-      return super.getFulfilment();
-    }
-    for (Element target : getTargetElements()) {
-      if (context.getProfiler().isVisited(context, target)) {
-        return 1;
-      } else {
-        return 0;
-      }
-    }
-    return 0;
-  }
 }

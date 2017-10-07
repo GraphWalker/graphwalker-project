@@ -22,4 +22,5 @@ public interface Profiler {
   List<Element> getVisitedVertices();
   boolean isVisited(Context context, Element element);
   List<Execution> getExecutionPath();
+  long getTotalExecutionTime();
 }

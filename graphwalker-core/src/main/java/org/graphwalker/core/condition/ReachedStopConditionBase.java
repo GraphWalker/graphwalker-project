@@ -40,6 +40,8 @@ import java.util.Set;
  */
 public abstract class ReachedStopConditionBase extends StopConditionBase implements ReachedStopCondition {
 
+  private boolean fulfilled = false;
+
   protected ReachedStopConditionBase(String value) {
     super(value);
   }
@@ -58,7 +60,10 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
 
   @Override
   public boolean isFulfilled() {
-    return getFulfilment() >= FULFILLMENT_LEVEL;
+    if (fulfilled) {
+      return true;
+    }
+    return fulfilled = getFulfilment() >= FULFILLMENT_LEVEL;
   }
 
   @Override

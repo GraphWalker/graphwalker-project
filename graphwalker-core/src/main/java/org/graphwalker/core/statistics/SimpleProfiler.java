@@ -29,6 +29,7 @@ package org.graphwalker.core.statistics;
 import static org.graphwalker.core.common.Objects.isNotNull;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.graphwalker.core.machine.Context;
@@ -167,5 +168,9 @@ public final class SimpleProfiler implements Profiler {
 
   public List<Execution> getExecutionPath() {
     return executionPath;
+  }
+
+  public long getTotalExecutionTime() {
+    return executionPath.stream().mapToLong(e -> e.getDuration(TimeUnit.MILLISECONDS)).sum();
   }
 }
