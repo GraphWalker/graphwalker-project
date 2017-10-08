@@ -29,6 +29,7 @@ package org.graphwalker.core.statistics;
 import static org.graphwalker.core.common.Objects.isNotNull;
 
 import java.util.*;
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -51,16 +52,19 @@ public final class SimpleProfiler implements Profiler {
   private final Map<Context, Map<Element, List<Execution>>> executions = new HashMap<>();
   private final List<Execution> executionPath = new ArrayList<>();
 
+  @Override
   public void addContext(Context context) {
     if (!executions.containsKey(context)) {
       executions.put(context, new HashMap<>());
     }
   }
 
+  @Override
   public Set<Context> getContexts() {
     return executions.keySet();
   }
 
+  @Override
   public void start(Context context) {
     if (!executions.containsKey(context)) {
       executions.put(context, new HashMap<>());
@@ -71,6 +75,7 @@ public final class SimpleProfiler implements Profiler {
     startTime = System.nanoTime();
   }
 
+  @Override
   public void stop(Context context) {
     long stopTime = System.nanoTime();
     Execution execution = new Execution(context, context.getCurrentElement(), startTime, stopTime - startTime);
@@ -78,14 +83,17 @@ public final class SimpleProfiler implements Profiler {
     executions.get(context).get(context.getCurrentElement()).add(execution);
   }
 
+  @Override
   public boolean isVisited(Context context, Element element) {
     return executions.containsKey(context) && executions.get(context).containsKey(element);
   }
 
+  @Override
   public long getTotalVisitCount() {
     return executionPath.size();
   }
 
+  @Override
   public long getVisitCount(Context context, Element element) {
     if (executions.containsKey(context) && executions.get(context).containsKey(element)) {
       return executions.get(context).get(element).size();
@@ -93,12 +101,7 @@ public final class SimpleProfiler implements Profiler {
     return 0L;
   }
 
-  public List<Element> getUnvisitedElements(Context context) {
-    return context.getModel().getElements().stream()
-      .filter(element -> !executions.get(context).containsKey(element))
-      .collect(Collectors.toList());
-  }
-
+  @Override
   public List<Element> getUnvisitedElements() {
     return executions.keySet().stream()
       .map(this::getUnvisitedElements)
@@ -106,13 +109,14 @@ public final class SimpleProfiler implements Profiler {
       .collect(Collectors.toList());
   }
 
-  public List<Element> getVisitedEdges(Context context) {
+  @Override
+  public List<Element> getUnvisitedElements(Context context) {
     return context.getModel().getElements().stream()
-      .filter(element -> element instanceof RuntimeEdge)
-      .filter(element -> executions.get(context).containsKey(element))
+      .filter(element -> !executions.get(context).containsKey(element))
       .collect(Collectors.toList());
   }
 
+  @Override
   public List<Element> getVisitedEdges() {
     return executions.keySet().stream()
       .map(this::getVisitedEdges)
@@ -120,13 +124,15 @@ public final class SimpleProfiler implements Profiler {
       .collect(Collectors.toList());
   }
 
-  public List<Element> getUnvisitedEdges(Context context) {
+  @Override
+  public List<Element> getVisitedEdges(Context context) {
     return context.getModel().getElements().stream()
       .filter(element -> element instanceof RuntimeEdge)
-      .filter(element -> !executions.get(context).containsKey(element))
+      .filter(element -> executions.get(context).containsKey(element))
       .collect(Collectors.toList());
   }
 
+  @Override
   public List<Element> getUnvisitedEdges() {
     return executions.keySet().stream()
       .map(this::getUnvisitedEdges)
@@ -134,13 +140,15 @@ public final class SimpleProfiler implements Profiler {
       .collect(Collectors.toList());
   }
 
-  public List<Element> getUnvisitedVertices(Context context) {
+  @Override
+  public List<Element> getUnvisitedEdges(Context context) {
     return context.getModel().getElements().stream()
-      .filter(element -> element instanceof RuntimeVertex)
+      .filter(element -> element instanceof RuntimeEdge)
       .filter(element -> !executions.get(context).containsKey(element))
       .collect(Collectors.toList());
   }
 
+  @Override
   public List<Element> getUnvisitedVertices() {
     return executions.keySet().stream()
       .map(this::getUnvisitedVertices)
@@ -148,13 +156,15 @@ public final class SimpleProfiler implements Profiler {
       .collect(Collectors.toList());
   }
 
-  public List<Element> getVisitedVertices(Context context) {
+  @Override
+  public List<Element> getUnvisitedVertices(Context context) {
     return context.getModel().getElements().stream()
       .filter(element -> element instanceof RuntimeVertex)
-      .filter(element -> executions.get(context).containsKey(element))
+      .filter(element -> !executions.get(context).containsKey(element))
       .collect(Collectors.toList());
   }
 
+  @Override
   public List<Element> getVisitedVertices() {
     return executions.keySet().stream()
       .map(this::getVisitedVertices)
@@ -162,11 +172,38 @@ public final class SimpleProfiler implements Profiler {
       .collect(Collectors.toList());
   }
 
+  @Override
+  public List<Element> getVisitedVertices(Context context) {
+    return context.getModel().getElements().stream()
+      .filter(element -> element instanceof RuntimeVertex)
+      .filter(element -> executions.get(context).containsKey(element))
+      .collect(Collectors.toList());
+  }
+
+  @Override
   public List<Execution> getExecutionPath() {
     return executionPath;
   }
 
+  @Override
   public long getTotalExecutionTime() {
-    return executionPath.stream().mapToLong(e -> e.getDuration(TimeUnit.MILLISECONDS)).sum();
+    return getTotalExecutionTime(TimeUnit.MILLISECONDS);
+  }
+
+  @Override
+  public long getTotalExecutionTime(TimeUnit unit) {
+    return executionPath.stream().mapToLong(e -> e.getDuration(unit)).sum();
+  }
+
+  @Override
+  public List<Profile> getProfiles() {
+    return executions.entrySet().stream()
+      .flatMap(entry -> entry.getValue().keySet().stream().map(element -> getProfile(entry.getKey(), element)))
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public Profile getProfile(Context context, Element element) {
+    return new Profile(context, element, executions.get(context).get(element));
   }
 }

@@ -26,6 +26,7 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -47,6 +48,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 /**
  * @author Nils Olsson
  */
@@ -67,6 +71,7 @@ public final class ProfilerTest {
     Profiler profiler = new SimpleProfiler();
     profiler.addContext(context);
     assertNotNull(profiler);
+    assertThat(profiler.getContexts(), is(new HashSet<>(Arrays.asList(context))));
     assertFalse(profiler.isVisited(context, start.build()));
     assertThat(profiler.getTotalVisitCount(), is(0L));
     assertThat(profiler.getVisitCount(context, start.build()), is(0L));
@@ -80,6 +85,13 @@ public final class ProfilerTest {
     assertThat(profiler.getUnvisitedEdges(context).size(), is(1));
     assertThat(profiler.getUnvisitedVertices(context).size(), is(1));
     assertThat(profiler.getExecutionPath().size(), is(1));
+    assertThat(profiler.getTotalExecutionTime(), is(not(0)));
+    Context newContext = new TestExecutionContext();
+    profiler.start(newContext);
+    profiler.stop(newContext);
+    assertThat(profiler.getContexts(), is(new HashSet<>(Arrays.asList(context, newContext))));
+    assertNotNull(profiler.getProfile(context, start.build()));
+    assertThat(profiler.getProfiles().size(), is(2));
   }
 
 

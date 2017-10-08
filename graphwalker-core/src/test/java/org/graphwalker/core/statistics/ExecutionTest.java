@@ -31,6 +31,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.concurrent.TimeUnit;
+
+import org.graphwalker.core.machine.ExecutionContext;
+import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.model.Vertex;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 /**
@@ -38,10 +43,15 @@ import org.junit.Test;
  */
 public class ExecutionTest {
 
+  private static Vertex.RuntimeVertex vertex = new Vertex().build();
+  private static ExecutionContext context = new TestExecutionContext();
+
   @Test
   public void create() throws Exception {
-    Execution execution = new Execution(null, null, 100000000L, 50000L);
+    Execution execution = new Execution(context, vertex, 100000000L, 50000L);
     assertNotNull(execution);
+    assertThat(execution.getContext(), CoreMatchers.is(context));
+    assertThat(execution.getElement(), CoreMatchers.is(vertex));
     assertThat(execution.getTime(), is(100000000L));
     assertThat(execution.getDuration(), is(50000L));
     assertThat(execution.getTime(TimeUnit.MILLISECONDS), is(100L));
