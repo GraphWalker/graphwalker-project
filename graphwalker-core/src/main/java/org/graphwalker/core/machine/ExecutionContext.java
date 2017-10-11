@@ -165,6 +165,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   public Context setProfiler(Profiler profiler) {
     this.profiler = profiler;
+    this.profiler.addContext(this);
     return this;
   }
 

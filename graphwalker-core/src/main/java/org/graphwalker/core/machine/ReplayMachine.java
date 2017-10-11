@@ -2,11 +2,11 @@ package org.graphwalker.core.machine;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.graphwalker.core.model.Element;
+import org.graphwalker.core.statistics.Execution;
 import org.graphwalker.core.statistics.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,50 +31,47 @@ public final class ReplayMachine extends SimpleMachine {
   private static final Logger LOG = LoggerFactory.getLogger(ReplayMachine.class);
 
   private final Profiler profiler;
-  private final Iterator<Element> iterator;
+  private final Iterator<Execution> iterator;
+  private final Map<Context, Context> contexts = new HashMap<>();
 
   public ReplayMachine(Profiler profiler) {
     super();
     this.profiler = profiler;
-    this.iterator = profiler.getPath().descendingIterator();
-    getContexts().addAll(createContexts(profiler));
-    setCurrentContext(chooseStartContext(getContexts()));
+    this.iterator = profiler.getExecutionPath().iterator();
+    createContexts(profiler);
+    Execution execution = profiler.getExecutionPath().get(0);
+    Context context = contexts.get(execution.getContext());
+    context.setNextElement(execution.getElement());
+    setCurrentContext(context);
   }
 
-  private Collection<Context> createContexts(Profiler profiler) {
-    List<Context> contexts = new ArrayList<>();
+  @Override
+  public List<Context> getContexts() {
+    return contexts.values().stream().collect(Collectors.toList());
+  }
+
+  private void createContexts(Profiler profiler) {
     for (Context context : profiler.getContexts()) {
       try {
         Context newContext = context.getClass().newInstance();
         newContext.setModel(context.getModel());
-        newContext.setNextElement(profiler.getPath().getFirst());
-        contexts.add(newContext);
+        contexts.put(context, newContext);
       } catch (InstantiationException | IllegalAccessException e) {
         LOG.error(e.getMessage());
         throw new MachineException(context, e);
       }
     }
-    return contexts;
   }
 
   protected Context getNextStep(Context context) {
-    Element element = iterator.next();
-    setCurrentContext(profiler.getContext(element));
-    getCurrentContext().setCurrentElement(element);
+    Execution execution = iterator.next();
+    setCurrentContext(contexts.get(execution.getContext()));
+    getCurrentContext().setCurrentElement(execution.getElement());
     return getCurrentContext();
   }
 
   @Override
   public boolean hasNextStep() {
     return iterator.hasNext();
-  }
-
-  private Context chooseStartContext(Collection<Context> contexts) {
-    for (Context context : contexts) {
-      if (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement())) {
-        return context;
-      }
-    }
-    throw new MachineException("No start context found");
   }
 }

@@ -26,11 +26,15 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
@@ -42,6 +46,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.statistics.Execution;
 import org.junit.Test;
 
 /**
@@ -92,8 +97,9 @@ public class ReachedSharedStateTest {
         v2.build(),
         e6.build(),
         v4.build());
-    Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    List<Element> path = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
   }
 
   @Test
@@ -134,7 +140,8 @@ public class ReachedSharedStateTest {
         v2.build(),
         e4.build(),
         v3.build());
-    Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    List<Element> path = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
   }
 }

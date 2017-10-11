@@ -174,7 +174,7 @@ public class LoginCrashSharedStateModelTest {
         v_Browse.build(),
         e_Exit.build());
     Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), machine.getCurrentContext().getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), machine.getCurrentContext().getProfiler().getExecutionPath().toArray());
   }
 
   /**

@@ -26,11 +26,15 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.CombinedCondition;
 import org.graphwalker.core.condition.EdgeCoverage;
@@ -46,6 +50,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.statistics.Execution;
 import org.junit.Test;
 
 /**
@@ -144,8 +149,9 @@ public class LoginModelTest {
         e_ValidPremiumCredentials.build(),
         v_Browse.build(),
         e_Exit.build());
-    Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    List<Element> path = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
   }
 
   //Test
@@ -165,7 +171,7 @@ public class LoginModelTest {
         v_Browse.build(),
         e_Exit.build());
     Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getExecutionPath().toArray());
   }
 
   @Test
@@ -183,8 +189,9 @@ public class LoginModelTest {
         v_LoginPrompted.build(),
         e_ValidPremiumCredentials.build(),
         v_Browse.build());
-    Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    List<Element> path = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
   }
 
   /**

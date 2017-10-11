@@ -33,10 +33,14 @@ import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
+import java.util.Set;
+
 /**
  * @author Nils Olsson
  */
 public abstract class ReachedStopConditionBase extends StopConditionBase implements ReachedStopCondition {
+
+  private boolean fulfilled = false;
 
   protected ReachedStopConditionBase(String value) {
     super(value);
@@ -56,7 +60,10 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
 
   @Override
   public boolean isFulfilled() {
-    return getFulfilment() >= FULFILLMENT_LEVEL;
+    if (fulfilled) {
+      return true;
+    }
+    return fulfilled = getFulfilment() >= FULFILLMENT_LEVEL;
   }
 
   @Override

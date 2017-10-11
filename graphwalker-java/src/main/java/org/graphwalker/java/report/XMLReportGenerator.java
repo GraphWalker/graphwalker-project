@@ -92,7 +92,7 @@ public class XMLReportGenerator {
       Testcase testcase = new Testcase();
       testcase.setName(context.getClass().getSimpleName());
       testcase.setClassname(context.getClass().getName());
-      testcase.setTime(getSeconds(context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS)));
+      testcase.setTime(getSeconds(context.getProfiler().getTotalExecutionTime()));
       if (executor.isFailure(context)) {
         Throwable throwable = executor.getFailure(context).getCause();
         Error error = new Error();
@@ -204,7 +204,7 @@ public class XMLReportGenerator {
             failedExecutions.add(context);
           }
         }
-        time += context.getProfiler().getProfile().getTotalExecutionTime(TimeUnit.MILLISECONDS);
+        time += context.getProfiler().getTotalExecutionTime();
       }
     }
 

@@ -26,6 +26,9 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,16 +36,28 @@ import java.util.concurrent.TimeUnit;
  */
 public final class Execution {
 
+  private final Context context;
+  private final Element element;
   private final long time;
   private final long duration;
 
-  public Execution(long time, long duration) {
-    this(time, duration, TimeUnit.NANOSECONDS);
+  public Execution(Context context, Element element, long time, long duration) {
+    this(context, element, time, duration, TimeUnit.NANOSECONDS);
   }
 
-  public Execution(long time, long duration, TimeUnit unit) {
+  public Execution(Context context, Element element, long time, long duration, TimeUnit unit) {
+    this.context = context;
+    this.element = element;
     this.time = unit.convert(time, TimeUnit.NANOSECONDS);
     this.duration = unit.convert(duration, TimeUnit.NANOSECONDS);
+  }
+
+  public Context getContext() {
+    return context;
+  }
+
+  public Element getElement() {
+    return element;
   }
 
   public long getTime(TimeUnit unit) {

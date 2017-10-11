@@ -37,6 +37,7 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
 /**
@@ -61,7 +62,7 @@ public class LengthTest {
     Model model = new Model().addVertex(vertex);
     StopCondition condition = new Length(100);
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     for (int i = 0; i <= 100; i++) {
       assertThat(condition.getFulfilment(), is((double) i / 100));
       context.getProfiler().start(context);
@@ -76,7 +77,7 @@ public class LengthTest {
     Model model = new Model().addVertex(vertex);
     StopCondition condition = new Length(100);
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     for (int i = 0; i < 100; i++) {
       assertFalse(condition.isFulfilled());
       context.getProfiler().start(context);

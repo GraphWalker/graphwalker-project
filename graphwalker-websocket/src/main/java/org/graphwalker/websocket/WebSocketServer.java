@@ -267,7 +267,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("modelId", context.getModel().getId());
                 jsonObject.put("elementId", element.getId());
-                jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
+                jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(context, element));
                 jsonElements.put(jsonObject);
               }
             }
@@ -364,7 +364,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
           jsonObject.put("command", "visitedElement");
           jsonObject.put("modelId", machine.getCurrentContext().getModel().getId());
           jsonObject.put("elementId", element.getId());
-          jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(element));
+          jsonObject.put("visitedCount", machine.getProfiler().getVisitCount(machine.getCurrentContext(), element));
           jsonObject.put("totalCount", machine.getProfiler().getTotalVisitCount());
           jsonObject.put("stopConditionFulfillment", machine.getCurrentContext().getPathGenerator().getStopCondition().getFulfilment());
 

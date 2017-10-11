@@ -33,6 +33,8 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
@@ -42,6 +44,7 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.statistics.Execution;
 import org.junit.Test;
 
 /**
@@ -94,11 +97,9 @@ public class SharedStateTest {
     assertThat(machine.getProfiler().getUnvisitedElements(context1).isEmpty(), is(true));
     assertThat(machine.getProfiler().getUnvisitedElements(context2).isEmpty(), is(true));
     assertThat(machine.getProfiler().getUnvisitedElements(context3).isEmpty(), is(true));
-    List<String> names = new ArrayList<>();
-    for (Element element : machine.getProfiler().getPath()) {
-      names.add(element.getName());
-    }
-    assertArrayEquals(names.toArray(), Arrays.asList("A", "I", "H", "G", "F", "E", "D", "C", "B", "A").toArray());
+    List<String> names = machine.getProfiler().getExecutionPath().stream().map(execution -> execution.getElement()
+      .getName()).collect(Collectors.toList());
+    assertArrayEquals(names.toArray(), Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I", "A").toArray());
   }
 
   @Test

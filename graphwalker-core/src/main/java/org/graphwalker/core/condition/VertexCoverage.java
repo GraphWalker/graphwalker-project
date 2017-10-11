@@ -56,7 +56,7 @@ public final class VertexCoverage extends CoverageStopConditionBase {
     List<RuntimeVertex> vertices = context.getModel().getVertices();
     double visitedVertexCount = 0.0;
     for (RuntimeVertex vertex : vertices) {
-      if (context.getProfiler().isVisited(vertex)) {
+      if (context.getProfiler().isVisited(context, vertex)) {
         visitedVertexCount++;
       }
     }

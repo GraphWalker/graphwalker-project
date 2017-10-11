@@ -88,9 +88,10 @@ public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
   }
 
   private void orderElementsUnvisitedFirst(List<Element> elements) {
-    final Profiler profiler = getContext().getProfiler();
+    final Context context = getContext();
+    final Profiler profiler = context.getProfiler();
     if (isNotNull(profiler)) {
-      elements.sort((a, b) -> Boolean.compare(profiler.isVisited(a), profiler.isVisited(b)));
+      elements.sort((a, b) -> Boolean.compare(profiler.isVisited(context, a), profiler.isVisited(context, b)));
     }
   }
 

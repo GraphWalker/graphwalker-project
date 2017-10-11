@@ -44,6 +44,7 @@ import org.graphwalker.core.model.Edge.RuntimeEdge;
 import org.graphwalker.core.model.Model.RuntimeModel;
 import org.graphwalker.core.model.Vertex.RuntimeVertex;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
 /**
@@ -76,7 +77,7 @@ public class QuickRandomPathTest {
     RuntimeEdge edge = findEdge(model, "ab");
     Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setPathGenerator(generator);
     context.setCurrentElement(source);
     assertEquals(context.getCurrentElement(), source);
@@ -91,7 +92,7 @@ public class QuickRandomPathTest {
     RuntimeVertex source = findVertex(model, "A");
     Context context = new TestExecutionContext().setModel(model).setNextElement(source);
     PathGenerator generator = new QuickRandomPath(new VertexCoverage(100));
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setPathGenerator(generator);
     context.setCurrentElement(source);
     assertTrue(generator.hasNextStep());

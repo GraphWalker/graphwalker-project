@@ -26,8 +26,10 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.ReachedEdge;
@@ -37,12 +39,14 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.Execution;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Nils Olsson
@@ -62,7 +66,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     Context context = new TestExecutionContext(model, generator);
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
@@ -76,7 +80,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     Context context = new TestExecutionContext(model, generator);
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(start.build());
     while (context.getPathGenerator().hasNextStep()) {
       context.getPathGenerator().getNextStep();
@@ -132,8 +136,9 @@ public class CombinedPathTest {
       v2.build(),
       e2.build()
     );
-    Collections.reverse(expectedPath);
-    assertArrayEquals(expectedPath.toArray(), context.getProfiler().getPath().toArray());
+    List<Element> path = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
   }
 
   @Test(expected = MachineException.class)
@@ -142,7 +147,7 @@ public class CombinedPathTest {
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v2")));
     generator.addPathGenerator(new RandomPath(new ReachedVertex("v1")));
     Context context = new TestExecutionContext(model, generator);
-    context.setProfiler(new Profiler());
+    context.setProfiler(new SimpleProfiler());
     context.setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
