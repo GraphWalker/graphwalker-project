@@ -30,7 +30,10 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 
 import javax.script.Bindings;
 import javax.script.SimpleBindings;
+
+import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.PathGenerator;
+import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.model.Model;
 
 /**
@@ -42,6 +45,11 @@ public final class TestExecutionContext extends ExecutionContext {
 
   public TestExecutionContext() {
     super();
+    getScriptEngine().put("global", bindings);
+  }
+
+  public TestExecutionContext(Model model) {
+    super(model, new RandomPath(new EdgeCoverage(100)));
     getScriptEngine().put("global", bindings);
   }
 
