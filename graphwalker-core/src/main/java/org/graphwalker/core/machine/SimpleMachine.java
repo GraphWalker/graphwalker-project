@@ -156,10 +156,14 @@ public class SimpleMachine extends MachineBase {
     return context;
   }
 
+  private boolean isStartContext(Context context) {
+    return hasNextStep(context) && (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement()));
+  }
+
   private Context findStartContext() {
     Context startContext = null;
     for (Context context : getContexts()) {
-      if (hasNextStep(context) && (isNotNull(context.getCurrentElement()) || isNotNull(context.getNextElement()))) {
+      if (isStartContext(context)) {
         startContext = context;
         break;
       }
@@ -237,6 +241,9 @@ public class SimpleMachine extends MachineBase {
     MDC.put("trace", UUID.randomUUID().toString());
     for (Context context : getContexts()) {
       if (hasNextStep(context)) {
+        if (!context.equals(getCurrentContext()) && isStartContext(context)) {
+          switchContext(context);
+        }
         return true;
       }
     }

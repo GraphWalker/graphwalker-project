@@ -32,6 +32,9 @@ import org.graphwalker.core.model.Element;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Nils Olsson
+ */
 public class Profile {
 
   private final Context context;

@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author Nils Olsson
+ */
 public interface Profiler {
   void addContext(Context context);
   Set<Context> getContexts();
