@@ -26,10 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.graphwalker.core.machine.Context;
 
 /**
  * <h1>CombinedCondition</h1>
@@ -41,7 +42,7 @@ import org.graphwalker.core.machine.Context;
  *
  * @author Nils Olsson
  */
-public final class CombinedCondition extends StopConditionBase {
+public class CombinedCondition extends StopConditionBase {
 
   private final List<StopCondition> conditions = new ArrayList<>();
 

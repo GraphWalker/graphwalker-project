@@ -26,36 +26,22 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Model.RuntimeModel;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.script.Bindings;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleScriptContext;
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.script.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.*;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * <h1>ExecutionContext</h1>

@@ -26,13 +26,12 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
 /**
  * @author Nils Olsson
  */
-public final class NoPathFoundException extends RuntimeException {
+public class NoPathFoundException extends RuntimeException {
 
   public NoPathFoundException(String message) {
     super(message);

@@ -36,7 +36,7 @@ package org.graphwalker.core.model;
  *
  * @author Nils Olsson
  */
-public final class Requirement {
+public class Requirement {
 
   private final String key;
 

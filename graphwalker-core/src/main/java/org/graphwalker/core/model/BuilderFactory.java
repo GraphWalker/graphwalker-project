@@ -26,10 +26,11 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.unmodifiableList;
-
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author Nils Olsson
@@ -37,10 +38,7 @@ import java.util.List;
 public abstract class BuilderFactory {
 
   public static <T> List<T> build(List<? extends Builder<T>> builders) {
-    List<T> objects = new ArrayList<>();
-    for (Builder<T> builder : builders) {
-      objects.add(builder.build());
-    }
-    return unmodifiableList(objects);
+    return builders.stream().map(Builder::build)
+      .collect(collectingAndThen(toList(), Collections::unmodifiableList));
   }
 }

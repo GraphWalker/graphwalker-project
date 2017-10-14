@@ -26,13 +26,14 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>ReachedSharedState</h1>
@@ -42,7 +43,7 @@ import org.graphwalker.core.model.Element;
  *
  * @author Nils Olsson
  */
-public final class ReachedSharedState extends ReachedStopConditionBase {
+public class ReachedSharedState extends ReachedStopConditionBase {
 
   public ReachedSharedState(String target) {
     super(target);

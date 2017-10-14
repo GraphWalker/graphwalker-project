@@ -26,9 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-
 import org.graphwalker.core.machine.Context;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 /**
  * <h1>DependencyEdgeCoverage</h1> The DependencyEdgeCoverage stop condition is fulfilled
@@ -38,7 +38,7 @@ import org.graphwalker.core.machine.Context;
  *
  * @author Miroslav Janeski
  */
-public final class DependencyEdgeCoverage extends DependencyCoverageStopConditionBase {
+public class DependencyEdgeCoverage extends DependencyCoverageStopConditionBase {
 
   public DependencyEdgeCoverage(int dependency) {
     super(dependency);

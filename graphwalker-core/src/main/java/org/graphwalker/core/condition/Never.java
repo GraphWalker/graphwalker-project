@@ -33,7 +33,7 @@ package org.graphwalker.core.condition;
  *
  * @author Nils Olsson
  */
-public final class Never extends StopConditionBase {
+public class Never extends StopConditionBase {
 
   public Never() {
     super("");

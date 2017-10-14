@@ -26,19 +26,20 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
-
-import java.util.HashMap;
-import java.util.Map;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+
 /**
  * @author Nils Olsson
  */
-public final class Eulerian implements Algorithm {
+public class Eulerian implements Algorithm {
 
   private final Context context;
   private final Map<RuntimeVertex, PolarityCounter> polarities;

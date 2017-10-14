@@ -26,16 +26,16 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Execution;
 import org.graphwalker.core.statistics.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <h1>ReplayMachine</h1>
@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Nils Olsson
  */
-public final class ReplayMachine extends SimpleMachine {
+public class ReplayMachine extends SimpleMachine {
 
   private static final Logger LOG = LoggerFactory.getLogger(ReplayMachine.class);
 

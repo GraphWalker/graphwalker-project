@@ -26,9 +26,10 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import java.util.List;
 import org.graphwalker.core.event.Observable;
 import org.graphwalker.core.statistics.Profiler;
+
+import java.util.List;
 
 /**
  * @author Nils Olsson

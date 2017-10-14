@@ -26,15 +26,16 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
 import org.graphwalker.core.statistics.SimpleProfiler;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
 
 /**
  * <h1>MachineBase</h1>

@@ -26,19 +26,14 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
+
+import java.util.*;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>AStar</h1>
@@ -49,7 +44,7 @@ import org.graphwalker.core.model.Path;
  *
  * @author Nils Olsson
  */
-public final class AStar implements Algorithm {
+public class AStar implements Algorithm {
 
   private final Context context;
 

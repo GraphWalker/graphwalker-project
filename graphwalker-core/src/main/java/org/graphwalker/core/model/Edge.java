@@ -26,16 +26,14 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.common.Objects.unmodifiableList;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import org.graphwalker.core.common.Objects;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.graphwalker.core.common.Objects;
+
+import static org.graphwalker.core.common.Objects.*;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * <h1>Edge</h1>
@@ -50,7 +48,7 @@ import org.graphwalker.core.common.Objects;
  *
  * @author Nils Olsson
  */
-public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
+public class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
 
   private Vertex sourceVertex;
   private Vertex targetVertex;
@@ -239,7 +237,7 @@ public final class Edge extends CachedBuilder<Edge, Edge.RuntimeEdge> {
    * the instance will not change after it's construction.
    * </p>
    */
-  public static final class RuntimeEdge extends RuntimeBase {
+  public static class RuntimeEdge extends RuntimeBase {
 
     private final RuntimeVertex sourceVertex;
     private final RuntimeVertex targetVertex;

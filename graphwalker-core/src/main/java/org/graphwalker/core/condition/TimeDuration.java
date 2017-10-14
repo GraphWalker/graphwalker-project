@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Nils Olsson
  */
-public final class TimeDuration extends StopConditionBase {
+public class TimeDuration extends StopConditionBase {
 
   private final long duration;
   private final long timestamp;

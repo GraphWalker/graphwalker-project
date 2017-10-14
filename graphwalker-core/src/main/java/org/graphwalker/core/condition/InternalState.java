@@ -26,14 +26,15 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import javax.script.ScriptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.script.ScriptException;
 
 /**
  * @author Nils Olsson
  */
-public final class InternalState extends StopConditionBase {
+public class InternalState extends StopConditionBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(InternalState.class);
   private final String script;

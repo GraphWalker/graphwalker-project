@@ -34,7 +34,7 @@ package org.graphwalker.core.condition;
  *
  * @author Nils Olsson
  */
-public final class Length extends StopConditionBase {
+public class Length extends StopConditionBase {
 
   private final long length;
 
