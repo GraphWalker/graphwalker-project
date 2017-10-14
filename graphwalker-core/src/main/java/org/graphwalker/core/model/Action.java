@@ -35,7 +35,7 @@ package org.graphwalker.core.model;
  *
  * @author Nils Olsson
  */
-public final class Action {
+public class Action {
 
   private final String script;
 

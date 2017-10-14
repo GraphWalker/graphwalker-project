@@ -26,15 +26,14 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNull;
-
-import java.util.List;
-import java.util.Random;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * <h1>RandomPath</h1>
@@ -45,7 +44,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Nils Olsson
  */
-public final class RandomPath extends PathGeneratorBase<StopCondition> {
+public class RandomPath extends PathGeneratorBase<StopCondition> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RandomPath.class);
 

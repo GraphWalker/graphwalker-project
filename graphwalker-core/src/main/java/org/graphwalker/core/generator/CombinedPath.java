@@ -26,11 +26,12 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.machine.Context;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.machine.Context;
 
 /**
  * <h1>CombinedPath</h1>
@@ -52,7 +53,7 @@ import org.graphwalker.core.machine.Context;
  *
  * @author Nils Olsson
  */
-public final class CombinedPath extends PathGeneratorBase<StopCondition> {
+public class CombinedPath extends PathGeneratorBase<StopCondition> {
 
   private final List<PathGenerator> generators = new ArrayList<>();
   private int index = 0;

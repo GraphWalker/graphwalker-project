@@ -29,7 +29,7 @@ package org.graphwalker.core.model;
 /**
  * @author Nils Olsson
  */
-public final class ClassificationTree implements Builder<ClassificationTree.RuntimeClassificationTree> {
+public class ClassificationTree implements Builder<ClassificationTree.RuntimeClassificationTree> {
 
   private final Classification classification = new Classification();
 

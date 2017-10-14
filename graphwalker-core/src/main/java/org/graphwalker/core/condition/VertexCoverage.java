@@ -26,10 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
+import org.graphwalker.core.machine.Context;
 
 import java.util.List;
-import org.graphwalker.core.machine.Context;
+
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 /**
  * <h1>VertexCoverage</h1>
@@ -39,7 +40,7 @@ import org.graphwalker.core.machine.Context;
  *
  * @author Nils Olsson
  */
-public final class VertexCoverage extends CoverageStopConditionBase {
+public class VertexCoverage extends CoverageStopConditionBase {
 
   public VertexCoverage(int percent) {
     super(percent);

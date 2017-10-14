@@ -26,11 +26,11 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson

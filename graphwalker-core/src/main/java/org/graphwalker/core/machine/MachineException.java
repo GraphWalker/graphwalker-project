@@ -29,7 +29,7 @@ package org.graphwalker.core.machine;
 /**
  * @author Nils Olsson
  */
-public final class MachineException extends RuntimeException {
+public class MachineException extends RuntimeException {
 
   private final Context context;
 

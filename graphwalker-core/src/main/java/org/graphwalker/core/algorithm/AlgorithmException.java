@@ -29,7 +29,7 @@ package org.graphwalker.core.algorithm;
 /**
  * @author Nils Olsson
  */
-public final class AlgorithmException extends RuntimeException {
+public class AlgorithmException extends RuntimeException {
 
   public AlgorithmException() {
   }

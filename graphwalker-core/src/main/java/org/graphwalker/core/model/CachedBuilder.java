@@ -26,10 +26,10 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNull;
-
 import java.util.Map;
 import java.util.Set;
+
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson

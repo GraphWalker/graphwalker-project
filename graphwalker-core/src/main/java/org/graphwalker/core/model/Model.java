@@ -26,22 +26,13 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.common.Objects.unmodifiableList;
-import static org.graphwalker.core.common.Objects.unmodifiableMap;
+import org.graphwalker.core.common.Objects;
+
+import java.util.*;
+
+import static org.graphwalker.core.common.Objects.*;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.graphwalker.core.common.Objects;
 
 /**
  * <h1>Model</h1>
@@ -58,7 +49,7 @@ import org.graphwalker.core.common.Objects;
  *
  * @author Nils Olsson
  */
-public final class Model extends BuilderBase<Model, Model.RuntimeModel> {
+public class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
   private List<Vertex> vertices = new ArrayList<>();
   private List<Edge> edges = new ArrayList<>();

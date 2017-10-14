@@ -34,7 +34,7 @@ package org.graphwalker.core.model;
  *
  * @author Nils Olsson
  */
-public final class Guard {
+public class Guard {
 
   private final String script;
 

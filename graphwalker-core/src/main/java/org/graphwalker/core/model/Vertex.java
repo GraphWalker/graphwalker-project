@@ -26,10 +26,9 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-import static org.graphwalker.core.common.Objects.isNull;
-
 import org.graphwalker.core.common.Objects;
+
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 
 /**
  * <h1>Vertex</h1>
@@ -44,7 +43,7 @@ import org.graphwalker.core.common.Objects;
  *
  * @author Nils Olsson
  */
-public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
+public class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
 
   private String sharedState;
 
@@ -97,7 +96,7 @@ public final class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
    * This class is used in models. It guarantees that that the internal states of
    * the instance will not change after it's construction.
    */
-  public static final class RuntimeVertex extends RuntimeBase {
+  public static class RuntimeVertex extends RuntimeBase {
 
     private final String sharedState;
 

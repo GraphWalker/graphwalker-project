@@ -26,19 +26,20 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+
+import java.util.Arrays;
+import java.util.List;
+
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
-import java.util.Arrays;
-import java.util.List;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
-
 /**
  * @author Nils Olsson
  */
-public final class FloydWarshall implements Algorithm {
+public class FloydWarshall implements Algorithm {
 
   private final RuntimeModel model;
   private final int[][] distances;

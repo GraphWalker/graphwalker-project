@@ -37,7 +37,7 @@ import org.graphwalker.core.machine.RequirementStatus;
  *
  * @author Nils Olsson
  */
-public final class RequirementCoverage extends CoverageStopConditionBase {
+public class RequirementCoverage extends CoverageStopConditionBase {
 
   public RequirementCoverage(int percent) {
     super(percent);

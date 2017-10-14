@@ -26,20 +26,18 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNull;
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
-
 import org.graphwalker.core.algorithm.Eulerian;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Path;
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * @author Nils Olsson
  */
-public final class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
+public class ShortestAllPaths extends PathGeneratorBase<StopCondition> {
 
   private Path<Element> path = null;
 

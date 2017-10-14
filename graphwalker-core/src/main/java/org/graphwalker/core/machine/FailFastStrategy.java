@@ -26,10 +26,10 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 /**
  * <h1>FailFastStrategy</h1>
@@ -41,7 +41,7 @@ import org.graphwalker.core.model.Requirement;
  *
  * @author Nils Olsson
  */
-public final class FailFastStrategy implements ExceptionStrategy {
+public class FailFastStrategy implements ExceptionStrategy {
 
   @Override
   public void handle(Machine machine, MachineException exception) {

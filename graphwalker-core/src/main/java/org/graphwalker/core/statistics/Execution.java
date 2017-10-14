@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Nils Olsson
  */
-public final class Execution {
+public class Execution {
 
   private final Context context;
   private final Element element;

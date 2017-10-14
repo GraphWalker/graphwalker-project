@@ -26,16 +26,15 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNull;
+import org.graphwalker.core.common.Objects;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.graphwalker.core.common.Objects;
 
 /**
  * @author Nils Olsson
  */
-public final class Classification extends CachedBuilder<Classification, Classification.RuntimeClassification> {
+public class Classification extends CachedBuilder<Classification, Classification.RuntimeClassification> {
 
   private final List<Classification> classifications = new ArrayList<>();
 
@@ -54,7 +53,7 @@ public final class Classification extends CachedBuilder<Classification, Classifi
     return new RuntimeClassification(this);
   }
 
-  public static final class RuntimeClassification extends RuntimeBase {
+  public static class RuntimeClassification extends RuntimeBase {
 
     private final List<RuntimeClassification> classifications;
 

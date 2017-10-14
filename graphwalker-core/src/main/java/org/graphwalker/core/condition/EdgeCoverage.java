@@ -26,9 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-
 import org.graphwalker.core.machine.Context;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
 /**
  * <h1>EdgeCoverage</h1>
@@ -38,7 +38,7 @@ import org.graphwalker.core.machine.Context;
  *
  * @author Nils Olsson
  */
-public final class EdgeCoverage extends CoverageStopConditionBase {
+public class EdgeCoverage extends CoverageStopConditionBase {
 
   public EdgeCoverage(int percent) {
     super(percent);

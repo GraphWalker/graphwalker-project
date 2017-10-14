@@ -26,18 +26,17 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNull;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Vertex;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * <h1>WeightedRandomPath</h1>
@@ -51,7 +50,7 @@ import org.graphwalker.core.model.Vertex;
  *
  * @author Kristian Karl
  */
-public final class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
+public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
   private final Random random = new Random(System.nanoTime());
 

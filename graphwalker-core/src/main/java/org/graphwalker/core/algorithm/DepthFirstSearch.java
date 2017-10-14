@@ -26,23 +26,19 @@ package org.graphwalker.core.algorithm;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+
+import java.util.*;
+
 import static org.graphwalker.core.common.Objects.unmodifiableList;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
-
 /**
  * @author Nils Olsson
  */
-public final class DepthFirstSearch implements Algorithm {
+public class DepthFirstSearch implements Algorithm {
 
   private final Context context;
 

@@ -26,8 +26,9 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import java.util.Set;
 import org.graphwalker.core.model.Element;
+
+import java.util.Set;
 
 /**
  * @author Nils Olsson

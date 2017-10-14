@@ -26,10 +26,11 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import java.util.HashSet;
-import java.util.Set;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNull;
@@ -41,7 +42,7 @@ import static org.graphwalker.core.common.Objects.isNull;
  *
  * @author Nils Olsson
  */
-public final class ReachedEdge extends ReachedStopConditionBase {
+public class ReachedEdge extends ReachedStopConditionBase {
 
   public ReachedEdge(String target) {
     super(target);

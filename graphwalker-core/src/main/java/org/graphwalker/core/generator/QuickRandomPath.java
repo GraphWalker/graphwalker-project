@@ -28,13 +28,6 @@ package org.graphwalker.core.generator;
  * #L%
 */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.machine.Context;
@@ -42,6 +35,13 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.statistics.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * <h1>QuickRandomPath</h1>
@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Kristian Karl
  */
-public final class QuickRandomPath extends PathGeneratorBase<StopCondition> {
+public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
 
   private static final Logger LOG = LoggerFactory.getLogger(QuickRandomPath.class);
   private final List<Element> elements = new ArrayList<>();

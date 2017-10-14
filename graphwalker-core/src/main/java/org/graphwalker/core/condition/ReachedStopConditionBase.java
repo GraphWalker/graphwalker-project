@@ -26,14 +26,12 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
-
 import org.graphwalker.core.algorithm.FloydWarshall;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 
-import java.util.Set;
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 
 /**
  * @author Nils Olsson

@@ -26,26 +26,20 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-
-import java.util.*;
-import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
 import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Edge.RuntimeEdge;
 import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Path;
-import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.model.Vertex.RuntimeVertex;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 /**
  * @author Nils Olsson
  */
-public final class SimpleProfiler implements Profiler {
+public class SimpleProfiler implements Profiler {
 
   private long startTime = 0;
 
