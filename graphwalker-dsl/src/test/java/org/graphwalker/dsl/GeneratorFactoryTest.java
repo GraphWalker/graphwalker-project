@@ -294,4 +294,20 @@ public class GeneratorFactoryTest {
     Assert.assertThat(generator.getStopCondition(), instanceOf(Length.class));
     Assert.assertThat(((Length) generator.getStopCondition()).getLength(), is(80l));
   }
+
+  @Test
+  public void multipleCombinedStopConditions() {
+    PathGenerator generator = GeneratorFactory.parse("random(reached_vertex(isPageOpened) and reached_vertex(isLanguageDetected) and reached_vertex(isTranslateCleared) and reached_edge(openPage))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(CombinedCondition.class));
+    Assert.assertThat(((CombinedCondition) generator.getStopCondition()).getStopConditions().size(), is(4));
+  }
+
+  @Test
+  public void multipleAlternativeStopConditions() {
+    PathGenerator generator = GeneratorFactory.parse("random(reached_vertex(isPageOpened) or reached_vertex(isLanguageDetected) or reached_vertex(isTranslateCleared))");
+    Assert.assertThat(generator, instanceOf(RandomPath.class));
+    Assert.assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
+    Assert.assertThat(((AlternativeCondition) generator.getStopCondition()).getStopConditions().size(), is(3));
+  }
 }

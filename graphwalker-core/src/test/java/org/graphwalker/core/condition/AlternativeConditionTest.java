@@ -89,4 +89,36 @@ public class AlternativeConditionTest {
     assertTrue(condition.isFulfilled());
     assertThat(condition.toString(), is("VertexCoverage(100) OR ReachedEdge(e1)"));
   }
+
+  @Test
+  public void testMultipleCondition() throws Exception {
+    AlternativeCondition condition = new AlternativeCondition();
+    condition.addStopCondition(new Never());
+    assertThat("Should be false", condition.isFulfilled(), is(false));
+    condition.addStopCondition(new Never());
+    assertThat("Should be false", condition.isFulfilled(), is(false));
+    condition.addStopCondition(new Never());
+    assertThat("Should be false", condition.isFulfilled(), is(false));
+    assertThat(condition.toString(), is("Never() OR Never() OR Never()"));
+    condition.addStopCondition(new Always());
+    assertThat("Should be true", condition.isFulfilled(), is(true));
+    assertThat(condition.toString(), is("Never() OR Never() OR Never() OR Always()"));
+  }
+
+  private class Always extends StopConditionBase {
+
+    protected Always() {
+      super("");
+    }
+
+    @Override
+    public double getFulfilment() {
+      return 1.0;
+    }
+
+    @Override
+    public boolean isFulfilled() {
+      return true;
+    }
+  }
 }
