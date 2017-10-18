@@ -4,7 +4,7 @@ package org.graphwalker.core.condition;
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2017 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,8 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.machine.Context;
+
+import java.util.List;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 
@@ -52,21 +54,15 @@ public class DependencyEdgeCoverage extends DependencyCoverageStopConditionBase 
   @Override
   public double getFulfilment() {
     Context context = getContext();
-    long totalDependencyEdgesCount = 0;
-    long visitedDependencyEdgesCount = 0;
-    for (RuntimeEdge edge : context.getModel().getEdges()) {
-      if (edge.getDependencyAsDouble() >= super.getDependencyAsDouble()) {
-        totalDependencyEdgesCount++;
-        if (context.getProfiler().isVisited(context, edge)) {
-          visitedDependencyEdgesCount++;
-        }
-      }
-    }
-
-    if (totalDependencyEdgesCount == 0) {
-      return totalDependencyEdgesCount;
-    } else {
+    List<RuntimeEdge> edges = getContext().getModel().getEdges();
+    long totalDependencyEdgesCount = edges.stream()
+      .filter(edge -> edge.getDependencyAsDouble() >= super.getDependencyAsDouble()).count();
+    if (totalDependencyEdgesCount != 0) {
+      long visitedDependencyEdgesCount = edges.stream()
+        .filter(edge -> edge.getDependencyAsDouble() >= super.getDependencyAsDouble())
+        .filter(edge -> context.getProfiler().isVisited(context, edge)).count();
       return ((double) visitedDependencyEdgesCount / totalDependencyEdgesCount);
     }
+    return 0;
   }
 }

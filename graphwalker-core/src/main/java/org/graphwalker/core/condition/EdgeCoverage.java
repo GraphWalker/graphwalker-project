@@ -4,7 +4,7 @@ package org.graphwalker.core.condition;
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2017 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,12 +53,8 @@ public class EdgeCoverage extends CoverageStopConditionBase {
   public double getFulfilment() {
     Context context = getContext();
     long totalEdgesCount = context.getModel().getEdges().size();
-    long visitedEdgesCount = 0;
-    for (RuntimeEdge edge : context.getModel().getEdges()) {
-      if (context.getProfiler().isVisited(context, edge)) {
-        visitedEdgesCount++;
-      }
-    }
+    long visitedEdgesCount = context.getModel().getEdges().stream()
+      .filter(edge -> context.getProfiler().isVisited(context, edge)).count();
     return ((double) visitedEdgesCount / totalEdgesCount) / getPercentAsDouble();
   }
 }
