@@ -26,5 +26,5 @@ package org.graphwalker.core.statistics;
  * #L%
  */
 
-public class NoExecutionException extends RuntimeException {
+public class MissingExecutionException extends RuntimeException {
 }

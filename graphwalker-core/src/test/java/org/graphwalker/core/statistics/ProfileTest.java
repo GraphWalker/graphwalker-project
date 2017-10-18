@@ -98,27 +98,27 @@ public class ProfileTest {
     assertThat(profile.getTotalExecutionTime(), is(0L));
   }
 
-  @Test(expected = NoExecutionException.class)
+  @Test(expected = MissingExecutionException.class)
   public void noAverageExecutionTime() throws Exception {
     new Profile(context, vertex, Collections.emptyList()).getAverageExecutionTime();
   }
 
-  @Test(expected = NoExecutionException.class)
+  @Test(expected = MissingExecutionException.class)
   public void noMinExecutionTime() throws Exception {
     new Profile(context, vertex, Collections.emptyList()).getMinExecutionTime();
   }
 
-  @Test(expected = NoExecutionException.class)
+  @Test(expected = MissingExecutionException.class)
   public void noMaxExecutionTime() throws Exception {
     new Profile(context, vertex, Collections.emptyList()).getMaxExecutionTime();
   }
 
-  @Test(expected = NoExecutionException.class)
+  @Test(expected = MissingExecutionException.class)
   public void noFirstExecutionTime() throws Exception {
     new Profile(context, vertex, Collections.emptyList()).getFirstExecutionTime();
   }
 
-  @Test(expected = NoExecutionException.class)
+  @Test(expected = MissingExecutionException.class)
   public void noLastExecutionTime() throws Exception {
     new Profile(context, vertex, Collections.emptyList()).getLastExecutionTime();
   }
