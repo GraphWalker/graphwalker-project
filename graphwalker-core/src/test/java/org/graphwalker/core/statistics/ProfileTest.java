@@ -32,6 +32,7 @@ import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -86,5 +87,39 @@ public class ProfileTest {
     assertThat(profile.getFirstExecutionTime(TimeUnit.MICROSECONDS), is(1L));
     assertThat(profile.getLastExecutionTime(TimeUnit.MICROSECONDS), is(2L));
     assertThat(profile.getTotalExecutionTime(TimeUnit.MICROSECONDS), is(6L));
+  }
+
+  @Test
+  public void emptyProfile() throws Exception {
+    Profile profile = new Profile(context, vertex, Collections.emptyList());
+    assertThat(profile.getContext(), is(context));
+    assertThat(profile.getElement(), is(vertex));
+    assertThat(profile.getExecutionCount(), is(0L));
+    assertThat(profile.getTotalExecutionTime(), is(0L));
+  }
+
+  @Test(expected = MissingExecutionException.class)
+  public void noAverageExecutionTime() throws Exception {
+    new Profile(context, vertex, Collections.emptyList()).getAverageExecutionTime();
+  }
+
+  @Test(expected = MissingExecutionException.class)
+  public void noMinExecutionTime() throws Exception {
+    new Profile(context, vertex, Collections.emptyList()).getMinExecutionTime();
+  }
+
+  @Test(expected = MissingExecutionException.class)
+  public void noMaxExecutionTime() throws Exception {
+    new Profile(context, vertex, Collections.emptyList()).getMaxExecutionTime();
+  }
+
+  @Test(expected = MissingExecutionException.class)
+  public void noFirstExecutionTime() throws Exception {
+    new Profile(context, vertex, Collections.emptyList()).getFirstExecutionTime();
+  }
+
+  @Test(expected = MissingExecutionException.class)
+  public void noLastExecutionTime() throws Exception {
+    new Profile(context, vertex, Collections.emptyList()).getLastExecutionTime();
   }
 }

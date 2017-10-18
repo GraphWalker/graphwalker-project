@@ -65,7 +65,8 @@ public class Profile {
 
   public long getMinExecutionTime(TimeUnit unit) {
     return unit.convert(executions.stream()
-      .mapToLong(Execution::getDuration).min().getAsLong(), TimeUnit.NANOSECONDS);
+      .mapToLong(Execution::getDuration).min()
+      .orElseThrow(MissingExecutionException::new), TimeUnit.NANOSECONDS);
   }
 
   public long getMaxExecutionTime() {
@@ -74,7 +75,8 @@ public class Profile {
 
   public long getMaxExecutionTime(TimeUnit unit) {
     return unit.convert(executions.stream()
-      .mapToLong(Execution::getDuration).max().getAsLong(), TimeUnit.NANOSECONDS);
+      .mapToLong(Execution::getDuration).max()
+      .orElseThrow(MissingExecutionException::new), TimeUnit.NANOSECONDS);
   }
 
   public long getTotalExecutionTime() {
@@ -92,7 +94,8 @@ public class Profile {
 
   public long getAverageExecutionTime(TimeUnit unit) {
     return unit.convert(Math.round(executions.stream()
-      .mapToLong(Execution::getDuration).average().getAsDouble()), TimeUnit.NANOSECONDS);
+      .mapToLong(Execution::getDuration).average()
+      .orElseThrow(MissingExecutionException::new)), TimeUnit.NANOSECONDS);
   }
 
   public long getFirstExecutionTime() {
@@ -100,7 +103,8 @@ public class Profile {
   }
 
   public long getFirstExecutionTime(TimeUnit unit) {
-    return executions.stream().findFirst().get().getDuration(unit);
+    return executions.stream().findFirst()
+      .orElseThrow(MissingExecutionException::new).getDuration(unit);
   }
 
   public long getLastExecutionTime() {
@@ -108,6 +112,7 @@ public class Profile {
   }
 
   public long getLastExecutionTime(TimeUnit unit) {
-    return executions.stream().reduce((first, second) -> second).get().getDuration(unit);
+    return executions.stream().reduce((first, second) -> second)
+      .orElseThrow(MissingExecutionException::new).getDuration(unit);
   }
 }
