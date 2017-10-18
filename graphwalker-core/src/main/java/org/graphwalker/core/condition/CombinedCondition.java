@@ -4,7 +4,7 @@ package org.graphwalker.core.condition;
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2017 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import org.graphwalker.core.machine.Context;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <h1>CombinedCondition</h1>
@@ -89,13 +90,7 @@ public class CombinedCondition extends StopConditionBase {
 
   @Override
   public StringBuilder toString(StringBuilder builder) {
-    Iterator<StopCondition> iterator = conditions.iterator();
-    while (iterator.hasNext()) {
-      builder = iterator.next().toString(builder);
-      if (iterator.hasNext()) {
-        builder.append(" AND ");
-      }
-    }
-    return builder;
+    return builder.append(conditions.stream().map(StopCondition::toString)
+      .collect(Collectors.joining(" AND ")));
   }
 }

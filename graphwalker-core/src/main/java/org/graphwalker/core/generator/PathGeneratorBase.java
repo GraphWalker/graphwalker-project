@@ -4,7 +4,7 @@ package org.graphwalker.core.generator;
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2017 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -75,8 +75,6 @@ public abstract class PathGeneratorBase<T extends StopCondition> implements Path
   }
 
   public StringBuilder toString(StringBuilder builder) {
-    builder.append(getClass().getSimpleName()).append("(");
-    getStopCondition().toString(builder).append(")");
-    return builder;
+    return getStopCondition().toString(builder.append(getClass().getSimpleName()).append("(")).append(")");
   }
 }

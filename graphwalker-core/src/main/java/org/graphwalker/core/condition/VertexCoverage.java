@@ -4,7 +4,7 @@ package org.graphwalker.core.condition;
  * #%L
  * GraphWalker Core
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2017 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,12 +55,9 @@ public class VertexCoverage extends CoverageStopConditionBase {
   public double getFulfilment() {
     Context context = getContext();
     List<RuntimeVertex> vertices = context.getModel().getVertices();
-    double visitedVertexCount = 0.0;
-    for (RuntimeVertex vertex : vertices) {
-      if (context.getProfiler().isVisited(context, vertex)) {
-        visitedVertexCount++;
-      }
-    }
+    double visitedVertexCount = context.getModel().getVertices().stream()
+      .filter(vertex -> context.getProfiler().isVisited(context, vertex))
+      .count();
     return (visitedVertexCount / vertices.size()) / getPercentAsDouble();
   }
 }
