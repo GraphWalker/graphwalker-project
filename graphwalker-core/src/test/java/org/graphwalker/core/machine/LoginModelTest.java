@@ -96,7 +96,7 @@ public class LoginModelTest {
       .addAction(new Action("rememberMe=false"));
 
   //@Test
-  public void ShortestAllPathEdgeCoverage() throws Exception {
+  public void shortestAllPathEdgeCoverage() throws Exception {
     Context context = new TestExecutionContext(model, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning);
     Machine machine = new SimpleMachine(context);
 
@@ -106,7 +106,7 @@ public class LoginModelTest {
   }
 
   //Test
-  public void ShortestAllPathEdgeAndVertexCoverage() throws Exception {
+  public void shortestAllPathEdgeAndVertexCoverage() throws Exception {
     CombinedCondition combinedCondition = new CombinedCondition();
     combinedCondition.addStopCondition(new EdgeCoverage(100));
     combinedCondition.addStopCondition(new VertexCoverage(100));
@@ -120,7 +120,7 @@ public class LoginModelTest {
   }
 
   //Test
-  public void ShortestAllPathEdgeOrVertexCoverage() throws Exception {
+  public void shortestAllPathEdgeOrVertexCoverage() throws Exception {
     AlternativeCondition alternativeCondition = new AlternativeCondition();
     alternativeCondition.addStopCondition(new EdgeCoverage(100));
     alternativeCondition.addStopCondition(new VertexCoverage(100));
@@ -134,7 +134,7 @@ public class LoginModelTest {
   }
 
   @Test
-  public void AStarPathReachedEdgeExit() throws Exception {
+  public void aStarPathReachedEdgeExit() throws Exception {
     Context context = new TestExecutionContext(model, new AStarPath(new ReachedEdge("e_Exit"))).setNextElement(v_ClientNotRunning);
     Machine machine = new SimpleMachine(context);
 
@@ -155,7 +155,7 @@ public class LoginModelTest {
   }
 
   //Test
-  public void AStarPathReachedEdgeStartClient_2() throws Exception {
+  public void aStarPathReachedEdgeStartClient_2() throws Exception {
     Context context = new TestExecutionContext(model, new AStarPath(new ReachedEdge("e_StartClient"))).setNextElement(v_ClientNotRunning);
     Machine machine = new SimpleMachine(context);
 
@@ -175,7 +175,7 @@ public class LoginModelTest {
   }
 
   @Test
-  public void AStarPathReachedVertex() throws Exception {
+  public void aStarPathReachedVertex() throws Exception {
     Context context = new TestExecutionContext(model, new AStarPath(new ReachedVertex("v_Browse"))).setNextElement(v_ClientNotRunning);
     Machine machine = new SimpleMachine(context);
 
@@ -198,7 +198,7 @@ public class LoginModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathEdgeCoverage() throws Exception {
+  public void randomPathEdgeCoverage() throws Exception {
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning);
     Machine machine = new SimpleMachine(context);
 
@@ -211,7 +211,7 @@ public class LoginModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathVertexCoverage() throws Exception {
+  public void randomPathVertexCoverage() throws Exception {
     Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning);
     Machine machine = new SimpleMachine(context);
 
@@ -224,7 +224,7 @@ public class LoginModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathEdgeAndVertexCoverage() throws Exception {
+  public void randomPathEdgeAndVertexCoverage() throws Exception {
     CombinedCondition combinedCondition = new CombinedCondition();
     combinedCondition.addStopCondition(new EdgeCoverage(100));
     combinedCondition.addStopCondition(new VertexCoverage(100));
@@ -241,7 +241,7 @@ public class LoginModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathEdgeOrVertexCoverage() throws Exception {
+  public void randomPathEdgeOrVertexCoverage() throws Exception {
     AlternativeCondition alternativeCondition = new AlternativeCondition();
     alternativeCondition.addStopCondition(new EdgeCoverage(100));
     alternativeCondition.addStopCondition(new VertexCoverage(100));
@@ -252,5 +252,38 @@ public class LoginModelTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+  }
+
+  @Test
+  public void randomPathMultipleAlternativeStopConditions() throws Exception {
+    AlternativeCondition condition = new AlternativeCondition();
+    condition.addStopCondition(new ReachedVertex("v_Browse"));
+    condition.addStopCondition(new ReachedVertex("v_ClientNotRunning"));
+    condition.addStopCondition(new ReachedVertex("v_LoginPrompted"));
+
+    Context context = new TestExecutionContext(model, new RandomPath(condition)).setNextElement(v_ClientNotRunning);
+    Machine machine = new SimpleMachine(context);
+
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    assertThat(machine.getProfiler().getTotalVisitCount(), is(1L));
+  }
+
+  @Test
+  public void randomPathMultipleCombinedStopConditions() throws Exception {
+    CombinedCondition condition = new CombinedCondition();
+    condition.addStopCondition(new ReachedVertex("v_Browse"));
+    condition.addStopCondition(new ReachedVertex("v_ClientNotRunning"));
+    condition.addStopCondition(new ReachedVertex("v_LoginPrompted"));
+
+    Context context = new TestExecutionContext(model, new RandomPath(condition)).setNextElement(v_ClientNotRunning);
+    Machine machine = new SimpleMachine(context);
+
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    condition.getStopConditions().forEach(stopCondition -> assertThat(stopCondition.isFulfilled(), is(true)));
+    assertThat(condition.isFulfilled(), is(true));
   }
 }
