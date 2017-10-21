@@ -176,7 +176,7 @@ public class GeneratorFactoryTest {
     PathGenerator generator = GeneratorFactory.parse("random(time_duration(600))");
     Assert.assertThat(generator, instanceOf(RandomPath.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(TimeDuration.class));
-    Assert.assertThat(((TimeDuration) generator.getStopCondition()).getDuration(), is(600l));
+    Assert.assertThat(((TimeDuration) generator.getStopCondition()).getDuration(), is(600L));
   }
 
   @Test
@@ -292,7 +292,7 @@ public class GeneratorFactoryTest {
     PathGenerator generator = GeneratorFactory.parse("randompath(length(80))");
     Assert.assertThat(generator, instanceOf(RandomPath.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(Length.class));
-    Assert.assertThat(((Length) generator.getStopCondition()).getLength(), is(80l));
+    Assert.assertThat(((Length) generator.getStopCondition()).getLength(), is(80L));
   }
 
   @Test

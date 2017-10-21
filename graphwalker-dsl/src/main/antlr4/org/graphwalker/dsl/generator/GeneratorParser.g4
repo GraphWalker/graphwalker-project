@@ -1,7 +1,7 @@
-parser grammar Generator_Parser;
+parser grammar GeneratorParser;
 
 options {
-	tokenVocab=Logical_Lexer;
+	tokenVocab=LogicalLexer;
 }
 
 parse

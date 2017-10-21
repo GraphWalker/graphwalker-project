@@ -1,4 +1,4 @@
-lexer grammar Logical_Lexer;
+lexer grammar LogicalLexer;
 
 OR
  : '||' | 'OR' | 'or'

@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.List;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.graphwalker.dsl.generator.Generator_Parser;
-import org.graphwalker.dsl.generator.Logical_Lexer;
+import org.graphwalker.dsl.generator.GeneratorParser;
+import org.graphwalker.dsl.generator.LogicalLexer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -67,10 +67,10 @@ public class GrammarTest {
   public void testCLI() {
     for (String generator : generators) {
       ANTLRInputStream inputStream = new ANTLRInputStream(generator);
-      Logical_Lexer lexer = new Logical_Lexer(inputStream);
+      LogicalLexer lexer = new LogicalLexer(inputStream);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
-      Generator_Parser parser = new Generator_Parser(tokens);
-      Generator_Parser.ParseContext context = parser.parse();
+      GeneratorParser parser = new GeneratorParser(tokens);
+      GeneratorParser.ParseContext context = parser.parse();
       Assert.assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
     }
   }
