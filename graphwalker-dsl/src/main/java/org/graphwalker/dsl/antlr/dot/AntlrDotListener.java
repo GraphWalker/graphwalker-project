@@ -29,7 +29,6 @@ package org.graphwalker.dsl.antlr.dot;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.dsl.dot.DOTBaseListener;
@@ -57,7 +56,7 @@ public class AntlrDotListener extends DOTBaseListener {
 
 
   @Override
-  public void enterNode_id(@NotNull DOTParser.Node_idContext ctx) {
+  public void enterNode_id(DOTParser.Node_idContext ctx) {
     expectVertex = true;
     logger.trace("Parsing vertex: " + ctx.getText());
     if (!vertices.containsKey(ctx.getText())) {
@@ -91,7 +90,7 @@ public class AntlrDotListener extends DOTBaseListener {
   }
 
   @Override
-  public void enterEdgeop(@NotNull DOTParser.EdgeopContext ctx) {
+  public void enterEdgeop(DOTParser.EdgeopContext ctx) {
     expectEdge = true;
     edge = new Edge();
     edges.add(edge);
@@ -99,7 +98,7 @@ public class AntlrDotListener extends DOTBaseListener {
   }
 
   @Override
-  public void enterId(@NotNull DOTParser.IdContext ctx) {
+  public void enterId(DOTParser.IdContext ctx) {
     if (ctx.getText().equalsIgnoreCase("LABEL")) {
       if (expectEdge) {
         expectEdgeLabel = true;
