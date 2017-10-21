@@ -66,7 +66,7 @@ public class AntlrDotListener extends DOTBaseListener {
         src.setId(ctx.getText());
         src.setName(ctx.getText());
         vertices.put(ctx.getText(), src);
-      } else if (dst == null || src != null) {
+      } else if (dst == null) {
         logger.trace("Create target vertex: " + ctx.getText());
         dst = new Vertex();
         dst.setId(ctx.getText());
