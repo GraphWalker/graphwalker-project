@@ -47,7 +47,7 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void SimplestGraph() throws IOException {
+  public void simplestGraph() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimplestGraph.dot"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
@@ -104,7 +104,7 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void Simple3v2e() throws IOException {
+  public void simple3v2e() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Simple3v2e.dot"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
@@ -131,7 +131,7 @@ public class DotContextFactoryTest {
 
 
   @Test
-  public void Simple4v3e() throws IOException {
+  public void simple4v3e() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Simple4v3e.dot"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
@@ -142,7 +142,7 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void SimplestGWGraph() throws IOException {
+  public void simplestGWGraph() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimplestGWGraph.dot"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
@@ -159,7 +159,7 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void SimpleGWGraph() throws IOException {
+  public void simpleGWGraph() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimpleGW.dot"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));
@@ -179,7 +179,7 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void GW_Login() throws IOException {
+  public void gwLogin() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(1));

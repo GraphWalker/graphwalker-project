@@ -95,7 +95,7 @@ public class CorrectModelsTest extends CLITestRoot {
    * shortest All Paths Vertex Coverage
    */
   @Test
-  public void Login_no_errors() {
+  public void loginNoErrors() {
     String args[] = {"offline", "-o", "-m", "graphml/Login.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     Assert.assertThat(result.getError(), is(""));

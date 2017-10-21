@@ -51,7 +51,7 @@ public class ResultTest {
    * Verifies statistics with multiple models execution.
    */
   @Test
-  public void PetClinic() throws IOException {
+  public void petClinic() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/PetClinic.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
@@ -76,7 +76,7 @@ public class ResultTest {
    * Verifies statistics model with requirements.
    */
   @Test
-  public void Login() throws IOException {
+  public void login() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/Login.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();
@@ -117,7 +117,7 @@ public class ResultTest {
    * Verifies statistics multiple with model that has run failures.
    */
   @Test
-  public void DualPathModel() throws IOException {
+  public void dualPathModel() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("org/graphwalker/java/test/DualPathModel.json"));
     Executor executor = new TestExecutor(contexts);
     JSONObject results = executor.execute(true).getResults();

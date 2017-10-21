@@ -169,7 +169,7 @@ public class TestExecutorTest {
   }
 
   @Test(expected = TestExecutionException.class)
-  public void ThrowExceptionExecutor() throws IOException {
+  public void throwExceptionExecutor() throws IOException {
     Executor executor = new TestExecutor(ThrowExceptionTest.class);
     executor.execute();
   }

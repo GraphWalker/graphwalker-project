@@ -69,7 +69,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
   HttpResponse response;
 
   @BeforeExecution
-  public void StartServer() throws Exception {
+  public void startServer() throws Exception {
     ResourceConfig rc = new DefaultResourceConfig();
     rest = new Restful(null, true, true);
     rc.getSingletons().add(rest);
@@ -82,13 +82,13 @@ public class RestTest extends ExecutionContext implements RestFlow {
   }
 
   @AfterExecution
-  public void StopServer() {
+  public void stopServer() {
     logger.debug("Stopping RestFul service");
     server.stop();
   }
 
   @Test
-  public void TestRun() throws IOException {
+  public void testRun() throws IOException {
     TestExecutor testExecutor = new TestExecutor(getClass());
     try {
       testExecutor.execute(false);

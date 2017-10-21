@@ -82,7 +82,7 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void SmallModelWithSimpleMachine() throws IOException {
+  public void smallModelWithSimpleMachine() throws IOException {
     SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
@@ -90,7 +90,7 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void LoginWithSimpleMachine() throws IOException {
+  public void loginWithSimpleMachine() throws IOException {
     SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/Login.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
@@ -230,14 +230,14 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void PetClinic() throws IOException {
+  public void petClinic() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/petClinic.json"));
     Assert.assertNotNull(contexts);
     Assert.assertThat(contexts.size(), is(5));
   }
 
   @Test
-  public void PetClinicWithSimpleMachine() throws IOException {
+  public void petClinicWithSimpleMachine() throws IOException {
     SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/petClinic.json")));
     while (machine.hasNextStep()) {
       Element e = machine.getNextStep().getCurrentElement();
