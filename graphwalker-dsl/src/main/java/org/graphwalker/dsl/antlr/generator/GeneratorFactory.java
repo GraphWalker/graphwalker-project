@@ -26,7 +26,8 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.graphwalker.core.generator.PathGenerator;
@@ -44,7 +45,7 @@ public class GeneratorFactory {
   }
 
   public static PathGenerator parse(String str) {
-    ANTLRInputStream inputStream = new ANTLRInputStream(str);
+    CharStream inputStream = CharStreams.fromString(str);
     LogicalLexer lexer = new LogicalLexer(inputStream);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     GeneratorParser parser = new GeneratorParser(tokens);

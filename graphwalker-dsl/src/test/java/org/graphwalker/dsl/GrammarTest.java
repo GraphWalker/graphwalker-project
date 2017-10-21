@@ -30,7 +30,8 @@ import static org.hamcrest.core.Is.is;
 
 import java.util.Arrays;
 import java.util.List;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.dsl.generator.GeneratorParser;
 import org.graphwalker.dsl.generator.LogicalLexer;
@@ -65,8 +66,8 @@ public class GrammarTest {
 
   @Test
   public void testCLI() {
-    for (String generator : generators) {
-      ANTLRInputStream inputStream = new ANTLRInputStream(generator);
+    for (String generator: generators) {
+      CharStream inputStream = CharStreams.fromString(generator);
       LogicalLexer lexer = new LogicalLexer(inputStream);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       GeneratorParser parser = new GeneratorParser(tokens);
