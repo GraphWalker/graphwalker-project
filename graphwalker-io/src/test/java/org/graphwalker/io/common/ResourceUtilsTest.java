@@ -35,6 +35,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by krikar on 2015-11-04.
  */
@@ -46,17 +49,17 @@ public class ResourceUtilsTest {
   @Test
   public void getResourceAsFile_asFile() throws IOException {
     File file = ResourceUtils.getResourceAsFile(testFolder.newFile("getResourceAsFile_asFile").toString());
-    Assert.assertNotNull(file);
-    Assert.assertTrue(file.exists());
-    Assert.assertTrue(file.canRead());
+    assertNotNull(file);
+    assertTrue(file.exists());
+    assertTrue(file.canRead());
   }
 
   @Test
   public void getResourceAsFile_asResource() {
     File file = ResourceUtils.getResourceAsFile("json/example.json");
-    Assert.assertNotNull(file);
-    Assert.assertTrue(file.exists());
-    Assert.assertTrue(file.canRead());
+    assertNotNull(file);
+    assertTrue(file.exists());
+    assertTrue(file.canRead());
   }
 
   @Test(expected = ResourceNotFoundException.class)
@@ -67,7 +70,7 @@ public class ResourceUtilsTest {
   @Test
   public void getResourceAsStream() {
     InputStream stream = ResourceUtils.getResourceAsStream("json/example.json");
-    Assert.assertNotNull(stream);
+    assertNotNull(stream);
   }
 
   @Test(expected = ResourceNotFoundException.class)
@@ -77,7 +80,7 @@ public class ResourceUtilsTest {
 
   @Test
   public void isDirectory() {
-    Assert.assertTrue(ResourceUtils.isDirectory(Paths.get(testFolder.getRoot().getPath())));
+    assertTrue(ResourceUtils.isDirectory(Paths.get(testFolder.getRoot().getPath())));
   }
 
   @Test

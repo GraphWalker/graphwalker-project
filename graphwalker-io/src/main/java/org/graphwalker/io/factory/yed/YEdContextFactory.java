@@ -29,7 +29,8 @@ package org.graphwalker.io.factory.yed;
 import com.yworks.xml.graphml.*;
 import com.yworks.xml.graphml.impl.EdgeLabelTypeImpl;
 import com.yworks.xml.graphml.impl.NodeLabelTypeImpl;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.xmlbeans.XmlException;
@@ -543,7 +544,7 @@ public final class YEdContextFactory implements ContextFactory {
   }
 
   private CommonTokenStream getTokenStream(String label) {
-    ANTLRInputStream inputStream = new ANTLRInputStream(label);
+    CharStream inputStream = CharStreams.fromString(label);
     YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
     lexer.removeErrorListeners();
     lexer.addErrorListener(YEdDescriptiveErrorListener.INSTANCE);

@@ -26,11 +26,7 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +36,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.antlr.v4.runtime.ANTLRInputStream;
+
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FilenameUtils;
@@ -48,8 +45,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.dsl.antlr.dot.AntlrDotListener;
+import org.graphwalker.dsl.antlr.dot.DotModelListener;
 import org.graphwalker.dsl.dot.DOTLexer;
 import org.graphwalker.dsl.dot.DOTParser;
 import org.graphwalker.io.common.ResourceUtils;
@@ -80,11 +76,11 @@ public final class DotContextFactory implements ContextFactory {
   @Override
   public List<Context> create(Path path) throws IOException {
     List<Context> contexts = new ArrayList<>();
-
     if (ResourceUtils.isDirectory(path)) {
-      DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
-      for (Path file : directoryStream) {
-        contexts.add(read(file));
+      try (DirectoryStream<Path> directory = Files.newDirectoryStream(path)) {
+        for (Path file : directory) {
+          contexts.add(read(file));
+        }
       }
     } else {
       contexts.add(read(path));
@@ -94,55 +90,50 @@ public final class DotContextFactory implements ContextFactory {
 
   private Context read(Path path) {
     Context context = new DotContext();
-    Model model = new Model();
+    // Model model = new Model();
+    try (InputStream inputStream = ResourceUtils.getResourceAsStream(path.toString())) {
+      DOTLexer lexer = new DOTLexer(CharStreams.fromStream(inputStream));
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-    StringBuilder out = new StringBuilder();
-    String line;
-    try (BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getResourceAsStream(path.toString())))) {
-      while ((line = reader.readLine()) != null) {
-        out.append(line);
+      DOTParser parser = new DOTParser(tokens);
+      ParseTreeWalker walker = new ParseTreeWalker();
+      DotModelListener modelListener = new DotModelListener();
+      walker.walk(modelListener, parser.graph());
+      final Model model = modelListener.getModel();
+      model.getEdges().stream()
+        .filter(edge -> edge.getSourceVertex() == null)
+        .forEach(context::setNextElement);
+      context.setModel(model.build());
+      /*
+      Edge startEdge = null;
+      for (Vertex vertex : listener.getVertices().values()) {
+        if (!"START".equalsIgnoreCase(vertex.getName())) {
+          model.addVertex(vertex);
+        }
       }
+      for (Edge edge : listener.getEdges()) {
+        if (edge.getSourceVertex() != null && "START".equalsIgnoreCase(edge.getSourceVertex().getName())) {
+          edge.setSourceVertex(null);
+          startEdge = edge;
+        }
+        model.addEdge(edge);
+      }
+
+      model.setName(FilenameUtils.removeExtension(path.getFileName().toString()));
+      context.setModel(model.build());
+      if (null != startEdge) {
+        context.setNextElement(startEdge);
+      } else {
+        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
+          if (context.getModel().getOutEdges(vertex).isEmpty()) {
+            context.setNextElement(vertex);
+          }
+        }
+      }
+      */
     } catch (IOException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("Could not read the file.");
-    }
-    logger.debug(out.toString());
-
-    DOTLexer lexer = new DOTLexer(new ANTLRInputStream(out.toString()));
-    CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-    DOTParser parser = new DOTParser(tokens);
-    ParseTreeWalker walker = new ParseTreeWalker();
-
-    AntlrDotListener listener = new AntlrDotListener();
-    walker.walk(listener, parser.graph());
-
-    Edge startEdge = null;
-    for (Vertex vertex : listener.getVertices().values()) {
-      if (!vertex.getName().equalsIgnoreCase("START")) {
-        model.addVertex(vertex);
-      }
-    }
-    for (Edge edge : listener.getEdges()) {
-      if (edge.getSourceVertex().getName() != null &&
-          edge.getSourceVertex().getName().equalsIgnoreCase("START")) {
-        edge.setSourceVertex(null);
-        startEdge = edge;
-      }
-      model.addEdge(edge);
-    }
-
-    model.setName(FilenameUtils.removeExtension(path.getFileName().toString()));
-    context.setModel(model.build());
-    if (null != startEdge) {
-      context.setNextElement(startEdge);
-    } else {
-      for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-        if (context.getModel().getOutEdges(vertex).isEmpty()) {
-          context.setNextElement(vertex);
-        }
-      }
-
     }
     return context;
   }
