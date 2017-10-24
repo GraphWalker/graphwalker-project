@@ -27,6 +27,7 @@ package org.graphwalker.io.xmlbeans.yed;
  */
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import org.apache.xmlbeans.XmlException;
@@ -42,11 +43,11 @@ public class XMLBeansTest {
   @Test
   public void doTest() throws IOException, XmlException {
     GraphmlDocument graphmlDocument = GraphmlDocument.Factory.parse(getClass().getResourceAsStream("/graphml/UC01.graphml"));
-    Assert.assertThat(graphmlDocument.selectPath(
+    assertThat(graphmlDocument.selectPath(
         "declare namespace xq='http://graphml.graphdrawing.org/xmlns';" +
         "$this/xq:graphml/xq:graph/xq:node"
     ).length, is(8));
-    Assert.assertThat(graphmlDocument.selectPath(
+    assertThat(graphmlDocument.selectPath(
         "declare namespace xq='http://graphml.graphdrawing.org/xmlns';" +
         "$this/xq:graphml/xq:graph/xq:edge"
     ).length, is(12));

@@ -188,25 +188,25 @@ public class CLI {
       if (jc.getParsedCommand() != null) {
         if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
           command = Command.OFFLINE;
-          RunCommandOffline();
+          runCommandOffline();
         } else if (jc.getParsedCommand().equalsIgnoreCase("online")) {
           command = Command.ONLINE;
-          RunCommandOnline();
+          runCommandOnline();
         } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
           command = Command.METHODS;
-          RunCommandMethods();
+          runCommandMethods();
         } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
           command = Command.REQUIREMENTS;
-          RunCommandRequirements();
+          runCommandRequirements();
         } else if (jc.getParsedCommand().equalsIgnoreCase("convert")) {
           command = Command.CONVERT;
-          RunCommandConvert();
+          runCommandConvert();
         } else if (jc.getParsedCommand().equalsIgnoreCase("source")) {
           command = Command.SOURCE;
-          RunCommandSource();
+          runCommandSource();
         } else if (jc.getParsedCommand().equalsIgnoreCase("check")) {
           command = Command.SOURCE;
-          RunCommandCheck();
+          runCommandCheck();
         }
       }
 
@@ -251,7 +251,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandCheck() throws Exception, UnsupportedFileFormat {
+  private void runCommandCheck() throws Exception, UnsupportedFileFormat {
     List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
     if (check.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
@@ -267,7 +267,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandRequirements() throws Exception, UnsupportedFileFormat {
+  private void runCommandRequirements() throws Exception, UnsupportedFileFormat {
     SortedSet<String> reqs = new TreeSet<>();
     List<Context> contexts = getContexts(requirements.model.iterator());
     if (requirements.blocked) {
@@ -284,7 +284,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandMethods() throws Exception, UnsupportedFileFormat {
+  private void runCommandMethods() throws Exception, UnsupportedFileFormat {
     SortedSet<String> names = new TreeSet<>();
     List<Context> contexts = getContexts(methods.model.iterator());
     if (methods.blocked) {
@@ -309,7 +309,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOnline() throws Exception, UnsupportedFileFormat {
+  private void runCommandOnline() throws Exception, UnsupportedFileFormat {
     if (online.service.equalsIgnoreCase(Online.SERVICE_WEBSOCKET)) {
       WebSocketServer GraphWalkerWebSocketServer = new WebSocketServer(online.port);
       try {
@@ -356,7 +356,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandConvert() throws Exception, UnsupportedFileFormat {
+  private void runCommandConvert() throws Exception, UnsupportedFileFormat {
     String inputFileName = convert.input;
 
     ContextFactory inputFactory = getContextFactory(inputFileName);
@@ -376,7 +376,7 @@ public class CLI {
     System.out.println(outputFactory.getAsString(contexts));
   }
 
-  private void RunCommandSource() throws Exception, UnsupportedFileFormat {
+  private void runCommandSource() throws Exception, UnsupportedFileFormat {
     String modelFileName = source.input.get(0);
     String templateFileName = source.input.get(1);
 
@@ -442,7 +442,7 @@ public class CLI {
     }
   }
 
-  private void RunCommandOffline() throws Exception, UnsupportedFileFormat {
+  private void runCommandOffline() throws Exception, UnsupportedFileFormat {
     if (offline.model.size() > 0) {
       List<Context> contexts = getContextsWithPathGenerators(offline.model.iterator());
       if (offline.blocked) {

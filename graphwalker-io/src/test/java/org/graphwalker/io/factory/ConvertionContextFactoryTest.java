@@ -27,6 +27,8 @@ package org.graphwalker.io.factory;
  */
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,46 +60,39 @@ public class ConvertionContextFactoryTest {
   @Test
   public void convertJsonToJson() throws IOException {
     List<Context> jsonContexts = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContexts);
-    Assert.assertThat(jsonContexts.size(), is(1));
-
+    assertNotNull(jsonContexts);
+    assertThat(jsonContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new JsonContextFactory().write(jsonContexts, tmpFolder);
-
     List<Context> jsonReadContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(jsonReadContexts);
-    Assert.assertThat(jsonReadContexts.size(), is(1));
+    assertNotNull(jsonReadContexts);
+    assertThat(jsonReadContexts.size(), is(1));
     Context jsonReadContext = jsonReadContexts.get(0);
-
-    Assert.assertThat(jsonContexts.get(0).getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
-    Assert.assertThat(jsonContexts.get(0).getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
+    assertThat(jsonContexts.get(0).getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
+    assertThat(jsonContexts.get(0).getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
   }
 
   @Test
   public void convertJsonToGraphml() throws IOException {
     List<Context> jsonContexts = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContexts);
-    Assert.assertThat(jsonContexts.size(), is(1));
-
+    assertNotNull(jsonContexts);
+    assertThat(jsonContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new YEdContextFactory().write(jsonContexts, tmpFolder);
-
     List<Context> yedReadContexts = new YEdContextFactory().create(tmpFolder);
-    Assert.assertNotNull(yedReadContexts);
-    Assert.assertThat(yedReadContexts.size(), is(1));
+    assertNotNull(yedReadContexts);
+    assertThat(yedReadContexts.size(), is(1));
     Context yedReadContext = yedReadContexts.get(0);
-
     // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
-    Assert.assertThat(jsonContexts.get(0).getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
-    Assert.assertThat(jsonContexts.get(0).getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
+    assertThat(jsonContexts.get(0).getModel().getEdges().size(), is(yedReadContext.getModel().getEdges().size() + 1));
+    assertThat(jsonContexts.get(0).getModel().getVertices().size(), is(yedReadContext.getModel().getVertices().size()));
   }
 
   @Test
   public void convertJsonToJava() throws IOException {
     List<Context> jsonContexts = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContexts);
-    Assert.assertThat(jsonContexts.size(), is(1));
-
+    assertNotNull(jsonContexts);
+    assertThat(jsonContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new JavaContextFactory().write(jsonContexts, tmpFolder);
   }
@@ -105,107 +100,88 @@ public class ConvertionContextFactoryTest {
   @Test
   public void convertJsonToDot() throws IOException {
     List<Context> jsonContexts = new JsonContextFactory().create(Paths.get("json/example.json"));
-    Assert.assertNotNull(jsonContexts);
-    Assert.assertThat(jsonContexts.size(), is(1));
-
+    assertNotNull(jsonContexts);
+    assertThat(jsonContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new DotContextFactory().write(jsonContexts, tmpFolder);
-
     List<Context> dotReadContexts = new DotContextFactory().create(tmpFolder);
-    Assert.assertNotNull(dotReadContexts);
-
-    Assert.assertThat(jsonContexts.get(0).getModel().getEdges().size(), is(dotReadContexts.get(0).getModel().getEdges().size()));
-    Assert.assertThat(jsonContexts.get(0).getModel().getVertices().size(), is(dotReadContexts.get(0).getModel().getVertices().size()));
+    assertNotNull(dotReadContexts);
+    assertThat(jsonContexts.get(0).getModel().getEdges().size(), is(dotReadContexts.get(0).getModel().getEdges().size()));
+    assertThat(jsonContexts.get(0).getModel().getVertices().size(), is(dotReadContexts.get(0).getModel().getVertices().size()));
   }
 
   @Test
   public void convertGraphmlToGraphml() throws IOException {
     List<Context> yEdContexts = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
-    Assert.assertNotNull(yEdContexts);
-    Assert.assertThat(yEdContexts.size(), is(1));
-
+    assertNotNull(yEdContexts);
+    assertThat(yEdContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new YEdContextFactory().write(yEdContexts, tmpFolder);
-
     List<Context> yedReadContexts = new YEdContextFactory().create(tmpFolder);
-    Assert.assertNotNull(yedReadContexts);
-    Assert.assertThat(yEdContexts.size(), is(1));
-
+    assertNotNull(yedReadContexts);
+    assertThat(yEdContexts.size(), is(1));
     // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
-    Assert.assertThat(yEdContexts.get(0).getModel().getEdges().size(), is(yedReadContexts.get(0).getModel().getEdges().size() + 1));
-    Assert.assertThat(yEdContexts.get(0).getModel().getVertices().size(), is(yedReadContexts.get(0).getModel().getVertices().size()));
+    assertThat(yEdContexts.get(0).getModel().getEdges().size(), is(yedReadContexts.get(0).getModel().getEdges().size() + 1));
+    assertThat(yEdContexts.get(0).getModel().getVertices().size(), is(yedReadContexts.get(0).getModel().getVertices().size()));
   }
-
 
   @Test
   public void convertGraphmlToDot() throws IOException {
     List<Context> yEdContexts = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
-    Assert.assertNotNull(yEdContexts);
-    Assert.assertThat(yEdContexts.size(), is(1));
-
+    assertNotNull(yEdContexts);
+    assertThat(yEdContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new DotContextFactory().write(yEdContexts, tmpFolder);
-
     List<Context> dotReadContexts = new DotContextFactory().create(tmpFolder);
-    Assert.assertNotNull(dotReadContexts);
-    Assert.assertThat(dotReadContexts.size(), is(1));
-
-    Assert.assertThat(yEdContexts.get(0).getModel().getEdges().size(), is(dotReadContexts.get(0).getModel().getEdges().size()));
-    Assert.assertThat(yEdContexts.get(0).getModel().getVertices().size(), is(dotReadContexts.get(0).getModel().getVertices().size()));
+    assertNotNull(dotReadContexts);
+    assertThat(dotReadContexts.size(), is(1));
+    assertThat(yEdContexts.get(0).getModel().getEdges().size(), is(dotReadContexts.get(0).getModel().getEdges().size()));
+    assertThat(yEdContexts.get(0).getModel().getVertices().size(), is(dotReadContexts.get(0).getModel().getVertices().size()));
   }
 
   @Test
   public void convertGraphmlToJava() throws IOException {
     List<Context> yEdContexts = new YEdContextFactory().create(Paths.get("graphml/UC01_GW2.graphml"));
-    Assert.assertNotNull(yEdContexts);
-    Assert.assertThat(yEdContexts.size(), is(1));
-
+    assertNotNull(yEdContexts);
+    assertThat(yEdContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new JavaContextFactory().write(yEdContexts, tmpFolder);
-
-    Assert.assertThat("File doesn't exist", new File(tmpFolder.toString() + "/UC01_GW2.java").exists(), is(true));
+    assertThat("File doesn't exist", new File(tmpFolder.toString() + "/UC01_GW2.java").exists(), is(true));
   }
 
   @Test
   public void graphml2Json() throws IOException {
     List<Context> yEdContexts = new YEdContextFactory().create(Paths.get("graphml/PetClinicSharedState.graphml"));
-    Assert.assertNotNull(yEdContexts);
-    Assert.assertThat(yEdContexts.size(), is(1));
-
+    assertNotNull(yEdContexts);
+    assertThat(yEdContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new JsonContextFactory().write(yEdContexts, tmpFolder);
-
     List<Context> jsonReadContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(jsonReadContexts);
-    Assert.assertThat(jsonReadContexts.size(), is(1));
-
-    Assert.assertThat(yEdContexts.get(0).getModel().getEdges().size(), is(jsonReadContexts.get(0).getModel().getEdges().size()));
-    Assert.assertThat(yEdContexts.get(0).getModel().getVertices().size(), is(jsonReadContexts.get(0).getModel().getVertices().size()));
+    assertNotNull(jsonReadContexts);
+    assertThat(jsonReadContexts.size(), is(1));
+    assertThat(yEdContexts.get(0).getModel().getEdges().size(), is(jsonReadContexts.get(0).getModel().getEdges().size()));
+    assertThat(yEdContexts.get(0).getModel().getVertices().size(), is(jsonReadContexts.get(0).getModel().getVertices().size()));
   }
 
   @Test
   public void convertDotToDot() throws IOException {
     List<Context> dotContexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-    Assert.assertNotNull(dotContexts);
-    Assert.assertThat(dotContexts.size(), is(1));
-
+    assertNotNull(dotContexts);
+    assertThat(dotContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new DotContextFactory().write(dotContexts, tmpFolder);
-
     List<Context> dotReadContexts = new DotContextFactory().create(tmpFolder);
-    Assert.assertNotNull(dotReadContexts);
-    Assert.assertThat(dotReadContexts.size(), is(1));
-
-    Assert.assertThat(dotContexts.get(0).getModel().getEdges().size(), is(dotReadContexts.get(0).getModel().getEdges().size()));
-    Assert.assertThat(dotContexts.get(0).getModel().getVertices().size(), is(dotReadContexts.get(0).getModel().getVertices().size()));
+    assertNotNull(dotReadContexts);
+    assertThat(dotReadContexts.size(), is(1));
+    assertThat(dotContexts.get(0).getModel().getEdges().size(), is(dotReadContexts.get(0).getModel().getEdges().size()));
+    assertThat(dotContexts.get(0).getModel().getVertices().size(), is(dotReadContexts.get(0).getModel().getVertices().size()));
   }
 
   @Test
   public void convertDotToJava() throws IOException {
     List<Context> dotContexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-    Assert.assertNotNull(dotContexts);
-    Assert.assertThat(dotContexts.size(), is(1));
-
+    assertNotNull(dotContexts);
+    assertThat(dotContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new JavaContextFactory().write(dotContexts, tmpFolder);
   }
@@ -213,36 +189,30 @@ public class ConvertionContextFactoryTest {
   @Test
   public void convertDotToGraphml() throws IOException {
     List<Context> dotContexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-    Assert.assertNotNull(dotContexts);
-    Assert.assertThat(dotContexts.size(), is(1));
-
+    assertNotNull(dotContexts);
+    assertThat(dotContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new YEdContextFactory().write(dotContexts, tmpFolder);
-
     List<Context> yedReadContexts = new YEdContextFactory().create(tmpFolder);
-    Assert.assertNotNull(yedReadContexts);
-    Assert.assertThat(dotContexts.size(), is(1));
-
+    assertNotNull(yedReadContexts);
+    assertThat(dotContexts.size(), is(1));
     // Since edges without source vertex is not allowed in yed/graphml, the yedReadContext will be one edge short
-    Assert.assertThat(dotContexts.get(0).getModel().getEdges().size(), is(yedReadContexts.get(0).getModel().getEdges().size() + 1));
-    Assert.assertThat(dotContexts.get(0).getModel().getVertices().size(), is(yedReadContexts.get(0).getModel().getVertices().size()));
+    assertThat(dotContexts.get(0).getModel().getEdges().size(), is(yedReadContexts.get(0).getModel().getEdges().size() + 1));
+    assertThat(dotContexts.get(0).getModel().getVertices().size(), is(yedReadContexts.get(0).getModel().getVertices().size()));
   }
 
   @Test
   public void convertDotToJson() throws IOException {
     List<Context> dotContexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-    Assert.assertNotNull(dotContexts);
-    Assert.assertThat(dotContexts.size(), is(1));
-
+    assertNotNull(dotContexts);
+    assertThat(dotContexts.size(), is(1));
     Path tmpFolder = testFolder.getRoot().toPath();
     new JsonContextFactory().write(dotContexts, tmpFolder);
-
     List<Context> jsonReadContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(jsonReadContexts);
-    Assert.assertThat(jsonReadContexts.size(), is(1));
+    assertNotNull(jsonReadContexts);
+    assertThat(jsonReadContexts.size(), is(1));
     Context jsonReadContext = jsonReadContexts.get(0);
-
-    Assert.assertThat(dotContexts.get(0).getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
-    Assert.assertThat(dotContexts.get(0).getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
+    assertThat(dotContexts.get(0).getModel().getEdges().size(), is(jsonReadContext.getModel().getEdges().size()));
+    assertThat(dotContexts.get(0).getModel().getVertices().size(), is(jsonReadContext.getModel().getVertices().size()));
   }
 }

@@ -30,7 +30,8 @@ import static org.hamcrest.core.Is.is;
 
 import java.util.Arrays;
 import java.util.List;
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.dsl.yed.YEdEdgeParser;
 import org.graphwalker.dsl.yed.YEdLabelLexer;
@@ -119,11 +120,11 @@ public class GrammarTest {
   @Test
   public void testVertexParser() {
     for (String vertex : vertices) {
-      ANTLRInputStream inputStream = new ANTLRInputStream(vertex);
+      CharStream inputStream = CharStreams.fromString(vertex);
       YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       YEdVertexParser parser = new YEdVertexParser(tokens);
-      YEdVertexParser.ParseContext context = parser.parse();
+      parser.parse();
       Assert.assertThat("Could not parse: " + vertex, parser.getNumberOfSyntaxErrors(), is(0));
     }
   }
@@ -131,11 +132,11 @@ public class GrammarTest {
   @Test
   public void testEdgeParser() {
     for (String edge : edges) {
-      ANTLRInputStream inputStream = new ANTLRInputStream(edge);
+      CharStream inputStream = CharStreams.fromString(edge);
       YEdLabelLexer lexer = new YEdLabelLexer(inputStream);
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       YEdEdgeParser parser = new YEdEdgeParser(tokens);
-      YEdEdgeParser.ParseContext context = parser.parse();
+      parser.parse();
       Assert.assertThat("Could not parse: " + edge, parser.getNumberOfSyntaxErrors(), is(0));
     }
   }

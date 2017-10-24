@@ -112,7 +112,7 @@ public class LoginCrashSharedStateModelTest {
 
 
   //Test
-  public void ShortestAllPathEdgeCoverage() throws Exception {
+  public void shortestAllPathEdgeCoverage() throws Exception {
     List<Context> contexts = new ArrayList<>();
     contexts.add(new TestExecutionContext(loginModel, new ShortestAllPaths(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
     contexts.add(new TestExecutionContext(crashModel, new ShortestAllPaths(new EdgeCoverage(100))));
@@ -124,7 +124,7 @@ public class LoginCrashSharedStateModelTest {
   }
 
   //Test
-  public void ShortestAllPathEdgeAndVertexCoverage() throws Exception {
+  public void shortestAllPathEdgeAndVertexCoverage() throws Exception {
     CombinedCondition combinedCondition = new CombinedCondition();
     combinedCondition.addStopCondition(new EdgeCoverage(100));
     combinedCondition.addStopCondition(new VertexCoverage(100));
@@ -140,7 +140,7 @@ public class LoginCrashSharedStateModelTest {
   }
 
   //Test
-  public void ShortestAllPathEdgeOrVertexCoverage() throws Exception {
+  public void shortestAllPathEdgeOrVertexCoverage() throws Exception {
     AlternativeCondition alternativeCondition = new AlternativeCondition();
     alternativeCondition.addStopCondition(new EdgeCoverage(100));
     alternativeCondition.addStopCondition(new VertexCoverage(100));
@@ -156,7 +156,7 @@ public class LoginCrashSharedStateModelTest {
   }
 
   //Test
-  public void AStarPathReachedEdgeAndReachedVertex() throws Exception {
+  public void aStarPathReachedEdgeAndReachedVertex() throws Exception {
     List<Context> contexts = new ArrayList<>();
     contexts.add(new TestExecutionContext(loginModel, new AStarPath(new ReachedEdge("e_RememberMe"))).setNextElement(v_ClientNotRunning));
     contexts.add(new TestExecutionContext(crashModel, new AStarPath(new ReachedVertex("v_CrashDumpFilesGenerated"))));
@@ -166,7 +166,7 @@ public class LoginCrashSharedStateModelTest {
       machine.getNextStep();
     }
 
-    List<Element> expectedPath = Arrays.<Element>asList(
+    List<Element> expectedPath = Arrays.asList(
         v_ClientNotRunning.build(),
         e_StartClient_1.build(),
         v_LoginPrompted.build(),
@@ -181,7 +181,7 @@ public class LoginCrashSharedStateModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathEdgeCoverage() throws Exception {
+  public void randomPathEdgeCoverage() throws Exception {
     List<Context> contexts = new ArrayList<>();
     contexts.add(new TestExecutionContext(loginModel, new RandomPath(new EdgeCoverage(100))).setNextElement(v_ClientNotRunning));
     contexts.add(new TestExecutionContext(crashModel, new RandomPath(new EdgeCoverage(100))));
@@ -196,7 +196,7 @@ public class LoginCrashSharedStateModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathVertexCoverage() throws Exception {
+  public void randomPathVertexCoverage() throws Exception {
     List<Context> contexts = new ArrayList<>();
     contexts.add(new TestExecutionContext(loginModel, new RandomPath(new VertexCoverage(100))).setNextElement(v_ClientNotRunning));
     contexts.add(new TestExecutionContext(crashModel, new RandomPath(new VertexCoverage(100))));
@@ -211,7 +211,7 @@ public class LoginCrashSharedStateModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathEdgeAndVertexCoverage() throws Exception {
+  public void randomPathEdgeAndVertexCoverage() throws Exception {
     CombinedCondition combinedCondition = new CombinedCondition();
     combinedCondition.addStopCondition(new EdgeCoverage(100));
     combinedCondition.addStopCondition(new VertexCoverage(100));
@@ -230,7 +230,7 @@ public class LoginCrashSharedStateModelTest {
    * Should not throw any exceptions or end up in some infinite loop
    */
   @Test
-  public void RandomPathEdgeOrVertexCoverage() throws Exception {
+  public void randomPathEdgeOrVertexCoverage() throws Exception {
     AlternativeCondition alternativeCondition = new AlternativeCondition();
     alternativeCondition.addStopCondition(new EdgeCoverage(100));
     alternativeCondition.addStopCondition(new VertexCoverage(100));

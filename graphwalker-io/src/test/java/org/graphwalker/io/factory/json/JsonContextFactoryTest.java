@@ -27,6 +27,9 @@ package org.graphwalker.io.factory.json;
  */
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,6 +42,7 @@ import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
@@ -67,22 +71,22 @@ public class JsonContextFactoryTest {
   @Test
   public void smallModel() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/SmallModel.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
 
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(4));
 
-    Assert.assertThat(context.getModel().findVertices("v_VerifySomeAction").get(0).getName(), is("v_VerifySomeAction"));
-    Assert.assertThat(context.getModel().findVertices("v_VerifySomeAction").get(0).getId(), is("n0"));
+    assertThat(context.getModel().findVertices("v_VerifySomeAction").get(0).getName(), is("v_VerifySomeAction"));
+    assertThat(context.getModel().findVertices("v_VerifySomeAction").get(0).getId(), is("n0"));
 
-    Assert.assertThat(context.getModel().findVertices("v_VerifySomeOtherAction").get(0).getName(), is("v_VerifySomeOtherAction"));
-    Assert.assertThat(context.getModel().findVertices("v_VerifySomeOtherAction").get(0).getId(), is("n1"));
+    assertThat(context.getModel().findVertices("v_VerifySomeOtherAction").get(0).getName(), is("v_VerifySomeOtherAction"));
+    assertThat(context.getModel().findVertices("v_VerifySomeOtherAction").get(0).getId(), is("n1"));
   }
 
   @Test
-  public void SmallModelWithSimpleMachine() throws IOException {
+  public void smallModelWithSimpleMachine() throws IOException {
     SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/SmallModel.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
@@ -90,7 +94,7 @@ public class JsonContextFactoryTest {
   }
 
   @Test
-  public void LoginWithSimpleMachine() throws IOException {
+  public void loginWithSimpleMachine() throws IOException {
     SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/Login.json")));
     while (machine.hasNextStep()) {
       logger.debug(machine.getNextStep().getCurrentElement().getName());
@@ -100,32 +104,32 @@ public class JsonContextFactoryTest {
   @Test
   public void requirement() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/UC01.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
 
-    Assert.assertThat(context.getModel().findVertices("v_BaseURL").get(0).getRequirements().size(), is(1));
+    assertThat(context.getModel().findVertices("v_BaseURL").get(0).getRequirements().size(), is(1));
     Requirement requirement = context.getModel().findVertices("v_BaseURL").get(0).getRequirements().iterator().next();
-    Assert.assertThat(requirement.getKey(), is("UC01 2.2.1"));
+    assertThat(requirement.getKey(), is("UC01 2.2.1"));
   }
 
   @Test
   public void property() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/UC01.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
 
-    Assert.assertThat(context.getModel().findVertices("v_BrowserStarted").get(0).getProperties().size(), is(1));
+    assertThat(context.getModel().findVertices("v_BrowserStarted").get(0).getProperties().size(), is(1));
     String color = (String) context.getModel().findVertices("v_BrowserStarted").get(0).getProperty("color");
-    Assert.assertTrue(color != null);
-    Assert.assertThat(color, is("yellow"));
+    assertTrue(color != null);
+    assertThat(color, is("yellow"));
   }
 
   @Test
   public void acceptJsonTest() {
     ContextFactory factory = new JsonContextFactory();
-    Assert.assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
+    assertTrue(factory.accept(Paths.get("json/SmallModel.json")));
   }
 
   @Test(expected = ContextFactoryException.class)
@@ -152,11 +156,11 @@ public class JsonContextFactoryTest {
     factory.write(writeContexts, tmpFolder);
 
     List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(readContexts);
-    Assert.assertThat(readContexts.size(), is(1));
+    assertNotNull(readContexts);
+    assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
 
-    Assert.assertThat(model.getEdges().get(0).getGuard().getScript(), is(readContext.getModel().getEdges().get(0).getGuard().getScript()));
+    assertThat(model.getEdges().get(0).getGuard().getScript(), is(readContext.getModel().getEdges().get(0).getGuard().getScript()));
   }
 
   @Test
@@ -176,11 +180,11 @@ public class JsonContextFactoryTest {
     factory.write(writeContexts, tmpFolder);
 
     List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(readContexts);
-    Assert.assertThat(readContexts.size(), is(1));
+    assertNotNull(readContexts);
+    assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
 
-    Assert.assertThat(model.getEdges().get(0).getActions().size(), is(readContext.getModel().getEdges().get(0).getActions().size()));
+    assertThat(model.getEdges().get(0).getActions().size(), is(readContext.getModel().getEdges().get(0).getActions().size()));
   }
 
   @Test
@@ -220,24 +224,24 @@ public class JsonContextFactoryTest {
     factory.write(writeContexts, tmpFolder);
 
     List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(readContexts);
-    Assert.assertThat(readContexts.size(), is(1));
+    assertNotNull(readContexts);
+    assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
 
-    Assert.assertThat(model.getVertices().size(), is(readContext.getModel().getVertices().size()));
-    Assert.assertThat(model.getEdges().size(), is(readContext.getModel().getEdges().size()));
-    Assert.assertThat(writeContext.getCurrentElement(), is(readContext.getCurrentElement()));
+    assertThat(model.getVertices().size(), is(readContext.getModel().getVertices().size()));
+    assertThat(model.getEdges().size(), is(readContext.getModel().getEdges().size()));
+    assertThat(writeContext.getCurrentElement(), is(readContext.getCurrentElement()));
   }
 
   @Test
-  public void PetClinic() throws IOException {
+  public void petClinic() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/petClinic.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(5));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(5));
   }
 
   @Test
-  public void PetClinicWithSimpleMachine() throws IOException {
+  public void petClinicWithSimpleMachine() throws IOException {
     SimpleMachine machine = new SimpleMachine(new JsonContextFactory().create(Paths.get("json/petClinic.json")));
     while (machine.hasNextStep()) {
       Element e = machine.getNextStep().getCurrentElement();
@@ -248,25 +252,25 @@ public class JsonContextFactoryTest {
   @Test
   public void acceptDependencyJsonTest() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/DependencyModel.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
 
     Context context = contexts.get(0);
 
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(4));
 
-    Edge.RuntimeEdge e = (Edge.RuntimeEdge) context.getModel().getElementById("e0");
-    Assert.assertThat(e.getDependency(), is(100));
+    RuntimeEdge e = (RuntimeEdge) context.getModel().getElementById("e0");
+    assertThat(e.getDependency(), is(100));
 
-    e = (Edge.RuntimeEdge) context.getModel().getElementById("e1");
-    Assert.assertThat(e.getDependency(), is(100));
+    e = (RuntimeEdge) context.getModel().getElementById("e1");
+    assertThat(e.getDependency(), is(100));
 
-    e = (Edge.RuntimeEdge) context.getModel().getElementById("e2");
-    Assert.assertThat(e.getDependency(), is(85));
+    e = (RuntimeEdge) context.getModel().getElementById("e2");
+    assertThat(e.getDependency(), is(85));
 
-    e = (Edge.RuntimeEdge) context.getModel().getElementById("e3");
-    Assert.assertThat(e.getDependency(), is(15));
+    e = (RuntimeEdge) context.getModel().getElementById("e3");
+    assertThat(e.getDependency(), is(15));
   }
 
   @Test
@@ -286,48 +290,48 @@ public class JsonContextFactoryTest {
     factory.write(writeContexts, tmpFolder);
 
     List<Context> readContexts = new JsonContextFactory().create(tmpFolder);
-    Assert.assertNotNull(readContexts);
-    Assert.assertThat(readContexts.size(), is(1));
+    assertNotNull(readContexts);
+    assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
 
-    Assert.assertThat(model.getEdges().get(0).getWeight(), is(readContext.getModel().getEdges().get(0).getWeight()));
+    assertThat(model.getEdges().get(0).getWeight(), is(readContext.getModel().getEdges().get(0).getWeight()));
   }
 
   @Test
   public void defaultWeightReadJsonTest() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/DependencyModel.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
 
     Context context = contexts.get(0);
 
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(4));
 
-    Edge.RuntimeEdge e = (Edge.RuntimeEdge) context.getModel().getElementById("e0");
-    Assert.assertThat(e.getWeight(), is(0.));
+    RuntimeEdge e = (RuntimeEdge) context.getModel().getElementById("e0");
+    assertThat(e.getWeight(), is(0.));
   }
 
   @Test
   public void readProperties() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/ModelWithProperties.json"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
 
     Context context = contexts.get(0);
 
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(4));
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(4));
 
-    Assert.assertTrue(context.getModel().hasProperty("color"));
-    Assert.assertThat((String) context.getModel().getProperty("color"), is("grey"));
+    assertTrue(context.getModel().hasProperty("color"));
+    assertThat(context.getModel().getProperty("color"), is("grey"));
 
-    Edge.RuntimeEdge e = (Edge.RuntimeEdge) context.getModel().getElementById("e0");
-    Assert.assertTrue(e.hasProperty("color"));
-    Assert.assertThat((String) e.getProperty("color"), is("green"));
+    RuntimeEdge e = (RuntimeEdge) context.getModel().getElementById("e0");
+    assertTrue(e.hasProperty("color"));
+    assertThat(e.getProperty("color"), is("green"));
 
     Vertex.RuntimeVertex v = (Vertex.RuntimeVertex) context.getModel().getElementById("n0");
-    Assert.assertTrue(v.hasProperty("color"));
-    Assert.assertThat((String) v.getProperty("color"), is("yellow"));
+    assertTrue(v.hasProperty("color"));
+    assertThat(v.getProperty("color"), is("yellow"));
   }
 }

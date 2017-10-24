@@ -27,13 +27,15 @@ package org.graphwalker.io.factory.dot;
  */
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.common.ResourceNotFoundException;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -47,145 +49,119 @@ public class DotContextFactoryTest {
   }
 
   @Test
-  public void SimplestGraph() throws IOException {
+  public void simplestGraph() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimplestGraph.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(2));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
-
-    Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
-    Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
-
-    Assert.assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
-    Assert.assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
-
-    Assert.assertNotNull(context.getModel().getEdges().get(0).getId());
-    Assert.assertThat(context.getModel().getEdges().get(0).getSourceVertex().getId(), is("a"));
-    Assert.assertThat(context.getModel().getEdges().get(0).getTargetVertex().getId(), is("b"));
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(1));
+    assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
+    assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
+    assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
+    assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
+    assertNotNull(context.getModel().getEdges().get(0).getId());
+    assertThat(context.getModel().getEdges().get(0).getSourceVertex().getId(), is("a"));
+    assertThat(context.getModel().getEdges().get(0).getTargetVertex().getId(), is("b"));
   }
 
   @Test
   public void g3v2e() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/3v2e.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(3));
-    Assert.assertThat(context.getModel().getEdges().size(), is(2));
+    assertThat(context.getModel().getVertices().size(), is(3));
+    assertThat(context.getModel().getEdges().size(), is(2));
   }
 
   @Test
   public void g3v2e_withEdgeLabel() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/3v2e_withEdgeLabel.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(3));
-    Assert.assertThat(context.getModel().getEdges().size(), is(2));
-
-    Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
-    Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
-
-    Assert.assertThat(context.getModel().findVertices("c").get(0).getName(), is("c"));
-    Assert.assertThat(context.getModel().findVertices("c").get(0).getId(), is("c"));
-
-    Assert.assertThat(context.getModel().findEdges("e1").get(0).getId(), is("e1"));
-    Assert.assertThat(context.getModel().findEdges("e1").get(0).getSourceVertex().getId(), is("a"));
-    Assert.assertThat(context.getModel().findEdges("e1").get(0).getTargetVertex().getId(), is("b"));
-
-    Assert.assertThat(context.getModel().findEdges("e2").get(0).getId(), is("e2"));
-    Assert.assertThat(context.getModel().findEdges("e2").get(0).getSourceVertex().getId(), is("b"));
-    Assert.assertThat(context.getModel().findEdges("e2").get(0).getTargetVertex().getId(), is("c"));
+    assertThat(context.getModel().getVertices().size(), is(3));
+    assertThat(context.getModel().getEdges().size(), is(2));
+    assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
+    assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
+    assertThat(context.getModel().findVertices("c").get(0).getName(), is("c"));
+    assertThat(context.getModel().findVertices("c").get(0).getId(), is("c"));
+    assertThat(context.getModel().findEdges("e1").get(0).getId(), is("e1"));
+    assertThat(context.getModel().findEdges("e1").get(0).getSourceVertex().getId(), is("a"));
+    assertThat(context.getModel().findEdges("e1").get(0).getTargetVertex().getId(), is("b"));
+    assertThat(context.getModel().findEdges("e2").get(0).getId(), is("e2"));
+    assertThat(context.getModel().findEdges("e2").get(0).getSourceVertex().getId(), is("b"));
+    assertThat(context.getModel().findEdges("e2").get(0).getTargetVertex().getId(), is("c"));
   }
 
   @Test
-  public void Simple3v2e() throws IOException {
+  public void simple3v2e() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Simple3v2e.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(3));
-    Assert.assertThat(context.getModel().getEdges().size(), is(2));
-
-    Assert.assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
-    Assert.assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
-
-    Assert.assertThat(context.getModel().findVertices("c").get(0).getName(), is("c"));
-    Assert.assertThat(context.getModel().findVertices("c").get(0).getId(), is("c"));
-
-    Assert.assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
-    Assert.assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
-
-    Assert.assertNull(context.getModel().getEdges().get(0).getName());
-    Assert.assertNotNull(context.getModel().getEdges().get(0).getId());
-
-    Assert.assertNull(context.getModel().getEdges().get(1).getName());
-    Assert.assertNotNull(context.getModel().getEdges().get(1).getId());
+    assertThat(context.getModel().getVertices().size(), is(3));
+    assertThat(context.getModel().getEdges().size(), is(2));
+    assertThat(context.getModel().findVertices("b").get(0).getName(), is("b"));
+    assertThat(context.getModel().findVertices("b").get(0).getId(), is("b"));
+    assertThat(context.getModel().findVertices("c").get(0).getName(), is("c"));
+    assertThat(context.getModel().findVertices("c").get(0).getId(), is("c"));
+    assertThat(context.getModel().findVertices("a").get(0).getName(), is("a"));
+    assertThat(context.getModel().findVertices("a").get(0).getId(), is("a"));
+    assertNull(context.getModel().getEdges().get(0).getName());
+    assertNotNull(context.getModel().getEdges().get(0).getId());
+    assertNull(context.getModel().getEdges().get(1).getName());
+    assertNotNull(context.getModel().getEdges().get(1).getId());
   }
 
-
   @Test
-  public void Simple4v3e() throws IOException {
+  public void simple4v3e() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Simple4v3e.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(4));
-    Assert.assertThat(context.getModel().getEdges().size(), is(3));
+    assertThat(context.getModel().getVertices().size(), is(4));
+    assertThat(context.getModel().getEdges().size(), is(3));
   }
 
   @Test
-  public void SimplestGWGraph() throws IOException {
+  public void simplestGWGraph() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimplestGWGraph.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(1));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
-
-    Assert.assertThat(context.getModel().getVertices().get(0).getName(), is("v1"));
-    Assert.assertThat(context.getModel().getVertices().get(0).getId(), is("v1"));
-
-    Assert.assertThat(context.getModel().getEdges().get(0).getName(), is("e1"));
-    Assert.assertThat(context.getModel().getEdges().get(0).getId(), is("e1"));
+    assertThat(context.getModel().getVertices().size(), is(1));
+    assertThat(context.getModel().getEdges().size(), is(1));
+    assertThat(context.getModel().getVertices().get(0).getName(), is("v1"));
+    assertThat(context.getModel().getVertices().get(0).getId(), is("v1"));
+    assertThat(context.getModel().getEdges().get(0).getName(), is("e1"));
+    assertThat(context.getModel().getEdges().get(0).getId(), is("e1"));
   }
 
   @Test
-  public void SimpleGWGraph() throws IOException {
+  public void simpleGWGraph() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/SimpleGW.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(1));
-    Assert.assertThat(context.getModel().getEdges().size(), is(1));
-
-    Assert.assertThat(context.getModel().getVertices().get(0).getName(), is("v1"));
-    Assert.assertThat(context.getModel().getVertices().get(0).getId(), is("n1"));
-
-    Assert.assertThat(context.getModel().getEdges().get(0).getName(), is("e1"));
-    Assert.assertThat(context.getModel().getEdges().get(0).getId(), is("e1"));
-
-    Assert.assertNull(context.getModel().getEdges().get(0).getSourceVertex());
-    Assert.assertThat(context.getModel().getEdges().get(0).getTargetVertex().getId(), is("n1"));
+    assertThat(context.getModel().getVertices().size(), is(1));
+    assertThat(context.getModel().getEdges().size(), is(1));
+    assertThat(context.getModel().getVertices().get(0).getName(), is("v1"));
+    assertThat(context.getModel().getVertices().get(0).getId(), is("n1"));
+    assertThat(context.getModel().getEdges().get(0).getName(), is("e1"));
+    assertThat(context.getModel().getEdges().get(0).getId(), is("e1"));
+    assertNull(context.getModel().getEdges().get(0).getSourceVertex());
+    assertThat(context.getModel().getEdges().get(0).getTargetVertex().getId(), is("n1"));
   }
 
   @Test
-  public void GW_Login() throws IOException {
+  public void gwLogin() throws IOException {
     List<Context> contexts = new DotContextFactory().create(Paths.get("dot/Login.dot"));
-    Assert.assertNotNull(contexts);
-    Assert.assertThat(contexts.size(), is(1));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
     Context context = contexts.get(0);
-
-    Assert.assertThat(context.getModel().getVertices().size(), is(3));
-    Assert.assertThat(context.getModel().getEdges().size(), is(9));
+    assertThat(context.getModel().getVertices().size(), is(3));
+    assertThat(context.getModel().getEdges().size(), is(9));
   }
 }

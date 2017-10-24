@@ -30,7 +30,6 @@ package org.graphwalker.dsl.antlr.generator;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.CombinedCondition;
 import org.graphwalker.core.condition.DependencyEdgeCoverage;
@@ -51,20 +50,20 @@ import org.graphwalker.core.generator.QuickRandomPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.generator.WeightedRandomPath;
-import org.graphwalker.dsl.generator.Generator_Parser;
-import org.graphwalker.dsl.generator.Generator_ParserBaseListener;
+import org.graphwalker.dsl.generator.GeneratorParser;
+import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
 
 /**
  * Created by krikar on 5/14/14.
  */
-public class GeneratorLoader extends Generator_ParserBaseListener {
+public class GeneratorLoader extends GeneratorParserBaseListener {
 
   StopCondition stopCondition = null;
   ArrayList<PathGenerator> pathGenerators = new ArrayList<>();
   ArrayList<StopCondition> stopConditions = new ArrayList<>();
 
   @Override
-  public void exitBooleanAndExpression(@NotNull Generator_Parser.BooleanAndExpressionContext ctx) {
+  public void exitBooleanAndExpression(GeneratorParser.BooleanAndExpressionContext ctx) {
     if (!ctx.AND().isEmpty()) {
       CombinedCondition combinedCondition = new CombinedCondition();
       stopConditions.forEach(combinedCondition::addStopCondition);
@@ -73,7 +72,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
   }
 
   @Override
-  public void exitStopCondition(@NotNull Generator_Parser.StopConditionContext ctx) {
+  public void exitStopCondition(GeneratorParser.StopConditionContext ctx) {
 
     if (ctx.getChild(0).getText().equalsIgnoreCase("never")) {
       stopConditions.add(new Never());
@@ -105,7 +104,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
   }
 
   @Override
-  public void exitLogicalExpression(@NotNull Generator_Parser.LogicalExpressionContext ctx) {
+  public void exitLogicalExpression(GeneratorParser.LogicalExpressionContext ctx) {
     if (!ctx.OR().isEmpty()) {
       AlternativeCondition alternativeCondition = new AlternativeCondition();
       stopConditions.forEach(alternativeCondition::addStopCondition);
@@ -114,7 +113,7 @@ public class GeneratorLoader extends Generator_ParserBaseListener {
   }
 
   @Override
-  public void exitGenerator(@NotNull Generator_Parser.GeneratorContext ctx) {
+  public void exitGenerator(GeneratorParser.GeneratorContext ctx) {
     if (stopConditions.size() == 1) {
       stopCondition = stopConditions.get(0);
     }

@@ -54,13 +54,13 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
   private int numberOfConnections = 0;
 
   @BeforeExecution
-  public void StartServer() throws Exception {
+  public void startServer() throws Exception {
     server = new WebSocketServer(8887);
     server.start();
   }
 
   @Test
-  public void TestRun() throws IOException {
+  public void testRun() throws IOException {
     TestExecutor testExecutor = new TestExecutor(getClass());
     try {
       testExecutor.execute(false);

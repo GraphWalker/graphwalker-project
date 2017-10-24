@@ -26,14 +26,15 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
-import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.dsl.antlr.DslErrorListner;
 import org.graphwalker.dsl.antlr.DslException;
-import org.graphwalker.dsl.generator.Generator_Parser;
-import org.graphwalker.dsl.generator.Logical_Lexer;
+import org.graphwalker.dsl.generator.GeneratorParser;
+import org.graphwalker.dsl.generator.LogicalLexer;
 
 /**
  * Created by krikar on 5/14/14.
@@ -44,13 +45,13 @@ public class GeneratorFactory {
   }
 
   public static PathGenerator parse(String str) {
-    ANTLRInputStream inputStream = new ANTLRInputStream(str);
-    Logical_Lexer lexer = new Logical_Lexer(inputStream);
+    CharStream inputStream = CharStreams.fromString(str);
+    LogicalLexer lexer = new LogicalLexer(inputStream);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
-    Generator_Parser parser = new Generator_Parser(tokens);
+    GeneratorParser parser = new GeneratorParser(tokens);
     parser.removeErrorListeners();
     parser.addErrorListener(new DslErrorListner());
-    Generator_Parser.ParseContext context = parser.parse();
+    GeneratorParser.ParseContext context = parser.parse();
 
     ParseTreeWalker walker = new ParseTreeWalker();
     GeneratorLoader generatorLoader = new GeneratorLoader();
