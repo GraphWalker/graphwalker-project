@@ -29,7 +29,7 @@ before_install:
 install:
 - sudo apt-get update -qq
 script:
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"]; then mvn clean deploy --settings deploy.xml; else mvn clean test; fi fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"]; then mvn clean package deploy --settings deploy.xml; else mvn clean test; fi fi
 after_success:
 - codecov
 deploy:
