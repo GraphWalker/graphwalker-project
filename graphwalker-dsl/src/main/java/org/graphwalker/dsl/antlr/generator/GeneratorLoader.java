@@ -4,7 +4,7 @@ package org.graphwalker.dsl.antlr.generator;
  * #%L
  * GraphWalker Command Line Interface
  * %%
- * Copyright (C) 2005 - 2014 GraphWalker
+ * Copyright (C) 2005 - 2017 GraphWalker
  * %%
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +26,11 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.graphwalker.core.condition.AlternativeCondition;
-import org.graphwalker.core.condition.CombinedCondition;
-import org.graphwalker.core.condition.DependencyEdgeCoverage;
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.Length;
-import org.graphwalker.core.condition.Never;
-import org.graphwalker.core.condition.ReachedEdge;
-import org.graphwalker.core.condition.ReachedStopCondition;
-import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.condition.RequirementCoverage;
-import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.condition.TimeDuration;
-import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.CombinedPath;
 import org.graphwalker.core.generator.PathGenerator;
@@ -58,9 +46,9 @@ import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
  */
 public class GeneratorLoader extends GeneratorParserBaseListener {
 
-  StopCondition stopCondition = null;
-  ArrayList<PathGenerator> pathGenerators = new ArrayList<>();
-  ArrayList<StopCondition> stopConditions = new ArrayList<>();
+  private StopCondition stopCondition = null;
+  private final List<PathGenerator> pathGenerators = new ArrayList<>();
+  private final List<StopCondition> stopConditions = new ArrayList<>();
 
   @Override
   public void exitBooleanAndExpression(GeneratorParser.BooleanAndExpressionContext ctx) {
@@ -73,32 +61,26 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
 
   @Override
   public void exitStopCondition(GeneratorParser.StopConditionContext ctx) {
-
-    if (ctx.getChild(0).getText().equalsIgnoreCase("never")) {
+    String conditionName = ctx.getChild(0).getText().toLowerCase();
+    if ("never".equals(conditionName)) {
       stopConditions.add(new Never());
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("edge_coverage") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("edgecoverage")) {
+    } else if ("edge_coverage".equals(conditionName) || "edgecoverage".equals(conditionName)) {
       stopConditions.add(new EdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("vertex_coverage") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("vertexcoverage")) {
+    } else if ("vertex_coverage".equals(conditionName) || "vertexcoverage".equals(conditionName)) {
       stopConditions.add(new VertexCoverage(Integer.parseInt(ctx.getChild(2).getText())));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("reached_vertex") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("reachedvertex")) {
+    } else if ("reached_vertex".equals(conditionName) || "reachedvertex".equals(conditionName)) {
       stopConditions.add(new ReachedVertex(ctx.getChild(2).getText()));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("reached_edge") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("reachededge")) {
+    } else if ("reached_shared_state".equals(conditionName) || "reachedsharedstate".equals(conditionName)) {
+      stopConditions.add(new ReachedSharedState(ctx.getChild(2).getText()));
+    } else if ("reached_edge".equals(conditionName) || "reachededge".equals(conditionName)) {
       stopConditions.add(new ReachedEdge(ctx.getChild(2).getText()));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("time_duration") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("timeduration")) {
-      stopConditions
-          .add(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("dependency_edge_coverage") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("dependencyedgecoverage")) {
+    } else if ("time_duration".equals(conditionName) || "timeduration".equals(conditionName)) {
+      stopConditions.add(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
+    } else if ("dependency_edge_coverage".equals(conditionName) || "dependencyedgecoverage".equals(conditionName)) {
       stopConditions.add(new DependencyEdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("requirement_coverage") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("requirementcoverage")) {
+    } else if ("requirement_coverage".equals(conditionName) || "requirementcoverage".equals(conditionName)) {
       stopConditions.add(new RequirementCoverage(Integer.parseInt(ctx.getChild(2).getText())));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("length")) {
+    } else if ("length".equals(conditionName)) {
     	stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
     }
   }
@@ -113,26 +95,20 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
   }
 
   @Override
-  public void exitGenerator(GeneratorParser.GeneratorContext ctx) {
+  public void exitGenerator(GeneratorParser.GeneratorContext context) {
     if (stopConditions.size() == 1) {
       stopCondition = stopConditions.get(0);
     }
-
-    if (ctx.getChild(0).getText().equalsIgnoreCase("random") ||
-        ctx.getChild(0).getText().equalsIgnoreCase("randompath")) {
+    String generatorName = context.getChild(0).getText().toLowerCase();
+    if ("random".equals(generatorName) || "randompath".equals(generatorName)) {
       pathGenerators.add(new RandomPath(stopCondition));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("weighted_random") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("weightedrandompath")) {
+    } else if ("weighted_random".equals(generatorName) || "weightedrandompath".equals(generatorName)) {
       pathGenerators.add(new WeightedRandomPath(stopCondition));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("quick_random") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("quickrandom") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("quickrandompath")) {
+    } else if ("quick_random".equals(generatorName) || "quickrandom".equals(generatorName) || "quickrandompath".equals(generatorName)) {
       pathGenerators.add(new QuickRandomPath(stopCondition));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("a_star") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("astarpath")) {
+    } else if ("a_star".equals(generatorName) || "astarpath".equals(generatorName)) {
       pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
-    } else if (ctx.getChild(0).getText().equalsIgnoreCase("shortest_all_paths") ||
-               ctx.getChild(0).getText().equalsIgnoreCase("shortestallpaths")) {
+    } else if ("shortest_all_paths".equals(generatorName) || "shortestallpaths".equals(generatorName)) {
       pathGenerators.add(new ShortestAllPaths(stopCondition));
     }
     stopConditions.clear();
@@ -144,11 +120,8 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
     } else if (pathGenerators.size() == 1) {
       return pathGenerators.get(0);
     }
-
     CombinedPath combinedPath = new CombinedPath();
-    for (PathGenerator pathGenerator : pathGenerators) {
-      combinedPath.addPathGenerator(pathGenerator);
-    }
+    pathGenerators.forEach(combinedPath::addPathGenerator);
     return combinedPath;
   }
 }
