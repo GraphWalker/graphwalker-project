@@ -70,6 +70,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
     setId(model.getId());
     setName(model.getName());
     setProperties(model.getProperties());
+    setRequirements(model.getRequirements());
     Map<RuntimeVertex, Vertex> cache = new HashMap<>();
     for (RuntimeVertex runtimeVertex : model.getVertices()) {
       Vertex vertex = new Vertex();
