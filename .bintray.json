@@ -9,7 +9,7 @@
   },
   "files": [
     {
-      "includePattern": "graphwalker-cli/target/(graphwalker-.*.jar)",
+      "includePattern": "graphwalker-cli/target/(graphwalker-cli-4.0.0-SNAPSHOT.jar)",
       "uploadPattern": "SNAPSHOTS/$1",
       "matrixParams":
       {
@@ -17,7 +17,7 @@
       }
     },
     {
-      "includePattern": "graphwalker-studio/target/(graphwalker-.*.jar)",
+      "includePattern": "graphwalker-studio/target/(graphwalker-studio-4.0.0-SNAPSHOT.jar)",
       "uploadPattern": "SNAPSHOTS/$1",
       "matrixParams":
       {
