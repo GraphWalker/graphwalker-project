@@ -66,7 +66,7 @@ public class MultipleModelTest {
     MultipleModel_2 model_2 = new MultipleModel_2();
     new TestBuilder()
       .addContext(model_1, MODEL_PATH_1, new AStarPath(new ReachedVertex("B")))
-      .addContext(model_2, MODEL_PATH_2, new AStarPath(new ReachedVertex("D")))
+      .addContext(model_2, MODEL_PATH_2, "a_star(reached_vertex(D))")
       .execute();
     assertTrue(model_1.count >= 2);
     assertTrue(model_2.count >= 1);
