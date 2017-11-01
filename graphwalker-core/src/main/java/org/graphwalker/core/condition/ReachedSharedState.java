@@ -57,6 +57,7 @@ public class ReachedSharedState extends ReachedStopConditionBase {
 
   @Override
   protected void validate(Context context) {
+    super.validate(context);
     if (isNotNull(context) && isNull(context.getModel().getSharedStates(getValue()))) {
       throw new StopConditionException("Shared state not found");
     }

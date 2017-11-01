@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.condition.StopConditionException;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
@@ -424,5 +425,11 @@ public class SimpleMachineTest {
     public void handle(Machine machine, MachineException exception) {
 
     }
+  }
+
+  @Test(expected = StopConditionException.class)
+  public void setReachedStopConditionWithoutModel() throws Exception {
+    Context context = new TestExecutionContext();
+    context.setPathGenerator(new RandomPath(new ReachedVertex("X")));
   }
 }
