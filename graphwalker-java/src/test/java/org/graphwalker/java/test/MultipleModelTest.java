@@ -30,28 +30,45 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.condition.ReachedVertex;
+import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.ContextFactoryScanner;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Kristian Karl
  */
 public class MultipleModelTest {
 
-  public final static Path MODEL_PATH_1 = Paths.get("org/graphwalker/java/test/MultipleModel_1.graphml");
-  public final static Path MODEL_PATH_2 = Paths.get("org/graphwalker/java/test/MultipleModel_2.graphml");
+  private final static Path MODEL_PATH_1 = Paths.get("org/graphwalker/java/test/MultipleModel_1.graphml");
+  private final static Path MODEL_PATH_2 = Paths.get("org/graphwalker/java/test/MultipleModel_2.graphml");
 
   @Test
   public void run() throws IOException {
     MultipleModel_1 model_1 = new MultipleModel_1();
     MultipleModel_2 model_2 = new MultipleModel_2();
-
     new TestBuilder()
         .addContext(model_1.setPathGenerator(new RandomPath(new EdgeCoverage(100))), MODEL_PATH_1)
         .addContext(model_2.setPathGenerator(new RandomPath(new EdgeCoverage(100))), MODEL_PATH_2)
         .execute();
-    Assert.assertTrue(model_1.count >= 4);
-    Assert.assertTrue(model_2.count >= 3);
+    assertTrue(model_1.count >= 4);
+    assertTrue(model_2.count >= 3);
+  }
+
+  @Test
+  public void reachedCondition() throws IOException {
+    MultipleModel_1 model_1 = new MultipleModel_1();
+    MultipleModel_2 model_2 = new MultipleModel_2();
+    new TestBuilder()
+      .addContext(model_1, MODEL_PATH_1, new AStarPath(new ReachedVertex("B")))
+      .addContext(model_2, MODEL_PATH_2, new AStarPath(new ReachedVertex("D")))
+      .execute();
+    assertTrue(model_1.count >= 2);
+    assertTrue(model_2.count >= 1);
   }
 }
