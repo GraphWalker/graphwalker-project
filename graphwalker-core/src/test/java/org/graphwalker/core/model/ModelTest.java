@@ -155,10 +155,18 @@ public class ModelTest {
 
   @Test
   public void recreateModel() throws Exception {
-    Model model1 = new Model().setId("m1").addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
+    Model model1 = new Model()
+      .addAction(new Action("test"))
+      .addRequirement(new Requirement("REQ1"))
+      .setProperty("key", "value").setId("m1")
+      .addEdge(new Edge().setSourceVertex(new Vertex()).setTargetVertex(new Vertex()));
     Model model2 = new Model(model1.build());
-    assertEquals(model1.getId(), model2.getId());
-    assertEquals(model1.getName(), model2.getName());
+    assertThat(model1.getId(), is(model2.getId()));
+    assertThat(model1.getName(), is(model2.getName()));
+    assertThat(model1.getProperties(), is(model2.getProperties()));
+    assertThat(model1.getRequirements(), is(model2.getRequirements()));
+    assertThat(model1.getActions(), is(model2.getActions()));
+    assertThat(model1.build(), is(model2.build()));
   }
 
   @Test

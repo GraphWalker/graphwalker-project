@@ -69,6 +69,9 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
   public Model(RuntimeModel model) {
     setId(model.getId());
     setName(model.getName());
+    setProperties(model.getProperties());
+    setRequirements(model.getRequirements());
+    setActions(model.getActions());
     Map<RuntimeVertex, Vertex> cache = new HashMap<>();
     for (RuntimeVertex runtimeVertex : model.getVertices()) {
       Vertex vertex = new Vertex();
@@ -93,7 +96,6 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       edge.setProperties(runtimeEdge.getProperties());
       this.edges.add(edge);
     }
-    this.actions.addAll(model.getActions());
   }
 
   /**
