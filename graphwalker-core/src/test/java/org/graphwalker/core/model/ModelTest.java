@@ -166,6 +166,7 @@ public class ModelTest {
     assertThat(model1.getProperties(), is(model2.getProperties()));
     assertThat(model1.getRequirements(), is(model2.getRequirements()));
     assertThat(model1.getActions(), is(model2.getActions()));
+    assertThat(model1.build(), is(model2.build()));
   }
 
   @Test
