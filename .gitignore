@@ -32,5 +32,9 @@ amps-standalone/
 #############
 .DS_Store
 
-
+# GraphWalker Studio
+package-lock.json
+bundle.js*
+bundle.css
+vendors.js
 

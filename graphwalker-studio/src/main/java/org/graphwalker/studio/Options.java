@@ -37,10 +37,10 @@ public class Options {
   public boolean version = false;
 
   @Parameter(names = {"--websocket-port", "-w"}, description = "Sets the port of the websocket service")
-  public int wsPort = 9999;
+  public int wsPort = 9991;
 
   @Parameter(names = {"--browser-port", "-b"}, description = "Sets the port of the web server service")
-  public int browserPort = 9090;
+  public int browserPort = 9091;
 
   @Parameter(names = {"--debug", "-d"}, description = "Sets the log level: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Default is OFF")
   public String debug = "OFF";

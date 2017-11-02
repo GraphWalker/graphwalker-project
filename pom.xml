@@ -224,6 +224,11 @@
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        <version>1.5.2.RELEASE</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
         <version>1.5.2.RELEASE</version>
       </dependency>
@@ -343,15 +348,13 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-      <plugin>
+      <!--plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
           <licenseName>mit</licenseName>
           <excludes>
-            <exclude>**/webapp/components/**/*</exclude>
-            <exclude>**/webapp/node_modules/**/*</exclude>
-            <exclude>**/webapp/dist/**/*</exclude>
+            <exclude>node_modules</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -363,7 +366,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
