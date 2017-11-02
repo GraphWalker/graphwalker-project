@@ -60,6 +60,7 @@ public class ReachedVertex extends ReachedStopConditionBase {
 
   @Override
   protected void validate(Context context) {
+    super.validate(context);
     if (isNotNull(context) && isNull(context.getModel().findVertices(getValue()))) {
       throw new StopConditionException("Vertex [" + getValue() + "] not found");
     }

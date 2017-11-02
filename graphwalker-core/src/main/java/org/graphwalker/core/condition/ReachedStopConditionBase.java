@@ -51,8 +51,8 @@ public abstract class ReachedStopConditionBase extends StopConditionBase impleme
   }
 
   protected void validate(Context context) {
-    if (isNotNull(context) && isNull(context.getModel().findElements(getValue()))) {
-      throw new StopConditionException("Element not found");
+    if (isNotNull(context) && isNull(context.getModel())) {
+      throw new StopConditionException("Context missing a model");
     }
   }
 

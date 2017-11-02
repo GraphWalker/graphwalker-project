@@ -56,6 +56,7 @@ public class ReachedEdge extends ReachedStopConditionBase {
 
   @Override
   protected void validate(Context context) {
+    super.validate(context);
     if (isNotNull(context) && isNull(context.getModel().findEdges(getValue()))) {
       throw new StopConditionException("Edge [" + getValue() + "] not found");
     }

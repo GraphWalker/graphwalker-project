@@ -54,6 +54,7 @@ public final class TestBuilder {
     return this;
   }
 
+  @Deprecated
   public TestBuilder addContext(Context context, Path path) throws IOException {
     List<Context> pathContexts = ContextFactoryScanner.get(path).create(path);
     if (isNullOrEmpty(pathContexts)) {
@@ -81,6 +82,33 @@ public final class TestBuilder {
     context.setPathGenerator(pathGenerator);
     contexts.add(context);
     return this;
+  }
+
+  public TestBuilder addContext(Context context, Path model, String pathGenerator) {
+    return addContext(context, model, GeneratorFactory.parse(pathGenerator));
+  }
+
+  public TestBuilder addContext(Context context, Path model, PathGenerator pathGenerator) {
+    addModel(context, model);
+    context.setPathGenerator(pathGenerator);
+    contexts.add(context);
+    return this;
+  }
+
+  private Context addModel(Context context, Path model) {
+    try {
+      List<Context> pathContexts = ContextFactoryScanner.get(model).create(model);
+      if (isNullOrEmpty(pathContexts)) {
+        throw new TestExecutionException("Could not read the model: " + model.toString());
+      } else if (pathContexts.size() > 1) {
+        throw new TestExecutionException("The model path: " + model.toString() + ", has more models than 1. Can only handle 1 model.");
+      }
+      context.setModel(pathContexts.get(0).getModel());
+      context.setNextElement(pathContexts.get(0).getNextElement());
+      return context;
+    } catch (IOException e) {
+      throw new TestExecutionException(e);
+    }
   }
 
   private Context createContext(Class<? extends Context> testClass) {
