@@ -1,37 +1,23 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd';
-import { StudioHeader, GraphEditor, StudioMenu } from "../../components";
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { deepOrange500 } from 'material-ui/styles/colors';
+import FlatButton from 'material-ui/FlatButton';
 import './styles.less';
 
-const { Sider } = Layout;
+const muiTheme = getMuiTheme({
+  palette: {
+    accent1Color: deepOrange500,
+  },
+});
 
 export default class Studio extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      collapsed: true,
-    };
-  }
-
-  toggle() {
-    this.setState({
-      collapsed: !this.state.collapsed,
-    });
-  }
-
   render() {
     return (
-      <Layout className="container">
-        <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
-          <div className="logo" />
-          <StudioMenu/>
-        </Sider>
-        <Layout className="content-container">
-          <StudioHeader collapsed={this.state.collapsed} toggle={() => this.toggle()}/>
-          <GraphEditor/>
-        </Layout>
-      </Layout>
+      <MuiThemeProvider muiTheme={muiTheme}>
+        <FlatButton label="OK" primary={true} />
+      </MuiThemeProvider>
     );
   }
 }
