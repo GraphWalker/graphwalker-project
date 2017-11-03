@@ -27,11 +27,13 @@ module.exports = {
     new ExtractTextPlugin({
       filename: './src/main/resources/static/bundle.css',
       allChunks: true
-    }),
+    })
+    /*,
     new webpack.optimize.UglifyJsPlugin({
       compress: {
         warnings: false
       }
     })
+    */
   ]
 };

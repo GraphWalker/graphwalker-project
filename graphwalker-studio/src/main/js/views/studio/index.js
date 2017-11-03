@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout } from 'antd';
 import { StudioHeader, GraphEditor, StudioMenu } from "../../components";
 import './styles.less';
 
@@ -10,7 +10,7 @@ export default class Studio extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: true,
     };
   }
 
@@ -27,7 +27,7 @@ export default class Studio extends Component {
           <div className="logo" />
           <StudioMenu/>
         </Sider>
-        <Layout>
+        <Layout className="content-container">
           <StudioHeader collapsed={this.state.collapsed} toggle={() => this.toggle()}/>
           <GraphEditor/>
         </Layout>
