@@ -11,7 +11,7 @@
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "rest": "^2.0.0",
-    "roboto-fontface": "^0.8.0"
+    "typeface-roboto": "0.0.43"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
