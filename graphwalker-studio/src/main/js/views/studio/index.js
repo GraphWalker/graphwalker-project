@@ -12,7 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-import { Controller, GitHubIcon, Project } from "../../components";
+import { Controller, Editor, GitHubIcon, Project } from "../../components";
 import { styles, theme } from './styles.js'
 
 class Studio extends Component {
@@ -68,9 +68,7 @@ class Studio extends Component {
             </div>
           </Drawer>
           <main className={classes.content}>
-            <Typography type="body1" noWrap>
-              {'You think water moves fast? You should see ice.'}
-            </Typography>
+            <Editor/>
           </main>
         </div>
       </div>
