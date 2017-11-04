@@ -71,6 +71,7 @@ export const styles = theme => ({
   content: {
     width: '100%',
     flexGrow: 1,
+    flexShrink: 1,
     backgroundColor: theme.palette.background.default,
     padding: 0,
     height: 'calc(100% - 56px)',

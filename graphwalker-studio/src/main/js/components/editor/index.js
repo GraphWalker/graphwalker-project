@@ -8,6 +8,7 @@ import EditorContainer from './container';
 const styles = theme => ({
   root: {
     flexGrow: 1,
+    flexShrink: 1,
     width: '100%',
     height: '100%',
     backgroundColor: theme.palette.background.paper,
