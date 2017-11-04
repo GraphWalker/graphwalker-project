@@ -4,16 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Divider from 'material-ui/Divider';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import EditorContainer from './container';
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    flexShrink: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: theme.palette.background.paper,
-  },
-});
+import { styles } from '../../styles'
 
 class Editor extends Component {
   state = {

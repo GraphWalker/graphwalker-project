@@ -10,7 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import { Controller, Editor, GitHubIcon, Logo, Project } from "../../components";
-import { styles, theme } from './styles.js'
+import { styles } from '../../styles.js'
 
 class Studio extends Component {
 
@@ -64,7 +64,7 @@ class Studio extends Component {
               <Project/>
             </div>
           </Drawer>
-          <main className={classes.content}>
+          <main className={classNames(classes.content, this.state.open && classes.contentShift)}>
             <Editor/>
           </main>
         </div>

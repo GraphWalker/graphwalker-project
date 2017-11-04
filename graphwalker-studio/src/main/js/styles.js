@@ -8,6 +8,11 @@ export const styles = theme => ({
     zIndex: 1,
     overflow: 'hidden',
   },
+  editorRoot: {
+    width: 'calc(100% - 60px)',
+    height: '100%',
+    backgroundColor: theme.palette.background.paper,
+  },
   appFrame: {
     position: 'relative',
     display: 'flex',
@@ -70,8 +75,6 @@ export const styles = theme => ({
   },
   content: {
     width: '100%',
-    flexGrow: 1,
-    flexShrink: 1,
     backgroundColor: theme.palette.background.default,
     padding: 0,
     height: 'calc(100% - 56px)',
@@ -81,4 +84,7 @@ export const styles = theme => ({
       marginTop: 64,
     },
   },
+  contentShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+  }
 });
