@@ -38,13 +38,7 @@ class Editor extends Component {
           <Tab label="Item Seven" />
         </Tabs>
         <Divider/>
-        {value === 0 && <EditorContainer>Item One</EditorContainer>}
-        {value === 1 && <EditorContainer>Item Two</EditorContainer>}
-        {value === 2 && <EditorContainer>Item Three</EditorContainer>}
-        {value === 3 && <EditorContainer>Item Four</EditorContainer>}
-        {value === 4 && <EditorContainer>Item Five</EditorContainer>}
-        {value === 5 && <EditorContainer>Item Six</EditorContainer>}
-        {value === 6 && <EditorContainer>Item Seven</EditorContainer>}
+        <EditorContainer/>
       </div>
     );
   }
