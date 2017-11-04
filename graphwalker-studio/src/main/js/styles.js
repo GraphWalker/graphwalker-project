@@ -74,7 +74,7 @@ export const styles = theme => ({
     ...theme.mixins.toolbar,
   },
   content: {
-    width: '100%',
+    width: 'calc(100% - 60px)',
     backgroundColor: theme.palette.background.default,
     padding: 0,
     height: 'calc(100% - 56px)',
