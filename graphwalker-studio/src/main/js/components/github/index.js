@@ -4,7 +4,7 @@ import SvgIcon from 'material-ui/SvgIcon';
 
 const url = 'https://github.com/GraphWalker/graphwalker-project';
 
-export default class Github extends Component {
+export class GitHubIcon extends Component {
   render() {
     return (
       <IconButton color="contrast" onClick={() => window.open(url, '_blank').focus()}>

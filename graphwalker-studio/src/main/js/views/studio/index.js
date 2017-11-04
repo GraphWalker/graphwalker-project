@@ -12,7 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-import GitHubIcon from '../../components/github';
+import { Controller, GitHubIcon } from "../../components";
 import { styles, theme } from './styles.js'
 
 class Studio extends Component {
@@ -45,6 +45,7 @@ class Studio extends Component {
               >
                 <MenuIcon />
               </IconButton>
+              <Controller/>
               <Typography type="title" color="inherit" className={classes.flex} noWrap>
               </Typography>
               <GitHubIcon color="contrast"/>
