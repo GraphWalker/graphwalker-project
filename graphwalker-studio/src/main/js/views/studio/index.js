@@ -5,14 +5,11 @@ import classNames from 'classnames';
 import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import List from 'material-ui/List';
 import Typography from 'material-ui/Typography';
-import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
-import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-import { Controller, Editor, GitHubIcon, Project } from "../../components";
+import { Controller, Editor, GitHubIcon, Logo, Project } from "../../components";
 import { styles, theme } from './styles.js'
 
 class Studio extends Component {
@@ -30,8 +27,7 @@ class Studio extends Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
-
+    const { classes } = this.props;
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -45,7 +41,7 @@ class Studio extends Component {
               >
                 <MenuIcon />
               </IconButton>
-              <Controller/>
+              <Controller />
               <Typography type="title" color="inherit" className={classes.flex} noWrap>
               </Typography>
               <GitHubIcon color="contrast"/>
@@ -60,8 +56,9 @@ class Studio extends Component {
           >
             <div className={classes.drawerInner}>
               <div className={classes.drawerHeader}>
+                <Logo/>
                 <IconButton onClick={this.handleDrawerClose}>
-                  {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                  <ChevronLeftIcon />
                 </IconButton>
               </div>
               <Project/>
