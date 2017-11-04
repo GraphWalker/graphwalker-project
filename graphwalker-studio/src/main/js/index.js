@@ -1,7 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import { MuiThemeProvider } from 'material-ui/styles';
+import { theme } from './theme';
 import Studio from './views/studio';
 import 'typeface-roboto';
 import './styles.less';
 
-ReactDOM.render(<Studio />, document.getElementById('studio'));
+function Application() {
+  return (
+    <MuiThemeProvider theme={theme}>
+      <Studio />
+    </MuiThemeProvider>
+  );
+}
+
+render(<Application />, document.getElementById('studio'));
