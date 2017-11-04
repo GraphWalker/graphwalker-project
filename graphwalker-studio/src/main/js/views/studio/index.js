@@ -12,7 +12,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-import { Controller, GitHubIcon } from "../../components";
+import { Controller, GitHubIcon, Project } from "../../components";
 import { styles, theme } from './styles.js'
 
 class Studio extends Component {
@@ -64,6 +64,7 @@ class Studio extends Component {
                   {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
               </div>
+              <Project/>
             </div>
           </Drawer>
           <main className={classes.content}>
