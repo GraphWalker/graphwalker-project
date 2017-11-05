@@ -8,9 +8,8 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
-import Paper from 'material-ui/Paper';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
-import { Controller, Editor, GitHubIcon, Logo, Project } from "../../components";
+import { Controller, Editor, GitHubIcon, Logo, Project, Settings } from "../../components";
 import { styles } from '../../styles'
 
 class Studio extends Component {
@@ -63,6 +62,7 @@ class Studio extends Component {
                 </IconButton>
               </div>
               <Project/>
+              <Settings/>
             </div>
           </Drawer>
           <main className={classNames(classes.content, this.state.open && classes.contentShift)}>

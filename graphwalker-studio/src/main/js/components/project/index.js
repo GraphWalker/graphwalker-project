@@ -4,7 +4,6 @@ import Divider from 'material-ui/Divider';
 import NewIcon from 'material-ui-icons/InsertDriveFile';
 import LoadIcon from 'material-ui-icons/OpenInBrowser';
 import SaveIcon from 'material-ui-icons/Save';
-import SettingsIcon from 'material-ui-icons/Settings';
 
 export class Project extends Component {
   render() {
@@ -29,15 +28,6 @@ export class Project extends Component {
               <SaveIcon />
             </ListItemIcon>
             <ListItemText primary="Save" />
-          </ListItem>
-        </List>
-        <Divider/>
-        <List>
-          <ListItem button>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
           </ListItem>
         </List>
       </div>
