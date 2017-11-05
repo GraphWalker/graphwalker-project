@@ -1,10 +1,43 @@
 import React, { Component } from 'react';
+import ContextMenu from './ContextMenu';
 import cytoscape from "cytoscape"
 
 export default class EditorContainer extends Component {
 
+  state = {
+    openEvent: false,
+  };
+
+  openMenu = event => {
+    console.log("openMenu");
+    this.setState({ openEvent: event });
+  };
+
+  closeMenu = () => {
+    this.setState({ openEvent: false });
+  };
+
+  handleContextMenu = (event) => {
+    const clientRect = document.getElementById("cy").getBoundingClientRect();
+    const hitX = clientRect.left <= event.pageX && event.pageX <= clientRect.right;
+    const hitY = clientRect.top <= event.pageY && event.pageY <= clientRect.bottom;
+    if (hitX && hitY) {
+      event.preventDefault();
+      if (this.state.openEvent) {
+        this.closeMenu();
+      }
+      this.openMenu(event);
+      return false;
+    }
+  };
+
   componentDidMount() {
     this.updateCytoscape();
+    document.addEventListener('contextmenu', this.handleContextMenu);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('contextmenu', this.handleContextMenu);
   }
 
   updateCytoscape() {
@@ -63,9 +96,10 @@ export default class EditorContainer extends Component {
     this.cy.on('select', this.selectNode);
     this.cy.on('unselect', this.deselectNode);
     this.cy.on('taphold', 'node', this.newEdgeStart);
-    this.cy.on('cxtdrag tapdrag', this.newEdgeDrag);
+    this.cy.on('tapdrag', this.newEdgeDrag);
     // this.cy.on('tapdragover', this.createEdge);
-    this.cy.on('cxttapend tapend', this.newEdgeEnd);
+    this.cy.on('tapend', this.newEdgeEnd);
+    this.cy.on('cxttap', this.openMenu);
     this.hasSelectedNodes = false;
     this.isCreatingEdge = false;
   }
@@ -160,7 +194,10 @@ export default class EditorContainer extends Component {
 
   render() {
     return (
-      <div id="cy" style={{ float: 'left', padding: 0, background: '#fff', height: '100%', width: 'calc(100% - 340px)', overflow: 'hidden' }} />
+      <div style={{ padding: 0, background: '#fff', height: '100%', width: '100%' }}>
+        <div id="cy" style={{ padding: 0, background: '#fff', height: '100%', width: '100%', overflow: 'hidden' }} />
+        <ContextMenu openEvent={this.state.openEvent} closeMenu={this.closeMenu}/>
+      </div>
     );
   }
 }

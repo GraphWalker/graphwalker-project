@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Divider from 'material-ui/Divider';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import EditorContainer from './EditorContainer';
-import { PropertiesTable } from "./PropertiesTable";
+import PropertiesTable from "./PropertiesTable";
 import { styles } from '../../styles'
 
 class Editor extends Component {
@@ -30,7 +30,9 @@ class Editor extends Component {
         </Tabs>
         <Divider/>
         <div style={{ padding: 0, height: '100%', width: '100%' }}>
-          <EditorContainer/>
+          <div style={{ float: 'left', padding: 0, background: '#fff', height: '100%', width: 'calc(100% - 340px)' }}>
+            <EditorContainer/>
+          </div>
           <div style={{float: 'right', width: '340px', height: '100%' }}>
             <PropertiesTable/>
           </div>
