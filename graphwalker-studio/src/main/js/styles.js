@@ -38,6 +38,9 @@ export const styles = theme => ({
   flex: {
     flex: 1,
   },
+  spacer2: {
+    height: 'calc(100% - 289px)',
+  },
   menuButton: {
     marginLeft: 12,
     marginRight: 36,
@@ -65,6 +68,7 @@ export const styles = theme => ({
   drawerInner: {
     // Make the items inside not wrap when transitioning:
     width: drawerWidth,
+    height: '100%',
   },
   drawerHeader: {
     display: 'flex',

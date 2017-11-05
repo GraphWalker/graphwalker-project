@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import classNames from 'classnames';
 import Drawer from 'material-ui/Drawer';
+import Divider from 'material-ui/Divider';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
@@ -42,8 +42,7 @@ class Studio extends Component {
                 <MenuIcon />
               </IconButton>
               <Controller />
-              <Typography type="title" color="inherit" className={classes.flex} noWrap>
-              </Typography>
+              <div className={classes.spacer} />
               <GitHubIcon color="contrast"/>
             </Toolbar>
           </AppBar>
@@ -62,6 +61,8 @@ class Studio extends Component {
                 </IconButton>
               </div>
               <Project/>
+              <div className={classes.spacer2} />
+              <Divider/>
               <Settings/>
             </div>
           </Drawer>
