@@ -93,5 +93,26 @@ export const styles = theme => ({
   },
   contentShift: {
     width: `calc(100% - ${drawerWidth}px)`,
-  }
+  },
+  propertiesDrawerPaper: {
+    position: 'relative',
+    height: '100%',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  propertiesDrawerDocked: {
+    height: '100%',
+  },
+  propertiesDrawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+  propertiesDrawerInner: {
+    height: '100%',
+  },
 });
