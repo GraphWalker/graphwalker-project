@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import cytoscape from "cytoscape"
-import { styles } from '../../styles'
 
-class EditorContainer extends Component {
+export default class EditorContainer extends Component {
 
   componentDidMount() {
     this.updateCytoscape();
@@ -162,25 +159,8 @@ class EditorContainer extends Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
-      <div style={{ padding: 0, height: '100%', width: '100%' }}>
-        <div id="cy" style={{ float: 'left', padding: 0, background: '#fff', height: '100%', width: 'calc(100% - 340px)', overflow: 'hidden' }} />
-        <div style={{float: 'right', width: '340px', height: '100%' }}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Key</TableCell>
-                <TableCell>Value</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      <div id="cy" style={{ float: 'left', padding: 0, background: '#fff', height: '100%', width: 'calc(100% - 340px)', overflow: 'hidden' }} />
     );
   }
 }
-
-export default withStyles(styles, { withTheme: true })(EditorContainer);

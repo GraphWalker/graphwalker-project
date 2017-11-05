@@ -5,6 +5,7 @@ import Divider from 'material-ui/Divider';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import EditorContainer from './container';
 import { styles } from '../../styles'
+import { Properties } from "./properties";
 
 class Editor extends Component {
   state = {
@@ -28,7 +29,12 @@ class Editor extends Component {
           <Tab label="VeterinariensSharedState" />
         </Tabs>
         <Divider/>
-        <EditorContainer/>
+        <div style={{ padding: 0, height: '100%', width: '100%' }}>
+          <EditorContainer/>
+          <div style={{float: 'right', width: '340px', height: '100%' }}>
+            <Properties/>
+          </div>
+        </div>
       </div>
     );
   }
