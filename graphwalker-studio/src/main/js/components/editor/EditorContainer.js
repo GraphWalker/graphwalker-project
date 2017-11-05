@@ -9,7 +9,6 @@ export default class EditorContainer extends Component {
   };
 
   openMenu = event => {
-    console.log("openMenu");
     this.setState({ openEvent: event });
   };
 
