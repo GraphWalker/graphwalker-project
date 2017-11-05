@@ -38,6 +38,9 @@ export const styles = theme => ({
   flex: {
     flex: 1,
   },
+  spacer: {
+    flex: '1 1 auto',
+  },
   spacer2: {
     height: 'calc(100% - 289px)',
   },
