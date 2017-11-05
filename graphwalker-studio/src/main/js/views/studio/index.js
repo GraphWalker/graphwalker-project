@@ -56,6 +56,7 @@ class Studio extends Component {
             <div className={classes.drawerInner}>
               <div className={classes.drawerHeader}>
                 <Logo/>
+                <div className={classes.spacer} />
                 <IconButton onClick={this.handleDrawerClose}>
                   <ChevronLeftIcon />
                 </IconButton>
