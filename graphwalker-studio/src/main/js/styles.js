@@ -42,7 +42,7 @@ export const styles = theme => ({
     flex: '1 1 auto',
   },
   spacer2: {
-    height: 'calc(100% - 289px)',
+    height: 'calc(100% - 291px)',
   },
   menuButton: {
     marginLeft: 12,

@@ -61,8 +61,8 @@ class Studio extends Component {
                 </IconButton>
               </div>
               <Project/>
-              <div className={classes.spacer2} />
               <Divider/>
+              <div className={classes.spacer2} />
               <Settings/>
             </div>
           </Drawer>
