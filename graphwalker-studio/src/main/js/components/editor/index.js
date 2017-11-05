@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Divider from 'material-ui/Divider';
 import Tabs, { Tab } from 'material-ui/Tabs';
-import EditorContainer from './container';
+import EditorContainer from './EditorContainer';
+import { PropertiesTable } from "./PropertiesTable";
 import { styles } from '../../styles'
-import { Properties } from "./properties";
 
 class Editor extends Component {
   state = {
@@ -32,7 +32,7 @@ class Editor extends Component {
         <div style={{ padding: 0, height: '100%', width: '100%' }}>
           <EditorContainer/>
           <div style={{float: 'right', width: '340px', height: '100%' }}>
-            <Properties/>
+            <PropertiesTable/>
           </div>
         </div>
       </div>

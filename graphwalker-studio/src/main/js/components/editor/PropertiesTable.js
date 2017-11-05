@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-export class Properties extends Component {
+export class PropertiesTable extends Component {
   render() {
     return (
       <Table>
