@@ -21,13 +21,11 @@ class Editor extends Component {
     return (
       <div className={classes.root}>
         <Tabs value={value} onChange={this.handleChange} scrollable scrollButtons="auto">
-          <Tab label="New Arrivals in the Longest Text of Nonfiction" />
-          <Tab label="Item Two" />
-          <Tab label="Item Three" />
-          <Tab label="Item Four" />
-          <Tab label="Item Five" />
-          <Tab label="Item Six" />
-          <Tab label="Item Seven" />
+          <Tab label="FindOwnersSharedState" />
+          <Tab label="NewOwnerSharedState" />
+          <Tab label="OwnerInformationSharedState" />
+          <Tab label="PetClinicSharedState" />
+          <Tab label="VeterinariensSharedState" />
         </Tabs>
         <Divider/>
         <EditorContainer/>

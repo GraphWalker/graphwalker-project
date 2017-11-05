@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import cytoscape from "cytoscape"
+import { styles } from '../../styles'
 
-export default class EditorContainer extends Component {
+class EditorContainer extends Component {
 
   componentDidMount() {
     this.updateCytoscape();
@@ -98,9 +101,6 @@ export default class EditorContainer extends Component {
 
   newEdgeStart = (event) => {
     if (!event.target.selected() && !this.isCreatingEdge) {
-      if (this.ghostEdge) {
-        console.log('X', this.ghostEdge);
-      }
       this.ghostNode = this.cy.add({
         group: 'nodes',
         data: {
@@ -162,8 +162,25 @@ export default class EditorContainer extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
-      <div id="cy" style={{ padding: 0, background: '#fff', height: '100%' }} />
+      <div style={{ padding: 0, height: '100%', width: '100%' }}>
+        <div id="cy" style={{ float: 'left', padding: 0, background: '#fff', height: '100%', width: 'calc(100% - 340px)', overflow: 'hidden' }} />
+        <div style={{float: 'right', width: '340px', height: '100%' }}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Key</TableCell>
+                <TableCell>Value</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+            </TableBody>
+          </Table>
+        </div>
+      </div>
     );
   }
 }
+
+export default withStyles(styles, { withTheme: true })(EditorContainer);
