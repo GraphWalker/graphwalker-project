@@ -39,6 +39,23 @@ export default class EditorContainer extends Component {
     document.removeEventListener('contextmenu', this.handleContextMenu);
   }
 
+  disableGestures() {
+    this.panningEnabled = this.cy.panningEnabled();
+    this.zoomingEnabled = this.cy.zoomingEnabled();
+    this.boxSelectionEnabled = this.cy.boxSelectionEnabled();
+    this.cy
+      .zoomingEnabled(false)
+      .panningEnabled(false)
+      .boxSelectionEnabled(false);
+  }
+
+  resetGestures() {
+    this.cy
+      .zoomingEnabled(this.zoomingEnabled)
+      .panningEnabled(this.panningEnabled)
+      .boxSelectionEnabled(this.boxSelectionEnabled);
+  }
+
   updateCytoscape() {
     const properties = Object.assign({}, {
       container: document.getElementById('cy'),
@@ -90,15 +107,17 @@ export default class EditorContainer extends Component {
       }]
     });
     this.cy = cytoscape(properties);
-    this.cy.nodes().ungrabify();
-    this.cy.on('tap', this.createNode);
-    this.cy.on('select', this.selectNode);
-    this.cy.on('unselect', this.deselectNode);
-    this.cy.on('taphold', 'node', this.newEdgeStart);
-    this.cy.on('tapdrag', this.newEdgeDrag);
-    // this.cy.on('tapdragover', this.createEdge);
-    this.cy.on('tapend', this.newEdgeEnd);
-    this.cy.on('cxttap', this.openMenu);
+    this.cy.ready(() => {
+      this.cy.nodes().ungrabify();
+      this.cy.on('tap', this.createNode);
+      this.cy.on('select', this.selectNode);
+      this.cy.on('unselect', this.deselectNode);
+      this.cy.on('taphold', 'node', this.newEdgeStart);
+      this.cy.on('tapdrag', this.newEdgeDrag);
+      // this.cy.on('tapdragover', this.createEdge);
+      this.cy.on('tapend', this.newEdgeEnd);
+      this.cy.on('cxttap', this.openMenu);
+    });
     this.hasSelectedNodes = false;
     this.isCreatingEdge = false;
   }
@@ -131,6 +150,7 @@ export default class EditorContainer extends Component {
 
   newEdgeStart = (event) => {
     if (!event.target.selected() && !this.isCreatingEdge) {
+      this.disableGestures();
       this.ghostNode = this.cy.add({
         group: 'nodes',
         data: {
@@ -179,6 +199,7 @@ export default class EditorContainer extends Component {
           'events': 'no'
         }
       });
+      this.resetGestures();
     }
     if (this.ghostEdge) {
       this.ghostEdge.remove();
