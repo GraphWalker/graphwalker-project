@@ -110,7 +110,7 @@ export default class EditorContainer extends Component {
         group: 'nodes',
         data: {
           // temp just so it should be more unique
-          id: 'testid' + position.x,
+          id: 'testid' + position.x + new Date(),
           name: '' + this.cy.nodes().length
         },
         renderedPosition: position
@@ -173,7 +173,7 @@ export default class EditorContainer extends Component {
         data: {
           source: this.ghostEdge.source().id(),
           target: event.target.id(),
-          id: 'newEdge' + this.ghostEdge.source().id() + event.target.id()
+          id: 'newEdge' + this.ghostEdge.source().id() + event.target.id() + new Date()
         },
         css: {
           'events': 'no'
