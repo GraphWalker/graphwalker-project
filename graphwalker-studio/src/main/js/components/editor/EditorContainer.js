@@ -171,9 +171,6 @@ export default class EditorContainer extends Component {
           source: event.target.id(),
           target: this.ghostNode.id(),
           id: 'ghostEdge'
-        },
-        css: {
-          'events': 'no'
         }
       });
       this.isCreatingEdge = true;
@@ -194,9 +191,6 @@ export default class EditorContainer extends Component {
           source: this.ghostEdge.source().id(),
           target: event.target.id(),
           id: 'newEdge' + this.ghostEdge.source().id() + event.target.id() + new Date()
-        },
-        css: {
-          'events': 'no'
         }
       });
       this.resetGestures();
