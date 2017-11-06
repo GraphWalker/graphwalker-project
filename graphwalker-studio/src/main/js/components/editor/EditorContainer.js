@@ -36,17 +36,28 @@ export default class EditorContainer extends Component {
     }
   };
 
-  attachKeyEventHandler = (event) => {
-    if (event.target === this.cy) {
-      const cy = document.getElementById('cy');
-      cy.addEventListener('keydown', this.handleKeyPress);
-      cy.focus();
+  focus = (el) => {
+    const scrollHierarchy = [];
+    let parent = el.parentNode;
+    while (parent) {
+      scrollHierarchy.push([parent, parent.scrollLeft, parent.scrollTop]);
+      parent = parent.parentNode;
     }
+    el.focus();
+    scrollHierarchy.forEach(function (item) {
+      const el = item[0];
+      if (el.scrollLeft !== item[1]) {
+        el.scrollLeft = item[1];
+      }
+      if (el.scrollTop !== item[2]) {
+        el.scrollTop = item[2];
+      }
+    });
   };
 
-  detachKeyEventHandler = (event) => {
+  setFocus = (event) => {
     if (event.target === this.cy) {
-      document.getElementById('cy').removeEventListener('keydown', this.handleKeyPress);
+      this.focus(document.getElementById('cy'));
     }
   };
 
@@ -138,10 +149,12 @@ export default class EditorContainer extends Component {
       this.cy.on('tapend', this.newEdgeEnd);
       this.cy.on('cxttap', this.openMenu);
 
-      this.cy.on('mouseover', this.attachKeyEventHandler);
-      this.cy.on('mouseout', this.detachKeyEventHandler);
+      this.cy.on('mouseover', this.setFocus);
 
       this.cy.on('keydown', this.handleKeyPress);
+
+
+      document.getElementById('cy').addEventListener('keydown', this.handleKeyPress);
     });
     this.hasSelectedNodes = false;
     this.isCreatingEdge = false;
