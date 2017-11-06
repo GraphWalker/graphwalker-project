@@ -32,7 +32,7 @@ export default class EditorContainer extends Component {
 
   handleKeyPress = (event) => {
     if (event.key === 'Backspace') {
-      this.cy.collection(':selected').remove();
+      this.cy.remove(':selected');
     }
   };
 
@@ -247,7 +247,7 @@ export default class EditorContainer extends Component {
   render() {
     return (
       <div style={{ padding: 0, background: '#fff', height: '100%', width: '100%' }}>
-        <div id="cy" tabIndex="-1" style={{ padding: 0, background: '#fff', height: '100%', width: '100%', overflow: 'hidden' }} />
+        <div id="cy" tabIndex="-1" style={{ padding: 0, background: '#fff', height: '100%', width: '100%', overflow: 'hidden', outline: 'none' }} />
         <ContextMenu openEvent={this.state.openEvent} closeMenu={this.closeMenu}/>
       </div>
     );
