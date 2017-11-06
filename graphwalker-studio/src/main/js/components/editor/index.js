@@ -13,6 +13,7 @@ import PropertiesTable from "./PropertiesTable";
 import { styles } from '../../styles'
 
 class Editor extends Component {
+
   state = {
     value: 0,
   };
@@ -25,7 +26,7 @@ class Editor extends Component {
     const { classes } = this.props;
     const { value } = this.state;
     return (
-      <div id="tmp" className={classes.root}>
+      <div className={classes.root}>
         <Tabs value={value} onChange={this.handleChange} scrollable scrollButtons="auto">
           <Tab label="FindOwnersSharedState" />
           <Tab label="NewOwnerSharedState" />

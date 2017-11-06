@@ -30,6 +30,26 @@ export default class EditorContainer extends Component {
     }
   };
 
+  handleKeyPress = (event) => {
+    if (event.key === 'Backspace') {
+      this.cy.collection(':selected').remove();
+    }
+  };
+
+  attachKeyEventHandler = (event) => {
+    if (event.target === this.cy) {
+      const cy = document.getElementById('cy');
+      cy.addEventListener('keydown', this.handleKeyPress);
+      cy.focus();
+    }
+  };
+
+  detachKeyEventHandler = (event) => {
+    if (event.target === this.cy) {
+      document.getElementById('cy').removeEventListener('keydown', this.handleKeyPress);
+    }
+  };
+
   componentDidMount() {
     this.updateCytoscape();
     document.addEventListener('contextmenu', this.handleContextMenu);
@@ -117,6 +137,11 @@ export default class EditorContainer extends Component {
       // this.cy.on('tapdragover', this.createEdge);
       this.cy.on('tapend', this.newEdgeEnd);
       this.cy.on('cxttap', this.openMenu);
+
+      this.cy.on('mouseover', this.attachKeyEventHandler);
+      this.cy.on('mouseout', this.detachKeyEventHandler);
+
+      this.cy.on('keydown', this.handleKeyPress);
     });
     this.hasSelectedNodes = false;
     this.isCreatingEdge = false;
@@ -209,7 +234,7 @@ export default class EditorContainer extends Component {
   render() {
     return (
       <div style={{ padding: 0, background: '#fff', height: '100%', width: '100%' }}>
-        <div id="cy" style={{ padding: 0, background: '#fff', height: '100%', width: '100%', overflow: 'hidden' }} />
+        <div id="cy" tabIndex="-1" style={{ padding: 0, background: '#fff', height: '100%', width: '100%', overflow: 'hidden' }} />
         <ContextMenu openEvent={this.state.openEvent} closeMenu={this.closeMenu}/>
       </div>
     );
