@@ -6,11 +6,14 @@ import Drawer from 'material-ui/Drawer';
 import Divider from 'material-ui/Divider';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
+import ListIcon from 'material-ui-icons/List';
+import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import { Controller, Editor, GitHubIcon, Logo, ModelSelector, Project, Settings } from "../../components";
 import { styles } from '../../styles'
+import PropertiesTable from "../../components/editor/PropertiesTable";
 
 class Studio extends Component {
 
@@ -72,7 +75,34 @@ class Studio extends Component {
           <main className={classNames(classes.content, this.state.open && classes.contentShift)}>
             <ModelSelector/>
             <Divider/>
-            <Editor/>
+            <div style={{ padding: 0, height: '100%', width: '100%', background: '#fff' }}>
+              <div style={{ float: 'left', padding: 0, background: '#fff', height: '100%', width: 'calc(100% - 340px)' }}>
+                <Editor/>
+              </div>
+              <Drawer
+                type="permanent"
+                anchor="right"
+                classes={{
+                  paper: classNames(classes.propertiesDrawerPaper),
+                  docked: classNames(classes.propertiesDrawerDocked)
+                }}
+                open={true}>
+                <div className={classes.propertiesDrawerInner}>
+                  <div className={classes.propertiesDrawerHeader}>
+                    <IconButton onClick={this.handleDrawerClose}>
+                      <ListIcon/>
+                    </IconButton>
+                    <Typography color="inherit" noWrap>
+                      Properties
+                    </Typography>
+                  </div>
+                  <Divider/>
+                  <PropertiesTable />
+                  <Divider/>
+                  <div className={classes.spacer2} />
+                </div>
+              </Drawer>
+            </div>
           </main>
         </div>
       </div>
