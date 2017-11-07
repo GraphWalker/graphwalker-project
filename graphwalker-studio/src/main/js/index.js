@@ -1,16 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { MuiThemeProvider } from 'material-ui/styles';
-import { theme } from './theme';
-import Studio from './views/studio';
+import { Provider } from 'react-redux';
+import initRedux from './redux/initRedux';
+import Studio from './studio';
 import 'typeface-roboto';
 import './styles.less';
 
+const redux = initRedux({});
+
 function Application() {
   return (
-    <MuiThemeProvider theme={theme}>
-      <Studio />
-    </MuiThemeProvider>
+    <Provider store={redux}>
+        <Studio />
+    </Provider>
   );
 }
 

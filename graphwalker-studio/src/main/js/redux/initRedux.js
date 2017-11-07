@@ -1,8 +1,9 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import logger from 'redux-logger'
 import themeReducer from './reducers/themeReducer';
 
 function create(initialState) {
-  let middlewares = [];
+  let middlewares = [logger];
   return createStore(
     combineReducers({
       theme: themeReducer,
