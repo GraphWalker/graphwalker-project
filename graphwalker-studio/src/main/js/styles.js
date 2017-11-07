@@ -115,4 +115,11 @@ export const styles = theme => ({
   propertiesDrawerInner: {
     height: '100%',
   },
+  logo: {
+    textTransform: 'uppercase',
+    fontVariant: 'small-caps',
+    fontWeight: 'bold',
+    color: 'rgba(0, 0, 0, 0.74)',
+    fontSize: '1.1rem'
+  }
 });
