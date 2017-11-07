@@ -9,6 +9,7 @@ export default class EditorContainer extends Component {
   };
 
   openMenu = event => {
+    document.getElementById('cy').blur();
     this.setState({ openEvent: event });
   };
 
