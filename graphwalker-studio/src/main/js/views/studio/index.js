@@ -61,9 +61,11 @@ class Studio extends Component {
                   <ChevronLeftIcon />
                 </IconButton>
               </div>
+              <Divider/>
               <Project/>
               <Divider/>
               <div className={classes.spacer2} />
+              <Divider/>
               <Settings/>
             </div>
           </Drawer>

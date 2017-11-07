@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
 import SettingsIcon from 'material-ui-icons/Settings';
 import SettingsDialog from './SettingsDialog';
 
@@ -24,7 +23,6 @@ export class Settings extends Component {
   render() {
     return (
       <div>
-        <Divider/>
         <List>
           <ListItem button onClick={this.openSettings}>
             <ListItemIcon>

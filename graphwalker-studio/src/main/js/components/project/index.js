@@ -9,7 +9,6 @@ export class Project extends Component {
   render() {
     return (
       <div>
-        <Divider/>
         <List>
           <ListItem button>
             <ListItemIcon>
