@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
+import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
+  toolbar: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
-  logo: {
-    textTransform: 'uppercase',
-    fontVariant: 'small-caps',
-    fontWeight: 'bold',
-    fontSize: '1.1rem',
+  title: {
+    color: theme.palette.text.secondary,
+  },
+  version: {
+    paddingLeft: '5px',
   }
 });
 
@@ -22,11 +22,14 @@ class Logo extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.container}>
-        <Typography type="title" noWrap className={classes.logo}>
+      <Toolbar className={classes.toolbar}>
+        <Typography type="title" color="inherit" className={classes.title}>
           GraphWalker
         </Typography>
-      </div>
+        <Typography type="caption" className={classes.version}>
+          4.0.0-SNAPSHOT
+        </Typography>
+      </Toolbar>
     );
   }
 }

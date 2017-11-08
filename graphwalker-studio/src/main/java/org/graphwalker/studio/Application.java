@@ -16,7 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-import static org.graphwalker.io.common.Util.getVersionString;
+import static org.graphwalker.io.common.Util.printVersionInformation;
 
 /**
  * @author Nils Olsson
@@ -28,9 +28,9 @@ public class Application {
   private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) throws UnknownHostException {
-    Application app = new Application();
+    Application application = new Application();
     try {
-      app.run(args);
+      application.run(args);
     } catch (Exception e) {
       // We should have caught all exceptions up until here, but there
       // might have been problems with the command parser for instance...
@@ -93,34 +93,10 @@ public class Application {
 
   private void setLogLevel(Options options) {
     // OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL
-    if (options.debug.equalsIgnoreCase("OFF")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.OFF);
-    } else if (options.debug.equalsIgnoreCase("ERROR")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.ERROR);
-    } else if (options.debug.equalsIgnoreCase("WARN")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.WARN);
-    } else if (options.debug.equalsIgnoreCase("INFO")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.INFO);
-    } else if (options.debug.equalsIgnoreCase("DEBUG")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.DEBUG);
-    } else if (options.debug.equalsIgnoreCase("TRACE")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.TRACE);
-    } else if (options.debug.equalsIgnoreCase("ALL")) {
-      LoggerUtil.setLogLevel(LoggerUtil.Level.ALL);
-    } else {
+    try {
+      LoggerUtil.setLogLevel(LoggerUtil.Level.valueOf(options.debug.toUpperCase()));
+    } catch (Throwable e) {
       throw new ParameterException("Incorrect argument to --debug");
     }
-  }
-
-  private String printVersionInformation() {
-    String version = "org.graphwalker version: " + getVersionString() + System.lineSeparator();
-    version += System.lineSeparator();
-
-    version += "org.graphwalker is open source software licensed under MIT license" + System.lineSeparator();
-    version += "The software (and it's source) can be downloaded from http://graphwalker.org" + System.lineSeparator();
-    version +=
-      "For a complete list of this package software dependencies, see http://graphwalker.org/archive/site/graphwalker-cli/dependencies.html" + System.lineSeparator();
-
-    return version;
   }
 }

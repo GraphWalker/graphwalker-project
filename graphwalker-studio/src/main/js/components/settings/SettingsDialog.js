@@ -9,6 +9,9 @@ import Switch from 'material-ui/Switch';
 import { THEME_CHANGE_PALETTE_TYPE } from '../../redux/actions';
 
 const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  }
 });
 
 class SettingsDialog extends Component {
@@ -28,6 +31,7 @@ class SettingsDialog extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <Dialog open={this.props.open} onRequestClose={this.props.onRequestClose}>
         <DialogTitle>Settings</DialogTitle>
@@ -45,8 +49,8 @@ class SettingsDialog extends Component {
           </FormGroup>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.onRequestClose} color="primary">
-            Cancel
+          <Button raised color="primary" className={classes.button} onClick={this.props.onRequestClose}>
+            OK
           </Button>
         </DialogActions>
       </Dialog>

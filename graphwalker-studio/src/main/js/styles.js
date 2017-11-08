@@ -82,7 +82,7 @@ export const styles = theme => ({
   },
   content: {
     width: 'calc(100% - 60px)',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     padding: 0,
     height: 'calc(100% - 56px)',
     marginTop: 56,

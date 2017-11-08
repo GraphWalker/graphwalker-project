@@ -6,7 +6,7 @@ import cytoscape from "cytoscape"
 const styles = theme => ({
   container: {
     padding: 0,
-    background: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     height: '100%',
     width: '100%',
   },
