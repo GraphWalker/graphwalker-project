@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import SettingsIcon from 'material-ui-icons/Settings';
 import SettingsDialog from './SettingsDialog';
 
-export class Settings extends Component {
+const styles = theme => ({
+});
+
+class Settings extends Component {
   state = {
     open: false,
   };
@@ -36,3 +40,5 @@ export class Settings extends Component {
     );
   }
 }
+
+export default withStyles(styles, { withTheme: true })(Settings);

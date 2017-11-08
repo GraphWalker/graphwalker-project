@@ -105,21 +105,4 @@ export const styles = theme => ({
   propertiesDrawerDocked: {
     height: '100%',
   },
-  propertiesDrawerHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  propertiesDrawerInner: {
-    height: '100%',
-  },
-  logo: {
-    textTransform: 'uppercase',
-    fontVariant: 'small-caps',
-    fontWeight: 'bold',
-    color: 'rgba(0, 0, 0, 0.74)',
-    fontSize: '1.1rem'
-  }
 });

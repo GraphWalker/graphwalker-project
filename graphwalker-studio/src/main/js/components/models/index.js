@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import { withStyles } from 'material-ui/styles';
 import Tabs, { Tab } from 'material-ui/Tabs';
 
-export class ModelSelector extends Component {
+const styles = theme => ({
+});
+
+class ModelSelector extends Component {
 
   state = {
     value: 0,
@@ -14,7 +18,7 @@ export class ModelSelector extends Component {
   render() {
     const { value } = this.state;
     return (
-      <Tabs value={value} onChange={this.handleChange} scrollable scrollButtons="auto">
+      <Tabs value={value} onChange={this.handleChange} indicatorColor="accent" textColor="accent" scrollable scrollButtons="on">
         <Tab label="FindOwnersSharedState" />
         <Tab label="NewOwnerSharedState" />
         <Tab label="OwnerInformationSharedState" />
@@ -24,3 +28,5 @@ export class ModelSelector extends Component {
     );
   }
 }
+
+export default withStyles(styles, { withTheme: true })(ModelSelector);

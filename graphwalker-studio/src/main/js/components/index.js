@@ -1,7 +1,8 @@
-export { Controller } from './controller';
-export { default as Editor } from './editor';
+export { default as Controller } from './controller';
+export { default as EditorContainer } from './editor';
 export { GitHubIcon } from './github';
 export { default as Logo } from './logo';
-export { ModelSelector } from './models';
-export { Project } from './project';
-export { Settings } from './settings';
+export { default as ModelSelector } from './models';
+export { default as Project } from './project';
+export { default as PropertiesTable } from './properties';
+export { default as Settings } from './settings';
