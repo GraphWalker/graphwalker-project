@@ -10,7 +10,7 @@ import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
-import { Controller, EditorContainer, GitHubIcon, Logo, ModelSelector, Project, PropertiesTable, Settings } from "../components";
+import { Controller, EditorContainer, Fullscreen, GitHubIcon, Logo, ModelSelector, Project, PropertiesTable, Settings } from "../components";
 import { styles } from '../styles';
 
 class Studio extends Component {
@@ -44,6 +44,7 @@ class Studio extends Component {
               </IconButton>
               <Controller />
               <div className={classes.spacer} />
+              <Fullscreen/>
               <GitHubIcon color="contrast"/>
             </Toolbar>
           </AppBar>
