@@ -16,8 +16,7 @@ function getTheme(theme) {
 class Wrapper extends Component {
 
   componentDidMount() {
-    setTimeout(() => {
-      console.log("test", this.props);
+    setInterval(() => {
       this.props.dispatch({
         type: actionTypes.THEME_CHANGE_PALETTE_TYPE,
         payload: {
@@ -27,11 +26,7 @@ class Wrapper extends Component {
     }, 5000);
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
-
   render() {
-    console.log(this.props);
     return (
       <MuiThemeProvider theme={getTheme(this.props.uiTheme)}>
         <Studio/>
