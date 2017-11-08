@@ -15,7 +15,7 @@ export class Fullscreen extends Component {
 }
 
   componentWillUnmount() {
-    screenfull.on('change', this.updateState)
+    screenfull.off('change', this.updateState)
   }
 
   updateState = () => {
