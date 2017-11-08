@@ -1,17 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import initRedux from './redux/initRedux';
+import initStore from './redux/initStore';
 import Studio from './studio';
 import 'typeface-roboto';
 import './styles.less';
 
-const redux = initRedux({});
+const store = initStore({});
 
 function Application() {
   return (
-    <Provider store={redux}>
-        <Studio />
+    <Provider store={store}>
+      <Studio />
     </Provider>
   );
 }

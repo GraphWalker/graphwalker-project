@@ -3,16 +3,15 @@ import logger from 'redux-logger'
 import themeReducer from './reducers/themeReducer';
 
 function create(initialState) {
-  let middlewares = [logger];
   return createStore(
     combineReducers({
       theme: themeReducer,
     }),
     initialState,
-    compose(applyMiddleware(...middlewares)),
+    compose(applyMiddleware(logger)),
   );
 }
 
-export default function initRedux(initialState) {
+export default function initStore(initialState) {
   return create(initialState);
 }
