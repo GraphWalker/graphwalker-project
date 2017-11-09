@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 import Dialog, { DialogTitle, DialogContent, DialogActions } from 'material-ui/Dialog';
 import { FormControlLabel, FormGroup } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
-import { THEME_CHANGE_PALETTE_TYPE } from '../../redux/actions';
+import { setPaletteType } from '../../redux/actions/theme';
 
 const styles = theme => ({
   button: {
@@ -21,12 +21,7 @@ class SettingsDialog extends Component {
   };
 
   toggleThemeType = (event, checked) => {
-    this.props.dispatch({
-      type: THEME_CHANGE_PALETTE_TYPE,
-      payload: {
-        paletteType: this.props.uiTheme.paletteType === 'light' ? 'dark' : 'light',
-      },
-    });
+    this.props.setPaletteType(this.props.uiTheme.paletteType === 'light' ? 'dark' : 'light');
     this.setState({ checked: checked });
   };
 
@@ -62,7 +57,11 @@ export default compose(
   withStyles(styles, {
     withTheme: true,
   }),
-  connect(state => ({
-    uiTheme: state.theme,
-  })),
+  connect(
+    state => ({
+      uiTheme: state.theme,
+    }),
+    dispatch => ({
+      setPaletteType: (type) => dispatch(setPaletteType(type))
+    })),
 )(SettingsDialog);

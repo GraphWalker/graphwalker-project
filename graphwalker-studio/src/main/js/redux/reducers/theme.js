@@ -1,11 +1,11 @@
-import actionTypes from '../actions';
+import { THEME_CHANGE_PALETTE_TYPE } from '../actions/theme';
 
 const initialState = {
   paletteType: 'light',
 };
 
 const mapping = {
-  [actionTypes.THEME_CHANGE_PALETTE_TYPE]: (state, action) => ({
+  [THEME_CHANGE_PALETTE_TYPE]: (state, action) => ({
     ...state,
     paletteType: action.payload.paletteType,
   }),
