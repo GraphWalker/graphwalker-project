@@ -11,7 +11,7 @@ const mapping = {
   }),
 };
 
-function themeReducer(state = initialState, action) {
+function theme(state = initialState, action) {
   let newState = state;
   if (mapping[action.type]) {
     newState = mapping[action.type](state, action);
@@ -19,4 +19,4 @@ function themeReducer(state = initialState, action) {
   return newState;
 }
 
-export default themeReducer;
+export default theme;

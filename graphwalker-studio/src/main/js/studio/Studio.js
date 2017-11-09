@@ -11,7 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import { Controller, EditorContainer, Fullscreen, GitHubIcon, Logo, ModelSelector, Project, PropertiesTable, Settings } from "../components";
-import { styles } from '../styles';
+import { styles } from './styles';
 
 class Studio extends Component {
 

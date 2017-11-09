@@ -7,7 +7,7 @@ import Table, { TableBody, TableCell, TableRow } from 'material-ui/Table';
 import Typography from 'material-ui/Typography';
 
 const styles = theme => ({
-  container: {
+  root: {
     height: '100%',
   },
   header: {
@@ -15,20 +15,19 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: '0 8px',
-    ...theme.mixins.toolbar,
-  }
+  },
 });
 
 class PropertiesTable extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.container}>
+      <div className={classes.root}>
         <div className={classes.header}>
           <IconButton onClick={this.handleDrawerClose}>
             <ListIcon/>
           </IconButton>
-          <Typography noWrap>
+          <Typography type="subheading" noWrap>
             Properties
           </Typography>
         </div>
