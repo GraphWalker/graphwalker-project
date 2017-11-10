@@ -11,7 +11,7 @@ const styles = theme => ({
     justifyContent: 'center',
   },
   title: {
-    color: theme.palette.text.secondary,
+    color: theme.palette.primary[500],
   },
   version: {
     paddingLeft: '5px',

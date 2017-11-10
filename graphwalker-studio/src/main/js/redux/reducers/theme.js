@@ -1,7 +1,7 @@
 import { THEME_CHANGE_PALETTE_TYPE } from '../actions/theme';
 
 const initialState = {
-  paletteType: 'light',
+  paletteType: 'dark',
 };
 
 const mapping = {
