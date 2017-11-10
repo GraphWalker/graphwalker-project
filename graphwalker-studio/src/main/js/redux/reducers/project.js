@@ -1,7 +1,7 @@
 import { PROJECT_SET_ACTIVE_MODEL } from '../actions/project';
 
 const initialState = {
-  activeModelId: '0',
+  activeModelId: 0,
   models: [{
     id: '0',
     name: 'A',

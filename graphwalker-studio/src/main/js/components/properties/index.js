@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
+import { connect } from 'react-redux';
+import compose from 'recompose/compose';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import ListIcon from 'material-ui-icons/List';
@@ -21,6 +23,13 @@ const styles = theme => ({
 class PropertiesTable extends Component {
   render() {
     const { classes } = this.props;
+    const properties = [];
+    Object.keys(this.props.model.properties).forEach((property, key) => properties.push((
+      <TableRow key={key}>
+        <TableCell>{property}</TableCell>
+        <TableCell>{this.props.model.properties[property]}</TableCell>
+      </TableRow>
+    )));
     return (
       <div className={classes.root}>
         <div className={classes.header}>
@@ -34,14 +43,7 @@ class PropertiesTable extends Component {
         <Divider/>
         <Table>
           <TableBody>
-            <TableRow>
-              <TableCell>name</TableCell>
-              <TableCell>test 1</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>model</TableCell>
-              <TableCell>one</TableCell>
-            </TableRow>
+            { properties }
           </TableBody>
         </Table>
         <Divider/>
@@ -50,4 +52,11 @@ class PropertiesTable extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(PropertiesTable);
+export default compose(
+  withStyles(styles, {
+    withTheme: true,
+  }),
+  connect(state => ({
+    model: state.project.models[state.project.activeModelId],
+  }))
+)(PropertiesTable);

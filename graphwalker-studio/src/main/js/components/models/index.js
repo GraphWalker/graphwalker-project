@@ -23,7 +23,9 @@ class ModelSelector extends Component {
   render() {
     const { classes } = this.props;
     const tabs = [];
-    this.props.models.forEach(model => tabs.push((<Tab key={model.id} value={model.id} label={model.name} />)));
+    this.props.models.forEach((model, key) => tabs.push(
+      <Tab key={key} value={model.id} label={model.name} />
+    ));
     return (
       <div className={classes.root}>
         <Tabs value={this.props.activeModelId} onChange={this.handleChange} indicatorColor="accent" textColor="accent" scrollable scrollButtons="on">
