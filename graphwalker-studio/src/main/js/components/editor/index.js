@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
+import { connect } from 'react-redux';
+import compose from 'recompose/compose';
 import ContextMenu from './ContextMenu';
 import cytoscape from "cytoscape"
 
@@ -80,12 +82,16 @@ class EditorContainer extends Component {
   };
 
   componentDidMount() {
-    this.updateCytoscape();
+    this.updateCytoscape(this.props.model.graph);
     document.addEventListener('contextmenu', this.handleContextMenu);
   }
 
   componentWillUnmount() {
     document.removeEventListener('contextmenu', this.handleContextMenu);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateCytoscape(nextProps.model.graph);
   }
 
   disableGestures() {
@@ -105,23 +111,10 @@ class EditorContainer extends Component {
       .boxSelectionEnabled(this.boxSelectionEnabled);
   }
 
-  updateCytoscape() {
+  updateCytoscape(graph) {
     const properties = Object.assign({}, {
       container: document.getElementById('cy'),
-      elements: {
-        nodes: [
-          { data: { id: "n1", name: "one", weight: 0.25 }, classes: "odd one" },
-          { data: { id: "n2", name: "two", weight: 0.5 }, classes: "even two" },
-          { data: { id: "n3", name: "three", weight: 0.75 }, classes: "odd three" },
-          { data: { id: "n4", parent: "n5", name: "bar" } },
-          { data: { id: "n5" } }
-        ],
-        edges: [
-          { data: { id: "n1n2", source: "n1", target: "n2", weight: 0.33 }, classes: "uh" },
-          { data: { id: "n2n3", source: "n2", target: "n3", weight: 0.66 }, classes: "huh" },
-          { data: { id: "n1n1", source: "n1", target: "n1" } }
-        ]
-      },
+      elements: graph,
       style: [{
         selector: 'node',
         style: {
@@ -273,4 +266,11 @@ class EditorContainer extends Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(EditorContainer);
+export default compose(
+  withStyles(styles, {
+    withTheme: true,
+  }),
+  connect(state => ({
+    model: state.project.models[state.project.activeModelId],
+  }))
+)(EditorContainer);
