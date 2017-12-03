@@ -1,13 +1,11 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import logger from 'redux-logger';
-import project from './reducers/project';
-import theme from './reducers/theme';
+import * as reducers from './reducers';
 
 function create(initialState) {
   return createStore(
     combineReducers({
-      project,
-      theme,
+      ...reducers,
     }),
     initialState,
     compose(applyMiddleware(logger)),
