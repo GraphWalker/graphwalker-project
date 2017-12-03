@@ -5,10 +5,15 @@ import SvgIcon from 'material-ui/SvgIcon';
 const url = 'https://github.com/GraphWalker/graphwalker-project';
 
 export class GitHubIcon extends Component {
+
+  openGithub = () => {
+    window.open(url, '_blank').focus();
+  };
+
   render() {
     return (
       <IconButton color="contrast"
-          onClick={() => window.open(url, '_blank').focus()}
+          onClick={this.openGithub}
       >
         <SvgIcon>
           {<path
