@@ -46,7 +46,7 @@ class PropertiesTable extends Component {
           <Typography noWrap
               type="subheading"
           >
-            Properties
+            {'Properties'}
           </Typography>
         </div>
         <Divider/>

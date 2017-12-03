@@ -33,12 +33,12 @@ class Logo extends Component {
             color="inherit"
             type="title"
         >
-          GraphWalker
+          {'GraphWalker'}
         </Typography>
         <Typography className={classes.version}
             type="caption"
         >
-          4.0.0-SNAPSHOT
+          {'4.0.0-SNAPSHOT'}
         </Typography>
       </Toolbar>
     );

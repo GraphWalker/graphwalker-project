@@ -39,7 +39,7 @@ class SettingsDialog extends Component {
       <Dialog onRequestClose={this.props.onRequestClose}
           open={this.props.open}
       >
-        <DialogTitle>Settings</DialogTitle>
+        <DialogTitle>{'Settings'}</DialogTitle>
         <DialogContent>
           <FormGroup>
             <FormControlLabel
@@ -59,7 +59,7 @@ class SettingsDialog extends Component {
               onClick={this.props.onRequestClose}
               raised
           >
-            OK
+            {'OK'}
           </Button>
         </DialogActions>
       </Dialog>

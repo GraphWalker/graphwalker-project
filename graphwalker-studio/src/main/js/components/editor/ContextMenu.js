@@ -37,19 +37,19 @@ export default class ContextMenu extends Component {
             <ListItemIcon>
               <NetworkCheckIcon />
             </ListItemIcon>
-            TODO: Context menu
+            {'TODO: Context menu'}
           </MenuItem>
           <MenuItem onClick={this.props.closeMenu}>
             <ListItemIcon>
               <PagesIcon />
             </ListItemIcon>
-            Item Two
+            {'Item Two'}
           </MenuItem>
           <MenuItem onClick={this.props.closeMenu}>
             <ListItemIcon>
               <SaveIcon />
             </ListItemIcon>
-            Save
+            {'Save'}
           </MenuItem>
         </Popover>
     );
