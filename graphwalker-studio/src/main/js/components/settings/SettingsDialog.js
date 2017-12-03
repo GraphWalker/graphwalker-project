@@ -16,13 +16,12 @@ const styles = theme => ({
 
 class SettingsDialog extends Component {
 
-  state = {
-    checked: true,
+  toggleThemeType = () => {
+    this.props.setPaletteType(this.props.uiTheme.paletteType === 'light' ? 'dark' : 'light');
   };
 
-  toggleThemeType = (event, checked) => {
-    this.props.setPaletteType(this.props.uiTheme.paletteType === 'light' ? 'dark' : 'light');
-    this.setState({ checked: checked });
+  isDarkTheme = () => {
+    return this.props.uiTheme.paletteType === 'dark';
   };
 
   render() {
@@ -37,7 +36,7 @@ class SettingsDialog extends Component {
             <FormControlLabel
                 control={
                 <Switch
-                    checked={this.state.checked}
+                    checked={this.isDarkTheme()}
                     onChange={this.toggleThemeType}
                 />
               }
