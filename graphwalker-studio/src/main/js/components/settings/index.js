@@ -28,14 +28,18 @@ class Settings extends Component {
     return (
       <div>
         <List>
-          <ListItem button onClick={this.openSettings}>
+          <ListItem button
+              onClick={this.openSettings}
+          >
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItem>
         </List>
-        <SettingsDialog open={this.state.open} onRequestClose={this.closeSettings}/>
+        <SettingsDialog onRequestClose={this.closeSettings}
+            open={this.state.open}
+        />
       </div>
     );
   }

@@ -33,12 +33,12 @@ class Studio extends Component {
       <div className={classes.root}>
         <div className={classes.appFrame}>
           <AppBar className={classNames(classes.appBar, this.state.open && classes.appBarShift)}>
-            <Toolbar disableGutters={true}>
+            <Toolbar disableGutters>
               <IconButton
-                color="contrast"
-                aria-label="open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, this.state.open && classes.hide)}
+                  aria-label="open drawer"
+                  className={classNames(classes.menuButton, this.state.open && classes.hide)}
+                  color="contrast"
+                  onClick={this.handleDrawerOpen}
               >
                 <MenuIcon />
               </IconButton>
@@ -49,11 +49,11 @@ class Studio extends Component {
             </Toolbar>
           </AppBar>
           <Drawer
-            type="permanent"
-            classes={{
+              classes={{
               paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
             }}
-            open={this.state.open}
+              open={this.state.open}
+              type="permanent"
           >
             <div className={classes.drawerInner}>
               <div className={classes.drawerHeader}>
@@ -79,13 +79,14 @@ class Studio extends Component {
                 <EditorContainer/>
               </div>
               <Drawer
-                type="permanent"
-                anchor="right"
-                classes={{
+                  anchor="right"
+                  classes={{
                   paper: classNames(classes.propertiesDrawerPaper),
                   docked: classNames(classes.propertiesDrawerDocked)
                 }}
-                open={true}>
+                  open
+                  type="permanent"
+              >
                   <PropertiesTable />
               </Drawer>
             </div>

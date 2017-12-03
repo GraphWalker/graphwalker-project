@@ -259,8 +259,13 @@ class EditorContainer extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
-        <div id="cy" tabIndex="-1" className={classes.editor} />
-        <ContextMenu openEvent={this.state.openEvent} closeMenu={this.closeMenu}/>
+        <div className={classes.editor}
+            id="cy"
+            tabIndex="-1"
+        />
+        <ContextMenu closeMenu={this.closeMenu}
+            openEvent={this.state.openEvent}
+        />
       </div>
     );
   }

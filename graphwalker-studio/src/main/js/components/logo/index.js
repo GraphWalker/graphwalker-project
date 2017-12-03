@@ -23,10 +23,15 @@ class Logo extends Component {
     const { classes } = this.props;
     return (
       <Toolbar className={classes.toolbar}>
-        <Typography type="title" color="inherit" className={classes.title}>
+        <Typography className={classes.title}
+            color="inherit"
+            type="title"
+        >
           GraphWalker
         </Typography>
-        <Typography type="caption" className={classes.version}>
+        <Typography className={classes.version}
+            type="caption"
+        >
           4.0.0-SNAPSHOT
         </Typography>
       </Toolbar>

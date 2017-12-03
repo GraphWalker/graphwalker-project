@@ -36,7 +36,9 @@ class PropertiesTable extends Component {
           <IconButton onClick={this.handleDrawerClose}>
             <ListIcon/>
           </IconButton>
-          <Typography type="subheading" noWrap>
+          <Typography noWrap
+              type="subheading"
+          >
             Properties
           </Typography>
         </div>

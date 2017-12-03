@@ -38,13 +38,17 @@ export class Fullscreen extends Component {
     }
     if (this.state.isFullscreen) {
       return (
-        <IconButton color="contrast" onClick={this.toggleFullscreen}>
+        <IconButton color="contrast"
+            onClick={this.toggleFullscreen}
+        >
           <FullscreenExitButton/>
         </IconButton>
       );
     }
     return (
-      <IconButton color="contrast" onClick={this.toggleFullscreen}>
+      <IconButton color="contrast"
+          onClick={this.toggleFullscreen}
+      >
         <FullscreenButton/>
       </IconButton>
     );

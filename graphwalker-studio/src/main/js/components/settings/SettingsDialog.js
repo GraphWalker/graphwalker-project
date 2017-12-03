@@ -28,23 +28,29 @@ class SettingsDialog extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <Dialog open={this.props.open} onRequestClose={this.props.onRequestClose}>
+      <Dialog onRequestClose={this.props.onRequestClose}
+          open={this.props.open}
+      >
         <DialogTitle>Settings</DialogTitle>
         <DialogContent>
           <FormGroup>
             <FormControlLabel
-              control={
+                control={
                 <Switch
-                  checked={this.state.checked}
-                  onChange={this.toggleThemeType}
+                    checked={this.state.checked}
+                    onChange={this.toggleThemeType}
                 />
               }
-              label="Toggle light/dark theme"
+                label="Toggle light/dark theme"
             />
           </FormGroup>
         </DialogContent>
         <DialogActions>
-          <Button raised color="primary" className={classes.button} onClick={this.props.onRequestClose}>
+          <Button className={classes.button}
+              color="primary"
+              onClick={this.props.onRequestClose}
+              raised
+          >
             OK
           </Button>
         </DialogActions>

@@ -24,11 +24,20 @@ class ModelSelector extends Component {
     const { classes } = this.props;
     const tabs = [];
     this.props.models.forEach((model, key) => tabs.push(
-      <Tab key={key} value={model.id} label={model.name} />
+      <Tab key={key}
+          label={model.name}
+          value={model.id}
+      />
     ));
     return (
       <div className={classes.root}>
-        <Tabs value={this.props.activeModelId} onChange={this.handleChange} indicatorColor="accent" textColor="accent" scrollable scrollButtons="on">
+        <Tabs indicatorColor="accent"
+            onChange={this.handleChange}
+            scrollButtons="on"
+            scrollable
+            textColor="accent"
+            value={this.props.activeModelId}
+        >
           { tabs }
         </Tabs>
       </div>

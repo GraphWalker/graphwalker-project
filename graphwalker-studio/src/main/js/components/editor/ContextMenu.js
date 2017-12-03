@@ -21,11 +21,12 @@ export default class ContextMenu extends Component {
   render() {
     return (
         <Popover
-          open={!!this.props.openEvent}
-          anchorEl={this.mockAnchorEl}
-          anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-          onRequestClose={this.props.closeMenu}
-          modal="false">
+            anchorEl={this.mockAnchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+            modal="false"
+            onRequestClose={this.props.closeMenu}
+            open={!!this.props.openEvent}
+        >
           <MenuItem onClick={this.props.closeMenu}>
             <ListItemIcon>
               <NetworkCheckIcon />
