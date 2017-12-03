@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -15,6 +16,14 @@ const styles = theme => ({
 });
 
 class SettingsDialog extends Component {
+
+  static propTypes = {
+    classes: PropTypes.object,
+    onRequestClose: PropTypes.func,
+    open: PropTypes.func,
+    setPaletteType: PropTypes.func,
+    uiTheme: PropTypes.object,
+  };
 
   toggleThemeType = () => {
     this.props.setPaletteType(this.props.uiTheme.paletteType === 'light' ? 'dark' : 'light');

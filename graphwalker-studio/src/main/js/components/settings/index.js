@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -11,6 +12,13 @@ const styles = theme => ({
 });
 
 class Settings extends Component {
+
+  static propTypes = {
+    closeSettings: PropTypes.func,
+    openSettings: PropTypes.func,
+    showModal: PropTypes.bool,
+  };
+
   render() {
     return (
       <div>

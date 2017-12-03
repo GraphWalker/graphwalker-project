@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -21,6 +22,12 @@ const styles = theme => ({
 });
 
 class PropertiesTable extends Component {
+
+  static propTypes = {
+    classes: PropTypes.object,
+    model: PropTypes.object,
+  };
+
   render() {
     const { classes } = this.props;
     const properties = [];

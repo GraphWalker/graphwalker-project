@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -15,6 +16,13 @@ const styles = theme => ({
 });
 
 class ModelSelector extends Component {
+
+  static propTypes = {
+    activeModelId: PropTypes.number,
+    classes: PropTypes.object,
+    models: PropTypes.array,
+    setActiveModel: PropTypes.func,
+  };
 
   handleChange = (event, value) => {
     this.props.setActiveModel(value);

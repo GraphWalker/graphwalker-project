@@ -24,6 +24,11 @@ function getTheme(theme) {
 }
 
 class Wrapper extends Component {
+
+  static propTypes = {
+    uiTheme: PropTypes.object,
+  };
+
   render() {
     return (
       <MuiThemeProvider theme={getTheme(this.props.uiTheme)}>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -19,6 +20,11 @@ const styles = theme => ({
 });
 
 class Logo extends Component {
+
+  static propTypes = {
+    classes: PropTypes.object,
+  };
+
   render() {
     const { classes } = this.props;
     return (

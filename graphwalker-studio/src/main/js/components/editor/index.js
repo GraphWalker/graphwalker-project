@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
@@ -23,9 +24,28 @@ const styles = theme => ({
 
 class EditorContainer extends Component {
 
+  static propTypes = {
+    classes: PropTypes.object,
+    model: PropTypes.object,
+    openMenu: PropTypes.func,
+  };
+
   state = {
     openEvent: false,
   };
+
+  componentDidMount() {
+    this.updateCytoscape(this.props.model.graph);
+    document.addEventListener('contextmenu', this.handleContextMenu);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.updateCytoscape(nextProps.model.graph);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('contextmenu', this.handleContextMenu);
+  }
 
   openMenu = event => {
     document.getElementById('cy').blur();
@@ -80,19 +100,6 @@ class EditorContainer extends Component {
       this.focus(document.getElementById('cy'));
     }
   };
-
-  componentDidMount() {
-    this.updateCytoscape(this.props.model.graph);
-    document.addEventListener('contextmenu', this.handleContextMenu);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('contextmenu', this.handleContextMenu);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.updateCytoscape(nextProps.model.graph);
-  }
 
   disableGestures() {
     this.panningEnabled = this.cy.panningEnabled();

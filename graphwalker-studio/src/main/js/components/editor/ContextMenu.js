@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { ListItemIcon } from 'material-ui/List';
 import Popover from 'material-ui/Popover';
 import { MenuItem } from 'material-ui/Menu';
@@ -7,6 +8,11 @@ import PagesIcon from 'material-ui-icons/Pages';
 import SaveIcon from 'material-ui-icons/Save';
 
 export default class ContextMenu extends Component {
+
+  static propTypes = {
+    closeMenu: PropTypes.func,
+    openEvent: PropTypes.func,
+  };
 
   get mockAnchorEl() {
     const openEvent = this.props.openEvent.originalEvent ? this.props.openEvent.originalEvent: this.props.openEvent;
