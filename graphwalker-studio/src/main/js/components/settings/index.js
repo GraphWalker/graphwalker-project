@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
-import { openSettings, closeSettings } from '../../redux/actions/settings';
+import { openSettings } from '../../redux/actions/settings';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import SettingsIcon from 'material-ui-icons/Settings';
 import SettingsDialog from './SettingsDialog';
@@ -14,27 +14,21 @@ const styles = theme => ({
 class Settings extends Component {
 
   static propTypes = {
-    closeSettings: PropTypes.func,
     openSettings: PropTypes.func,
-    showModal: PropTypes.bool,
   };
 
   render() {
     return (
       <div>
         <List>
-          <ListItem button
-              onClick={this.props.openSettings}
-          >
+          <ListItem button onClick={this.props.openSettings}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Settings" />
           </ListItem>
         </List>
-        <SettingsDialog onRequestClose={this.props.closeSettings}
-            open={this.props.showModal}
-        />
+        <SettingsDialog />
       </div>
     );
   }
@@ -45,10 +39,8 @@ export default compose(
     withTheme: true,
   }),
   connect(state => ({
-      showModal: state.settings.showModal,
     }),
     dispatch => ({
       openSettings: () => dispatch(openSettings()),
-      closeSettings: () => dispatch(closeSettings()),
     })),
 )(Settings);

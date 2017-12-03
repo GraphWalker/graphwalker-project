@@ -11,7 +11,7 @@ export default class ContextMenu extends Component {
 
   static propTypes = {
     closeMenu: PropTypes.func,
-    openEvent: PropTypes.func,
+    openEvent: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   };
 
   get mockAnchorEl() {
@@ -25,27 +25,28 @@ export default class ContextMenu extends Component {
   }
 
   render() {
+    const { closeMenu, openEvent } = this.props;
     return (
         <Popover
             anchorEl={this.mockAnchorEl}
             anchorOrigin={{horizontal: 'left', vertical: 'top'}}
             modal="false"
-            onRequestClose={this.props.closeMenu}
-            open={!!this.props.openEvent}
+            onRequestClose={closeMenu}
+            open={!!openEvent}
         >
-          <MenuItem onClick={this.props.closeMenu}>
+          <MenuItem onClick={closeMenu}>
             <ListItemIcon>
               <NetworkCheckIcon />
             </ListItemIcon>
             {'TODO: Context menu'}
           </MenuItem>
-          <MenuItem onClick={this.props.closeMenu}>
+          <MenuItem onClick={closeMenu}>
             <ListItemIcon>
               <PagesIcon />
             </ListItemIcon>
             {'Item Two'}
           </MenuItem>
-          <MenuItem onClick={this.props.closeMenu}>
+          <MenuItem onClick={closeMenu}>
             <ListItemIcon>
               <SaveIcon />
             </ListItemIcon>

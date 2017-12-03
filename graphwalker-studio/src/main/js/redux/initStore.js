@@ -4,9 +4,7 @@ import * as reducers from './reducers';
 
 function create(initialState) {
   return createStore(
-    combineReducers({
-      ...reducers,
-    }),
+    combineReducers(reducers),
     initialState,
     compose(applyMiddleware(logger)),
   );

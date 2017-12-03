@@ -15,6 +15,11 @@ import { styles } from './styles';
 
 class Studio extends Component {
 
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
+  };
+
   state = {
     open: false,
   };
@@ -96,10 +101,5 @@ class Studio extends Component {
     );
   }
 }
-
-Studio.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles, { withTheme: true })(Studio);

@@ -25,16 +25,17 @@ class ModelSelector extends Component {
   };
 
   handleChange = (event, value) => {
+    console.log(value);
     this.props.setActiveModel(value);
   };
 
   render() {
     const { classes } = this.props;
     const tabs = [];
-    this.props.models.forEach((model, key) => tabs.push(
-      <Tab key={key}
+    this.props.models.forEach((model, index) => tabs.push(
+      <Tab key={index}
           label={model.name}
-          value={model.id}
+          value={index}
       />
     ));
     return (
