@@ -42,7 +42,7 @@ mvn package -pl graphwalker-studio -am
 
 The jar is in:
 ```bash
-graphwalker-studio/target/graphwalker-studio-3.2.1.jar
+graphwalker-studio/target/graphwalker-studio-4.0.0.jar
 ```
  
 Run it like:
