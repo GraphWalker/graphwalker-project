@@ -48,8 +48,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -75,11 +77,19 @@ public final class TestExecutor implements Executor, Observer {
     urls.addAll(classPath);
     urls.addAll(classLoader);
     for (URL url : urls) {
-      if (!filteredUrls.contains(url) && new File(url.getFile()).exists()) {
-        filteredUrls.add(url);
-      }
+        if (!filteredUrls.contains(url) && exists(url)) {
+          filteredUrls.add(url);
+        }
     }
     return filteredUrls;
+  }
+
+  private static boolean exists(URL url) {
+    try {
+      return Paths.get(URLDecoder.decode(url.getFile(), "UTF-8")).toFile().exists();
+    } catch (UnsupportedEncodingException e) {
+      return false;
+    }
   }
 
   private final Configuration configuration;
