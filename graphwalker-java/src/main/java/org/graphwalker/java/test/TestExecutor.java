@@ -77,9 +77,9 @@ public final class TestExecutor implements Executor, Observer {
     urls.addAll(classPath);
     urls.addAll(classLoader);
     for (URL url : urls) {
-        if (!filteredUrls.contains(url) && exists(url)) {
-          filteredUrls.add(url);
-        }
+      if (!filteredUrls.contains(url) && exists(url)) {
+        filteredUrls.add(url);
+      }
     }
     return filteredUrls;
   }
