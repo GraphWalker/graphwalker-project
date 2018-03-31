@@ -86,7 +86,7 @@ public final class TestExecutor implements Executor, Observer {
 
   private static boolean exists(URL url) {
     try {
-      return Paths.get(URLDecoder.decode(url.getFile(), "UTF-8")).toFile().exists();
+      return new File(URLDecoder.decode(url.getFile(), "UTF-8")).exists();
     } catch (UnsupportedEncodingException e) {
       return false;
     }
