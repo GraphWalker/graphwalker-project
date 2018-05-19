@@ -408,7 +408,8 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    assertEquals((double) context.getScriptEngine().eval("toString()"), 6.0, 0.1);
+    String evalStr = context.getScriptEngine().eval("toString()").toString();
+    assertEquals(Double.parseDouble(evalStr), 6.0, 0.1);
   }
 
   @Test
