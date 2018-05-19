@@ -90,6 +90,7 @@
                 </executions>
                 <inherited>true</inherited>
                 <configuration>
+                    <javaSource>1.9</javaSource>
                     <schemaDirectory>src/main/xsd</schemaDirectory>
                 </configuration>
             </plugin>
