@@ -60,7 +60,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>1.12</version>
                 <configuration>
                     <licenseName>mit</licenseName>
                 </configuration>
@@ -91,6 +90,7 @@
                 </executions>
                 <inherited>true</inherited>
                 <configuration>
+                    <javaSource>1.9</javaSource>
                     <schemaDirectory>src/main/xsd</schemaDirectory>
                 </configuration>
             </plugin>

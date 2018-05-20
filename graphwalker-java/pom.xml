@@ -60,6 +60,23 @@
       <artifactId>jsonassert</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -67,7 +84,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxb2-maven-plugin</artifactId>
-        <version>2.3.1</version>
         <executions>
           <execution>
             <id>xjc</id>
@@ -80,6 +96,34 @@
         <configuration>
           <packageName>org.graphwalker.java.report</packageName>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.sun.codemodel</groupId>
+            <artifactId>codemodel</artifactId>
+            <version>2.6</version>
+          </dependency>
+          <dependency>
+            <groupId>com.sun.xsom</groupId>
+            <artifactId>xsom</artifactId>
+            <version>20140925</version>
+          </dependency>
+          <!-- https://mvnrepository.com/artifact/com.sun.xml.txw2/txwc2 -->
+          <dependency>
+            <groupId>com.sun.xml.txw2</groupId>
+            <artifactId>txwc2</artifactId>
+            <version>20110809</version>
+          </dependency>
+          <dependency>
+            <groupId>com.sun.istack</groupId>
+            <artifactId>istack-commons-runtime</artifactId>
+            <version>3.0.5</version>
+          </dependency>
+          <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
