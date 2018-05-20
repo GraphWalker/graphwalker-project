@@ -352,6 +352,11 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
   }
 
   @Override
+  public void onStart() {
+    logger.debug("WebSocket service started");
+  }
+
+  @Override
   public void update(Machine machine, Element element, EventType type) {
     logger.info("Received an update from a GraphWalker machine");
     for (Object o : machines.entrySet()) {
