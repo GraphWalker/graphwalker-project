@@ -115,7 +115,11 @@ public class Util {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
       } finally {
-        IOUtils.closeQuietly(inputStream);
+        try {
+          inputStream.close();
+        } catch (IOException e) {
+          logger.error("Could not close 'git.properties': ", e.getMessage());
+        }
       }
     }
     inputStream = Util.class.getResourceAsStream("/git.properties");
@@ -128,7 +132,11 @@ public class Util {
         logger.error("An error occurred when trying to get the version string", e);
         return "unknown";
       } finally {
-        IOUtils.closeQuietly(inputStream);
+        try {
+          inputStream.close();
+        } catch (IOException e) {
+          logger.error("Could not close 'git.properties': ", e.getMessage());
+        }
       }
     }
     return versionStr;
