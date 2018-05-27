@@ -26,6 +26,7 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -97,8 +98,8 @@ public final class ContextFactoryScanner {
   private static ContextFactory create(Class<? extends ContextFactory> factoryClass) {
     if (!factories.containsKey(factoryClass)) {
       try {
-        factories.put(factoryClass, factoryClass.newInstance());
-      } catch (InstantiationException | IllegalAccessException e) {
+        factories.put(factoryClass, factoryClass.getDeclaredConstructor().newInstance());
+      } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
         logger.error(e.getMessage());
         return null;
       }
