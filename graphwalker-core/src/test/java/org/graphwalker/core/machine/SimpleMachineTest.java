@@ -36,7 +36,6 @@ import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +51,6 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Guard;
 import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Path;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Execution;
 import org.junit.Test;
@@ -431,5 +429,41 @@ public class SimpleMachineTest {
   public void setReachedStopConditionWithoutModel() throws Exception {
     Context context = new TestExecutionContext();
     context.setPathGenerator(new RandomPath(new ReachedVertex("X")));
+  }
+
+  @Test
+  public void resetMachine() throws Exception {
+    Vertex v1 = new Vertex().setName("v1");
+    Vertex v2 = new Vertex().setName("v2");
+    Edge e1 = new Edge().setName("e1").setSourceVertex(v1).setTargetVertex(v2);
+    Model model = new Model().addEdge(e1);
+
+    List<Context> contexts = new ArrayList<>();
+    Context context = new TestExecutionContext(model, new RandomPath(new VertexCoverage(100)));
+    context.setNextElement(v1);
+    contexts.add(context);
+
+    Machine machine = new SimpleMachine(contexts);
+    Element firstElement = machine.getCurrentContext().getNextElement();
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    List<Element> expectedPath = Arrays.<Element>asList(
+      v1.build(),
+      e1.build(),
+      v2.build()
+    );
+    List<Element> path = context.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
+
+    machine = new SimpleMachine(contexts);
+    machine.reset(firstElement);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    path = context.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
   }
 }

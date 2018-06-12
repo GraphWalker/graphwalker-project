@@ -94,4 +94,6 @@ public interface Context {
   void execute(String name);
 
   Map<String, String> getKeys();
+
+  boolean hasElement(Element element);
 }
