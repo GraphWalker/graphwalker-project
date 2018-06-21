@@ -246,16 +246,6 @@ public class SimpleMachine extends MachineBase {
     return false;
   }
 
-  @Override
-  public void reset(Element element) {
-    for (Context context : getContexts()) {
-      context.setExecutionStatus(ExecutionStatus.NOT_EXECUTED);
-      if (context.hasElement(element)) {
-        context.setNextElement(element);
-      }
-    }
-  }
-
   private boolean hasNextStep(Context context) {
     ExecutionStatus status = context.getExecutionStatus();
     if (ExecutionStatus.COMPLETED.equals(status) || ExecutionStatus.FAILED.equals(status)) {

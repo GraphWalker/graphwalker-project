@@ -444,7 +444,6 @@ public class SimpleMachineTest {
     contexts.add(context);
 
     Machine machine = new SimpleMachine(contexts);
-    Element firstElement = machine.getCurrentContext().getNextElement();
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
@@ -457,8 +456,9 @@ public class SimpleMachineTest {
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
 
-    machine = new SimpleMachine(contexts);
-    machine.reset(firstElement);
+    context.setNextElement(machine.getProfiler().getExecutionPath().get(0).getElement());
+    context.setExecutionStatus(ExecutionStatus.NOT_EXECUTED);
+    machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }

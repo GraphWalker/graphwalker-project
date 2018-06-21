@@ -133,10 +133,6 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     return this;
   }
 
-  public boolean hasElement(Element element) {
-    return model.getElements().contains(element);
-  }
-
   private void addRequirements(RuntimeModel model) {
     requirements.clear();
     for (Requirement requirement : model.getRequirements()) {
