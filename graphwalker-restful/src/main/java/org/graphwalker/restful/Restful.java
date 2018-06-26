@@ -28,6 +28,7 @@ package org.graphwalker.restful;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -35,12 +36,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.FailFastStrategy;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.MachineException;
-import org.graphwalker.core.machine.SimpleMachine;
+
+import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Action;
+import org.graphwalker.core.statistics.Execution;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.java.test.Result;
 import org.json.JSONObject;
@@ -195,6 +194,13 @@ public class Restful {
     logger.debug("Received restart");
     JSONObject resultJson = new JSONObject();
     try {
+      Execution execution = machine.getProfiler().getExecutionPath().get(0);
+      contexts = contexts.stream().peek(context -> {
+        if (execution.getContext().equals(context)) {
+          context.setNextElement(execution.getElement());
+        }
+        context.setExecutionStatus(ExecutionStatus.NOT_EXECUTED);
+      }).collect(Collectors.toList());
       machine = new SimpleMachine(contexts);
       resultJson.put("result", "ok");
     } catch (Exception e) {

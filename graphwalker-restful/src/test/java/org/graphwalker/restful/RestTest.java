@@ -150,6 +150,21 @@ public class RestTest extends ExecutionContext implements RestFlow {
     Assert.assertThat(body, is("{\"result\":\"ok\"}"));
     Assert.assertNotNull(rest.getContexts());
     Assert.assertNotNull(rest.getMachine());
+
+    response = httpExecute(new HttpGet("http://localhost:9191/graphwalker/getStatistics"));
+    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    body = getResonseBody();
+    logger.debug(body);
+    JSONObject responseJSON = new JSONObject(body);
+    JSONAssert.assertEquals("Wrong number of edge coverage", "{edgeCoverage:0}", responseJSON, false);
+    JSONAssert.assertEquals("Result should be ok", "{result:\"ok\"}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of total visited edges", "{totalNumberOfVisitedEdges:0}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of total number of visited vertices", "{totalNumberOfVisitedVertices:0}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of vertices", "{totalNumberOfVertices:7}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of edges", "{totalNumberOfEdges:12}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of unvisited vertices", "{totalNumberOfUnvisitedVertices:7}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of vertex coverage", "{vertexCoverage:0}", responseJSON, false);
+    JSONAssert.assertEquals("Wrong number of unvisited edges", "{totalNumberOfUnvisitedEdges:12}", responseJSON, false);
   }
 
   @Override
