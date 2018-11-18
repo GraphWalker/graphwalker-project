@@ -30,7 +30,7 @@ public class VertexChecker {
       if (vertex.getName().isEmpty()) {
         issues.add("Name of vertex cannot be an empty string");
       }
-      if (CharMatcher.WHITESPACE.matchesAnyOf(vertex.getName())) {
+      if (CharMatcher.whitespace().matchesAnyOf(vertex.getName())) {
         issues.add("Name of vertex cannot have any white spaces.");
       }
     }
