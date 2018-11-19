@@ -30,8 +30,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +58,11 @@ public final class ResourceUtils {
         resource = Thread.currentThread().getContextClassLoader().getResource(filename);
       }
       if (null != resource) {
-        return new File(resource.getFile());
+        try {
+          return Paths.get(resource.toURI()).toFile();
+        } catch (URISyntaxException e) {
+          throw new ResourceNotFoundException("Could not read resource: " + filename + ", " + e.getMessage());
+        }
       }
       throw new ResourceNotFoundException("Could not read resource: " + filename);
     }

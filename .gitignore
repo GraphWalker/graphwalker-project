@@ -14,11 +14,16 @@
 # Temp stuff #
 ##############
 doc/.~lock.*
+*~
+*.swp
+*.swo
+
 
 # Build and unit tests stuff #
 #############################
 logs/
 **/target/
+**/bin/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.next
