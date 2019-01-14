@@ -32,10 +32,3 @@ script:
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"]; then mvn clean deploy --settings deploy.xml; else mvn clean package; fi fi
 after_success:
 - codecov
-deploy:
-  provider: bintray
-  file: .bintray.json
-  user: graphwalker 
-  key:
-    secure: "G2SkTggt90Bhy51UaGGOxOcLOgk+EiFl+3OrdQqfTxxiVbcScthm8E9uOVyeYzCHYBYtMae1r4MHHdZrwU8/wl3SHGBGZHQDxfhfJ5vDNFhd3VzBwiE0xj3fIXg1ZHa1wZOMQD5E5A2e0KrVy9n9uRva+O6TY+zG2HIyj+x7CwU="
-
