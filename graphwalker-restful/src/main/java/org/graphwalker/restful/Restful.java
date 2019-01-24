@@ -86,7 +86,6 @@ public class Restful {
       setContexts(contexts);
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
@@ -114,7 +113,6 @@ public class Restful {
       }
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
@@ -139,7 +137,6 @@ public class Restful {
       resultJson = Util.getStepAsJSON(machine, verbose, unvisited);
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson = new JSONObject();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
@@ -162,7 +159,6 @@ public class Restful {
       resultJson.put("data", data);
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
@@ -180,7 +176,6 @@ public class Restful {
       machine.getCurrentContext().execute(new Action(script));
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
@@ -204,7 +199,6 @@ public class Restful {
       machine = new SimpleMachine(contexts);
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
@@ -223,7 +217,6 @@ public class Restful {
       failFastStrategy.handle(machine, new MachineException(machine.getCurrentContext(), new Throwable(reason)));
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
@@ -242,7 +235,6 @@ public class Restful {
       resultJson = result.getResults();
       resultJson.put("result", "ok");
     } catch (Exception e) {
-      e.printStackTrace();
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
     }
