@@ -46,4 +46,3 @@ deploy:
   overwrite: true
   on:
     tags: false
-
