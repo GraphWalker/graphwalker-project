@@ -35,7 +35,7 @@ after_success:
 deploy:
   provider: releases
   api_key:
-    secure: "V5RaSZAogwi6mwUU8aMp5ifmwm9Y5Ufp8TB7ipgBdbSUuuaUyD/PZtMRGxo7qNFq3xL6yEy1sdI52RsvKXORILBhzwAYrlBvCwjpC9+tN3NCIOA/JOYcV3y/5Pq3PZ/cCgH05IyCwGi2+6YJFWW5avXPXo/YI/nKZSBy0Pv+cUA="
+    secure: "J4Oq/iiqi+puSzYMqZFI+LybGtdYHcKA57P8EysACCjzusC4Q5CpRZ4RAEt7aoq3G0WSiN85dMpxwovsKiCdZEZDNGCE6VMYI7OsMpcO6BmLLZtrE3v3IXxUhqazNVbGFf5rRdCyF4n3K65+NPe6wrupK17OVzjefEaJQlTbc28="
   tag_name: LATEST-BUILDS
   target_commitish: $TRAVIS_COMMIT
   draft: false
