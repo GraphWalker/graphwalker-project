@@ -32,3 +32,15 @@ script:
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"]; then mvn clean deploy --settings deploy.xml; else mvn clean package; fi fi
 after_success:
 - codecov
+deploy:
+  provider: releases
+  api_key: ${GITHUB_OAUTH_TOKEN}
+  tag_name: LATEST-BUILDS
+  target_commitish: $TRAVIS_COMMIT
+  draft: false
+  file:
+    - "graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar"
+    - "graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar"
+  overwrite: true
+  on:
+    tags: false
