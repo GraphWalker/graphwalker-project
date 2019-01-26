@@ -36,7 +36,7 @@ after_success:
 deploy:
   provider: releases
   api_key:
-    secure: H2xNWrT/6zzrbAIw1U8sqhFxtchULU68loOZy0uErjYuHGYVq63Co7E3Y/NmVhVGFrvcxkYqMALhwJ8kTB2d/QguqOlUk7oJH84jh50xFKfiAuDNUcMECADz7KJcJQR/m799SZAnfplckpwt3xq5M5cwNOikeTQ8aluIfQ5IQtXbTd37DzIcBieNTU22pDzA4UP0Qje7iHHn16EmIN01SF6OA8Gprqj4XswOt3xJ/XKbCz1e+SuXBxDqRbfZqek6XAYJ+CgfNtSETL08JN6bFZHHXtTj0yvpRHmPF04M4qFhOxPujwf0p775CqfaZXWAVhKHoFJhb0hSEZehflSqwIa++V4Q/xACAY9287n9ZXFIzQi26ulqZ/uycdvqKuJ/1WL6VbmFzD0wl6h1bPNT52wzb0MLKcra9XY4V7YaFasxWtspbBGH5tBn7/RoJ0npLf+z8Ld9tRmHdlOYyEsu8pSZNwbQXGH/tIxtJfcmalz/E7pA/AfLgcJ3AgA7FHTFGT924FJy+W5CaUw/dXjgA51c/4qdWetnXLOKG1/RbZl0vX3ZoJopoG0qCeMY0vM1eEnY7oFuHEEizt/pe2W0qE6Qed02ImRNRxeOGGlXi/EJYdXkoy7fhUGPefLnTHTG/8gPLpNIYYD5QSI2IJcO9Duej7t8MTvGrDtyNKexBPk=
+    secure: N1NZGwX9/Hrm7Qs3BP4AJ1HnUr7rydL+vd4e9rW6ISs6M6acUShxIMLFsxTXrYblsfDYCQ81r7S4tRENYXjvXwZjQGSyBmkkY1WQuQhl4QV4eepCy5i/yp7m15P7CZHkeqg5XSJteST4rpaz9oxrBCRYyVGArZUlQcWYnpUbmB0=
   tag_name: LATEST-BUILDS
   target_commitish: "$TRAVIS_COMMIT"
   draft: false
@@ -44,5 +44,4 @@ deploy:
   - graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar
   - graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar
   overwrite: true
-  on:
-    tags: false
+  skip_cleanup: true
