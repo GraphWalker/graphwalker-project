@@ -38,8 +38,6 @@ before_deploy:
 - git config --local user.name "$USER_NAME"
 - git config --local user.email "$USER_EMAIL"
 - git tag --force "$TRAVIS_TAG" "$TRAVIS_COMMIT"
-  api_key:
-    secure: N1NZGwX9/Hrm7Qs3BP4AJ1HnUr7rydL+vd4e9rW6ISs6M6acUShxIMLFsxTXrYblsfDYCQ81r7S4tRENYXjvXwZjQGSyBmkkY1WQuQhl4QV4eepCy5i/yp7m15P7CZHkeqg5XSJteST4rpaz9oxrBCRYyVGArZUlQcWYnpUbmB0=
 deploy:
   provider: releases
   api_key:
