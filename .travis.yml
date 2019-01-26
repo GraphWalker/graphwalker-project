@@ -13,7 +13,6 @@ env:
   - secure: NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI=
   - secure: fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE=
   - secure: UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g=
-  - secure: rKe0Mdv6hIv1wNflIPnZCbJ7O0KK33ZtZWThtUP6hV3FTvGIWG56wFgb/qJdf8bx3qS/umjW3mxsXEGBtPiqGUS9v72ANsQtmdCn34OiUnPLXbOhb6Sskb/vE2GcifqeZdaFSOVu3NuG5MtNNHj+MoRYTpLpWPYUz+epfOhcnV7zk16rw/EHVF4dT6dd6EjNkLKY8EfxA8SIDwPBbOAGBDvYSZUPUOebP0Ylw+Ht2J5EMaOsBocGSTKn2Dlyr7jAb0AuvAUhiq+6Uo5MTbIQbBgJhF+zYbM5q/shIgL6aDLULbHFl0KPiIRN+1ZPwKlAehHCqiRwRrMkbHZYSrat78O/Q1XlHZpt1eVIhdTtUaARmWoq4VB2ln4osbBuAuIRb1A0c6nH1oqBP0K323LnGeBhvwq9XaZsMIULVobS+mge93Fgt0jkjTWEd5JFYENMNv/nNGE8J4IOGiymQ5GEzL96P7yDyrqtz3SJ5Bc+3+8HLf33tsvgLq8W1UvARf/UvlcG64EsD99eMlzXUBnKBIdXwMNaIzQIkWdZJ9x4LCceNBphW6KWUT8qvXsS0PGAJtE1eJzEru0y8Fo0H8fkiPgC+Sgx6LqKWI6i9cShtsJ2C7jB6Lh1j4S0QCzyxyJwRAQdbz433+6LaHpLxgzolnDRCRy/o4BmaJSmYvjah3s=
 addons:
   hosts:
   - myshorthost
@@ -39,7 +38,7 @@ before_deploy:
 - git config --local user.name "$USER_NAME"
 - git config --local user.email "$USER_EMAIL"
 - git tag --force "$TRAVIS_TAG" "$TRAVIS_COMMIT"
-- git push --force --tags
+#- git push --force --tags
 deploy:
   provider: releases
   api_key:
