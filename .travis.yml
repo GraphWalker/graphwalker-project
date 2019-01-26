@@ -3,7 +3,7 @@ jdk:
 - oraclejdk8
 cache:
   directories:
-  - $HOME/.m2
+  - "$HOME/.m2"
 branches:
   only:
   - master
@@ -29,19 +29,22 @@ before_install:
 install:
 - sudo apt-get update -qq
 script:
-- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"]; then mvn clean deploy --settings deploy.xml; else mvn clean package; fi fi
+- if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"];
+  then mvn clean deploy --settings deploy.xml; else mvn clean package; fi fi
 after_success:
 - codecov
 deploy:
   provider: releases
-  api_key:
-    secure: "J4Oq/iiqi+puSzYMqZFI+LybGtdYHcKA57P8EysACCjzusC4Q5CpRZ4RAEt7aoq3G0WSiN85dMpxwovsKiCdZEZDNGCE6VMYI7OsMpcO6BmLLZtrE3v3IXxUhqazNVbGFf5rRdCyF4n3K65+NPe6wrupK17OVzjefEaJQlTbc28="
   tag_name: LATEST-BUILDS
-  target_commitish: $TRAVIS_COMMIT
+  target_commitish: "$TRAVIS_COMMIT"
   draft: false
   file:
-    - "graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar"
-    - "graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar"
+  - graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar
+  - graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar
   overwrite: true
   on:
     tags: false
+  user:
+    secure: kAoyo3bZieOUeireJhXXZfigkvRBGIMnebRdcFqMdYWdzL5y3LQfcrnIBjxX83Ehfhmn61cp5U4EUDGIw08GXAg9vSV+hXmCI4nDuGh8mJtgEQ7piAoLk0iav7RLGRNtlT8I3Y3F4PEjv2FbmZ0QGCwQ6EexfNlmniH6o0lS1NmT1AWZim0+yd1PiwO/9F6WV42QB59sqijtOxBtr/jBWSP+nuwVQ85JdsdLUL7eRU71cpZyalpLUvr8VvNc54NivSXhyIIXA8MjdeVH543g8alFg/XvzzzO39nUgE6eWEhifUsLF3b4CPHKN/12wVUBn3l5LGIXn/nwDLbA3KAvSaVaoqq1MC7tkl1nQgHzVjSJiKvdcoc9qhvOSwGwbIjL/mW0AYNwfRJFPY3geuxnl9oGS33QC89NlFwP4xfAS6mLqhWXFjxAwx6TJerfFsmDSHjSnTMHnuHbnoaiNU5pF7gpYBStp/mxvgjQFjwIE1Xh2q1tOzeOOoE5Q+s80c8RAHV+k4XCfVAOFRpgHoY6Oya7LSri0Lsw9rgW6lNGpCbHTYZJBToPYDJbDBipmZHN0ioi21I1Iq89XyxfL696+CWoP/6d5qY8/+c48M8q4mMRW13GOZjlib0nkvEjgZ6QYTxGnvUzgIcLtXLhYbVZ0M9Jf06QaxnFr1uKSto7/38=
+  password:
+    secure: s3qK+35XdxKCUM7vDD55QlH3QJLuMvtSv8y+XTL2bOIbcgxBIUlpEM3yAduiMd+jt8evgzdCMZbN0Qd0Zi7sxUGqtLfoWH+68ICfgk52NNCFKonP6kV/fDEoE65ORc5Rnv8HJekFpBa3NkYjMGVE+lDV3CAFmawPJj3aufCeZreDXRetOM/KpsQiv1DatBAcW1ri7lYRjTDu7rwGvIyV010wMnwbZD9hls4gney/35vCFOMWuXpFLSmAeDwDaLUED7ayINRU135XTY/Pu8UUvwEDbnpjS0qOBWaherdZFg8mYVTZKb85RAfPSzTVGqoG1scFBfUqn0bdL2OVaFXwIY4XPdq5JWsusWvjI9JpcJDCqVml2bTLMtqpAXTW4wdo/Be27S/ozk4VuX89dN/MOo/lHRnRPAJHW3v9kP8bfcXgC3QljLRXMyPudQLZIB/0WCGLsCk2oolTASmccY7YaueHxzwcdQ1Y8A2BE8+ehSZwwGKrll4pq8m9ZM8IYC+7Lsweg7s8wALAP13ST9vkiIdcMOuNB2mvq7rTBSqycG4BGJ56Z25SbW6xFdR4KfGa96BuV05msl0nkHYz+w+QBxEL+2wTTocwfBoixRV/gr/Rh3C5PCflV9yLuqSMgENwZay8Zwd5aRmfD909sdM66mzGthJU5MotJePGL5EzUkU=
