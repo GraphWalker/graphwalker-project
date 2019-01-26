@@ -45,3 +45,6 @@ deploy:
   - graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar
   overwrite: true
   skip_cleanup: true
+  on:
+    tags: true
+  
