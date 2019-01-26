@@ -25,8 +25,6 @@ addons:
     build_command: mvn clean compile -DskipTests=true
     branch_pattern: coverity_scan
 before_install:
-- openssl aes-256-cbc -K $encrypted_e854261430b5_key -iv $encrypted_e854261430b5_iv
-  -in github_deploy_key.enc -out github_deploy_key -d
 - pip install --user codecov
 install:
 - sudo apt-get update -qq
