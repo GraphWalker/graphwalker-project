@@ -25,6 +25,8 @@ addons:
     build_command: mvn clean compile -DskipTests=true
     branch_pattern: coverity_scan
 before_install:
+- openssl aes-256-cbc -K $encrypted_e854261430b5_key -iv $encrypted_e854261430b5_iv
+  -in github_deploy_key.enc -out github_deploy_key -d
 - pip install --user codecov
 install:
 - sudo apt-get update -qq
@@ -38,11 +40,11 @@ deploy:
   api_key:
     secure: H2xNWrT/6zzrbAIw1U8sqhFxtchULU68loOZy0uErjYuHGYVq63Co7E3Y/NmVhVGFrvcxkYqMALhwJ8kTB2d/QguqOlUk7oJH84jh50xFKfiAuDNUcMECADz7KJcJQR/m799SZAnfplckpwt3xq5M5cwNOikeTQ8aluIfQ5IQtXbTd37DzIcBieNTU22pDzA4UP0Qje7iHHn16EmIN01SF6OA8Gprqj4XswOt3xJ/XKbCz1e+SuXBxDqRbfZqek6XAYJ+CgfNtSETL08JN6bFZHHXtTj0yvpRHmPF04M4qFhOxPujwf0p775CqfaZXWAVhKHoFJhb0hSEZehflSqwIa++V4Q/xACAY9287n9ZXFIzQi26ulqZ/uycdvqKuJ/1WL6VbmFzD0wl6h1bPNT52wzb0MLKcra9XY4V7YaFasxWtspbBGH5tBn7/RoJ0npLf+z8Ld9tRmHdlOYyEsu8pSZNwbQXGH/tIxtJfcmalz/E7pA/AfLgcJ3AgA7FHTFGT924FJy+W5CaUw/dXjgA51c/4qdWetnXLOKG1/RbZl0vX3ZoJopoG0qCeMY0vM1eEnY7oFuHEEizt/pe2W0qE6Qed02ImRNRxeOGGlXi/EJYdXkoy7fhUGPefLnTHTG/8gPLpNIYYD5QSI2IJcO9Duej7t8MTvGrDtyNKexBPk=
   tag_name: LATEST-BUILDS
-  target_commitish: $TRAVIS_COMMIT
+  target_commitish: "$TRAVIS_COMMIT"
   draft: false
   file:
-    - "graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar"
-    - "graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar"
+  - graphwalker-cli/target/graphwalker-cli-4.0.0-SNAPSHOT.jar
+  - graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar
   overwrite: true
   on:
     tags: false
