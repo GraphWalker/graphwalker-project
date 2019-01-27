@@ -12,7 +12,7 @@ env:
   global:
   - secure: NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI=
   - secure: fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE=
-  - secure: UGWyiUB7ji6bNkCywhexy7sErFE9X4YUgZFiTDBxba+P7Czsipj4NHvXCum3v53n5OO7WJ0WVKRTUXLgVmH5aJW3YhLo7zmoW7zlChD5xxHY55s3EEQzYfWNF9IJURgbzt5TzhPi6RROnOiDoUqKZBY8BepaT/fguWNACuJ5+5g=
+  - secure: l4l57R2f/x+Dxaf+N4n/87RYsMASZ/UDoN9DiBFhM5mOKeaVoi+eriDR3Cnx3UR4ENVEDQs0WVeizJ2op27fEAfbywyLDbjHChAhajd4ZA9LaudPlIbZ/tGUTGuiA3piwCs0wJj9hmfrUkYytr7I8Jk0bQnjr8ahjNpU8uniyNToKCbT7G5vtwgNI+ElAycKKhCYlf8JdbHMsdlCVbkC8SRgKlXZEGrx0bB7VJ3u0am0IlZzFmF2cx1U+3sepuCiM1F2ZjBgH+0oFnqANPFAp3csqxpjjQZWP/E8Jzjre7t7Zr0ZbBKW5luRteG9bqgCRbp8nTDRmBN6YMrtrNvv2JvU/fZDie+Vl3+8+56ebTKGfeFJ0DRCa4Nrj2cXPsqkio2/GYgExSsmQtWtHNzrsqxlcOPuFMVaINE2w0K70+gejCoy86cAxIOXTRfaqSYAkWTEK5JMaDxQdC5LWfq3s1sM+8As4hRYq7IyqjA7+8KyIOw2PJMG/buSAE+kLIirSdsNZR8qszuSumriPWAglLm716kU88F80L1RQVzFJn6b1hE77GewFeutAKYIEuQY8sCy6VaMx4ZzH3iQerm/W212P1SczmspOyLzEPnj5T0luVnkkmvYV+6XeDrykFQlVtIGadqhc7de+bQcc7qpBnUVD/KwGBLAK8M9vC++l2U=
 addons:
   hosts:
   - myshorthost
@@ -38,12 +38,13 @@ before_deploy:
 - git config --local user.name "$USER_NAME"
 - git config --local user.email "$USER_EMAIL"
 - git tag --force "$TRAVIS_TAG" "$TRAVIS_COMMIT"
-- git push --force --tags https://${GH_TOKEN}@github.com/GraphWalker/graphwalker-project.git > /dev/null 2>&1
+- git push --force --tags https://${GH_TOKEN}@github.com/GraphWalker/graphwalker-project.git
+  > /dev/null 2>&1
 deploy:
   provider: releases
   api_key:
     secure: N1NZGwX9/Hrm7Qs3BP4AJ1HnUr7rydL+vd4e9rW6ISs6M6acUShxIMLFsxTXrYblsfDYCQ81r7S4tRENYXjvXwZjQGSyBmkkY1WQuQhl4QV4eepCy5i/yp7m15P7CZHkeqg5XSJteST4rpaz9oxrBCRYyVGArZUlQcWYnpUbmB0=
-  tag_name: $TRAVIS_TAG
+  tag_name: "$TRAVIS_TAG"
   target_commitish: "$TRAVIS_COMMIT"
   draft: false
   file:
