@@ -12,7 +12,7 @@ env:
   global:
   - secure: NleX7IcOJ4Vwt4VLkXskUsHUVHt/tMtSw+l/tKfhievZ6Ddtyo+bgSXaWz9sCysYGKycOik84rerUEXwc4eG5sWavwNYudG7/FfWxvU80Dvbztzjb34TmLSA6bOwcYPKt3UC6Aa9vH1RvMDeITU6ravdxXSr3jpIYqaWAd9h2CI=
   - secure: fETdgm1lQXxABK+pnhOk/YRSjlmpUbv64Fp4TBhE2sGNR0EM6xMkKDWO2WrtXWIgGPLt7EIBujkI4pntPTrp59NSkkuAOLiZtfn3vr25FCuercHq99St9BtSFSksYPUnOpnQTCndIAseeA0jFszoR4Swbv3HjIhD3bH9oTlrzKE=
-  - secure: l4l57R2f/x+Dxaf+N4n/87RYsMASZ/UDoN9DiBFhM5mOKeaVoi+eriDR3Cnx3UR4ENVEDQs0WVeizJ2op27fEAfbywyLDbjHChAhajd4ZA9LaudPlIbZ/tGUTGuiA3piwCs0wJj9hmfrUkYytr7I8Jk0bQnjr8ahjNpU8uniyNToKCbT7G5vtwgNI+ElAycKKhCYlf8JdbHMsdlCVbkC8SRgKlXZEGrx0bB7VJ3u0am0IlZzFmF2cx1U+3sepuCiM1F2ZjBgH+0oFnqANPFAp3csqxpjjQZWP/E8Jzjre7t7Zr0ZbBKW5luRteG9bqgCRbp8nTDRmBN6YMrtrNvv2JvU/fZDie+Vl3+8+56ebTKGfeFJ0DRCa4Nrj2cXPsqkio2/GYgExSsmQtWtHNzrsqxlcOPuFMVaINE2w0K70+gejCoy86cAxIOXTRfaqSYAkWTEK5JMaDxQdC5LWfq3s1sM+8As4hRYq7IyqjA7+8KyIOw2PJMG/buSAE+kLIirSdsNZR8qszuSumriPWAglLm716kU88F80L1RQVzFJn6b1hE77GewFeutAKYIEuQY8sCy6VaMx4ZzH3iQerm/W212P1SczmspOyLzEPnj5T0luVnkkmvYV+6XeDrykFQlVtIGadqhc7de+bQcc7qpBnUVD/KwGBLAK8M9vC++l2U=
+  - secure: VPbi1UELzFM2vxyjzotBvo+wc6rJBfHrUkY1xca2aPndRsfZZklUZCiFPmcNBF3kD9CCUbhuT4HjeZgWCONaZKYu9Qp3CUneaIn2IbT3ewevC7OD+uxw4K4QuzdnunSPGXWVB3QT4Jqcfv9ehO5bfC0nxmdSppEGguM+1/S9eFmAZvWJSqhJHPZ2SUIS5uNMq5G9h0TuC4HkwADLlJKTrl0BkUcSdbFj5vda6zV2njFKrUE+wgctyuXNIER1YmT7Mk/y2PtCjO9hlPb5ilyBiZkWCOdxPYMOEUcDw9laZoiz2993RQMJeOrOVzDOJlBpEvQ/uxGeShZhirEwNQUe9VeXSle3bZvFzbOho/B9y9Rt1wWKAPXPjp4o3Uhgz/sNNOPnZ1WSUb+K9ZbwuwIq4bF88kDlBZhGenv3HGY/qotBmCkBWMZxcd465qqh62ooIFnYn7xnGky7zWXUhCqkFt2LRxQg2F1TO44ctg2NfI7aWZnVe8w8TiZbUTx46J1nO8JnfPx6RhsuUgHF2+mCNIIOOlQTRNYQaV6atxSnkFNWKvMRV97M6F0yxOPp6SG5TJyeQp3P5vx6xUGdfrj0u7+2910ZxD8Aqo04ijtqb98LDGc0FAAn8NmDx/KPkCzjro8FkWZVfPJhkcI94ztjTFe5qJI71YELV2w1tqUbqP0=
 addons:
   hosts:
   - myshorthost
@@ -35,10 +35,9 @@ after_success:
 - codecov
 before_deploy:
 - export TRAVIS_TAG="LATEST-BUILDS"
-- git config --local user.name "$USER_NAME"
-- git config --local user.email "$USER_EMAIL"
 - git tag --force "$TRAVIS_TAG" "$TRAVIS_COMMIT"
-- git push --force --tags https://${GH_TOKEN}@github.com/GraphWalker/graphwalker-project.git > /dev/null 2>&1
+- git push --force --tags https://${GH_TOKEN}@github.com/GraphWalker/graphwalker-project.git
+  > /dev/null 2>&1
 deploy:
   provider: releases
   api_key:
