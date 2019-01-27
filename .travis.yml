@@ -37,7 +37,6 @@ before_deploy:
 - export TRAVIS_TAG="LATEST-BUILDS"
 - git tag --force "$TRAVIS_TAG" "$TRAVIS_COMMIT"
 - git push --force --tags https://${GH_TOKEN}@github.com/GraphWalker/graphwalker-project.git
-  > /dev/null 2>&1
 deploy:
   provider: releases
   api_key:
