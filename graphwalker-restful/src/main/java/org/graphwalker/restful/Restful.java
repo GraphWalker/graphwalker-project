@@ -46,6 +46,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.graphwalker.core.common.Objects.isNull;
+
 /**
  * JAX-RS (Java API for RESTful Services (JAX-RS)) service implementation.
  * Created by krikar on 5/30/14.
@@ -189,15 +191,22 @@ public class Restful {
     logger.debug("Received restart");
     JSONObject resultJson = new JSONObject();
     try {
-      Execution execution = machine.getProfiler().getExecutionPath().get(0);
-      contexts = contexts.stream().peek(context -> {
-        if (execution.getContext().equals(context)) {
-          context.setNextElement(execution.getElement());
-        }
-        context.setExecutionStatus(ExecutionStatus.NOT_EXECUTED);
-      }).collect(Collectors.toList());
-      machine = new SimpleMachine(contexts);
+      if ( isNull(machine) ) {
+        throw new RuntimeException("No model(s) are loaded.");
+      }
+
+      if ( machine.getProfiler().getExecutionPath().size() > 0 ) {
+        Execution execution = machine.getProfiler().getExecutionPath().get(0);
+        contexts = contexts.stream().peek(context -> {
+          if (execution.getContext().equals(context)) {
+            context.setNextElement(execution.getElement());
+          }
+          context.setExecutionStatus(ExecutionStatus.NOT_EXECUTED);
+        }).collect(Collectors.toList());
+        machine = new SimpleMachine(contexts);
+      }
       resultJson.put("result", "ok");
+
     } catch (Exception e) {
       resultJson.put("result", "nok");
       resultJson.put("error", e.getMessage());
