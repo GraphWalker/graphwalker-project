@@ -4,6 +4,13 @@ GraphWalker
 
 Documentation on http://graphwalker.org/
 
+## GraphWalker survey
+
+We created a questionnaire which we would love our users to fill in.
+The purpose is to help us understand how GraphWalker is used.
+
+Please go to [GraphWalker Survey](https://goo.gl/forms/rvHWHHsWIsh4Hw9y1)
+
 ## Get the source code and build all modules
 
 ```bash
