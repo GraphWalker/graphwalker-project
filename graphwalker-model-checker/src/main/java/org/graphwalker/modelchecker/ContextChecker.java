@@ -49,7 +49,12 @@ public class ContextChecker {
           int countNumOfCulDeSac = 0;
           for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
             if (context.getModel().getOutEdges(vertex).size() == 0) {
-              countNumOfCulDeSac++;
+
+              // Check if the vertex with no out-edges is a shared vertex.
+              // if so, it shall not to be calculated as a cul-de-sac
+              if (!vertex.hasSharedState()) {
+                countNumOfCulDeSac++;
+              }
             }
           }
           if (countNumOfCulDeSac > 1) {

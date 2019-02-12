@@ -19,6 +19,6 @@ public class ContextsCheckerTest {
   public void testDefault() throws IOException {
     List<Context> contexts = new JsonContextFactory().create(Paths.get("json/petClinic.json"));
     List<String> issues = ContextsChecker.hasIssues(contexts);
-    Assert.assertThat(issues.size(), is(2));
+    Assert.assertThat(issues.size(), is(0));
   }
 }
