@@ -52,7 +52,7 @@ export function onLoadTest() {
 
   removeTest();
 
-  $('<input type="file" class="ui-helper-hidden-accessible" />')
+  $('<input type="file" class="ui-helper-hidden-accessible" multiple />')
     .appendTo('body')
     .focus()
     .trigger('click')
@@ -1434,9 +1434,16 @@ function onMessage(event) {
         document.getElementById('issues').innerHTML = 'No issues';
         console.log('Command getModel ok');
 
-        removeTest();
-
-        readGraphFromJSON(JSON.parse(message.models));
+        // assign model name as model.id
+        let models = JSON.parse(message.models);
+	        models.models = models.models.map(function(model) {
+	        	if (!model.name) {
+	        		model.name = model.id
+	        	}
+	        	return model;
+          });
+          
+        readGraphFromJSON(models);
 
         var tabs = $('#tabs');
         tabs.show();
