@@ -1436,12 +1436,12 @@ function onMessage(event) {
 
         // assign model name as model.id
         let models = JSON.parse(message.models);
-	        models.models = models.models.map(function(model) {
-	        	if (!model.name) {
-	        		model.name = model.id
-	        	}
-	        	return model;
-          });
+        models.models = models.models.map(function(model) {
+          if (!model.name) {
+            model.name = model.id
+          }
+          return model;
+        });
           
         readGraphFromJSON(models);
 

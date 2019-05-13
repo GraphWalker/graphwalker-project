@@ -3,9 +3,11 @@ GraphWalker Studio
 ==================
 
 ## Build Studio
+Pre-requisite:
+1. Install [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
+2. Build the main project (graphwalker-project) using: `mvn package`
 
-* Install [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
-* Run following commands: 
+Run following commands: 
 * `cd src/main/webapp`
 * `npm install`
 * `webpack`
