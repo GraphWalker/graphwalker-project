@@ -71,7 +71,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
   @BeforeExecution
   public void startServer() throws Exception {
     ResourceConfig rc = new DefaultResourceConfig();
-    rest = new Restful(null, true, true);
+    rest = new Restful(null, true, true, true);
     rc.getSingletons().add(rest);
 
     String url = "http://0.0.0.0:" + 9191;

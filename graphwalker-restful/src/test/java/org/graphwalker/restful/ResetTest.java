@@ -26,7 +26,7 @@ public class ResetTest {
   @Before
   public void startServer() throws Exception {
     ResourceConfig resourceConfig = new DefaultResourceConfig();
-    Restful restful = new Restful(null, true, true);
+    Restful restful = new Restful(null, true, true, true);
     resourceConfig.getSingletons().add(restful);
     server = GrizzlyServerFactory.createHttpServer("http://0.0.0.0:9192", resourceConfig);
     server.start();
