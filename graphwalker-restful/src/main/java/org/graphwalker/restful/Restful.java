@@ -60,10 +60,12 @@ public class Restful {
   private Machine machine;
   private Boolean verbose;
   private Boolean unvisited;
+  private Boolean blocked;
 
-  public Restful(List<Context> contexts, Boolean verbose, Boolean unvisited) throws Exception {
+  public Restful(List<Context> contexts, Boolean verbose, Boolean unvisited, Boolean blocked) throws Exception {
     this.verbose = verbose;
     this.unvisited = unvisited;
+    this.blocked = blocked;
 
     if (contexts == null || contexts.isEmpty()) {
       return;
@@ -72,6 +74,9 @@ public class Restful {
   }
 
   public void setContexts(List<Context> contexts) {
+    if (this.blocked) {
+      org.graphwalker.io.common.Util.filterBlockedElements(contexts);
+    }
     this.contexts = contexts;
     machine = new SimpleMachine(this.contexts);
   }

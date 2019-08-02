@@ -321,11 +321,8 @@ public class CLI {
       ResourceConfig rc = new DefaultResourceConfig();
       try {
         List<Context> contexts = getContextsWithPathGenerators(online.model.iterator());
-        if (online.blocked) {
-          org.graphwalker.io.common.Util.filterBlockedElements(contexts);
-        }
 
-        rc.getSingletons().add(new Restful(contexts, online.verbose, online.unvisited));
+        rc.getSingletons().add(new Restful(contexts, online.verbose, online.unvisited, online.blocked));
       } catch (MachineException e) {
         System.err.println("Was the argument --model correctly?");
         throw e;
