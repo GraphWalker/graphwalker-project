@@ -1,6 +1,3 @@
-var $ = require('jquery');
-var cytoscape = require('cytoscape');
-
 
 // Hash array that holds all graphs/models.
 var graphs = [];
@@ -18,7 +15,7 @@ var rightClickedRenderedPosition;
 var breakPoints = [];
 $('#location').val('ws://localhost:9999');
 
-export function onConnect() {
+function onConnect() {
   console.log('onConnect');
 
   onDisconnect();
@@ -31,7 +28,7 @@ export function onConnect() {
   }
 }
 
-export function onDisconnect() {
+function onDisconnect() {
   console.log('onDisconnect');
   if (websocket) {
     // http://stackoverflow.com/questions/25779831/how-to-catch-websocket-connection-to-ws-xxxnn-failed-connection-closed-be
@@ -40,14 +37,14 @@ export function onDisconnect() {
   }
 }
 
-export function onNewTest() {
+function onNewTest() {
   console.log('onNewTest');
   removeTest();
   emptyInitialControlStates();
   defaultUI();
 }
 
-export function onLoadTest() {
+function onLoadTest() {
   console.log('onLoadTest');
 
   removeTest();
@@ -105,7 +102,7 @@ export function onLoadTest() {
     });
 }
 
-export function onSaveTest() {
+function onSaveTest() {
   console.log('onSaveTest');
   var link = document.createElement('a');
   link.setAttribute('download', graphs.name + '.json');
@@ -120,7 +117,7 @@ export function onSaveTest() {
   });
 }
 
-export function removeTest() {
+function removeTest() {
   console.log('removeTest');
 
   $('#tabs > ul > li').each(function() {
@@ -139,7 +136,7 @@ export function removeTest() {
   tabs.hide();
 }
 
-export function makeJsonGraphFile() {
+function makeJsonGraphFile() {
   console.log('makeJsonGraphFile');
   var jsonFile = null;
   var data = new Blob([JSON.stringify(generateJsonGraph())], {
@@ -157,7 +154,7 @@ export function makeJsonGraphFile() {
   return jsonFile;
 }
 
-export function generateJsonGraph() {
+function generateJsonGraph() {
   var jsonGraphs = {
     name: graphs.name,
     models: []
@@ -274,7 +271,7 @@ export function generateJsonGraph() {
   return jsonGraphs;
 }
 
-export function onPausePlayExecution(element) {
+function onPausePlayExecution(element) {
   console.log('pausePlayExecution: pauseExecution: ' + pauseExecution + ', clicked: ' + currentModelId);
   stepExecution = false;
 
@@ -300,7 +297,7 @@ export function onPausePlayExecution(element) {
   }
 }
 
-export function onStepExecution() {
+function onStepExecution() {
   console.log('onStepExecution: ' + currentModelId);
   document.getElementById('runTest').disabled = true;
   document.getElementById('resetTest').disabled = false;
@@ -315,7 +312,7 @@ export function onStepExecution() {
 }
 
 // Run the execution of the state machine
-export function onRunTest() {
+function onRunTest() {
   console.log('onRunTest: ' + currentModelId);
 
   // Reset any previous runs
@@ -341,7 +338,7 @@ export function onRunTest() {
 }
 
 // Reset the state machine to it's initial state
-export function onResetTest() {
+function onResetTest() {
   console.log('onResetTest: ' + currentModelId);
   isTestRunning = false;
   defaultUI();
@@ -359,7 +356,7 @@ export function onResetTest() {
   setElementsColor();
 }
 
-export function onAddModel() {
+function onAddModel() {
   console.log('onAddModel');
   enableModelControls();
 
@@ -371,7 +368,7 @@ export function onAddModel() {
   tabs.show().tabs('option', 'active', index);
 }
 
-export function onDoLayout() {
+function onDoLayout() {
   console.log('onDoLayout');
   if (graphs[currentModelId] !== undefined) {
     graphs[currentModelId].layout().stop();
@@ -386,6 +383,39 @@ export function onDoLayout() {
     layout.run();
   }
 }
+
+
+window.graphwalker = {
+  onConnect: onConnect,
+  onDisconnect: onDisconnect,
+  onNewTest: onNewTest,
+  onLoadTest: onLoadTest,
+  onSaveTest: onSaveTest,
+  removeTest: removeTest,
+  makeJsonGraphFile: makeJsonGraphFile,
+  generateJsonGraph: generateJsonGraph,
+  onPausePlayExecution: onPausePlayExecution,
+  onStepExecution: onStepExecution,
+  onRunTest: onRunTest,
+  onResetTest: onResetTest,
+  onAddModel: onAddModel,
+  onDoLayout: onDoLayout
+}
+
+  window.onConnect = onConnect;
+  window.onDisconnect = onDisconnect;
+  window.onNewTest = onNewTest;
+  window.onLoadTest = onLoadTest;
+  window.onSaveTest = onSaveTest;
+  window.removeTest = removeTest;
+  window.makeJsonGraphFile = makeJsonGraphFile;
+  window.generateJsonGraph = generateJsonGraph;
+  window.onPausePlayExecution = onPausePlayExecution;
+  window.onStepExecution = onStepExecution;
+  window.onRunTest = onRunTest;
+  window.onResetTest = onResetTest;
+  window.onAddModel = onAddModel;
+  window.onDoLayout = onDoLayout;
 
 /*
  ************************************************************************
@@ -749,7 +779,7 @@ function createGraph(currentModelId) {
   });
 
   $('#A-' + currentModelId).mousedown(function(event) {
-    context.destroy('#A-' + currentModelId);
+    //context.destroy('#A-' + currentModelId);
     switch (event.which) {
       case 1:
         //alert('Left Mouse button pressed.');
@@ -1540,15 +1570,16 @@ function emptyInitialControlStates() {
 $(document).ready(function() {
   emptyInitialControlStates();
   onConnect();
-
-  context.init({
-    fadeSpeed: 100,
-    filter: function($obj) {},
-    above: 'auto',
-    preventDoubleContext: true,
-    compress: false
-  });
-
+  console.log(context);
+  setTimeout(function () {
+    context.init({
+      fadeSpeed: 100,
+      filter: function($obj) {},
+      above: 'auto',
+      preventDoubleContext: true,
+      compress: false
+    });
+  }, 1);
 
   var generators = [
     "random",
