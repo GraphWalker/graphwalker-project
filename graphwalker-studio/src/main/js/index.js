@@ -1,4 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Application from './Application';
 
-ReactDOM.render('<div>test3</div>', document.getElementById('root'));
+import './style.css';
+
+ReactDOM.render(<Application />, document.getElementById('root'));
