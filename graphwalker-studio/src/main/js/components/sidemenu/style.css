@@ -1,0 +1,20 @@
+.sidemenu {
+  width: 3.5rem;
+  min-width: 3.5rem;
+  background-color: #2C2C2C;
+  text-align: center;
+}
+
+
+.sidemenu > .bp3-divider {
+  border-color: #6D6D6D;
+}
+
+.sidemenu:first-child {
+}
+
+.sidemenu-button {
+  width: 100%;
+  display: inline-block;
+  padding: 9px 0;
+}
