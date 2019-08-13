@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './style.css';
-import {Divider, FormGroup, InputGroup, Switch} from "@blueprintjs/core";
+import { Divider, FormGroup, InputGroup, Switch, Slider } from "@blueprintjs/core";
 
 export default class ConfigPanel extends Component {
 
@@ -20,6 +20,11 @@ export default class ConfigPanel extends Component {
           <InputGroup placeholder="Actions"/>
           <InputGroup placeholder="Requirements"/>
           <Switch id="text-input" label="Start element" />
+        </FormGroup>
+        <FormGroup label="Execution Delay" labelFor="text-input">
+          <div>
+            <Slider min={0} max={500} stepSize={1} labelRenderer={false} value={250} />
+          </div>
         </FormGroup>
       </div>
     )

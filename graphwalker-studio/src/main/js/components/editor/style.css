@@ -1,5 +1,53 @@
+@import "~react-responsive-tabs/styles.css";
 
 .editor-panel {
   display: flex;
+  flex: 1;
+}
+
+.RRT__container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.RRT__removable {
+  display: flex;
+}
+
+.RRT__tab--selected .RRT__removable-icon {
+  position: static;
+  font-size: 14px;
+}
+
+.RRT__tab--selected .RRT__removable {
+
+}
+
+.RRT__tab--selected div.RRT__removable-text {
+  margin-right: 10px;
+}
+
+.tab-panel {
+  display: flex;
+  flex: 1;
+  border: 0;
+  border-top: 1px solid #ddd;
+  padding: 0;
+}
+
+.RRT__tab--selected .RRT__removable-text {
+  margin-right: 18px;
+}
+
+div.RRT__showmore {
+  outline: none;
+}
+
+.editor-container {
+  overflow: hidden;
+}
+
+.editor-component {
   flex: 1;
 }

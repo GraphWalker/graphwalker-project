@@ -1,7 +1,7 @@
 
 .config-panel {
-  width: 18rem;
-  min-width: 18rem;
+  width: 22rem;
+  min-width: 20rem;
   background-color: #FFFFFF;
   padding: 0.5rem;
 }
@@ -12,4 +12,8 @@
 
 .bp3-input {
   margin-bottom: 0.5rem;
+}
+
+.bp3-switch > .bp3-control-indicator, .bp3-slider > * {
+  outline: none !important;
 }
