@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import Tabs from 'react-responsive-tabs';
 import EditorPanel from "./editor-panel";
 import './style.css';
 
-const models = [{ name: 'Model 1', data: '1' }, { name: 'Model 2', data: '2' }];
-
-export default class Editor extends Component {
+class Editor extends Component {
 
   getTabs = () => {
-    return models.map((model, index) => ({
+    console.log(this.props.models);
+    return this.props.models.map((model, index) => ({
       title: model.name,
-      getContent: () => <EditorPanel/>,
+      getContent: () => <EditorPanel model={model}/>,
       key: index,
       tabClassName: 'tab',
       panelClassName: 'tab-panel',
@@ -35,3 +35,10 @@ export default class Editor extends Component {
   }
 }
 
+const mapStateToProps = ({ test: { models }}) => {
+  return {
+    models
+  }
+}
+
+export default connect(mapStateToProps)(Editor);

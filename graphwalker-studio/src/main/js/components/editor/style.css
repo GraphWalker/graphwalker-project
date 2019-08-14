@@ -36,6 +36,10 @@
   padding: 0;
 }
 
+.tab-panel > * {
+  background-color: white;
+}
+
 .RRT__tab--selected .RRT__removable-text {
   margin-right: 18px;
 }

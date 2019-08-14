@@ -2,6 +2,7 @@
 .config-panel {
   width: 22rem;
   min-width: 20rem;
+  min-height: 32rem;
   background-color: #FFFFFF;
   padding: 0.5rem;
 }
