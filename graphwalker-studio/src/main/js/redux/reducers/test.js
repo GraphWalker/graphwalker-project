@@ -1,7 +1,8 @@
-import {ADD_MODEL, LOAD_TEST, NEW_TEST} from "../actionTypes";
+import {ADD_MODEL, LOAD_TEST, NEW_TEST, SELECT_MODEL} from "../actionTypes";
 
 const initialState = {
-  models: []
+  models: [],
+  selectedModelIndex: null
 };
 
 export default function(state = initialState, action) {
@@ -9,19 +10,28 @@ export default function(state = initialState, action) {
     case ADD_MODEL: {
       return {
         ...state,
-        models: [action.payload, ...state.models]
+        models: [action.payload, ...state.models],
+        selectedModelIndex: 0
       }
     }
     case LOAD_TEST: {
       return {
         ...state,
-        ...JSON.parse(action.payload.content)
+        ...JSON.parse(action.payload.content),
+        selectedModelIndex: 0
       }
     }
     case NEW_TEST: {
       return {
         ...initialState,
-        models: [action.payload]
+        models: [action.payload],
+        selectedModelIndex: 0
+      }
+    }
+    case SELECT_MODEL: {
+      return {
+        ...state,
+        selectedModelIndex: action.payload.index
       }
     }
     default:

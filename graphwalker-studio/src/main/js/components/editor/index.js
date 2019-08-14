@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Tabs from 'react-responsive-tabs';
 import EditorPanel from "./editor-panel";
+import { selectModelIndex } from "../../redux/actions";
 import './style.css';
 
 class Editor extends Component {
@@ -29,6 +30,7 @@ class Editor extends Component {
               transform={false}
               onRemove={this.onRemoveTab}
               items={this.getTabs()}
+              onChange={this.props.selectModelIndex}
         />
       </div>
     )
@@ -41,4 +43,4 @@ const mapStateToProps = ({ test: { models }}) => {
   }
 }
 
-export default connect(mapStateToProps)(Editor);
+export default connect(mapStateToProps, { selectModelIndex })(Editor);

@@ -1,4 +1,4 @@
-import {ADD_MODEL, LOAD_TEST, NEW_TEST} from "./actionTypes";
+import {ADD_MODEL, LOAD_TEST, NEW_TEST, SELECT_MODEL} from "./actionTypes";
 
 let modelCount = 0;
 export const addModel = () => ({
@@ -34,3 +34,10 @@ export const newTest = () => {
     }
   }
 };
+
+export const selectModelIndex = index => ({
+  type: SELECT_MODEL,
+  payload: {
+    index
+  }
+});
