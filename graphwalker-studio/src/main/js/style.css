@@ -15,3 +15,7 @@ html {
   display: flex;
 }
 
+.banner {
+  flex: 1;
+  fill: rgb(34, 47, 53);
+}
