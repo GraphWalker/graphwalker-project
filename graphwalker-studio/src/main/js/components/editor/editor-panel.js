@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from "react-redux";
 import {ResizeSensor, Tab, Tabs} from "@blueprintjs/core";
 import CytoscapeComponent from "react-cytoscapejs";
 import Container from "../container";
+import { selectElement } from "../../redux/actions";
 
 const stylesheet = [
   {
@@ -46,7 +48,7 @@ const stylesheet = [
   }
 ];
 
-export default class EditorPanel extends Component {
+class EditorPanel extends Component {
 
   constructor(props) {
     super(props);
@@ -80,6 +82,13 @@ export default class EditorPanel extends Component {
   componentDidMount() {
     this.cy.resize();
     this.cy.fit(null, 50);
+    this.cy.on('tap', (event) => {
+      if (event.target === this.cy) {
+        this.props.selectElement(null);
+      } else {
+        this.props.selectElement(event.target.id());
+      }
+    })
   }
 
   componentDidUpdate() {
@@ -122,3 +131,5 @@ export default class EditorPanel extends Component {
     )
   }
 }
+
+export default connect(null, { selectElement })(EditorPanel);
