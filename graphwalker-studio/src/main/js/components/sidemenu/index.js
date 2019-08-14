@@ -26,7 +26,8 @@ class SideMenu extends Component {
 
   saveTest = (event) => {
     event.preventDefault();
-    if (this.props.test) {
+
+    if (this.props.test.models.length > 0) {
       const data = new Blob([JSON.stringify(this.props.test)], {
         type: 'text/plain'
       });
