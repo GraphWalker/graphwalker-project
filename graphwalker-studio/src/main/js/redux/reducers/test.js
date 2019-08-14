@@ -5,7 +5,7 @@ import {
   SELECT_MODEL,
   SELECT_ELEMENT,
   UPDATE_MODEL,
-  UPDATE_ELEMENT, SET_START_ELEMENT
+  UPDATE_ELEMENT, SET_START_ELEMENT, UPDATE_EXECUTION, CLOSE_MODEL
 } from "../actionTypes";
 
 const initialState = {
@@ -88,13 +88,30 @@ export default function(state = initialState, action) {
     case SET_START_ELEMENT: {
       const { event: { currentTarget: { checked }}} = action.payload;
       const { models, selectedElementId } = state;
-      console.log(checked, selectedElementId)
       return {
         ...state,
         models: models.map(model => {
           model.startElementId = checked ? selectedElementId: "";
           return model;
         })
+      }
+    }
+    case UPDATE_EXECUTION: {
+      const { value } = action.payload;
+      return {
+        ...state,
+        execution: {
+          delay: value
+        }
+      }
+    }
+    case CLOSE_MODEL: {
+      const { models, selectedModelIndex } = state;
+      const { index } = action.payload;
+      return {
+        ...state,
+        models: models.filter((value, n) => n !== index),
+        selectedModelIndex: Math.max(selectedModelIndex - 1, 0)
       }
     }
     default:

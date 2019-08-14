@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import Tabs from 'react-responsive-tabs';
 import EditorPanel from "./editor-panel";
-import { selectModel } from "../../redux/actions";
+import { selectModel, closeModel } from "../../redux/actions";
 import './style.css';
 
 class Editor extends Component {
 
   getTabs = () => {
-    console.log(this.props.models);
     return this.props.models.map((model, index) => ({
       title: model.name,
       getContent: () => <EditorPanel model={model}/>,
@@ -20,7 +19,7 @@ class Editor extends Component {
 
   onRemoveTab = (key, event) => {
     event.stopPropagation();
-    console.log('REMOVE');
+    this.props.closeModel(key);
   };
 
   render() {
@@ -43,4 +42,4 @@ const mapStateToProps = ({ test: { models }}) => {
   }
 };
 
-export default connect(mapStateToProps, { selectModel })(Editor);
+export default connect(mapStateToProps, { selectModel, closeModel })(Editor);

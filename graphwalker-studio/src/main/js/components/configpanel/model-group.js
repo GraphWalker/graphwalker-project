@@ -5,11 +5,12 @@ import { updateModel } from "../../redux/actions";
 
 class ModelGroup extends Component {
   render() {
+    const { name, generator, updateModel} = this.props;
     return (
       <FormGroup label="Model Properties" labelFor="text-input">
-        <InputGroup placeholder="Model Name" value={this.props.name} onChange={(event) => this.props.updateModel('name', event)}/>
+        <InputGroup placeholder="Model Name" value={name} onChange={(event) => updateModel('name', event)}/>
         <InputGroup placeholder="Model Generator Builder"/>
-        <InputGroup placeholder="Model Generator" value={this.props.generator} onChange={(event) => this.props.updateModel('generator', event)}/>
+        <InputGroup placeholder="Model Generator" value={generator} onChange={(event) => updateModel('generator', event)}/>
       </FormGroup>
     )
   }

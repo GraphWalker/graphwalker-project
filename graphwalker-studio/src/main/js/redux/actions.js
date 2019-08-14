@@ -5,7 +5,7 @@ import {
   SELECT_MODEL,
   SELECT_ELEMENT,
   UPDATE_MODEL,
-  UPDATE_ELEMENT, SET_START_ELEMENT
+  UPDATE_ELEMENT, SET_START_ELEMENT, UPDATE_EXECUTION, CLOSE_MODEL
 } from "./actionTypes";
 
 let modelCount = 0;
@@ -77,5 +77,19 @@ export const setStartElement = (event) => ({
   type: SET_START_ELEMENT,
   payload: {
     event
+  }
+});
+
+export const updateExecution = (value) => ({
+  type: UPDATE_EXECUTION,
+  payload: {
+    value
+  }
+});
+
+export const closeModel = index => ({
+  type: CLOSE_MODEL,
+  payload: {
+    index
   }
 });
