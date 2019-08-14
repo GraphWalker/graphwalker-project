@@ -1,4 +1,12 @@
-import {ADD_MODEL, LOAD_TEST, NEW_TEST, SELECT_MODEL, SELECT_ELEMENT} from "../actionTypes";
+import {
+  ADD_MODEL,
+  LOAD_TEST,
+  NEW_TEST,
+  SELECT_MODEL,
+  SELECT_ELEMENT,
+  UPDATE_MODEL,
+  UPDATE_ELEMENT, SET_START_ELEMENT
+} from "../actionTypes";
 
 const initialState = {
   models: [],
@@ -46,6 +54,47 @@ export default function(state = initialState, action) {
       return {
         ...state,
         selectedElementId: action.payload.id
+      }
+    }
+    case UPDATE_MODEL: {
+      const { field, event: { currentTarget: { value }}} = action.payload;
+      const { models, selectedModelIndex } = state;
+      models[selectedModelIndex][field] = value;
+      return {
+        ...state,
+        models
+      };
+    }
+    case UPDATE_ELEMENT: {
+      const { field, event: { currentTarget: { value }}} = action.payload;
+      const { models, selectedModelIndex, selectedElementId } = state;
+      models[selectedModelIndex].vertices = models[selectedModelIndex].vertices.map(vertex => {
+        if (vertex.id === selectedElementId) {
+          vertex[field] = value;
+        }
+        return vertex;
+      })
+      models[selectedModelIndex].edges = models[selectedModelIndex].edges.map(edge => {
+        if (edge.id === selectedElementId) {
+          edge[field] = value;
+        }
+        return edge;
+      })
+      return {
+        ...state,
+        models
+      }
+    }
+    case SET_START_ELEMENT: {
+      const { event: { currentTarget: { checked }}} = action.payload;
+      const { models, selectedElementId } = state;
+      console.log(checked, selectedElementId)
+      return {
+        ...state,
+        models: models.map(model => {
+          model.startElementId = checked ? selectedElementId: "";
+          return model;
+        })
       }
     }
     default:

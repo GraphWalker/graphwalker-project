@@ -1,4 +1,12 @@
-import {ADD_MODEL, LOAD_TEST, NEW_TEST, SELECT_MODEL, SELECT_ELEMENT} from "./actionTypes";
+import {
+  ADD_MODEL,
+  LOAD_TEST,
+  NEW_TEST,
+  SELECT_MODEL,
+  SELECT_ELEMENT,
+  UPDATE_MODEL,
+  UPDATE_ELEMENT, SET_START_ELEMENT
+} from "./actionTypes";
 
 let modelCount = 0;
 export const addModel = () => ({
@@ -46,5 +54,28 @@ export const selectElement = id => ({
   type: SELECT_ELEMENT,
   payload: {
     id
+  }
+});
+
+export const updateModel = (field, event) => ({
+  type: UPDATE_MODEL,
+  payload: {
+    field,
+    event
+  }
+});
+
+export const updateElement = (field, event) => ({
+  type: UPDATE_ELEMENT,
+  payload: {
+    field,
+    event
+  }
+});
+
+export const setStartElement = (event) => ({
+  type: SET_START_ELEMENT,
+  payload: {
+    event
   }
 });
