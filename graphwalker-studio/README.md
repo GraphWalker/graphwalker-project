@@ -4,14 +4,8 @@ GraphWalker Studio
 
 ## Build Studio
 
-* Install [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
-* Run following commands: 
-* `cd src/main/webapp`
-* `npm install`
-* `webpack`
 
 ```bash
-# cd to the root of the studio module
 mvn package
 ```
 
