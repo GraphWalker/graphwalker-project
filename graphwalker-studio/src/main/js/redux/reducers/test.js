@@ -57,8 +57,8 @@ export default function(state = initialState, action) {
       }
     }
     case UPDATE_MODEL: {
-      const { field, event: { currentTarget: { value }}} = action.payload;
-      const { models, selectedModelIndex } = state;
+      const {field, event: {currentTarget: {value}}} = action.payload;
+      const {models, selectedModelIndex} = state;
       models[selectedModelIndex][field] = value;
       return {
         ...state,
@@ -66,8 +66,8 @@ export default function(state = initialState, action) {
       };
     }
     case UPDATE_ELEMENT: {
-      const { field, event: { currentTarget: { value }}} = action.payload;
-      const { models, selectedModelIndex, selectedElementId } = state;
+      const {field, event: {currentTarget: {value}}} = action.payload;
+      const {models, selectedModelIndex, selectedElementId} = state;
       models[selectedModelIndex].vertices = models[selectedModelIndex].vertices.map(vertex => {
         if (vertex.id === selectedElementId) {
           vertex[field] = value;
@@ -86,18 +86,18 @@ export default function(state = initialState, action) {
       }
     }
     case SET_START_ELEMENT: {
-      const { event: { currentTarget: { checked }}} = action.payload;
-      const { models, selectedElementId } = state;
+      const {event: {currentTarget: {checked}}} = action.payload;
+      const {models, selectedElementId} = state;
       return {
         ...state,
         models: models.map(model => {
-          model.startElementId = checked ? selectedElementId: "";
+          model.startElementId = checked ? selectedElementId : "";
           return model;
         })
       }
     }
     case UPDATE_EXECUTION: {
-      const { value } = action.payload;
+      const {value} = action.payload;
       return {
         ...state,
         execution: {
@@ -106,15 +106,16 @@ export default function(state = initialState, action) {
       }
     }
     case CLOSE_MODEL: {
-      const { models, selectedModelIndex } = state;
-      const { index } = action.payload;
+      const {models, selectedModelIndex} = state;
+      const {index} = action.payload;
       return {
         ...state,
         models: models.filter((value, n) => n !== index),
         selectedModelIndex: Math.max(selectedModelIndex - 1, 0)
       }
     }
-    default:
+    default: {
       return state;
+    }
   }
 }

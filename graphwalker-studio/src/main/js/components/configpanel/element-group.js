@@ -7,7 +7,7 @@ class ElementGroup extends Component {
   render() {
     const { id, name, sharedState, guard, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
     return (
-      <FormGroup label="Element Properties" labelFor="text-input">
+      <FormGroup label="Element Properties">
         <InputGroup disabled={disabled} placeholder="Element name" value={name} onChange={(event) => updateElement('name', event)}/>
         <InputGroup disabled={disabled} placeholder="Element id" value={id} onChange={(event) => updateElement('id', event)}/>
         <InputGroup disabled={disabled} placeholder="Shared name" value={sharedState} onChange={(event) => updateElement('sharedState', event)}/>

@@ -7,7 +7,7 @@ class ModelGroup extends Component {
   render() {
     const { name, generator, updateModel} = this.props;
     return (
-      <FormGroup label="Model Properties" labelFor="text-input">
+      <FormGroup label="Model Properties">
         <InputGroup placeholder="Model Name" value={name} onChange={(event) => updateModel('name', event)}/>
         <InputGroup placeholder="Model Generator Builder"/>
         <InputGroup placeholder="Model Generator" value={generator} onChange={(event) => updateModel('generator', event)}/>

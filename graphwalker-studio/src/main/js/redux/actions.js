@@ -5,7 +5,14 @@ import {
   SELECT_MODEL,
   SELECT_ELEMENT,
   UPDATE_MODEL,
-  UPDATE_ELEMENT, SET_START_ELEMENT, UPDATE_EXECUTION, CLOSE_MODEL
+  UPDATE_ELEMENT,
+  SET_START_ELEMENT,
+  UPDATE_EXECUTION,
+  CLOSE_MODEL,
+  EXECUTION_RUN,
+  EXECUTION_PAUSE,
+  EXECUTION_STOP,
+  EXECUTION_STEP
 } from "./actionTypes";
 
 let modelCount = 0;
@@ -93,3 +100,19 @@ export const closeModel = index => ({
     index
   }
 });
+
+export const runTest = () => ({
+  type: EXECUTION_RUN
+})
+
+export const stepTest = () => ({
+  type: EXECUTION_STEP
+})
+
+export const pauseTest = () => ({
+  type: EXECUTION_PAUSE
+})
+
+export const stopTest = () => ({
+  type: EXECUTION_STOP
+})

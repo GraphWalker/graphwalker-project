@@ -15,6 +15,10 @@
   margin-bottom: 0.5rem;
 }
 
+.bp3-input-group.bp3-disabled, input.bp3-input[disabled], textarea.bp3-input[disabled] {
+  cursor: default !important;
+}
+
 textarea.bp3-input {
   resize: none;
 }
