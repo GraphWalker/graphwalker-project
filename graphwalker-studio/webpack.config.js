@@ -5,7 +5,7 @@ module.exports = {
   entry: path.resolve(__dirname, 'src/main/js/index.js'),
   output: {
     filename: 'studio.js',
-    path: path.resolve(__dirname, 'src/main/resources/static')
+    path: path.resolve(__dirname, 'target/classes/static')
   },
   module: {
     rules: [
