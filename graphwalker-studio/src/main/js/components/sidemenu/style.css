@@ -3,22 +3,27 @@
   min-width: 3.5rem;
   background-color: #2C2C2C;
   text-align: center;
+  padding-top: 0.5rem;
 }
 
 .sidemenu > .bp3-divider {
   border-color: #6D6D6D;
 }
 
-.sidemenu-button {
-  width: 100%;
-  display: inline-block;
-  padding: 9px 0;
-}
-
-span.bp3-icon {
+button.sidemenu-button {
   outline: none;
 }
-
-span.bp3-icon:hover {
-  color: #FFFFFF;
+button.sidemenu-button[disabled] {
+  cursor: default !important;
 }
+
+button.sidemenu-button[disabled] > .bp3-icon > svg:not([fill]) {
+  fill: #6D6D6D;
+}
+
+button.sidemenu-button > .bp3-icon {
+  color: #EDEDED;
+}
+
+
+
