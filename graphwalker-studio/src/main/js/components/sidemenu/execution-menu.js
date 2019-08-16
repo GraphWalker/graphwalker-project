@@ -20,7 +20,6 @@ class ExecutionMenu extends Component {
 }
 
 const mapStateToProps = ({ test: { models }, execution: { running, paused }}) => {
-  console.log(models.length === 0, running, paused)
   return {
     disabled: models.length === 0,
     running,

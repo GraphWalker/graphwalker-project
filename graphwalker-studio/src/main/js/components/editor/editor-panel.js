@@ -60,8 +60,8 @@ class EditorPanel extends Component {
 
   handleResize = (entries) => {
     const entry = entries.filter(entry => entry.target.className === 'container-column')[0];
-    if (entry)
-      console.log([entry.contentRect.width, entry.contentRect.height], [this.cy.width(), this.cy.height()]);
+    //if (entry)
+      //console.log([entry.contentRect.width, entry.contentRect.height], [this.cy.width(), this.cy.height()]);
 
 
     //const { width, height } = entries[0].contentRect;

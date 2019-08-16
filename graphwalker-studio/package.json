@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",
+    "core-js": "^3.2.1",
     "cytoscape": "^3.8.2",
     "normalize.css": "^8.0.1",
     "react": "^16.9.0",
@@ -17,7 +18,8 @@
     "react-responsive-tabs": "^3.2.0",
     "react-split-pane": "^0.1.87",
     "redux": "^4.0.4",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

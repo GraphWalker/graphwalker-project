@@ -5,16 +5,13 @@ import {
   SELECT_MODEL,
   SELECT_ELEMENT,
   UPDATE_MODEL,
-  UPDATE_ELEMENT, SET_START_ELEMENT, UPDATE_EXECUTION, CLOSE_MODEL
+  UPDATE_ELEMENT, SET_START_ELEMENT, CLOSE_MODEL
 } from "../actionTypes";
 
 const initialState = {
   models: [],
   selectedModelIndex: null,
   selectedElementId: null,
-  execution: {
-    delay: 0
-  }
 };
 
 export default function(state = initialState, action) {
@@ -94,15 +91,6 @@ export default function(state = initialState, action) {
           model.startElementId = checked ? selectedElementId : "";
           return model;
         })
-      }
-    }
-    case UPDATE_EXECUTION: {
-      const {value} = action.payload;
-      return {
-        ...state,
-        execution: {
-          delay: value
-        }
       }
     }
     case CLOSE_MODEL: {
