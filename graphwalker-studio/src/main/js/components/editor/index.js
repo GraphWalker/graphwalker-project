@@ -1,10 +1,90 @@
 import React, { Component } from 'react';
-import { connect } from "react-redux";
-import Tabs from 'react-responsive-tabs';
+import styled from 'styled-components';
+import Tabs from './editor-tabs';
+
+const EditorContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #FFFFFF;
+`;
+
+export default class Editor extends Component {
+  render() {
+    return (
+      <EditorContainer>
+        <Tabs/>
+      </EditorContainer>
+    )
+  }
+}
+
+
+
+
+/*
+//import Tabs from 'react-responsive-tabs';
 import EditorPanel from "./editor-panel";
 import { selectModel, closeModel } from "../../redux/actions";
-import './style.css';
 
+import './style.css';
+import { Icon } from "@blueprintjs/core";
+import {Tabs, DragTabList, DragTab, PanelList, Panel, ExtraButton} from 'react-tabtab';
+import {simpleSwitch} from 'react-tabtab/lib/helpers/move';
+//import * as customStyle from 'react-tabtab/lib/themes/material-design';
+import customStyle from './tabs-style';
+
+
+
+
+export default class Editor extends Component {
+
+  constructor(props) {
+    super(props);
+    this.handleTabChange = this.handleTabChange.bind(this);
+    this.handleTabSequenceChange = this.handleTabSequenceChange.bind(this);
+    this.state = {
+      activeIndex: 0,
+    }
+  }
+
+  handleTabChange(index) {
+    this.setState({activeIndex: index});
+  }
+
+  handleTabSequenceChange({oldIndex, newIndex}) {
+    const {tabs} = this.state;
+    const updateTabs = simpleSwitch(tabs, oldIndex, newIndex);
+    this.setState({tabs: updateTabs, activeIndex: newIndex});
+  }
+
+  render() {
+    const {activeIndex} = this.state;
+    return (
+      <Tabs activeIndex={activeIndex}
+            onTabChange={this.handleTabChange}
+            onTabSequenceChange={this.handleTabSequenceChange}
+            customStyle={customStyle}
+            ExtraButton={
+              <ExtraButton className="EXTRA_BUTTON">
+                <Icon icon="plus"/>
+              </ExtraButton>
+            }
+      >
+        <DragTabList>
+          <DragTab closable>DragTab1</DragTab>
+          <DragTab closable>DragTab2</DragTab>
+        </DragTabList>
+        <PanelList>
+          <Panel>Content1</Panel>
+          <Panel>Content2</Panel>
+        </PanelList>
+      </Tabs>
+    )
+  }
+}
+*/
+/*
 class Editor extends Component {
 
   getTabs = () => {
@@ -43,3 +123,4 @@ const mapStateToProps = ({ test: { models }}) => {
 };
 
 export default connect(mapStateToProps, { selectModel, closeModel })(Editor);
+*/

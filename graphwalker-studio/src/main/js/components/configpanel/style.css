@@ -1,21 +1,6 @@
 
-.config-panel {
-  width: 22rem;
-  min-width: 20rem;
-  min-height: 32rem;
-  background-color: #FFFFFF;
-  padding: 0.5rem;
-}
-
-.bp3-form-group {
-  padding-top: 0.5rem;
-}
-
-.bp3-input {
-  margin-bottom: 0.5rem;
-}
-
-.bp3-input-group.bp3-disabled, input.bp3-input[disabled], textarea.bp3-input[disabled] {
+.bp3-input-group.bp3-disabled, input.bp3-input[disabled], textarea.bp3-input[disabled],
+.bp3-control.bp3-switch.bp3-disabled, .bp3-control.bp3-switch.bp3-disabled > .bp3-control-indicator {
   cursor: default !important;
 }
 

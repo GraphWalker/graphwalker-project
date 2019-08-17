@@ -10,7 +10,7 @@ import {
 
 const initialState = {
   models: [],
-  selectedModelIndex: null,
+  selectedModelIndex: 0,
   selectedElementId: null,
 };
 
@@ -95,11 +95,12 @@ export default function(state = initialState, action) {
     }
     case CLOSE_MODEL: {
       const {models, selectedModelIndex} = state;
+      console.log(action.payload, Math.max(selectedModelIndex - 1, 0));
       const {index} = action.payload;
       return {
         ...state,
         models: models.filter((value, n) => n !== index),
-        selectedModelIndex: Math.max(selectedModelIndex - 1, 0)
+        selectedModelIndex: selectedModelIndex === index ? Math.max(selectedModelIndex - 1, 0): selectedModelIndex
       }
     }
     default: {

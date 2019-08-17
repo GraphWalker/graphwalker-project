@@ -7,19 +7,31 @@ class ElementGroup extends Component {
   render() {
     const { id, name, sharedState, guard, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
     return (
-      <FormGroup label="Element Properties">
-        <InputGroup disabled={disabled} placeholder="Element name" value={name} onChange={(event) => updateElement('name', event)}/>
-        <InputGroup disabled={disabled} placeholder="Element id" value={id} onChange={(event) => updateElement('id', event)}/>
-        <InputGroup disabled={disabled} placeholder="Shared name" value={sharedState} onChange={(event) => updateElement('sharedState', event)}/>
-        <InputGroup disabled={disabled} placeholder="Guard" value={guard} onChange={(event) => updateElement('guard', event)}/>
-        <div className="bp3-input-group">
-          <TextArea disabled={disabled} placeholder="Actions" value={actions} onChange={(event) => updateElement('actions', event)}/>
-        </div>
-        <div className="bp3-input-group">
-          <TextArea disabled={disabled} placeholder="Requirements" value={requirements} onChange={(event) => updateElement('requirements', event)}/>
-        </div>
+      <>
+        <FormGroup label="Element Name" disabled={disabled}>
+          <InputGroup disabled={disabled} value={name} onChange={(event) => updateElement('name', event)}/>
+        </FormGroup>
+        <FormGroup label="Element ID" disabled={disabled}>
+          <InputGroup disabled={disabled} value={id} onChange={(event) => updateElement('id', event)}/>
+        </FormGroup>
+        <FormGroup label="Shared Name" disabled={disabled}>
+          <InputGroup disabled={disabled} value={sharedState} onChange={(event) => updateElement('sharedState', event)}/>
+        </FormGroup>
+        <FormGroup label="Guard" disabled={disabled}>
+          <InputGroup disabled={disabled} value={guard} onChange={(event) => updateElement('guard', event)}/>
+        </FormGroup>
+        <FormGroup label="Actions" disabled={disabled}>
+          <div className="bp3-input-group">
+            <TextArea disabled={disabled} value={actions} onChange={(event) => updateElement('actions', event)}/>
+          </div>
+        </FormGroup>
+        <FormGroup label="Requirements" disabled={disabled}>
+          <div className="bp3-input-group">
+            <TextArea disabled={disabled} value={requirements} onChange={(event) => updateElement('requirements', event)}/>
+          </div>
+        </FormGroup>
         <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={setStartElement}/>
-      </FormGroup>
+      </>
     )
   }
 }

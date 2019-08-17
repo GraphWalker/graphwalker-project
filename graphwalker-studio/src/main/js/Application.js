@@ -4,10 +4,10 @@ import Container from "./components/container";
 import StatusBar from "./components/statusbar";
 import SideMenu from "./components/sidemenu";
 import Editor from "./components/editor";
-import ConfigPanel from "./components/configpanel/config-panel";
+import ConfigPanel from "./components/configpanel";
 import { Divider } from "@blueprintjs/core";
-import SplitPane from "react-split-pane";
 import Banner from "./graphwalker.inline.svg";
+import SplitterLayout from 'react-splitter-layout';
 import './style.css';
 
 class Application extends Component {
@@ -27,9 +27,12 @@ class Application extends Component {
         <Container column>
           <Container>
             <SideMenu/>
-            <Editor/>
-            <Divider/>
-            <ConfigPanel/>
+            <main>
+              <SplitterLayout primaryIndex={0} secondaryInitialSize={400}>
+                <Editor/>
+                <ConfigPanel/>
+              </SplitterLayout>
+            </main>
           </Container>
           <StatusBar/>
         </Container>

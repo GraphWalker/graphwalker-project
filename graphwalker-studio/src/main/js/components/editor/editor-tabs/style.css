@@ -1,0 +1,6 @@
+
+button.bp3-button.tabs-button, button.bp3-button.tabs-button:hover, button.bp3-button.tabs-button.bp3-active {
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}

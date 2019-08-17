@@ -15,11 +15,11 @@
     "react-cytoscapejs": "^1.2.0",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.0",
-    "react-responsive-tabs": "^3.2.0",
-    "react-split-pane": "^0.1.87",
+    "react-splitter-layout": "^4.0.0",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "styled-components": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
