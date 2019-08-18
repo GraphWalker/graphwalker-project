@@ -11,9 +11,6 @@ class ElementGroup extends Component {
         <FormGroup label="Element Name" disabled={disabled}>
           <InputGroup disabled={disabled} value={name} onChange={(event) => updateElement('name', event)}/>
         </FormGroup>
-        <FormGroup label="Element ID" disabled={disabled}>
-          <InputGroup disabled={disabled} value={id} onChange={(event) => updateElement('id', event)}/>
-        </FormGroup>
         <FormGroup label="Shared Name" disabled={disabled}>
           <InputGroup disabled={disabled} value={sharedState} onChange={(event) => updateElement('sharedState', event)}/>
         </FormGroup>

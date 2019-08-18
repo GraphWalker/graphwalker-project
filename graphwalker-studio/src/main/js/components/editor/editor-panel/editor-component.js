@@ -2,17 +2,13 @@ import React, { Component, createElement } from 'react';
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
 import { selectElement } from "../../../redux/actions";
-import { ResizeSensor } from "@blueprintjs/core";
+import { Classes, ContextMenu, Menu, MenuDivider, MenuItem, ResizeSensor } from "@blueprintjs/core";
 import { debounce } from "debounce";
 import Cytoscape from "cytoscape";
 import stylesheet from "./editor-stylesheet";
 import "./style.css";
 
 class EditorComponent extends Component {
-
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     const container = findDOMNode(this);
@@ -33,13 +29,43 @@ class EditorComponent extends Component {
   }
 
   addEventHandlers() {
-    this.editor.on('tap', (event) => {
+    this.editor.on('tap', event => {
       if (event.target === this.editor) {
         this.props.selectElement(null);
       } else {
         this.props.selectElement(event.target.id());
       }
+    });
+
+
+    this.editor.on('cxttap', 'node', event => {
+      const { clientX, clientY } = event.originalEvent;
+      ContextMenu.show(
+        <Menu>
+          <MenuItem icon="full-circle" text="Breakpoint...">
+            <MenuItem icon="new-object" text="Add breakpoint" />
+            <MenuItem icon="graph-remove" text="Remove breakpoint" />
+          </MenuItem>
+          <MenuItem icon="cross" text="Delete" />
+        </Menu>, { left: clientX, top: clientY });
     })
+
+    this.editor.on('cxttap', event => {
+      if (event.target === this.editor) {
+        const { clientX, clientY } = event.originalEvent;
+        ContextMenu.show(
+          <Menu>
+            <MenuItem icon="insert" text="Add vertex" />
+            <MenuItem icon="select" text="Select all" />
+            <MenuItem icon="layout" text="Layout...">
+              <MenuItem icon="layout-auto" text="Auto" />
+              <MenuItem icon="layout-circle" text="Circle" />
+              <MenuItem icon="layout-grid" text="Grid" />
+            </MenuItem>
+          </Menu>, { left: clientX, top: clientY });
+      }
+    });
+
   }
 
   handleResize = debounce(() => {
