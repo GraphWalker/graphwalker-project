@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Tabs from './editor-tabs';
+import EditorTabs from './editor-tabs';
+import EditorPanel from "./editor-panel";
 
 const EditorContainer = styled.div`
   display: flex;
@@ -13,7 +14,8 @@ export default class Editor extends Component {
   render() {
     return (
       <EditorContainer>
-        <Tabs/>
+        <EditorTabs/>
+        <EditorPanel/>
       </EditorContainer>
     )
   }

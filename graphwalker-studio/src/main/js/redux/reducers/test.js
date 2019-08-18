@@ -1,11 +1,14 @@
 import {
-  ADD_MODEL,
-  LOAD_TEST,
-  NEW_TEST,
-  SELECT_MODEL,
-  SELECT_ELEMENT,
-  UPDATE_MODEL,
-  UPDATE_ELEMENT, SET_START_ELEMENT, CLOSE_MODEL
+  TEST_LOAD,
+  TEST_NEW,
+  MODEL_ADD,
+  MODEL_CLOSE,
+  MODEL_CLOSE_ALL,
+  MODEL_SELECT,
+  MODEL_UPDATE,
+  ELEMENT_SELECT,
+  ELEMENT_START,
+  ELEMENT_UPDATE
 } from "../actionTypes";
 
 const initialState = {
@@ -16,23 +19,48 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case ADD_MODEL: {
+    case TEST_LOAD: {
+      const file = JSON.parse(action.payload.content);
+
+      // convert gw model to
+      file.models.forEach(model => {
+        const elements = [];
+        const { startElementId } = model;
+
+        model.vertices.map(({id, name, sharedState, actions, requirements, properties: {x = 0, y = 0}}) => elements.push({
+          group: 'nodes',
+          data: {id, name, color: id === startElementId ? 'LightGreen' : 'LightSteelBlue'},
+          position: {x, y}
+        }));
+
+        model.edges.filter(({sourceVertexId: source}) => source == null).map(() => elements.push({
+          group: 'nodes',
+          data: {id: 'Start', name: 'Start', color: 'LightGreen'},
+          position: {x: 0, y: 0}
+        }));
+
+        model.edges.map(({id, name, guard, actions, sourceVertexId: source = 'Start', targetVertexId: target}) => elements.push({
+          group: 'edges',
+          data: {
+            id,
+            name,
+            source: source == null ? 'Start' : source,
+            target,
+            color: source == null ? 'LightGreen' : 'LightSteelBlue'
+          }
+        }));
+
+        model.editor = { elements };
+      })
+
       return {
         ...state,
-        models: [action.payload, ...state.models],
+        ...file,
         selectedModelIndex: 0,
         selectedElementId: null
       }
     }
-    case LOAD_TEST: {
-      return {
-        ...state,
-        ...JSON.parse(action.payload.content),
-        selectedModelIndex: 0,
-        selectedElementId: null
-      }
-    }
-    case NEW_TEST: {
+    case TEST_NEW: {
       return {
         ...initialState,
         models: [action.payload],
@@ -40,67 +68,102 @@ export default function(state = initialState, action) {
         selectedElementId: null
       }
     }
-    case SELECT_MODEL: {
+    case MODEL_ADD: {
+      return {
+        ...state,
+        models: [action.payload, ...state.models],
+        selectedModelIndex: 0,
+        selectedElementId: null
+      }
+    }
+    case MODEL_CLOSE: {
+      const {models, selectedModelIndex} = state;
+      const {index} = action.payload;
+
+      return {
+        ...state,
+        models: models.filter((value, n) => n !== index),
+        selectedModelIndex: selectedModelIndex === index ? Math.max(selectedModelIndex - 1, 0): selectedModelIndex
+      }
+    }
+    case MODEL_CLOSE_ALL: {
+      return {
+        ...initialState
+      }
+    }
+    case MODEL_SELECT: {
       return {
         ...state,
         selectedModelIndex: action.payload.index,
         selectedElementId: null
       }
     }
-    case SELECT_ELEMENT: {
+    case MODEL_UPDATE: {
+      const {field, event: {currentTarget: {value}}} = action.payload;
+      const {models, selectedModelIndex} = state;
+
+      const updatedModels = models.map(model => {
+        return Object.assign({}, model);
+      });
+
+      updatedModels[selectedModelIndex][field] = value;
+      return {
+        ...state,
+        models: updatedModels
+      };
+    }
+    case ELEMENT_SELECT: {
       return {
         ...state,
         selectedElementId: action.payload.id
       }
     }
-    case UPDATE_MODEL: {
-      const {field, event: {currentTarget: {value}}} = action.payload;
-      const {models, selectedModelIndex} = state;
-      models[selectedModelIndex][field] = value;
+    case ELEMENT_START: {
+      const {event: {currentTarget: {checked}}} = action.payload;
+      const {models, selectedElementId} = state;
+
+      const updatedModels = models.map(model => {
+        return Object.assign({}, model);
+      });
+
       return {
         ...state,
-        models
-      };
+        models: updatedModels.map(model => {
+          const startElementId = checked ? selectedElementId : "";
+          return Object.assign({}, model, { startElementId });
+        })
+      }
     }
-    case UPDATE_ELEMENT: {
+    case ELEMENT_UPDATE: {
       const {field, event: {currentTarget: {value}}} = action.payload;
       const {models, selectedModelIndex, selectedElementId} = state;
-      models[selectedModelIndex].vertices = models[selectedModelIndex].vertices.map(vertex => {
+
+      const updatedModels = models.map(model => {
+        return Object.assign({}, model);
+      });
+
+      updatedModels[selectedModelIndex].editor.elements.forEach(element => {
+        if (element.data.id === selectedElementId) {
+          element.data[field] = value;
+        }
+      })
+
+      updatedModels[selectedModelIndex].vertices = models[selectedModelIndex].vertices.map(vertex => {
         if (vertex.id === selectedElementId) {
           vertex[field] = value;
         }
         return vertex;
       })
-      models[selectedModelIndex].edges = models[selectedModelIndex].edges.map(edge => {
+      updatedModels[selectedModelIndex].edges = models[selectedModelIndex].edges.map(edge => {
         if (edge.id === selectedElementId) {
           edge[field] = value;
         }
         return edge;
       })
+
       return {
         ...state,
-        models
-      }
-    }
-    case SET_START_ELEMENT: {
-      const {event: {currentTarget: {checked}}} = action.payload;
-      const {models, selectedElementId} = state;
-      return {
-        ...state,
-        models: models.map(model => {
-          model.startElementId = checked ? selectedElementId : "";
-          return model;
-        })
-      }
-    }
-    case CLOSE_MODEL: {
-      const {models, selectedModelIndex} = state;
-      console.log(action.payload, Math.max(selectedModelIndex - 1, 0));
-      const {index} = action.payload;
-      return {
-        ...state,
-        models: models.filter((value, n) => n !== index),
-        selectedModelIndex: selectedModelIndex === index ? Math.max(selectedModelIndex - 1, 0): selectedModelIndex
+        models: updatedModels
       }
     }
     default: {

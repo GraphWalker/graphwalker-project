@@ -1,12 +1,15 @@
-export const ADD_MODEL = "ADD_MODEL";
-export const LOAD_TEST  = "LOAD_TEST";
-export const NEW_TEST  = "NEW_TEST";
-export const SELECT_MODEL = "SELECT_MODEL";
-export const SELECT_ELEMENT = "SELECT_ELEMENT";
-export const UPDATE_MODEL = "UPDATE_MODEL";
-export const UPDATE_ELEMENT = "UPDATE_ELEMENT";
-export const SET_START_ELEMENT = "SET_START_ELEMENT";
-export const CLOSE_MODEL = "CLOSE_MODEL";
+export const TEST_LOAD = "TEST_LOAD";
+export const TEST_NEW = "TEST_NEW";
+
+export const MODEL_ADD = "MODEL_ADD";
+export const MODEL_CLOSE = "MODEL_CLOSE";
+export const MODEL_CLOSE_ALL = "MODEL_CLOSE_ALL";
+export const MODEL_SELECT = "MODEL_SELECT";
+export const MODEL_UPDATE = "MODEL_UPDATE";
+
+export const ELEMENT_SELECT = "ELEMENT_SELECT";
+export const ELEMENT_START = "ELEMENT_START";
+export const ELEMENT_UPDATE = "ELEMENT_UPDATE";
 
 export const EXECUTION_CONNECT = "EXECUTION_CONNECT";
 export const EXECUTION_DELAY = "EXECUTION_DELAY";

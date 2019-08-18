@@ -1,9 +1,30 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
+import styled from 'styled-components';
+import { ResizeSensor } from "@blueprintjs/core";
+import EditorComponent from "./editor-component";
+
+const EditorPanelContainer = styled.div`
+  height: 100%;
+  overflow: hidden;
+`;
+
+export default class EditorPanel extends Component {
+
+  render() {
+    return (
+      <EditorPanelContainer>
+        <EditorComponent/>
+      </EditorPanelContainer>
+    );
+  }
+}
+
+/*
 import { connect } from "react-redux";
-import {ResizeSensor, Tab, Tabs} from "@blueprintjs/core";
+import {ResizeSensor} from "@blueprintjs/core";
 import CytoscapeComponent from "react-cytoscapejs";
-import Container from "../container";
-import { selectElement } from "../../redux/actions";
+import Container from "../../container";
+import { selectElement } from "../../../redux/actions";
 
 const stylesheet = [
   {
@@ -67,14 +88,14 @@ class EditorPanel extends Component {
     //const { width, height } = entries[0].contentRect;
     //console.log(entries.map(e => [e.target, e.contentRect.width, e.contentRect.height]));
     //this.cy.resize();
-    /*
+
     this.setState({
       width: width,
       height: height
     });
 
                                 style={{ width: `${this.state.width}px`, height: `${this.state.height}px` }}
-     */
+
     this.cy.resize();
   };
 
@@ -132,3 +153,4 @@ class EditorPanel extends Component {
 }
 
 export default connect(null, { selectElement })(EditorPanel);
+*/

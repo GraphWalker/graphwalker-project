@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import styled from 'styled-components';
 import { Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
-import { addModel, selectModel, closeModel } from "../../../redux/actions";
+import { addModel, selectModel, closeModel, closeAllModels } from "../../../redux/actions";
 import "./style.css";
 
 const TabsContainer = styled.div`
@@ -70,10 +70,10 @@ class EditorTabs extends Component {
   };
 
   render() {
-    const { models, selectedModelIndex, addModel, selectModel, closeModel } = this.props;
+    const { models, selectedModelIndex, addModel, selectModel, closeModel, closeAllModels } = this.props;
     const moreMenu = (
       <Menu>
-        <MenuItem icon="cross" text="Close All" />
+        <MenuItem icon="cross" text="Close All" onClick={closeAllModels} />
       </Menu>
     );
     const tabs = models.map((model, index) => (
@@ -92,7 +92,7 @@ class EditorTabs extends Component {
         </TabList>
         <TabActionList>
           <Button className="tabs-button" icon="plus" onClick={addModel}/>
-          <Popover content={moreMenu} position={Position.BOTTOM_RIGHT}>
+          <Popover content={moreMenu} position={Position.BOTTOM_LEFT} minimal boundary="viewport">
             <Button className="tabs-button" icon="more"/>
           </Popover>
         </TabActionList>
@@ -108,4 +108,4 @@ const mapStateToProps = ({ test: { models, selectedModelIndex }}) => {
   }
 };
 
-export default connect(mapStateToProps, { addModel, selectModel, closeModel })(EditorTabs);
+export default connect(mapStateToProps, { addModel, selectModel, closeModel, closeAllModels })(EditorTabs);

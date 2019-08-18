@@ -28,7 +28,7 @@ class Application extends Component {
           <Container>
             <SideMenu/>
             <main>
-              <SplitterLayout primaryIndex={0} secondaryInitialSize={400}>
+              <SplitterLayout secondaryInitialSize={400}>
                 <Editor/>
                 <ConfigPanel/>
               </SplitterLayout>
