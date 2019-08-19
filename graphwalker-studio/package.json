@@ -10,6 +10,7 @@
     "@blueprintjs/core": "^3.18.0",
     "core-js": "^3.2.1",
     "cytoscape": "^3.8.2",
+    "cytoscape-cose-bilkent": "^4.0.0",
     "debounce": "^1.2.0",
     "normalize.css": "^8.0.1",
     "react": "^16.9.0",
