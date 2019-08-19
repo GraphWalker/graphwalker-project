@@ -1,13 +1,13 @@
-import React, { Component, createElement } from 'react';
+import React, { Component } from 'react';
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
-import { selectElement } from "../../../redux/actions";
+import { createElement, deleteElement, selectElement } from "../../../redux/actions";
 import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
 import { debounce } from "debounce";
+import uuid from "uuid/v1"
 import Cytoscape from "cytoscape";
 import coseBilkent from 'cytoscape-cose-bilkent';
 import stylesheet from "./editor-stylesheet";
-
 import "./style.css";
 
 Cytoscape.use( coseBilkent );
@@ -33,11 +33,52 @@ class EditorComponent extends Component {
   }
 
   addEventHandlers() {
+
+    document.addEventListener('keydown', event => {
+      this.keyCode = event.which;
+    });
+
+    document.addEventListener('keyup', event => {
+      this.keyCode = null;
+    });
+
     this.editor.on('tap', event => {
       if (event.target === this.editor) {
-        this.props.selectElement(null);
+        if (this.editor.elements(':selected').length === 0) {
+          if (this.keyCode === 86) { // v key is pressed
+            const { position: { x, y }} = event;
+            this.props.createElement({
+              id: uuid(),
+              name: 'v_NewVertex',
+              position: { x, y }
+            });
+          }
+        } else {
+          this.props.selectElement(null);
+        }
       } else {
         this.props.selectElement(event.target.id());
+      }
+    });
+
+    this.editor.on('tapstart', 'node', event => {
+      if (this.keyCode === 69) {
+        this.editor.autoungrabify(true);
+        this.source = event.target;
+      }
+    });
+
+    this.editor.on('tapend', event => {
+      if (this.keyCode === 69) {
+        this.editor.autoungrabify(false);
+        if (this.editor != event.target && event.target.isNode()) {
+          this.props.createElement({
+            id: uuid(),
+            source: this.source.id(),
+            target: event.target.id(),
+            name: 'v_NewVertex'
+          });
+        }
       }
     });
 
@@ -45,7 +86,7 @@ class EditorComponent extends Component {
       const { clientX, clientY } = event.originalEvent;
       ContextMenu.show(
         <Menu>
-          <MenuItem icon="cross" text="Delete" onClick={() => event.target.remove()}/>
+          <MenuItem icon="cross" text="Delete" onClick={() => this.props.deleteElement(event.target.remove().map(element => element.id()))}/>
           <Divider/>
           <MenuItem icon="full-circle" text="Breakpoint...">
             <MenuItem disabled={true} icon="new-object" text="Add breakpoint" />
@@ -59,9 +100,9 @@ class EditorComponent extends Component {
         const { clientX, clientY } = event.originalEvent;
         ContextMenu.show(
           <Menu>
-            <MenuItem disabled={true} icon="insert" text="Add vertex" />
             <MenuItem icon="select" text="Select all" onClick={() => this.editor.elements().select()} />
-            <MenuItem disabled={this.editor.elements(':selected').length === 0} icon="cross" text="Delete selected" onClick={() => this.editor.remove(':selected')}/>
+            <MenuItem disabled={this.editor.elements(':selected').length === 0} icon="cross" text="Delete selected"
+                      onClick={() => this.props.deleteElement(this.editor.elements(':selected').remove().map(element => element.id()))}/>
             <Divider/>
             <MenuItem icon="layout" text="Layout...">
               <MenuItem icon="layout-auto" text="Auto" onClick={() => this.editor.layout({ name: 'cose-bilkent', nodeDimensionsIncludeLabels: true, idealEdgeLength: 200 }).run()} />
@@ -93,4 +134,4 @@ const mapStateToProps = ({ test: { models, selectedModelIndex }}) => {
   }
 };
 
-export default connect(mapStateToProps, { selectElement })(EditorComponent);
+export default connect(mapStateToProps, { createElement, deleteElement, selectElement })(EditorComponent);

@@ -1,6 +1,11 @@
 
 export default [
   {
+    selector: 'core',
+    style: {
+      'active-bg-size': 0
+    }
+  }, {
     selector: 'node',
     style: {
       content: 'data(name)',

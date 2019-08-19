@@ -6,6 +6,8 @@ import {
   MODEL_CLOSE_ALL,
   MODEL_SELECT,
   MODEL_UPDATE,
+  ELEMENT_CREATE,
+  ELEMENT_DELETE,
   ELEMENT_SELECT,
   ELEMENT_START,
   ELEMENT_UPDATE
@@ -111,6 +113,59 @@ export default function(state = initialState, action) {
         ...state,
         models: updatedModels
       };
+    }
+    case ELEMENT_CREATE: {
+      const { data: { id, name, source, target, position }} = action.payload;
+      const { models, selectedModelIndex } = state;
+
+      const updatedModels = models.map(model => {
+        return Object.assign({}, model);
+      });
+
+      if (position != null) {
+        const { x, y } = position;
+        updatedModels[selectedModelIndex].editor.elements.push({
+          group: 'nodes',
+          data: {id, name, color: 'LightSteelBlue'},
+          position: {x, y}
+        });
+      } else {
+        updatedModels[selectedModelIndex].editor.elements.push({
+          group: 'edges',
+          data: {
+            id,
+            name,
+            source,
+            target,
+            color: 'LightSteelBlue'
+          }
+        });
+      }
+      return {
+        ...state,
+        models: updatedModels
+      }
+    }
+    case ELEMENT_DELETE: {
+      const { id } = action.payload;
+      const { models, selectedModelIndex } = state;
+
+      const updatedModels = models.map(model => {
+        return Object.assign({}, model);
+      });
+
+      updatedModels[selectedModelIndex].editor.elements = updatedModels[selectedModelIndex].editor.elements.filter(element => {
+        if (Array.isArray(id)) {
+          return !id.includes(element.data.id)
+        } else {
+          return element.data.id != id;
+        }
+      })
+
+      return {
+        ...state,
+        models: updatedModels
+      }
     }
     case ELEMENT_SELECT: {
       return {

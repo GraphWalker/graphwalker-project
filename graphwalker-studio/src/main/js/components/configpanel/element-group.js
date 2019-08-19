@@ -35,9 +35,9 @@ class ElementGroup extends Component {
 
 const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId }}) => {
   const model = models[selectedModelIndex];
-  const elements = [...model.vertices, ...model.edges];
-  const element = elements.filter(element => element.id === selectedElementId)[0] || {};
-  const { id = "", name = "", sharedState = "", guard = "", actions = [], requirements = [] } = element;
+  const elements = model.editor.elements; // [...model.vertices, ...model.edges];
+  const element = elements.filter(element => element.data && element.data.id === selectedElementId)[0] || { data: {}};
+  const { id = "", name = "", sharedState = "", guard = "", actions = [], requirements = [] } = element.data;
   return {
     id,
     name,

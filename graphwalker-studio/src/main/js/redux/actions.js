@@ -6,6 +6,8 @@ import {
   MODEL_CLOSE_ALL,
   MODEL_SELECT,
   MODEL_UPDATE,
+  ELEMENT_CREATE,
+  ELEMENT_DELETE,
   ELEMENT_SELECT,
   ELEMENT_START,
   ELEMENT_UPDATE,
@@ -84,6 +86,20 @@ export const updateModel = (field, event) => ({
   payload: {
     field,
     event
+  }
+});
+
+export const createElement = (data) => ({
+  type: ELEMENT_CREATE,
+  payload: {
+    data
+  }
+});
+
+export const deleteElement = id => ({
+  type: ELEMENT_DELETE,
+  payload: {
+    id
   }
 });
 
