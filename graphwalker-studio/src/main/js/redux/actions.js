@@ -169,7 +169,16 @@ export const stepTest = () => {
     try {
       const response = await client.send({command: 'hasNext'});
       if (response.hasNext) {
-        dispatch(action(EXECUTION_STEP, await client.send({command: 'getNext'})));
+        const next = await client.send({command: 'getNext'})
+        const { modelId, elementId } = next;
+        const { test: { models }} = getState();
+        models.forEach((model, index) => {
+          if (model.id === modelId) {
+            dispatch(selectModel(index));
+          }
+        });
+        dispatch(selectElement(elementId))
+        dispatch(action(EXECUTION_STEP, next));
       } else {
         dispatch(action(EXECUTION_FULFILLED, response));
       }

@@ -31,7 +31,14 @@ export default function(state = initialState, action) {
 
         model.vertices.map(({id, name, sharedState, actions, requirements, properties: {x = 0, y = 0}}) => elements.push({
           group: 'nodes',
-          data: {id, name, color: id === startElementId ? 'LightGreen' : 'LightSteelBlue'},
+          data: {
+            id,
+            name,
+            color: id === startElementId ? 'LightGreen' : 'LightSteelBlue',
+            sharedState,
+            actions,
+            requirements
+          },
           position: {x, y}
         }));
 
@@ -48,7 +55,9 @@ export default function(state = initialState, action) {
             name,
             source: source == null ? 'Start' : source,
             target,
-            color: source == null ? 'LightGreen' : 'LightSteelBlue'
+            color: source == null ? 'LightGreen' : 'LightSteelBlue',
+            guard,
+            actions
           }
         }));
 

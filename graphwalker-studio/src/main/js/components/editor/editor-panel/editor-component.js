@@ -14,12 +14,35 @@ Cytoscape.use( coseBilkent );
 
 class EditorComponent extends Component {
 
+  updateColors = () => {
+    const { model: { id }, selectedElementId } = this.props;
+    const visited = this.props.execution.visited[id];
+    this.props.model.editor.elements.forEach(element => {
+      if (visited && visited[element.data.id]) {
+        element.data.color = 'LightGreen';
+      } else {
+        if (this.props.model.startElementId === element.data.id) {
+          element.data.color = 'LightGreen';
+        } else if (element.data.sharedState) {
+          element.data.color = 'LightSalmon';
+        } else {
+          element.data.color = 'LightSteelBlue';
+        }
+      }
+    });
+    if (selectedElementId) {
+      this.editor.elements().unselect()
+      this.editor.elements('#'+selectedElementId).select()
+    }
+  }
+
   componentDidMount() {
     const container = findDOMNode(this);
     this.editor = new Cytoscape({
       container,
       style: stylesheet
     });
+    this.updateColors();
     this.editor.json(this.props.model.editor);
     this.addEventHandlers();
   }
@@ -29,6 +52,7 @@ class EditorComponent extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    this.updateColors();
     this.editor.json(this.props.model.editor);
   }
 
@@ -127,10 +151,12 @@ class EditorComponent extends Component {
   }
 }
 
-const mapStateToProps = ({ test: { models, selectedModelIndex }}) => {
+const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId }, execution }) => {
   return {
     model: models[selectedModelIndex],
-    updated: models.updated
+    updated: models.updated,
+    execution,
+    selectedElementId
   }
 };
 

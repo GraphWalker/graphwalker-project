@@ -13,7 +13,10 @@ import {
 const initialState = {
   running: false,
   paused: false,
-  delay: 0
+  delay: 0,
+  stopConditionFulfillment: 0,
+  totalCount: 0,
+  visited: {}
 }
 
 export default function(state = initialState, action) {
@@ -52,7 +55,10 @@ export default function(state = initialState, action) {
     case EXECUTION_LOAD: {
       console.log('EXECUTION_LOAD', action.payload);
       return {
-        ...state
+        ...state,
+        stopConditionFulfillment: 0,
+        totalCount: 0,
+        visited: {}
       }
     }
     case EXECUTION_PAUSE: {
@@ -73,8 +79,26 @@ export default function(state = initialState, action) {
     }
     case EXECUTION_STEP: {
       console.log('EXECUTION_STEP', action.payload);
-      return {
-        ...state
+      const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload.response;
+      if (command === 'visitedElement') {
+        return {
+          ...state,
+          stopConditionFulfillment,
+          totalCount,
+          visited: {
+            ...state.visited,
+            [modelId]: {
+              ...state.visited[modelId],
+              [elementId]: {
+                visitedCount
+              }
+            }
+          }
+        }
+      } else {
+        return {
+          ...state
+        }
       }
     }
     case EXECUTION_STOP: {
@@ -82,7 +106,10 @@ export default function(state = initialState, action) {
       return {
         ...state,
         running: false,
-        paused: false
+        paused: false,
+        stopConditionFulfillment: 0,
+        totalCount: 0,
+        visited: {}
       }
     }
     default: {

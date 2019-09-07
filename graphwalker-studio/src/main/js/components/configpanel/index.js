@@ -4,6 +4,7 @@ import {Divider, Icon} from "@blueprintjs/core";
 import ModelGroup from "./model-group";
 import ElementGroup from "./element-group";
 import "./style.css"
+import ExecutionGroup from "./execution-group";
 
 const PanelContainer = styled.div`
   display: flex;
@@ -42,6 +43,7 @@ export default class ConfigPanel extends Component {
         <PanelContent>
           <ModelGroup/>
           <ElementGroup/>
+          <ExecutionGroup/>
         </PanelContent>
       </PanelContainer>
     );
