@@ -4,7 +4,6 @@ GraphWalker Studio
 
 ## Build Studio
 
-
 ```bash
 mvn package
 ```
