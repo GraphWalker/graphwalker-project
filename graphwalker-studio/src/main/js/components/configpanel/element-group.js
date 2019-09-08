@@ -9,25 +9,25 @@ class ElementGroup extends Component {
     return (
       <>
         <FormGroup label="Element Name" disabled={disabled}>
-          <InputGroup disabled={disabled} value={name} onChange={(event) => updateElement('name', event)}/>
+          <InputGroup disabled={disabled} value={name} onChange={({ target: { value }}) => updateElement('name', value)}/>
         </FormGroup>
         <FormGroup label="Shared Name" disabled={disabled}>
-          <InputGroup disabled={disabled} value={sharedState} onChange={(event) => updateElement('sharedState', event)}/>
+          <InputGroup disabled={disabled} value={sharedState} onChange={({ target: { value }}) => updateElement('sharedState', value)}/>
         </FormGroup>
         <FormGroup label="Guard" disabled={disabled}>
-          <InputGroup disabled={disabled} value={guard} onChange={(event) => updateElement('guard', event)}/>
+          <InputGroup disabled={disabled} value={guard} onChange={({ target: { value }}) => updateElement('guard', value)}/>
         </FormGroup>
         <FormGroup label="Actions" disabled={disabled}>
           <div className="bp3-input-group">
-            <TextArea disabled={disabled} value={actions} onChange={(event) => updateElement('actions', event)}/>
+            <TextArea disabled={disabled} value={actions} onChange={({ target: { value }}) => updateElement('actions', value)}/>
           </div>
         </FormGroup>
         <FormGroup label="Requirements" disabled={disabled}>
           <div className="bp3-input-group">
-            <TextArea disabled={disabled} value={requirements} onChange={(event) => updateElement('requirements', event)}/>
+            <TextArea disabled={disabled} value={requirements} onChange={({ target: { value }}) => updateElement('requirements', value)}/>
           </div>
         </FormGroup>
-        <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={setStartElement}/>
+        <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(checked)}/>
       </>
     )
   }
@@ -35,9 +35,9 @@ class ElementGroup extends Component {
 
 const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId }}) => {
   const model = models[selectedModelIndex];
-  const elements = model.editor.elements; // [...model.vertices, ...model.edges];
-  const element = elements.filter(element => element.data && element.data.id === selectedElementId)[0] || { data: {}};
-  const { id = "", name = "", sharedState = "", guard = "", actions = [], requirements = [] } = element.data;
+  const elements = [...model.vertices, ...model.edges];
+  const element = elements.filter(element => element.id === selectedElementId)[0] || {};
+  const { id = "", name = "", sharedState = "", guard = "", actions = [], requirements = [] } = element;
   return {
     id,
     name,

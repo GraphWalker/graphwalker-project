@@ -9,10 +9,10 @@ class ModelGroup extends Component {
     return (
       <>
         <FormGroup label="Model Name">
-          <InputGroup placeholder="Model Name" value={name} onChange={(event) => updateModel('name', event)}/>
+          <InputGroup placeholder="Model Name" value={name} onChange={({ target: { value }}) => updateModel('name', value)}/>
         </FormGroup>
         <FormGroup label="Model Generator">
-          <InputGroup placeholder="Model Generator" value={generator} onChange={(event) => updateModel('generator', event)}/>
+          <InputGroup placeholder="Model Generator" value={generator} onChange={({ target: { value }}) => updateModel('generator', value)}/>
         </FormGroup>
       </>
     )

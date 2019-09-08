@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
-import { createElement, deleteElement, selectElement } from "../../../redux/actions";
+import { createElement, deleteElement, selectElement, updateElementPosition } from "../../../redux/actions";
 import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
 import { debounce } from "debounce";
 import uuid from "uuid/v1"
@@ -14,10 +14,10 @@ Cytoscape.use( coseBilkent );
 
 class EditorComponent extends Component {
 
-  updateColors = () => {
-    const { model: { id }, selectedElementId } = this.props;
+  updateColors = ({ elements }) => {
+    const { model: { id }} = this.props;
     const visited = this.props.execution.visited[id];
-    this.props.model.editor.elements.forEach(element => {
+    elements.forEach(element => {
       if (visited && visited[element.data.id]) {
         element.data.color = 'LightGreen';
       } else {
@@ -30,6 +30,48 @@ class EditorComponent extends Component {
         }
       }
     });
+    return { elements };
+  }
+
+  asJson = () => {
+    const elements = [];
+    const { startElementId } = this.props.model;
+    this.props.model.vertices.forEach(({id, name, sharedState, actions, requirements, properties: {x = 0, y = 0}}) => elements.push({
+      group: 'nodes',
+      data: {
+        id,
+        name,
+        color: id === startElementId ? 'LightGreen' : 'LightSteelBlue',
+        sharedState,
+        actions,
+        requirements
+      },
+      position: {x, y}
+    }));
+
+    this.props.model.edges.filter(({sourceVertexId: source}) => source == null).forEach(() => elements.push({
+      group: 'nodes',
+      data: {id: 'Start', name: 'Start', color: 'LightGreen'},
+      position: {x: 0, y: 0}
+    }));
+
+    this.props.model.edges.forEach(({id, name, guard, actions, sourceVertexId: source = 'Start', targetVertexId: target}) => elements.push({
+      group: 'edges',
+      data: {
+        id,
+        name,
+        source: source == null ? 'Start' : source,
+        target,
+        color: source == null ? 'LightGreen' : 'LightSteelBlue',
+        guard,
+        actions
+      }
+    }));
+    return { elements };
+  }
+
+  updateSelected = () => {
+    const { selectedElementId } = this.props;
     if (selectedElementId) {
       this.editor.elements().unselect()
       this.editor.elements('#'+selectedElementId).select()
@@ -42,8 +84,8 @@ class EditorComponent extends Component {
       container,
       style: stylesheet
     });
-    this.updateColors();
-    this.editor.json(this.props.model.editor);
+    this.editor.json(this.updateColors(this.asJson()));
+    this.updateSelected();
     this.addEventHandlers();
   }
 
@@ -52,8 +94,8 @@ class EditorComponent extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.updateColors();
-    this.editor.json(this.props.model.editor);
+    this.editor.json(this.updateColors(this.asJson()));
+    this.updateSelected();
   }
 
   addEventHandlers() {
@@ -74,7 +116,7 @@ class EditorComponent extends Component {
             this.props.createElement({
               id: uuid(),
               name: 'v_NewVertex',
-              position: { x, y }
+              properties: { x, y }
             });
           }
         } else {
@@ -92,14 +134,19 @@ class EditorComponent extends Component {
       }
     });
 
+    this.editor.on('dragfree', 'node', event => {
+      const { target } = event;
+      this.props.updateElementPosition(target.id(), target.position());
+    });
+
     this.editor.on('tapend', event => {
       if (this.keyCode === 69) {
         this.editor.autoungrabify(false);
         if (this.editor != event.target && event.target.isNode()) {
           this.props.createElement({
             id: uuid(),
-            source: this.source.id(),
-            target: event.target.id(),
+            sourceVertexId: this.source.id(),
+            targetVertexId: event.target.id(),
             name: 'v_NewVertex'
           });
         }
@@ -160,4 +207,4 @@ const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId
   }
 };
 
-export default connect(mapStateToProps, { createElement, deleteElement, selectElement })(EditorComponent);
+export default connect(mapStateToProps, { createElement, deleteElement, selectElement, updateElementPosition })(EditorComponent);

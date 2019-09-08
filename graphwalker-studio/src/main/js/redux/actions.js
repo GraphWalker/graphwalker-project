@@ -11,6 +11,7 @@ import {
   ELEMENT_SELECT,
   ELEMENT_START,
   ELEMENT_UPDATE,
+  ELEMENT_UPDATE_POSITION,
   EXECUTION_CONNECT,
   EXECUTION_DELAY,
   EXECUTION_FAILED,
@@ -63,7 +64,7 @@ export const addModel = () => ({
   }
 });
 
-export const closeModel = index => ({
+export const closeModel = (index) => ({
   type: MODEL_CLOSE,
   payload: {
     index
@@ -74,54 +75,62 @@ export const closeAllModels = () => ({
   type: MODEL_CLOSE_ALL,
 });
 
-export const selectModel = index => ({
+export const selectModel = (index) => ({
   type: MODEL_SELECT,
   payload: {
     index
   }
 });
 
-export const updateModel = (field, event) => ({
+export const updateModel = (field, value) => ({
   type: MODEL_UPDATE,
   payload: {
     field,
-    event
+    value
   }
 });
 
 export const createElement = (data) => ({
   type: ELEMENT_CREATE,
   payload: {
-    data
+    ...data
   }
 });
 
-export const deleteElement = id => ({
+export const deleteElement = (id) => ({
   type: ELEMENT_DELETE,
   payload: {
     id
   }
 });
 
-export const selectElement = id => ({
+export const selectElement = (id) => ({
   type: ELEMENT_SELECT,
   payload: {
     id
   }
 });
 
-export const setStartElement = (event) => ({
+export const setStartElement = (checked) => ({
   type: ELEMENT_START,
   payload: {
-    event
+    checked
   }
 });
 
-export const updateElement = (field, event) => ({
+export const updateElementPosition = (id, position) => ({
+  type: ELEMENT_UPDATE_POSITION,
+  payload: {
+    id,
+    position
+  }
+});
+
+export const updateElement = (field, value) => ({
   type: ELEMENT_UPDATE,
   payload: {
     field,
-    event
+    value
   }
 });
 

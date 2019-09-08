@@ -1,3 +1,4 @@
+import produce from "immer";
 import {
   TEST_LOAD,
   TEST_NEW,
@@ -10,7 +11,8 @@ import {
   ELEMENT_DELETE,
   ELEMENT_SELECT,
   ELEMENT_START,
-  ELEMENT_UPDATE
+  ELEMENT_UPDATE,
+  ELEMENT_UPDATE_POSITION
 } from "../actionTypes";
 
 const initialState = {
@@ -22,54 +24,13 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case TEST_LOAD: {
-      const file = JSON.parse(action.payload.content);
-
-      // convert gw model to
-      file.models.forEach(model => {
-        const elements = [];
-        const { startElementId } = model;
-
-        model.vertices.map(({id, name, sharedState, actions, requirements, properties: {x = 0, y = 0}}) => elements.push({
-          group: 'nodes',
-          data: {
-            id,
-            name,
-            color: id === startElementId ? 'LightGreen' : 'LightSteelBlue',
-            sharedState,
-            actions,
-            requirements
-          },
-          position: {x, y}
-        }));
-
-        model.edges.filter(({sourceVertexId: source}) => source == null).map(() => elements.push({
-          group: 'nodes',
-          data: {id: 'Start', name: 'Start', color: 'LightGreen'},
-          position: {x: 0, y: 0}
-        }));
-
-        model.edges.map(({id, name, guard, actions, sourceVertexId: source = 'Start', targetVertexId: target}) => elements.push({
-          group: 'edges',
-          data: {
-            id,
-            name,
-            source: source == null ? 'Start' : source,
-            target,
-            color: source == null ? 'LightGreen' : 'LightSteelBlue',
-            guard,
-            actions
-          }
-        }));
-
-        model.editor = { elements };
-      })
-
-      return {
-        ...state,
-        ...file,
-        selectedModelIndex: 0,
-        selectedElementId: null
-      }
+      return produce(state, draft => {
+        Object.assign(draft, {
+          ...JSON.parse(action.payload.content),
+          selectedModelIndex: 0,
+          selectedElementId: null
+        });
+      });
     }
     case TEST_NEW: {
       return {
@@ -80,22 +41,22 @@ export default function(state = initialState, action) {
       }
     }
     case MODEL_ADD: {
-      return {
-        ...state,
-        models: [action.payload, ...state.models],
-        selectedModelIndex: 0,
-        selectedElementId: null
-      }
+      return produce(state, draft => {
+        Object.assign(draft, {
+          models: [action.payload, ...state.models],
+          selectedModelIndex: 0,
+          selectedElementId: null
+        });
+      });
     }
     case MODEL_CLOSE: {
-      const {models, selectedModelIndex} = state;
-      const {index} = action.payload;
-
-      return {
-        ...state,
-        models: models.filter((value, n) => n !== index),
-        selectedModelIndex: selectedModelIndex === index ? Math.max(selectedModelIndex - 1, 0): selectedModelIndex
-      }
+      return produce(state, draft => {
+        const { models, selectedModelIndex } = state;
+        Object.assign(draft, {
+          models: models.filter((value, index) => index !== action.payload.index),
+          selectedModelIndex: selectedModelIndex === action.payload.index ? Math.max(selectedModelIndex - 1, 0): selectedModelIndex
+        });
+      });
     }
     case MODEL_CLOSE_ALL: {
       return {
@@ -103,78 +64,43 @@ export default function(state = initialState, action) {
       }
     }
     case MODEL_SELECT: {
-      return {
-        ...state,
-        selectedModelIndex: action.payload.index,
-        selectedElementId: null
-      }
+      return produce(state, draft => {
+        Object.assign(draft, {
+          selectedModelIndex: action.payload.index,
+          selectedElementId: null
+        });
+      });
     }
     case MODEL_UPDATE: {
-      const {field, event: {currentTarget: {value}}} = action.payload;
-      const {models, selectedModelIndex} = state;
-
-      const updatedModels = models.map(model => {
-        return Object.assign({}, model);
+      const { field, value } = action.payload;
+      return produce(state, draft => {
+        draft.models[state.selectedModelIndex][field] = value;
       });
-
-      updatedModels[selectedModelIndex][field] = value;
-      return {
-        ...state,
-        models: updatedModels
-      };
     }
     case ELEMENT_CREATE: {
-      const { data: { id, name, source, target, position }} = action.payload;
-      const { models, selectedModelIndex } = state;
-
-      const updatedModels = models.map(model => {
-        return Object.assign({}, model);
+      const { id, name, sourceVertexId, targetVertexId, properties } = action.payload;
+      return produce(state, draft => {
+        if (properties != null) {
+          draft.models[state.selectedModelIndex].vertices.push({
+            id, name, properties
+          });
+        } else {
+          draft.models[state.selectedModelIndex].edges.push({
+            id, name, sourceVertexId, targetVertexId
+          });
+        }
       });
-
-      if (position != null) {
-        const { x, y } = position;
-        updatedModels[selectedModelIndex].editor.elements.push({
-          group: 'nodes',
-          data: {id, name, color: 'LightSteelBlue'},
-          position: {x, y}
-        });
-      } else {
-        updatedModels[selectedModelIndex].editor.elements.push({
-          group: 'edges',
-          data: {
-            id,
-            name,
-            source,
-            target,
-            color: 'LightSteelBlue'
-          }
-        });
-      }
-      return {
-        ...state,
-        models: updatedModels
-      }
     }
     case ELEMENT_DELETE: {
-      const { id } = action.payload;
-      const { models, selectedModelIndex } = state;
-
-      const updatedModels = models.map(model => {
-        return Object.assign({}, model);
-      });
-
-      updatedModels[selectedModelIndex].editor.elements = updatedModels[selectedModelIndex].editor.elements.filter(element => {
-        if (Array.isArray(id)) {
-          return !id.includes(element.data.id)
+      return produce(state, draft => {
+        if (Array.isArray(action.payload.id)) {
+          draft.models[state.selectedModelIndex].vertices = draft.models[state.selectedModelIndex].vertices.filter(vertex => !action.payload.id.includes(vertex.id))
+          draft.models[state.selectedModelIndex].edges = draft.models[state.selectedModelIndex].edges.filter(edge => !action.payload.id.includes(edge.id))
         } else {
-          return element.data.id != id;
+          draft.models[state.selectedModelIndex].vertices = draft.models[state.selectedModelIndex].vertices.filter(vertex => vertex.id !== action.payload.id)
+          draft.models[state.selectedModelIndex].edges = draft.models[state.selectedModelIndex].edges.filter(edge => edge.id !== action.payload.id)
         }
-      })
-
-      return {
-        ...state,
-        models: updatedModels
-      }
+      });
     }
     case ELEMENT_SELECT: {
       return {
@@ -183,52 +109,39 @@ export default function(state = initialState, action) {
       }
     }
     case ELEMENT_START: {
-      const {event: {currentTarget: {checked}}} = action.payload;
-      const {models, selectedElementId} = state;
-
-      const updatedModels = models.map(model => {
-        return Object.assign({}, model);
+      const { checked } = action.payload;
+      return produce(state, draft => {
+        draft.models.forEach(model => {
+          model.startElementId = checked ? state.selectedElementId : "";
+        });
       });
-
-      return {
-        ...state,
-        models: updatedModels.map(model => {
-          const startElementId = checked ? selectedElementId : "";
-          return Object.assign({}, model, { startElementId });
-        })
-      }
     }
     case ELEMENT_UPDATE: {
-      const {field, event: {currentTarget: {value}}} = action.payload;
-      const {models, selectedModelIndex, selectedElementId} = state;
-
-      const updatedModels = models.map(model => {
-        return Object.assign({}, model);
+      const { field, value } = action.payload;
+      return produce(state, draft => {
+        const models = draft.models[state.selectedModelIndex];
+        models.vertices.forEach(vertex => {
+          if (vertex.id === state.selectedElementId) {
+            vertex[field] = value;
+          }
+        });
+        models.edges.forEach(edge => {
+          if (edge.id === state.selectedElementId) {
+            edge[field] = value;
+          }
+        });
       });
-
-      updatedModels[selectedModelIndex].editor.elements.forEach(element => {
-        if (element.data.id === selectedElementId) {
-          element.data[field] = value;
-        }
-      })
-
-      updatedModels[selectedModelIndex].vertices = models[selectedModelIndex].vertices.map(vertex => {
-        if (vertex.id === selectedElementId) {
-          vertex[field] = value;
-        }
-        return vertex;
-      })
-      updatedModels[selectedModelIndex].edges = models[selectedModelIndex].edges.map(edge => {
-        if (edge.id === selectedElementId) {
-          edge[field] = value;
-        }
-        return edge;
-      })
-
-      return {
-        ...state,
-        models: updatedModels
-      }
+    }
+    case ELEMENT_UPDATE_POSITION: {
+      const { id, position } = action.payload;
+      return produce(state, draft => {
+        draft.models[state.selectedModelIndex].vertices.forEach(vertex => {
+          if (vertex.id === id) {
+            vertex.properties.x = position.x;
+            vertex.properties.y = position.y;
+          }
+        })
+      });
     }
     default: {
       return state;
