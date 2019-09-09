@@ -1,6 +1,7 @@
 import {
   TEST_LOAD,
   TEST_NEW,
+  EDITOR_SAVE_STATE,
   MODEL_ADD,
   MODEL_CLOSE,
   MODEL_CLOSE_ALL,
@@ -48,6 +49,14 @@ export const newTest = () => {
   }
 };
 
+export const saveEditorState = (index, editor) => ({
+  type: EDITOR_SAVE_STATE,
+  payload: {
+    index,
+    editor
+  }
+})
+
 let modelCount = 0;
 export const addModel = () => ({
   type: MODEL_ADD,
@@ -58,9 +67,6 @@ export const addModel = () => ({
     name: `Untitled-${++modelCount}`,
     startElementId: "",
     vertices: [],
-    editor: {
-      elements: []
-    }
   }
 });
 

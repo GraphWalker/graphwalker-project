@@ -1,6 +1,8 @@
 export const TEST_LOAD = "TEST_LOAD";
 export const TEST_NEW = "TEST_NEW";
 
+export const EDITOR_SAVE_STATE = "EDITOR_SAVE_STATE";
+
 export const MODEL_ADD = "MODEL_ADD";
 export const MODEL_CLOSE = "MODEL_CLOSE";
 export const MODEL_CLOSE_ALL = "MODEL_CLOSE_ALL";

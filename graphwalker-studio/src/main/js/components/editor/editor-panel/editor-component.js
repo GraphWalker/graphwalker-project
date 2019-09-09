@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
-import { createElement, deleteElement, selectElement, updateElementPosition } from "../../../redux/actions";
+import { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState } from "../../../redux/actions";
 import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
 import { debounce } from "debounce";
 import uuid from "uuid/v1"
@@ -101,7 +101,8 @@ class EditorComponent extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.editor.json(this.updateColors(this.asJson()));
+    this.props.saveEditorState(prevProps.selectedModelIndex, this.editor.json())
+    this.editor.json(Object.assign({}, this.props.editor, this.updateColors(this.asJson())));
     this.updateSelected();
   }
 
@@ -208,10 +209,12 @@ class EditorComponent extends Component {
 const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId }, execution }) => {
   return {
     model: models[selectedModelIndex],
+    editor: models[selectedModelIndex].editor,
     updated: models.updated,
     execution,
-    selectedElementId
+    selectedElementId,
+    selectedModelIndex
   }
 };
 
-export default connect(mapStateToProps, { createElement, deleteElement, selectElement, updateElementPosition })(EditorComponent);
+export default connect(mapStateToProps, { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState })(EditorComponent);

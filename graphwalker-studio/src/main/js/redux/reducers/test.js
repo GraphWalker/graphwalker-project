@@ -12,7 +12,7 @@ import {
   ELEMENT_SELECT,
   ELEMENT_START,
   ELEMENT_UPDATE,
-  ELEMENT_UPDATE_POSITION
+  ELEMENT_UPDATE_POSITION, EDITOR_SAVE_STATE
 } from "../actionTypes";
 
 const initialState = {
@@ -39,6 +39,11 @@ export default function(state = initialState, action) {
         selectedModelIndex: 0,
         selectedElementId: null
       }
+    }
+    case EDITOR_SAVE_STATE: {
+      return produce(state, draft => {
+        draft.models[action.payload.index].editor = action.payload.editor;
+      });
     }
     case MODEL_ADD: {
       return produce(state, draft => {
