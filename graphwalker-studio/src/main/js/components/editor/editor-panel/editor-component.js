@@ -101,7 +101,9 @@ class EditorComponent extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.props.saveEditorState(prevProps.selectedModelIndex, this.editor.json())
+    if (prevProps.selectedModelIndex !== this.props.selectedModelIndex) {
+      this.props.saveEditorState(prevProps.selectedModelIndex, this.editor.json())
+    }
     this.editor.json(Object.assign({}, this.props.editor, this.updateColors(this.asJson())));
     this.updateSelected();
   }
