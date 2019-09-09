@@ -70,6 +70,13 @@ class EditorComponent extends Component {
     return { elements };
   }
 
+  doLayout = (config) => {
+    this.editor.layout(config).run()
+    this.editor.elements("nodes").forEach(vertex => {
+      this.props.updateElementPosition(vertex.id(), vertex.position());
+    })
+  }
+
   updateSelected = () => {
     const { selectedElementId } = this.props;
     if (selectedElementId) {
@@ -176,9 +183,9 @@ class EditorComponent extends Component {
                       onClick={() => this.props.deleteElement(this.editor.elements(':selected').remove().map(element => element.id()))}/>
             <Divider/>
             <MenuItem icon="layout" text="Layout...">
-              <MenuItem icon="layout-auto" text="Auto" onClick={() => this.editor.layout({ name: 'cose-bilkent', nodeDimensionsIncludeLabels: true, idealEdgeLength: 200 }).run()} />
-              <MenuItem icon="layout-circle" text="Circle" onClick={() => this.editor.layout({ name: 'circle' }).run()} />
-              <MenuItem icon="layout-grid" text="Grid" onClick={() => this.editor.layout({ name: 'grid' }).run()} />
+              <MenuItem icon="layout-auto" text="Auto" onClick={() => this.doLayout({ name: 'cose-bilkent', nodeDimensionsIncludeLabels: true, idealEdgeLength: 200 })} />
+              <MenuItem icon="layout-circle" text="Circle" onClick={() => this.doLayout({ name: 'circle' })} />
+              <MenuItem icon="layout-grid" text="Grid" onClick={() => this.doLayout({ name: 'grid' })} />
             </MenuItem>
           </Menu>, { left: clientX, top: clientY });
       }
