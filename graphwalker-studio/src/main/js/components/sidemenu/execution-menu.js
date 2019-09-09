@@ -5,7 +5,7 @@ import { runTest, pauseTest, stepTest, stopTest } from "../../redux/actions";
 
 class ExecutionMenu extends Component {
   render() {
-    const { disabled, running, paused, runTest, pauseTest, stepTest, stopTest } = this.props;
+    const { disabled, running, paused, visited, runTest, pauseTest, stepTest, stopTest } = this.props;
     return (
       <ButtonGroup minimal={true} vertical={true} large={true} >
         {running ?
@@ -13,17 +13,18 @@ class ExecutionMenu extends Component {
           <Button className="sidemenu-button" disabled={disabled} icon="play" onClick={runTest} />
         }
         <Button className="sidemenu-button" disabled={disabled || !paused} icon="step-forward" onClick={stepTest} />
-        <Button className="sidemenu-button" disabled={disabled || !(running || paused)} icon="stop" onClick={stopTest} />
+        <Button className="sidemenu-button" disabled={disabled || !(running || paused || Object.keys(visited).length > 0)} icon="stop" onClick={stopTest} />
       </ButtonGroup>
     )
   }
 }
 
-const mapStateToProps = ({ test: { models }, execution: { running, paused }}) => {
+const mapStateToProps = ({ test: { models }, execution: { running, paused, visited }}) => {
   return {
     disabled: models.length === 0,
     running,
-    paused
+    paused,
+    visited
   }
 }
 
