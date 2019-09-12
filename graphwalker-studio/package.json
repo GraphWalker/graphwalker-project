@@ -12,6 +12,7 @@
     "cytoscape": "^3.8.2",
     "cytoscape-cose-bilkent": "^4.0.0",
     "debounce": "^1.2.0",
+    "immer": "^4.0.0",
     "normalize.css": "^8.0.1",
     "react": "^16.9.0",
     "react-cytoscapejs": "^1.2.0",
