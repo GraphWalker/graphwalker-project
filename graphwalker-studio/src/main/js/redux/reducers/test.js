@@ -30,6 +30,11 @@ export default function(state = initialState, action) {
           selectedModelIndex: 0,
           selectedElementId: null
         });
+        draft.models.forEach(model => {
+          model.vertices.forEach(vertex => {
+            vertex.properties = Object.assign({x: 0, y: 0}, vertex.properties);
+          });
+        })
       });
     }
     case TEST_NEW: {
