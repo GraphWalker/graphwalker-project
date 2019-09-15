@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
-import { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState } from "../../../redux/actions";
+import { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState, toggleBreakpoint } from "../../../redux/actions";
 import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
 import { debounce } from "debounce";
 import uuid from "uuid/v1"
@@ -18,7 +18,10 @@ class EditorComponent extends Component {
     const { model: { id }} = this.props;
     const visited = this.props.execution.visited[id];
     elements.forEach(element => {
-      if (visited && visited[element.data.id]) {
+      const key = `${id},${element.data.id}`;
+      if (this.props.execution.breakpoints[key]) {
+        element.data.color = 'Red';
+      } else if (visited && visited[element.data.id]) {
         element.data.color = 'LightGreen';
       } else {
         if (this.props.model.startElementId === element.data.id) {
@@ -67,7 +70,7 @@ class EditorComponent extends Component {
         actions
       }
     }));
-    return { elements };
+    return this.updateColors({ elements });
   }
 
   doLayout = (config) => {
@@ -165,13 +168,16 @@ class EditorComponent extends Component {
 
     this.editor.on('cxttap', 'node, edge', event => {
       const { clientX, clientY } = event.originalEvent;
+      const { model: { id }} = this.props;
+      const key = `${id},${event.target.id()}`;
+      const hasBreakpoint = this.props.execution.breakpoints[key] != null;
       ContextMenu.show(
         <Menu>
           <MenuItem icon="cross" text="Delete" onClick={() => this.props.deleteElement(event.target.remove().map(element => element.id()))}/>
           <Divider/>
           <MenuItem icon="full-circle" text="Breakpoint...">
-            <MenuItem disabled={true} icon="new-object" text="Add breakpoint" />
-            <MenuItem disabled={true} icon="graph-remove" text="Remove breakpoint" />
+            <MenuItem disabled={hasBreakpoint} icon="new-object" text="Add breakpoint" onClick={() => this.props.toggleBreakpoint(id, event.target.id())} />
+            <MenuItem disabled={!hasBreakpoint} icon="graph-remove" text="Remove breakpoint" onClick={() => this.props.toggleBreakpoint(id, event.target.id())} />
           </MenuItem>
         </Menu>, { left: clientX, top: clientY });
     })
@@ -215,8 +221,8 @@ const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId
     updated: models.updated,
     execution,
     selectedElementId,
-    selectedModelIndex
+    selectedModelIndex,
   }
 };
 
-export default connect(mapStateToProps, { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState })(EditorComponent);
+export default connect(mapStateToProps, { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState, toggleBreakpoint })(EditorComponent);

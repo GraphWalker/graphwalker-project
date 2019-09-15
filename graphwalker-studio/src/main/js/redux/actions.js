@@ -13,6 +13,7 @@ import {
   ELEMENT_START,
   ELEMENT_UPDATE,
   ELEMENT_UPDATE_POSITION,
+  EXECUTION_BREAKPOINT_TOGGLE,
   EXECUTION_CONNECT,
   EXECUTION_DELAY,
   EXECUTION_FAILED,
@@ -161,10 +162,10 @@ export const runTest = () => {
     const {test: {models}, execution: {paused, delay}} = getState();
     try {
       if (!paused) {
-        dispatch(action(EXECUTION_CONNECT, await client.connect()));
-        dispatch(action(EXECUTION_LOAD, await client.send({command: 'start', gw: {name: 'TEST', models}})));
+        await dispatch(action(EXECUTION_CONNECT, await client.connect()));
+        await dispatch(action(EXECUTION_LOAD, await client.send({command: 'start', gw: {name: 'TEST', models}})));
       }
-      dispatch(action(EXECUTION_RUN));
+      await dispatch(action(EXECUTION_RUN));
       const callback = async () => {
         const { execution: { running, delay }} = getState();
         if (running) {
@@ -174,7 +175,7 @@ export const runTest = () => {
       }
       setTimeout(callback, delay);
     } catch (error) {
-      dispatch(action(EXECUTION_STOP, error));
+      await dispatch(action(EXECUTION_STOP, error));
     }
   }
 }
@@ -186,31 +187,44 @@ export const stepTest = () => {
       if (response.hasNext) {
         const next = await client.send({command: 'getNext'})
         const { modelId, elementId } = next;
-        const { test: { models }} = getState();
-        models.forEach((model, index) => {
+        const { test: { models }, execution: { breakpoints }} = getState();
+        models.forEach(async (model, index) => {
           if (model.id === modelId) {
-            dispatch(selectModel(index));
+            await dispatch(selectModel(index));
           }
         });
-        dispatch(selectElement(elementId))
-        dispatch(action(EXECUTION_STEP, next));
+        await dispatch(selectElement(elementId))
+        await dispatch(action(EXECUTION_STEP, next));
+
+        const key = `${next.modelId},${next.elementId}`;
+        if (breakpoints[key]) {
+          await dispatch(pauseTest());
+        }
       } else {
-        dispatch(action(EXECUTION_FULFILLED, response));
+        await dispatch(action(EXECUTION_FULFILLED, response));
       }
     } catch (error) {
-      dispatch(action(EXECUTION_STOP, error));
+      await dispatch(action(EXECUTION_STOP, error));
     }
   }
 }
 
 export const pauseTest = () => {
   return async (dispatch, getState, client) => {
-    dispatch(action(EXECUTION_PAUSE));
+    await dispatch(action(EXECUTION_PAUSE));
   }
 }
 
 export const stopTest = () => {
   return async (dispatch, getState, client) => {
-    dispatch(action(EXECUTION_STOP, await client.close()));
+    await dispatch(action(EXECUTION_STOP, await client.close()));
   }
 }
+
+export const toggleBreakpoint = (modelId, elementId) => ({
+  type: EXECUTION_BREAKPOINT_TOGGLE,
+  payload: {
+    modelId,
+    elementId
+  }
+});

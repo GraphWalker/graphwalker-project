@@ -1,4 +1,6 @@
+import produce from "immer";
 import {
+  EXECUTION_BREAKPOINT_TOGGLE,
   EXECUTION_CONNECT,
   EXECUTION_DELAY,
   EXECUTION_FAILED,
@@ -16,11 +18,23 @@ const initialState = {
   delay: 0,
   stopConditionFulfillment: 0,
   totalCount: 0,
-  visited: {}
+  visited: {},
+  breakpoints: {}
 }
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case EXECUTION_BREAKPOINT_TOGGLE: {
+      const { modelId, elementId } = action.payload;
+      const key = `${modelId},${elementId}`;
+      return produce(state , draft => {
+        if (key in draft.breakpoints) {
+          delete draft.breakpoints[key];
+        } else {
+          draft.breakpoints[key] = true;
+        }
+      });
+    }
     case EXECUTION_CONNECT: {
       console.log('EXECUTION_CONNECT', action.payload);
       return {
