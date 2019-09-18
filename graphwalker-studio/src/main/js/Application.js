@@ -9,6 +9,7 @@ import { Divider } from "@blueprintjs/core";
 import Banner from "./graphwalker.inline.svg";
 import SplitterLayout from 'react-splitter-layout';
 import './style.css';
+import PanelGroup from "react-panelgroup";
 
 class Application extends Component {
 
@@ -27,12 +28,13 @@ class Application extends Component {
         <Container column>
           <Container>
             <SideMenu/>
-            <main>
-              <SplitterLayout secondaryInitialSize={400}>
-                <Editor/>
-                <ConfigPanel/>
-              </SplitterLayout>
-            </main>
+            <PanelGroup borderColor="grey" panelWidths={[
+              { width: 400, resize: "dynamic" },
+              { resize: "stretch" }
+            ]}>
+              <ConfigPanel/>
+              <Editor/>
+            </PanelGroup>
           </Container>
           <StatusBar/>
         </Container>

@@ -170,10 +170,10 @@ export const runTest = () => {
         const { execution: { running, delay }} = getState();
         if (running) {
           await dispatch(stepTest());
-          setTimeout(callback, delay);
+          setTimeout(await callback, delay);
         }
       }
-      setTimeout(callback, delay);
+      setTimeout(await callback, delay);
     } catch (error) {
       await dispatch(action(EXECUTION_STOP, error));
     }
