@@ -28,6 +28,8 @@ package org.graphwalker.java.test;
 
 import org.graphwalker.java.annotation.GraphWalker;
 
+import static org.graphwalker.core.common.Objects.isNotNull;
+
 /**
  * @author Nils Olsson
  */
@@ -52,11 +54,13 @@ public class ContextConfiguration {
 
   public void setTestClass(Class<?> testClass) {
     this.testClass = testClass;
-    GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
     setTestClassName(testClass.getSimpleName());
-    setPathGeneratorName(configuration.pathGenerator().getSimpleName());
-    setStopConditionName(configuration.stopCondition().getSimpleName());
-    setStopConditionValue(configuration.stopConditionValue());
+    GraphWalker configuration = testClass.getAnnotation(GraphWalker.class);
+    if (isNotNull(configuration)) {
+      setPathGeneratorName(configuration.pathGenerator().getSimpleName());
+      setStopConditionName(configuration.stopCondition().getSimpleName());
+      setStopConditionValue(configuration.stopConditionValue());
+    }
   }
 
   public String getTestClassName() {

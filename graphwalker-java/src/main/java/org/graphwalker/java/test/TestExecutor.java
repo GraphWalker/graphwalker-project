@@ -35,6 +35,7 @@ import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.io.factory.ContextFactoryScanner;
+import org.graphwalker.io.factory.json.JsonContext;
 import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.factory.PathGeneratorFactory;
 import org.graphwalker.java.report.XMLReportGenerator;
@@ -165,7 +166,6 @@ public final class TestExecutor implements Executor, Observer {
 
   private void configureContext(Context context) throws IOException {
     Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
-    GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
     if (!models.isEmpty()) {
       Path path = Paths.get(models.iterator().next().file());
       List<Context> contexts = ContextFactoryScanner.get(reflections, path).create(path);
@@ -175,12 +175,26 @@ public final class TestExecutor implements Executor, Observer {
       } else if (contexts.size() == 1) {
         context.setModel(contexts.get(0).getModel());
         context.setNextElement(contexts.get(0).getNextElement());
+
+        // If a json file was read, we have possible data for path generator
+        if (contexts.get(0) instanceof JsonContext) {
+          if (isNotNull(contexts.get(0).getPathGenerator())) {
+            context.setPathGenerator(contexts.get(0).getPathGenerator());
+          }
+        }
       } else {
         for (Context examineContext : contexts) {
           try {
             if (Class.forName(path.getParent().toString().replace('/', '.') + "." + examineContext.getModel().getName()).isAssignableFrom(context.getClass())) {
               context.setModel(examineContext.getModel());
               context.setNextElement(examineContext.getNextElement());
+
+              // If a json file was read, we have possible data for path generator
+              if (contexts.get(0) instanceof JsonContext) {
+                if (isNotNull(contexts.get(0).getPathGenerator())) {
+                  context.setPathGenerator(examineContext.getPathGenerator());
+                }
+              }
             }
           } catch (ClassNotFoundException e) {
             logger.error("Problem examine: " + examineContext.getModel().getName());
@@ -188,13 +202,19 @@ public final class TestExecutor implements Executor, Observer {
         }
       }
     }
-    if (!"".equals(annotation.value())) {
-      context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
-    } else {
-      context.setPathGenerator(PathGeneratorFactory.createPathGenerator(annotation));
-    }
-    if (isNotNullOrEmpty(annotation.start()) && isNotNull(context.getModel())) {
-      context.setNextElement(getElement(context.getModel(), annotation.start()));
+
+    GraphWalker annotation = context.getClass().getAnnotation(GraphWalker.class);
+    if (isNotNull(annotation)) {
+      if (!"".equals(annotation.value())) {
+        context.setPathGenerator(GeneratorFactory.parse(annotation.value()));
+      } else {
+        if (isNull(context.getPathGenerator())) {
+          context.setPathGenerator(PathGeneratorFactory.createPathGenerator(annotation));
+        }
+      }
+      if (isNotNullOrEmpty(annotation.start()) && isNotNull(context.getModel())) {
+        context.setNextElement(getElement(context.getModel(), annotation.start()));
+      }
     }
   }
 
@@ -246,6 +266,9 @@ public final class TestExecutor implements Executor, Observer {
   }
 
   private boolean isTestIncluded(GraphWalker annotation, String name) {
+    if (isNull(annotation)) {
+      return true;
+    }
     boolean belongsToGroup = false;
     for (String group : annotation.groups()) {
       for (String definedGroups : configuration.getGroups()) {
