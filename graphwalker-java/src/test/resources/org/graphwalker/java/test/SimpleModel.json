@@ -1,0 +1,28 @@
+{
+  "models": [
+    {
+      "name": "SimpleModel",
+      "id": "1b69c3f3-727b-48b4-bb6c-cf90e45f7be1",
+      "startElementId": "v1",
+      "generator": "random(edge_coverage(100))",
+      "vertices": [
+        {
+          "id": "v1",
+          "name": "v_Vertex_1"
+        },
+        {
+          "id": "v2",
+          "name": "v_Vertex_2"
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "name": "e_Edge_1",
+          "sourceVertexId": "v1",
+          "targetVertexId": "v2"
+        }
+      ]
+    }
+  ]
+}

@@ -109,6 +109,24 @@ public class TestExecutorTest {
     executor.execute();
   }
 
+  @org.graphwalker.java.annotation.Model(file = "org/graphwalker/java/test/SimpleModel.json")
+  public static class NonExistingGraphwalkerAnnotation extends ExecutionContext {
+    @org.graphwalker.java.annotation.Vertex()
+    void v_Vertex_1() {}
+
+    @org.graphwalker.java.annotation.Vertex()
+    void v_Vertex_2() {}
+
+    @org.graphwalker.java.annotation.Edge()
+    void e_Edge_1() {}
+  }
+
+  @Test()
+  public void nonExistingGraphwalkerAnnotation() throws IOException {
+    Executor executor = new TestExecutor(NonExistingGraphwalkerAnnotation.class);
+    executor.execute();
+  }
+
   @GraphWalker(value = "random(vertex_coverage(100))", start = "myStartElement")
   public static class DSLConfiguredTest extends ExecutionContext {
 
