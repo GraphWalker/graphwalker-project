@@ -5,7 +5,6 @@ import './style.css';
 
 class StatusBar extends Component {
   render() {
-    console.log(this.props.fulfillment)
     return (
       <footer className="statusbar">
         { this.props.isVisible ? <ProgressBar value={this.props.fulfillment} intent={Intent.SUCCESS}/> : null }
