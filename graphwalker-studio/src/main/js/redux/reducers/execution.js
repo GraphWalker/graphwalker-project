@@ -15,7 +15,7 @@ import {
 const initialState = {
   running: false,
   paused: false,
-  delay: 0,
+  delay: 250,
   stopConditionFulfillment: 0,
   totalCount: 0,
   visited: {},
