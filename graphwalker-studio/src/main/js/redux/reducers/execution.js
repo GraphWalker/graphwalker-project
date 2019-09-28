@@ -17,6 +17,7 @@ const initialState = {
   paused: false,
   delay: 250,
   stopConditionFulfillment: 0,
+  fulfillment: {},
   totalCount: 0,
   visited: {},
   breakpoints: {}
@@ -95,6 +96,14 @@ export default function(state = initialState, action) {
       console.log('EXECUTION_STEP', action.payload);
       const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload.response;
       if (command === 'visitedElement') {
+        return produce(state , draft => {
+          draft.stopConditionFulfillment = stopConditionFulfillment;
+          draft.fulfillment[modelId] = stopConditionFulfillment;
+          draft.totalCount = totalCount;
+          draft.visited[modelId] = Object.assign({}, draft.visited[modelId]);
+          draft.visited[modelId][elementId] = visitedCount;
+        });
+        /*
         return {
           ...state,
           stopConditionFulfillment,
@@ -109,10 +118,9 @@ export default function(state = initialState, action) {
             }
           }
         }
+         */
       } else {
-        return {
-          ...state
-        }
+        return state
       }
     }
     case EXECUTION_STOP: {
