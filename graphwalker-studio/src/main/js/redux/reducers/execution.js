@@ -16,7 +16,6 @@ const initialState = {
   running: false,
   paused: false,
   delay: 250,
-  stopConditionFulfillment: 0,
   fulfillment: {},
   totalCount: 0,
   visited: {},
@@ -71,7 +70,7 @@ export default function(state = initialState, action) {
       console.log('EXECUTION_LOAD', action.payload);
       return {
         ...state,
-        stopConditionFulfillment: 0,
+        fulfillment: [],
         totalCount: 0,
         visited: {}
       }
@@ -97,28 +96,11 @@ export default function(state = initialState, action) {
       const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload.response;
       if (command === 'visitedElement') {
         return produce(state , draft => {
-          draft.stopConditionFulfillment = stopConditionFulfillment;
           draft.fulfillment[modelId] = stopConditionFulfillment;
           draft.totalCount = totalCount;
           draft.visited[modelId] = Object.assign({}, draft.visited[modelId]);
           draft.visited[modelId][elementId] = visitedCount;
         });
-        /*
-        return {
-          ...state,
-          stopConditionFulfillment,
-          totalCount,
-          visited: {
-            ...state.visited,
-            [modelId]: {
-              ...state.visited[modelId],
-              [elementId]: {
-                visitedCount
-              }
-            }
-          }
-        }
-         */
       } else {
         return state
       }
@@ -129,7 +111,7 @@ export default function(state = initialState, action) {
         ...state,
         running: false,
         paused: false,
-        stopConditionFulfillment: 0,
+        fulfillment: [],
         totalCount: 0,
         visited: {}
       }
