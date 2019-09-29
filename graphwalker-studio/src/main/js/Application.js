@@ -27,13 +27,16 @@ class Application extends Component {
         <Container column>
           <Container>
             <SideMenu/>
-            <PanelGroup borderColor="#FFFFFF" panelWidths={[
-              { size: 400, resize: "dynamic" },
-              { resize: "stretch" }
-            ]}>
-              <ConfigPanel/>
-              <Editor/>
-            </PanelGroup>
+            {this.props.showProperties ?
+              <PanelGroup borderColor="#FFFFFF" panelWidths={[{ size: 400, resize: "dynamic" }, { resize: "stretch" }]}>
+                <ConfigPanel/>
+                <Editor/>
+              </PanelGroup>
+              :
+              <PanelGroup borderColor="#FFFFFF" panelWidths={[{ resize: "stretch" }]}>
+                <Editor/>
+              </PanelGroup>
+            }
           </Container>
           <StatusBar/>
         </Container>
@@ -42,9 +45,10 @@ class Application extends Component {
   }
 }
 
-const mapStateToProps = ({ test: { models }}) => {
+const mapStateToProps = ({ test: { models }, editor: { showProperties }}) => {
   return {
-    showBanner: models.length === 0
+    showBanner: models.length === 0,
+    showProperties
   }
 };
 

@@ -22,7 +22,7 @@ import {
   EXECUTION_PAUSE,
   EXECUTION_RUN,
   EXECUTION_STEP,
-  EXECUTION_STOP
+  EXECUTION_STOP, EDITOR_PROPERTIES_TOGGLE
 } from "./actionTypes";
 
 export const loadTest = content => {
@@ -227,4 +227,8 @@ export const toggleBreakpoint = (modelId, elementId) => ({
     modelId,
     elementId
   }
+});
+
+export const toggleProperties = () => ({
+  type: EDITOR_PROPERTIES_TOGGLE
 });
