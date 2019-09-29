@@ -25,7 +25,7 @@ class ModelGroup extends Component {
 }
 
 const mapStateToProps = ({ test: { models, selectedModelIndex }}) => {
-  const { name, generator, actions } = models[selectedModelIndex];
+  const { name, generator, actions = [] } = models[selectedModelIndex];
   return {
     name,
     generator,
