@@ -19,12 +19,12 @@ class ElementGroup extends Component {
         </FormGroup>
         <FormGroup label="Actions" disabled={disabled}>
           <div className="bp3-input-group">
-            <TextArea disabled={disabled} value={actions} onChange={({ target: { value }}) => updateElement('actions', value)}/>
+            <TextArea disabled={disabled} value={actions.join("\n")} onChange={({ target: { value }}) => updateElement('actions', value.split("\n"))}/>
           </div>
         </FormGroup>
         <FormGroup label="Requirements" disabled={disabled}>
           <div className="bp3-input-group">
-            <TextArea disabled={disabled} value={requirements} onChange={({ target: { value }}) => updateElement('requirements', value)}/>
+            <TextArea disabled={disabled} value={requirements.join("\n")} onChange={({ target: { value }}) => updateElement('requirements', value.split("\n"))}/>
           </div>
         </FormGroup>
         <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(id)}/>
