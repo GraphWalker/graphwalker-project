@@ -28,12 +28,12 @@ class Application extends Component {
           <Container>
             <SideMenu/>
             {this.props.showProperties ?
-              <PanelGroup borderColor="#FFFFFF" panelWidths={[{ size: 400, resize: "dynamic" }, { resize: "stretch" }]}>
+              <PanelGroup borderColor="#F3F3F3" panelWidths={[{ size: 400, resize: "dynamic" }, { resize: "stretch" }]}>
                 <ConfigPanel/>
                 <Editor/>
               </PanelGroup>
               :
-              <PanelGroup borderColor="#FFFFFF" panelWidths={[{ resize: "stretch" }]}>
+              <PanelGroup borderColor="#F3F3F3" panelWidths={[{ resize: "stretch" }]}>
                 <Editor/>
               </PanelGroup>
             }

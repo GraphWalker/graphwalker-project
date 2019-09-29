@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { FormGroup, InputGroup, Switch, TextArea } from "@blueprintjs/core";
 import { updateElement, setStartElement } from "../../redux/actions";
+import Group from "./group";
 
 class ElementGroup extends Component {
   render() {
     const { id, name, sharedState, guard, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
     return (
-      <>
-        <FormGroup label="Element Name" disabled={disabled}>
+      <Group name="Element" isOpen={true}>
+        <FormGroup label="Name" disabled={disabled}>
           <InputGroup disabled={disabled} value={name} onChange={({ target: { value }}) => updateElement('name', value)}/>
         </FormGroup>
         <FormGroup label="Shared Name" disabled={disabled}>
@@ -28,7 +29,7 @@ class ElementGroup extends Component {
           </div>
         </FormGroup>
         <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(id)}/>
-      </>
+      </Group>
     )
   }
 }
