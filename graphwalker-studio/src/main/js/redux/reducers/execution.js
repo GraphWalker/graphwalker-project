@@ -96,7 +96,7 @@ export default function(state = initialState, action) {
       const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload.response;
       if (command === 'visitedElement') {
         return produce(state , draft => {
-          draft.fulfillment[modelId] = stopConditionFulfillment;
+          draft.fulfillment = Object.assign({}, draft.fulfillment, { [modelId] : stopConditionFulfillment });
           draft.totalCount = totalCount;
           draft.visited[modelId] = Object.assign({}, draft.visited[modelId]);
           draft.visited[modelId][elementId] = visitedCount;
