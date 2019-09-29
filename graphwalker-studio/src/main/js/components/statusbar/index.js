@@ -10,7 +10,7 @@ class StatusBar extends Component {
   render() {
     return (
       <>
-        <footer className={this.props.hasIssues ? "statusbar issues" : "statusbar"}>
+        <footer className={this.props.hasIssues ? "statusbar issues" : this.props.fulfillment >= 1 ? "statusbar complete" : "statusbar"}>
           { this.props.isVisible ? <ProgressBar value={this.props.fulfillment} intent={Intent.SUCCESS}/> : null }
         </footer>
         <Toaster position={Position.TOP_RIGHT}>

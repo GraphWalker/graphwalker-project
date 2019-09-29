@@ -9,6 +9,10 @@
   background-color: #db3737;
 }
 
+.statusbar.complete {
+  background-color: #0f9960;
+}
+
 .statusbar > .bp3-progress-bar {
   height: 100%;
   border-radius: 0;
