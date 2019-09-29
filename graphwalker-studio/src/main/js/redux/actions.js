@@ -118,10 +118,10 @@ export const selectElement = (id) => ({
   }
 });
 
-export const setStartElement = (checked) => ({
+export const setStartElement = (id) => ({
   type: ELEMENT_START,
   payload: {
-    checked
+    id
   }
 });
 

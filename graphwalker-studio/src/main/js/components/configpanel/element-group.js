@@ -27,7 +27,7 @@ class ElementGroup extends Component {
             <TextArea disabled={disabled} value={requirements} onChange={({ target: { value }}) => updateElement('requirements', value)}/>
           </div>
         </FormGroup>
-        <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(checked)}/>
+        <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(id)}/>
       </>
     )
   }
