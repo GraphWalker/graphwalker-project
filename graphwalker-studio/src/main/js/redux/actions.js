@@ -22,7 +22,7 @@ import {
   EXECUTION_PAUSE,
   EXECUTION_RUN,
   EXECUTION_STEP,
-  EXECUTION_STOP
+  EXECUTION_STOP, EDITOR_PROPERTIES_TOGGLE
 } from "./actionTypes";
 
 export const loadTest = content => {
@@ -118,10 +118,10 @@ export const selectElement = (id) => ({
   }
 });
 
-export const setStartElement = (checked) => ({
+export const setStartElement = (id) => ({
   type: ELEMENT_START,
   payload: {
-    checked
+    id
   }
 });
 
@@ -152,7 +152,7 @@ const action = (type, response = {}) => {
   return {
     type,
     payload: {
-      response
+      ...response
     }
   }
 }
@@ -203,8 +203,8 @@ export const stepTest = () => {
       } else {
         await dispatch(action(EXECUTION_FULFILLED, response));
       }
-    } catch (error) {
-      await dispatch(action(EXECUTION_STOP, error));
+    } catch ({ issues }) {
+      await dispatch(action(EXECUTION_FAILED, issues));
     }
   }
 }
@@ -227,4 +227,8 @@ export const toggleBreakpoint = (modelId, elementId) => ({
     modelId,
     elementId
   }
+});
+
+export const toggleProperties = () => ({
+  type: EDITOR_PROPERTIES_TOGGLE
 });

@@ -28,7 +28,6 @@ const PanelLabel = styled.span`
 `;
 
 const PanelContent = styled.div`
-  padding: 1rem;
   overflow-y: auto;
 `;
 

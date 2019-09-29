@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { FormGroup, InputGroup, Switch, TextArea } from "@blueprintjs/core";
 import { updateElement, setStartElement } from "../../redux/actions";
+import Group from "./group";
 
 class ElementGroup extends Component {
   render() {
     const { id, name, sharedState, guard, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
     return (
-      <>
-        <FormGroup label="Element Name" disabled={disabled}>
+      <Group name="Element" isOpen={true}>
+        <FormGroup label="Name" disabled={disabled}>
           <InputGroup disabled={disabled} value={name} onChange={({ target: { value }}) => updateElement('name', value)}/>
         </FormGroup>
         <FormGroup label="Shared Name" disabled={disabled}>
@@ -19,16 +20,16 @@ class ElementGroup extends Component {
         </FormGroup>
         <FormGroup label="Actions" disabled={disabled}>
           <div className="bp3-input-group">
-            <TextArea disabled={disabled} value={actions} onChange={({ target: { value }}) => updateElement('actions', value)}/>
+            <TextArea disabled={disabled} value={actions.join("\n")} onChange={({ target: { value }}) => updateElement('actions', value.split("\n"))}/>
           </div>
         </FormGroup>
         <FormGroup label="Requirements" disabled={disabled}>
           <div className="bp3-input-group">
-            <TextArea disabled={disabled} value={requirements} onChange={({ target: { value }}) => updateElement('requirements', value)}/>
+            <TextArea disabled={disabled} value={requirements.join("\n")} onChange={({ target: { value }}) => updateElement('requirements', value.split("\n"))}/>
           </div>
         </FormGroup>
-        <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(checked)}/>
-      </>
+        <Switch disabled={disabled} label="Start element" checked={isStartElement} onChange={({ target: { checked }}) => setStartElement(id)}/>
+      </Group>
     )
   }
 }

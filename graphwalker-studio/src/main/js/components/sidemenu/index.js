@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Divider } from "@blueprintjs/core";
 import FileMenu from "./file-menu";
 import ExecutionMenu from "./execution-menu";
+import EditorMenu from "./editor-menu";
 import './style.css';
 
 export default class SideMenu extends Component {
@@ -13,6 +14,7 @@ export default class SideMenu extends Component {
         <Divider/>
         <ExecutionMenu/>
         <Divider/>
+        <EditorMenu/>
       </aside>
     )
   }

@@ -19,7 +19,8 @@ const initialState = {
   fulfillment: {},
   totalCount: 0,
   visited: {},
-  breakpoints: {}
+  breakpoints: {},
+  issues: []
 }
 
 export default function(state = initialState, action) {
@@ -55,7 +56,8 @@ export default function(state = initialState, action) {
       return {
         ...state,
         running: false,
-        paused: false
+        paused: false,
+        issues: action.payload
       }
     }
     case EXECUTION_FULFILLED: {
@@ -88,12 +90,13 @@ export default function(state = initialState, action) {
       return {
         ...state,
         running: true,
-        paused: false
+        paused: false,
+        issues: []
       }
     }
     case EXECUTION_STEP: {
       console.log('EXECUTION_STEP', action.payload);
-      const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload.response;
+      const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload;
       if (command === 'visitedElement') {
         return produce(state , draft => {
           draft.fulfillment = Object.assign({}, draft.fulfillment, { [modelId] : stopConditionFulfillment });
@@ -113,7 +116,8 @@ export default function(state = initialState, action) {
         paused: false,
         fulfillment: [],
         totalCount: 0,
-        visited: {}
+        visited: {},
+        issues: []
       }
     }
     default: {

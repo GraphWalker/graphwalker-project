@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { findDOMNode } from "react-dom";
 import { connect } from "react-redux";
-import { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState, toggleBreakpoint } from "../../../redux/actions";
+import {
+  createElement,
+  deleteElement,
+  selectElement,
+  setStartElement,
+  updateElementPosition,
+  saveEditorState,
+  toggleBreakpoint
+} from "../../../redux/actions";
 import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
 import { debounce } from "debounce";
 import uuid from "uuid/v1"
@@ -19,6 +27,7 @@ class EditorComponent extends Component {
     const visited = this.props.execution.visited[id];
     elements.forEach(element => {
       const key = `${id},${element.data.id}`;
+      element.data.name = element.data.name || "";
       if (this.props.execution.breakpoints[key]) {
         element.data.color = 'Red';
       } else if (visited && visited[element.data.id]) {
@@ -158,7 +167,7 @@ class EditorComponent extends Component {
             id: uuid(),
             sourceVertexId: this.source.id(),
             targetVertexId: event.target.id(),
-            name: 'v_NewEdge'
+            name: 'e_NewEdge'
           });
         }
       }
@@ -171,6 +180,11 @@ class EditorComponent extends Component {
       const hasBreakpoint = this.props.execution.breakpoints[key] != null;
       ContextMenu.show(
         <Menu>
+          { this.props.model.startElementId === event.target.id() ?
+            <MenuItem icon="selection" text="Remove start point" onClick={() => this.props.setStartElement(event.target.id())} />
+            :
+            <MenuItem icon="circle" text="Add start point" onClick={() => this.props.setStartElement(event.target.id())} />
+          }
           <MenuItem icon="cross" text="Delete" onClick={() => this.props.deleteElement(event.target.remove().map(element => element.id()))}/>
           <Divider/>
           <MenuItem icon="full-circle" text="Breakpoint...">
@@ -223,4 +237,4 @@ const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId
   }
 };
 
-export default connect(mapStateToProps, { createElement, deleteElement, selectElement, updateElementPosition, saveEditorState, toggleBreakpoint })(EditorComponent);
+export default connect(mapStateToProps, { createElement, deleteElement, selectElement, setStartElement, updateElementPosition, saveEditorState, toggleBreakpoint })(EditorComponent);
