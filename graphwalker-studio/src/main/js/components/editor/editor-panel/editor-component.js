@@ -167,7 +167,7 @@ class EditorComponent extends Component {
             id: uuid(),
             sourceVertexId: this.source.id(),
             targetVertexId: event.target.id(),
-            name: 'v_NewEdge'
+            name: 'e_NewEdge'
           });
         }
       }

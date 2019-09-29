@@ -10,6 +10,7 @@ const GroupHeader = styled.div`
   text-transform: uppercase;
   font-size: 10px;
   font-weight: bold;
+  padding: 2px;
 `;
 
 const GroupContent = styled.div`
