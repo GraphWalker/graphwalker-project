@@ -90,10 +90,8 @@ class EditorComponent extends Component {
 
   componentDidMount() {
     const container = findDOMNode(this);
-    this.editor = new Cytoscape({
-      container,
-      style: stylesheet
-    });
+    this.editor = new Cytoscape({ container });
+    this.editor.style().clear().fromJson(stylesheet).update()
     this.editor.json(this.updateColors(this.asJson()));
     this.updateSelected();
     this.addEventHandlers();
