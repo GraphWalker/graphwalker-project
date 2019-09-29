@@ -27,6 +27,7 @@ class EditorComponent extends Component {
     const visited = this.props.execution.visited[id];
     elements.forEach(element => {
       const key = `${id},${element.data.id}`;
+      element.data.name = element.data.name || "";
       if (this.props.execution.breakpoints[key]) {
         element.data.color = 'Red';
       } else if (visited && visited[element.data.id]) {
