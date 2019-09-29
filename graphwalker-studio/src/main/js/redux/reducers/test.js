@@ -47,7 +47,9 @@ export default function(state = initialState, action) {
     }
     case EDITOR_SAVE_STATE: {
       return produce(state, draft => {
-        draft.models[action.payload.index].editor = action.payload.editor;
+        if (draft.models[action.payload.index]) {
+          draft.models[action.payload.index].editor = action.payload.editor;
+        }
       });
     }
     case MODEL_ADD: {

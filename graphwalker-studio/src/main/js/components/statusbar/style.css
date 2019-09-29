@@ -4,3 +4,12 @@
   font-size: 12px;
   background-color: #248ec2;
 }
+
+.statusbar > .bp3-progress-bar {
+  height: 100%;
+  border-radius: 0;
+}
+
+.statusbar > .bp3-progress-bar > .bp3-progress-meter {
+  border-radius: 0;
+}

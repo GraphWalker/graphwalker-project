@@ -12,14 +12,13 @@ const PanelContainer = styled.div`
   height: 100%;
   width: 100%;
   background-color: #F3F3F3;
+  color: #6F6F6F;
 `;
 
 const PanelHeader = styled.div`
   display: flex;
   align-items: center;
   min-height: 30px;
-  background-color: #2C2C2C;
-  color: #EDEDED;
   padding-left: 0.5rem;
 `;
 
@@ -38,8 +37,7 @@ export default class ConfigPanel extends Component {
     return (
       <PanelContainer>
         <PanelHeader>
-          <Icon iconSize={14} icon="properties"/>
-          <PanelLabel>Properties</PanelLabel>
+          <PanelLabel>PROPERTIES</PanelLabel>
         </PanelHeader>
         <PanelContent>
           <ModelGroup/>

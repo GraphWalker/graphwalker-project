@@ -28,8 +28,8 @@ class Application extends Component {
         <Container column>
           <Container>
             <SideMenu/>
-            <PanelGroup borderColor="grey" panelWidths={[
-              { width: 400, resize: "dynamic" },
+            <PanelGroup borderColor="#FFFFFF" panelWidths={[
+              { size: 400, resize: "dynamic" },
               { resize: "stretch" }
             ]}>
               <ConfigPanel/>
