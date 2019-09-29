@@ -152,7 +152,7 @@ const action = (type, response = {}) => {
   return {
     type,
     payload: {
-      response
+      ...response
     }
   }
 }
@@ -203,8 +203,8 @@ export const stepTest = () => {
       } else {
         await dispatch(action(EXECUTION_FULFILLED, response));
       }
-    } catch (error) {
-      await dispatch(action(EXECUTION_STOP, error));
+    } catch ({ issues }) {
+      await dispatch(action(EXECUTION_FAILED, issues));
     }
   }
 }

@@ -1,21 +1,37 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { ProgressBar, Intent } from "@blueprintjs/core";
+import { ProgressBar, Intent, Toast, Toaster, Position } from "@blueprintjs/core";
+import { stopTest } from "../../redux/actions";
 import './style.css';
 
 class StatusBar extends Component {
+
+
   render() {
     return (
-      <footer className="statusbar">
-        { this.props.isVisible ? <ProgressBar value={this.props.fulfillment} intent={Intent.SUCCESS}/> : null }
-      </footer>
+      <>
+        <footer className={this.props.hasIssues ? "statusbar issues" : "statusbar"}>
+          { this.props.isVisible ? <ProgressBar value={this.props.fulfillment} intent={Intent.SUCCESS}/> : null }
+        </footer>
+        <Toaster position={Position.TOP_RIGHT}>
+          {
+            Object.values(this.props.issues)
+              .map((issue, index) => <Toast key={index}
+                                            intent={Intent.DANGER}
+                                            onDismiss={this.props.stopTest}
+                                            message={issue} icon="warning-sign" />)
+          }
+        </Toaster>
+      </>
     )
   }
 }
 
-const mapStateToProps = ({ test: { models }, execution: { running, paused, fulfillment }}) => ({
+const mapStateToProps = ({ test: { models }, execution: { running, paused, fulfillment, issues }}) => ({
   isVisible: running || paused,
-  fulfillment: (Object.values(fulfillment).reduce((a, b) => a + b, 0) / models.length) || 0
+  fulfillment: (Object.values(fulfillment).reduce((a, b) => a + b, 0) / models.length) || 0,
+  hasIssues: Object.values(issues).length > 0,
+  issues
 });
 
-export default connect(mapStateToProps)(StatusBar);
+export default connect(mapStateToProps, { stopTest })(StatusBar);
