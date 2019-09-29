@@ -18,6 +18,7 @@ class StatusBar extends Component {
             Object.values(this.props.issues)
               .map((issue, index) => <Toast key={index}
                                             intent={Intent.DANGER}
+                                            timeout={0}
                                             onDismiss={this.props.stopTest}
                                             message={issue} icon="warning-sign" />)
           }
