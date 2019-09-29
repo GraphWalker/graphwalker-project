@@ -7,9 +7,8 @@ import Editor from "./components/editor";
 import ConfigPanel from "./components/configpanel";
 import { Divider } from "@blueprintjs/core";
 import Banner from "./graphwalker.inline.svg";
-import SplitterLayout from 'react-splitter-layout';
-import './style.css';
 import PanelGroup from "react-panelgroup";
+import './style.css';
 
 class Application extends Component {
 
