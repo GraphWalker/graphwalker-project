@@ -26,6 +26,8 @@ export default class WebSocketClient {
         const response = JSON.parse(event.data);
         if (message.command === "getNext" && response.command === 'visitedElement') {
           resolve(JSON.parse(event.data));
+        } else if (response.command === 'issues') {
+          reject(JSON.parse(event.data));
         } else if (message.command !== "getNext" && message.command === response.command) {
           resolve(JSON.parse(event.data));
         } 

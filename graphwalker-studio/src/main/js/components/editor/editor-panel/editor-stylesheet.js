@@ -1,4 +1,3 @@
-
 export default [
   {
     selector: 'core',
@@ -35,6 +34,12 @@ export default [
       'line-color': 'data(color)',
       'target-arrow-color': 'data(color)',
       'background-color': 'data(color)'
+    },
+  }, {
+    selector: ':loop',
+    style: {
+      'curve-style': 'unbundled-bezier',
+      'control-point-step-size': 60,
     },
   }, {
     selector: ':selected',

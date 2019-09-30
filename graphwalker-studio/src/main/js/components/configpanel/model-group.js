@@ -1,29 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { FormGroup, InputGroup } from "@blueprintjs/core";
+import { FormGroup, InputGroup, TextArea } from "@blueprintjs/core";
 import { updateModel } from "../../redux/actions";
+import Group from "./group";
 
 class ModelGroup extends Component {
   render() {
-    const { name, generator, updateModel} = this.props;
+    const { name, generator, actions, updateModel} = this.props;
     return (
-      <>
-        <FormGroup label="Model Name">
+      <Group name="Model" isOpen={true}>
+        <FormGroup label="Name">
           <InputGroup placeholder="Model Name" value={name} onChange={({ target: { value }}) => updateModel('name', value)}/>
         </FormGroup>
-        <FormGroup label="Model Generator">
+        <FormGroup label="Generator">
           <InputGroup placeholder="Model Generator" value={generator} onChange={({ target: { value }}) => updateModel('generator', value)}/>
         </FormGroup>
-      </>
+        <FormGroup label="Actions">
+          <div className="bp3-input-group">
+            <TextArea value={actions.join("\n")} onChange={({ target: { value }}) => updateModel('actions', value.split("\n"))}/>
+          </div>
+        </FormGroup>
+      </Group>
     )
   }
 }
 
 const mapStateToProps = ({ test: { models, selectedModelIndex }}) => {
-  const { name, generator } = models[selectedModelIndex]
+  const { name, generator, actions = [] } = models[selectedModelIndex];
   return {
     name,
-    generator
+    generator,
+    actions
   }
 };
 

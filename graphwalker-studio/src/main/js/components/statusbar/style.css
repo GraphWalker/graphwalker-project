@@ -4,3 +4,20 @@
   font-size: 12px;
   background-color: #248ec2;
 }
+
+.statusbar.issues {
+  background-color: #db3737;
+}
+
+.statusbar.complete {
+  background-color: #0f9960;
+}
+
+.statusbar > .bp3-progress-bar {
+  height: 100%;
+  border-radius: 0;
+}
+
+.statusbar > .bp3-progress-bar > .bp3-progress-meter {
+  border-radius: 0;
+}

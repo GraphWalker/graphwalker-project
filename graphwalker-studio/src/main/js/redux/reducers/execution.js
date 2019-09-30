@@ -15,11 +15,12 @@ import {
 const initialState = {
   running: false,
   paused: false,
-  delay: 0,
-  stopConditionFulfillment: 0,
+  delay: 250,
+  fulfillment: {},
   totalCount: 0,
   visited: {},
-  breakpoints: {}
+  breakpoints: {},
+  issues: []
 }
 
 export default function(state = initialState, action) {
@@ -55,7 +56,8 @@ export default function(state = initialState, action) {
       return {
         ...state,
         running: false,
-        paused: false
+        paused: false,
+        issues: action.payload
       }
     }
     case EXECUTION_FULFILLED: {
@@ -70,7 +72,7 @@ export default function(state = initialState, action) {
       console.log('EXECUTION_LOAD', action.payload);
       return {
         ...state,
-        stopConditionFulfillment: 0,
+        fulfillment: [],
         totalCount: 0,
         visited: {}
       }
@@ -88,31 +90,22 @@ export default function(state = initialState, action) {
       return {
         ...state,
         running: true,
-        paused: false
+        paused: false,
+        issues: []
       }
     }
     case EXECUTION_STEP: {
       console.log('EXECUTION_STEP', action.payload);
-      const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload.response;
+      const { command, modelId, elementId, stopConditionFulfillment, visitedCount, totalCount } = action.payload;
       if (command === 'visitedElement') {
-        return {
-          ...state,
-          stopConditionFulfillment,
-          totalCount,
-          visited: {
-            ...state.visited,
-            [modelId]: {
-              ...state.visited[modelId],
-              [elementId]: {
-                visitedCount
-              }
-            }
-          }
-        }
+        return produce(state , draft => {
+          draft.fulfillment = Object.assign({}, draft.fulfillment, { [modelId] : stopConditionFulfillment });
+          draft.totalCount = totalCount;
+          draft.visited[modelId] = Object.assign({}, draft.visited[modelId]);
+          draft.visited[modelId][elementId] = visitedCount;
+        });
       } else {
-        return {
-          ...state
-        }
+        return state
       }
     }
     case EXECUTION_STOP: {
@@ -121,9 +114,10 @@ export default function(state = initialState, action) {
         ...state,
         running: false,
         paused: false,
-        stopConditionFulfillment: 0,
+        fulfillment: [],
         totalCount: 0,
-        visited: {}
+        visited: {},
+        issues: []
       }
     }
     default: {

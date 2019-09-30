@@ -1,7 +1,7 @@
 {
   "models": [
     {
-      "name": "New model",
+      "name": "SmallTest",
       "id": "cbca8c67-6d0c-40b4-8afb-032b069a4bc1",
       "generator": "random(edge_coverage(100))",
       "actions": [],
