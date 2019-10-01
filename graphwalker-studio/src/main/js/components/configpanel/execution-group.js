@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { FormGroup, Slider } from "@blueprintjs/core";
-import { setExecutionDelay } from "../../redux/actions";
+import {FormGroup, InputGroup, Slider} from "@blueprintjs/core";
+import { setExecutionDelay, updateModel } from "../../redux/actions";
 import Group from "./group";
 
 class ExecutionGroup extends Component {
   render() {
-    const { delay, setExecutionDelay } = this.props;
+    const { delay, generator, setExecutionDelay, updateModel } = this.props;
     return (
       <Group name="Execution" isOpen={true}>
+        <FormGroup label="Generator">
+          <InputGroup placeholder="Model Generator" value={generator} onChange={({ target: { value }}) => updateModel('generator', value)}/>
+        </FormGroup>
         <FormGroup label="Delay" labelInfo="(ms)">
           <div>
             <Slider min={0} max={500} stepSize={1} labelRenderer={false} value={delay} onChange={setExecutionDelay}/>
@@ -19,10 +22,12 @@ class ExecutionGroup extends Component {
   }
 }
 
-const mapStateToProps = ({ execution: { delay } }) => {
+const mapStateToProps = ({ test: { models, selectedModelIndex }, execution: { delay } }) => {
+  const { generator } = models[selectedModelIndex];
   return {
-    delay
+    delay,
+    generator
   }
 };
 
-export default connect(mapStateToProps, { setExecutionDelay })(ExecutionGroup);
+export default connect(mapStateToProps, { setExecutionDelay, updateModel })(ExecutionGroup);

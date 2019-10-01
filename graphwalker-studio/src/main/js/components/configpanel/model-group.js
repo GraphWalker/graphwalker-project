@@ -6,14 +6,11 @@ import Group from "./group";
 
 class ModelGroup extends Component {
   render() {
-    const { name, generator, actions, updateModel} = this.props;
+    const { name, actions, updateModel} = this.props;
     return (
       <Group name="Model" isOpen={true}>
         <FormGroup label="Name">
           <InputGroup placeholder="Model Name" value={name} onChange={({ target: { value }}) => updateModel('name', value)}/>
-        </FormGroup>
-        <FormGroup label="Generator">
-          <InputGroup placeholder="Model Generator" value={generator} onChange={({ target: { value }}) => updateModel('generator', value)}/>
         </FormGroup>
         <FormGroup label="Actions">
           <div className="bp3-input-group">
@@ -26,10 +23,9 @@ class ModelGroup extends Component {
 }
 
 const mapStateToProps = ({ test: { models, selectedModelIndex }}) => {
-  const { name, generator, actions = [] } = models[selectedModelIndex];
+  const { name, actions = [] } = models[selectedModelIndex];
   return {
     name,
-    generator,
     actions
   }
 };
