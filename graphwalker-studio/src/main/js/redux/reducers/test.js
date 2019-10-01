@@ -14,6 +14,7 @@ import {
   ELEMENT_UPDATE,
   ELEMENT_UPDATE_POSITION, EDITOR_SAVE_STATE
 } from "../actionTypes";
+import uuid from "uuid/v1";
 
 const initialState = {
   models: [],
@@ -31,6 +32,9 @@ export default function(state = initialState, action) {
           selectedElementId: null
         });
         draft.models.forEach(model => {
+          if (!model.id) {
+            model.id = uuid()
+          }
           model.vertices.forEach(vertex => {
             vertex.properties = Object.assign({x: 0, y: 0}, vertex.properties);
           });
