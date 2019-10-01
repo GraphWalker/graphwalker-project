@@ -84,7 +84,7 @@ class EditorComponent extends Component {
 
   doLayout = (config) => {
     this.editor.layout(config).run()
-    this.editor.elements("nodes").forEach(vertex => {
+    this.editor.nodes().forEach(vertex => {
       this.props.updateElementPosition(vertex.id(), vertex.position());
     })
   }

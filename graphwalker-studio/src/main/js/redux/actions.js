@@ -24,6 +24,7 @@ import {
   EXECUTION_STEP,
   EXECUTION_STOP, EDITOR_PROPERTIES_TOGGLE
 } from "./actionTypes";
+import uuid from "uuid/v1";
 
 export const loadTest = content => {
   return async (dispatch, getState, client) => {
@@ -64,7 +65,7 @@ export const addModel = () => ({
   payload: {
     edges: [],
     generator: "random(edge_coverage(100))",
-    id: "e918f0f7-dc56-4aa3-97fb-3660654309f6",
+    id: uuid(),
     name: `Untitled-${++modelCount}`,
     startElementId: "",
     vertices: [],
