@@ -22,6 +22,22 @@
     </scm>
 
     <build>
+      <resources>
+        <resource>
+          <directory>src/main/resources</directory>
+          <filtering>true</filtering>
+          <includes>
+            <include>archetype-resources/pom.xml</include>
+          </includes>
+        </resource>
+        <resource>
+          <directory>src/main/resources</directory>
+          <filtering>false</filtering>
+          <excludes>
+            <exclude>archetype-resources/pom.xml</exclude>
+          </excludes>
+        </resource>
+      </resources>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.archetype</groupId>

@@ -44,4 +44,7 @@
       </includes>
     </fileSet>
   </fileSets>
+  <requiredProperty key="projectVersion">
+    <defaultValue>$project.version}</defaultValue>
+  </requiredProperty>
 </archetype-descriptor>

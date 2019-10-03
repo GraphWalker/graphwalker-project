@@ -36,7 +36,7 @@
   <name>GraphWalker Example</name>
 
   <properties>
-    <graphwalker.version>${version}</graphwalker.version>
+    <graphwalker.version>${projectVersion}</graphwalker.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -82,17 +82,10 @@
         <!-- Bind goals to the default lifecycle -->
         <executions>
           <execution>
-            <id>generate-test-sources</id>
-            <phase>generate-test-sources</phase>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
             <goals>
-              <goal>generate-test-sources</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>test</goal>
+              <goal>generate-sources</goal>
             </goals>
           </execution>
         </executions>
