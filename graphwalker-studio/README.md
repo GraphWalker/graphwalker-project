@@ -10,10 +10,10 @@ mvn package
 
 The jar is in:
 ```bash
-target/graphwalker-studio-4.0.0-SNAPSHOT.jar
+target/graphwalker-studio-4.0.1.jar
 ```
 
 Run it like:
 ```bash
-java -jar target/graphwalker-studio-4.0.0-SNAPSHOT.jar
+java -jar target/graphwalker-studio-4.0.1.jar
 ```

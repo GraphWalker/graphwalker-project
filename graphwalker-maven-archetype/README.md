@@ -7,7 +7,7 @@ A GraphWalker maven archetype. To help create boilerplate GraphWalker maven proj
 To create a sample project:
 
 ~~~sh
-%> mvn archetype:generate -B -DarchetypeGroupId=org.graphwalker -DarchetypeArtifactId=graphwalker-maven-archetype -DarchetypeVersion=4.0.0-SNAPSHOT -DgroupId=com.company -DartifactId=myProject
+%> mvn archetype:generate -B -DarchetypeGroupId=org.graphwalker -DarchetypeArtifactId=graphwalker-maven-archetype -DgroupId=com.company -DartifactId=myProject -DarchetypeVersion=LATESTmvn archetype:generate -B -DarchetypeGroupId=org.graphwalker -DarchetypeArtifactId=graphwalker-maven-archetype -DgroupId=com.company -DartifactId=myProject -DarchetypeVersion=LATEST
 ~~~
 
 Then cd into the project:
@@ -16,6 +16,6 @@ Then cd into the project:
 ~~~
 Build and run the test:
 ~~~sh
-%> mvn :graphwalker:test
+%> mvn compile exec:java -Dexec.mainClass="com.company.Runner" 
 ~~~
 
