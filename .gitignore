@@ -18,6 +18,10 @@ doc/.~lock.*
 *.swp
 *.swo
 
+# Vidual Code #
+###############
+.vscode/
+
 
 # Build and unit tests stuff #
 #############################
