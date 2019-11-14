@@ -49,8 +49,6 @@ import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.generator.WeightedRandomPath;
 import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
-import org.graphwalker.dsl.antlr.generator.GeneratorFactoryException;
-import org.graphwalker.generator.PluginGenerator;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -59,7 +57,7 @@ import org.junit.Test;
  */
 public class GeneratorFactoryTest {
 
-  @Test(expected = GeneratorFactoryException.class)
+  @Test(expected = DslException.class)
   public void unvalidGenerator() {
     GeneratorFactory.parse("kskskdhfh(edge_coverage(100))");
   }
@@ -311,16 +309,5 @@ public class GeneratorFactoryTest {
     Assert.assertThat(generator, instanceOf(RandomPath.class));
     Assert.assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
     Assert.assertThat(((AlternativeCondition) generator.getStopCondition()).getStopConditions().size(), is(3));
-  }
-
-  /**
-   * Tries to load a plugin generator that should be found in the classpath
-   */
-  @Test
-  public void plugin_generator() {
-    PathGenerator generator = GeneratorFactory.parse("pluginGenerator(edge_coverage(100))");
-    Assert.assertThat(generator, instanceOf(PluginGenerator.class));
-    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
-    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
   }
 }
