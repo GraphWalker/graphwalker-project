@@ -6,7 +6,7 @@ import Group from "./group";
 
 class ElementGroup extends Component {
   render() {
-    const { id, name, sharedState, guard, weight, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
+    const { id, name, sharedState, guard, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
     return (
       <Group name="Element" isOpen={true}>
         <FormGroup label="Name" disabled={disabled}>
@@ -17,9 +17,6 @@ class ElementGroup extends Component {
         </FormGroup>
         <FormGroup label="Guard" disabled={disabled}>
           <InputGroup disabled={disabled} value={guard} onChange={({ target: { value }}) => updateElement('guard', value)}/>
-        </FormGroup>
-        <FormGroup label="Weight" disabled={disabled}>
-          <InputGroup disabled={disabled} value={weight} onChange={({ target: { value }}) => updateElement('weight', value)}/>
         </FormGroup>
         <FormGroup label="Actions" disabled={disabled}>
           <div className="bp3-input-group">
@@ -41,13 +38,12 @@ const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId
   const model = models[selectedModelIndex];
   const elements = [...model.vertices, ...model.edges];
   const element = elements.filter(element => element.id === selectedElementId)[0] || {};
-  const { id = "", name = "", sharedState = "", guard = "", weight = "", actions = [], requirements = [] } = element;
+  const { id = "", name = "", sharedState = "", guard = "", actions = [], requirements = [] } = element;
   return {
     id,
     name,
     sharedState,
     guard,
-    weight,
     actions,
     requirements,
     isStartElement: model.startElementId === selectedElementId,

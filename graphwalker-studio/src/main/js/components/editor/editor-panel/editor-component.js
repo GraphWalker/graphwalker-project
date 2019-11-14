@@ -67,7 +67,7 @@ class EditorComponent extends Component {
       position: {x: 0, y: 0}
     }));
 
-    this.props.model.edges.forEach(({id, name, guard, weight, actions, sourceVertexId: source = 'Start', targetVertexId: target}) => elements.push({
+    this.props.model.edges.forEach(({id, name, guard, actions, sourceVertexId: source = 'Start', targetVertexId: target}) => elements.push({
       group: 'edges',
       data: {
         id,
@@ -76,7 +76,6 @@ class EditorComponent extends Component {
         target,
         color: source == null ? 'LightGreen' : 'LightSteelBlue',
         guard,
-        weight,
         actions
       }
     }));

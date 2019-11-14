@@ -255,7 +255,6 @@ function generateJsonGraph() {
         id: edge.data().id,
         name: edge.data().label,
         guard: edge.data().guard,
-        weight: edge.data().weight,
         actions: actions,
         requirements: requirements,
         properties: properties,
@@ -745,7 +744,6 @@ function createGraph(currentModelId) {
     $('#elementId').val('').prop('disabled', true);
     $('#sharedStateName').val('').prop('disabled', true);
     $('#guard').val('').prop('disabled', true);
-    $('#weight').val('').prop('disabled', true);
     $('#actions').val('').prop('disabled', true);
     $('#requirements').val('').prop('disabled', true);
     $('#checkboxStartElement').checkboxradio('disable');
@@ -771,7 +769,6 @@ function createGraph(currentModelId) {
     $('#label').textinput('enable').val(this.data().label);
     $('#elementId').textinput('enable').val(this.data().id);
     $('#guard').textinput('enable').val(this.data().guard);
-    $('#weight').textinput('enable').val(this.data().weight);
     $('#actions').textinput('enable').val(this.data().actions);
     $('#requirements').textinput('enable').val(this.data().requirements);
 
@@ -930,7 +927,6 @@ function createGraph(currentModelId) {
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
         guard: currentElement.data().guard,
-        weight: currentElement.data().weight,
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
@@ -950,7 +946,6 @@ function createGraph(currentModelId) {
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
         guard: currentElement.data().guard,
-        weight: currentElement.data().weight,
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
@@ -963,20 +958,6 @@ function createGraph(currentModelId) {
       currentElement.data('name', formatElementName({
         name: currentElement.data().label,
         guard: currentElement.data().guard,
-        weight: currentElement.data().weight,
-        actions: currentElement.data().actions,
-        requirements: currentElement.data().requirements
-      }));
-    }
-  });
-
-  $('#weight').on('input', function() {
-    if (currentElement) {
-      currentElement.data('weight', $.trim($('#weight').val()));
-      currentElement.data('name', formatElementName({
-        name: currentElement.data().label,
-        guard: currentElement.data().guard,
-        weight: currentElement.data().weight,
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
@@ -990,7 +971,6 @@ function createGraph(currentModelId) {
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
         guard: currentElement.data().guard,
-        weight: currentElement.data().weight,
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
@@ -1004,7 +984,6 @@ function createGraph(currentModelId) {
         name: currentElement.data().label,
         sharedState: currentElement.data().sharedState,
         guard: currentElement.data().guard,
-        weight: currentElement.data().weight,
         actions: currentElement.data().actions,
         requirements: currentElement.data().requirements
       }));
@@ -1173,11 +1152,9 @@ function readGraphFromJSON(jsonGraphs) {
           name: formatElementName({
             name: jsonEdge.name,
             guard: jsonEdge.guard,
-            weight: jsonEdge.weight,
             actions: jsonEdge.actions
           }),
           guard: jsonEdge.guard,
-          weight: jsonEdge.weight,
           actions: edgeActions,
           requirements: edgeRequirements,
           properties: jsonEdge.properties,
@@ -1291,9 +1268,6 @@ function formatElementName(jsonObj) {
     }
     if (jsonObj.guard) {
       str += 'Guard: ' + jsonObj.guard + '\n';
-    }
-    if (jsonObj.weight) {
-      str += 'Weight: ' + jsonObj.weight + '\n';
     }
     if (jsonObj.actions) {
       str += 'Actions: ' + jsonObj.actions + '\n';
@@ -1585,9 +1559,6 @@ function emptyInitialControlStates() {
 
   $('#guard').val('');
   $('#guard').val('').prop('disabled', true);
-
-  $('#weight').val('');
-  $('#weight').val('').prop('disabled', true);
 
   $('#actions').val('');
   $('#actions').val('').prop('disabled', true);
