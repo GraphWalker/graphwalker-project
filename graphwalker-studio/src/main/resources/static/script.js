@@ -1293,7 +1293,7 @@ function formatElementName(jsonObj) {
       str += 'Guard: ' + jsonObj.guard + '\n';
     }
     if (jsonObj.weight) {
-      str += 'Weight: ' + jsonObj.weight + '\n';
+      str += 'Weight: ' + parseFloat(jsonObj.weight) + '\n';
     }
     if (jsonObj.actions) {
       str += 'Actions: ' + jsonObj.actions + '\n';
