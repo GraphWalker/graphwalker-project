@@ -61,15 +61,19 @@ public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
   private static final Logger LOG = LoggerFactory.getLogger(QuickRandomPath.class);
   private final List<Element> elements = new ArrayList<>();
   private Element target = null;
-  private Random random = new Random(System.nanoTime());
+  private Random random;
 
   public QuickRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
+    long seed = System.nanoTime();
+    random = new Random(seed);
+    LOG.info("Seed: " + seed);
   }
 
   public QuickRandomPath(long seed, StopCondition stopCondition) {
     setStopCondition(stopCondition);
     random = new Random(seed);
+    LOG.info("Seed: " + seed);
   }
 
   @Override

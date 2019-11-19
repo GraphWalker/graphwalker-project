@@ -47,16 +47,19 @@ import java.util.Random;
 public class RandomPath extends PathGeneratorBase<StopCondition> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RandomPath.class);
-
-  private Random random = new Random(System.nanoTime());
+  private Random random;
 
   public RandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
+    long seed = System.nanoTime();
+    random = new Random(seed);
+    LOG.info("Seed: " + seed);
   }
 
   public RandomPath(long seed, StopCondition stopCondition) {
     setStopCondition(stopCondition);
     random = new Random(seed);
+    LOG.info("Seed: " + seed);
   }
 
   @Override

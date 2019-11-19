@@ -32,6 +32,8 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Vertex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,15 +54,20 @@ import java.util.Random;
  */
 public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
-  private Random random = new Random(System.nanoTime());
+  private static final Logger LOG = LoggerFactory.getLogger(WeightedRandomPath.class);
+  private Random random;
 
   public WeightedRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
+    long seed = System.nanoTime();
+    random = new Random(seed);
+    LOG.info("Seed: " + seed);
   }
 
   public WeightedRandomPath(long seed, StopCondition stopCondition) {
     setStopCondition(stopCondition);
     random = new Random(seed);
+    LOG.info("Seed: " + seed);
   }
 
   @Override
