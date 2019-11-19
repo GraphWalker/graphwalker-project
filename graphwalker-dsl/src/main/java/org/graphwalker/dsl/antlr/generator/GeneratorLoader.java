@@ -47,6 +47,7 @@ import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
 public class GeneratorLoader extends GeneratorParserBaseListener {
 
   private StopCondition stopCondition = null;
+  private Integer seed = null;
   private final List<PathGenerator> pathGenerators = new ArrayList<>();
   private final List<StopCondition> stopConditions = new ArrayList<>();
 
@@ -95,17 +96,37 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
   }
 
   @Override
+  public void exitSeed(GeneratorParser.SeedContext ctx) {
+    String str = ctx.getChild(0).getText();
+    if (str != null && str.length() > 0) {
+      seed = Integer.parseInt(str);
+    }
+  }
+
+  @Override
   public void exitGenerator(GeneratorParser.GeneratorContext context) {
     if (stopConditions.size() == 1) {
       stopCondition = stopConditions.get(0);
     }
     String generatorName = context.getChild(0).getText().toLowerCase();
     if ("random".equals(generatorName) || "randompath".equals(generatorName)) {
-      pathGenerators.add(new RandomPath(stopCondition));
+      if (seed == null ) {
+        pathGenerators.add(new RandomPath(stopCondition));
+      } else {
+        pathGenerators.add(new RandomPath(seed, stopCondition));
+      }
     } else if ("weighted_random".equals(generatorName) || "weightedrandompath".equals(generatorName)) {
-      pathGenerators.add(new WeightedRandomPath(stopCondition));
+      if (seed == null ) {
+        pathGenerators.add(new WeightedRandomPath(stopCondition));
+      } else {
+        pathGenerators.add(new WeightedRandomPath(seed, stopCondition));
+      }
     } else if ("quick_random".equals(generatorName) || "quickrandom".equals(generatorName) || "quickrandompath".equals(generatorName)) {
-      pathGenerators.add(new QuickRandomPath(stopCondition));
+      if (seed == null ) {
+        pathGenerators.add(new QuickRandomPath(stopCondition));
+      } else {
+        pathGenerators.add(new QuickRandomPath(seed, stopCondition));
+      }
     } else if ("a_star".equals(generatorName) || "astarpath".equals(generatorName)) {
       pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
     } else if ("shortest_all_paths".equals(generatorName) || "shortestallpaths".equals(generatorName)) {

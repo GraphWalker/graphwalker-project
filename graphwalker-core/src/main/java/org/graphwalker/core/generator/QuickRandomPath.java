@@ -1,7 +1,7 @@
 package org.graphwalker.core.generator;
 
 /*
-* #%L
+ * #%L
  * * GraphWalker Core
  * *
  * %%
@@ -26,7 +26,7 @@ package org.graphwalker.core.generator;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * #L%
-*/
+ */
 
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNull;
@@ -60,9 +61,15 @@ public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
   private static final Logger LOG = LoggerFactory.getLogger(QuickRandomPath.class);
   private final List<Element> elements = new ArrayList<>();
   private Element target = null;
+  private Random random = new Random(System.nanoTime());
 
   public QuickRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
+  }
+
+  public QuickRandomPath(long seed, StopCondition stopCondition) {
+    setStopCondition(stopCondition);
+    random = new Random(seed);
   }
 
   @Override
@@ -71,7 +78,7 @@ public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
     if (elements.isEmpty()) {
       elements.addAll(context.getModel().getElements());
       elements.remove(context.getCurrentElement());
-      Collections.shuffle(elements);
+      Collections.shuffle(elements, random);
     }
     if (isNull(target) || target.equals(context.getCurrentElement())) {
       if (elements.isEmpty()) {

@@ -16,6 +16,10 @@ RPAREN
  : ')'
  ;
 
+COMMA
+ : ','
+ ;
+
 WHITESPACE
  : [ \t\r\n\u000C]+ -> skip
  ;

@@ -12,10 +12,10 @@ package org.graphwalker.core.generator;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -52,10 +52,15 @@ import java.util.Random;
  */
 public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
-  private final Random random = new Random(System.nanoTime());
+  private Random random = new Random(System.nanoTime());
 
   public WeightedRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
+  }
+
+  public WeightedRandomPath(long seed, StopCondition stopCondition) {
+    setStopCondition(stopCondition);
+    random = new Random(seed);
   }
 
   @Override
@@ -93,8 +98,8 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
           sum += edge.getWeight();
           if (sum > 1) {
             throw new MachineException("The sum of all weights in edges from vertex: '"
-                                       + currentElement.getName()
-                                       + "', adds up to more than 1.00");
+              + currentElement.getName()
+              + "', adds up to more than 1.00");
           }
         } else {
           numberOfZeros++;
@@ -127,8 +132,8 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     }
 
     throw new MachineException("Could not calculate which weighted edge to choose from vertex: "
-                               + currentElement.getName()
-                               + "'");
+      + currentElement.getName()
+      + "'");
   }
 }
 

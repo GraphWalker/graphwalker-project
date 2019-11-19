@@ -45,10 +45,28 @@ public abstract class Models {
       .setName("B");
 
   private static final Edge EDGE_AB = new Edge()
-      .setId("ab")
-      .setName("ab")
-      .setSourceVertex(VERTEX_A)
-      .setTargetVertex(VERTEX_B);
+    .setId("ab")
+    .setName("ab")
+    .setSourceVertex(VERTEX_A)
+    .setTargetVertex(VERTEX_B);
+
+  private static final Edge EDGE_AB_2 = new Edge()
+    .setId("ab_2")
+    .setName("ab_2")
+    .setSourceVertex(VERTEX_A)
+    .setTargetVertex(VERTEX_B);
+
+  private static final Edge EDGE_AB_3 = new Edge()
+    .setId("ab_3")
+    .setName("ab_3")
+    .setSourceVertex(VERTEX_A)
+    .setTargetVertex(VERTEX_B);
+
+  private static final Edge EDGE_BA = new Edge()
+    .setId("ba")
+    .setName("ba")
+    .setSourceVertex(VERTEX_B)
+    .setTargetVertex(VERTEX_A);
 
   private static final RuntimeModel EMPTY_MODEL = new Model().build();
 
@@ -57,8 +75,15 @@ public abstract class Models {
       .build();
 
   private static final RuntimeModel SIMPLE_MODEL = new Model()
-      .addEdge(EDGE_AB)
-      .build();
+    .addEdge(EDGE_AB)
+    .build();
+
+  private static final RuntimeModel FOUR_EDGES_MODEL = new Model()
+    .addEdge(EDGE_AB)
+    .addEdge(EDGE_AB_2)
+    .addEdge(EDGE_AB_3)
+    .addEdge(EDGE_BA)
+    .build();
 
   public static RuntimeVertex findVertex(RuntimeModel model, String id) {
     return (RuntimeVertex) model.getElementById(id);
@@ -78,5 +103,9 @@ public abstract class Models {
 
   public static Model simpleModel() {
     return new Model(SIMPLE_MODEL);
+  }
+
+  public static Model fourEdgesModel() {
+    return new Model(FOUR_EDGES_MODEL);
   }
 }
