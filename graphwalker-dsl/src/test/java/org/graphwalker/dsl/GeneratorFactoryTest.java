@@ -329,7 +329,7 @@ public class GeneratorFactoryTest {
 
   @Test
   public void quickrandom_seed_edge_coverage() {
-    PathGenerator generator = GeneratorFactory.parse("quickrandom(123456789, edge_coverage(100))");
+    PathGenerator generator = GeneratorFactory.parse("quickrandom(89554871348029579, edge_coverage(100))");
     assertThat(generator, instanceOf(QuickRandomPath.class));
     assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
     assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));

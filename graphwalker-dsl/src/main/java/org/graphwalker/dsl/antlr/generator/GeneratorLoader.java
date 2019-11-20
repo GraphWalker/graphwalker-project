@@ -47,7 +47,7 @@ import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
 public class GeneratorLoader extends GeneratorParserBaseListener {
 
   private StopCondition stopCondition = null;
-  private Integer seed = null;
+  private Long seed = null;
   private final List<PathGenerator> pathGenerators = new ArrayList<>();
   private final List<StopCondition> stopConditions = new ArrayList<>();
 
@@ -99,7 +99,7 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
   public void exitSeed(GeneratorParser.SeedContext ctx) {
     String str = ctx.getChild(0).getText();
     if (str != null && str.length() > 0) {
-      seed = Integer.parseInt(str);
+      seed = Long.parseLong(str);
     }
   }
 
