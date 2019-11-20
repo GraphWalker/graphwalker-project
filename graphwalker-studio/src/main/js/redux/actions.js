@@ -175,8 +175,8 @@ export const runTest = () => {
         }
       }
       setTimeout(await callback, delay);
-    } catch (error) {
-      await dispatch(action(EXECUTION_STOP, error));
+    } catch ({ issues }) {
+      await dispatch(action(EXECUTION_FAILED, issues));
     }
   }
 }
