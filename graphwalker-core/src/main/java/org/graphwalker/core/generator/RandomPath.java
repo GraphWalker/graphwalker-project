@@ -12,10 +12,10 @@ package org.graphwalker.core.generator;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * <h1>RandomPath</h1>
@@ -47,8 +46,6 @@ import java.util.Random;
 public class RandomPath extends PathGeneratorBase<StopCondition> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RandomPath.class);
-
-  private final Random random = new Random(System.nanoTime());
 
   public RandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
@@ -64,7 +61,7 @@ public class RandomPath extends PathGeneratorBase<StopCondition> {
       LOG.error("context.getModel().getElements(): " + context.getModel().getElements());
       throw new NoPathFoundException(context.getCurrentElement());
     }
-    context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+    context.setCurrentElement(elements.get(SingletonRandomGenerator.nextInt(elements.size())));
     return context;
   }
 

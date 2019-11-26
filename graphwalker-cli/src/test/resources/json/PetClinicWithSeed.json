@@ -1,0 +1,345 @@
+{
+  "name": "GraphWalker Example Test",
+  "seed": 16436238642755,
+  "models": [
+    {
+      "name": "FindOwners",
+      "id": "476fb419-3d7d-4492-802e-6695fe93f595",
+      "generator": "random(edge_coverage(100))",
+      "vertices": [
+        {
+          "id": "b53814ec-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_FindOwners",
+          "sharedState": "FindOwners",
+          "properties": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "id": "dcb0e896-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_NewOwner",
+          "sharedState": "NewOwner",
+          "properties": {
+            "x": 120.65625,
+            "y": -157.8125
+          }
+        },
+        {
+          "id": "dcb0f200-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_Owners",
+          "properties": {
+            "x": -219.34375,
+            "y": -187.8125
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "dcb0fb88-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_AddOwner",
+          "sourceVertexId": "b53814ec-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0e896-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "dcb0fd5e-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_FindOwners",
+          "sourceVertexId": "dcb0e896-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "b53814ec-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "dcb0fe62-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_Search",
+          "sourceVertexId": "b53814ec-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0f200-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "dcb0ff34-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_FindOwners",
+          "sourceVertexId": "dcb0f200-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "b53814ec-468c-11e7-a919-92ebcb67fe33"
+        }
+      ]
+    },
+    {
+      "name": "NewOwner",
+      "id": "b23d193c-287a-4eb9-a318-52ead7680ff7",
+      "generator": "random(edge_coverage(100))",
+      "vertices": [
+        {
+          "id": "dcb0d798-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_NewOwner",
+          "sharedState": "NewOwner",
+          "properties": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "id": "dcb0eab2-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_IncorrectData",
+          "properties": {
+            "x": 131.65625,
+            "y": -205.3125
+          }
+        },
+        {
+          "id": "dcb0f3c2-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_OwnerInformation",
+          "sharedState": "OwnerInformation",
+          "properties": {
+            "x": -284.34375,
+            "y": -143.3125
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "dcb104e8-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_IncorrectData",
+          "sourceVertexId": "dcb0d798-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0eab2-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "dcb10736-468c-11e7-a919-92ebcb67fe33",
+          "sourceVertexId": "dcb0eab2-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0d798-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "dcb10812-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_CorrectData",
+          "sourceVertexId": "dcb0d798-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0f3c2-468c-11e7-a919-92ebcb67fe33"
+        }
+      ]
+    },
+    {
+      "name": "OwnerInformation",
+      "id": "5f1149c3-2853-47e6-838d-691bf30406a8",
+      "generator": "random(edge_coverage(100))",
+      "actions": [
+        "numOfPets=0;"
+      ],
+      "vertices": [
+        {
+          "id": "dcb0dba8-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_OwnerInformation",
+          "sharedState": "OwnerInformation",
+          "properties": {
+            "x": -23.34375,
+            "y": -51.8125
+          }
+        },
+        {
+          "id": "dcb0ebb6-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_NewPet",
+          "properties": {
+            "x": -27.34375,
+            "y": 118.1875
+          }
+        },
+        {
+          "id": "dcb0f8a4-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_Pet",
+          "properties": {
+            "x": -317.34375,
+            "y": 7.1875
+          }
+        },
+        {
+          "id": "971ec0b8-468d-11e7-a919-92ebcb67fe33",
+          "name": "v_NewVisit",
+          "properties": {
+            "x": 139.65625,
+            "y": -195.8125
+          }
+        },
+        {
+          "id": "971ec57c-468d-11e7-a919-92ebcb67fe33",
+          "name": "v_FindOwners",
+          "sharedState": "FindOwners",
+          "properties": {
+            "x": -270.34375,
+            "y": -181.8125
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "971ec838-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_AddPetSuccessfully",
+          "actions": [
+            " numOfPets++;"
+          ],
+          "sourceVertexId": "dcb0ebb6-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ecaa4-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_AddNewPet",
+          "sourceVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0ebb6-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ecca2-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_EditPet",
+          "guard": "numOfPets>0",
+          "sourceVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0f8a4-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ece78-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_UpdatePet",
+          "sourceVertexId": "dcb0f8a4-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ed0b2-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_AddPetFailed",
+          "sourceVertexId": "dcb0ebb6-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0ebb6-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ed3c8-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_AddVisit",
+          "guard": "numOfPets>0",
+          "sourceVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "971ec0b8-468d-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ed53a-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_VisitAddedSuccessfully",
+          "sourceVertexId": "971ec0b8-468d-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ed738-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_VisitAddedFailed",
+          "sourceVertexId": "971ec0b8-468d-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "971ec0b8-468d-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971edad0-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_FindOwners",
+          "sourceVertexId": "dcb0dba8-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "971ec57c-468d-11e7-a919-92ebcb67fe33"
+        }
+      ]
+    },
+    {
+      "name": "PetClinic",
+      "id": "3f6b365f-7011-4db6-b0cc-e19aa453d9b8",
+      "generator": "random(edge_coverage(100))",
+      "vertices": [
+        {
+          "id": "dcb0dde2-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_HomePage",
+          "sharedState": "HomePage",
+          "properties": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "id": "dcb0ef4e-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_FindOwners",
+          "sharedState": "FindOwners",
+          "properties": {
+            "x": 112.65625,
+            "y": -180.8125
+          }
+        },
+        {
+          "id": "dcb0f8a5-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_Veterinarians",
+          "sharedState": "Veterinarians",
+          "properties": {
+            "x": -246.34375,
+            "y": -153.8125
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "971edcce-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_FindOwners",
+          "sourceVertexId": "dcb0dde2-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0ef4e-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ede36-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_HomePage",
+          "sourceVertexId": "dcb0ef4e-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0dde2-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ee142-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_Veterinarians",
+          "sourceVertexId": "dcb0dde2-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0f8a5-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ee2b4-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_HomePage",
+          "sourceVertexId": "dcb0f8a5-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0dde2-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ee5c0-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_Veterinarians",
+          "sourceVertexId": "dcb0ef4e-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0f8a5-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971ee732-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_FindOwners",
+          "sourceVertexId": "dcb0f8a5-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0ef4e-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "b53810a0-468c-11e7-a919-92ebcb67fe33",
+          "name": "e_StartBrowser",
+          "targetVertexId": "dcb0dde2-468c-11e7-a919-92ebcb67fe33"
+        }
+      ],
+      "startElementId": "b53810a0-468c-11e7-a919-92ebcb67fe33"
+    },
+    {
+      "name": "Veterinarians",
+      "id": "368a9635-c59a-4285-ad01-cf75b0baa978",
+      "generator": "random(edge_coverage(100))",
+      "vertices": [
+        {
+          "id": "dcb0defa-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_Veterinarians",
+          "sharedState": "Veterinarians",
+          "properties": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "id": "dcb0f124-468c-11e7-a919-92ebcb67fe33",
+          "name": "v_SearchResult",
+          "properties": {
+            "x": -213.34375,
+            "y": -138.8125
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "971eea2a-468d-11e7-a919-92ebcb67fe33",
+          "name": "e_Search",
+          "sourceVertexId": "dcb0defa-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0f124-468c-11e7-a919-92ebcb67fe33"
+        },
+        {
+          "id": "971eeba6-468d-11e7-a919-92ebcb67fe33",
+          "sourceVertexId": "dcb0f124-468c-11e7-a919-92ebcb67fe33",
+          "targetVertexId": "dcb0defa-468c-11e7-a919-92ebcb67fe33"
+        }
+      ]
+    }
+  ]
+}

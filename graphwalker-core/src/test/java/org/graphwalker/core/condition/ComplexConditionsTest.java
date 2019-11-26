@@ -76,7 +76,6 @@ public class ComplexConditionsTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      System.out.println(context.getCurrentElement().getName());
     }
   }
 
@@ -92,7 +91,6 @@ public class ComplexConditionsTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      System.out.println(context.getCurrentElement().getName());
     }
   }
 
@@ -108,7 +106,6 @@ public class ComplexConditionsTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      System.out.println(context.getCurrentElement().getName());
     }
   }
 
@@ -124,7 +121,6 @@ public class ComplexConditionsTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      System.out.println(context.getCurrentElement().getName());
     }
   }
 
@@ -140,7 +136,6 @@ public class ComplexConditionsTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      System.out.println(context.getCurrentElement().getName());
     }
   }
 
@@ -156,7 +151,6 @@ public class ComplexConditionsTest {
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      System.out.println(context.getCurrentElement().getName());
     }
   }
 

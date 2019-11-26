@@ -1,0 +1,134 @@
+{
+  "models": [
+    {
+      "generator": "RandomPath(90835538976957, EdgeCoverage(100))",
+      "startElementId": "e0",
+      "vertices": [
+        {
+          "id": "n4",
+          "name": "v_BrowserStopped"
+        },
+        {
+          "id": "n1",
+          "name": "v_BrowserStarted",
+          "properties": {
+            "color": "yellow"
+          }
+        },
+        {
+          "id": "n2",
+          "name": "v_BaseURL",
+          "requirements": [
+            "UC01 2.2.1"
+          ]
+        },
+        {
+          "id": "n3",
+          "name": "v_SearchResult",
+          "requirements": [
+            "UC01 2.2.2"
+          ]
+        },
+        {
+          "id": "n5",
+          "name": "v_BookInformation",
+          "requirements": [
+            "UC01 2.2.3"
+          ]
+        },
+        {
+          "id": "n6",
+          "name": "v_OtherBoughtBooks"
+        },
+        {
+          "id": "n7",
+          "name": "v_ShoppingCart",
+          "requirements": [
+            "UC01 2.3"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "e0",
+          "name": "e_init",
+          "actions": [
+            " num_of_books \u003d 0;",
+            " MAX_BOOKS \u003d 5;"
+          ],
+          "targetVertexId": "n4"
+        },
+        {
+          "id": "e1",
+          "name": "e_EnterBaseURL",
+          "sourceVertexId": "n1",
+          "targetVertexId": "n2"
+        },
+        {
+          "id": "e2",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n2",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e3",
+          "name": "e_StartBrowser",
+          "sourceVertexId": "n4",
+          "targetVertexId": "n1"
+        },
+        {
+          "id": "e4",
+          "name": "e_ClickBook",
+          "sourceVertexId": "n3",
+          "targetVertexId": "n5"
+        },
+        {
+          "id": "e5",
+          "name": "e_AddBookToCart",
+          "guard": "num_of_books\u003c\u003dMAX_BOOKS",
+          "actions": [
+            " num_of_books++;"
+          ],
+          "sourceVertexId": "n5",
+          "targetVertexId": "n6"
+        },
+        {
+          "id": "e6",
+          "name": "e_ShoppingCart",
+          "sourceVertexId": "n6",
+          "targetVertexId": "n7"
+        },
+        {
+          "id": "e7",
+          "name": "e_ShoppingCart",
+          "sourceVertexId": "n3",
+          "targetVertexId": "n7"
+        },
+        {
+          "id": "e8",
+          "name": "e_ShoppingCart",
+          "sourceVertexId": "n5",
+          "targetVertexId": "n7"
+        },
+        {
+          "id": "e9",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n7",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e10",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n6",
+          "targetVertexId": "n3"
+        },
+        {
+          "id": "e11",
+          "name": "e_SearchBook",
+          "sourceVertexId": "n5",
+          "targetVertexId": "n3"
+        }
+      ]
+    }
+  ]
+}
