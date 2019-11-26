@@ -26,10 +26,10 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.SimpleMachine;
 import org.graphwalker.core.model.Action;
@@ -333,5 +334,13 @@ public class JsonContextFactoryTest {
     Vertex.RuntimeVertex v = (Vertex.RuntimeVertex) context.getModel().getElementById("n0");
     assertTrue(v.hasProperty("color"));
     assertThat(v.getProperty("color"), is("yellow"));
+  }
+
+  @Test
+  public void petClinicWithSeed() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/petClinicWithSeed.json"));
+    assertThat(SingletonRandomGenerator.nextInt(), is(1553932502));
+    assertThat(SingletonRandomGenerator.nextInt(), is(-2090749135));
+    assertThat(SingletonRandomGenerator.nextInt(), is(-287790814));
   }
 }

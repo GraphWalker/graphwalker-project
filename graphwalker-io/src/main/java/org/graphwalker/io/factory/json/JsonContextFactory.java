@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Model;
@@ -140,6 +141,11 @@ public final class JsonContextFactory implements ContextFactory {
 
     if (isNull(jsonMultimodel) || isNull(jsonMultimodel.getModels())) {
       throw new ContextFactoryException("The json file is not a valid GraphWalker model(s) file");
+    }
+
+    // Seed the [global] singleton random generator, if any seed was set in the json file
+    if (jsonMultimodel.getSeed() != null) {
+      SingletonRandomGenerator.setSeed(jsonMultimodel.getSeed());
     }
 
     for (JsonModel jsonModel : jsonMultimodel.getModels()) {

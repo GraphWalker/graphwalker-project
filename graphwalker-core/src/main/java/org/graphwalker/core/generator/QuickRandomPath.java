@@ -1,7 +1,7 @@
 package org.graphwalker.core.generator;
 
 /*
-* #%L
+ * #%L
  * * GraphWalker Core
  * *
  * %%
@@ -26,7 +26,7 @@ package org.graphwalker.core.generator;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * #L%
-*/
+ */
 
 import org.graphwalker.core.algorithm.AStar;
 import org.graphwalker.core.condition.StopCondition;
@@ -71,7 +71,7 @@ public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
     if (elements.isEmpty()) {
       elements.addAll(context.getModel().getElements());
       elements.remove(context.getCurrentElement());
-      Collections.shuffle(elements);
+      Collections.shuffle(elements, SingletonRandomGenerator.random());
     }
     if (isNull(target) || target.equals(context.getCurrentElement())) {
       if (elements.isEmpty()) {

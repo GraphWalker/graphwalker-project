@@ -12,10 +12,10 @@ package org.graphwalker.core.generator;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,11 +32,12 @@ import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Vertex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * <h1>WeightedRandomPath</h1>
@@ -52,7 +53,7 @@ import java.util.Random;
  */
 public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
-  private final Random random = new Random(System.nanoTime());
+  private static final Logger LOG = LoggerFactory.getLogger(WeightedRandomPath.class);
 
   public WeightedRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
@@ -69,7 +70,7 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     if (currentElement instanceof Vertex.RuntimeVertex) {
       context.setCurrentElement(getWeightedEdge(elements, currentElement));
     } else {
-      context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+      context.setCurrentElement(elements.get(SingletonRandomGenerator.nextInt(elements.size())));
     }
     return context;
   }
@@ -93,8 +94,8 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
           sum += edge.getWeight();
           if (sum > 1) {
             throw new MachineException("The sum of all weights in edges from vertex: '"
-                                       + currentElement.getName()
-                                       + "', adds up to more than 1.00");
+              + currentElement.getName()
+              + "', adds up to more than 1.00");
           }
         } else {
           numberOfZeros++;
@@ -109,7 +110,7 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     } else {
       rest = 1 - sum;
     }
-    int index = random.nextInt(100);
+    int index = SingletonRandomGenerator.nextInt(100);
     double weight = 0;
     for (Element element : elements) {
       if (element instanceof Edge.RuntimeEdge) {
@@ -127,8 +128,8 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     }
 
     throw new MachineException("Could not calculate which weighted edge to choose from vertex: "
-                               + currentElement.getName()
-                               + "'");
+      + currentElement.getName()
+      + "'");
   }
 }
 
