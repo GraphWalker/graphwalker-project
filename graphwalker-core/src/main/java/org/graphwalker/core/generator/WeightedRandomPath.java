@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * <h1>WeightedRandomPath</h1>
@@ -55,19 +54,9 @@ import java.util.Random;
 public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
 
   private static final Logger LOG = LoggerFactory.getLogger(WeightedRandomPath.class);
-  private Random random;
 
   public WeightedRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
-    long seed = System.nanoTime();
-    random = new Random(seed);
-    LOG.info("Seed: " + seed);
-  }
-
-  public WeightedRandomPath(long seed, StopCondition stopCondition) {
-    setStopCondition(stopCondition);
-    random = new Random(seed);
-    LOG.info("Seed: " + seed);
   }
 
   @Override
@@ -81,7 +70,7 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     if (currentElement instanceof Vertex.RuntimeVertex) {
       context.setCurrentElement(getWeightedEdge(elements, currentElement));
     } else {
-      context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+      context.setCurrentElement(elements.get(SingletonRandomGenerator.nextInt(elements.size())));
     }
     return context;
   }
@@ -121,7 +110,7 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
     } else {
       rest = 1 - sum;
     }
-    int index = random.nextInt(100);
+    int index = SingletonRandomGenerator.nextInt(100);
     double weight = 0;
     for (Element element : elements) {
       if (element instanceof Edge.RuntimeEdge) {

@@ -110,8 +110,8 @@ public class QuickRandomPathTest {
     RuntimeEdge BA = findEdge(model, "ba");
     Context context = new TestExecutionContext().setModel(model).setNextElement(A);
 
-    long seed = 1349327921;
-    context.setPathGenerator(new QuickRandomPath(seed, new Length(30)));
+    SingletonRandomGenerator.setSeed(1349327921);
+    context.setPathGenerator(new QuickRandomPath(new Length(30)));
     Machine machine = new SimpleMachine(context);
 
     List<String> actualPath = new ArrayList<String>();

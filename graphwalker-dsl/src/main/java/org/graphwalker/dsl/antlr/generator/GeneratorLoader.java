@@ -12,10 +12,10 @@ package org.graphwalker.dsl.antlr.generator;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -47,7 +47,6 @@ import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
 public class GeneratorLoader extends GeneratorParserBaseListener {
 
   private StopCondition stopCondition = null;
-  private Long seed = null;
   private final List<PathGenerator> pathGenerators = new ArrayList<>();
   private final List<StopCondition> stopConditions = new ArrayList<>();
 
@@ -82,7 +81,7 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
     } else if ("requirement_coverage".equals(conditionName) || "requirementcoverage".equals(conditionName)) {
       stopConditions.add(new RequirementCoverage(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("length".equals(conditionName)) {
-    	stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
+      stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
     }
   }
 
@@ -96,37 +95,17 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
   }
 
   @Override
-  public void exitSeed(GeneratorParser.SeedContext ctx) {
-    String str = ctx.getChild(0).getText();
-    if (str != null && str.length() > 0) {
-      seed = Long.parseLong(str);
-    }
-  }
-
-  @Override
   public void exitGenerator(GeneratorParser.GeneratorContext context) {
     if (stopConditions.size() == 1) {
       stopCondition = stopConditions.get(0);
     }
     String generatorName = context.getChild(0).getText().toLowerCase();
     if ("random".equals(generatorName) || "randompath".equals(generatorName)) {
-      if (seed == null ) {
-        pathGenerators.add(new RandomPath(stopCondition));
-      } else {
-        pathGenerators.add(new RandomPath(seed, stopCondition));
-      }
+      pathGenerators.add(new RandomPath(stopCondition));
     } else if ("weighted_random".equals(generatorName) || "weightedrandompath".equals(generatorName)) {
-      if (seed == null ) {
-        pathGenerators.add(new WeightedRandomPath(stopCondition));
-      } else {
-        pathGenerators.add(new WeightedRandomPath(seed, stopCondition));
-      }
+      pathGenerators.add(new WeightedRandomPath(stopCondition));
     } else if ("quick_random".equals(generatorName) || "quickrandom".equals(generatorName) || "quickrandompath".equals(generatorName)) {
-      if (seed == null ) {
-        pathGenerators.add(new QuickRandomPath(stopCondition));
-      } else {
-        pathGenerators.add(new QuickRandomPath(seed, stopCondition));
-      }
+      pathGenerators.add(new QuickRandomPath(stopCondition));
     } else if ("a_star".equals(generatorName) || "astarpath".equals(generatorName)) {
       pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
     } else if ("shortest_all_paths".equals(generatorName) || "shortestallpaths".equals(generatorName)) {

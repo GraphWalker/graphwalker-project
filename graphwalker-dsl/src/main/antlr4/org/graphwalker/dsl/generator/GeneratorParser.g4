@@ -9,15 +9,10 @@ parse
  ;
 
 generator
- : Alphanumeric LPAREN parameters RPAREN
- | Alphanumeric LPAREN parameters RPAREN RPAREN {notifyErrorListeners("The generator has too many parentheses");}
- | Alphanumeric LPAREN parameters {notifyErrorListeners("The generator is missing closing parentheses");}
+ : Alphanumeric LPAREN logicalExpression RPAREN
+ | Alphanumeric LPAREN logicalExpression RPAREN RPAREN {notifyErrorListeners("The generator has too many parentheses");}
+ | Alphanumeric LPAREN logicalExpression {notifyErrorListeners("The generator is missing closing parentheses");}
  | Alphanumeric  {notifyErrorListeners("A generator needs parentheses");}
- ;
-
-parameters
- : ( logicalExpression
- | seed COMMA logicalExpression )
  ;
 
 logicalExpression
@@ -39,6 +34,3 @@ stopCondition
  | Alphanumeric)
  ;
 
-seed
- : Number
- ;

@@ -1,11 +1,11 @@
 {
   "name": "GraphWalker Example Test",
-  "seed": 16436238642755,
+  "seed": 11111,
   "models": [
     {
       "name": "FindOwners",
       "id": "476fb419-3d7d-4492-802e-6695fe93f595",
-      "generator": "random(edge_coverage(100))",
+      "generator": "quickrandom(edge_coverage(100))",
       "vertices": [
         {
           "id": "b53814ec-468c-11e7-a919-92ebcb67fe33",
@@ -64,7 +64,7 @@
     {
       "name": "NewOwner",
       "id": "b23d193c-287a-4eb9-a318-52ead7680ff7",
-      "generator": "random(edge_coverage(100))",
+      "generator": "quickrandom(edge_coverage(100))",
       "vertices": [
         {
           "id": "dcb0d798-468c-11e7-a919-92ebcb67fe33",
@@ -116,7 +116,7 @@
     {
       "name": "OwnerInformation",
       "id": "5f1149c3-2853-47e6-838d-691bf30406a8",
-      "generator": "random(edge_coverage(100))",
+      "generator": "quickrandom(edge_coverage(100))",
       "actions": [
         "numOfPets=0;"
       ],
@@ -229,7 +229,7 @@
     {
       "name": "PetClinic",
       "id": "3f6b365f-7011-4db6-b0cc-e19aa453d9b8",
-      "generator": "random(edge_coverage(100))",
+      "generator": "quickrandom(edge_coverage(100))",
       "vertices": [
         {
           "id": "dcb0dde2-468c-11e7-a919-92ebcb67fe33",
@@ -307,7 +307,7 @@
     {
       "name": "Veterinarians",
       "id": "368a9635-c59a-4285-ad01-cf75b0baa978",
-      "generator": "random(edge_coverage(100))",
+      "generator": "quickrandom(edge_coverage(100))",
       "vertices": [
         {
           "id": "dcb0defa-468c-11e7-a919-92ebcb67fe33",

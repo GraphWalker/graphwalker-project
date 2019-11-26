@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * <h1>RandomPath</h1>
@@ -47,19 +46,9 @@ import java.util.Random;
 public class RandomPath extends PathGeneratorBase<StopCondition> {
 
   private static final Logger LOG = LoggerFactory.getLogger(RandomPath.class);
-  private Random random;
 
   public RandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
-    long seed = System.nanoTime();
-    random = new Random(seed);
-    LOG.info("Seed: " + seed);
-  }
-
-  public RandomPath(long seed, StopCondition stopCondition) {
-    setStopCondition(stopCondition);
-    random = new Random(seed);
-    LOG.info("Seed: " + seed);
   }
 
   @Override
@@ -72,7 +61,7 @@ public class RandomPath extends PathGeneratorBase<StopCondition> {
       LOG.error("context.getModel().getElements(): " + context.getModel().getElements());
       throw new NoPathFoundException(context.getCurrentElement());
     }
-    context.setCurrentElement(elements.get(random.nextInt(elements.size())));
+    context.setCurrentElement(elements.get(SingletonRandomGenerator.nextInt(elements.size())));
     return context;
   }
 

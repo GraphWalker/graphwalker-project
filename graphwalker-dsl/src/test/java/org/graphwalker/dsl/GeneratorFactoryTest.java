@@ -310,28 +310,4 @@ public class GeneratorFactoryTest {
     assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
     assertThat(((AlternativeCondition) generator.getStopCondition()).getStopConditions().size(), is(3));
   }
-
-  @Test
-  public void random_seed_edge_coverage() {
-    PathGenerator generator = GeneratorFactory.parse("random(123456789, edge_coverage(100))");
-    assertThat(generator, instanceOf(RandomPath.class));
-    assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
-    assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
-  }
-
-  @Test
-  public void  weighted_random__seed_edge_coverage() {
-    PathGenerator generator = GeneratorFactory.parse(" weighted_random(123456789, edge_coverage(100))");
-    assertThat(generator, instanceOf(WeightedRandomPath.class));
-    assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
-    assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
-  }
-
-  @Test
-  public void quickrandom_seed_edge_coverage() {
-    PathGenerator generator = GeneratorFactory.parse("quickrandom(89554871348029579, edge_coverage(100))");
-    assertThat(generator, instanceOf(QuickRandomPath.class));
-    assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
-    assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
-  }
 }

@@ -143,8 +143,8 @@ public class WeightedRandomPathTest {
 
   @Test
   public void seededGenerator() {
-    long seed = 1349327921;
-    PathGenerator generator = new WeightedRandomPath(seed, new Length(30));
+    SingletonRandomGenerator.setSeed(1349327921);
+    PathGenerator generator = new WeightedRandomPath(new Length(30));
     Context context = new TestExecutionContext(model, generator).setCurrentElement(source.build());
     SimpleMachine machine = new SimpleMachine(context);
 

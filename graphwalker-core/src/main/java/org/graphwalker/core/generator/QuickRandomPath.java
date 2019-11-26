@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.common.Objects.isNull;
@@ -61,19 +60,9 @@ public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
   private static final Logger LOG = LoggerFactory.getLogger(QuickRandomPath.class);
   private final List<Element> elements = new ArrayList<>();
   private Element target = null;
-  private Random random;
 
   public QuickRandomPath(StopCondition stopCondition) {
     setStopCondition(stopCondition);
-    long seed = System.nanoTime();
-    random = new Random(seed);
-    LOG.info("Seed: " + seed);
-  }
-
-  public QuickRandomPath(long seed, StopCondition stopCondition) {
-    setStopCondition(stopCondition);
-    random = new Random(seed);
-    LOG.info("Seed: " + seed);
   }
 
   @Override
@@ -82,7 +71,7 @@ public class QuickRandomPath extends PathGeneratorBase<StopCondition> {
     if (elements.isEmpty()) {
       elements.addAll(context.getModel().getElements());
       elements.remove(context.getCurrentElement());
-      Collections.shuffle(elements, random);
+      Collections.shuffle(elements, SingletonRandomGenerator.random());
     }
     if (isNull(target) || target.equals(context.getCurrentElement())) {
       if (elements.isEmpty()) {

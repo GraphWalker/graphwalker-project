@@ -34,6 +34,7 @@ import java.util.List;
 public final class JsonMultimodel {
 
   private String name;
+  private Long seed;
   private List<JsonModel> models;
 
   public String getName() {
@@ -42,6 +43,14 @@ public final class JsonMultimodel {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public Long getSeed() {
+    return seed;
+  }
+
+  public void setSeed(Long seed) {
+    this.seed = seed;
   }
 
   public List<JsonModel> getModels() {
