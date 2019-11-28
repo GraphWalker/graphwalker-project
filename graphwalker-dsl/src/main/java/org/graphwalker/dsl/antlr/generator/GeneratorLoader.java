@@ -26,6 +26,7 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -110,6 +111,13 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
       pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
     } else if ("shortest_all_paths".equals(generatorName) || "shortestallpaths".equals(generatorName)) {
       pathGenerators.add(new ShortestAllPaths(stopCondition));
+    } else {
+      Class generatorClass = GeneratorFactoryScanner.get(generatorName);
+      try {
+        pathGenerators.add((PathGenerator) generatorClass.getConstructor(StopCondition.class).newInstance(stopCondition));
+      } catch (Exception e) {
+        throw new GeneratorFactoryException("No suitable generator found with name: " + generatorName + ", because: " + e.getCause());
+      }
     }
     stopConditions.clear();
   }
