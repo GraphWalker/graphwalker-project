@@ -30,12 +30,12 @@ mvn package -pl graphwalker-cli -am
 
 The jar is in:
 ```bash
-graphwalker-cli/target/graphwalker-cli-4.1.0-SNAPSHOT.jar
+graphwalker-cli/target/graphwalker-cli-4.1.0.jar
 ```
 
 Run it like:
 ```bash
-java -jar graphwalker-cli/target/graphwalker-cli-4.1.0-SNAPSHOT.jar
+java -jar graphwalker-cli/target/graphwalker-cli-4.1.0.jar
 ```
 
 ## Build Studio
@@ -51,5 +51,5 @@ graphwalker-studio/target/
  
 Run it like:
 ```bash
-java -jar graphwalker-studio/target/graphwalker-studio-4.0.0-SNAPSHOT.jar
+java -jar graphwalker-studio/target/graphwalker-studio-4.1.0.jar
 ```
