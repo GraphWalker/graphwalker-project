@@ -187,4 +187,17 @@ public class WeightedRandomPathTest {
       "target"
     )).toArray(), actualPath.toArray());
   }
+
+  @Test
+   public void singleEdge() {
+    Model invalidModel = new Model().addEdge(edge1);
+    PathGenerator generator = new WeightedRandomPath(new EdgeCoverage(100));
+    Context context = new TestExecutionContext(invalidModel, generator).setCurrentElement(source.build());
+    SimpleMachine machine = new SimpleMachine(context);
+
+    while (machine.hasNextStep()) {
+      LOG.debug(machine.getCurrentContext().getCurrentElement().getName());
+      machine.getNextStep();
+    }
+  }
 }
