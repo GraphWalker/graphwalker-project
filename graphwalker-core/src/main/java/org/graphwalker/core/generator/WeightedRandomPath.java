@@ -127,6 +127,10 @@ public class WeightedRandomPath extends PathGeneratorBase<StopCondition> {
       }
     }
 
+    if (elements.size() == 1 && elements.get(0) instanceof Edge.RuntimeEdge) {
+      return (Edge.RuntimeEdge) elements.get(0);
+    }
+
     throw new MachineException("Could not calculate which weighted edge to choose from vertex: "
       + currentElement.getName()
       + "'");
