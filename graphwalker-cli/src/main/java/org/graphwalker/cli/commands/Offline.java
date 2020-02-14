@@ -58,4 +58,8 @@ public class Offline {
   @Parameter(names = {"--blocked",
                       "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
   public boolean blocked = true;
+
+  @Parameter(names = {"--seed", "-d"}, required = false,
+    description = "Seed the random generator using the provided number.")
+  public long seed = 0;
 }
