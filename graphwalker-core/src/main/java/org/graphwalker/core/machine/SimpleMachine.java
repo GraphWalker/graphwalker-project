@@ -30,6 +30,7 @@ import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.slf4j.Logger;
@@ -212,12 +213,12 @@ public class SimpleMachine extends MachineBase {
   private List<SharedStateTuple> getPossibleSharedStates(String sharedState) {
     List<SharedStateTuple> sharedStates = new ArrayList<>();
     for (Context context : getContexts()) {
-      if (getCurrentContext().equals(context) && hasOutEdges(context)) {
+      if (getCurrentContext().equals(context) && hasAccessibleOutEdges(context, context.getCurrentElement())) {
         sharedStates.add(new SharedStateTuple(getCurrentContext(), (RuntimeVertex) getCurrentContext().getCurrentElement()));
       } else if (!getCurrentContext().equals(context) && context.getModel().hasSharedState(sharedState)) {
         for (RuntimeVertex vertex : context.getModel().getSharedStates(sharedState)) {
-          if ((!vertex.equals(lastElement) || getCurrentContext().getModel().getOutEdges((RuntimeVertex) getCurrentContext().getCurrentElement()).isEmpty())
-            && (vertex.hasName() || !context.getModel().getOutEdges(vertex).isEmpty())) {
+          if ((!vertex.equals(lastElement) || !hasAccessibleOutEdges(getCurrentContext(), getCurrentContext().getCurrentElement()))
+            && (vertex.hasName() || hasAccessibleOutEdges(context, vertex))) {
             sharedStates.add(new SharedStateTuple(context, vertex));
           }
         }
@@ -226,10 +227,21 @@ public class SimpleMachine extends MachineBase {
     return sharedStates;
   }
 
-  private boolean hasOutEdges(Context context) {
-    return isNotNull(context.getCurrentElement())
-      && context.getCurrentElement() instanceof RuntimeVertex
-      && !context.getModel().getOutEdges((RuntimeVertex) context.getCurrentElement()).isEmpty();
+  private boolean hasAccessibleOutEdges(Context context, Element element) {
+    if (isNull(element)) {
+      return false;
+    }
+
+    if (element instanceof RuntimeEdge) {
+      return false;
+    }
+
+    for (RuntimeEdge edge : context.getModel().getOutEdges((RuntimeVertex) element)) {
+      if (context.isAvailable(edge)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
