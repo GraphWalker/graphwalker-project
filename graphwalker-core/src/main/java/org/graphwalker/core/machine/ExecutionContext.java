@@ -258,8 +258,9 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   public boolean isAvailable(RuntimeEdge edge) {
     if (edge.hasGuard()) {
-      LOG.debug("Execute: '{}' in model: '{}'", edge.getGuard().getScript(), getModel().getName());
+      LOG.debug("Execute guard: '{}' in model: '{}'", edge.getGuard().getScript(), getModel().getName());
       try {
+        LOG.debug("Guard: '{}' is: '{}'", edge.getGuard().getScript(), getScriptEngine().eval(edge.getGuard().getScript()));
         return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());
       } catch (ScriptException e) {
         LOG.error(e.getMessage());
@@ -270,17 +271,18 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   public void execute(Action action) {
-    LOG.debug("Execute: '{}' in model: '{}'", action.getScript(), getModel().getName());
+    LOG.debug("Execute action: '{}' in model: '{}'", action.getScript(), getModel().getName());
     try {
       getScriptEngine().eval(action.getScript());
     } catch (ScriptException e) {
       LOG.error(e.getMessage());
       throw new MachineException(this, e);
     }
+    LOG.debug("Data: '{}'", getKeys().toString());
   }
 
   public void execute(String name) {
-    LOG.debug("Execute: '{}' in model: '{}'", name, getModel().getName());
+    LOG.debug("Execute method: '{}' in model: '{}'", name, getModel().getName());
     try {
       getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
       getScriptEngine().eval(name + "()");
@@ -310,9 +312,24 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
           }
         }
       }
-    } else {
-      for (String key : getBindings(ENGINE_SCOPE).keySet()) {
+    }
+
+    if (getBindings(ENGINE_SCOPE).containsKey("global")) {
+      Map<String, Object> global = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("global");
+      for (String key : global.keySet()) {
         if (isVariable(key, methods)) {
+          if (global.get(key) instanceof Double) {
+            keys.put(key, Long.toString(Math.round((double) global.get(key))));
+          } else {
+            keys.put(key, global.get(key).toString());
+          }
+        }
+      }
+    }
+
+    if (keys.isEmpty()) {
+      for (String key : getBindings(ENGINE_SCOPE).keySet()) {
+        if (!"nashorn.global".equals(key) && !"global".equals(key) && isVariable(key, methods)) {
           Object value = getBindings(ENGINE_SCOPE).get(key);
           if (value instanceof Double) {
             keys.put(key, Long.toString(Math.round((double) value)));
@@ -337,7 +354,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   @SuppressWarnings("unchecked")
   public void setAttribute(String name, Object value) {
-    if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
+    if (getBindings(ENGINE_SCOPE).containsKey("global")) {
       Map<String, Object> attributes = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
       attributes.put(name, value);
     } else {

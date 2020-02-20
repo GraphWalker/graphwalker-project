@@ -46,6 +46,7 @@ import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -186,6 +187,50 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     List<Element> expectedPath = Arrays.<Element>asList(start.build(), edge1.build(), shared1.build(), shared2.build(), edge2.build(), stop.build());
+    List<Element> path = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertThat(expectedPath, is(path));
+  }
+
+  @Test
+  public void sharedStateWithUnaccessibleEdge() throws Exception {
+    SingletonRandomGenerator.setSeed(147945811993279L);
+
+    Vertex v1_A = new Vertex().setName("v1_A");
+    Vertex v2_A = new Vertex().setSharedState("MyState").setName("v2_A");
+    Edge e1_A = new Edge().setSourceVertex(v1_A).setTargetVertex(v2_A).setName("e1_A");
+    Edge e2_A = new Edge().setSourceVertex(v2_A).setTargetVertex(v1_A).addAction(new Action("global.available = true")).setName("e2_A");
+
+    Vertex v1_B = new Vertex().setSharedState("MyState").setName("v1_B");
+    Vertex v2_B = new Vertex().setName("v2_B");
+    Edge e1_B = new Edge().setSourceVertex(v1_B).setTargetVertex(v2_B).setGuard(new Guard("global.available == true"));
+
+    Model m1 = new Model().addEdge(e1_A).addEdge(e2_A).addAction(new Action("global.available = false")).setName("m1");;
+    Model m2 = new Model().addEdge(e1_B).setName("m2");
+
+    List<Context> contexts = new ArrayList<>();
+    contexts.add(new TestExecutionContext(m1, new RandomPath(new VertexCoverage(100))).setNextElement(v1_A));
+    contexts.add(new TestExecutionContext(m2, new RandomPath(new VertexCoverage(100))));
+
+    Machine machine = new SimpleMachine(contexts);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+
+    List<Element> expectedPath = Arrays.<Element>asList(
+      v1_A.build(),
+      e1_A.build(),
+      v2_A.build(),
+      v1_B.build(),
+      v2_A.build(),
+      e2_A.build(),
+      v1_A.build(),
+      e1_A.build(),
+      v2_A.build(),
+      v1_B.build(),
+      e1_B.build(),
+      v2_B.build());
+
     List<Element> path = machine.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
