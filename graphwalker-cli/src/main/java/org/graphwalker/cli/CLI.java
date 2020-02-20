@@ -38,6 +38,7 @@ import org.graphwalker.cli.commands.*;
 import org.graphwalker.cli.util.LoggerUtil;
 import org.graphwalker.cli.util.UnsupportedFileFormat;
 import org.graphwalker.core.event.EventType;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.MachineException;
 import org.graphwalker.core.machine.SimpleMachine;
@@ -452,10 +453,19 @@ public class CLI {
           System.out.println(Util.getStepAsJSON(machine, offline.verbose, offline.unvisited).toString());
         }
       });
+
+      if (offline.seed != 0) {
+        SingletonRandomGenerator.setSeed(offline.seed);
+      }
+
       executor.execute();
     } else if (!offline.gw3.isEmpty()) {
       //TODO Fix gw3. Should not be there
       List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw3));
+
+      if (offline.seed != 0) {
+        SingletonRandomGenerator.setSeed(offline.seed);
+      }
 
       if (offline.blocked) {
         org.graphwalker.io.common.Util.filterBlockedElements(contexts);
