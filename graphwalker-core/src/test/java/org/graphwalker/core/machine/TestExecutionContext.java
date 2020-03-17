@@ -12,10 +12,10 @@ package org.graphwalker.core.machine;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,15 +26,15 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.graphwalker.core.model.Model.RuntimeModel;
-
-import javax.script.Bindings;
-import javax.script.SimpleBindings;
-
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.model.Model;
+
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
+
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson
@@ -45,21 +45,17 @@ public final class TestExecutionContext extends ExecutionContext {
 
   public TestExecutionContext() {
     super();
-    getScriptEngine().put("global", bindings);
   }
 
   public TestExecutionContext(Model model) {
     super(model, new RandomPath(new EdgeCoverage(100)));
-    getScriptEngine().put("global", bindings);
   }
 
   public TestExecutionContext(Model model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
   }
 
   public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
   }
 }

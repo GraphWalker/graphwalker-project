@@ -12,10 +12,10 @@ package org.graphwalker.core.machine;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,9 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
+import org.graalvm.polyglot.Value;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.model.Action;
@@ -36,6 +34,9 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -45,7 +46,7 @@ public class AccessModelTest {
   @Test
   public void read() throws Exception {
     ExecutionContext context = createContext();
-    assertThat(round(context.getAttribute("x")), is(1));
+    assertThat(context.getAttribute("x").asInt(), is(1));
   }
 
   private int round(Object value) {
@@ -59,15 +60,15 @@ public class AccessModelTest {
   @Test
   public void write() throws Exception {
     ExecutionContext context = createContext();
-    context.setAttribute("y", 2);
-    assertThat((Integer) context.getAttribute("y"), is(2));
+    context.setAttribute("y", Value.asValue(2));
+    assertThat(context.getAttribute("y").asInt(), is(2));
   }
 
   private ExecutionContext createContext() {
     Model model = new Model();
     model.addEdge(new Edge()
-                      .setSourceVertex(new Vertex())
-                      .setTargetVertex(new Vertex()));
+      .setSourceVertex(new Vertex())
+      .setTargetVertex(new Vertex()));
     ExecutionContext context = new TestExecutionContext(model, new ShortestAllPaths(new VertexCoverage(100)));
     context.execute(new Action("x = 1;"));
     return context;

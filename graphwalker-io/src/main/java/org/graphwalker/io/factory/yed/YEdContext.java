@@ -41,16 +41,16 @@ public final class YEdContext extends ExecutionContext {
 
   public YEdContext() {
     super();
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public YEdContext(Model model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public YEdContext(Model.RuntimeModel model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 }

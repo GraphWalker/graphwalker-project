@@ -12,10 +12,10 @@ package org.graphwalker.core.machine;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graalvm.polyglot.Value;
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.Action;
@@ -34,10 +35,8 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.statistics.Profiler;
 
-import javax.script.ScriptEngine;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
@@ -51,7 +50,7 @@ public interface Context {
 
   Context setExecutionStatus(ExecutionStatus executionStatus);
 
-  ScriptEngine getScriptEngine();
+  org.graalvm.polyglot.Context getExecutionEnvironment();
 
   RuntimeModel getModel();
 
@@ -91,7 +90,9 @@ public interface Context {
 
   void execute(Action action);
 
-  void execute(String name);
+  void execute(Element name);
 
-  Map<String, String> getKeys();
+  Value getAttribute(String name);
+
+  void setAttribute(String name, Value value);
 }

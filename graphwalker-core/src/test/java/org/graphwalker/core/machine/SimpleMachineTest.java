@@ -12,10 +12,10 @@ package org.graphwalker.core.machine;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,19 +26,6 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.StopConditionException;
@@ -47,14 +34,18 @@ import org.graphwalker.core.generator.AStarPath;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.generator.ShortestAllPaths;
 import org.graphwalker.core.generator.SingletonRandomGenerator;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Execution;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson
@@ -121,8 +112,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
-        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
+      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
@@ -139,8 +130,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
     model.addAction(new Action("var i = 1;"));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
@@ -158,8 +149,8 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
-        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i == 0")));
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
+      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i == 0")));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
@@ -186,7 +177,7 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(start.build(), edge1.build(), shared1.build(), shared2.build(), edge2.build(), stop.build());
+    List<Element> expectedPath = Arrays.asList(start.build(), edge1.build(), shared1.build(), shared2.build(), edge2.build(), stop.build());
     List<Element> path = machine.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -205,7 +196,7 @@ public class SimpleMachineTest {
     Vertex v2_B = new Vertex().setName("v2_B");
     Edge e1_B = new Edge().setSourceVertex(v1_B).setTargetVertex(v2_B).setGuard(new Guard("global.available == true"));
 
-    Model m1 = new Model().addEdge(e1_A).addEdge(e2_A).addAction(new Action("global.available = false")).setName("m1");;
+    Model m1 = new Model().addEdge(e1_A).addEdge(e2_A).addAction(new Action("global.available = false")).setName("m1");
     Model m2 = new Model().addEdge(e1_B).setName("m2");
 
     List<Context> contexts = new ArrayList<>();
@@ -217,7 +208,7 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
 
-    List<Element> expectedPath = Arrays.<Element>asList(
+    List<Element> expectedPath = Arrays.asList(
       v1_A.build(),
       e1_A.build(),
       v2_A.build(),
@@ -275,9 +266,9 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(start.build(), e1.build(), v2.build(), e2.build()
-        , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
-        , e5.build(), v2.build(), e6.build(), v3b.build());
+    List<Element> expectedPath = Arrays.asList(start.build(), e1.build(), v2.build(), e2.build()
+      , v1.build(), e3.build(), v2.build(), e4.build(), v3a.build()
+      , e5.build(), v2.build(), e6.build(), v3b.build());
     List<Element> path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -295,7 +286,7 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build(), e2.build(), v1.build());
+    List<Element> expectedPath = Arrays.asList(e1.build(), v1.build(), e2.build(), v1.build());
     List<Element> path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -321,18 +312,18 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(
-        start.build(),
-        e1.build(),
-        v1.build(),
-        e2.build(),
-        v2.build(),
-        e4.build(),
-        v4.build(),
-        e6.build(),
-        v1.build(),
-        e3.build(),
-        v3.build());
+    List<Element> expectedPath = Arrays.asList(
+      start.build(),
+      e1.build(),
+      v1.build(),
+      e2.build(),
+      v2.build(),
+      e4.build(),
+      v4.build(),
+      e6.build(),
+      v1.build(),
+      e3.build(),
+      v3.build());
     List<Element> path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -358,24 +349,24 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(
-        start.build(),
-        e1.build(),
-        v2.build(),
-        e2.build(),
-        v1.build(),
-        e3.build(),
-        v2.build(),
-        e2.build(),
-        v1.build(),
-        e3.build(),
-        v2.build(),
-        e2.build(),
-        v1.build(),
-        e3.build(),
-        v2.build(),
-        e4.build(),
-        v3a.build());
+    List<Element> expectedPath = Arrays.asList(
+      start.build(),
+      e1.build(),
+      v2.build(),
+      e2.build(),
+      v1.build(),
+      e3.build(),
+      v2.build(),
+      e2.build(),
+      v1.build(),
+      e3.build(),
+      v2.build(),
+      e2.build(),
+      v1.build(),
+      e3.build(),
+      v2.build(),
+      e4.build(),
+      v3a.build());
     List<Element> path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -397,10 +388,10 @@ public class SimpleMachineTest {
       machine.getNextStep();
     }
     // We should start at "Second Start" and then walk the path to the end
-    List<Element> expectedPath = Arrays.<Element>asList(
-        secondStartVertex.build(),
-        e2.build(),
-        endVertex.build());
+    List<Element> expectedPath = Arrays.asList(
+      secondStartVertex.build(),
+      e2.build(),
+      endVertex.build());
     List<Element> path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -418,7 +409,7 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(e1.build(), v1.build());
+    List<Element> expectedPath = Arrays.asList(e1.build(), v1.build());
     List<Element> path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
@@ -429,13 +420,13 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1));
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+      .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1));
     model.addAction(new Action("context = 1;"));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
-    assertThat(machine.getCurrentContext().getKeys().containsKey("context"), is(true));
+    assertThat(machine.getCurrentContext().getAttribute("context"), is(1));
   }
 
   @Test
@@ -443,15 +434,15 @@ public class SimpleMachineTest {
     Vertex vertex1 = new Vertex();
     Vertex vertex2 = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
-        .addAction(new Action(" elements = [1,2,3]; value = 0; toString = function(){for(var i = 0;i<elements.length;i++){value+=elements[i]}return value};"));
+      .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2))
+      .addAction(new Action(" elements = [1,2,3]; value = 0; sum = function(){for(var i = 0;i<elements.length;i++){value+=elements[i]}return value};"));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    assertEquals((double) context.getScriptEngine().eval("toString()"), 6.0, 0.1);
+    assertEquals((Integer) context.getExecutionEnvironment().eval("js", "sum()").asInt(), Integer.valueOf(6));
   }
 
   @Test
@@ -492,7 +483,7 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    List<Element> expectedPath = Arrays.<Element>asList(
+    List<Element> expectedPath = Arrays.asList(
       v1.build(),
       e1.build(),
       v2.build()
