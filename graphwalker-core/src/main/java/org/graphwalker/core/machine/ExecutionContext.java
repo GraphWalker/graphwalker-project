@@ -38,6 +38,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
@@ -102,7 +103,7 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   }
 
   private ScriptEngine getEngineByName() {
-    ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
+    ScriptEngine engine = new ScriptEngineManager().getEngineByName("graal.js");
     if (null == engine) {
       throw new MachineException("Failed to create ScriptEngine");
     }
