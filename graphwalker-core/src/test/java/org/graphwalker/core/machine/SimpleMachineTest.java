@@ -118,11 +118,11 @@ public class SimpleMachineTest {
 
   @Test
   public void executeAction() throws Exception {
-    Vertex vertex1 = new Vertex();
+    Vertex vertex1 = new Vertex().addAction(new Action("var a = 1;"));
     Vertex vertex2 = new Vertex();
     Model model = new Model()
         .addEdge(new Edge().setSourceVertex(vertex1).setTargetVertex(vertex2).addAction(new Action("var i = 1;")))
-        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0")));
+        .addEdge(new Edge().setSourceVertex(vertex2).setTargetVertex(vertex1).setGuard(new Guard("i != 0 && a == 1")));
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);

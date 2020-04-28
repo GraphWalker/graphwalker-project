@@ -301,6 +301,7 @@ public class SimpleMachine extends MachineBase {
   }
 
   private void execute(RuntimeVertex vertex) {
+    execute(vertex.getActions());
     if (vertex.hasName()) {
       getCurrentContext().execute(vertex.getName());
     }

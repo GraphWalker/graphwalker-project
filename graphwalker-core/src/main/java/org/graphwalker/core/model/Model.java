@@ -79,6 +79,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       vertex.setName(runtimeVertex.getName());
       vertex.setSharedState(runtimeVertex.getSharedState());
       vertex.setRequirements(runtimeVertex.getRequirements());
+      vertex.setActions(runtimeVertex.getActions());
       vertex.setProperties(runtimeVertex.getProperties());
       this.vertices.add(vertex);
       cache.put(runtimeVertex, vertex);
