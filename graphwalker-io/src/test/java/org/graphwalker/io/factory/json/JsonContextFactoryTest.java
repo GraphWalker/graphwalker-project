@@ -166,9 +166,9 @@ public class JsonContextFactoryTest {
 
   @Test
   public void actions() throws IOException {
-    Vertex v_BrowserStopped = new Vertex().setName("v_BrowserStopped").setId("n4");
+    Vertex v_BrowserStopped = new Vertex().setName("v_BrowserStopped").setId("n4").addAction(new Action("num_of_books = 0"));
     Model model = new Model();
-    model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" num_of_books = 0;"))
+    model.addEdge(new Edge().setTargetVertex(v_BrowserStopped).setName("e_init").setId("e0").addAction(new Action(" init = true"))
                       .addAction(new Action(" MAX_BOOKS = 5;")));
 
     Context writeContext = new TestExecutionContext();
@@ -185,7 +185,9 @@ public class JsonContextFactoryTest {
     assertThat(readContexts.size(), is(1));
     Context readContext = readContexts.get(0);
 
+    assertThat(model.getActions().size(), is(readContext.getModel().getActions().size()));
     assertThat(model.getEdges().get(0).getActions().size(), is(readContext.getModel().getEdges().get(0).getActions().size()));
+    assertThat(model.getVertices().get(0).getActions().size(), is(readContext.getModel().getVertices().get(0).getActions().size()));
   }
 
   @Test
