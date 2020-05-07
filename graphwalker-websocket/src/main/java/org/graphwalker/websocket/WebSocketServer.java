@@ -42,6 +42,7 @@ import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.io.factory.yed.YEdContextFactory;
@@ -228,6 +229,25 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             obj.put("data", data);
             obj.put("result", "ok");
             response.put("data", data);
+            response.put("success", true);
+          } catch (Exception e) {
+            logger.error(e.getMessage());
+            sendIssue(socket, e.getMessage());
+          }
+        } else {
+          response.put("message", "The GraphWalker state machine is not initiated. Is a model loaded, and started?");
+        }
+        break;
+      }
+      case "SETDATA": {
+        response.put("command", "setData");
+        response.put("success", false);
+        Machine machine = machines.get(socket);
+        if (machine != null) {
+          JSONObject obj = new JSONObject();
+          try {
+            machine.getCurrentContext().execute(new Action(root.getString("action")));
+            obj.put("result", "ok");
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());

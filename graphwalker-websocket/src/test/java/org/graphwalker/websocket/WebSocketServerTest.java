@@ -30,12 +30,16 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+
+import netscape.javascript.JSObject;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.BeforeExecution;
 import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutionException;
 import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -52,9 +56,11 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
   private WebSocketClient client = new WebSocketClient();
   private WebSocketServer server;
   private int numberOfConnections = 0;
+  private int expectedValue = 54686327;
 
   @BeforeExecution
   public void startServer() throws Exception {
+    SingletonRandomGenerator.setSeed(222930684376058L);
     server = new WebSocketServer(8887);
     server.start();
   }
@@ -107,7 +113,15 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
   @Override
   public void e_GetData() {
-    client.getData();
+    String response =  client.getData();
+    JSONObject jsonObject = new JSONObject(response);
+    Assert.assertEquals(expectedValue, jsonObject.getInt("value"));
+  }
+
+  @Override
+  public void e_SetData() {
+    expectedValue = SingletonRandomGenerator.nextInt();
+    client.setData("value=" + expectedValue);
   }
 
   @Override
