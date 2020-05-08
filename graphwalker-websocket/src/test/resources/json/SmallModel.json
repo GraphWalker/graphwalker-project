@@ -5,6 +5,9 @@
       "name": "SmallModel",
       "generator": "random(edge_coverage(100))",
       "startElementId": "e0",
+      "actions": [
+        "value=54686327;"
+      ],
       "vertices": [
         {
           "name": "v_VerifySomeAction",
