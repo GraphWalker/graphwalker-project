@@ -182,6 +182,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
             response.put("modelId", machine.getCurrentContext().getModel().getId());
             response.put("elementId", machine.getCurrentContext().getCurrentElement().getId());
             response.put("name", machine.getCurrentContext().getCurrentElement().getName());
+            response.put("modelName", machine.getCurrentContext().getModel().getName());
             response.put("success", true);
           } catch (Exception e) {
             logger.error(e.getMessage());
