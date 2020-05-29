@@ -164,4 +164,18 @@ public class DotContextFactoryTest {
     assertThat(context.getModel().getVertices().size(), is(3));
     assertThat(context.getModel().getEdges().size(), is(9));
   }
+
+  @Test
+  public void doubleQuote() throws IOException {
+    List<Context> contexts = new DotContextFactory().create(Paths.get("dot/doubleQuote.dot"));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
+    Context context = contexts.get(0);
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(0));
+    assertThat(context.getModel().getVertices().get(0).getName(), is("v1"));
+    assertThat(context.getModel().getVertices().get(1).getName(), is("v2"));
+    assertThat(context.getModel().getVertices().get(0).getId(), is("n1"));
+    assertThat(context.getModel().getVertices().get(1).getId(), is("n2"));
+  }
 }

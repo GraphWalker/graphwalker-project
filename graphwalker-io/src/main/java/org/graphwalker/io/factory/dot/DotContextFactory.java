@@ -104,33 +104,6 @@ public final class DotContextFactory implements ContextFactory {
         .filter(edge -> edge.getSourceVertex() == null)
         .forEach(context::setNextElement);
       context.setModel(model.build());
-      /*
-      Edge startEdge = null;
-      for (Vertex vertex : listener.getVertices().values()) {
-        if (!"START".equalsIgnoreCase(vertex.getName())) {
-          model.addVertex(vertex);
-        }
-      }
-      for (Edge edge : listener.getEdges()) {
-        if (edge.getSourceVertex() != null && "START".equalsIgnoreCase(edge.getSourceVertex().getName())) {
-          edge.setSourceVertex(null);
-          startEdge = edge;
-        }
-        model.addEdge(edge);
-      }
-
-      model.setName(FilenameUtils.removeExtension(path.getFileName().toString()));
-      context.setModel(model.build());
-      if (null != startEdge) {
-        context.setNextElement(startEdge);
-      } else {
-        for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-          if (context.getModel().getOutEdges(vertex).isEmpty()) {
-            context.setNextElement(vertex);
-          }
-        }
-      }
-      */
     } catch (IOException e) {
       logger.error(e.getMessage());
       throw new ContextFactoryException("Could not read the file.");
