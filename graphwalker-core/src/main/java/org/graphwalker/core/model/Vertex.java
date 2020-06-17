@@ -28,7 +28,12 @@ package org.graphwalker.core.model;
 
 import org.graphwalker.core.common.Objects;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
+import static org.graphwalker.core.common.Objects.unmodifiableList;
 
 /**
  * <h1>Vertex</h1>
@@ -46,6 +51,7 @@ import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 public class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
 
   private String sharedState;
+  private List<Action> actions = new ArrayList<>();
 
   /**
    * Gets the name of the shared state.
@@ -80,6 +86,52 @@ public class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
   }
 
   /**
+   * Adds an action to the vertex, which represents a piece of code that will be executed
+   * each time the vertex is being traversed. The code is by default interpreted as javascript.
+   *
+   * @param action The action.
+   * @return The vertex.
+   */
+  public Vertex addAction(Action action) {
+    this.actions.add(action);
+    invalidateCache();
+    return this;
+  }
+
+  public Vertex addActions(Action... actions) {
+    return addActions(Arrays.asList(actions));
+  }
+
+  public Vertex addActions(List<Action> actions) {
+    this.actions.addAll(actions);
+    return this;
+  }
+
+  /**
+   * Adds a list of actions to the vertex, which represents a pieces of code that will be executed
+   * each time the vertex is being traversed. The code snippets is by default interpreted as javascript.
+   *
+   * @param actions The actions.
+   * @return The vertex.
+   * @see Vertex#addAction
+   */
+  public Vertex setActions(List<Action> actions) {
+    this.actions = new ArrayList<>(actions);
+    invalidateCache();
+    return this;
+  }
+
+  /**
+   * Gets the lists of actions of the vertex.
+   *
+   * @return The actions
+   * @see Vertex#setActions
+   */
+  public List<Action> getActions() {
+    return unmodifiableList(actions);
+  }
+
+  /**
    * Creates an immutable vertex from this vertex.
    *
    * @return An immutable vertex as a RuntimeVertex
@@ -101,7 +153,7 @@ public class Vertex extends CachedBuilder<Vertex, Vertex.RuntimeVertex> {
     private final String sharedState;
 
     private RuntimeVertex(Vertex vertex) {
-      super(vertex.getId(), vertex.getName(), vertex.getRequirements(), vertex.getProperties());
+      super(vertex.getId(), vertex.getName(), vertex.getActions(), vertex.getRequirements(), vertex.getProperties());
       this.sharedState = vertex.getSharedState();
     }
 

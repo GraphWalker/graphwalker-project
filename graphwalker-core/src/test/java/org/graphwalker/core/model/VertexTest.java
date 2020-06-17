@@ -37,6 +37,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+
 /**
  * @author Nils Olsson
  */
@@ -47,6 +49,8 @@ public class VertexTest {
     Vertex vertex = new Vertex()
         .setName("vertex")
         .setSharedState("MY_STATE")
+        .setActions(Arrays.asList(new Action("action2"), new Action("action3")))
+        .addAction(new Action("action1"))
         .addRequirement(new Requirement("REQ1"))
         .addRequirement(new Requirement("REQ2"));
     assertNotNull(vertex);
@@ -54,6 +58,8 @@ public class VertexTest {
     assertEquals(vertex.getName(), "vertex");
     assertNotNull(vertex.getSharedState());
     assertThat(vertex.getSharedState(), is("MY_STATE"));
+    assertNotNull(vertex.getActions());
+    assertThat(vertex.getActions().size(), is(3));
     assertNotNull(vertex.getRequirements());
     assertThat(vertex.getRequirements().size(), is(2));
     assertNotNull(vertex.build());
@@ -62,6 +68,17 @@ public class VertexTest {
     assertEquals(vertex.build().getName(), vertex.getName());
     assertNotNull(vertex.build().getRequirements());
     assertThat(vertex.build().getRequirements().size(), is(2));
+  }
+
+  @Test
+  public void vertexWithAction() throws Exception {
+    Vertex vertex = new Vertex();
+    assertFalse(vertex.build().hasActions());
+    assertTrue(vertex.build().getActions().isEmpty());
+    assertTrue(vertex.addAction(new Action("")).build().hasActions());
+    assertTrue(vertex.addActions(new Action("")).build().hasActions());
+    assertTrue(vertex.setActions(Arrays.asList(new Action(""))).build().hasActions());
+    assertFalse(vertex.build().getActions().isEmpty());
   }
 
   @Test

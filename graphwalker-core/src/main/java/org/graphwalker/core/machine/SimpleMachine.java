@@ -30,6 +30,7 @@ import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.model.Action;
+import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.slf4j.Logger;
@@ -288,7 +289,9 @@ public class SimpleMachine extends MachineBase {
 
   private void execute(RuntimeEdge edge) {
     execute(edge.getActions());
-    getCurrentContext().execute(edge);
+    if (edge.hasName()) {
+      getCurrentContext().execute(edge.getName());
+    }
   }
 
   private void execute(List<Action> actions) {
@@ -298,7 +301,10 @@ public class SimpleMachine extends MachineBase {
   }
 
   private void execute(RuntimeVertex vertex) {
-    getCurrentContext().execute(vertex);
+    execute(vertex.getActions());
+    if (vertex.hasName()) {
+      getCurrentContext().execute(vertex.getName());
+    }
   }
 
   private static class SharedStateTuple {
