@@ -78,12 +78,12 @@ public class ExampleTest extends ExecutionContext {
     Vertex start = new Vertex();
     Model model = new Model().addEdge(new Edge()
                                           .setName("edge1")
-                                          .setGuard(new Guard("isTrue()"))
+                                          .setGuard(new Guard("ExampleTest.isTrue()"))
                                           .setSourceVertex(start
                                                                .setName("vertex1"))
                                           .setTargetVertex(new Vertex()
                                                                .setName("vertex2"))
-                                          .addAction(new Action("myAction();")));
+                                          .addAction(new Action("ExampleTest.myAction()")));
     this.setModel(model.build());
     this.setPathGenerator(new RandomPath(new VertexCoverage(100)));
     setNextElement(start);
@@ -98,7 +98,7 @@ public class ExampleTest extends ExecutionContext {
     Vertex start = new Vertex();
     Model model = new Model().addEdge(new Edge()
                                           .setName("edge1")
-                                          .setGuard(new Guard("isFalse()"))
+                                          .setGuard(new Guard("ExampleTest.isFalse()"))
                                           .setSourceVertex(start
                                                                .setName("vertex1"))
                                           .setTargetVertex(new Vertex()
@@ -117,7 +117,7 @@ public class ExampleTest extends ExecutionContext {
     Vertex start = new Vertex();
     Model model = new Model().addEdge(new Edge()
                                           .setName("edge1")
-                                          .setGuard(new Guard("isTrue()"))
+                                          .setGuard(new Guard("ExampleTest.isTrue()"))
                                           .setSourceVertex(start
                                                                .setName("vertex3"))
                                           .setTargetVertex(new Vertex()

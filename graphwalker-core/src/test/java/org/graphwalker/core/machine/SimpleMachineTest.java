@@ -28,11 +28,7 @@ package org.graphwalker.core.machine;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -435,7 +431,8 @@ public class SimpleMachineTest {
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
-    assertThat(machine.getCurrentContext().getKeys().containsKey("context"), is(true));
+    //assertThat(machine.getCurrentContext().getKeys().containsKey("context"), is(true));
+    fail("Fix me");
   }
 
   @Test

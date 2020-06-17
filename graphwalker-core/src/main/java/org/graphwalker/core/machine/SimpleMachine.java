@@ -289,9 +289,6 @@ public class SimpleMachine extends MachineBase {
 
   private void execute(RuntimeEdge edge) {
     execute(edge.getActions());
-    if (edge.hasName()) {
-      getCurrentContext().execute(edge.getName());
-    }
   }
 
   private void execute(List<Action> actions) {
@@ -302,9 +299,6 @@ public class SimpleMachine extends MachineBase {
 
   private void execute(RuntimeVertex vertex) {
     execute(vertex.getActions());
-    if (vertex.hasName()) {
-      getCurrentContext().execute(vertex.getName());
-    }
   }
 
   private static class SharedStateTuple {

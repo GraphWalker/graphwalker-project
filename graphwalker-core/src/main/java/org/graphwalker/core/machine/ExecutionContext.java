@@ -73,7 +73,8 @@ public abstract class ExecutionContext implements Context {
   private final Map<Requirement, RequirementStatus> requirements = new HashMap<>();
 
   public ExecutionContext() {
-    executionEnvironment = org.graalvm.polyglot.Context.create("js");
+    executionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).build();
+    executionEnvironment.getBindings("js").putMember(getClass().getSimpleName(), this);
   }
 
   public ExecutionContext(Model model, PathGenerator pathGenerator) {
