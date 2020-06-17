@@ -431,8 +431,7 @@ public class SimpleMachineTest {
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex1);
     Machine machine = new SimpleMachine(context);
-    //assertThat(machine.getCurrentContext().getKeys().containsKey("context"), is(true));
-    fail("Fix me");
+    assertThat(context.getExecutionEnvironment().eval("js", "context").asInt(), is(1));
   }
 
   @Test
@@ -448,7 +447,7 @@ public class SimpleMachineTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
-    assertEquals((double) context.getScriptEngine().eval("toString()"), 6.0, 0.1);
+    assertEquals(context.getExecutionEnvironment().eval("js", "toString()").asDouble(), 6.0, 0.1);
   }
 
   @Test
