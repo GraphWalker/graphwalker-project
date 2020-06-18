@@ -134,30 +134,37 @@ public class SharedStateTest {
   }
 
   @Test
-  public void accessGlobalAttribute() throws Exception {
-    Vertex shared1 = new Vertex().setName("A");
-    Vertex shared2 = new Vertex().setName("B");
+  public void accessGlobalAttribute() {
+    Vertex v_A = new Vertex().setName("v_A");
+    Vertex v_C = new Vertex().setName("v_C");
     Model model1 = new Model()
       .setName("model_1")
-      .addVertex(shared1)
-      .addEdge(new Edge()
-        .setName("I")
-        .addAction(new Action("global.myVariable = true"))
-        .setSourceVertex(shared1)
-        .setTargetVertex(new Vertex()
-          .setName("H")
-          .setSharedState("SHARED1")))
+      .addVertex(v_A)
+      .addEdge(
+         new Edge()
+        .setName("e_B")
+        .setSourceVertex(v_A)
+        .setTargetVertex(
+           new Vertex()
+          .setName("v_B")
+          .setSharedState("SHARED_STATE_VERTEX")
+        )
+      )
       .addAction(new Action("global.myVariable = true"));
     Model model2 = new Model()
       .setName("model_2")
-      .addVertex(shared2.setSharedState("SHARED1"))
-      .addEdge(new Edge()
-        .setName("C")
-        .setGuard(new Guard("myVariable"))
-        .setSourceVertex(shared2)
-        .setTargetVertex(new Vertex()
-          .setName("D")));
-    Context context1 = new TestExecutionContext(model1, new RandomPath(new EdgeCoverage(100))).setNextElement(shared1);
+      .addVertex(v_C.setSharedState("SHARED_STATE_VERTEX"))
+      .addEdge(
+         new Edge()
+        .setName("e_D")
+        .setGuard(new Guard("global.myVariable"))
+        .setSourceVertex(v_C)
+        .setTargetVertex(
+           new Vertex()
+          .setName("v_D")
+        )
+      );
+    Context context1 = new TestExecutionContext(model1, new RandomPath(new EdgeCoverage(100))).setNextElement(v_A);
     Context context2 = new TestExecutionContext(model2, new RandomPath(new VertexCoverage(100)));
     Machine machine = new SimpleMachine(context1, context2);
     while (machine.hasNextStep()) {

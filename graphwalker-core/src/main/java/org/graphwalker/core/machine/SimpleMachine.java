@@ -30,7 +30,6 @@ import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.generator.NoPathFoundException;
 import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.slf4j.Logger;
@@ -58,6 +57,7 @@ public class SimpleMachine extends MachineBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(SimpleMachine.class);
 
+  private org.graalvm.polyglot.Context globalExecutionEnvironment;
   private Element lastElement;
 
   public SimpleMachine() {
@@ -74,7 +74,10 @@ public class SimpleMachine extends MachineBase {
   }
 
   private void executeInitActions(Collection<Context> contexts) {
+    globalExecutionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).build();
+
     for (Context context : contexts) {
+      context.setGlobalExecutionEnvironment(globalExecutionEnvironment);
       setCurrentContext(context);
       getCurrentContext().setProfiler(getProfiler());
       if (isNull(context.getModel())) {
@@ -275,30 +278,21 @@ public class SimpleMachine extends MachineBase {
   }
 
   private void execute(Element element) {
-    try {
-      if (element instanceof RuntimeVertex) {
-        execute((RuntimeVertex) element);
-      } else if (element instanceof RuntimeEdge) {
-        execute((RuntimeEdge) element);
-      }
-    } catch (MachineException e) {
-      LOG.error(e.getMessage());
-      getExceptionStrategy().handle(this, e);
-    }
-  }
-
-  private void execute(RuntimeEdge edge) {
-    execute(edge.getActions());
+     execute(element.getActions());
   }
 
   private void execute(List<Action> actions) {
     for (Action action : actions) {
-      getCurrentContext().execute(action);
+      execute(action);
     }
   }
 
-  private void execute(RuntimeVertex vertex) {
-    execute(vertex.getActions());
+  private void execute(Action action) {
+    if (action.getScript().matches("^global\\..*")) {
+      globalExecutionEnvironment.eval("js", action.getScript().replaceFirst("^global\\.", ""));
+    } else {
+      getCurrentContext().execute(action);
+    }
   }
 
   private static class SharedStateTuple {

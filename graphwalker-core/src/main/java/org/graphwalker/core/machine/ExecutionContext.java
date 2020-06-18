@@ -59,6 +59,7 @@ public abstract class ExecutionContext implements Context {
   private static final Logger LOG = LoggerFactory.getLogger(ExecutionContext.class);
 
   private org.graalvm.polyglot.Context executionEnvironment;
+  private org.graalvm.polyglot.Context globalExecutionEnvironment;
 
   private RuntimeModel model;
   private PathGenerator pathGenerator;
@@ -227,14 +228,22 @@ public abstract class ExecutionContext implements Context {
   public boolean isAvailable(RuntimeEdge edge) {
     if (edge.hasGuard()) {
       LOG.debug("Execute guard: '{}' in edge {}, in model: '{}'", edge.getGuard().getScript(), edge.getName(), getModel().getName());
-      return executionEnvironment.eval("js", edge.getGuard().getScript()).asBoolean();
+      if (edge.getGuard().getScript().matches("^global\\..*")) {
+        globalExecutionEnvironment.eval("js", edge.getGuard().getScript().replaceFirst("^global\\.", ""));
+      } else {
+        return executionEnvironment.eval("js", edge.getGuard().getScript()).asBoolean();
+      }
     }
     return true;
   }
 
   public void execute(Action action) {
     LOG.debug("Execute action: '{}' in model: '{}'", action.getScript(), getModel().getName());
-    executionEnvironment.eval("js", action.getScript());
+    if (action.getScript().matches("^global\\..*")) {
+      globalExecutionEnvironment.eval("js", action.getScript().replaceFirst("^global\\.", ""));
+    } else {
+      executionEnvironment.eval("js", action.getScript());
+    }
     LOG.debug("Data: '{}'", data());
   }
 
@@ -271,5 +280,10 @@ public abstract class ExecutionContext implements Context {
         .append(", ");
     }
     return data.toString();
+  }
+
+  @Override
+  public void setGlobalExecutionEnvironment(org.graalvm.polyglot.Context globalExecutionEnvironment) {
+    this.globalExecutionEnvironment = globalExecutionEnvironment;
   }
 }

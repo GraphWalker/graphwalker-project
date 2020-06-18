@@ -199,7 +199,7 @@ public class SimpleMachineTest {
 
     Vertex v1_B = new Vertex().setSharedState("MyState").setName("v1_B");
     Vertex v2_B = new Vertex().setName("v2_B");
-    Edge e1_B = new Edge().setSourceVertex(v1_B).setTargetVertex(v2_B).setGuard(new Guard("global.available == true"));
+    Edge e1_B = new Edge().setSourceVertex(v1_B).setTargetVertex(v2_B).setGuard(new Guard("global.available == true")).setName("e1_b");
 
     Model m1 = new Model().addEdge(e1_A).addEdge(e2_A).addAction(new Action("global.available = false")).setName("m1");;
     Model m2 = new Model().addEdge(e1_B).setName("m2");
@@ -227,9 +227,9 @@ public class SimpleMachineTest {
       e1_B.build(),
       v2_B.build());
 
-    List<Element> path = machine.getProfiler().getExecutionPath().stream()
-      .map(Execution::getElement).collect(Collectors.toList());
-    assertThat(expectedPath, is(path));
+    List<Element> path = machine.getProfiler().getExecutionPath().stream().map(Execution::getElement).collect(Collectors.toList());
+    //assertThat(expectedPath, is(path));
+    fail("Fix me");
   }
 
   @Test(expected = MachineException.class)

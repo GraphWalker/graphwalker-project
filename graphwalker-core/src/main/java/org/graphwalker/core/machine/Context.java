@@ -95,4 +95,6 @@ public interface Context {
   Value getAttribute(String name);
 
   void setAttribute(String name, Value value);
+
+  void setGlobalExecutionEnvironment(org.graalvm.polyglot.Context executionEnvironment);
 }

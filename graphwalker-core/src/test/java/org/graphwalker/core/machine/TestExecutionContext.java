@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graalvm.polyglot.Context;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.RandomPath;
