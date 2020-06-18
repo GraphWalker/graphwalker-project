@@ -47,10 +47,6 @@ public abstract class RuntimeBase implements Element {
     this(id, name, new ArrayList<>(), new HashSet<>());
   }
 
-  protected RuntimeBase(String id, String name, Set<Requirement> requirements, Map<String, Object> properties) {
-    this(id, name, new ArrayList<>(), requirements, properties);
-  }
-
   protected RuntimeBase(String id, String name, List<Action> actions, Set<Requirement> requirements) {
     this(id, name, actions, requirements, new HashMap<>());
   }

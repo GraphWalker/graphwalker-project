@@ -27,10 +27,10 @@
 <configuration>
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] [%X{trace}] %-5level %logger{20} - %msg%n</pattern>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{30}.%M - %msg%n</pattern>
     </encoder>
   </appender>
-  <root level="info">
+  <root level="debug">
     <appender-ref ref="CONSOLE"/>
   </root>
 </configuration>

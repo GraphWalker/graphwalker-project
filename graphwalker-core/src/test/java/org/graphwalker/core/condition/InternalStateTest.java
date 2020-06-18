@@ -12,10 +12,10 @@ package org.graphwalker.core.condition;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,11 +25,6 @@ package org.graphwalker.core.condition;
  * THE SOFTWARE.
  * #L%
  */
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
@@ -42,6 +37,11 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Nils Olsson
  */
@@ -51,8 +51,8 @@ public class InternalStateTest {
   public void testIsFulfilled() throws Exception {
     Vertex vertex = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
-        .addAction(new Action("var index = 0"));
+      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")))
+      .addAction(new Action("var index = 0"));
     StopCondition condition = new InternalState("index == 99");
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(vertex.build());
     Machine machine = new SimpleMachine(context);
@@ -63,27 +63,7 @@ public class InternalStateTest {
     }
     assertThat(condition.getFulfilment(), is(1.0));
     assertTrue(condition.isFulfilled());
-    assertThat(context.getKeys().get("index"), is("99"));
-  }
-
-  @Test
-  public void testIsFulfilledWithInitEdge() throws Exception {
-    Vertex start = new Vertex();
-    Vertex vertex = new Vertex();
-    Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
-    StopCondition condition = new InternalState("index == 99");
-    Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
-    Machine machine = new SimpleMachine(context);
-    while (machine.hasNextStep()) {
-      assertThat(condition.getFulfilment(), is(0.0));
-      assertFalse(condition.isFulfilled());
-      machine.getNextStep();
-    }
-    assertThat(condition.getFulfilment(), is(1.0));
-    assertTrue(condition.isFulfilled());
-    assertThat(context.getKeys().get("index"), is("99"));
+    assertThat(context.getAttribute("index").asInt(), is(99));
   }
 
   @Test(expected = StopConditionException.class)
@@ -91,8 +71,8 @@ public class InternalStateTest {
     Vertex start = new Vertex();
     Vertex vertex = new Vertex();
     Model model = new Model()
-        .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
-        .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
+      .addEdge(new Edge().setSourceVertex(start).setTargetVertex(vertex).addAction(new Action("index = 0")))
+      .addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex).addAction(new Action("index++")));
     StopCondition condition = new InternalState("var test = 'test'");
     Context context = new TestExecutionContext(model, new RandomPath(condition)).setCurrentElement(start.build());
     Machine machine = new SimpleMachine(context);
@@ -103,6 +83,6 @@ public class InternalStateTest {
     }
     assertThat(condition.getFulfilment(), is(1.0));
     assertTrue(condition.isFulfilled());
-    assertThat(context.getKeys().get("index"), is("99"));
+    assertThat(context.getAttribute("index"), is("99"));
   }
 }

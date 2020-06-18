@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 
@@ -57,6 +59,12 @@ public class JsonVertex {
       }
     }
 
+    if (actions != null) {
+      for (String action : actions) {
+        vertex.addAction(new Action(action));
+      }
+    }
+
     if (properties != null) {
       vertex.setProperties(properties);
     }
@@ -73,6 +81,13 @@ public class JsonVertex {
       requirements = new ArrayList<>();
       for (Requirement requirement : vertex.getRequirements()) {
         requirements.add(requirement.getKey());
+      }
+    }
+
+    if (vertex.hasActions()) {
+      actions = new ArrayList<>();
+      for (Action action : vertex.getActions()) {
+        actions.add(action.getScript());
       }
     }
 
@@ -102,6 +117,12 @@ public class JsonVertex {
     if (requirements != null) {
       for (String requirement : requirements) {
         vertex.addRequirement(new Requirement(requirement));
+      }
+    }
+
+    if (actions != null) {
+      for (String action : actions) {
+        vertex.addAction(new Action(action));
       }
     }
 

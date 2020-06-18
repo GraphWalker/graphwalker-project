@@ -43,16 +43,16 @@ public final class TestExecutionContext extends ExecutionContext {
 
   public TestExecutionContext() {
     super();
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public TestExecutionContext(Model model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public TestExecutionContext(RuntimeModel model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 }

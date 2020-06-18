@@ -41,16 +41,16 @@ public final class DotContext extends ExecutionContext {
 
   public DotContext() {
     super();
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public DotContext(Model model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public DotContext(Model.RuntimeModel model, PathGenerator generator) {
     super(model, generator);
-    getScriptEngine().put("global", bindings);
+    this.getExecutionEnvironment().put("global", bindings);
   }
 }

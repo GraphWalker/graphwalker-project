@@ -26,6 +26,7 @@ package org.graphwalker.core.condition;
  * #L%
  */
 
+import org.graalvm.polyglot.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,17 +47,11 @@ public class InternalState extends StopConditionBase {
 
   @Override
   public boolean isFulfilled() {
-    try {
-      Object value = getContext().getScriptEngine().eval(script);
-      if (value instanceof Boolean) {
-        return (Boolean) value;
-      } else {
-        throw new StopConditionException("Wrong type of expression");
-      }
-    } catch (ScriptException e) {
-      LOG.error(e.getMessage());
-      return false;
+    Value value = getContext().getExecutionEnvironment().eval("js", script);
+    if (value.isBoolean()) {
+      return value.asBoolean();
     }
+    throw new StopConditionException("Wrong type of expression");
   }
 
   @Override

@@ -20,6 +20,7 @@ public class DotModelListener extends DOTBaseListener {
   }
 
   private Vertex createVertex(String id, String label) {
+    id = id.replaceAll("^\"|\"$", "");
     if ("Start".equalsIgnoreCase(id) || "Start".equalsIgnoreCase(label)) {
       vertices.put(id, null);
       return null;

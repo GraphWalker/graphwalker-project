@@ -50,12 +50,14 @@ public class WebSocketClient {
     START,
     GETNEXT,
     GETDATA,
-    VISITEDELEMENT
+    SETDATA,
+    VISITEDELEMENT;
   }
 
   public boolean connected = false;
   public RX_STATE rxState = RX_STATE.NONE;
   public boolean cmd = false;
+  public String response = "";
   public boolean hasNext = false;
   private int port = 8887;
   private String host = "localhost";
@@ -142,6 +144,17 @@ public class WebSocketClient {
               break;
             case "GETDATA":
               rxState = RX_STATE.GETDATA;
+              if (root.getBoolean("success")) {
+                cmd = true;
+              }
+              if (root.has("data")) {
+                response = root.getJSONObject("data").toString();
+              } else {
+                response = "";
+              }
+              break;
+            case "SETDATA":
+              rxState = RX_STATE.SETDATA;
               if (root.getBoolean("success")) {
                 cmd = true;
               }
@@ -267,9 +280,16 @@ public class WebSocketClient {
   /**
    * Asks the machine to return all data from the current model context.
    */
-  public void getData() {
+  public String getData() {
     logger.debug("Get data");
     client.wsc.send("{ command: \"getData\"}");
     wait(client, RX_STATE.GETDATA);
+    return client.response;
+  }
+
+  public void setData(String action) {
+    logger.debug("Set data as an action: " + action);
+    client.wsc.send("{ command: \"setData\", action: \"" + action + "\"}");
+    wait(client, RX_STATE.SETDATA);
   }
 }
