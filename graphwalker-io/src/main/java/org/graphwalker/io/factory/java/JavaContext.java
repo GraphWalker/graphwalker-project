@@ -41,16 +41,13 @@ public final class JavaContext extends ExecutionContext {
 
   public JavaContext() {
     super();
-    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public JavaContext(Model model, PathGenerator generator) {
     super(model, generator);
-    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public JavaContext(Model.RuntimeModel model, PathGenerator generator) {
     super(model, generator);
-    this.getExecutionEnvironment().put("global", bindings);
   }
 }

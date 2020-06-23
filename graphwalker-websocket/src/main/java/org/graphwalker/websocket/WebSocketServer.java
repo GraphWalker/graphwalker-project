@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import org.apache.commons.io.IOUtils;
+import org.graalvm.polyglot.Value;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -222,9 +223,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         if (machine != null) {
           JSONObject obj = new JSONObject();
           try {
+            Value bindings = machine.getCurrentContext().getExecutionEnvironment().getBindings("js");
             JSONObject data = new JSONObject();
-            for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
-              data.put(k.getKey(), k.getValue());
+            for (String key : bindings. getMemberKeys() ) {
+              data.put(key, bindings.getMember(key));
             }
             obj.put("modelId", machine.getCurrentContext().getModel().getId());
             obj.put("data", data);
@@ -393,9 +395,10 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
           jsonObject.put("totalCount", machine.getProfiler().getTotalVisitCount());
           jsonObject.put("stopConditionFulfillment", machine.getCurrentContext().getPathGenerator().getStopCondition().getFulfilment());
 
+          Value bindings = machine.getCurrentContext().getExecutionEnvironment().getBindings("js");
           JSONObject data = new JSONObject();
-          for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
-            data.put(k.getKey(), k.getValue());
+          for (String key : bindings.getMemberKeys()) {
+            data.put(key, bindings.getMember(key));
           }
           jsonObject.put("data", data);
 

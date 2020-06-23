@@ -41,16 +41,13 @@ public final class JsonContext extends ExecutionContext {
 
   public JsonContext() {
     super();
-    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public JsonContext(Model model, PathGenerator generator) {
     super(model, generator);
-    this.getExecutionEnvironment().put("global", bindings);
   }
 
   public JsonContext(Model.RuntimeModel model, PathGenerator generator) {
     super(model, generator);
-    this.getExecutionEnvironment().put("global", bindings);
   }
 }

@@ -28,6 +28,7 @@ package org.graphwalker.restful;
 
 import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
+import org.graalvm.polyglot.Value;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.model.Action;
@@ -63,10 +64,11 @@ public abstract class Util {
     if (verbose) {
       object.put("currentElementID", machine.getCurrentContext().getCurrentElement().getId());
 
+      Value bindings = machine.getCurrentContext().getExecutionEnvironment().getBindings("js");
       JSONArray jsonKeys = new JSONArray();
-      for (Map.Entry<String, String> key : machine.getCurrentContext().getKeys().entrySet()) {
+      for (String key : bindings. getMemberKeys() ) {
         JSONObject jsonKey = new JSONObject();
-        jsonKey.put(key.getKey(), key.getValue());
+        jsonKey.put(key, bindings.getMember(key));
         jsonKeys.put(jsonKey);
       }
       object.put("data", jsonKeys);
