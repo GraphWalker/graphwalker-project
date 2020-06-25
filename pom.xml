@@ -312,6 +312,12 @@
         <artifactId>javassist</artifactId>
         <version>3.25.0-GA</version>
       </dependency>
+      <dependency>
+        <groupId>io.github.classgraph</groupId>
+        <artifactId>classgraph</artifactId>
+        <scope>test</scope>
+        <version>4.8.87</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
