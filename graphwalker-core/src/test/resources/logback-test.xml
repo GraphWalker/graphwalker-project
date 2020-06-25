@@ -30,7 +30,7 @@
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{30}.%M - %msg%n</pattern>
     </encoder>
   </appender>
-  <root level="debug">
+  <root level="error">
     <appender-ref ref="CONSOLE"/>
   </root>
 </configuration>
