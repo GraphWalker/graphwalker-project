@@ -1,7 +1,7 @@
 language: java
 dist: trusty
 jdk:
-- oraclejdk8
+- openjdk11
 cache:
   directories:
   - "$HOME/.m2"
@@ -30,7 +30,7 @@ install:
 - sudo apt-get update -qq
 script:
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"];
-  then mvn clean deploy --settings deploy.xml; else mvn clean package; fi fi
+  then mvn clean deploy --settings deploy.xml; else mvn --quiet clean package; fi fi
 after_success:
 - codecov
 before_deploy:
