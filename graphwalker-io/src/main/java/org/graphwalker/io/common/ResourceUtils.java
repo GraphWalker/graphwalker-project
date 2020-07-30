@@ -49,7 +49,7 @@ public final class ResourceUtils {
   }
 
   public static File getResourceAsFile(final String filename) {
-    File file = createFile(filename);
+    File file = new File(filename);
     if (file != null && file.exists()) {
       return file;
     } else {
@@ -69,7 +69,7 @@ public final class ResourceUtils {
   }
 
   public static InputStream getResourceAsStream(final String filename) {
-    File file = createFile(filename);
+    File file = new File(filename);
     if (file != null && file.exists()) {
       try {
         return new FileInputStream(file);
@@ -89,20 +89,8 @@ public final class ResourceUtils {
     }
   }
 
-  private static String[] splitPath(String filename) {
-    return filename.split("[\\\\/]");
-  }
-
-  private static File createFile(String filename) {
-    File createdFile = null;
-    for (String part : splitPath(filename)) {
-      createdFile = new File(createdFile, part);
-    }
-    return createdFile;
-  }
-
   public static boolean isDirectory(Path path) {
-    File file = createFile(path.toString());
+    File file = path.toFile();
     return (file != null && file.isDirectory());
   }
 }
