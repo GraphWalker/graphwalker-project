@@ -12,10 +12,10 @@ package org.graphwalker.core.machine;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.graalvm.polyglot.Value;
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.model.*;
@@ -33,7 +34,6 @@ import org.graphwalker.core.statistics.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.script.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -54,12 +54,12 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
  *
  * @author Nils Olsson
  */
-public abstract class ExecutionContext extends SimpleScriptContext implements Context {
+public abstract class ExecutionContext implements Context {
 
   private static final Logger LOG = LoggerFactory.getLogger(ExecutionContext.class);
 
-  private final static String DEFAULT_SCRIPT_LANGUAGE = "JavaScript";
-  private ScriptEngine scriptEngine;
+  private org.graalvm.polyglot.Context executionEnvironment;
+  private org.graalvm.polyglot.Context globalExecutionEnvironment;
 
   private RuntimeModel model;
   private PathGenerator pathGenerator;
@@ -74,39 +74,8 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
   private final Map<Requirement, RequirementStatus> requirements = new HashMap<>();
 
   public ExecutionContext() {
-    ScriptEngine engine = getEngineByName();
-    engine.setContext(this);
-    String script = "";
-    Compilable compiler = (Compilable) engine;
-    for (Method method : getClass().getMethods()) {
-      String arguments = "";
-      for (int i = 0; i < method.getParameterTypes().length; i++) {
-        if (i > 0) {
-          arguments += ",";
-        }
-        arguments += Character.toChars(65 + i)[0];
-      }
-      script += "function " + method.getName() + "(" + arguments;
-      script += ") { return impl." + method.getName() + "(" + arguments + ");};";
-    }
-    try {
-      CompiledScript compiledScript = compiler.compile(script);
-      Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-      bindings.put("impl", this);
-      compiledScript.eval(bindings);
-      scriptEngine = compiledScript.getEngine();
-    } catch (ScriptException e) {
-      LOG.error(e.getMessage());
-      throw new RuntimeException(e);
-    }
-  }
-
-  private ScriptEngine getEngineByName() {
-    ScriptEngine engine = new ScriptEngineManager().getEngineByName(DEFAULT_SCRIPT_LANGUAGE);
-    if (null == engine) {
-      throw new MachineException("Failed to create ScriptEngine");
-    }
-    return engine;
+    executionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).build();
+    executionEnvironment.getBindings("js").putMember(getClass().getSimpleName(), this);
   }
 
   public ExecutionContext(Model model, PathGenerator pathGenerator) {
@@ -119,8 +88,8 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
     setPathGenerator(pathGenerator);
   }
 
-  public ScriptEngine getScriptEngine() {
-    return scriptEngine;
+  public org.graalvm.polyglot.Context getExecutionEnvironment() {
+    return executionEnvironment;
   }
 
   public RuntimeModel getModel() {
@@ -258,13 +227,11 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   public boolean isAvailable(RuntimeEdge edge) {
     if (edge.hasGuard()) {
-      LOG.debug("Execute guard: '{}' in model: '{}'", edge.getGuard().getScript(), getModel().getName());
-      try {
-        LOG.debug("Guard: '{}' is: '{}'", edge.getGuard().getScript(), getScriptEngine().eval(edge.getGuard().getScript()));
-        return (Boolean) getScriptEngine().eval(edge.getGuard().getScript());
-      } catch (ScriptException e) {
-        LOG.error(e.getMessage());
-        throw new MachineException(this, e);
+      LOG.debug("Execute guard: '{}' in edge {}, in model: '{}'", edge.getGuard().getScript(), edge.getName(), getModel().getName());
+      if (edge.getGuard().getScript().matches("^global\\..*")) {
+        return globalExecutionEnvironment.eval("js", edge.getGuard().getScript().replaceFirst("^global\\.", "")).asBoolean();
+      } else {
+        return executionEnvironment.eval("js", edge.getGuard().getScript()).asBoolean();
       }
     }
     return true;
@@ -272,97 +239,52 @@ public abstract class ExecutionContext extends SimpleScriptContext implements Co
 
   public void execute(Action action) {
     LOG.debug("Execute action: '{}' in model: '{}'", action.getScript(), getModel().getName());
-    try {
-      getScriptEngine().eval(action.getScript());
-    } catch (ScriptException e) {
-      LOG.error(e.getMessage());
-      throw new MachineException(this, e);
+    if (action.getScript().matches("^global\\..*")) {
+      globalExecutionEnvironment.eval("js", action.getScript().replaceFirst("^global\\.", ""));
+    } else {
+      executionEnvironment.eval("js", action.getScript());
     }
-    LOG.debug("Data: '{}'", getKeys().toString());
+    LOG.debug("Data: '{}'", data());
   }
 
-  public void execute(String name) {
-    LOG.debug("Execute method: '{}' in model: '{}'", name, getModel().getName());
+  public void execute(Element element) {
+    if (!element.hasName()) {
+      return;
+    }
+    LOG.debug("Execute method: '{}' in model: '{}'", element.getName(), getModel().getName());
     try {
-      getClass().getMethod(name); // provoke a NoSuchMethodException exception if the method doesn't exist
-      getScriptEngine().eval(name + "()");
+      Method method = getClass().getMethod(element.getName());
+      method.invoke(this);
     } catch (NoSuchMethodException e) {
       // ignore, method is not defined in the execution context
     } catch (Throwable t) {
+      executionStatus = ExecutionStatus.FAILED;
       LOG.error(t.getMessage());
       throw new MachineException(this, t);
     }
   }
 
-  @SuppressWarnings("unchecked")
-  public Map<String, String> getKeys() {
-    Map<String, String> keys = new HashMap<>();
-    List<String> methods = new ArrayList<>();
-    for (Method method : getClass().getMethods()) {
-      methods.add(method.getName());
-    }
-    if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
-      Map<String, Object> global = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
-      for (String key : global.keySet()) {
-        if (isVariable(key, methods)) {
-          if (global.get(key) instanceof Double) {
-            keys.put(key, Long.toString(Math.round((double) global.get(key))));
-          } else {
-            keys.put(key, global.get(key).toString());
-          }
-        }
-      }
-    }
-
-    if (getBindings(ENGINE_SCOPE).containsKey("global")) {
-      Map<String, Object> global = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("global");
-      for (String key : global.keySet()) {
-        if (isVariable(key, methods)) {
-          if (global.get(key) instanceof Double) {
-            keys.put(key, Long.toString(Math.round((double) global.get(key))));
-          } else {
-            keys.put(key, global.get(key).toString());
-          }
-        }
-      }
-    }
-
-    if (keys.isEmpty()) {
-      for (String key : getBindings(ENGINE_SCOPE).keySet()) {
-        if (!"nashorn.global".equals(key) && !"global".equals(key) && isVariable(key, methods)) {
-          Object value = getBindings(ENGINE_SCOPE).get(key);
-          if (value instanceof Double) {
-            keys.put(key, Long.toString(Math.round((double) value)));
-          } else {
-            keys.put(key, value.toString());
-          }
-        }
-      }
-    }
-    return keys;
+  public Value getAttribute(String name) {
+    return executionEnvironment.getBindings("js").getMember(name);
   }
 
-  @SuppressWarnings("unchecked")
-  public Object getAttribute(String name) {
-    if (getBindings(ENGINE_SCOPE).containsKey("nashorn.global")) {
-      Map<String, Object> attributes = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
-      return attributes.get(name);
-    } else {
-      return super.getAttribute(name);
-    }
+  public void setAttribute(String name, Value value) {
+    executionEnvironment.getBindings("js").putMember(name, value);
   }
 
-  @SuppressWarnings("unchecked")
-  public void setAttribute(String name, Object value) {
-    if (getBindings(ENGINE_SCOPE).containsKey("global")) {
-      Map<String, Object> attributes = (Map<String, Object>) getBindings(ENGINE_SCOPE).get("nashorn.global");
-      attributes.put(name, value);
-    } else {
-      super.setAttribute(name, value, ENGINE_SCOPE);
+  public String data() {
+    StringBuilder data = new StringBuilder();
+    for (String member : executionEnvironment.getBindings("js").getMemberKeys()) {
+      data.append(member)
+        .append(": ")
+        .append(executionEnvironment.getBindings("js").getMember(member))
+        .append(", ");
     }
+    return data.toString();
   }
 
-  private boolean isVariable(String key, List<String> methods) {
-    return !"impl".equals(key) && !methods.contains(key) && !"print".equals(key) && !"println".equals(key);
+  @Override
+  public void setGlobalExecutionEnvironment(org.graalvm.polyglot.Context globalExecutionEnvironment) {
+    this.globalExecutionEnvironment = globalExecutionEnvironment;
   }
 }

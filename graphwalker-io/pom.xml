@@ -53,6 +53,10 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -91,6 +95,7 @@
                 <inherited>true</inherited>
                 <configuration>
                     <schemaDirectory>src/main/xsd</schemaDirectory>
+                    <javaSource>1.8</javaSource>
                 </configuration>
             </plugin>
         </plugins>

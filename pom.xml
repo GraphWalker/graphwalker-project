@@ -145,14 +145,34 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.graalvm.sdk</groupId>
+        <artifactId>graal-sdk</artifactId>
+        <version>20.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.js</groupId>
+        <artifactId>js</artifactId>
+        <version>20.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.js</groupId>
+        <artifactId>js-scriptengine</artifactId>
+        <version>20.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.graalvm.truffle</groupId>
+        <artifactId>truffle-api</artifactId>
+        <version>20.1.0</version>
+      </dependency>
+      <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.6</version>
+        <version>2.7</version>
       </dependency>
       <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
-        <version>20180813</version>
+        <version>20200518</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -167,22 +187,22 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.13-rc-1</version>
+        <version>4.13</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlbeans</groupId>
         <artifactId>xmlbeans</artifactId>
-        <version>3.0.2</version>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-runtime</artifactId>
-        <version>4.7.2</version>
+        <version>4.8-1</version>
       </dependency>
       <dependency>
         <groupId>org.reflections</groupId>
         <artifactId>reflections</artifactId>
-        <version>0.9.11</version>
+        <version>0.9.12</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.javaparser</groupId>
@@ -192,12 +212,12 @@
       <dependency>
         <groupId>com.beust</groupId>
         <artifactId>jcommander</artifactId>
-        <version>1.72</version>
+        <version>1.78</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.8.1</version>
+        <version>3.10</version>
       </dependency>
       <dependency>
         <groupId>com.sun.jersey</groupId>
@@ -207,43 +227,43 @@
       <dependency>
         <groupId>org.java-websocket</groupId>
         <artifactId>Java-WebSocket</artifactId>
-        <version>1.4.0</version>
+        <version>1.5.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>2.8.5</version>
+        <version>2.8.6</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>27.1-jre</version>
+        <version>29.0-jre</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>2.3.1.RELEASE</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-tomcat</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>2.3.1.RELEASE</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-actuator</artifactId>
-        <version>2.1.3.RELEASE</version>
+        <version>2.3.1.RELEASE</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5.7</version>
+        <version>4.5.12</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.xmlunit</groupId>
         <artifactId>xmlunit-matchers</artifactId>
-        <version>2.6.2</version>
+        <version>2.7.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -255,12 +275,12 @@
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-core</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-plugin-api</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.3</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
@@ -271,6 +291,32 @@
         <groupId>org.skyscreamer</groupId>
         <artifactId>jsonassert</artifactId>
         <version>1.5.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-core</artifactId>
+        <version>2.3.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>2.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.25.0-GA</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.classgraph</groupId>
+        <artifactId>classgraph</artifactId>
+        <scope>test</scope>
+        <version>4.8.87</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -389,7 +435,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.2</version>
+        <version>0.8.5</version>
         <executions>
           <execution>
             <goals>
@@ -408,7 +454,7 @@
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
-        <version>2.2.6</version>
+        <version>4.0.0</version>
         <executions>
           <execution>
             <goals>
@@ -436,37 +482,37 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.0.0-M1</version>
+          <version>3.0.0-M5</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>3.0.0-M2</version>
+          <version>3.0.0-M3</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
+          <version>3.9.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -476,7 +522,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-war-plugin</artifactId>
-          <version>3.2.2</version>
+          <version>3.3.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -496,12 +542,12 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>1.16</version>
+          <version>1.20</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -511,12 +557,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-archetype-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.2</version>
         </plugin>
         <plugin>
           <groupId>org.antlr</groupId>
           <artifactId>antlr4-maven-plugin</artifactId>
-          <version>4.7.1</version>
+          <version>4.8-1</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -531,7 +577,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.2.4</version>
         </plugin>
       </plugins>
     </pluginManagement>

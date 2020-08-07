@@ -221,9 +221,7 @@ public class CLI {
     } catch (ParameterException e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage() + System.lineSeparator());
-      if (jc.getParsedCommand() != null) {
-        jc.usage(jc.getParsedCommand());
-      }
+      jc.usage();
     } catch (Exception e) {
       System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
       System.err.println(e.getMessage() + System.lineSeparator());

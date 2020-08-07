@@ -37,6 +37,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import org.graalvm.polyglot.Value;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.statistics.Execution;
@@ -159,9 +160,10 @@ public class Restful {
     logger.debug("Received getData");
     JSONObject resultJson = new JSONObject();
     try {
+      Value bindings = machine.getCurrentContext().getExecutionEnvironment().getBindings("js");
       JSONObject data = new JSONObject();
-      for (Map.Entry<String, String> k : machine.getCurrentContext().getKeys().entrySet()) {
-        data.put(k.getKey(), k.getValue());
+      for (String key : bindings.getMemberKeys()) {
+        data.put(key, bindings.getMember(key));
       }
       resultJson.put("data", data);
       resultJson.put("result", "ok");

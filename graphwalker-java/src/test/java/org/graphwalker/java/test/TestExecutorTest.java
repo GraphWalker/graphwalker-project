@@ -38,11 +38,12 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
+import io.github.classgraph.ClassGraph;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,7 +151,7 @@ public class TestExecutorTest {
     List<URL> urls = new ArrayList<>();
     urls.add(new File(new File("."), "target/test-classes").toURI().toURL());
     urls.add(new File(new File("."), "target/classes").toURI().toURL());
-    urls.addAll(Arrays.asList(((URLClassLoader) getClass().getClassLoader()).getURLs()));
+    urls.addAll(new ClassGraph().getClasspathURLs());
     Configuration configuration = new Configuration();
     configuration.addInclude("*MyOtherTest*");
     Reflector reflector = new Reflector(configuration, new IsolatedClassLoader(urls.toArray(new URL[urls.size()])));
