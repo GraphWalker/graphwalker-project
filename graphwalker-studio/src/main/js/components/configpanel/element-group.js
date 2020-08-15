@@ -6,20 +6,20 @@ import Group from "./group";
 
 class ElementGroup extends Component {
   render() {
-    const { id, name, sharedState, guard, weight, actions, requirements, updateElement, isStartElement, setStartElement, disabled } = this.props;
+    const { id, name, sharedState, guard, weight, actions, requirements, updateElement, isStartElement, setStartElement, isVertex, disabled } = this.props;
     return (
       <Group name="Element" isOpen={true}>
         <FormGroup label="Name" disabled={disabled}>
           <InputGroup disabled={disabled} value={name} onChange={({ target: { value }}) => updateElement('name', value)}/>
         </FormGroup>
-        <FormGroup label="Shared Name" disabled={disabled}>
-          <InputGroup disabled={disabled} value={sharedState} onChange={({ target: { value }}) => updateElement('sharedState', value)}/>
+        <FormGroup label="Shared Name" disabled={disabled || !isVertex}>
+          <InputGroup disabled={disabled || !isVertex} value={sharedState} onChange={({ target: { value }}) => updateElement('sharedState', value)}/>
         </FormGroup>
-        <FormGroup label="Guard" disabled={disabled}>
-          <InputGroup disabled={disabled} value={guard} onChange={({ target: { value }}) => updateElement('guard', value)}/>
+        <FormGroup label="Guard" disabled={disabled || isVertex}>
+          <InputGroup disabled={disabled || isVertex} value={guard} onChange={({ target: { value }}) => updateElement('guard', value)}/>
         </FormGroup>
-        <FormGroup label="Weight" disabled={disabled}>
-          <InputGroup disabled={disabled} value={weight} onChange={({ target: { value }}) => updateElement('weight', value)}/>
+        <FormGroup label="Weight" disabled={disabled || isVertex}>
+          <InputGroup disabled={disabled || isVertex} value={weight} onChange={({ target: { value }}) => updateElement('weight', value)}/>
         </FormGroup>
         <FormGroup label="Actions" disabled={disabled}>
           <div className="bp3-input-group">
@@ -40,6 +40,8 @@ class ElementGroup extends Component {
 const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId }}) => {
   const model = models[selectedModelIndex];
   const elements = [...model.vertices, ...model.edges];
+  const isVertex = model.vertices.filter( e => e.id == selectedElementId).length == 1;
+  console.log(isVertex);
   const element = elements.filter(element => element.id === selectedElementId)[0] || {};
   const { id = "", name = "", sharedState = "", guard = "", weight = "", actions = [], requirements = [] } = element;
   return {
@@ -51,6 +53,7 @@ const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId
     actions,
     requirements,
     isStartElement: model.startElementId === selectedElementId,
+    isVertex,
     disabled: selectedElementId === null
   }
 };
