@@ -41,7 +41,6 @@ const mapStateToProps = ({ test: { models, selectedModelIndex, selectedElementId
   const model = models[selectedModelIndex];
   const elements = [...model.vertices, ...model.edges];
   const isVertex = model.vertices.filter( e => e.id == selectedElementId).length == 1;
-  console.log(isVertex);
   const element = elements.filter(element => element.id === selectedElementId)[0] || {};
   const { id = "", name = "", sharedState = "", guard = "", weight = "", actions = [], requirements = [] } = element;
   return {
