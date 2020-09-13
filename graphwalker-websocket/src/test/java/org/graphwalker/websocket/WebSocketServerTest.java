@@ -31,7 +31,6 @@ import static org.hamcrest.CoreMatchers.is;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import netscape.javascript.JSObject;
 import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.BeforeExecution;
