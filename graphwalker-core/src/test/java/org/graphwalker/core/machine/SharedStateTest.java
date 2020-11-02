@@ -29,9 +29,12 @@ package org.graphwalker.core.machine;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.model.*;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -135,11 +138,10 @@ public class SharedStateTest {
 
   @Test
   public void accessGlobalAttribute() {
+    // Model 1 has 2 vertices and 1 edge and a global attribute which is gonna be used by Model 2
     Vertex v_A = new Vertex().setName("v_A");
-    Vertex v_C = new Vertex().setName("v_C");
     Model model1 = new Model()
       .setName("model_1")
-      .addVertex(v_A)
       .addEdge(
          new Edge()
         .setName("e_B")
@@ -150,25 +152,50 @@ public class SharedStateTest {
           .setSharedState("SHARED_STATE_VERTEX")
         )
       )
-      .addAction(new Action("global.myVariable = true"));
+      .addAction(new Action("global.myVariable = false; global.myVariable_2 = false;"));
+
+    // Model 2 has 2 vertices and 2 edges. One edge, e_C performs an action which has to execute in order
+    // to fulfill the condition for edge e_D
+    Vertex v_C = new Vertex().setName("v_C").setSharedState("SHARED_STATE_VERTEX");
     Model model2 = new Model()
       .setName("model_2")
-      .addVertex(v_C.setSharedState("SHARED_STATE_VERTEX"))
+      .addEdge(
+        new Edge()
+          .setName("e_C")
+          .setGuard(new Guard("global.myVariable == false"))
+          .addAction(new Action("global.myVariable = true"))
+          .setSourceVertex(v_C)
+          .setTargetVertex(v_C)
+      )
       .addEdge(
          new Edge()
         .setName("e_D")
-        .setGuard(new Guard("global.myVariable"))
+        .setGuard(new Guard("global.myVariable == true"))
         .setSourceVertex(v_C)
         .setTargetVertex(
            new Vertex()
           .setName("v_D")
         )
       );
+
+    SingletonRandomGenerator.setSeed(9966424442217L);
     Context context1 = new TestExecutionContext(model1, new RandomPath(new EdgeCoverage(100))).setNextElement(v_A);
-    Context context2 = new TestExecutionContext(model2, new RandomPath(new VertexCoverage(100)));
+    Context context2 = new TestExecutionContext(model2, new RandomPath(new EdgeCoverage(100)));
     Machine machine = new SimpleMachine(context1, context2);
+
+    List<String> actualPath = new ArrayList<String>();
     while (machine.hasNextStep()) {
       machine.getNextStep();
+      actualPath.add(machine.getCurrentContext().getCurrentElement().getName());
     }
-  }
+    Assert.assertArrayEquals(new ArrayList<>(Arrays.asList(
+      "v_A",
+      "e_B",
+      "v_B",
+      "v_C",
+      "e_C",
+      "v_C",
+      "e_D",
+      "v_D"
+    )).toArray(), actualPath.toArray());  }
 }
