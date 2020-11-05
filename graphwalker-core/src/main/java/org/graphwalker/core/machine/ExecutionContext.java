@@ -38,6 +38,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.graphwalker.core.common.Objects.isNotNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
@@ -68,6 +70,8 @@ public abstract class ExecutionContext implements Context {
   private Element currentElement;
   private Element nextElement;
   private Element lastElement;
+
+  private String REGEXP_GLOBAL = "global\\.";
 
   private final Map<Class<? extends Algorithm>, Object> algorithms = new HashMap<>();
 
@@ -228,8 +232,10 @@ public abstract class ExecutionContext implements Context {
   public boolean isAvailable(RuntimeEdge edge) {
     if (edge.hasGuard()) {
       LOG.debug("Execute guard: '{}' in edge {}, in model: '{}'", edge.getGuard().getScript(), edge.getName(), getModel().getName());
-      if (edge.getGuard().getScript().matches("^global\\..*")) {
-        return globalExecutionEnvironment.eval("js", edge.getGuard().getScript().replaceFirst("^global\\.", "")).asBoolean();
+      Pattern pattern = Pattern.compile(REGEXP_GLOBAL);
+      Matcher matcher = pattern.matcher(edge.getGuard().getScript());
+      if (matcher.find()) {
+        return globalExecutionEnvironment.eval("js", edge.getGuard().getScript().replaceAll(REGEXP_GLOBAL, "")).asBoolean();
       } else {
         return executionEnvironment.eval("js", edge.getGuard().getScript()).asBoolean();
       }
@@ -239,8 +245,10 @@ public abstract class ExecutionContext implements Context {
 
   public void execute(Action action) {
     LOG.debug("Execute action: '{}' in model: '{}'", action.getScript(), getModel().getName());
-    if (action.getScript().matches("^global\\..*")) {
-      globalExecutionEnvironment.eval("js", action.getScript().replaceFirst("^global\\.", ""));
+    Pattern pattern = Pattern.compile(REGEXP_GLOBAL);
+    Matcher matcher = pattern.matcher(action.getScript());
+    if (action.getScript().matches(REGEXP_GLOBAL)) {
+      globalExecutionEnvironment.eval("js", action.getScript().replaceAll(REGEXP_GLOBAL, ""));
     } else {
       executionEnvironment.eval("js", action.getScript());
     }
