@@ -26,8 +26,7 @@ For example, the core itself does not know how to read and parse models from fil
 ### How to build and install locally
 ```sh
 git clone https://github.com/GraphWalker/graphwalker-project.git
-git clone https://github.com/GraphWalker/graphwalker-core.git
-cd graphwalker-core
+cd graphwalker-project/graphwalker-core
 mvn install
 ```
 
