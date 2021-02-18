@@ -2,10 +2,6 @@
 GraphWalker Core
 ===================
 
-=======
-This is the GraphWalker major version 3. For earlier versions of GraphWalker, see: [GraphWalker 2].
-
-
 ### What is GraphWalker
 
 GraphWalker is a Model-based testing tool which uses directed graphs (finite state diagram). The graphs are expressions of a systems expected behavior. It's not a description of the actual system under test, rather than it is an expression of the test design. See [Finite State Model-Based Testing on a Shoestring] as an example.
@@ -30,8 +26,7 @@ For example, the core itself does not know how to read and parse models from fil
 ### How to build and install locally
 ```sh
 git clone https://github.com/GraphWalker/graphwalker-project.git
-git clone https://github.com/GraphWalker/graphwalker-core.git
-cd graphwalker-core
+cd graphwalker-project/graphwalker-core
 mvn install
 ```
 
@@ -41,7 +36,7 @@ For a maven project just add this dependency:
 <dependency>
     <groupId>org.graphwalker</groupId>
     <artifactId>graphwalker-core</artifactId>
-    <version>4.0.0</version>
+    <version>4.3.0</version>
 </dependency>
 ```
 
