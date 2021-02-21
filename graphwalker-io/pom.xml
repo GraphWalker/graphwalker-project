@@ -95,7 +95,7 @@
                 <inherited>true</inherited>
                 <configuration>
                     <schemaDirectory>src/main/xsd</schemaDirectory>
-                    <javaSource>1.8</javaSource>
+                    <javaSource>11</javaSource>
                 </configuration>
             </plugin>
         </plugins>
