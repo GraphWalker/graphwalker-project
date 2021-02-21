@@ -22,7 +22,7 @@ env:
       name: GraphWalker/graphwalker-project
       description: Build submitted via Travis CI
     notification_email: nils.olsson@arcticblue.se
-    build_command: mvn clean compile -DskipTests=true
+    build_command: ./mvnw clean compile -DskipTests=true
     branch_pattern: coverity_scan
 before_install:
 - pip install --user codecov
@@ -30,7 +30,7 @@ install:
 - sudo apt-get update -qq
 script:
 - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then if [ "${TRAVIS_PULL_REQUEST}" = "false"];
-  then mvn clean deploy --settings deploy.xml; else mvn --quiet clean package; fi fi
+  then ./mvnw clean deploy --settings deploy.xml; else ./mvnw --quiet clean package; fi fi
 after_success:
 - codecov
 before_deploy:
