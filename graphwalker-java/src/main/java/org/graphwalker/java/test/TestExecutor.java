@@ -185,7 +185,7 @@ public final class TestExecutor implements Executor, Observer {
       } else {
         for (Context examineContext : contexts) {
           try {
-            if (Class.forName(path.getParent().toString().replace('/', '.') + "." + examineContext.getModel().getName()).isAssignableFrom(context.getClass())) {
+            if (Class.forName(path.getParent().toString().replace(File.separatorChar, '.') + "." + examineContext.getModel().getName()).isAssignableFrom(context.getClass())) {
               context.setModel(examineContext.getModel());
               context.setNextElement(examineContext.getNextElement());
 
