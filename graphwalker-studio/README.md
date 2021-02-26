@@ -17,3 +17,8 @@ Run it like:
 ```bash
 java -jar target/graphwalker-studio-4.0.1.jar
 ```
+
+Open it in a browser:
+```bash
+html://localhost:9090/studio.html
+```
