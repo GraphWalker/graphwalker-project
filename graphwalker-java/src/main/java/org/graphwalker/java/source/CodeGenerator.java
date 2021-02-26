@@ -75,13 +75,15 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
             try {
               ContextFactory factory = ContextFactoryScanner.get(file);
               List<Context> contexts = factory.create(file);
+              logger.info("Source generated from: " + file.toString() + " -> ");
               for (Context context : contexts) {
                 SourceFile sourceFile = new SourceFile(context.getModel().getName(), file, input, output);
                 write(context, sourceFile);
                 cache.add(file, new CacheEntry(file.toFile().lastModified(), true));
+                logger.info("                       " + sourceFile.getOutputPath());
               }
             } catch (Throwable t) {
-              logger.error(t.getMessage());
+              logger.info(t.getMessage());
               cache.add(file, new CacheEntry(file.toFile().lastModified(), false));
             }
           }
