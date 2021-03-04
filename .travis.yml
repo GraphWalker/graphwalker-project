@@ -45,7 +45,7 @@ deploy:
   target_commitish: "$TRAVIS_COMMIT"
   draft: false
   file:
-  - graphwalker-cli/target/graphwalker-cli-4.3.0-SNAPSHOT.jar
-  - graphwalker-studio/target/graphwalker-studio-4.3.0-SNAPSHOT.jar
+  - graphwalker-cli/target/graphwalker-cli-4.3.2-SNAPSHOT.jar
+  - graphwalker-studio/target/graphwalker-studio-4.3.2-SNAPSHOT.jar
   overwrite: true
   skip_cleanup: true
