@@ -247,7 +247,7 @@ public abstract class ExecutionContext implements Context {
     LOG.debug("Execute action: '{}' in model: '{}'", action.getScript(), getModel().getName());
     Pattern pattern = Pattern.compile(REGEXP_GLOBAL);
     Matcher matcher = pattern.matcher(action.getScript());
-    if (action.getScript().matches(REGEXP_GLOBAL)) {
+    if (matcher.find()) {
       globalExecutionEnvironment.eval("js", action.getScript().replaceAll(REGEXP_GLOBAL, ""));
     } else {
       executionEnvironment.eval("js", action.getScript());
