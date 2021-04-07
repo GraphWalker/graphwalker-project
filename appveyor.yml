@@ -1,6 +1,0 @@
-version: '{build}'
-os: Windows Server 2012
-build_script:
-  - ./mvnw clean package --batch-mode -DskipTests
-test_script:
-  - ./mvnw clean install --batch-mode
