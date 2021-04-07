@@ -2,6 +2,8 @@ language: java
 dist: trusty
 jdk:
 - openjdk11
+env: PYTHON_VERSION=3.6.2
+python: 3.6
 cache:
   directories:
   - "$HOME/.m2"
