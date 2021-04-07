@@ -273,7 +273,13 @@ public abstract class ExecutionContext implements Context {
   }
 
   public Value getAttribute(String name) {
-    return executionEnvironment.getBindings("js").getMember(name);
+    Pattern pattern = Pattern.compile(REGEXP_GLOBAL);
+    Matcher matcher = pattern.matcher(name);
+    if (matcher.find()) {
+      return globalExecutionEnvironment.getBindings("js").getMember(name.replaceAll(REGEXP_GLOBAL, ""));
+    } else {
+      return executionEnvironment.getBindings("js").getMember(name);
+    }
   }
 
   public void setAttribute(String name, Value value) {
@@ -283,10 +289,21 @@ public abstract class ExecutionContext implements Context {
   public String data() {
     StringBuilder data = new StringBuilder();
     for (String member : executionEnvironment.getBindings("js").getMemberKeys()) {
+      if (executionEnvironment.getBindings("js").getMember(member).toString().contains("org.graphwalker.core.machine.TestExecutionContext")) {
+        continue;
+      }
       data.append(member)
         .append(": ")
         .append(executionEnvironment.getBindings("js").getMember(member))
         .append(", ");
+    }
+    if (isNotNull(globalExecutionEnvironment)) {
+      for (String member : globalExecutionEnvironment.getBindings("js").getMemberKeys()) {
+        data.append("global." + member)
+          .append(": ")
+          .append(globalExecutionEnvironment.getBindings("js").getMember(member))
+          .append(", ");
+      }
     }
     return data.toString();
   }
