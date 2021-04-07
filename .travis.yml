@@ -2,6 +2,8 @@ language: java
 dist: trusty
 jdk:
 - openjdk11
+env: PYTHON_VERSION=3.6.2
+python: 3.6
 cache:
   directories:
   - "$HOME/.m2"
@@ -25,7 +27,7 @@ env:
     build_command: ./mvnw clean compile -DskipTests=true
     branch_pattern: coverity_scan
 before_install:
-- pip3 install --user codecov
+- pip install --user codecov
 install:
 - sudo apt-get update -qq
 script:
