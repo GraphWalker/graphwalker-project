@@ -37,11 +37,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static org.graphwalker.core.common.Objects.isNotNull;
-import static org.graphwalker.core.common.Objects.isNull;
+import static org.graphwalker.core.common.Objects.*;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
@@ -292,15 +289,7 @@ public class SimpleMachine extends MachineBase {
   }
 
   private void execute(Action action) {
-    Pattern pattern = Pattern.compile(REGEXP_GLOBAL);
-    Matcher matcher = pattern.matcher(action.getScript());
-
-    if (matcher.find()) {
-      LOG.debug("Execute action: '{}' in model: '{}'", action.getScript(), getCurrentContext().getModel().getName());
-      globalExecutionEnvironment.eval("js", action.getScript().replaceAll(REGEXP_GLOBAL, ""));
-    } else {
-      getCurrentContext().execute(action);
-    }
+     getCurrentContext().execute(action);
   }
 
   private static class SharedStateTuple {

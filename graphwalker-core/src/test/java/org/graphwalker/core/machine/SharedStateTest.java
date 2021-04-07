@@ -152,7 +152,9 @@ public class SharedStateTest {
           .setSharedState("SHARED_STATE_VERTEX")
         )
       )
-      .addAction(new Action("global.myVariable = false; global.myVariable_2 = false;"));
+      .addAction(new Action("myVariable = true;"))
+      .addAction(new Action("global.myVariable = false"))
+      .addAction(new Action("global.myVariable_2 = false;"));
 
     // Model 2 has 2 vertices and 2 edges. One edge, e_C performs an action which has to execute in order
     // to fulfill the condition for edge e_D
@@ -186,16 +188,21 @@ public class SharedStateTest {
     List<String> actualPath = new ArrayList<String>();
     while (machine.hasNextStep()) {
       machine.getNextStep();
-      actualPath.add(machine.getCurrentContext().getCurrentElement().getName());
+      actualPath.add(machine.getCurrentContext().getCurrentElement().getName()
+        + ": " + machine.getCurrentContext().getAttribute("myVariable")
+        + ", " + machine.getCurrentContext().getAttribute("global.myVariable")
+        + ", " + machine.getCurrentContext().getAttribute("global.myVariable_2")
+        + ", data: " + ((ExecutionContext)machine.getCurrentContext()).data()
+      );
     }
     Assert.assertArrayEquals(new ArrayList<>(Arrays.asList(
-      "v_A",
-      "e_B",
-      "v_B",
-      "v_C",
-      "e_C",
-      "v_C",
-      "e_D",
-      "v_D"
+      "v_A: true, false, false, data: myVariable: true, global.myVariable: false, global.myVariable_2: false, ",
+      "e_B: true, false, false, data: myVariable: true, global.myVariable: false, global.myVariable_2: false, ",
+      "v_B: true, false, false, data: myVariable: true, global.myVariable: false, global.myVariable_2: false, ",
+      "v_C: null, false, false, data: global.myVariable: false, global.myVariable_2: false, ",
+      "e_C: null, true, false, data: global.myVariable: true, global.myVariable_2: false, ",
+      "v_C: null, true, false, data: global.myVariable: true, global.myVariable_2: false, ",
+      "e_D: null, true, false, data: global.myVariable: true, global.myVariable_2: false, ",
+      "v_D: null, true, false, data: global.myVariable: true, global.myVariable_2: false, "
     )).toArray(), actualPath.toArray());  }
 }
