@@ -14,7 +14,7 @@ import {
   ELEMENT_UPDATE,
   ELEMENT_UPDATE_POSITION, EDITOR_SAVE_STATE
 } from "../actionTypes";
-import uuid from "uuid/v1";
+import { v4 as uuid } from 'uuid';
 
 const initialState = {
   models: [],
