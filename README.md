@@ -1,4 +1,6 @@
 [![Java CI with Maven](https://github.com/GraphWalker/graphwalker-project/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/GraphWalker/graphwalker-project/actions/workflows/maven.yml)
+[![CodeQL](https://github.com/GraphWalker/graphwalker-project/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/GraphWalker/graphwalker-project/actions/workflows/codeql-analysis.yml)
+
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-project/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.graphwalker/graphwalker-project)
 
 # GraphWalker
