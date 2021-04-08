@@ -24,7 +24,7 @@ import {
   EXECUTION_STEP,
   EXECUTION_STOP, EDITOR_PROPERTIES_TOGGLE
 } from "./actionTypes";
-import uuid from "uuid/v1";
+import { v4 as uuid } from 'uuid';
 
 export const loadTest = content => {
   return async (dispatch, getState, client) => {

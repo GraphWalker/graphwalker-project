@@ -12,7 +12,7 @@ import {
 } from "../../../redux/actions";
 import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
 import { debounce } from "debounce";
-import uuid from "uuid/v1"
+import { v4 as uuid } from 'uuid';
 import Cytoscape from "cytoscape";
 import coseBilkent from 'cytoscape-cose-bilkent';
 import stylesheet from "./editor-stylesheet";
