@@ -73,6 +73,9 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <doclint>none</doclint>
+    <spring.version>2.4.4</spring.version>
+    <maven.version>3.8.1</maven.version>
+    <antlr.version>4.9.2</antlr.version>
   </properties>
 
   <modules>
@@ -172,7 +175,7 @@
       <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
-        <version>20201115</version>
+        <version>20210307</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -197,7 +200,7 @@
       <dependency>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-runtime</artifactId>
-        <version>4.9.1</version>
+        <version>${antlr.version}</version>
       </dependency>
       <dependency>
         <groupId>org.reflections</groupId>
@@ -212,12 +215,12 @@
       <dependency>
         <groupId>com.beust</groupId>
         <artifactId>jcommander</artifactId>
-        <version>1.78</version>
+        <version>1.81</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.11</version>
+        <version>3.12.0</version>
       </dependency>
       <dependency>
         <groupId>com.sun.jersey</groupId>
@@ -227,7 +230,7 @@
       <dependency>
         <groupId>org.java-websocket</groupId>
         <artifactId>Java-WebSocket</artifactId>
-        <version>1.5.1</version>
+        <version>1.5.2</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.gson</groupId>
@@ -237,22 +240,22 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>30.1-jre</version>
+        <version>30.1.1-jre</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
-        <version>2.4.3</version>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-tomcat</artifactId>
-        <version>2.4.3</version>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-actuator</artifactId>
-        <version>2.4.3</version>
+        <version>${spring.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -275,12 +278,12 @@
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-core</artifactId>
-        <version>3.6.3</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-plugin-api</artifactId>
-        <version>3.6.3</version>
+        <version>${maven.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
@@ -316,7 +319,7 @@
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
         <scope>test</scope>
-        <version>4.8.102</version>
+        <version>4.8.104</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -425,7 +428,7 @@
                   </plugins>
                 </requireSameVersions>
                 <requireMavenVersion>
-                  <version>3.3.9</version>
+                  <version>3.5.4</version>
                 </requireMavenVersion>
               </rules>
             </configuration>
@@ -562,7 +565,7 @@
         <plugin>
           <groupId>org.antlr</groupId>
           <artifactId>antlr4-maven-plugin</artifactId>
-          <version>4.9.1</version>
+          <version>${antlr.version}</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
