@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.42.0",
-    "core-js": "^3.10.0",
+    "core-js": "^3.10.1",
     "cytoscape": "^3.18.2",
     "cytoscape-cose-bilkent": "^4.1.0",
     "debounce": "^1.2.1",
