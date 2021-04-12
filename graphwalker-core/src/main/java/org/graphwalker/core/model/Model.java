@@ -54,6 +54,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
   private List<Vertex> vertices = new ArrayList<>();
   private List<Edge> edges = new ArrayList<>();
   private List<Action> actions = new ArrayList<>();
+  private List<Edge> predefinedPath = new ArrayList<>();
 
   /**
    * Create a new Model
@@ -224,6 +225,18 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
     return edges;
   }
 
+  public Model setPredefinedPath(List<Edge> predefinedPath) {
+    if (!getEdges().containsAll(predefinedPath)) {
+      // TODO not all edges from predefined path can be found
+    }
+    this.predefinedPath = predefinedPath;
+    return this;
+  }
+
+  public List<Edge> getPredefinedPath() {
+    return predefinedPath;
+  }
+
   /**
    * Creates an immutable model from this model.
    *
@@ -253,6 +266,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
     private final Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache;
     private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
     private final Map<String, List<RuntimeVertex>> sharedStateCache;
+    private final List<RuntimeEdge> predefinedPath;
 
     private RuntimeModel(Model model) {
       super(model.getId(), model.getName(), model.getActions(), model.getRequirements(), model.getProperties());
@@ -266,6 +280,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       this.elementsByNameCache = createElementsByNameCache();
       this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
       this.sharedStateCache = createSharedStateCache();
+      this.predefinedPath = BuilderFactory.build(model.getPredefinedPath());
     }
 
     /**
@@ -377,6 +392,10 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
      */
     public List<RuntimeEdge> findEdges(String name) {
       return edgesByNameCache.get(name);
+    }
+
+    public List<RuntimeEdge> getPredefinedPath() {
+      return predefinedPath;
     }
 
     /**

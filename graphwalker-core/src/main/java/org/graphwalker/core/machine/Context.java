@@ -76,6 +76,10 @@ public interface Context {
 
   Context setNextElement(Element nextElement);
 
+  Integer getPredefinedPathCurrentElementIndex();
+
+  Context setPredefinedPathCurrentElementIndex(Integer predefinedPathCurrentElementIndex);
+
   List<Requirement> getRequirements();
 
   List<Requirement> getRequirements(RequirementStatus status);
