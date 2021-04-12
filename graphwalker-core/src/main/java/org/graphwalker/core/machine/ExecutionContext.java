@@ -70,8 +70,7 @@ public abstract class ExecutionContext implements Context {
   private Element currentElement;
   private Element nextElement;
   private Element lastElement;
-
-  private Integer predefinedPathCurrentElementIndex;
+  private Integer predefinedPathCurrentEdgeIndex;
 
   private String REGEXP_GLOBAL = "global\\.";
 
@@ -82,7 +81,7 @@ public abstract class ExecutionContext implements Context {
   public ExecutionContext() {
     executionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).build();
     executionEnvironment.getBindings("js").putMember(getClass().getSimpleName(), this);
-    predefinedPathCurrentElementIndex = 0;
+    predefinedPathCurrentEdgeIndex = 0;
   }
 
   public ExecutionContext(Model model, PathGenerator pathGenerator) {
@@ -182,12 +181,12 @@ public abstract class ExecutionContext implements Context {
     return this;
   }
 
-  public Integer getPredefinedPathCurrentElementIndex() {
-    return predefinedPathCurrentElementIndex;
+  public Integer getPredefinedPathCurrentEdgeIndex() {
+    return predefinedPathCurrentEdgeIndex;
   }
 
   public Context setPredefinedPathCurrentElementIndex(Integer predefinedPathCurrentElementIndex) {
-    this.predefinedPathCurrentElementIndex = predefinedPathCurrentElementIndex;
+    this.predefinedPathCurrentEdgeIndex = predefinedPathCurrentElementIndex;
     return this;
   }
 

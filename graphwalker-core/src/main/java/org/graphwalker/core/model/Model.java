@@ -27,6 +27,7 @@ package org.graphwalker.core.model;
  */
 
 import org.graphwalker.core.common.Objects;
+import org.graphwalker.core.machine.MachineException;
 
 import java.util.*;
 
@@ -227,7 +228,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
   public Model setPredefinedPath(List<Edge> predefinedPath) {
     if (!getEdges().containsAll(predefinedPath)) {
-      // TODO not all edges from predefined path can be found
+      throw new MachineException("Not all edges from predefined path exist in the model");
     }
     this.predefinedPath = predefinedPath;
     return this;
@@ -235,6 +236,10 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
   public List<Edge> getPredefinedPath() {
     return predefinedPath;
+  }
+
+  public boolean hasPredefinedPath() {
+    return isNotNullOrEmpty(predefinedPath);
   }
 
   /**
@@ -396,6 +401,10 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
 
     public List<RuntimeEdge> getPredefinedPath() {
       return predefinedPath;
+    }
+
+    public boolean hasPredefinedPath() {
+      return isNotNullOrEmpty(predefinedPath);
     }
 
     /**

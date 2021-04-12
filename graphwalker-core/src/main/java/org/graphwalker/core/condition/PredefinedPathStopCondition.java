@@ -8,12 +8,12 @@ public class PredefinedPathStopCondition extends StopConditionBase {
 
   @Override
   public boolean isFulfilled() {
-    return getContext().getPredefinedPathCurrentElementIndex() == getContext().getModel().getPredefinedPath().size();
+    return getContext().getPredefinedPathCurrentEdgeIndex() == getContext().getModel().getPredefinedPath().size();
   }
 
   @Override
   public double getFulfilment() {
-    return (double) getContext().getPredefinedPathCurrentElementIndex() / getContext().getModel().getPredefinedPath().size();
+    return (double) getContext().getPredefinedPathCurrentEdgeIndex() / getContext().getModel().getPredefinedPath().size();
   }
 
 }

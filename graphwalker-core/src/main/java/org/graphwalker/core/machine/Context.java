@@ -76,7 +76,7 @@ public interface Context {
 
   Context setNextElement(Element nextElement);
 
-  Integer getPredefinedPathCurrentElementIndex();
+  Integer getPredefinedPathCurrentEdgeIndex();
 
   Context setPredefinedPathCurrentElementIndex(Integer predefinedPathCurrentElementIndex);
 
