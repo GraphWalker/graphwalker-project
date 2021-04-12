@@ -30,6 +30,7 @@ import org.graphwalker.core.common.Objects;
 import org.graphwalker.core.machine.MachineException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.graphwalker.core.common.Objects.*;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
@@ -98,6 +99,19 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       edge.setWeight(runtimeEdge.getWeight());
       edge.setProperties(runtimeEdge.getProperties());
       this.edges.add(edge);
+    }
+    for (RuntimeEdge runtimeEdge : model.getPredefinedPath()) {
+      Edge edge = new Edge();
+      edge.setId(runtimeEdge.getId());
+      edge.setName(runtimeEdge.getName());
+      edge.setSourceVertex(cache.get(runtimeEdge.getSourceVertex()));
+      edge.setTargetVertex(cache.get(runtimeEdge.getTargetVertex()));
+      edge.setGuard(runtimeEdge.getGuard());
+      edge.setActions(runtimeEdge.getActions());
+      edge.setRequirements(runtimeEdge.getRequirements());
+      edge.setWeight(runtimeEdge.getWeight());
+      edge.setProperties(runtimeEdge.getProperties());
+      this.predefinedPath.add(edge);
     }
   }
 
@@ -227,10 +241,11 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
   }
 
   public Model setPredefinedPath(List<Edge> predefinedPath) {
-    if (!getEdges().containsAll(predefinedPath)) {
-      throw new MachineException("Not all edges from predefined path exist in the model");
-    }
-    this.predefinedPath = predefinedPath;
+    this.predefinedPath = predefinedPath.stream()
+      .map(predefinedPathEdge -> getEdges().stream()
+        .filter(localEdge -> localEdge.getId().equals(predefinedPathEdge.getId()))
+        .findFirst().orElseThrow(() -> new RuntimeException("Not all edges from predefined path exist in the model")))
+      .collect(Collectors.toList());
     return this;
   }
 
@@ -285,7 +300,11 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       this.elementsByNameCache = createElementsByNameCache();
       this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
       this.sharedStateCache = createSharedStateCache();
-      this.predefinedPath = BuilderFactory.build(model.getPredefinedPath());
+      this.predefinedPath = model.getPredefinedPath().stream()
+        .map(predefinedPathEdge -> this.edges.stream()
+          .filter(localEdge -> localEdge.getId().equals(predefinedPathEdge.getId()))
+          .findFirst().orElseThrow(() -> new RuntimeException("Not all edges from predefined path exist in the model")))
+        .collect(Collectors.toList());
     }
 
     /**

@@ -78,7 +78,7 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
     } else if ("length".equals(conditionName)) {
       stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("predefined_path".equals(conditionName) || "predefinedpath".equals(conditionName)) {
-      stopConditions.add(new PredefinedPathStopCondition(ctx.getChild(2).getText()));
+      stopConditions.add(new PredefinedPathStopCondition());
     }
   }
 
