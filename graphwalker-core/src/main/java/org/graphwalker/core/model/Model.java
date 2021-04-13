@@ -157,6 +157,9 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
    * @return The model.
    */
   public Model deleteEdge(Edge edge) {
+    if (isNotNull(predefinedPath) && predefinedPath.contains(edge)) {
+      throw new RuntimeException("Cannot remove edge contained in predefined path");
+    }
     edges.remove(edge);
     return this;
   }
@@ -172,6 +175,10 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
    * @return The model.
    */
   public Model deleteVertex(Vertex vertex) {
+    if (isNotNull(predefinedPath)
+      && predefinedPath.stream().anyMatch(edge -> vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex()))) {
+      throw new RuntimeException("Cannot remove vertex with connecting edge contained in predefined path");
+    }
     edges.removeIf(edge -> vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex()));
     vertices.remove(vertex);
     return this;

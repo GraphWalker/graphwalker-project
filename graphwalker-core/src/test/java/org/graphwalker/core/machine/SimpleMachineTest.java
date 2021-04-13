@@ -32,17 +32,12 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.condition.StopConditionException;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.generator.SingletonRandomGenerator;
+import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.*;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -505,5 +500,27 @@ public class SimpleMachineTest {
     path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
+  }
+
+  @Test
+  public void predefinedPathCurrentEdgeIndex() {
+    Vertex vertex = new Vertex().setId("v");
+    Edge edge = new Edge()
+      .setId("e")
+      .setSourceVertex(vertex)
+      .setTargetVertex(new Vertex());
+    List<Edge> predefinedPath = Collections.singletonList(edge);
+    Model model = new Model()
+      .addVertex(vertex)
+      .addEdge(edge)
+      .setPredefinedPath(predefinedPath);
+    Context context = new TestExecutionContext(model, new PredefinedPath(new PredefinedPathStopCondition()));
+    context.setNextElement(vertex);
+    Machine machine = new SimpleMachine(context);
+    assertEquals((Integer) 0, context.getPredefinedPathCurrentEdgeIndex());
+    machine.getNextStep();
+    assertEquals((Integer) 0, context.getPredefinedPathCurrentEdgeIndex());
+    machine.getNextStep();
+    assertEquals((Integer) 1, context.getPredefinedPathCurrentEdgeIndex());
   }
 }

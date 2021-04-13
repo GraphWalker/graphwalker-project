@@ -32,8 +32,10 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.graphwalker.core.model.Model.RuntimeModel;
 import org.junit.Test;
@@ -351,5 +353,103 @@ public class ModelTest {
     assertThat(model1.build(), not(model2.build()));
     assertFalse(model1.build().equals(null));
     assertThat(model1.build(), not(model1));
+  }
+
+  @Test
+  public void setPredefinedPath() {
+    Vertex vertex = new Vertex()
+      .setId("v");
+    Edge edge = new Edge()
+      .setId("v")
+      .setSourceVertex(vertex)
+      .setTargetVertex(vertex);
+    List<Edge> predefinedPath = Arrays.asList(edge, edge);
+    Model model = new Model()
+      .addVertex(vertex)
+      .addEdge(edge)
+      .setPredefinedPath(predefinedPath);
+    assertEquals(predefinedPath, model.getPredefinedPath());
+  }
+
+  @Test
+  public void buildModelWithPredefinedPath() {
+    Vertex vertex = new Vertex()
+      .setId("v");
+    Edge edge = new Edge()
+      .setId("v")
+      .setSourceVertex(vertex)
+      .setTargetVertex(vertex);
+    List<Edge> predefinedPath = Arrays.asList(edge, edge);
+    Model model = new Model()
+      .addVertex(vertex)
+      .addEdge(edge)
+      .setPredefinedPath(predefinedPath);
+    RuntimeModel runtimeModel = model.build();
+    String[] predefinedPathEdgeIds = predefinedPath.stream().map(Edge::getId).toArray(String[]::new);
+    String[] runtimeModelPredefinedPathEdgeIds = runtimeModel.getPredefinedPath().stream().map(RuntimeBase::getId).toArray(String[]::new);
+    assertArrayEquals(predefinedPathEdgeIds, runtimeModelPredefinedPathEdgeIds);
+  }
+
+  @Test
+  public void recreateModelWithPredefinedPath() throws Exception {
+    Vertex vertex = new Vertex()
+      .setId("v");
+    Edge edge = new Edge()
+      .setId("v")
+      .setSourceVertex(vertex)
+      .setTargetVertex(vertex);
+    List<Edge> predefinedPath = Arrays.asList(edge, edge);
+    Model model1 = new Model()
+      .addVertex(vertex)
+      .addEdge(edge)
+      .setPredefinedPath(predefinedPath);
+    Model model2 = new Model(model1.build());
+    String[] model1PredefinedPathEdgeIds = model1.getPredefinedPath().stream().map(Edge::getId).toArray(String[]::new);
+    String[] model2PredefinedPathEdgeIds = model2.getPredefinedPath().stream().map(Edge::getId).toArray(String[]::new);
+    assertArrayEquals(model1PredefinedPathEdgeIds, model2PredefinedPathEdgeIds);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testSetPredefinedPathWithUnknownEdge() throws Exception {
+    Vertex vertex = new Vertex()
+      .setId("v");
+    Edge edge = new Edge()
+      .setId("v")
+      .setSourceVertex(vertex)
+      .setTargetVertex(vertex);
+    List<Edge> predefinedPath = Arrays.asList(edge, edge);
+    new Model().setPredefinedPath(predefinedPath); // should fail
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testRemoveEdgeContainedInPredefinedPath() throws Exception {
+    Vertex vertex = new Vertex()
+      .setId("v");
+    Edge edge = new Edge()
+      .setId("v")
+      .setSourceVertex(vertex)
+      .setTargetVertex(vertex);
+    List<Edge> predefinedPath = Arrays.asList(edge, edge);
+    Model model = new Model()
+      .addVertex(vertex)
+      .addEdge(edge)
+      .setPredefinedPath(predefinedPath);
+    model.deleteEdge(edge); // should fail
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testRemoveVertexWithConnectingEdgeContainedInPredefinedPath() throws Exception {
+    Vertex vertex = new Vertex()
+      .setId("v");
+    Edge edge = new Edge()
+      .setId("v")
+      .setSourceVertex(vertex)
+      .setTargetVertex(vertex);
+    List<Edge> predefinedPath = Arrays.asList(edge, edge);
+    Model model = new Model()
+      .addVertex(vertex)
+      .addEdge(edge)
+      .setPredefinedPath(predefinedPath);
+    model.deleteVertex(vertex); // should fail
   }
 }

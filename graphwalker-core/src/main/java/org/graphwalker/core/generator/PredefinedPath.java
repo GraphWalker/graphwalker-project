@@ -1,6 +1,8 @@
 package org.graphwalker.core.generator;
 
+import org.graphwalker.core.condition.PredefinedPathStopCondition;
 import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.condition.StopConditionException;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -15,6 +17,9 @@ public class PredefinedPath extends PathGeneratorBase<StopCondition> {
   private static final Logger LOG = LoggerFactory.getLogger(PredefinedPath.class);
 
   public PredefinedPath(StopCondition stopCondition) {
+    if (!(stopCondition instanceof PredefinedPathStopCondition)) {
+      throw new StopConditionException("PredefinedPath generator can only work with a PredefinedPathStopCondition instance");
+    }
     setStopCondition(stopCondition);
   }
 
