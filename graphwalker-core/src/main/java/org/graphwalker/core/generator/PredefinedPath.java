@@ -51,7 +51,7 @@ public class PredefinedPath extends PathGeneratorBase<StopCondition> {
   }
 
   private Element getNextElementFromVertex(Context context, List<Element> reachableElements, Vertex.RuntimeVertex currentElement) {
-    Element nextElement = context.getModel().getPredefinedPath().get(context.getPredefinedPathCurrentEdgeIndex() + 1);
+    Element nextElement = context.getModel().getPredefinedPath().get(context.getPredefinedPathCurrentEdgeIndex());
     if (!reachableElements.contains(nextElement)) {
       LOG.error("Next edge with id \"" + nextElement.getId() + "\" from predefined path is unreachable (either the guarding condition was not met or the edge has a different source vertex.");
       throw new NoPathFoundException(currentElement);

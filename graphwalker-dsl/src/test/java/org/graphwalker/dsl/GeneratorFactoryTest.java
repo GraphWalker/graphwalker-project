@@ -30,24 +30,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-import org.graphwalker.core.condition.AlternativeCondition;
-import org.graphwalker.core.condition.CombinedCondition;
-import org.graphwalker.core.condition.DependencyEdgeCoverage;
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.Length;
-import org.graphwalker.core.condition.ReachedEdge;
-import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.condition.RequirementCoverage;
-import org.graphwalker.core.condition.StopCondition;
-import org.graphwalker.core.condition.TimeDuration;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.CombinedPath;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.generator.QuickRandomPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.generator.WeightedRandomPath;
+import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactoryException;
@@ -312,6 +296,14 @@ public class GeneratorFactoryTest {
     assertThat(generator, instanceOf(RandomPath.class));
     assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
     assertThat(((AlternativeCondition) generator.getStopCondition()).getStopConditions().size(), is(3));
+  }
+
+  @Test
+  public void predefinedPath_predefinedPathStopCondition() {
+    PathGenerator generator = GeneratorFactory.parse("predefined_path(predefined_path)");
+    assertThat(generator, instanceOf(PredefinedPath.class));
+    assertThat(generator.getStopCondition(), instanceOf(PredefinedPathStopCondition.class));
+    assertThat(generator.getStopCondition().getValue(), is("PredefinedPath"));
   }
 
   /**
