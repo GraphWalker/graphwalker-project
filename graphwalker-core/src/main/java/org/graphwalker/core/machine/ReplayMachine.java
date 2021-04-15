@@ -28,6 +28,7 @@ package org.graphwalker.core.machine;
 
 import org.graphwalker.core.statistics.Execution;
 import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +82,8 @@ public class ReplayMachine extends SimpleMachine {
       try {
         Context newContext = context.getClass().newInstance();
         newContext.setModel(context.getModel());
+        newContext.setPathGenerator(context.getPathGenerator());
+        newContext.setProfiler(new SimpleProfiler());
         contexts.put(context, newContext);
       } catch (InstantiationException | IllegalAccessException e) {
         LOG.error(e.getMessage());
