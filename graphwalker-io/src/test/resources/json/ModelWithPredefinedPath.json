@@ -3,43 +3,44 @@
     {
       "name": "Small model",
       "generator": "predefined_path(predefined_path)",
-      "startElementId": "e0",
+      "startElementId": "n0",
       "vertices": [
         {
-          "name": "v_VerifySomeAction",
+          "name": "n0",
           "id": "n0"
         },
         {
-          "name": "v_VerifySomeOtherAction",
+          "name": "n1",
           "id": "n1"
         }
       ],
       "edges": [
         {
-          "name": "e_FirstAction",
+          "name": "e0",
           "id": "e0",
-          "targetVertexId": "n0"
+          "sourceVertexId": "n0",
+          "targetVertexId": "n1"
         },
         {
-          "name": "e_AnotherAction",
+          "name": "e1",
           "id": "e1",
           "sourceVertexId": "n0",
           "targetVertexId": "n1"
         },
         {
-          "name": "e_SomeOtherAction",
+          "name": "e2",
           "id": "e2",
-          "sourceVertexId": "n1",
+          "sourceVertexId": "n0",
           "targetVertexId": "n1"
         },
         {
-          "name": "e_SomeOtherAction",
+          "name": "e3",
           "id": "e3",
           "sourceVertexId": "n1",
           "targetVertexId": "n0"
         }
       ],
-      "predefinedPathEdgeIds": ["e0", "e1", "e2", "e3"]
+      "predefinedPathEdgeIds": ["e0", "e3", "e1", "e3", "e2"]
     }
   ]
 }
