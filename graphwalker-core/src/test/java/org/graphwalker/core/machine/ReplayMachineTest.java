@@ -27,14 +27,18 @@ package org.graphwalker.core.machine;
  */
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.Execution;
+import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +67,37 @@ public class ReplayMachineTest {
     List<Element> replayedPath = replayMachine.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(replayedPath, is(expectedPath));
+  }
+
+  @Test
+  public void replayMachineFromExecutionPath() {
+    Machine machine = createMachineExecution();
+    List<Execution> executionPath = new ArrayList<>(machine.getProfiler().getExecutionPath());
+    Machine replayMachine = new ReplayMachine(SimpleProfiler.createFromExecutionPath(executionPath));
+    while (replayMachine.hasNextStep()) {
+      replayMachine.getNextStep();
+    }
+    List<Element> expectedPath = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    List<Element> replayedPath = replayMachine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertEquals(expectedPath, replayedPath);
+  }
+
+  @Test
+  public void replayMachineFromAlteredExecutionPath() {
+    Machine machine = createMachineExecution();
+    List<Execution> executionPath = new ArrayList<>(machine.getProfiler().getExecutionPath());
+    executionPath.remove(executionPath.size() - 1);
+    Machine replayMachine = new ReplayMachine(SimpleProfiler.createFromExecutionPath(executionPath));
+    while (replayMachine.hasNextStep()) {
+      replayMachine.getNextStep();
+    }
+    List<Element> originalPath = machine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    List<Element> replayedPath = replayMachine.getProfiler().getExecutionPath().stream()
+      .map(Execution::getElement).collect(Collectors.toList());
+    assertNotEquals(originalPath, replayedPath);
   }
 
   private Machine createMachineExecution() {

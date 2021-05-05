@@ -200,4 +200,21 @@ public class SimpleProfiler implements Profiler {
   public Profile getProfile(Context context, Element element) {
     return new Profile(context, element, executions.get(context).get(element));
   }
+
+  public static SimpleProfiler createFromExecutionPath(List<Execution> executionPath) {
+    SimpleProfiler profiler = new SimpleProfiler();
+    for (Execution execution : executionPath) {
+      Context context = execution.getContext();
+      if (!profiler.executions.containsKey(context)) {
+        profiler.executions.put(context, new HashMap<>());
+      }
+      Element element = execution.getElement();
+      if (!profiler.executions.get(context).containsKey(element)) {
+        profiler.executions.get(context).put(element, new ArrayList<>());
+      }
+      profiler.executionPath.add(execution);
+      profiler.executions.get(context).get(element).add(execution);
+    }
+    return profiler;
+  }
 }
