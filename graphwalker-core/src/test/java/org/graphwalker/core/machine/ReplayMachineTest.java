@@ -45,7 +45,15 @@ public class ReplayMachineTest {
 
   @Test
   public void replayMachine() throws Exception {
-    Machine machine = createMachineExecution();
+    compareMachineWithReplayMachine(createMachineExecution());
+  }
+
+  @Test
+  public void replayMultiModelMachine() throws Exception {
+    compareMachineWithReplayMachine(createMultiModelMachineExecution());
+  }
+
+  private void compareMachineWithReplayMachine(Machine machine) {
     Machine replayMachine = new ReplayMachine(machine.getProfiler());
     while (replayMachine.hasNextStep()) {
       replayMachine.getNextStep();
@@ -65,6 +73,31 @@ public class ReplayMachineTest {
     Context context = new TestExecutionContext(model, new RandomPath(new EdgeCoverage(100)));
     context.setNextElement(vertex);
     Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    return machine;
+  }
+
+  private Machine createMultiModelMachineExecution() {
+    Vertex vertex1 = new Vertex();
+    vertex1.setName("vertex1");
+    vertex1.setSharedState("sharedState");
+    Edge edge1a = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex1).addAction(new Action("flag = true;")).setName("edge1a");
+    Edge edge1b = new Edge().setSourceVertex(vertex1).setTargetVertex(vertex1).setGuard(new Guard("flag === true")).setName("edge1b");
+    Model model1 = new Model().addEdge(edge1a).addEdge(edge1b).addAction(new Action("var flag = false;"));
+    Context context1 = new TestExecutionContext(model1, new RandomPath(new EdgeCoverage(100)));
+    context1.setNextElement(vertex1);
+
+    Vertex vertex2 = new Vertex();
+    vertex2.setName("vertex2");
+    vertex2.setSharedState("sharedState");
+    Edge edge2a = new Edge().setSourceVertex(vertex2).setTargetVertex(vertex2).addAction(new Action("flag = true;")).setName("edge2a");
+    Edge edge2b = new Edge().setSourceVertex(vertex2).setTargetVertex(vertex2).setGuard(new Guard("flag === true")).setName("edge2b");
+    Model model2 = new Model().addEdge(edge2a).addEdge(edge2b).addAction(new Action("var flag = false;"));
+    Context context2 = new TestExecutionContext(model2, new RandomPath(new EdgeCoverage(100)));
+
+    Machine machine = new SimpleMachine(context1, context2);
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
