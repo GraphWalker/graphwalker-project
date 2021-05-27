@@ -32,13 +32,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.graphwalker.core.condition.*;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.CombinedPath;
-import org.graphwalker.core.generator.PathGenerator;
-import org.graphwalker.core.generator.QuickRandomPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.generator.WeightedRandomPath;
+import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.generator.GeneratorParser;
 import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
 
@@ -83,6 +77,8 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
       stopConditions.add(new RequirementCoverage(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("length".equals(conditionName)) {
       stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
+    } else if ("predefined_path".equals(conditionName) || "predefinedpath".equals(conditionName)) {
+      stopConditions.add(new PredefinedPathStopCondition());
     }
   }
 
@@ -111,6 +107,8 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
       pathGenerators.add(new AStarPath((ReachedStopCondition) stopCondition));
     } else if ("shortest_all_paths".equals(generatorName) || "shortestallpaths".equals(generatorName)) {
       pathGenerators.add(new ShortestAllPaths(stopCondition));
+    } else if ("predefined_path".equals(generatorName) || "predefinedpath".equals(generatorName)) {
+      pathGenerators.add(new PredefinedPath(stopCondition));
     } else {
       Class generatorClass = GeneratorFactoryScanner.get(generatorName);
       try {

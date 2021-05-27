@@ -345,4 +345,28 @@ public class JsonContextFactoryTest {
     assertThat(SingletonRandomGenerator.nextInt(), is(-2090749135));
     assertThat(SingletonRandomGenerator.nextInt(), is(-287790814));
   }
+
+  @Test
+  public void predefinedPath() throws IOException {
+    List<Context> contexts = new JsonContextFactory().create(Paths.get("json/ModelWithPredefinedPath.json"));
+    assertNotNull(contexts);
+    assertThat(contexts.size(), is(1));
+
+    Context context = contexts.get(0);
+
+    assertThat(context.getModel().getVertices().size(), is(2));
+    assertThat(context.getModel().getEdges().size(), is(4));
+    assertThat(context.getModel().getPredefinedPath().size(), is(5));
+
+    assertThat(context.getModel().getPredefinedPath().get(0).getId(), is("e0"));
+    assertThat(context.getModel().getPredefinedPath().get(1).getId(), is("e3"));
+    assertThat(context.getModel().getPredefinedPath().get(2).getId(), is("e1"));
+    assertThat(context.getModel().getPredefinedPath().get(3).getId(), is("e3"));
+    assertThat(context.getModel().getPredefinedPath().get(4).getId(), is("e2"));
+  }
+
+  @Test(expected = ContextFactoryException.class)
+  public void testPredefinedPathWithUnknownEdge() throws Exception {
+    new JsonContextFactory().create(Paths.get("json/ModelWithPredefinedPath_unknown_edge.json")); // should fail
+  }
 }

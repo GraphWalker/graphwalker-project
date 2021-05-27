@@ -32,17 +32,12 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.condition.StopConditionException;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.generator.SingletonRandomGenerator;
+import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.*;
 import org.graphwalker.core.model.Action;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Element;
@@ -505,5 +500,38 @@ public class SimpleMachineTest {
     path = context.getProfiler().getExecutionPath().stream()
       .map(Execution::getElement).collect(Collectors.toList());
     assertThat(expectedPath, is(path));
+  }
+
+  @Test
+  public void predefinedPathCurrentEdgeIndex() {
+    // Model
+    Vertex v0 = new Vertex().setId("v0");
+    Vertex v1 = new Vertex().setId("v1");
+    Edge e0 = new Edge().setId("e0").setSourceVertex(v0).setTargetVertex(v1);
+    Edge e1 = new Edge().setId("e1").setSourceVertex(v0).setTargetVertex(v1);
+    Edge e2 = new Edge().setId("e2").setSourceVertex(v0).setTargetVertex(v1);
+    Edge e3 = new Edge().setId("e3").setSourceVertex(v1).setTargetVertex(v0);
+    List<Edge> predefinedPath = Arrays.asList(e0, e3, e1, e3, e2);
+    Model model = new Model()
+      .addVertex(v0).addVertex(v1)
+      .addEdge(e0).addEdge(e1).addEdge(e2).addEdge(e3)
+      .setPredefinedPath(predefinedPath);
+
+    // Context and machine
+    Context context = new TestExecutionContext(model, new PredefinedPath(new PredefinedPathStopCondition()));
+    context.setNextElement(v0);
+    Machine machine = new SimpleMachine(context);
+
+    // Tests
+    for (int stepCount = 0; stepCount < 5; ++stepCount) {
+      // Current element is a vertex
+      assertEquals((Integer) stepCount, context.getPredefinedPathCurrentEdgeIndex());
+      machine.getNextStep();
+      // Current element is an edge
+      assertEquals((Integer) stepCount, context.getPredefinedPathCurrentEdgeIndex());
+      machine.getNextStep();
+    }
+    // Last element is a vertex
+    assertEquals((Integer) 5, context.getPredefinedPathCurrentEdgeIndex());
   }
 }

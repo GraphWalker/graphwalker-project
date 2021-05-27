@@ -30,11 +30,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
+import java.util.stream.Collectors;
+
+import org.graphwalker.core.model.*;
+import org.graphwalker.io.factory.ContextFactoryException;
 
 /**
  * @author Nils Olsson
@@ -50,6 +49,7 @@ public class JsonModel {
   private Map<String, Object> properties;
   private List<JsonVertex> vertices;
   private List<JsonEdge> edges;
+  private List<String> predefinedPathEdgeIds;
 
   public String getId() {
     return id;
@@ -123,6 +123,14 @@ public class JsonModel {
     this.edges = edges;
   }
 
+  public List<String> getPredefinedPathEdgeIds() {
+    return predefinedPathEdgeIds;
+  }
+
+  public void setPredefinedPathEdgeIds(List<String> predefinedPathEdgeIds) {
+    this.predefinedPathEdgeIds = predefinedPathEdgeIds;
+  }
+
   public boolean isModel() {
     return !(null == name || null == generator || null == edges || null == vertices);
   }
@@ -162,6 +170,14 @@ public class JsonModel {
         model.addEdge(edge);
       }
     }
+
+    if (predefinedPathEdgeIds != null) {
+      List<Edge> predefinedPath = getPredefinedPathEdgeIds().stream()
+        .map(this::findEdgeById)
+        .collect(Collectors.toList());
+      model.setPredefinedPath(predefinedPath);
+    }
+
     return model;
   }
 
@@ -201,6 +217,12 @@ public class JsonModel {
       jsonEdge.setEdge(edge);
       edges.add(jsonEdge);
     }
+
+    if (model.hasPredefinedPath()) {
+      predefinedPathEdgeIds = model.getPredefinedPath().stream()
+        .map(RuntimeBase::getId).collect(Collectors.toList());
+    }
+
   }
 
   public void setModel(Model model) {
@@ -232,5 +254,11 @@ public class JsonModel {
     if (properties != null && !properties.isEmpty()) {
       model.getProperties().putAll(properties);
     }
+  }
+
+  private Edge findEdgeById(String edgeId) {
+    return getEdges().stream().filter(edge -> edgeId.equals(edge.getEdge().getId()))
+      .findFirst().orElseThrow(() -> new ContextFactoryException("Edge with id \"" + edgeId + "\" could not be found in JsonModel"))
+      .getEdge();
   }
 }
