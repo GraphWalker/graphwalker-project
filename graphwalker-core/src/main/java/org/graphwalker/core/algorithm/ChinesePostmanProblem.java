@@ -19,6 +19,8 @@ import static org.graphwalker.core.model.Vertex.RuntimeVertex;
  * Directed Chinese Postman Problem
  * Algorithm based on: Edmonds, J., Johnson, E.L. Matching, Euler tours and the Chinese postman, Mathematical
  * Programming (1973) 5: 88. doi:10.1007/BF01580113
+ * Returns the shortest path that covers all the edges if the graph is strongly connected.
+ * Throws AlgorithmException if graph is not strongly connected.
  * @author Onur Enginer
  */
 public class ChinesePostmanProblem implements Algorithm {
@@ -36,19 +38,26 @@ public class ChinesePostmanProblem implements Algorithm {
     polarize();
   }
 
-  public enum EulerianType {
-    EULERIAN, SEMI_EULERIAN, NOT_EULERIAN
-  }
-
   private void polarize() {
     for (RuntimeEdge edge : context.getModel().getEdges()) {
       getPolarityCounter(edge.getSourceVertex()).decrease();
       getPolarityCounter(edge.getTargetVertex()).increase();
     }
-    for (RuntimeVertex vertex : context.getModel().getVertices()) {
-      if (!polarities.get(vertex).hasPolarity()) {
-        polarities.remove(vertex);
-      }
+    int nn = 0, np = 0;
+    for (RuntimeVertex v : polarities.keySet()) {
+      if (polarities.get(v).polarity < 0)
+        nn++;
+      else if (polarities.get(v).polarity > 0)
+        np++;
+    }
+    neg = new RuntimeVertex[nn];
+    pos = new RuntimeVertex[np];
+    nn = np = 0;
+    for (RuntimeVertex v : polarities.keySet()) {
+      if (polarities.get(v).polarity < 0)
+        neg[nn++] = v;
+      else if (polarities.get(v).polarity > 0)
+        pos[np++] = v;
     }
   }
 
@@ -69,7 +78,6 @@ public class ChinesePostmanProblem implements Algorithm {
     int matrixSize = getMatrixSize();
     int[][] costMatrix = new int[matrixSize][matrixSize];
     VertexPair[][] pairMatrix = new VertexPair[matrixSize][matrixSize];
-    findUnbalanced();
     Map<VertexPair, Path<Element>> shortestPaths = new HashMap<VertexPair, Path<Element>>();
     for (int i = 0; i < pos.length; i++) {
       RuntimeVertex p = pos[i];
@@ -164,25 +172,6 @@ public class ChinesePostmanProblem implements Algorithm {
       edgeList.add(edge);
     }
     return edgeList;
-  }
-
-  void findUnbalanced() {
-    int nn = 0, np = 0;
-    for (RuntimeVertex v : polarities.keySet()) {
-      if (polarities.get(v).polarity < 0)
-        nn++;
-      else if (polarities.get(v).polarity > 0)
-        np++;
-    }
-    neg = new RuntimeVertex[nn];
-    pos = new RuntimeVertex[np];
-    nn = np = 0;
-    for (RuntimeVertex v : polarities.keySet()) { 
-      if (polarities.get(v).polarity < 0)
-        neg[nn++] = v;
-      else if (polarities.get(v).polarity > 0)
-        pos[np++] = v;
-    }
   }
 
   class PolarityCounter {
