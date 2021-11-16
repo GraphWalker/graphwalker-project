@@ -10,12 +10,12 @@ mvn package
 
 The jar is in:
 ```bash
-target/graphwalker-studio-4.0.1.jar
+target/graphwalker-studio-4.3.2.jar
 ```
 
 Run it like:
 ```bash
-java -jar target/graphwalker-studio-4.0.1.jar
+java -jar target/graphwalker-studio-4.3.2.jar
 ```
 
 Open it in a browser: http://localhost:9090/studio.html
