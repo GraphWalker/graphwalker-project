@@ -73,9 +73,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <doclint>none</doclint>
-    <spring.version>2.4.4</spring.version>
-    <maven.version>3.8.1</maven.version>
-    <antlr.version>4.9.2</antlr.version>
+    <spring.version>2.5.6</spring.version>
+    <maven.version>3.8.3</maven.version>
+    <antlr.version>4.9.3</antlr.version>
+    <graalvm.version>21.0.0.2</graalvm.version>
   </properties>
 
   <modules>
@@ -150,27 +151,27 @@
       <dependency>
         <groupId>org.graalvm.sdk</groupId>
         <artifactId>graal-sdk</artifactId>
-        <version>21.0.0.2</version>
+        <version>${graalvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.js</groupId>
         <artifactId>js</artifactId>
-        <version>21.0.0.2</version>
+        <version>${graalvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.js</groupId>
         <artifactId>js-scriptengine</artifactId>
-        <version>21.0.0.2</version>
+        <version>${graalvm.version}</version>
       </dependency>
       <dependency>
         <groupId>org.graalvm.truffle</groupId>
         <artifactId>truffle-api</artifactId>
-        <version>21.0.0.2</version>
+        <version>${graalvm.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.8.0</version>
+        <version>2.11.0</version>
       </dependency>
       <dependency>
         <groupId>org.json</groupId>
@@ -235,12 +236,12 @@
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>2.8.6</version>
+        <version>2.8.9</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>30.1.1-jre</version>
+        <version>31.0.1-jre</version>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -266,7 +267,7 @@
       <dependency>
         <groupId>org.xmlunit</groupId>
         <artifactId>xmlunit-matchers</artifactId>
-        <version>2.8.2</version>
+        <version>2.8.3</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -288,7 +289,7 @@
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.1</version>
       </dependency>
       <dependency>
         <groupId>org.skyscreamer</groupId>
@@ -313,13 +314,13 @@
       <dependency>
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
-        <version>3.27.0-GA</version>
+        <version>3.28.0-GA</version>
       </dependency>
       <dependency>
         <groupId>io.github.classgraph</groupId>
         <artifactId>classgraph</artifactId>
         <scope>test</scope>
-        <version>4.8.104</version>
+        <version>4.8.132</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
