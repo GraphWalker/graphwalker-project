@@ -149,7 +149,7 @@ class EditorComponent extends Component {
     });
 
     this.editor.on('tapstart', 'node', event => {
-      if (this.keyCode === 69) {
+      if (this.keyCode === 69) { // e key is pressed
         this.editor.autoungrabify(true);
         this.source = event.target;
       }
@@ -161,7 +161,7 @@ class EditorComponent extends Component {
     });
 
     this.editor.on('tapend', event => {
-      if (this.keyCode === 69) {
+      if (this.keyCode === 69) { // e key is pressed
         this.editor.autoungrabify(false);
         if (this.editor != event.target && event.target.isNode()) {
           this.props.createElement({
