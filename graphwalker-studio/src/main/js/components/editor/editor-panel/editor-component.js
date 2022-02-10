@@ -134,11 +134,12 @@ class EditorComponent extends Component {
         if (this.editor.elements(':selected').length === 0) {
           if (this.keyCode === 86) { // v key is pressed
             const { position: { x, y }} = event;
-            this.props.createElement({
+            const vertexCreate = this.props.createElement({
               id: uuid(),
               name: 'v_NewVertex',
               properties: { x, y }
             });
+            this.props.selectElement(vertexCreate.payload.id);
           }
         } else {
           this.props.selectElement(null);
@@ -164,12 +165,13 @@ class EditorComponent extends Component {
       if (this.keyCode === 69) { // e key is pressed
         this.editor.autoungrabify(false);
         if (this.editor != event.target && event.target.isNode()) {
-          this.props.createElement({
+          const edgeCreate = this.props.createElement({
             id: uuid(),
             sourceVertexId: this.source.id(),
             targetVertexId: event.target.id(),
             name: 'e_NewEdge'
           });
+          this.props.selectElement(edgeCreate.payload.id);
         }
       }
     });
