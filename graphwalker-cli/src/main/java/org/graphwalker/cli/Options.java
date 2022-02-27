@@ -12,10 +12,10 @@ package org.graphwalker.cli;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,12 +30,12 @@ import com.beust.jcommander.Parameter;
 
 public class Options {
 
-  @Parameter(names = {"--help", "-h"}, description = "Prints help text")
+  @Parameter(names = {"--help", "-h"}, help = true, description = "Show this message and exit.")
   public boolean help = false;
 
-  @Parameter(names = {"--version", "-v"}, description = "Prints the version of graphwalker")
+  @Parameter(names = {"--version", "-v"}, help = true, description = "Show the graphwalker version and exit.")
   public boolean version = false;
 
-  @Parameter(names = {"--debug", "-d"}, description = "Sets the log level: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL. Default is OFF")
+  @Parameter(names = {"--debug", "-d"}, description = "Sets the log level. Valid log levels are: OFF, ERROR, WARN, INFO, DEBUG, TRACE, ALL.")
   public String debug = "OFF";
 }

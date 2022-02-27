@@ -12,10 +12,10 @@ package org.graphwalker.cli.commands;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,11 +31,11 @@ import com.beust.jcommander.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-@Parameters(commandDescription = "Generate a test sequence offline. The sequence is printed to the standard output. See http://graphwalker.org/docs/command_line_syntax")
+@Parameters(commandDescription = "Offline means generating a test sequence that can later be run automatically. The sequence is printed to the standard output.")
 public class Offline {
 
   @Parameter(names = {"--verbose", "-o"}, required = false,
-    description = "Will print more details to stdout")
+    description = "Will print more details to stdout.")
   public boolean verbose = false;
 
   @Parameter(names = {"--unvisited", "-u"}, required = false,
@@ -43,23 +43,26 @@ public class Offline {
   public boolean unvisited = false;
 
   @Parameter(names = {"--model", "-m"}, required = false, arity = 2,
-    description = "The model, as a graphml file followed by generator with stop condition. " +
-                  "The format is GENERATOR(STOP_CONDITION) See http://graphwalker.org/docs/path_generators_and_stop_conditions")
+    description = "The model(s), as a GRAPHML or JSON file followed by generator with stop condition. " +
+                  "The format is GENERATOR(STOP_CONDITION) (e.g \"random(never)\", \"weighted_random(length(24))\"). " +
+                  "This option can occur multiple times.")
   public List<String> model = new ArrayList<>();
 
   @Parameter(names = {"--gw3", "-g"}, required = false, arity = 1,
-    description = "The model, as a single gw3 file")
+    description = "The model, as a single gw3 file.")
   public String gw3 = "";
 
   @Parameter(names = {"--start-element", "-e"}, required = false,
     description = "Sets the starting element in the [first] model.")
   public String startElement = "";
 
-  @Parameter(names = {"--blocked",
-                      "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
+  @Parameter(names = {"--blocked", "-b"}, arity = 1,
+    description = "This option enables or disables the BLOCKED feature. " +
+                  "When \"-b true\" GraphWalker will filter out any elements with the keyword BLOCKED. " +
+                  "When \"-b false\" GraphWalker will not filter out elements with the keyword BLOCKED.")
   public boolean blocked = true;
 
   @Parameter(names = {"--seed", "-d"}, required = false,
-    description = "Seed the random generator using the provided number.")
+    description = "Seed the random generator using the provided number. Using a seeded number, will generate the same path every time.")
   public long seed = 0;
 }

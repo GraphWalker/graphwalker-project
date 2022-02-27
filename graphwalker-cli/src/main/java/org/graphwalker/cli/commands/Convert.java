@@ -12,10 +12,10 @@ package org.graphwalker.cli.commands;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,19 +30,20 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import org.graphwalker.io.factory.ContextFactoryScanner;
 
-@Parameters(commandDescription = "Convert a graph in file format, to some other format. See http://graphwalker.org/docs/command_line_syntax")
+@Parameters(commandDescription = "Convert a graph from one format, to some other format.")
 public class Convert {
 
   @Parameter(names = {"--input", "-i"}, required = true, arity = 1,
-    description = "This command requires an input file." +
-                  "See http://graphwalker.org/docs/command_line_syntax")
+    description = "The input model file.")
   public String input = "";
 
   @Parameter(names = {"--format", "-f"}, required = false, arity = 1,
-    description = "Which format to convert into. Valid key words are: JSON [default], GRAPHML, DOT or JAVA")
+    description = "Which format to convert into. Valid key words are: JSON [default], GRAPHML, DOT or JAVA.")
   public String format = ContextFactoryScanner.JSON;
 
-  @Parameter(names = {"--blocked",
-                      "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
+  @Parameter(names = {"--blocked", "-b"}, arity = 1,
+    description = "This option enables or disables the BLOCKED feature. " +
+                  "When \"-b true\" GraphWalker will filter out any elements with the keyword BLOCKED. " +
+                  "When \"-b false\" GraphWalker will not filter out elements with the keyword BLOCKED.")
   public boolean blocked = true;
 }
