@@ -29,6 +29,7 @@ package org.graphwalker.dsl.antlr.generator;
 import org.apache.commons.io.FilenameUtils;
 import org.graphwalker.core.generator.PathGeneratorBase;
 import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public final class GeneratorFactoryScanner {
   }
 
   public static Class get(String generator) {
-    return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).addScanners(new SubTypesScanner())), generator);
+    return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).setScanners(Scanners.SubTypes)), generator);
   }
 
   public static Class get(Reflections reflections, String generatorString) {
