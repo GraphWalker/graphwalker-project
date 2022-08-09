@@ -33,9 +33,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
 import org.apache.commons.io.FilenameUtils;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -55,10 +58,6 @@ public final class ContextFactoryScanner {
   }
 
   private static final Logger logger = LoggerFactory.getLogger(ContextFactoryScanner.class);
-
-  static {
-    Reflections.log = null;
-  }
 
   private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
 
@@ -80,8 +79,15 @@ public final class ContextFactoryScanner {
     return filteredUrls;
   }
 
+  private static Reflections getReflections(Collection<URL> urls) {
+    return new Reflections(new ConfigurationBuilder().addUrls(urls).setScanners(Scanners.SubTypes));
+  }
+
   public static ContextFactory get(Path path) {
-    return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).addScanners(new SubTypesScanner())), path);
+    Supplier<Collection<URL>> memoizedUrls;
+    memoizedUrls = Suppliers.memoize(ContextFactoryScanner::getUrls);
+
+    return get(getReflections(memoizedUrls.get()), path);
   }
 
   public static ContextFactory get(Reflections reflections, Path path) {

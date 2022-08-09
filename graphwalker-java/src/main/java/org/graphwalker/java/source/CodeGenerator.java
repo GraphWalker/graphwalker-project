@@ -49,8 +49,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,7 +93,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
         }
 
         private boolean isModified(Path file) throws IOException {
-          return !Files.getLastModifiedTime(file).equals(cache.get(file).getLastModifiedTime());
+          return Files.getLastModifiedTime(file).toMillis() != cache.get(file).getLastModifiedTime().toMillis();
         }
 
         @Override
@@ -111,7 +113,7 @@ public final class CodeGenerator extends VoidVisitorAdapter<ChangeContext> {
       RuntimeModel model = context.getModel();
       String source = generator.generate(file, model);
       Files.createDirectories(file.getOutputPath().getParent());
-      Files.write(file.getOutputPath(), source.getBytes(Charset.forName("UTF-8"))
+      Files.write(file.getOutputPath(), source.getBytes(StandardCharsets.UTF_8)
         , StandardOpenOption.CREATE
         , StandardOpenOption.TRUNCATE_EXISTING);
     } catch (Throwable t) {
