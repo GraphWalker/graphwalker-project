@@ -3,9 +3,9 @@ before_install:
   - echo "version $VERSION"
   - echo "Replace version (only in the parent tag)"
   - find . -name "pom.xml" | xargs sed -i -E -e "0,/<dependencies>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
-  - find . -name "pom.xml" | xargs grep version
+  - find . -name "pom.xml" | xargs grep -n version
   - echo "Replace groupId in al dependencies"
-  - find . -name "pom.xml" | xargs sed -i -E -e  "0,/<\/dependencies>/ s/<groupId>org.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
-  - find . -name "pom.xml" | xargs grep groupId
+  - find . -name "pom.xml" | xargs sed -i -E -e "0,/<\/dependencies>/ s/<groupId>org\.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
+  - find . -name "pom.xml" | xargs grep -n groupId
   - echo "Installing"
   - ./mvnw install -DskipTests
