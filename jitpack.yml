@@ -1,7 +1,6 @@
-before_install:
-  - echo "groupId: $GROUP"
-  - echo "version: $VERSION"
 install:
+  - echo "groupId $GROUP"
+  - echo "version $VERSION"
   - echo "Prepare package"
   - mvn prepare-package -DskipTest
   - echo "Generate plugin descriptor"
