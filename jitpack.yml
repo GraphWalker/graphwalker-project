@@ -1,8 +1,11 @@
 before_install:
   - echo "groupId $GROUP"
   - echo "version $VERSION"
+  - echo "Replace version"
   - find . -name "pom.xml" | xargs sed -i -E -e "0,/<dependencies>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
-  - echo "Replace plugin groupId"
+  - find . -name "pom.xml" | xargs grep version
+  - echo "Replace groupId"
   - find . -name "pom.xml" | xargs sed -i -E -e  "0,/<dependencies>/ s/<groupId>org.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
+  - find . -name "pom.xml" | xargs grep groupId
   - echo "Installing"
   - ./mvnw install -DskipTests
