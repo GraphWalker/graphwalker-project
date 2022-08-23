@@ -1,3 +1,12 @@
 before_install:
-  - find . -name "pom.xml" | xargs sed -i -E -e "0,/<\/parent>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
-  - find . -name "pom.xml" | xargs sed -i -E -e  "0,/<\/parent>/ s/<groupId>org.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
+  - echo "groupId: $GROUP"
+  - echo "version: $VERSION"
+install:
+  - echo "Generate plugin descriptor"
+  - mvn plugin:describe
+  - echo "Replace plugin version"
+  - find graphwalker-maven-plugin -name "plugin.xml" | xargs sed -i -E -e "0,/<\/parent>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
+  - echo "Replace plugin groupId"
+  - find graphwalker-maven-plugin -name "plugin.xml" | xargs sed -i -E -e  "0,/<\/parent>/ s/<groupId>org.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
+  - echo "Installing"
+  - ./mvnw install -DskipTests
