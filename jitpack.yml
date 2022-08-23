@@ -2,11 +2,13 @@ before_install:
   - echo "groupId: $GROUP"
   - echo "version: $VERSION"
 install:
+  - echo "Prepare package"
+  - mvn prepare-package -DskipTest
   - echo "Generate plugin descriptor"
-  - mvn plugin:describe
+  - mvn plugin:descriptor
   - echo "Replace plugin version"
-  - find graphwalker-maven-plugin -name "plugin.xml" | xargs sed -i -E -e "0,/<\/parent>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
+  - find graphwalker-maven-plugin -name "plugin.xml" | xargs sed -i -E -e "0,/<mojos>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
   - echo "Replace plugin groupId"
-  - find graphwalker-maven-plugin -name "plugin.xml" | xargs sed -i -E -e  "0,/<\/parent>/ s/<groupId>org.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
+  - find graphwalker-maven-plugin -name "plugin.xml" | xargs sed -i -E -e  "0,/<mojos>/ s/<groupId>org.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
   - echo "Installing"
   - ./mvnw install -DskipTests
