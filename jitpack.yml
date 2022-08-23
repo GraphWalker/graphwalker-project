@@ -7,5 +7,8 @@ before_install:
   - echo "Replace groupId in all pom"
   - find . -name "pom.xml" | xargs sed -ibak -E -e "s/<groupId>org\.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
   - find . -name "pom.xml" | xargs grep -n groupId
+  - echo "Replace groupId in all plugin-help.xml"
+  - find . -name "plugin-help.xml" | xargs sed -ibak -E -e "s/<groupId>org\.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
+  - find . -name "plugin-help.xml" | xargs grep -n groupId
   - echo "Installing"
   - ./mvnw install -DskipTests
