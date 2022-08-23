@@ -10,5 +10,8 @@ before_install:
   - echo "Replace groupId in all plugin-help.xml"
   - find . -name "plugin-help.xml" | xargs sed -ibak -E -e "s/<groupId>org\.graphwalker<\/groupId>/<groupId>${GROUP}<\/groupId>/g"
   - find . -name "plugin-help.xml" | xargs grep -n groupId
+  - echo "Handle plugin-help version"
+  - find . -name "pom.xml" | xargs sed -ibak -E -e "0,/<mojos>/ s/<version>[0-9\.]+-SNAPSHOT<\/version>/<version>${VERSION}<\/version>/g"
+  - find . -name "pom.xml" | xargs grep -n version
   - echo "Installing"
   - ./mvnw install -DskipTests
