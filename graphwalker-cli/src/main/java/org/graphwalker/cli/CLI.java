@@ -12,10 +12,10 @@ package org.graphwalker.cli;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -116,106 +116,66 @@ public class CLI {
   private void run(String[] args) {
     Options options = new Options();
     JCommander jc = new JCommander(options);
-    jc.setProgramName("java -jar graphwalker.jar");
-    try {
-      jc.parseWithoutValidation(args);
-    } catch (Exception e) {
-      // ignore
-    }
+    jc.setProgramName("graphwalker");
+
+    offline = new Offline();
+    jc.addCommand("offline", offline);
+
+    online = new Online();
+    jc.addCommand("online", online);
+
+    methods = new Methods();
+    jc.addCommand("methods", methods);
+
+    requirements = new Requirements();
+    jc.addCommand("requirements", requirements);
+
+    convert = new Convert();
+    jc.addCommand("convert", convert);
+
+    source = new Source();
+    jc.addCommand("source", source);
+
+    check = new Check();
+    jc.addCommand("check", check);
 
     try {
+      jc.parse(args);
       setLogLevel(options);
 
       if (options.help) {
-        options = new Options();
-        jc = new JCommander(options);
-        offline = new Offline();
-        jc.addCommand("offline", offline);
-
-        online = new Online();
-        jc.addCommand("online", online);
-
-        methods = new Methods();
-        jc.addCommand("methods", methods);
-
-        requirements = new Requirements();
-        jc.addCommand("requirements", requirements);
-
-        convert = new Convert();
-        jc.addCommand("convert", convert);
-
-        source = new Source();
-        jc.addCommand("source", source);
-
-        check = new Check();
-        jc.addCommand("check", check);
-
-        jc.parse(args);
         jc.usage();
         return;
       } else if (options.version) {
         System.out.println(printVersionInformation());
         return;
-      }
-
-      // Need to instantiate options again to avoid
-      // ParameterException "Can only specify option --debug once."
-      options = new Options();
-      jc = new JCommander(options);
-      offline = new Offline();
-      jc.addCommand("offline", offline);
-
-      online = new Online();
-      jc.addCommand("online", online);
-
-      methods = new Methods();
-      jc.addCommand("methods", methods);
-
-      requirements = new Requirements();
-      jc.addCommand("requirements", requirements);
-
-      convert = new Convert();
-      jc.addCommand("convert", convert);
-
-      source = new Source();
-      jc.addCommand("source", source);
-
-      check = new Check();
-      jc.addCommand("check", check);
-
-      jc.parse(args);
-
-      // Parse for commands
-      if (jc.getParsedCommand() != null) {
-        if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
-          command = Command.OFFLINE;
-          runCommandOffline();
-        } else if (jc.getParsedCommand().equalsIgnoreCase("online")) {
-          command = Command.ONLINE;
-          runCommandOnline();
-        } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
-          command = Command.METHODS;
-          runCommandMethods();
-        } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
-          command = Command.REQUIREMENTS;
-          runCommandRequirements();
-        } else if (jc.getParsedCommand().equalsIgnoreCase("convert")) {
-          command = Command.CONVERT;
-          runCommandConvert();
-        } else if (jc.getParsedCommand().equalsIgnoreCase("source")) {
-          command = Command.SOURCE;
-          runCommandSource();
-        } else if (jc.getParsedCommand().equalsIgnoreCase("check")) {
-          command = Command.SOURCE;
-          runCommandCheck();
-        }
-      }
-
-      // No commands or options were found
-      else {
+      } else if (jc.getParsedCommand() == null) {
         throw new MissingCommandException("Missing a command. Add '--help'");
       }
 
+      // Parse for commands
+      if (jc.getParsedCommand().equalsIgnoreCase("offline")) {
+        command = Command.OFFLINE;
+        runCommandOffline();
+      } else if (jc.getParsedCommand().equalsIgnoreCase("online")) {
+        command = Command.ONLINE;
+        runCommandOnline();
+      } else if (jc.getParsedCommand().equalsIgnoreCase("methods")) {
+        command = Command.METHODS;
+        runCommandMethods();
+      } else if (jc.getParsedCommand().equalsIgnoreCase("requirements")) {
+        command = Command.REQUIREMENTS;
+        runCommandRequirements();
+      } else if (jc.getParsedCommand().equalsIgnoreCase("convert")) {
+        command = Command.CONVERT;
+        runCommandConvert();
+      } else if (jc.getParsedCommand().equalsIgnoreCase("source")) {
+        command = Command.SOURCE;
+        runCommandSource();
+      } else if (jc.getParsedCommand().equalsIgnoreCase("check")) {
+        command = Command.CHECK;
+        runCommandCheck();
+      }
     } catch (UnsupportedFileFormat | MissingCommandException e) {
       System.err.println(e.getMessage() + System.lineSeparator());
     } catch (ParameterException e) {

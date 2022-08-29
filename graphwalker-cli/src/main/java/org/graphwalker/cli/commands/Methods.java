@@ -12,10 +12,10 @@ package org.graphwalker.cli.commands;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,14 +31,16 @@ import com.beust.jcommander.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-@Parameters(commandDescription = "Generates a list of unique names of vertices and edges in the model. See http://graphwalker.org/docs/command_line_syntax")
+@Parameters(commandDescription = "Generates a list of unique names of vertices and edges in the model.")
 public class Methods {
 
   @Parameter(names = {"--model", "-m"}, required = true,
-    description = "The model(s)")
+    description = "The model(s), as a GRAPHML or JSON file. This option can occur multiple times.")
   public List<String> model = new ArrayList<>();
 
-  @Parameter(names = {"--blocked",
-                      "-b"}, arity = 1, description = "This option enables or disables the BLOCKED feature. When \"-b true\" GraphWalker will filter out elements in models with the keyword BLOCKED. When \"-b false\" GraphWalker will not filter out any elements in models with the keyword BLOCKED.")
+  @Parameter(names = {"--blocked", "-b"}, arity = 1,
+    description = "This option enables or disables the BLOCKED feature. " +
+                  "When \"-b true\" GraphWalker will filter out any elements with the keyword BLOCKED. " +
+                  "When \"-b false\" GraphWalker will not filter out elements with the keyword BLOCKED.")
   public boolean blocked = true;
 }
