@@ -33,9 +33,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
+import com.google.common.base.Supplier;
+import com.google.common.base.Suppliers;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import org.apache.commons.io.FilenameUtils;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -55,10 +62,6 @@ public final class ContextFactoryScanner {
   }
 
   private static final Logger logger = LoggerFactory.getLogger(ContextFactoryScanner.class);
-
-  static {
-    Reflections.log = null;
-  }
 
   private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
 
@@ -80,13 +83,28 @@ public final class ContextFactoryScanner {
     return filteredUrls;
   }
 
-  public static ContextFactory get(Path path) {
-    return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).addScanners(new SubTypesScanner())), path);
+  private static Reflections getReflections(Collection<URL> urls) {
+    return new Reflections(new ConfigurationBuilder().addUrls(urls).setScanners(Scanners.SubTypes));
+  }
+
+  public static ContextFactory get(Path path){
+    Supplier<Collection<URL>> memoizedUrls;
+    memoizedUrls = Suppliers.memoize(ContextFactoryScanner::getUrls);
+
+    return get(getReflections(memoizedUrls.get()), path);
   }
 
   public static ContextFactory get(Reflections reflections, Path path) {
+    LoadingCache<Class<? extends ContextFactory>, ContextFactory> memo = CacheBuilder.newBuilder()
+      .build(CacheLoader.from(ContextFactoryScanner::create));
+
     for (Class<? extends ContextFactory> factoryClass : reflections.getSubTypesOf(ContextFactory.class)) {
-      ContextFactory factory = create(factoryClass);
+      ContextFactory factory = null;
+      try {
+        factory = memo.get(factoryClass);
+      } catch (ExecutionException e) {
+        factory = create(factoryClass);
+      }
       if (null != factory && factory.accept(path)) {
         return factory;
       }

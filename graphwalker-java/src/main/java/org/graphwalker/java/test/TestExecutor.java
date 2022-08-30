@@ -40,8 +40,7 @@ import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.factory.PathGeneratorFactory;
 import org.graphwalker.java.report.XMLReportGenerator;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.scanners.Scanners;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
@@ -70,10 +69,9 @@ public final class TestExecutor implements Executor, Observer {
 
   private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
     .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
-    .addScanners(new SubTypesScanner(), new TypeAnnotationsScanner()));
+    .setScanners(Scanners.SubTypes, Scanners.TypesAnnotated));
 
   private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
-    Reflections.log = null;
     List<URL> urls = new ArrayList<>(), filteredUrls = new ArrayList<>();
     urls.addAll(classPath);
     urls.addAll(classLoader);

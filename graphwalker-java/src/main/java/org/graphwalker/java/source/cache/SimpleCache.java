@@ -32,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -60,7 +61,7 @@ public final class SimpleCache implements Cache<Path, CacheEntry> {
   private void read() {
     if (Files.exists(path)) {
       try {
-        String json = new String(Files.readAllBytes(path), Charset.forName("UTF-8"));
+        String json = new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
         Map<String, CacheEntry> data = gson.fromJson(json, type);
         storage.putAll(data);
       } catch (IOException e) {
@@ -74,7 +75,7 @@ public final class SimpleCache implements Cache<Path, CacheEntry> {
     try {
       String json = gson.toJson(storage);
       Files.createDirectories(path.getParent());
-      Files.write(path, json.getBytes(Charset.forName("UTF-8")));
+      Files.write(path, json.getBytes(StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.error(e.getMessage());
       throw new CacheException(e);
