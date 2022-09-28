@@ -45,36 +45,3 @@ Run it like:
 ```bash
 java -jar graphwalker-studio/target/graphwalker-studio-<VERSION>.jar
 ```
-
-===================
-
-Predefined Path
-===================
-This fork of the GraphWalker project enables the user to define an edge sequence in the input graph, along which the machine should execute.
-
-## Graph input format
-
-Currently a predefined path can only be specified in JSON GW3 input graphs.
-
-To define an edge sequence, the model has to contain an array element called *predefinedPathEdgeIds* containing the edge IDs in the sequence.
-
-The generator and stop condition has to be specified in the *generator* element.
-
-Example:
-
-```JSON
-{
-    "models": [
-        {
-            "generator": "predefined_path(predefined_path)",
-            ...
-            "edges": [
-                { "id": "e0", ... },
-                { "id": "e1", ... },
-                { "id": "e2", ... }
-            ],
-            "predefinedPathEdgeIds": [ "e0", "e1", "e2", "e0" ]
-        }
-    ]
-}
-```
