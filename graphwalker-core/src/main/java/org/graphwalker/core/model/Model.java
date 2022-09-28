@@ -27,8 +27,10 @@ package org.graphwalker.core.model;
  */
 
 import org.graphwalker.core.common.Objects;
+import org.graphwalker.core.machine.MachineException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.graphwalker.core.common.Objects.*;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
@@ -54,6 +56,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
   private List<Vertex> vertices = new ArrayList<>();
   private List<Edge> edges = new ArrayList<>();
   private List<Action> actions = new ArrayList<>();
+  private List<Edge> predefinedPath = new ArrayList<>();
 
   /**
    * Create a new Model
@@ -96,6 +99,19 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       edge.setWeight(runtimeEdge.getWeight());
       edge.setProperties(runtimeEdge.getProperties());
       this.edges.add(edge);
+    }
+    for (RuntimeEdge runtimeEdge : model.getPredefinedPath()) {
+      Edge edge = new Edge();
+      edge.setId(runtimeEdge.getId());
+      edge.setName(runtimeEdge.getName());
+      edge.setSourceVertex(cache.get(runtimeEdge.getSourceVertex()));
+      edge.setTargetVertex(cache.get(runtimeEdge.getTargetVertex()));
+      edge.setGuard(runtimeEdge.getGuard());
+      edge.setActions(runtimeEdge.getActions());
+      edge.setRequirements(runtimeEdge.getRequirements());
+      edge.setWeight(runtimeEdge.getWeight());
+      edge.setProperties(runtimeEdge.getProperties());
+      this.predefinedPath.add(edge);
     }
   }
 
@@ -141,6 +157,9 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
    * @return The model.
    */
   public Model deleteEdge(Edge edge) {
+    if (isNotNull(predefinedPath) && predefinedPath.contains(edge)) {
+      throw new RuntimeException("Cannot remove edge contained in predefined path");
+    }
     edges.remove(edge);
     return this;
   }
@@ -156,6 +175,10 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
    * @return The model.
    */
   public Model deleteVertex(Vertex vertex) {
+    if (isNotNull(predefinedPath)
+      && predefinedPath.stream().anyMatch(edge -> vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex()))) {
+      throw new RuntimeException("Cannot remove vertex with connecting edge contained in predefined path");
+    }
     edges.removeIf(edge -> vertex.equals(edge.getSourceVertex()) || vertex.equals(edge.getTargetVertex()));
     vertices.remove(vertex);
     return this;
@@ -224,6 +247,23 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
     return edges;
   }
 
+  public Model setPredefinedPath(List<Edge> predefinedPath) {
+    this.predefinedPath = predefinedPath.stream()
+      .map(predefinedPathEdge -> getEdges().stream()
+        .filter(localEdge -> localEdge.getId().equals(predefinedPathEdge.getId()))
+        .findFirst().orElseThrow(() -> new RuntimeException("Not all edges from predefined path exist in the model")))
+      .collect(Collectors.toList());
+    return this;
+  }
+
+  public List<Edge> getPredefinedPath() {
+    return predefinedPath;
+  }
+
+  public boolean hasPredefinedPath() {
+    return isNotNullOrEmpty(predefinedPath);
+  }
+
   /**
    * Creates an immutable model from this model.
    *
@@ -253,6 +293,7 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
     private final Map<RuntimeVertex, List<RuntimeEdge>> inEdgesByVertexCache;
     private final Map<RuntimeVertex, List<RuntimeEdge>> outEdgesByVertexCache;
     private final Map<String, List<RuntimeVertex>> sharedStateCache;
+    private final List<RuntimeEdge> predefinedPath;
 
     private RuntimeModel(Model model) {
       super(model.getId(), model.getName(), model.getActions(), model.getRequirements(), model.getProperties());
@@ -266,6 +307,11 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
       this.elementsByNameCache = createElementsByNameCache();
       this.elementsByElementCache = createElementsByElementCache(elementsCache, outEdgesByVertexCache);
       this.sharedStateCache = createSharedStateCache();
+      this.predefinedPath = model.getPredefinedPath().stream()
+        .map(predefinedPathEdge -> this.edges.stream()
+          .filter(localEdge -> localEdge.getId().equals(predefinedPathEdge.getId()))
+          .findFirst().orElseThrow(() -> new RuntimeException("Not all edges from predefined path exist in the model")))
+        .collect(Collectors.toList());
     }
 
     /**
@@ -377,6 +423,14 @@ public class Model extends BuilderBase<Model, Model.RuntimeModel> {
      */
     public List<RuntimeEdge> findEdges(String name) {
       return edgesByNameCache.get(name);
+    }
+
+    public List<RuntimeEdge> getPredefinedPath() {
+      return predefinedPath;
+    }
+
+    public boolean hasPredefinedPath() {
+      return isNotNullOrEmpty(predefinedPath);
     }
 
     /**
