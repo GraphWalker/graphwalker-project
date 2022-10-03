@@ -185,6 +185,12 @@ public class TestExecutorTest {
     }
 
     public void throwException() {
+      PossiblyAnActualRealWorldScenario.problematicMethod();
+    }
+  }
+
+  public static class PossiblyAnActualRealWorldScenario {
+    public static void problematicMethod() {
       throw new RuntimeException();
     }
   }
@@ -196,11 +202,11 @@ public class TestExecutorTest {
   }
 
   /**
-   * Do not obscure the root cause
+   * Do not obscure the root cause failure
    * @throws IOException
    */
   @Test
-  public void doNotHideRootCauseException() throws IOException {
+  public void doNotObscureRootCauseFailureResult() throws IOException {
     Executor executor = new TestExecutor(ThrowExceptionTest.class);
 
     Result result = executor.execute(true);
@@ -208,13 +214,30 @@ public class TestExecutorTest {
     JSONArray failures = (JSONArray) result.getResults().get("failures");
     ArrayList<String> failureList = new ArrayList<>();
     failures.forEach( failure -> {
-      Boolean hasFailureItem = ((JSONObject) failure).has("failure");
+      boolean hasFailureItem = ((JSONObject) failure).has("failure");
       if (hasFailureItem) {
         failureList.add(((JSONObject) failure).getString("failure"));
       }
     } );
 
     Assert.assertTrue(failureList.get(0).startsWith("java.lang.RuntimeException"));
+  }
+
+  @Test
+  public void doNotObscureRootCauseStack() throws IOException {
+    Executor executor = new TestExecutor(ThrowExceptionTest.class);
+    Throwable t = null;
+    try {
+      executor.execute();
+    } catch (Throwable thrown) {
+      t = thrown;
+    }
+
+    Assert.assertNotNull(t);
+    Assert.assertTrue(Arrays.stream(t.getCause().getStackTrace()).anyMatch( stackTraceElement -> {
+      System.out.println(stackTraceElement.getMethodName());
+      return stackTraceElement.getMethodName() == "problematicMethod";
+    }));
   }
 
   @Test

@@ -279,7 +279,7 @@ public abstract class ExecutionContext implements Context {
       // ignore, method is not defined in the execution context
     } catch (Throwable t) {
       executionStatus = ExecutionStatus.FAILED;
-      LOG.error(t.getMessage());
+      LOG.error(ExceptionUtils.getRootCauseMessage(t));
       // Do not obscure the root cause as it's not useful for the end user
       // i.e: always showing java.lang.reflect.InvocationTargetException no matter what.
       throw new MachineException(this, ExceptionUtils.getRootCause(t));
