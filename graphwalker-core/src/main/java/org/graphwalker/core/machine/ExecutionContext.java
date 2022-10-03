@@ -26,6 +26,7 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.graalvm.polyglot.Value;
 import org.graphwalker.core.algorithm.Algorithm;
 import org.graphwalker.core.generator.PathGenerator;
@@ -279,7 +280,9 @@ public abstract class ExecutionContext implements Context {
     } catch (Throwable t) {
       executionStatus = ExecutionStatus.FAILED;
       LOG.error(t.getMessage());
-      throw new MachineException(this, t);
+      // Do not obscure the root cause as it's not useful for the end user
+      // i.e: always showing java.lang.reflect.InvocationTargetException no matter what.
+      throw new MachineException(this, ExceptionUtils.getRootCause(t));
     }
   }
 

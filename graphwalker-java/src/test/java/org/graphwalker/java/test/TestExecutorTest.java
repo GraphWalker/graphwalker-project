@@ -34,6 +34,7 @@ import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Execution;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -192,6 +193,28 @@ public class TestExecutorTest {
   public void throwExceptionExecutor() throws IOException {
     Executor executor = new TestExecutor(ThrowExceptionTest.class);
     executor.execute();
+  }
+
+  /**
+   * Do not obscure the root cause
+   * @throws IOException
+   */
+  @Test
+  public void doNotHideRootCauseException() throws IOException {
+    Executor executor = new TestExecutor(ThrowExceptionTest.class);
+
+    Result result = executor.execute(true);
+    Assert.assertTrue(result.hasErrors());
+    JSONArray failures = (JSONArray) result.getResults().get("failures");
+    ArrayList<String> failureList = new ArrayList<>();
+    failures.forEach( failure -> {
+      Boolean hasFailureItem = ((JSONObject) failure).has("failure");
+      if (hasFailureItem) {
+        failureList.add(((JSONObject) failure).getString("failure"));
+      }
+    } );
+
+    Assert.assertTrue(failureList.get(0).startsWith("java.lang.RuntimeException"));
   }
 
   @Test
