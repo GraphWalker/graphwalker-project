@@ -26,5 +26,8 @@ public class SimpleCacheTest {
     assertEquals(true, cached.isGenerated());
 
     assertTrue(cache.contains(key));
+    
+      // Clean up after test
+      assertTrue( new File("./cache.json").delete() );
   }
 }
