@@ -26,6 +26,7 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,15 @@ import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.generator.GeneratorParser;
 import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by krikar on 5/14/14.
  */
 public class GeneratorLoader extends GeneratorParserBaseListener {
+
+  private static final Logger logger = LoggerFactory.getLogger(GeneratorLoader.class);
 
   private StopCondition stopCondition = null;
   private final List<PathGenerator> pathGenerators = new ArrayList<>();
@@ -110,12 +115,10 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
     } else if ("predefined_path".equals(generatorName) || "predefinedpath".equals(generatorName)) {
       pathGenerators.add(new PredefinedPath(stopCondition));
     } else {
-      Class generatorClass = GeneratorFactoryScanner.get(generatorName);
-      try {
-        pathGenerators.add((PathGenerator) generatorClass.getConstructor(StopCondition.class).newInstance(stopCondition));
-      } catch (Exception e) {
-        throw new GeneratorFactoryException("No suitable generator found with name: " + generatorName + ", because: " + e.getCause());
-      }
+        PathGenerator pathGenerator = GeneratorFactoryScanner.get(generatorName);
+        pathGenerator.setStopCondition(stopCondition);
+        pathGenerators.add(pathGenerator);
+        logger.debug("Generator: " + pathGenerator.getClass().getName() + " is loaded");
     }
     stopConditions.clear();
   }

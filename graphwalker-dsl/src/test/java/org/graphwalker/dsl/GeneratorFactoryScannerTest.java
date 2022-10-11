@@ -7,7 +7,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class GeneratorFactoryScannerTest {
   @Test
-  public void validPluginGenerator() {
+  public void validPluginGenerator()  {
     assertNotNull(GeneratorFactoryScanner.get("PluginGenerator"));
   }
 }

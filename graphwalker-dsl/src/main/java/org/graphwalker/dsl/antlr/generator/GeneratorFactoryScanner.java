@@ -26,19 +26,17 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
-import org.apache.commons.io.FilenameUtils;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
+import org.graphwalker.core.condition.Never;
+import org.graphwalker.core.condition.StopCondition;
+import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.generator.PathGeneratorBase;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URL;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public final class GeneratorFactoryScanner {
 
@@ -47,35 +45,33 @@ public final class GeneratorFactoryScanner {
 
   private static final Logger logger = LoggerFactory.getLogger(GeneratorFactoryScanner.class);
 
-  private static boolean valid(URL url) {
-    String extension = FilenameUtils.getExtension(url.getPath());
-    return "".equals(extension) || "jar".equals(extension);
-  }
-
-  private static Collection<URL> getUrls() {
-    Set<URL> filteredUrls = new HashSet<>();
-    Set<URL> urls = new HashSet<>();
-    urls.addAll(ClasspathHelper.forClassLoader());
-    urls.addAll(ClasspathHelper.forJavaClassPath());
-    for (URL url : urls) {
-      if (valid(url)) {
-        logger.debug(url.toString());
-        filteredUrls.add(url);
+  public static PathGenerator get(String generator) {
+    List<Class<PathGeneratorBase>> pathGenerators;
+    try (ScanResult scanResult = new ClassGraph()
+      .enableClassInfo().scan()) {
+      pathGenerators = scanResult
+        .getSubclasses(PathGeneratorBase.class.getName())
+        .loadClasses(PathGeneratorBase.class);
+    }
+    logger.debug("Available path generators:  " + pathGenerators.toString());
+    for (Class<? extends PathGeneratorBase> generatorClass : pathGenerators) {
+      if (generatorClass.getSimpleName().equalsIgnoreCase(generator)) {
+        PathGenerator pathGenerator = null;
+        try {
+          pathGenerator = generatorClass.getConstructor(StopCondition.class).newInstance(new Never());
+        } catch (InstantiationException e) {
+          throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+          throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+          throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+          throw new RuntimeException(e);
+        }
+        logger.debug("Found suitable path generator: " + pathGenerator.getClass().getName());
+        return pathGenerator;
       }
     }
-    return filteredUrls;
-  }
-
-  public static Class get(String generator) {
-    return get(new Reflections(new ConfigurationBuilder().addUrls(getUrls()).setScanners(Scanners.SubTypes)), generator);
-  }
-
-  public static Class get(Reflections reflections, String generatorString) {
-    for (Class<? extends PathGeneratorBase> generatorClass : reflections.getSubTypesOf(PathGeneratorBase.class)) {
-      if (generatorClass.getSimpleName().equalsIgnoreCase(generatorString)) {
-        return generatorClass;
-      }
-    }
-    throw new GeneratorFactoryException("No suitable generator found with name: " + generatorString);
+    throw new GeneratorFactoryException("No suitable generator found with name: " + generator + " in classpath");
   }
 }
