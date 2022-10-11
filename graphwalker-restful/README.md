@@ -9,7 +9,7 @@ tool or programming language that kan do HTTP.
 
 | Name          | Type | Description |Input | Output |
 |:------------- |:-----|:------------|:-----|:----|
-| load          | POST  | Upload model(s) to the service |The format is json, using the GW3 notation |A json string with **result: ok**, or an error mesage|
+| load          | POST  | Upload model(s) to the service |The format is json, using the GW notation |A json string with **result: ok**, or an error mesage|
 | hasNext       | GET  | Query the service if the execution of the model(s) is done. | No indata | A json string with hasNext resturning true or false, or an error message |
 | getNext       | GET  | Retrieve the next element to be executed. | No indata | A json string with the next element to execute, or an error message |
 | getData       | GET  | Get the data of the current model | No indata | A json string with the all the attributs and their values |
@@ -22,15 +22,15 @@ tool or programming language that kan do HTTP.
 ## load
 
 |||
-|:------------ |:-----|
-|**Name**|load|
-|**Type**|POST|
-|**Description**|Will upload model(s) to the service. It will replace anything previously loaded in the service.|
-|**Input**|A json string, using the GW3 notation.|
-|**Input example**|__curl -i -H "Content-Type: text/plain;charset=UTF-8" -X POST -d @petClinic.gw3 http://localhost:8887/graphwalker/__|
-|**Output**|A json string with **result: ok**, or an error mesage|
-|**Output example**|If the file is loaded ok: __{"result":"ok"}__|
-|**Output example**|If the file failed: __{"result":"nok","error":"java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 4 path $"}__|
+|:------------ |:----------------- load                                                                                                                                               ------------------------------------------------------------------------------------------------------------------------------|
+|**Name**| load                                                                                                                                               |
+|**Type**| POST                                                                                                                                               |
+|**Description**| Will upload model(s) to the service. It will replace anything previously loaded in the service.                                                    |
+|**Input**| A json string, using the GW notation.                                                                                                              |
+|**Input example**| __curl -i -H "Content-Type: text/plain;charset=UTF-8" -X POST -d @petClinic.gw http://localhost:8887/graphwalker/__                               |
+|**Output**| A json string with **result: ok**, or an error mesage                                                                                              |
+|**Output example**| If the file is loaded ok: __{"result":"ok"}__                                                                                                      |
+|**Output example**| If the file failed: __{"result":"nok","error":"java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 4 path $"}__ |
 
 ## hasNext
 

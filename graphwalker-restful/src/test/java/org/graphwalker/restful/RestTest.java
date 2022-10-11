@@ -172,7 +172,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
   @Override
   public void e_Load() {
     HttpPost request = new HttpPost("http://localhost:9191/graphwalker/load");
-    FileEntity fileEntity = new FileEntity(ResourceUtils.getResourceAsFile("gw3/UC01.json"), ContentType.TEXT_PLAIN);
+    FileEntity fileEntity = new FileEntity(ResourceUtils.getResourceAsFile("gw/UC01.json"), ContentType.TEXT_PLAIN);
     request.setEntity(fileEntity);
     response = httpExecute(request);
   }

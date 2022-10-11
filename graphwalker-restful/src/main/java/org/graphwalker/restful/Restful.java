@@ -86,11 +86,11 @@ public class Restful {
   @Consumes("text/plain;charset=UTF-8")
   @Produces("text/plain;charset=UTF-8")
   @Path("load")
-  public String load(String jsonGW3) {
-    logger.debug("Received load with gw3: " + jsonGW3);
+  public String load(String jsonGW) {
+    logger.debug("Received load with gw: " + jsonGW);
     JSONObject resultJson = new JSONObject();
     try {
-      List<Context> contexts = new JsonContextFactory().create(jsonGW3);
+      List<Context> contexts = new JsonContextFactory().create(jsonGW);
       setContexts(contexts);
       resultJson.put("result", "ok");
     } catch (Exception e) {
