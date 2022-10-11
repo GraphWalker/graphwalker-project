@@ -74,7 +74,7 @@ public class SimpleMachine extends MachineBase {
   }
 
   private void executeInitActions(Collection<Context> contexts) {
-    globalExecutionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).build();
+    globalExecutionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).option("engine.WarnInterpreterOnly", "false").build();
 
     for (Context context : contexts) {
       context.setGlobalExecutionEnvironment(globalExecutionEnvironment);
