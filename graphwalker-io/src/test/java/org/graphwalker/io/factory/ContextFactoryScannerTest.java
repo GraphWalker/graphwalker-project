@@ -27,7 +27,6 @@ package org.graphwalker.io.factory;
  */
 
 import java.io.File;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

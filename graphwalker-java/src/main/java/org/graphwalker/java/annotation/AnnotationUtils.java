@@ -31,8 +31,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
+
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import org.graphwalker.core.machine.Context;
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,15 +46,18 @@ public abstract class AnnotationUtils {
 
   private static final Logger logger = LoggerFactory.getLogger(AnnotationUtils.class);
 
-  public static Set<Class<?>> findTests(Reflections reflections) {
-    return find(reflections, Context.class, GraphWalker.class);
+  public static Set<Class<?>> findTests() {
+    return find(Context.class, GraphWalker.class);
   }
 
-  public static Set<Class<?>> find(Reflections reflections, Class<?> type, Class<? extends Annotation> annotation) {
+  public static Set<Class<?>> find( Class<?> type, Class<? extends Annotation> annotation) {
     Set<Class<?>> classes = new HashSet<>();
-    for (Class<?> subType : reflections.getTypesAnnotatedWith(annotation)) {
-      if (type.isAssignableFrom(subType)) {
-        classes.add(subType);
+
+    try (ScanResult scanResult = new ClassGraph().enableClassInfo().enableAnnotationInfo().scan()) {
+      for (ClassInfo classInfo : scanResult.getClassesWithAnnotation(annotation)) {
+        if (type.isAssignableFrom(classInfo.loadClass())) {
+          classes.add(classInfo.loadClass());
+        }
       }
     }
     return classes;
@@ -102,5 +108,4 @@ public abstract class AnnotationUtils {
       }
     }
   }
-
 }

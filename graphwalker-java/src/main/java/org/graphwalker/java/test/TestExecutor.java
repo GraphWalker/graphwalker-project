@@ -39,10 +39,6 @@ import org.graphwalker.io.factory.json.JsonContext;
 import org.graphwalker.java.annotation.*;
 import org.graphwalker.java.factory.PathGeneratorFactory;
 import org.graphwalker.java.report.XMLReportGenerator;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,10 +62,6 @@ import static org.graphwalker.core.model.Model.RuntimeModel;
 public final class TestExecutor implements Executor, Observer {
 
   private static final Logger logger = LoggerFactory.getLogger(TestExecutor.class);
-
-  private static final Reflections reflections = new Reflections(new ConfigurationBuilder()
-    .addUrls(filter(ClasspathHelper.forJavaClassPath(), ClasspathHelper.forClassLoader()))
-    .setScanners(Scanners.SubTypes, Scanners.TypesAnnotated));
 
   private static Collection<URL> filter(Collection<URL> classPath, Collection<URL> classLoader) {
     List<URL> urls = new ArrayList<>(), filteredUrls = new ArrayList<>();
@@ -99,7 +91,7 @@ public final class TestExecutor implements Executor, Observer {
 
   public TestExecutor(Configuration configuration) throws IOException {
     this.configuration = configuration;
-    this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests(reflections));
+    this.machineConfiguration = createMachineConfiguration(AnnotationUtils.findTests());
     this.machine = createMachine(machineConfiguration);
     this.machine.addObserver(this);
   }
@@ -166,7 +158,7 @@ public final class TestExecutor implements Executor, Observer {
     Set<Model> models = AnnotationUtils.getAnnotations(context.getClass(), Model.class);
     if (!models.isEmpty()) {
       Path path = Paths.get(models.iterator().next().file());
-      List<Context> contexts = ContextFactoryScanner.get(reflections, path).create(path);
+      List<Context> contexts = ContextFactoryScanner.get(path).create(path);
 
       if (isNullOrEmpty(contexts)) {
         throw new TestExecutionException("Could not read the model: " + path.toString());

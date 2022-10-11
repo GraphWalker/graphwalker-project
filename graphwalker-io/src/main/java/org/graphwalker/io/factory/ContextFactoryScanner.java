@@ -26,25 +26,16 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import java.net.URL;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import org.apache.commons.io.FilenameUtils;
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ScanResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,48 +56,21 @@ public final class ContextFactoryScanner {
 
   private static Map<Class<? extends ContextFactory>, ContextFactory> factories = new HashMap<>();
 
-  private static boolean valid(URL url) {
-    String extension = FilenameUtils.getExtension(url.getPath());
-    return "".equals(extension) || "jar".equals(extension);
-  }
-
-  private static Collection<URL> getUrls() {
-    Set<URL> filteredUrls = new HashSet<>();
-    Set<URL> urls = new HashSet<>();
-    urls.addAll(ClasspathHelper.forClassLoader());
-    urls.addAll(ClasspathHelper.forJavaClassPath());
-    for (URL url : urls) {
-      if (valid(url)) {
-        filteredUrls.add(url);
-      }
-    }
-    return filteredUrls;
-  }
-
-  private static Reflections getReflections(Collection<URL> urls) {
-    return new Reflections(new ConfigurationBuilder().addUrls(urls).setScanners(Scanners.SubTypes));
-  }
-
-  public static ContextFactory get(Path path){
-    Supplier<Collection<URL>> memoizedUrls;
-    memoizedUrls = Suppliers.memoize(ContextFactoryScanner::getUrls);
-
-    return get(getReflections(memoizedUrls.get()), path);
-  }
-
-  public static ContextFactory get(Reflections reflections, Path path) {
+  public static ContextFactory get(Path path) {
     LoadingCache<Class<? extends ContextFactory>, ContextFactory> memo = CacheBuilder.newBuilder()
       .build(CacheLoader.from(ContextFactoryScanner::create));
 
-    for (Class<? extends ContextFactory> factoryClass : reflections.getSubTypesOf(ContextFactory.class)) {
-      ContextFactory factory = null;
-      try {
-        factory = memo.get(factoryClass);
-      } catch (ExecutionException e) {
-        factory = create(factoryClass);
-      }
-      if (null != factory && factory.accept(path)) {
-        return factory;
+    try (ScanResult scanResult = new ClassGraph().enableClassInfo().scan()) {
+      for ( ClassInfo classInfo : scanResult.getClassesImplementing(ContextFactory.class)) {
+        ContextFactory factory = null;
+        try {
+          factory = memo.get((Class<? extends ContextFactory>) classInfo.loadClass());
+        } catch (ExecutionException e) {
+          factory = create((Class<? extends ContextFactory>) classInfo.loadClass());
+        }
+        if (null != factory && factory.accept(path)) {
+          return factory;
+        }
       }
     }
     throw new ContextFactoryException("No suitable context factory found for file: " + path.toString());

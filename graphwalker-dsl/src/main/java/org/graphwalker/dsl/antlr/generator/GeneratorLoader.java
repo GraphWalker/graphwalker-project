@@ -26,8 +26,6 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
