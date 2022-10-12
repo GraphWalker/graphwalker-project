@@ -41,6 +41,11 @@ public class TestExecutionException extends RuntimeException {
     this.result = result;
   }
 
+  public TestExecutionException(Result result, Throwable t) {
+    super(t);
+    this.result = result;
+  }
+
   public TestExecutionException(String message) {
     super(message);
   }

@@ -35,6 +35,7 @@ import org.graphwalker.core.model.Vertex;
 import org.graphwalker.core.statistics.Execution;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.java.annotation.GraphWalker;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -183,6 +184,12 @@ public class TestExecutorTest {
     }
 
     public void throwException() {
+      PossiblyAnActualRealWorldScenario.problematicMethod();
+    }
+  }
+
+  public static class PossiblyAnActualRealWorldScenario {
+    public static void problematicMethod() {
       throw new RuntimeException();
     }
   }
@@ -191,6 +198,45 @@ public class TestExecutorTest {
   public void throwExceptionExecutor() throws IOException {
     Executor executor = new TestExecutor(ThrowExceptionTest.class);
     executor.execute();
+  }
+
+  /**
+   * Do not obscure the root cause failure
+   * @throws IOException
+   */
+  @Test
+  public void doNotObscureRootCauseFailureResult() throws IOException {
+    Executor executor = new TestExecutor(ThrowExceptionTest.class);
+
+    Result result = executor.execute(true);
+    Assert.assertTrue(result.hasErrors());
+    JSONArray failures = (JSONArray) result.getResults().get("failures");
+    ArrayList<String> failureList = new ArrayList<>();
+    failures.forEach( failure -> {
+      boolean hasFailureItem = ((JSONObject) failure).has("failure");
+      if (hasFailureItem) {
+        failureList.add(((JSONObject) failure).getString("failure"));
+      }
+    } );
+
+    Assert.assertTrue(failureList.get(0).startsWith("java.lang.RuntimeException"));
+  }
+
+  @Test
+  public void doNotObscureRootCauseStack() throws IOException {
+    Executor executor = new TestExecutor(ThrowExceptionTest.class);
+    Throwable t = null;
+    try {
+      executor.execute();
+    } catch (Throwable thrown) {
+      t = thrown;
+    }
+
+    Assert.assertNotNull(t);
+    Assert.assertTrue(Arrays.stream(t.getCause().getStackTrace()).anyMatch( stackTraceElement -> {
+      System.out.println(stackTraceElement.getMethodName());
+      return stackTraceElement.getMethodName() == "problematicMethod";
+    }));
   }
 
   @Test

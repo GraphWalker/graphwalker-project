@@ -26,6 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.graphwalker.core.event.EventType;
 import org.graphwalker.core.event.Observer;
 import org.graphwalker.core.machine.Context;
@@ -234,6 +235,7 @@ public final class TestExecutor implements Executor, Observer {
   public Result execute(boolean ignoreErrors) {
     result = new Result();
     executeAnnotation(BeforeExecution.class, machine);
+    Throwable executionException = null;
     try {
       while (machine.hasNextStep()) {
         machine.getNextStep();
@@ -241,11 +243,12 @@ public final class TestExecutor implements Executor, Observer {
     } catch (MachineException e) {
       logger.error(e.getMessage());
       failures.put(e.getContext(), e);
+      executionException = e;
     }
     executeAnnotation(AfterExecution.class, machine);
     result.updateResults(machine, failures);
     if (!ignoreErrors && !failures.isEmpty()) {
-      throw new TestExecutionException(result);
+      throw new TestExecutionException(result, ExceptionUtils.getRootCause(executionException));
     }
     return result;
   }
