@@ -26,38 +26,32 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
+import org.graphwalker.core.condition.EdgeCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
+import org.graphwalker.io.TestExecutionContext;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.SingletonRandomGenerator;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Edge.RuntimeEdge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Requirement;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.io.TestExecutionContext;
-import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.ContextFactoryException;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Kristian Karl

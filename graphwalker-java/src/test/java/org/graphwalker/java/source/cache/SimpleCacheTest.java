@@ -1,6 +1,5 @@
 package org.graphwalker.java.source.cache;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -8,7 +7,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SimpleCacheTest {
 

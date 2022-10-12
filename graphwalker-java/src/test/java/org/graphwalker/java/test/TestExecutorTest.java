@@ -26,6 +26,7 @@ package org.graphwalker.java.test;
  * #L%
  */
 
+import io.github.classgraph.ClassGraph;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
@@ -37,8 +38,6 @@ import org.graphwalker.java.annotation.GraphWalker;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
-
-import io.github.classgraph.ClassGraph;
 
 import java.io.File;
 import java.io.IOException;

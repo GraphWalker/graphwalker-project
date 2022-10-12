@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { FormGroup, InputGroup, TextArea } from "@blueprintjs/core";
-import { updateModel } from "../../redux/actions";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {FormGroup, InputGroup, TextArea} from "@blueprintjs/core";
+import {updateModel} from "../../redux/actions";
 import Group from "./group";
 
 class ModelGroup extends Component {

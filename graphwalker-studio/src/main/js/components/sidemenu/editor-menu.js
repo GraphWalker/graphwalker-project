@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { Button, ButtonGroup } from "@blueprintjs/core";
-import { toggleProperties} from "../../redux/actions";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {Button, ButtonGroup} from "@blueprintjs/core";
+import {toggleProperties} from "../../redux/actions";
 
 class EditorMenu extends Component {
 

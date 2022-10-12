@@ -30,11 +30,7 @@ import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.StopConditionException;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
+import org.graphwalker.core.model.*;
 import org.junit.Test;
 
 /**

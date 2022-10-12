@@ -26,10 +26,6 @@ package org.graphwalker.dsl;
  * #L%
  */
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.antlr.DslException;
@@ -38,6 +34,10 @@ import org.graphwalker.dsl.antlr.generator.GeneratorFactoryException;
 import org.graphwalker.generator.PluginGenerator;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 /**
  * Created by krikar on 5/14/14.

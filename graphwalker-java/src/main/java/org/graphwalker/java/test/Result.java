@@ -26,13 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.MachineException;
@@ -41,6 +34,14 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.Requirement;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static org.graphwalker.core.common.Objects.isNotNullOrEmpty;
 
 /**
  * @author Nils Olsson

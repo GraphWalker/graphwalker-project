@@ -26,11 +26,12 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
+import org.graphwalker.core.machine.Context;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
-import org.graphwalker.core.machine.Context;
 
 /**
  * @author Nils Olsson

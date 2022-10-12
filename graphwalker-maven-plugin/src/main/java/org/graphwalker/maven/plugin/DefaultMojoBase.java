@@ -26,15 +26,16 @@ package org.graphwalker.maven.plugin;
  * #L%
  */
 
-import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Nils Olsson

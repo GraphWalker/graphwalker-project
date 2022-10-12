@@ -14,7 +14,9 @@ import org.apache.http.util.EntityUtils;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.graphwalker.io.common.ResourceUtils;
 import org.json.JSONObject;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.io.IOException;

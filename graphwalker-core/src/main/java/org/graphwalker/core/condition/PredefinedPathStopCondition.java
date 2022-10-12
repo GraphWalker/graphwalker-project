@@ -1,6 +1,5 @@
 package org.graphwalker.core.condition;
 
-import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Vertex;
 
 public class PredefinedPathStopCondition extends StopConditionBase {

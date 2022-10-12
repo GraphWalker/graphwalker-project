@@ -26,24 +26,20 @@ package org.graphwalker.core.generator;
  * #L%
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
 import org.graphwalker.core.algorithm.AlgorithmException;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.TestExecutionContext;
-import org.graphwalker.core.model.Builder;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.statistics.Profiler;
+import org.graphwalker.core.model.*;
 import org.graphwalker.core.statistics.SimpleProfiler;
 import org.junit.Test;
+
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Nils Olsson

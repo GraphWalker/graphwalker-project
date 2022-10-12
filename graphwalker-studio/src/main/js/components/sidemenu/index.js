@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Divider } from "@blueprintjs/core";
+import React, {Component} from 'react';
+import {Divider} from "@blueprintjs/core";
 import FileMenu from "./file-menu";
 import ExecutionMenu from "./execution-menu";
 import EditorMenu from "./editor-menu";

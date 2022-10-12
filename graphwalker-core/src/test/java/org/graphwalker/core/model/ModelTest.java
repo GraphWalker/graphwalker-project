@@ -26,19 +26,18 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.*;
+import org.graphwalker.core.model.Model.RuntimeModel;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
-import org.graphwalker.core.model.Model.RuntimeModel;
-import org.junit.Test;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson

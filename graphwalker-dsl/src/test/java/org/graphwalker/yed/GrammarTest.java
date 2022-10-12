@@ -26,10 +26,6 @@ package org.graphwalker.yed;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-
-import java.util.Arrays;
-import java.util.List;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -38,6 +34,11 @@ import org.graphwalker.dsl.yed.YEdLabelLexer;
 import org.graphwalker.dsl.yed.YEdVertexParser;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson

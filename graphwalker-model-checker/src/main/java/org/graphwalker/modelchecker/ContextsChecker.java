@@ -1,11 +1,12 @@
 package org.graphwalker.modelchecker;
 
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.model.Element;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.model.Element;
 
 /**
  * Created by krikar on 2015-11-08.

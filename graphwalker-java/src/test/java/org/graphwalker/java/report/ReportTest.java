@@ -26,8 +26,13 @@ package org.graphwalker.java.report;
  * #L%
  */
 
-import static org.junit.Assert.assertThat;
-import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.java.test.Executor;
+import org.graphwalker.java.test.TestExecutor;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,13 +42,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.graphwalker.java.test.Executor;
-import org.graphwalker.java.test.TestExecutor;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+
+import static org.junit.Assert.assertThat;
+import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
 /**
  * @author Nils Olsson

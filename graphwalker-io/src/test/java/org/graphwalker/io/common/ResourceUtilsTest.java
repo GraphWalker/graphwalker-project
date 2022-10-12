@@ -26,14 +26,15 @@ package org.graphwalker.io.common;
  * #L%
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

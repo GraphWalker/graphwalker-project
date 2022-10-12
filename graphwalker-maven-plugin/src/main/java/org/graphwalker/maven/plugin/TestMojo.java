@@ -26,6 +26,15 @@ package org.graphwalker.maven.plugin;
  * #L%
  */
 
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.*;
+import org.codehaus.plexus.util.StringUtils;
+import org.graphwalker.java.test.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,22 +42,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import org.apache.commons.io.IOUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Execute;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.codehaus.plexus.util.StringUtils;
-import org.graphwalker.java.test.Configuration;
-import org.graphwalker.java.test.ContextConfiguration;
-import org.graphwalker.java.test.IsolatedClassLoader;
-import org.graphwalker.java.test.Reflector;
-import org.graphwalker.java.test.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Nils Olsson

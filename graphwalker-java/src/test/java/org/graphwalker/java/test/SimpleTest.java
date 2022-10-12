@@ -26,15 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
@@ -44,6 +35,16 @@ import org.graphwalker.java.annotation.AfterExecution;
 import org.graphwalker.java.annotation.BeforeElement;
 import org.graphwalker.java.annotation.BeforeExecution;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson

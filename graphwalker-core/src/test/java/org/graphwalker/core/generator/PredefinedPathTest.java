@@ -3,7 +3,6 @@ package org.graphwalker.core.generator;
 import org.graphwalker.core.condition.Never;
 import org.graphwalker.core.condition.PredefinedPathStopCondition;
 import org.graphwalker.core.condition.StopConditionException;
-import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.machine.*;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;

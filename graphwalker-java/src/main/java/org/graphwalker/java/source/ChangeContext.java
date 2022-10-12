@@ -26,12 +26,13 @@ package org.graphwalker.java.source;
  * #L%
  */
 
-import static org.graphwalker.core.model.Model.RuntimeModel;
-
 import japa.parser.ast.body.MethodDeclaration;
+import org.graphwalker.core.model.Element;
+
 import java.util.HashSet;
 import java.util.Set;
-import org.graphwalker.core.model.Element;
+
+import static org.graphwalker.core.model.Model.RuntimeModel;
 
 /**
  * @author Nils Olsson

@@ -26,17 +26,18 @@ package org.graphwalker.io.common;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.io.factory.json.JsonContextFactory;
 import org.graphwalker.io.factory.yed.YEdContextFactory;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by krikar on 2015-11-04.

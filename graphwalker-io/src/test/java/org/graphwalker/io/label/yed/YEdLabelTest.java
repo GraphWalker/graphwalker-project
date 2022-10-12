@@ -26,13 +26,6 @@ package org.graphwalker.io.label.yed;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -40,6 +33,13 @@ import org.graphwalker.dsl.yed.YEdEdgeParser;
 import org.graphwalker.dsl.yed.YEdLabelLexer;
 import org.graphwalker.dsl.yed.YEdVertexParser;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson

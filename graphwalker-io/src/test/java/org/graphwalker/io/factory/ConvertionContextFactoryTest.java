@@ -26,26 +26,26 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.factory.dot.DotContextFactory;
+import org.graphwalker.io.factory.java.JavaContextFactory;
+import org.graphwalker.io.factory.json.JsonContextFactory;
+import org.graphwalker.io.factory.yed.YEdContextFactory;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.factory.dot.DotContextFactory;
-import org.graphwalker.io.factory.java.JavaContextFactory;
-import org.graphwalker.io.factory.json.JsonContextFactory;
-import org.graphwalker.io.factory.yed.YEdContextFactory;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Kristian Karl

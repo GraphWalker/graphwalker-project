@@ -26,16 +26,16 @@ package org.graphwalker.dsl.antlr.generator;
  * #L%
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import org.graphwalker.core.condition.*;
 import org.graphwalker.core.generator.*;
 import org.graphwalker.dsl.generator.GeneratorParser;
 import org.graphwalker.dsl.generator.GeneratorParserBaseListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by krikar on 5/14/14.

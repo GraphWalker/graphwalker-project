@@ -26,13 +26,23 @@ package org.graphwalker.io.factory.yed;
  * #L%
  */
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.apache.commons.io.IOUtils;
+import org.graphwalker.core.condition.VertexCoverage;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.core.machine.Machine;
+import org.graphwalker.core.machine.SimpleMachine;
+import org.graphwalker.core.model.*;
+import org.graphwalker.core.model.Edge.RuntimeEdge;
+import org.graphwalker.core.model.Model.RuntimeModel;
+import org.graphwalker.core.model.Vertex.RuntimeVertex;
+import org.graphwalker.io.TestExecutionContext;
+import org.graphwalker.io.common.ResourceUtils;
+import org.graphwalker.io.factory.ContextFactory;
+import org.graphwalker.io.factory.ContextFactoryException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -42,27 +52,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Edge.RuntimeEdge;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Model.RuntimeModel;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.model.Vertex.RuntimeVertex;
-import org.graphwalker.io.TestExecutionContext;
-import org.graphwalker.io.common.ResourceUtils;
-import org.graphwalker.io.factory.ContextFactory;
-import org.graphwalker.io.factory.ContextFactoryException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 
 /**

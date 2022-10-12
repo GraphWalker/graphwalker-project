@@ -26,10 +26,10 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
-import static org.graphwalker.core.common.Objects.isNull;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.graphwalker.core.common.Objects.isNull;
 
 public final class JsonMultimodel {
 

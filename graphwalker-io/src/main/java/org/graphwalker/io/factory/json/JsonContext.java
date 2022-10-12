@@ -26,11 +26,12 @@ package org.graphwalker.io.factory.json;
  * #L%
  */
 
-import javax.script.Bindings;
-import javax.script.SimpleBindings;
 import org.graphwalker.core.generator.PathGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Model;
+
+import javax.script.Bindings;
+import javax.script.SimpleBindings;
 
 /**
  * Created by krikar on 9/24/14.

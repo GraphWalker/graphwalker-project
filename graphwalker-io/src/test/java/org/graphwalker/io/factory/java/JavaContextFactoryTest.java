@@ -26,11 +26,12 @@ package org.graphwalker.io.factory.java;
  * #L%
  */
 
-import java.nio.file.Paths;
 import org.graphwalker.io.factory.ContextFactoryException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Paths;
 
 /**
  * @author Kristian Karl

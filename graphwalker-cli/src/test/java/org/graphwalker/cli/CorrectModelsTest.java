@@ -48,13 +48,14 @@
 
 package org.graphwalker.cli;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
-
-import java.util.Arrays;
-import org.junit.Assert;
-import org.junit.Test;
 
 
 public class CorrectModelsTest extends CLITestRoot {

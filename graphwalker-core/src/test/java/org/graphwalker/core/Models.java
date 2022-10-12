@@ -26,13 +26,13 @@ package org.graphwalker.core;
  * #L%
  */
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-import static org.graphwalker.core.model.Model.RuntimeModel;
-import static org.graphwalker.core.model.Vertex.RuntimeVertex;
-
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
+
+import static org.graphwalker.core.model.Edge.RuntimeEdge;
+import static org.graphwalker.core.model.Model.RuntimeModel;
+import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 
 public abstract class Models {
 

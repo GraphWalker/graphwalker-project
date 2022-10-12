@@ -26,9 +26,10 @@
 package org.graphwalker;
 
 
-import java.util.regex.Pattern;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+
+import java.util.regex.Pattern;
 
 public class RegexMatcher extends BaseMatcher {
 

@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
-import { findDOMNode } from "react-dom";
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {findDOMNode} from "react-dom";
+import {connect} from "react-redux";
 import {
   createElement,
   deleteElement,
+  saveEditorState,
   selectElement,
   setStartElement,
-  updateElementPosition,
-  saveEditorState,
-  toggleBreakpoint
+  toggleBreakpoint,
+  updateElementPosition
 } from "../../../redux/actions";
-import {Classes, ContextMenu, Divider, Menu, MenuDivider, MenuItem, ResizeSensor} from "@blueprintjs/core";
-import { debounce } from "debounce";
-import { v4 as uuid } from 'uuid';
+import {ContextMenu, Divider, Menu, MenuItem, ResizeSensor} from "@blueprintjs/core";
+import {debounce} from "debounce";
+import {v4 as uuid} from 'uuid';
 import Cytoscape from "cytoscape";
 import coseBilkent from 'cytoscape-cose-bilkent';
 import stylesheet from "./editor-stylesheet";

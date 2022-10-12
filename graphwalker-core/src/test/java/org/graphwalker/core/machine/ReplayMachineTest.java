@@ -26,9 +26,6 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.model.*;
@@ -37,6 +34,9 @@ import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson

@@ -26,10 +26,6 @@ package org.graphwalker.io.factory;
  * #L%
  */
 
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -38,6 +34,11 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Nils Olsson

@@ -26,17 +26,16 @@ package org.graphwalker.io.factory.dot;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import org.graphwalker.core.machine.Context;
+import org.graphwalker.io.common.ResourceNotFoundException;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.io.common.ResourceNotFoundException;
-import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 /**
  * @author Kristian Karl

@@ -26,26 +26,20 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.*;
+import org.graphwalker.core.model.*;
+import org.graphwalker.core.statistics.Execution;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.graphwalker.core.condition.*;
-import org.graphwalker.core.generator.*;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.graphwalker.core.statistics.Execution;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson

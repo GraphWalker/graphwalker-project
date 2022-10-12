@@ -26,28 +26,19 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.junit.Assert.assertArrayEquals;
+import org.graphwalker.core.condition.*;
+import org.graphwalker.core.generator.AStarPath;
+import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.ShortestAllPaths;
+import org.graphwalker.core.model.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.graphwalker.core.condition.AlternativeCondition;
-import org.graphwalker.core.condition.CombinedCondition;
-import org.graphwalker.core.condition.EdgeCoverage;
-import org.graphwalker.core.condition.ReachedEdge;
-import org.graphwalker.core.condition.ReachedVertex;
-import org.graphwalker.core.condition.VertexCoverage;
-import org.graphwalker.core.generator.AStarPath;
-import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.generator.ShortestAllPaths;
-import org.graphwalker.core.model.Action;
-import org.graphwalker.core.model.Edge;
-import org.graphwalker.core.model.Element;
-import org.graphwalker.core.model.Guard;
-import org.graphwalker.core.model.Model;
-import org.graphwalker.core.model.Vertex;
-import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
 
 /**
  * This is a programatic implementaion of the models:

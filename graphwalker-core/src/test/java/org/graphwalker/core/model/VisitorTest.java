@@ -26,17 +26,16 @@ package org.graphwalker.core.model;
  * #L%
  */
 
+import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Model.RuntimeModel;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
-
-import java.util.HashSet;
-import java.util.Set;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson

@@ -26,12 +26,6 @@ package org.graphwalker.io.common;
  * #L%
  */
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Properties;
-
 import org.apache.commons.io.IOUtils;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Edge;
@@ -39,6 +33,12 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Properties;
 
 /**
  * Created by krikar on 2015-11-04.

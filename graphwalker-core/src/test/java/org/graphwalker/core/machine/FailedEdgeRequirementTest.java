@@ -26,9 +26,6 @@ package org.graphwalker.core.machine;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 import org.graphwalker.core.condition.RequirementCoverage;
 import org.graphwalker.core.condition.StopCondition;
 import org.graphwalker.core.generator.RandomPath;
@@ -37,6 +34,9 @@ import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Requirement;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson
