@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import {FormGroup, InputGroup, Slider} from "@blueprintjs/core";
-import { setExecutionDelay, updateModel } from "../../redux/actions";
+import {setExecutionDelay, updateModel} from "../../redux/actions";
 import Group from "./group";
 
 class ExecutionGroup extends Component {

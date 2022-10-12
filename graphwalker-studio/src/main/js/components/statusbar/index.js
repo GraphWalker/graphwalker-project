@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { ProgressBar, Intent, Toast, Toaster, Position } from "@blueprintjs/core";
-import { stopTest } from "../../redux/actions";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {Intent, Position, ProgressBar, Toast, Toaster} from "@blueprintjs/core";
+import {stopTest} from "../../redux/actions";
 import './style.css';
 
 class StatusBar extends Component {

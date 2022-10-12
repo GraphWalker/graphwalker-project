@@ -26,14 +26,14 @@ package org.graphwalker.io.xmlbeans.yed;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
 import org.apache.xmlbeans.XmlException;
 import org.graphdrawing.graphml.xmlns.GraphmlDocument;
-import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Nils Olsson

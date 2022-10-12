@@ -26,7 +26,6 @@ package org.graphwalker.restful;
  * #L%
  */
 
-import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.graalvm.polyglot.Value;
 import org.graphwalker.core.machine.Context;
@@ -36,6 +35,8 @@ import org.graphwalker.core.model.Element;
 import org.graphwalker.core.model.RuntimeBase;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * Helper class to create output in different formats, like JSON or plain text.

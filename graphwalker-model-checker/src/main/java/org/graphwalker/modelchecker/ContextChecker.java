@@ -1,11 +1,12 @@
 package org.graphwalker.modelchecker;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.model.Vertex;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by krikar on 2015-11-08.

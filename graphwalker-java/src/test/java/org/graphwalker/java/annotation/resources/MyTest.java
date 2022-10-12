@@ -29,13 +29,7 @@ package org.graphwalker.java.annotation.resources;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.ExecutionContext;
-import org.graphwalker.java.annotation.AfterElement;
-import org.graphwalker.java.annotation.AfterExecution;
-import org.graphwalker.java.annotation.BeforeElement;
-import org.graphwalker.java.annotation.BeforeExecution;
-import org.graphwalker.java.annotation.Edge;
-import org.graphwalker.java.annotation.GraphWalker;
-import org.graphwalker.java.annotation.Vertex;
+import org.graphwalker.java.annotation.*;
 
 /**
  * @author Nils Olsson

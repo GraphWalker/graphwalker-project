@@ -26,11 +26,12 @@
 
 package org.graphwalker.cli;
 
-import static org.hamcrest.core.Is.is;
-
-import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.hamcrest.core.Is.is;
 
 
 public class ConvertFilesTest extends CLITestRoot {

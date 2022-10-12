@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { Button, ButtonGroup } from "@blueprintjs/core";
-import { runTest, pauseTest, stepTest, stopTest } from "../../redux/actions";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {Button, ButtonGroup} from "@blueprintjs/core";
+import {pauseTest, runTest, stepTest, stopTest} from "../../redux/actions";
 
 class ExecutionMenu extends Component {
   render() {

@@ -26,21 +26,15 @@ package org.graphwalker.core.model;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import org.graphwalker.core.condition.AlternativeCondition;
 import org.graphwalker.core.condition.ReachedVertex;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
-import org.graphwalker.core.machine.Context;
-import org.graphwalker.core.machine.Machine;
-import org.graphwalker.core.machine.RequirementStatus;
-import org.graphwalker.core.machine.SimpleMachine;
-import org.graphwalker.core.machine.TestExecutionContext;
+import org.graphwalker.core.machine.*;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 /**
  * @author Nils Olsson

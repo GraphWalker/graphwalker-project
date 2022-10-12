@@ -2,16 +2,14 @@
 
 <!-- Header -->
 <xs:schema
-    targetNamespace="http://www.yworks.com/xml/graphml"
+  targetNamespace="http://www.yworks.com/xml/graphml"
 
-    xmlns="http://www.yworks.com/xml/graphml"
-    xmlns:g="http://graphml.graphdrawing.org/xmlns"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns="http://www.yworks.com/xml/graphml"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
 
-    elementFormDefault="qualified"
-    attributeFormDefault="unqualified"
-    >
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+>
 
   <!-- Processor -->
   <xs:complexType name="Processor.type">

@@ -26,11 +26,6 @@ package org.graphwalker.websocket;
  * #L%
  */
 
-import static org.hamcrest.CoreMatchers.is;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-
 import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.java.annotation.BeforeExecution;
@@ -43,6 +38,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * Created by krikar on 10/10/14.

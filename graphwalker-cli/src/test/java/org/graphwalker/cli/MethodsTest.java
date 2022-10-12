@@ -26,13 +26,14 @@
 
 package org.graphwalker.cli;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.core.Is.is;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import org.junit.Assert;
-import org.junit.Test;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
 
 
 public class MethodsTest extends CLITestRoot {

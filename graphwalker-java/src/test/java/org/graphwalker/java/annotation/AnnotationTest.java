@@ -26,14 +26,15 @@ package org.graphwalker.java.annotation;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-
-import java.util.Set;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.java.annotation.resources.MyTest;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Set;
+
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson

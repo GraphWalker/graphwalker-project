@@ -38,7 +38,8 @@ import org.slf4j.MDC;
 
 import java.util.*;
 
-import static org.graphwalker.core.common.Objects.*;
+import static org.graphwalker.core.common.Objects.isNotNull;
+import static org.graphwalker.core.common.Objects.isNull;
 import static org.graphwalker.core.model.Edge.RuntimeEdge;
 import static org.graphwalker.core.model.Vertex.RuntimeVertex;
 

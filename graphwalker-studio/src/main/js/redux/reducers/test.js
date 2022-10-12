@@ -1,20 +1,21 @@
 import produce from "immer";
 import {
-  TEST_LOAD,
-  TEST_NEW,
-  MODEL_ADD,
-  MODEL_CLOSE,
-  MODEL_CLOSE_ALL,
-  MODEL_SELECT,
-  MODEL_UPDATE,
+  EDITOR_SAVE_STATE,
   ELEMENT_CREATE,
   ELEMENT_DELETE,
   ELEMENT_SELECT,
   ELEMENT_START,
   ELEMENT_UPDATE,
-  ELEMENT_UPDATE_POSITION, EDITOR_SAVE_STATE
+  ELEMENT_UPDATE_POSITION,
+  MODEL_ADD,
+  MODEL_CLOSE,
+  MODEL_CLOSE_ALL,
+  MODEL_SELECT,
+  MODEL_UPDATE,
+  TEST_LOAD,
+  TEST_NEW
 } from "../actionTypes";
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
 
 const initialState = {
   models: [],

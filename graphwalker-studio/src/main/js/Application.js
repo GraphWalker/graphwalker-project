@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import Container from "./components/container";
 import StatusBar from "./components/statusbar";
 import SideMenu from "./components/sidemenu";
 import Editor from "./components/editor";
 import ConfigPanel from "./components/configpanel";
-import { Divider } from "@blueprintjs/core";
 import Banner from "./graphwalker.inline.svg";
 import PanelGroup from "react-panelgroup";
 import './style.css';

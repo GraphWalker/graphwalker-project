@@ -26,10 +26,10 @@ package org.graphwalker.cli;
  * #L%
  */
 
-import static org.hamcrest.core.Is.is;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
 
 
 public class IncorrectModelsTest extends CLITestRoot {

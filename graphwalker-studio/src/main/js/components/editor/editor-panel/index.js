@@ -1,6 +1,5 @@
-import React, { Component, createRef } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import { ResizeSensor } from "@blueprintjs/core";
 import EditorComponent from "./editor-component";
 
 const EditorPanelContainer = styled.div`

@@ -1,12 +1,6 @@
 import {
-  TEST_LOAD,
-  TEST_NEW,
+  EDITOR_PROPERTIES_TOGGLE,
   EDITOR_SAVE_STATE,
-  MODEL_ADD,
-  MODEL_CLOSE,
-  MODEL_CLOSE_ALL,
-  MODEL_SELECT,
-  MODEL_UPDATE,
   ELEMENT_CREATE,
   ELEMENT_DELETE,
   ELEMENT_SELECT,
@@ -22,9 +16,16 @@ import {
   EXECUTION_PAUSE,
   EXECUTION_RUN,
   EXECUTION_STEP,
-  EXECUTION_STOP, EDITOR_PROPERTIES_TOGGLE
+  EXECUTION_STOP,
+  MODEL_ADD,
+  MODEL_CLOSE,
+  MODEL_CLOSE_ALL,
+  MODEL_SELECT,
+  MODEL_UPDATE,
+  TEST_LOAD,
+  TEST_NEW
 } from "./actionTypes";
-import { v4 as uuid } from 'uuid';
+import {v4 as uuid} from 'uuid';
 
 export const loadTest = content => {
   return async (dispatch, getState, client) => {

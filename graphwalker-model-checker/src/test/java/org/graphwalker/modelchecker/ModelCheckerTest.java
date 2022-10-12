@@ -1,14 +1,15 @@
 package org.graphwalker.modelchecker;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.core.Is.is;
-
-import java.util.List;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.core.Is.is;
 
 /**
  * Created by krikar on 2015-11-08.

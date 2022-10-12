@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { FormGroup, InputGroup, Switch, TextArea } from "@blueprintjs/core";
-import { updateElement, setStartElement } from "../../redux/actions";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {FormGroup, InputGroup, Switch, TextArea} from "@blueprintjs/core";
+import {setStartElement, updateElement} from "../../redux/actions";
 import Group from "./group";
 
 class ElementGroup extends Component {

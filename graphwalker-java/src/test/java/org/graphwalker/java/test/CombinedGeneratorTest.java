@@ -26,9 +26,6 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.graphwalker.core.condition.EdgeCoverage;
 import org.graphwalker.core.condition.VertexCoverage;
 import org.graphwalker.core.generator.CombinedPath;
@@ -37,6 +34,10 @@ import org.graphwalker.core.machine.ExecutionContext;
 import org.graphwalker.core.model.Edge;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author Kristian Karl

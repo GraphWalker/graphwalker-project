@@ -28,8 +28,6 @@ package org.graphwalker.core.condition;
 
 import org.graphwalker.core.machine.Context;
 
-import static org.graphwalker.core.model.Edge.RuntimeEdge;
-
 /**
  * <h1>EdgeCoverage</h1>
  * The EdgeCoverage stop condition is fulfilled when the percentage of visited edges in the

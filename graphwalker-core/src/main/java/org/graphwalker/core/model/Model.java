@@ -27,7 +27,6 @@ package org.graphwalker.core.model;
  */
 
 import org.graphwalker.core.common.Objects;
-import org.graphwalker.core.machine.MachineException;
 
 import java.util.*;
 import java.util.stream.Collectors;

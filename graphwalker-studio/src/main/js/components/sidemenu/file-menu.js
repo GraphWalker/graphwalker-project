@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
-import { Button, ButtonGroup } from "@blueprintjs/core";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {Button, ButtonGroup} from "@blueprintjs/core";
 import {addModel, loadTest, newTest} from "../../redux/actions";
 
 class FileMenu extends Component {

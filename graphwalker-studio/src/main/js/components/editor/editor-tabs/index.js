@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from "react-redux";
+import React, {Component} from 'react';
+import {connect} from "react-redux";
 import styled from 'styled-components';
-import { Button, Icon, Menu, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
-import { addModel, selectModel, closeModel, closeAllModels } from "../../../redux/actions";
+import {Button, Icon, Menu, MenuItem, Popover, Position} from "@blueprintjs/core";
+import {addModel, closeAllModels, closeModel, selectModel} from "../../../redux/actions";
 import "./style.css";
 
 const TabsContainer = styled.div`

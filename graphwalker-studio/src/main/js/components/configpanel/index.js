@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import styled from 'styled-components';
-import {Divider, Icon} from "@blueprintjs/core";
 import ModelGroup from "./model-group";
 import ElementGroup from "./element-group";
 import "./style.css"
