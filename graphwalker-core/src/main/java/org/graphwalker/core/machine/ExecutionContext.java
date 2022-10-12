@@ -79,7 +79,7 @@ public abstract class ExecutionContext implements Context {
   private final Map<Requirement, RequirementStatus> requirements = new HashMap<>();
 
   public ExecutionContext() {
-    executionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).build();
+    executionEnvironment = org.graalvm.polyglot.Context.newBuilder().allowAllAccess(true).option("engine.WarnInterpreterOnly", "false").build();
     executionEnvironment.getBindings("js").putMember(getClass().getSimpleName(), this);
     predefinedPathCurrentEdgeIndex = 0;
   }

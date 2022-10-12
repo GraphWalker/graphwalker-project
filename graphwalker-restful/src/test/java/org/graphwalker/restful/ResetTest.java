@@ -51,7 +51,7 @@ public class ResetTest {
     try (CloseableHttpClient client = HttpClientBuilder.create() .build()) {
       // Load model
       HttpPost load = new HttpPost("http://localhost:9192/graphwalker/load");
-      load.setEntity(new FileEntity(ResourceUtils.getResourceAsFile("gw3/UC01.json"), ContentType.TEXT_PLAIN));
+      load.setEntity(new FileEntity(ResourceUtils.getResourceAsFile("gw/UC01.json"), ContentType.TEXT_PLAIN));
       client.execute(load);
       // Reset model without taking any steps
       CloseableHttpResponse response = client.execute(new HttpPut("http://localhost:9192/graphwalker/restart"));

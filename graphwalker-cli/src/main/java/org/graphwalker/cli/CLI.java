@@ -417,9 +417,8 @@ public class CLI {
       }
 
       executor.execute();
-    } else if (!offline.gw3.isEmpty()) {
-      //TODO Fix gw3. Should not be there
-      List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw3));
+    } else if (!offline.gw.isEmpty()) {
+      List<Context> contexts = new JsonContextFactory().create(Paths.get(offline.gw));
 
       if (offline.seed != 0) {
         SingletonRandomGenerator.setSeed(offline.seed);

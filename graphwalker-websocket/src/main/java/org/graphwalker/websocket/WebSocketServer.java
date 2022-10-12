@@ -158,12 +158,9 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer i
         response.put("success", false);
         List<Context> contexts = null;
         try {
-          try {
-            contexts = new JsonContextFactory().create(root.getJSONObject("gw").toString());
-          } catch (RuntimeException e) {
-            contexts = new JsonContextFactory().create(root.getJSONObject("gw3").toString());
-          }
+          contexts = new JsonContextFactory().create(root.getJSONObject("gw").toString());
           Machine machine = new SimpleMachine(contexts);
+          logger.debug("krikar: machine created");
           machine.addObserver(this);
           machines.put(socket, machine);
           response.put("success", true);

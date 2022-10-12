@@ -48,9 +48,9 @@ public class Offline {
                   "This option can occur multiple times.")
   public List<String> model = new ArrayList<>();
 
-  @Parameter(names = {"--gw3", "-g"}, required = false, arity = 1,
-    description = "The model, as a single gw3 file.")
-  public String gw3 = "";
+  @Parameter(names = {"--gw", "-g"}, required = false, arity = 1,
+    description = "The model, as a single gw file.")
+  public String gw = "";
 
   @Parameter(names = {"--start-element", "-e"}, required = false,
     description = "Sets the starting element in the [first] model.")

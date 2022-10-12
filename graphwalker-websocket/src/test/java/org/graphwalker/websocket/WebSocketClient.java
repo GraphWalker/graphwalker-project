@@ -250,7 +250,7 @@ public class WebSocketClient {
    */
   public void startMachine(Path path) {
     logger.debug("Start the machine");
-    String startCommand = "{ command: \"start\", gw3: ";
+    String startCommand = "{ command: \"start\", gw: ";
     startCommand += loadModel(path) + "}";
     client.wsc.send(startCommand);
     wait(client, RX_STATE.START);

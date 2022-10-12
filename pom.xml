@@ -73,10 +73,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <doclint>none</doclint>
-    <spring.version>2.5.12</spring.version>
+    <spring.version>2.7.4</spring.version>
     <maven.version>3.8.3</maven.version>
-    <antlr.version>4.9.3</antlr.version>
-    <graalvm.version>21.0.0.2</graalvm.version>
+    <antlr.version>4.11.1</antlr.version>
+    <graalvm.version>22.2.0</graalvm.version>
   </properties>
 
   <modules>
@@ -204,9 +204,9 @@
         <version>${antlr.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.reflections</groupId>
-        <artifactId>reflections</artifactId>
-        <version>0.10.2</version>
+        <groupId>io.github.classgraph</groupId>
+        <artifactId>classgraph</artifactId>
+        <version>4.8.132</version>
       </dependency>
       <dependency>
         <groupId>com.google.code.javaparser</groupId>
@@ -315,12 +315,6 @@
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
         <version>3.28.0-GA</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.classgraph</groupId>
-        <artifactId>classgraph</artifactId>
-        <scope>test</scope>
-        <version>4.8.132</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
