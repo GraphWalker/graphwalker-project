@@ -12,10 +12,10 @@ package org.graphwalker.cli;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -41,9 +41,10 @@ public class IOErrorsTest extends CLITestRoot {
   public void nonExistentFile() {
     String args[] = {"offline", "-m", "sdsdtkdsjhsl.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is("An error occurred when running command: " +
-                                            "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
-                                            System.lineSeparator() + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
+    Assert.assertThat(result.getStatus(), is(2));
     Assert.assertThat(result.getOutput(), is(""));
+    Assert.assertThat(result.getError(), is("An error occurred when running command: " +
+                                            "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" + System.lineSeparator() +
+                                            "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
   }
 }

@@ -10,10 +10,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -67,6 +67,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void simplestModel() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
@@ -79,6 +80,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void shortestAllPathsVertexCoverage() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
@@ -99,6 +101,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void loginNoErrors() {
     String args[] = {"offline", "-o", "-m", "graphml/Login.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
   }
 
@@ -109,6 +112,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void noStartVertex() {
     String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
@@ -123,6 +127,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlocked() {
     String args[] = {"offline", "-b", "false", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
@@ -137,6 +142,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlocked() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
@@ -149,6 +155,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlockedJson() {
     String args[] = {"offline", "-b", "false", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
                       hasItems("{\"currentElementName\":\"e1\"}",
@@ -175,6 +182,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlockedJson() {
     String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
+    Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
                       hasItems("{\"currentElementName\":\"e1\"}",

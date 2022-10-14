@@ -12,10 +12,10 @@ package org.graphwalker.cli;
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,17 +49,23 @@ public abstract class CLITestRoot {
     System.setOut(outStream);
     System.setErr(errStream);
 
+    int status = -1;
+
     try {
-      CLI.main(args);
+      CLI cli = new CLI();
+      status = cli.run(args);
     } finally {
       System.setOut(oldOutStream);
       System.setErr(oldErrStream);
 
       String outMsg = stdOutput.toString();
       String errMsg = errOutput.toString();
+
       logger.info("stdout: " + outMsg);
       logger.info("stderr: " + errMsg);
-      return new Result(outMsg, errMsg);
+      logger.info("status: " + status);
+
+      return new Result(outMsg, errMsg, status);
     }
   }
 
@@ -82,10 +88,12 @@ public abstract class CLITestRoot {
 
     private final String output;
     private final String error;
+    private final int status;
 
-    public Result(String output, String error) {
+    public Result(String output, String error, int status) {
       this.output = output;
       this.error = error;
+      this.status = status;
     }
 
     public String getOutput() {
@@ -94,6 +102,10 @@ public abstract class CLITestRoot {
 
     public String getError() {
       return error;
+    }
+
+    public int getStatus() {
+      return status;
     }
   }
 }
