@@ -329,8 +329,7 @@ public class CLI {
     try {
       contexts = inputFactory.create(Paths.get(inputFileName));
     } catch (DslException e) {
-      System.err.println("When parsing model: '" + inputFileName + "' " + e.getMessage() + System.lineSeparator());
-      throw new Exception("Model syntax error");
+      throw new Exception("The following syntax error occurred when parsing: '" + inputFileName + "': " + e.getMessage() + System.lineSeparator());
     }
 
     if (convert.blocked) {
@@ -355,8 +354,7 @@ public class CLI {
         throw new RuntimeException("No valid models found in: " + modelFileName);
       }
     } catch (DslException e) {
-      System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
-      throw new Exception("Model syntax error");
+      throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "': " + e.getMessage() + System.lineSeparator());
     }
 
     if (source.blocked) {
@@ -455,9 +453,9 @@ public class CLI {
       try {
         contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
-        System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
-        throw new Exception("Model syntax error.");
+        throw new Exception("The following error occurred when parsing: '" + modelFileName + "'." + System.lineSeparator() + e.getMessage() + System.lineSeparator());
       }
+
       // TODO fix all occurrences of get(0) is not safe
       contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
@@ -473,9 +471,9 @@ public class CLI {
         }
 
         if (elements == null) {
-          throw new ParameterException("--start-element Did not find matching element in the model: " + modelFileName);
+          throw new ParameterException("--start-element Did not find matching element in the model: '" + modelFileName + "'.");
         } else if (elements.size() > 1) {
-          throw new ParameterException("--start-element There are more than one matching element in the model: " + modelFileName);
+          throw new ParameterException("--start-element There are more than one matching element in the model: '" + modelFileName + "'.");
         }
         contexts.get(0).setNextElement(elements.get(0));
       }
