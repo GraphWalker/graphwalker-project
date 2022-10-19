@@ -26,12 +26,13 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertTrue;
 
 
 public class SourceTest extends CLITestRoot {
@@ -40,15 +41,15 @@ public class SourceTest extends CLITestRoot {
   public void generatePerl() throws IOException {
     String args[] = {"source", "--input", "json/example.json", "template/perl.template"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertTrue(result.getOutput().length() > 1200 && result.getOutput().length() < 1300);
+    assertThat(result.getError(), is(""));
+    assertTrue(result.getOutput().length() > 1200 && result.getOutput().length() < 1300);
   }
 
   @Test
   public void generatePython() throws IOException {
     String args[] = {"source", "--input", "json/example.json", "template/python.template"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertTrue(result.getOutput().length() > 950 && result.getOutput().length() < 1150);
+    assertThat(result.getError(), is(""));
+    assertTrue(result.getOutput().length() > 950 && result.getOutput().length() < 1150);
   }
 }

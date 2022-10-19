@@ -32,12 +32,12 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.dsl.yed.YEdEdgeParser;
 import org.graphwalker.dsl.yed.YEdLabelLexer;
 import org.graphwalker.dsl.yed.YEdVertexParser;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -126,7 +126,7 @@ public class GrammarTest {
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       YEdVertexParser parser = new YEdVertexParser(tokens);
       parser.parse();
-      Assert.assertThat("Could not parse: " + vertex, parser.getNumberOfSyntaxErrors(), is(0));
+      assertThat("Could not parse: " + vertex, parser.getNumberOfSyntaxErrors(), is(0));
     }
   }
 
@@ -138,7 +138,7 @@ public class GrammarTest {
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       YEdEdgeParser parser = new YEdEdgeParser(tokens);
       parser.parse();
-      Assert.assertThat("Could not parse: " + edge, parser.getNumberOfSyntaxErrors(), is(0));
+      assertThat("Could not parse: " + edge, parser.getNumberOfSyntaxErrors(), is(0));
     }
   }
 }

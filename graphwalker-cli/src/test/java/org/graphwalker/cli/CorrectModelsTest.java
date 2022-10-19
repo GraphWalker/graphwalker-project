@@ -48,11 +48,11 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
@@ -67,8 +67,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void simplestModel() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
@@ -79,8 +79,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void shortestAllPathsVertexCoverage() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
@@ -99,7 +99,7 @@ public class CorrectModelsTest extends CLITestRoot {
   public void loginNoErrors() {
     String args[] = {"offline", "-o", "-m", "graphml/Login.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
+    assertThat(result.getError(), is(""));
   }
 
   /**
@@ -109,8 +109,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void noStartVertex() {
     String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
@@ -123,8 +123,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlocked() {
     String args[] = {"offline", "-b", "false", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator()));
@@ -137,8 +137,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlocked() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
@@ -149,8 +149,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlockedJson() {
     String args[] = {"offline", "-b", "false", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
                       hasItems("{\"currentElementName\":\"e1\"}",
                                "{\"currentElementName\":\"e2\"}",
                                "{\"currentElementName\":\"e3\"}",
@@ -175,8 +175,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlockedJson() {
     String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
                       hasItems("{\"currentElementName\":\"e1\"}",
                                "{\"currentElementName\":\"e2\"}",
                                "{\"currentElementName\":\"e3\"}",
@@ -189,7 +189,7 @@ public class CorrectModelsTest extends CLITestRoot {
                                "{\"currentElementName\":\"v3\"}",
                                "{\"currentElementName\":\"v4\"}"));
 
-    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
                       not(hasItems("{\"currentElementName\":\"e5\"}",
                                    "{\"currentElementName\":\"e6\"}",
                                    "{\"currentElementName\":\"v5\"}")));

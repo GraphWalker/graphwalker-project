@@ -7,11 +7,11 @@ import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
 import org.graphwalker.io.factory.json.JsonContext;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -23,14 +23,14 @@ public class ContextCheckerTest {
   public void testDefault() {
     Context context = new JsonContext();
     List<String> issues = ContextChecker.hasIssues(context);
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), is("No model found in context"));
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), is("No model found in context"));
 
     Model model = new Model();
     context.setModel(model.build());
     issues = ContextChecker.hasIssues(context);
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), is("The model has neither a start element or a defined shared state."));
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), is("The model has neither a start element or a defined shared state."));
 
     Vertex v1 = new Vertex().setName("v1").setId("v1");
     Vertex v2 = new Vertex().setName("v2").setId("v2");
@@ -38,7 +38,7 @@ public class ContextCheckerTest {
     context.setNextElement(v1);
     context.setModel(model.build());
     issues = ContextChecker.hasIssues(context);
-    Assert.assertThat(issues.size(), is(0));
+    assertThat(issues.size(), is(0));
   }
 
   @Test
@@ -59,8 +59,8 @@ public class ContextCheckerTest {
     context.setNextElement(context.getModel().findElements("e0").get(0));
 
     List<String> issues = ContextChecker.hasIssues(context);
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), is("The model has multiple cul-de-sacs, and is requested to run using a random " +
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), is("The model has multiple cul-de-sacs, and is requested to run using a random " +
                                         "path generator and 100% edge coverage. That will not work."));
 
     model.addEdge(new Edge().setSourceVertex(v4).setTargetVertex(v2).setName("e4").setId("e4"));
@@ -69,8 +69,8 @@ public class ContextCheckerTest {
     context.setNextElement(context.getModel().findElements("e0").get(0));
 
     issues = ContextChecker.hasIssues(context);
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), is("The model has one cul-de-sacs, and is requested to run using a random " +
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), is("The model has one cul-de-sacs, and is requested to run using a random " +
                                         "path generator and 100% edge coverage. That might not work."));
   }
 }

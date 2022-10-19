@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -158,18 +159,18 @@ public class TestExecutorTest {
     MachineConfiguration mc = reflector.getMachineConfiguration();
     Result result = reflector.execute();
     JSONObject results = result.getResults();
-    Assert.assertThat(result.getErrors().size(), is(0));
-    Assert.assertThat(results.getInt("totalFailedNumberOfModels"), is(0));
-    Assert.assertThat(results.getInt("totalNotExecutedNumberOfModels"), is(0));
-    Assert.assertThat(results.getInt("totalNumberOfUnvisitedVertices"), is(0));
-    Assert.assertThat(results.getInt("totalNumberOfModels"), is(1));
-    Assert.assertThat(results.getInt("totalCompletedNumberOfModels"), is(1));
-    Assert.assertThat(results.getInt("totalNumberOfVisitedEdges"), is(1));
-    Assert.assertThat(results.getInt("totalIncompleteNumberOfModels"), is(0));
-    Assert.assertThat(results.getInt("totalNumberOfVisitedVertices"), is(2));
-    Assert.assertThat(results.getInt("edgeCoverage"), is(100));
-    Assert.assertThat(results.getInt("vertexCoverage"), is(100));
-    Assert.assertThat(results.getInt("totalNumberOfUnvisitedEdges"), is(0));
+    assertThat(result.getErrors().size(), is(0));
+    assertThat(results.getInt("totalFailedNumberOfModels"), is(0));
+    assertThat(results.getInt("totalNotExecutedNumberOfModels"), is(0));
+    assertThat(results.getInt("totalNumberOfUnvisitedVertices"), is(0));
+    assertThat(results.getInt("totalNumberOfModels"), is(1));
+    assertThat(results.getInt("totalCompletedNumberOfModels"), is(1));
+    assertThat(results.getInt("totalNumberOfVisitedEdges"), is(1));
+    assertThat(results.getInt("totalIncompleteNumberOfModels"), is(0));
+    assertThat(results.getInt("totalNumberOfVisitedVertices"), is(2));
+    assertThat(results.getInt("edgeCoverage"), is(100));
+    assertThat(results.getInt("vertexCoverage"), is(100));
+    assertThat(results.getInt("totalNumberOfUnvisitedEdges"), is(0));
   }
 
   @GraphWalker(start = "throwException")
@@ -249,7 +250,7 @@ public class TestExecutorTest {
       contexts.get(3),
       contexts.get(4)
     );
-    Assert.assertThat(executor.getMachine().getContexts().size(), is(5));
+    assertThat(executor.getMachine().getContexts().size(), is(5));
   }
 
   @Test

@@ -26,11 +26,11 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 
@@ -41,15 +41,15 @@ public class CheckTest extends CLITestRoot {
   public void check() throws IOException {
     String args[] = {"check", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
   }
 
   @Test
   public void checkWithBlocked() throws IOException {
     String args[] = {"check", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
   }
 }

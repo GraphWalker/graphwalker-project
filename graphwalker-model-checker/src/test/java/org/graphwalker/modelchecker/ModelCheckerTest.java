@@ -3,12 +3,12 @@ package org.graphwalker.modelchecker;
 import org.graphwalker.core.model.Edge;
 import org.graphwalker.core.model.Model;
 import org.graphwalker.core.model.Vertex;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -19,7 +19,7 @@ public class ModelCheckerTest {
   @Test
   public void testDefault() {
     List<String> issues = ModelChecker.hasIssues(new Model().build());
-    Assert.assertThat(issues.size(), is(0));
+    assertThat(issues.size(), is(0));
   }
 
   @Test
@@ -27,8 +27,8 @@ public class ModelCheckerTest {
     Model model = new Model();
     model.addVertex(new Vertex());
     List<String> issues = ModelChecker.hasIssues(model.build());
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), is("Name of vertex cannot be null"));
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), is("Name of vertex cannot be null"));
   }
 
   @Test
@@ -37,8 +37,8 @@ public class ModelCheckerTest {
     model.addVertex(new Vertex().setId("NOTUNIQUEID").setName("SomeName"));
     model.addVertex(new Vertex().setId("NOTUNIQUEID").setName("SomeOtherName"));
     List<String> issues = ModelChecker.hasIssues(model.build());
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), is("Id of the vertex is not unique: NOTUNIQUEID"));
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), is("Id of the vertex is not unique: NOTUNIQUEID"));
   }
 
   @Test
@@ -47,7 +47,7 @@ public class ModelCheckerTest {
     Vertex vertex = new Vertex().setName("SomeName").setId("SomeId");
     model.addVertex(vertex).addEdge(new Edge().setSourceVertex(vertex).setTargetVertex(vertex));
     List<String> issues = ModelChecker.hasIssues(model.build());
-    Assert.assertThat(issues.size(), is(1));
-    Assert.assertThat(issues.get(0), containsString(", have a unnamed self loop edge."));
+    assertThat(issues.size(), is(1));
+    assertThat(issues.get(0), containsString(", have a unnamed self loop edge."));
   }
 }

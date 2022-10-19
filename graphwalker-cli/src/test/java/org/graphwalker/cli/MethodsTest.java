@@ -26,12 +26,12 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 
@@ -42,8 +42,8 @@ public class MethodsTest extends CLITestRoot {
   public void methodsDontUseBlockedFeature() throws IOException {
     String args[] = {"methods", "-b", "false", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split("\\s+")),
                       containsInAnyOrder("e1",
                                          "e2",
                                          "e3",
@@ -65,8 +65,8 @@ public class MethodsTest extends CLITestRoot {
   public void methodsUseBlockedFeature() throws IOException {
     String args[] = {"methods", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split("\\s+")),
                       containsInAnyOrder("e1",
                                          "e2",
                                          "e3",
