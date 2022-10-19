@@ -39,9 +39,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * This is a programatic implementaion of the loginModel:

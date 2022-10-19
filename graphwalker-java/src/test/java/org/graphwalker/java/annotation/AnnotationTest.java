@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import java.util.Set;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -44,26 +45,26 @@ public class AnnotationTest {
   @Test
   public void getAnnotationsTest() {
     Set<GraphWalker> annotations = AnnotationUtils.getAnnotations(MyTest.class, GraphWalker.class);
-    Assert.assertThat(annotations.size(), is(1));
+    assertThat(annotations.size(), is(1));
     Assert.assertTrue(annotations.toArray()[0] instanceof GraphWalker);
     GraphWalker annotation = (GraphWalker) annotations.toArray()[0];
-    Assert.assertThat(annotation.start(), is("vertex1"));
-    Assert.assertThat(annotation.groups(), is(new String[]{"MyTests"}));
+    assertThat(annotation.start(), is("vertex1"));
+    assertThat(annotation.groups(), is(new String[]{"MyTests"}));
     Assert.assertTrue(RandomPath.class.isAssignableFrom(annotation.pathGenerator()));
     Assert.assertTrue(VertexCoverage.class.isAssignableFrom(annotation.stopCondition()));
-    Assert.assertThat(annotation.stopConditionValue(), is("100"));
-    Assert.assertThat(AnnotationUtils.getAnnotations(MyTest.class, Vertex.class).size(), is(0));
+    assertThat(annotation.stopConditionValue(), is("100"));
+    assertThat(AnnotationUtils.getAnnotations(MyTest.class, Vertex.class).size(), is(0));
   }
 
   @Test
   public void executeTest() {
     MyTest myTest = new MyTest();
     AnnotationUtils.execute(BeforeExecution.class, myTest);
-    Assert.assertThat(myTest.getCount(), is(1));
+    assertThat(myTest.getCount(), is(1));
     AnnotationUtils.execute(AfterExecution.class, myTest);
-    Assert.assertThat(myTest.getCount(), is(2));
+    assertThat(myTest.getCount(), is(2));
     AnnotationUtils.execute(BeforeElement.class, myTest);
-    Assert.assertThat(myTest.getCount(), is(3));
+    assertThat(myTest.getCount(), is(3));
   }
 
   @Test

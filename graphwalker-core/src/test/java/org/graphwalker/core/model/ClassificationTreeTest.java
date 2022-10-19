@@ -29,8 +29,10 @@ package org.graphwalker.core.model;
 import org.junit.Test;
 
 import static org.graphwalker.core.model.ClassificationTree.RuntimeClassificationTree;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Nils Olsson

@@ -26,12 +26,12 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 
@@ -41,7 +41,7 @@ public class PrintHelpTest extends CLITestRoot {
   public void help() throws IOException {
     String args[] = {"--help"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), containsString("Usage: graphwalker [options] [command] [command options]"));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), containsString("Usage: graphwalker [options] [command] [command options]"));
   }
 }

@@ -40,9 +40,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+
 
 /**
  * @author Nils Olsson

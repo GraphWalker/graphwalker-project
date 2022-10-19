@@ -31,12 +31,12 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.graphwalker.dsl.generator.GeneratorParser;
 import org.graphwalker.dsl.generator.LogicalLexer;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -73,7 +73,7 @@ public class GrammarTest {
       CommonTokenStream tokens = new CommonTokenStream(lexer);
       GeneratorParser parser = new GeneratorParser(tokens);
       GeneratorParser.ParseContext context = parser.parse();
-      Assert.assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
+      assertThat("Could not parse: " + generator, parser.getNumberOfSyntaxErrors(), is(0));
     }
   }
 }

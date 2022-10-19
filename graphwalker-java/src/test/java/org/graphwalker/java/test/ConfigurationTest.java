@@ -26,10 +26,11 @@ package org.graphwalker.java.test;
  * #L%
  */
 
-import org.junit.Assert;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Nils Olsson
@@ -40,18 +41,18 @@ public class ConfigurationTest {
   public void configurationTest() {
     Configuration configuration = new Configuration();
     configuration.addExclude("exclude");
-    Assert.assertThat(configuration.getExcludes().size(), is(1));
+    assertThat(configuration.getExcludes().size(), is(1));
     configuration.addInclude("include");
-    Assert.assertThat(configuration.getIncludes().size(), is(1));
+    assertThat(configuration.getIncludes().size(), is(1));
     configuration.addGroup("group");
-    Assert.assertThat(configuration.getGroups().size(), is(1));
+    assertThat(configuration.getGroups().size(), is(1));
   }
 
   @Test
   public void minimalConfigurationTest() {
     Configuration configuration = new Configuration();
-    Assert.assertNotNull(configuration.getExcludes());
-    Assert.assertNotNull(configuration.getIncludes());
-    Assert.assertNotNull(configuration.getGroups());
+    assertNotNull(configuration.getExcludes());
+    assertNotNull(configuration.getIncludes());
+    assertNotNull(configuration.getGroups());
   }
 }

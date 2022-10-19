@@ -28,7 +28,6 @@ package org.graphwalker.java.source;
 
 import org.graphwalker.io.common.ResourceUtils;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -46,6 +45,7 @@ import java.util.List;
 import static org.graphwalker.java.utils.OccurrencesOfString.occurrencesOfString;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -61,32 +61,32 @@ public class GenerateTest {
   @Test
   public void generate() throws IOException {
     List<String> sources = new CodeGenerator().generate("/org/graphwalker/java/annotation/MyModel.graphml");
-    Assert.assertThat(sources.size(), is(1));
-    Assert.assertThat(sources.get(0), containsString("package org.graphwalker.java.annotation;"));
-    Assert.assertThat(sources.get(0), containsString("edge12"));
-    Assert.assertThat(sources.get(0), containsString("vertex2"));
-    Assert.assertThat(sources.get(0), not(containsString("SHARED")));
+    assertThat(sources.size(), is(1));
+    assertThat(sources.get(0), containsString("package org.graphwalker.java.annotation;"));
+    assertThat(sources.get(0), containsString("edge12"));
+    assertThat(sources.get(0), containsString("vertex2"));
+    assertThat(sources.get(0), not(containsString("SHARED")));
   }
 
   @Test
   public void generatePathWithSpace() throws IOException {
     List<String> sources = new CodeGenerator().generate("/org/graphwalker/java/path with space/MyModel.graphml");
-    Assert.assertThat(sources.size(), is(1));
-    Assert.assertThat(sources.get(0), containsString("edge12"));
-    Assert.assertThat(sources.get(0), containsString("vertex2"));
-    Assert.assertThat(sources.get(0), not(containsString("SHARED")));
-    Assert.assertThat(sources.get(0), containsString("package org.graphwalker.java.path_with_space;"));
+    assertThat(sources.size(), is(1));
+    assertThat(sources.get(0), containsString("edge12"));
+    assertThat(sources.get(0), containsString("vertex2"));
+    assertThat(sources.get(0), not(containsString("SHARED")));
+    assertThat(sources.get(0), containsString("package org.graphwalker.java.path_with_space;"));
   }
 
   @Test
   public void generateMultiModelFile() throws IOException {
     List<String> sources = new CodeGenerator().generate("/org/graphwalker/java/test/PetClinic.json");
-    Assert.assertThat(sources.size(), is(5));
+    assertThat(sources.size(), is(5));
 
-    Assert.assertThat(sources.get(0), containsString("public interface FindOwners {"));
-    Assert.assertThat(sources.get(0), occurrencesOfString("@Vertex()", 3));
-    Assert.assertThat(sources.get(0), occurrencesOfString("@Edge()", 3));
-    Assert.assertThat(sources.get(0), stringContainsInOrder(Arrays.asList(
+    assertThat(sources.get(0), containsString("public interface FindOwners {"));
+    assertThat(sources.get(0), occurrencesOfString("@Vertex()", 3));
+    assertThat(sources.get(0), occurrencesOfString("@Edge()", 3));
+    assertThat(sources.get(0), stringContainsInOrder(Arrays.asList(
       "void e_AddOwner();",
       "void v_FindOwners();",
       "void e_Search();",
@@ -94,10 +94,10 @@ public class GenerateTest {
       "void v_NewOwner();"
     )));
 
-    Assert.assertThat(sources.get(1), containsString("public interface NewOwner {"));
-    Assert.assertThat(sources.get(1), occurrencesOfString("@Vertex()", 3));
-    Assert.assertThat(sources.get(1), occurrencesOfString("@Edge()", 2));
-    Assert.assertThat(sources.get(1), stringContainsInOrder(Arrays.asList(
+    assertThat(sources.get(1), containsString("public interface NewOwner {"));
+    assertThat(sources.get(1), occurrencesOfString("@Vertex()", 3));
+    assertThat(sources.get(1), occurrencesOfString("@Edge()", 2));
+    assertThat(sources.get(1), stringContainsInOrder(Arrays.asList(
       "void v_OwnerInformation();",
       "void e_CorrectData();",
       "void e_IncorrectData();",
@@ -105,10 +105,10 @@ public class GenerateTest {
       "void v_NewOwner();"
     )));
 
-    Assert.assertThat(sources.get(2), containsString("public interface OwnerInformation {"));
-    Assert.assertThat(sources.get(2), occurrencesOfString("@Vertex()", 5));
-    Assert.assertThat(sources.get(2), occurrencesOfString("@Edge()", 9));
-    Assert.assertThat(sources.get(2), stringContainsInOrder(Arrays.asList(
+    assertThat(sources.get(2), containsString("public interface OwnerInformation {"));
+    assertThat(sources.get(2), occurrencesOfString("@Vertex()", 5));
+    assertThat(sources.get(2), occurrencesOfString("@Edge()", 9));
+    assertThat(sources.get(2), stringContainsInOrder(Arrays.asList(
       "void v_OwnerInformation();",
       "void e_UpdatePet();",
       "void v_FindOwners();",
@@ -125,10 +125,10 @@ public class GenerateTest {
       "void e_VisitAddedFailed();"
     )));
 
-    Assert.assertThat(sources.get(3), containsString("public interface PetClinic {"));
-    Assert.assertThat(sources.get(3), occurrencesOfString("@Vertex()", 3));
-    Assert.assertThat(sources.get(3), occurrencesOfString("@Edge()", 4));
-    Assert.assertThat(sources.get(3), stringContainsInOrder(Arrays.asList(
+    assertThat(sources.get(3), containsString("public interface PetClinic {"));
+    assertThat(sources.get(3), occurrencesOfString("@Vertex()", 3));
+    assertThat(sources.get(3), occurrencesOfString("@Edge()", 4));
+    assertThat(sources.get(3), stringContainsInOrder(Arrays.asList(
       "void v_FindOwners();",
       "void e_HomePage();",
       "void e_StartBrowser();",
@@ -137,10 +137,10 @@ public class GenerateTest {
       "void v_HomePage();"
     )));
 
-    Assert.assertThat(sources.get(4), containsString("public interface Veterinarians {"));
-    Assert.assertThat(sources.get(4), occurrencesOfString("@Vertex()", 2));
-    Assert.assertThat(sources.get(4), occurrencesOfString("@Edge()", 1));
-    Assert.assertThat(sources.get(4), stringContainsInOrder(Arrays.asList(
+    assertThat(sources.get(4), containsString("public interface Veterinarians {"));
+    assertThat(sources.get(4), occurrencesOfString("@Vertex()", 2));
+    assertThat(sources.get(4), occurrencesOfString("@Edge()", 1));
+    assertThat(sources.get(4), stringContainsInOrder(Arrays.asList(
       "void e_Search();",
       "void v_SearchResult();",
       "void v_Veterinarians();"
@@ -181,10 +181,10 @@ public class GenerateTest {
     JSONAssert.assertEquals(expected, data, false);
 
     File sourceFile = new File(tmpFolder + "/org/graphwalker/java/graphml/MyModel.java");
-    Assert.assertThat(sourceFile.exists(), is(true));
+    assertThat(sourceFile.exists(), is(true));
 
     String content = readFile(sourceFile.toPath(), StandardCharsets.UTF_8);
-    Assert.assertThat(content, equalTo(
+    assertThat(content, equalTo(
       "// Generated by GraphWalker (http://www.graphwalker.org)\n" +
         "package org.graphwalker.java.graphml;\n" +
         "\n" +
@@ -235,9 +235,9 @@ public class GenerateTest {
     JSONAssert.assertEquals(expected, data, false);
 
     File sourceDir = new File(tmpFolder + "/org");
-    Assert.assertThat(sourceDir.exists(), is(false));
+    assertThat(sourceDir.exists(), is(false));
 
     File sourceFile = new File(tmpFolder + "/org/graphwalker/java/graphml/MyModel.java");
-    Assert.assertThat(sourceFile.exists(), is(false));
+    assertThat(sourceFile.exists(), is(false));
   }
 }

@@ -26,11 +26,11 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 
@@ -46,7 +46,7 @@ public class ConvertFilesTest extends CLITestRoot {
   public void convertGraphmlToJava() throws IOException {
     String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", "--format", "java"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getError(), is(""));
+    assertThat(result.getError(), is(""));
     //TODO:Fix test
 //    Assert.assertTrue(tempFile.length() > 0);
   }
