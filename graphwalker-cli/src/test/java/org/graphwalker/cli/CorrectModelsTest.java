@@ -112,8 +112,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void noStartVertex() {
     String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
     Result result = runCommand(args);
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+    Assert.assertThat(result.getStatus(), is(0));
+    Assert.assertThat(result.getError(), is(""));
+    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
