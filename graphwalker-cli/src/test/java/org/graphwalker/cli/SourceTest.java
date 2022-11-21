@@ -41,27 +41,17 @@ public class SourceTest extends CLITestRoot {
   public void generatePerl() throws IOException {
     String args[] = {"source", "--input", "json/example.json", "template/perl.template"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertTrue(result.getOutput().length() > 1200 && result.getOutput().length() < 1300);
-=======
-    assertThat(result.getError(), is(""));
-    assertTrue(result.getOutput().length() > 1200 && result.getOutput().length() < 1300);
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 
   @Test
   public void generatePython() throws IOException {
     String args[] = {"source", "--input", "json/example.json", "template/python.template"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertTrue(result.getOutput().length() > 950 && result.getOutput().length() < 1150);
-=======
-    assertThat(result.getError(), is(""));
-    assertTrue(result.getOutput().length() > 950 && result.getOutput().length() < 1150);
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 }
