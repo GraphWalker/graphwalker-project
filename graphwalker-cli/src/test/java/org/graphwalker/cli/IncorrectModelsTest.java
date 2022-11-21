@@ -42,11 +42,11 @@ public class IncorrectModelsTest extends CLITestRoot {
     String args[] = {"offline", "-m", "graphml/IncorrectModels/wrongVertexSyntax.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     assertThat(result.getError(),
-                      is("An error occurred when running command: 'offline -m graphml/IncorrectModels/wrongVertexSyntax.graphml random(edge_coverage(100))'."
-                         + System.lineSeparator()
-                         + "The following syntax error occurred when parsing: 'graphml/IncorrectModels/wrongVertexSyntax.graphml'."
-                         + System.lineSeparator()
-                         + "Syntax Error: The string '1' did not conform to GraphWalker syntax rules." + System.lineSeparator() + System.lineSeparator()));
+               is("An error occurred when running command: 'offline -m graphml/IncorrectModels/wrongVertexSyntax.graphml random(edge_coverage(100))'."
+                  + System.lineSeparator()
+                  + "The following syntax error occurred when parsing: 'graphml/IncorrectModels/wrongVertexSyntax.graphml'."
+                  + System.lineSeparator()
+                  + "Syntax Error: The string '1' did not conform to GraphWalker syntax rules." + System.lineSeparator() + System.lineSeparator()));
     assertThat(result.getOutput(), is(""));
   }
 
@@ -84,11 +84,11 @@ public class IncorrectModelsTest extends CLITestRoot {
     String args[] = {"offline", "-m", "graphml/IncorrectModels/badEdgeName.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     assertThat(result.getError(),
-                      is("An error occurred when running command: 'offline -m graphml/IncorrectModels/badEdgeName.graphml random(edge_coverage(100))'."
-                         + System.lineSeparator()
-                         + "The following syntax error occurred when parsing: 'graphml/IncorrectModels/badEdgeName.graphml'."
-                         + System.lineSeparator()
-                         + "Syntax Error: The string '1_badName' did not conform to GraphWalker syntax rules." + System.lineSeparator() + System.lineSeparator()));
+               is("An error occurred when running command: 'offline -m graphml/IncorrectModels/badEdgeName.graphml random(edge_coverage(100))'."
+                  + System.lineSeparator()
+                  + "The following syntax error occurred when parsing: 'graphml/IncorrectModels/badEdgeName.graphml'."
+                  + System.lineSeparator()
+                  + "Syntax Error: The string '1_badName' did not conform to GraphWalker syntax rules." + System.lineSeparator() + System.lineSeparator()));
     assertThat(result.getOutput(), is(""));
   }
 
@@ -100,11 +100,11 @@ public class IncorrectModelsTest extends CLITestRoot {
     String args[] = {"offline", "-m", "graphml/IncorrectModels/badVertexName.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
     assertThat(result.getError(),
-                      is("An error occurred when running command: 'offline -m graphml/IncorrectModels/badVertexName.graphml random(edge_coverage(100))'."
-                         + System.lineSeparator()
-                         + "The following syntax error occurred when parsing: 'graphml/IncorrectModels/badVertexName.graphml'."
-                         + System.lineSeparator()
-                         + "Syntax Error: The string '1_badName' did not conform to GraphWalker syntax rules." + System.lineSeparator() + System.lineSeparator()));
+               is("An error occurred when running command: 'offline -m graphml/IncorrectModels/badVertexName.graphml random(edge_coverage(100))'."
+                  + System.lineSeparator()
+                  + "The following syntax error occurred when parsing: 'graphml/IncorrectModels/badVertexName.graphml'."
+                  + System.lineSeparator()
+                  + "Syntax Error: The string '1_badName' did not conform to GraphWalker syntax rules." + System.lineSeparator() + System.lineSeparator()));
     assertThat(result.getOutput(), is(""));
   }
 }
