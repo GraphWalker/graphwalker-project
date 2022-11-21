@@ -65,9 +65,14 @@ public class MethodsTest extends CLITestRoot {
   public void methodsUseBlockedFeature() throws IOException {
     String args[] = {"methods", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
+<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+=======
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+>>>>>>> 3036b2c4 (Replace deprecated assertThat)
                       containsInAnyOrder("e1",
                                          "e2",
                                          "e3",

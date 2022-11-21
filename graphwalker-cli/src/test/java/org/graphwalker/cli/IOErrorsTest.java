@@ -41,10 +41,17 @@ public class IOErrorsTest extends CLITestRoot {
   public void nonExistentFile() {
     String args[] = {"offline", "-m", "sdsdtkdsjhsl.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
+<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(2));
     Assert.assertThat(result.getOutput(), is(""));
     Assert.assertThat(result.getError(), is("An error occurred when running command: " +
                                             "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" + System.lineSeparator() +
                                             "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
+=======
+    assertThat(result.getError(), is("An error occurred when running command: " +
+                                            "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" +
+                                            System.lineSeparator() + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
+    assertThat(result.getOutput(), is(""));
+>>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 }

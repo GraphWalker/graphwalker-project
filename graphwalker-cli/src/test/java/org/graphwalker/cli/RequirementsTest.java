@@ -43,8 +43,12 @@ public class RequirementsTest extends CLITestRoot {
   public void requirements() throws IOException {
     String args[] = {"requirements", "-m", "graphml/online/ShoppingCart.graphml"};
     Result result = runCommand(args);
+<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
+=======
+    assertThat(result.getError(), is(""));
+>>>>>>> 3036b2c4 (Replace deprecated assertThat)
 
     List<String> array = Arrays.asList(result.getOutput().split("\n"));
     for (int i = 0; i < array.size(); i++) {
