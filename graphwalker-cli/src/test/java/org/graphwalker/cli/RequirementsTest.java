@@ -43,18 +43,18 @@ public class RequirementsTest extends CLITestRoot {
   public void requirements() throws IOException {
     String args[] = {"requirements", "-m", "graphml/online/ShoppingCart.graphml"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
 
     List<String> array = Arrays.asList(result.getOutput().split("\n"));
     for (int i = 0; i < array.size(); i++) {
       array.set(i, array.get(i).trim());
     }
     assertThat(array,
-                      containsInAnyOrder("UC01 2.2.1",
-                                         "UC01 2.2.2",
-                                         "UC01 2.2.3",
-                                         "UC01 2.3",
-                                         "UC01 2.4"));
+              containsInAnyOrder("UC01 2.2.1",
+                                 "UC01 2.2.2",
+                                 "UC01 2.2.3",
+                                 "UC01 2.3",
+                                 "UC01 2.4"));
   }
 }

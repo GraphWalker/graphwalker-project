@@ -67,10 +67,10 @@ public class CorrectModelsTest extends CLITestRoot {
   public void simplestModel() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
   /**
@@ -80,18 +80,18 @@ public class CorrectModelsTest extends CLITestRoot {
   public void shortestAllPathsVertexCoverage() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e4\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v4\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e6\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e3\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v3\"}" + System.lineSeparator()));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e4\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v4\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e6\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e3\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v3\"}" + System.lineSeparator()));
   }
 
   /**
@@ -101,8 +101,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void loginNoErrors() {
     String args[] = {"offline", "-o", "-m", "graphml/Login.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
   }
 
   /**
@@ -112,12 +112,12 @@ public class CorrectModelsTest extends CLITestRoot {
   public void noStartVertex() {
     String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
   }
 
   /**
@@ -127,12 +127,12 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlocked() {
     String args[] = {"offline", "-b", "false", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v2\"}" + System.lineSeparator()));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v2\"}" + System.lineSeparator()));
   }
 
   /**
@@ -142,10 +142,10 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlocked() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-                                             "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
+                                      "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
   /**
@@ -155,24 +155,24 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlockedJson() {
     String args[] = {"offline", "-b", "false", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
-                      hasItems("{\"currentElementName\":\"e1\"}",
-                               "{\"currentElementName\":\"e2\"}",
-                               "{\"currentElementName\":\"e3\"}",
-                               "{\"currentElementName\":\"e4\"}",
-                               "{\"currentElementName\":\"e5\"}",
-                               "{\"currentElementName\":\"e6\"}",
-                               "{\"currentElementName\":\"e7\"}",
-                               "{\"currentElementName\":\"e8\"}",
-                               "{\"currentElementName\":\"e9\"}",
-                               "{\"currentElementName\":\"e10\"}",
-                               "{\"currentElementName\":\"v1\"}",
-                               "{\"currentElementName\":\"v2\"}",
-                               "{\"currentElementName\":\"v3\"}",
-                               "{\"currentElementName\":\"v4\"}",
-                               "{\"currentElementName\":\"v5\"}"));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+               hasItems("{\"currentElementName\":\"e1\"}",
+                        "{\"currentElementName\":\"e2\"}",
+                        "{\"currentElementName\":\"e3\"}",
+                        "{\"currentElementName\":\"e4\"}",
+                        "{\"currentElementName\":\"e5\"}",
+                        "{\"currentElementName\":\"e6\"}",
+                        "{\"currentElementName\":\"e7\"}",
+                        "{\"currentElementName\":\"e8\"}",
+                        "{\"currentElementName\":\"e9\"}",
+                        "{\"currentElementName\":\"e10\"}",
+                        "{\"currentElementName\":\"v1\"}",
+                        "{\"currentElementName\":\"v2\"}",
+                        "{\"currentElementName\":\"v3\"}",
+                        "{\"currentElementName\":\"v4\"}",
+                        "{\"currentElementName\":\"v5\"}"));
   }
 
   /**
@@ -182,24 +182,24 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlockedJson() {
     String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
-                      hasItems("{\"currentElementName\":\"e1\"}",
-                               "{\"currentElementName\":\"e2\"}",
-                               "{\"currentElementName\":\"e3\"}",
-                               "{\"currentElementName\":\"e4\"}",
-                               "{\"currentElementName\":\"e7\"}",
-                               "{\"currentElementName\":\"e8\"}",
-                               "{\"currentElementName\":\"e9\"}",
-                               "{\"currentElementName\":\"v1\"}",
-                               "{\"currentElementName\":\"v2\"}",
-                               "{\"currentElementName\":\"v3\"}",
-                               "{\"currentElementName\":\"v4\"}"));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
+               hasItems("{\"currentElementName\":\"e1\"}",
+                        "{\"currentElementName\":\"e2\"}",
+                        "{\"currentElementName\":\"e3\"}",
+                        "{\"currentElementName\":\"e4\"}",
+                        "{\"currentElementName\":\"e7\"}",
+                        "{\"currentElementName\":\"e8\"}",
+                        "{\"currentElementName\":\"e9\"}",
+                        "{\"currentElementName\":\"v1\"}",
+                        "{\"currentElementName\":\"v2\"}",
+                        "{\"currentElementName\":\"v3\"}",
+                        "{\"currentElementName\":\"v4\"}"));
 
     assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
-                      not(hasItems("{\"currentElementName\":\"e5\"}",
-                                   "{\"currentElementName\":\"e6\"}",
-                                   "{\"currentElementName\":\"v5\"}")));
+               not(hasItems("{\"currentElementName\":\"e5\"}",
+                            "{\"currentElementName\":\"e6\"}",
+                            "{\"currentElementName\":\"v5\"}")));
   }
 }

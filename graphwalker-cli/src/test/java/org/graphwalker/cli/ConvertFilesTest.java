@@ -46,9 +46,9 @@ public class ConvertFilesTest extends CLITestRoot {
   public void convertGraphmlToJava() throws IOException {
     String args[] = {"convert", "--input", "graphml/UC01_GW2.graphml", "--format", "java"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
     // TODO: Fix test
-    // Assert.assertTrue(tempFile.length() > 0);
+    // assertTrue(tempFile.length() > 0);
   }
 }

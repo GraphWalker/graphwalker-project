@@ -41,8 +41,8 @@ public class PrintVersionTest extends CLITestRoot {
   public void version() throws IOException {
     String args[] = {"--version"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(result.getOutput(), containsString("org.graphwalker version: "));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), containsString("org.graphwalker version: "));
   }
 }

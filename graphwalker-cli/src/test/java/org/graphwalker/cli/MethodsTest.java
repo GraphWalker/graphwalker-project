@@ -44,40 +44,40 @@ public class MethodsTest extends CLITestRoot {
     Result result = runCommand(args);
     assertThat(result.getError(), is(""));
     assertThat(Arrays.asList(result.getOutput().split("\\s+")),
-                      containsInAnyOrder("e1",
-                                         "e2",
-                                         "e3",
-                                         "e4",
-                                         "e5",
-                                         "e6",
-                                         "e7",
-                                         "e8",
-                                         "e9",
-                                         "e10",
-                                         "v1",
-                                         "v2",
-                                         "v3",
-                                         "v4",
-                                         "v5"));
+                containsInAnyOrder("e1",
+                                   "e2",
+                                   "e3",
+                                   "e4",
+                                   "e5",
+                                   "e6",
+                                   "e7",
+                                   "e8",
+                                   "e9",
+                                   "e10",
+                                   "v1",
+                                   "v2",
+                                   "v3",
+                                   "v4",
+                                   "v5"));
   }
 
   @Test
   public void methodsUseBlockedFeature() throws IOException {
     String args[] = {"methods", "-m", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-    Assert.assertThat(result.getStatus(), is(0));
-    Assert.assertThat(result.getError(), is(""));
-    Assert.assertThat(Arrays.asList(result.getOutput().split("\\s+")),
-                      containsInAnyOrder("e1",
-                                         "e2",
-                                         "e3",
-                                         "e4",
-                                         "e7",
-                                         "e8",
-                                         "e9",
-                                         "v1",
-                                         "v2",
-                                         "v3",
-                                         "v4"));
+    assertThat(result.getStatus(), is(0));
+    assertThat(result.getError(), is(""));
+    assertThat(Arrays.asList(result.getOutput().split("\\s+")),
+               containsInAnyOrder("e1",
+                                  "e2",
+                                  "e3",
+                                  "e4",
+                                  "e7",
+                                  "e8",
+                                  "e9",
+                                  "v1",
+                                  "v2",
+                                  "v3",
+                                  "v4"));
   }
 }
