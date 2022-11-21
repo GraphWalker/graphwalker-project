@@ -112,14 +112,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void noStartVertex() {
     String args[] = {"offline", "-e", "v1", "-m", "graphml/CorrectModels/modelWithNoStartVertex.graphml", "a_star(reached_edge(e4))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), is("{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e4\"}" + System.lineSeparator()));
@@ -132,14 +127,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlocked() {
     String args[] = {"offline", "-b", "false", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator()));
