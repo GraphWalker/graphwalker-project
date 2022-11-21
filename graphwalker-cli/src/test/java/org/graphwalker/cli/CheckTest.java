@@ -41,27 +41,17 @@ public class CheckTest extends CLITestRoot {
   public void check() throws IOException {
     String args[] = {"check", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 
   @Test
   public void checkWithBlocked() throws IOException {
     String args[] = {"check", "-m", "graphml/online/ShoppingCart.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), containsString("No issues found with the model(s)."));
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 }

@@ -67,14 +67,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void simplestModel() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/simplestModel.graphml", "random(vertex_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
@@ -85,14 +80,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void shortestAllPathsVertexCoverage() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/shortestAllPathsVertexCoverage.graphml", "shortest_all_paths(vertex_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"e2\"}" + System.lineSeparator() +
                                              "{\"currentElementName\":\"v2\"}" + System.lineSeparator() +
@@ -111,12 +101,8 @@ public class CorrectModelsTest extends CLITestRoot {
   public void loginNoErrors() {
     String args[] = {"offline", "-o", "-m", "graphml/Login.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
-=======
-    assertThat(result.getError(), is(""));
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 
   /**
@@ -166,14 +152,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlocked() {
     String args[] = {"offline", "-m", "graphml/CorrectModels/blockedVertex.graphml", "random(edge_coverage(100))"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(result.getOutput(), is("{\"currentElementName\":\"e1\"}" + System.lineSeparator() +
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                                              "{\"currentElementName\":\"v1\"}" + System.lineSeparator()));
   }
 
@@ -184,14 +165,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void dontUseBlockedJson() {
     String args[] = {"offline", "-b", "false", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                       hasItems("{\"currentElementName\":\"e1\"}",
                                "{\"currentElementName\":\"e2\"}",
                                "{\"currentElementName\":\"e3\"}",
@@ -216,14 +192,9 @@ public class CorrectModelsTest extends CLITestRoot {
   public void useBlockedJson() {
     String args[] = {"offline", "-g", "json/graphWithBlockedElements.json"};
     Result result = runCommand(args);
-<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
-=======
-    assertThat(result.getError(), is(""));
-    assertThat(Arrays.asList(result.getOutput().split(System.lineSeparator())),
->>>>>>> 3036b2c4 (Replace deprecated assertThat)
                       hasItems("{\"currentElementName\":\"e1\"}",
                                "{\"currentElementName\":\"e2\"}",
                                "{\"currentElementName\":\"e3\"}",
