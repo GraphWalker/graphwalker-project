@@ -44,7 +44,6 @@ import org.graphwalker.java.annotation.GraphWalker;
 import org.graphwalker.java.test.TestExecutionException;
 import org.graphwalker.java.test.TestExecutor;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
@@ -52,7 +51,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 /**
  * Created by krikar on 10/10/14.
@@ -94,7 +95,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
         for (String error : e.getResult().getErrors()) {
           System.err.println(error);
         }
-        Assert.fail("Did not expect any errors");
+        fail("Did not expect any errors");
       }
     }
   }
@@ -103,7 +104,7 @@ public class RestTest extends ExecutionContext implements RestFlow {
     try {
       return HttpClientBuilder.create().build().execute(request);
     } catch (IOException e) {
-      Assert.fail(e.getMessage());
+      fail(e.getMessage());
     }
     return null;
   }
@@ -120,8 +121,8 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
   @Override
   public void v_EmptyMachine() {
-    Assert.assertNull(rest.getContexts());
-    Assert.assertNull(rest.getMachine());
+    assertNull(rest.getContexts());
+    assertNull(rest.getMachine());
   }
 
   @Override
@@ -141,15 +142,15 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
   @Override
   public void v_RestRunning() {
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, is("{\"result\":\"ok\"}"));
-    Assert.assertNotNull(rest.getContexts());
-    Assert.assertNotNull(rest.getMachine());
+    assertThat(body, is("{\"result\":\"ok\"}"));
+    assertNotNull(rest.getContexts());
+    assertNotNull(rest.getMachine());
 
     response = httpExecute(new HttpGet("http://localhost:9191/graphwalker/getStatistics"));
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     body = getResonseBody();
     logger.debug(body);
     JSONObject responseJSON = new JSONObject(body);
@@ -180,29 +181,29 @@ public class RestTest extends ExecutionContext implements RestFlow {
 
   @Override
   public void v_GetData() {
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
     JSONObject responseJSON = new JSONObject(body);
     JSONAssert.assertEquals("Result should be ok", "{result:\"ok\"}", responseJSON, false);
     JSONAssert.assertEquals("Wrong value of num_of_books", "{data:{num_of_books:\"0\"}}", responseJSON, false);
     JSONAssert.assertEquals("Wrong value of MAX_BOOKS", "{data:{MAX_BOOKS:\"5\"}}", responseJSON, false);
-    Assert.assertNotNull(rest.getContexts());
-    Assert.assertNotNull(rest.getMachine());
+    assertNotNull(rest.getContexts());
+    assertNotNull(rest.getMachine());
   }
 
   private String getResonseBody() {
     try {
       return new BasicResponseHandler().handleResponse(response);
     } catch (IOException e) {
-      Assert.fail(e.getMessage());
+      fail(e.getMessage());
     }
     return null;
   }
 
   @Override
   public void v_GetNext() {
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
     JSONObject responseJSON = new JSONObject(body);
@@ -216,13 +217,13 @@ public class RestTest extends ExecutionContext implements RestFlow {
     //JSONAssert.assertEquals("Wrong data", "{data:[{num_of_books:\"0\"},{MAX_BOOKS:\"5\"}]}", responseJSON, new ArraySizeComparator(JSONCompareMode.LENIENT));
     JSONAssert.assertEquals("Wrong number of unvisited elements", "{numberOfUnvisitedElements:18}", responseJSON, false);
 
-    Assert.assertNotNull(rest.getContexts());
-    Assert.assertNotNull(rest.getMachine());
+    assertNotNull(rest.getContexts());
+    assertNotNull(rest.getMachine());
   }
 
   @Override
   public void v_GetStatistics() {
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
     JSONObject responseJSON = new JSONObject(body);
@@ -235,27 +236,27 @@ public class RestTest extends ExecutionContext implements RestFlow {
     JSONAssert.assertEquals("Wrong number of unvisited vertices", "{totalNumberOfUnvisitedVertices:7}", responseJSON, false);
     JSONAssert.assertEquals("Wrong number of vertex coverage", "{vertexCoverage:0}", responseJSON, false);
     JSONAssert.assertEquals("Wrong number of unvisited edges", "{totalNumberOfUnvisitedEdges:11}", responseJSON, false);
-    Assert.assertNotNull(rest.getContexts());
-    Assert.assertNotNull(rest.getMachine());
+    assertNotNull(rest.getContexts());
+    assertNotNull(rest.getMachine());
   }
 
   @Override
   public void v_HasNext() {
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
-    Assert.assertNotNull(rest.getContexts());
-    Assert.assertNotNull(rest.getMachine());
+    assertThat(body, is("{\"result\":\"ok\",\"hasNext\":\"true\"}"));
+    assertNotNull(rest.getContexts());
+    assertNotNull(rest.getMachine());
   }
 
   @Override
   public void v_SetData() {
-    Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
+    assertThat(response.getStatusLine().getStatusCode(), is(200));
     String body = getResonseBody();
     logger.debug(body);
-    Assert.assertThat(body, is("{\"result\":\"ok\"}"));
-    Assert.assertNotNull(rest.getContexts());
-    Assert.assertNotNull(rest.getMachine());
+    assertThat(body, is("{\"result\":\"ok\"}"));
+    assertNotNull(rest.getContexts());
+    assertNotNull(rest.getMachine());
   }
 }

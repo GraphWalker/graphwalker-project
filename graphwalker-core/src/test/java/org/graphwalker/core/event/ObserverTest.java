@@ -40,6 +40,7 @@ import java.util.List;
 
 import static org.graphwalker.core.event.EventType.AFTER_ELEMENT;
 import static org.graphwalker.core.event.EventType.BEFORE_ELEMENT;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 

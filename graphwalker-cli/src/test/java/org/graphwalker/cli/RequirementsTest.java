@@ -26,13 +26,13 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 
@@ -43,14 +43,18 @@ public class RequirementsTest extends CLITestRoot {
   public void requirements() throws IOException {
     String args[] = {"requirements", "-m", "graphml/online/ShoppingCart.graphml"};
     Result result = runCommand(args);
+<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
+=======
+    assertThat(result.getError(), is(""));
+>>>>>>> 3036b2c4 (Replace deprecated assertThat)
 
     List<String> array = Arrays.asList(result.getOutput().split("\n"));
     for (int i = 0; i < array.size(); i++) {
       array.set(i, array.get(i).trim());
     }
-    Assert.assertThat(array,
+    assertThat(array,
                       containsInAnyOrder("UC01 2.2.1",
                                          "UC01 2.2.2",
                                          "UC01 2.2.3",

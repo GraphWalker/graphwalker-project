@@ -26,12 +26,12 @@
 
 package org.graphwalker.cli;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 
@@ -41,8 +41,13 @@ public class PrintVersionTest extends CLITestRoot {
   public void version() throws IOException {
     String args[] = {"--version"};
     Result result = runCommand(args);
+<<<<<<< HEAD
     Assert.assertThat(result.getStatus(), is(0));
     Assert.assertThat(result.getError(), is(""));
     Assert.assertThat(result.getOutput(), containsString("org.graphwalker version: "));
+=======
+    assertThat(result.getError(), is(""));
+    assertThat(result.getOutput(), containsString("org.graphwalker version: "));
+>>>>>>> 3036b2c4 (Replace deprecated assertThat)
   }
 }

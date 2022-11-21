@@ -32,7 +32,6 @@ import org.graphwalker.dsl.antlr.DslException;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactory;
 import org.graphwalker.dsl.antlr.generator.GeneratorFactoryException;
 import org.graphwalker.generator.PluginGenerator;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -312,8 +311,8 @@ public class GeneratorFactoryTest {
   @Test
   public void plugin_generator() {
     PathGenerator generator = GeneratorFactory.parse("pluginGenerator(edge_coverage(100))");
-    Assert.assertThat(generator, instanceOf(PluginGenerator.class));
-    Assert.assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
-    Assert.assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
+    assertThat(generator, instanceOf(PluginGenerator.class));
+    assertThat(generator.getStopCondition(), instanceOf(EdgeCoverage.class));
+    assertThat(((EdgeCoverage) generator.getStopCondition()).getPercent(), is(100));
   }
 }

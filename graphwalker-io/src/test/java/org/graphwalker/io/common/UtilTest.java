@@ -35,9 +35,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by krikar on 2015-11-04.

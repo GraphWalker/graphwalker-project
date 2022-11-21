@@ -33,8 +33,10 @@ import org.graphwalker.core.generator.RandomPath;
 import org.graphwalker.core.machine.*;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Nils Olsson

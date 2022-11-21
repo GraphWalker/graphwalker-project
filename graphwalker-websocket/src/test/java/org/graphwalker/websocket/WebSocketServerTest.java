@@ -34,7 +34,6 @@ import org.graphwalker.java.test.TestExecutionException;
 import org.graphwalker.java.test.TestExecutor;
 import org.java_websocket.WebSocket;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import static com.ibm.icu.impl.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.*;
 
 /**
  * Created by krikar on 10/10/14.
@@ -74,7 +76,7 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
         for (String error : e.getResult().getErrors()) {
           System.err.println(error);
         }
-        Assert.fail("Did not expect any errors");
+        fail("Did not expect any errors");
       }
     }
   }
@@ -93,7 +95,7 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
   @Override
   public void v_MachineRunning() {
     WebSocket socket = server.getSockets().iterator().next();
-    Assert.assertNotNull(server.getMachines().get(socket));
+    assertNotNull(server.getMachines().get(socket));
   }
 
   @Override
@@ -103,18 +105,18 @@ public class WebSocketServerTest extends ExecutionContext implements WebSocketFl
 
   @Override
   public void v_EmptyMachine() {
-    Assert.assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
-    Assert.assertThat("We should now haw 1 connection", server.getSockets().size(), is(1));
-    Assert.assertThat(server.getMachines().size(), is(1));
+    assertThat("Before we connected, we should have no connections", numberOfConnections, is(0));
+    assertThat("We should now haw 1 connection", server.getSockets().size(), is(1));
+    assertThat(server.getMachines().size(), is(1));
     WebSocket socket = server.getSockets().iterator().next();
-    Assert.assertNull(server.getMachines().get(socket));
+    assertNull(server.getMachines().get(socket));
   }
 
   @Override
   public void e_GetData() {
     String response =  client.getData();
     JSONObject jsonObject = new JSONObject(response);
-    Assert.assertEquals(expectedValue, jsonObject.getInt("value"));
+    assertEquals(expectedValue, jsonObject.getInt("value"));
   }
 
   @Override
