@@ -43,8 +43,8 @@ public class IOErrorsTest extends CLITestRoot {
     Result result = runCommand(args);
     assertThat(result.getStatus(), is(2));
     assertThat(result.getOutput(), is(""));
-    assertThat(result.getError(), is("An error occurred when running command: " +
-                                      "offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))" + System.lineSeparator() +
-                                      "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
+    assertThat(result.getError(), is("An error occurred when running command: 'offline -m sdsdtkdsjhsl.graphml random(edge_coverage(100))'."
+                                     + System.lineSeparator()
+                                     + "Could not read the file." + System.lineSeparator() + System.lineSeparator()));
   }
 }

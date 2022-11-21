@@ -181,13 +181,13 @@ public class CLI {
       System.err.println(e.getMessage() + System.lineSeparator());
       return 1;
     } catch (ParameterException e) {
-      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: '" + StringUtils.join(args, " ") + "'.");
       System.err.println(e.getMessage() + System.lineSeparator());
       jc.usage();
       return 1;
     } catch (Exception e) {
       logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
-      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: '" + StringUtils.join(args, " ") + "'.");
       System.err.println(e.getMessage() + System.lineSeparator());
       return 2;
     }
@@ -329,7 +329,9 @@ public class CLI {
     try {
       contexts = inputFactory.create(Paths.get(inputFileName));
     } catch (DslException e) {
-      throw new Exception("The following syntax error occurred when parsing: '" + inputFileName + "': " + e.getMessage() + System.lineSeparator());
+      throw new Exception("The following syntax error occurred when parsing: '" + inputFileName + "'."
+                          + System.lineSeparator()
+                          + "Syntax Error: " + e.getMessage() + System.lineSeparator());
     }
 
     if (convert.blocked) {
@@ -351,10 +353,12 @@ public class CLI {
       contexts = inputFactory.create(Paths.get(modelFileName));
       if (isNullOrEmpty(contexts)) {
         logger.error("No valid models found in: " + modelFileName);
-        throw new RuntimeException("No valid models found in: " + modelFileName);
+        throw new RuntimeException("No valid models found in: '" + modelFileName + "'.");
       }
     } catch (DslException e) {
-      throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "': " + e.getMessage() + System.lineSeparator());
+      throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "'."
+                          + System.lineSeparator()
+                          + "Syntax Error: " + e.getMessage());
     }
 
     if (source.blocked) {
@@ -383,7 +387,7 @@ public class CLI {
         }
       } catch (IOException e) {
         logger.error(e.getMessage());
-        throw new RuntimeException("Could not read the file: " + templateFileName);
+        throw new RuntimeException("Could not read the file: '" + templateFileName + "'.");
       }
       String templateStr = templateStrBuilder.toString();
 
@@ -453,7 +457,9 @@ public class CLI {
       try {
         contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
-        throw new Exception("The following error occurred when parsing: '" + modelFileName + "'." + System.lineSeparator() + e.getMessage() + System.lineSeparator());
+        throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "'."
+                            + System.lineSeparator()
+                            + "Syntax Error: " + e.getMessage());
       }
 
       // TODO fix all occurrences of get(0) is not safe
@@ -508,7 +514,9 @@ public class CLI {
       try {
         contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
-        throw new Exception("The following error occurred when parsing: '" + modelFileName + "' " + e.getMessage());
+        throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "'."
+                            + System.lineSeparator()
+                            + "Syntax Error: " + e.getMessage());
       }
       executionContexts.addAll(contexts);
     }
