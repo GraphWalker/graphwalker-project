@@ -41,6 +41,7 @@ public class PrintHelpTest extends CLITestRoot {
   public void help() throws IOException {
     String args[] = {"--help"};
     Result result = runCommand(args);
+    assertThat(result.getStatus(), is(0));
     assertThat(result.getError(), is(""));
     assertThat(result.getOutput(), containsString("Usage: graphwalker [options] [command] [command options]"));
   }

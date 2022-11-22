@@ -101,19 +101,20 @@ public class CLI {
   public static void main(String[] args) {
     CLI cli = new CLI();
     try {
-      cli.run(args);
+      int status = cli.run(args);
+      System.exit(status);
     } catch (Exception e) {
       // We should have caught all exceptions up until here, but there
       // might have been problems with the command parser for instance...
       System.err.println(e + System.lineSeparator());
-      logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
+      logger.error("An unexpected error occurred when running command: " + StringUtils.join(args, " "), e);
     }
   }
 
   /**
    * Parses the command line.
    */
-  private void run(String[] args) {
+  public int run(String[] args) {
     Options options = new Options();
     JCommander jc = new JCommander(options);
     jc.setProgramName("graphwalker");
@@ -145,12 +146,12 @@ public class CLI {
 
       if (options.help) {
         jc.usage();
-        return;
+        return 0;
       } else if (options.version) {
         System.out.println(printVersionInformation());
-        return;
+        return 0;
       } else if (jc.getParsedCommand() == null) {
-        throw new MissingCommandException("Missing a command. Add '--help'");
+        throw new MissingCommandException("Missing a command. Use the '--help' option to list all available commands.");
       }
 
       // Parse for commands
@@ -174,19 +175,24 @@ public class CLI {
         runCommandSource();
       } else if (jc.getParsedCommand().equalsIgnoreCase("check")) {
         command = Command.CHECK;
-        runCommandCheck();
+        return runCommandCheck();
       }
     } catch (UnsupportedFileFormat | MissingCommandException e) {
       System.err.println(e.getMessage() + System.lineSeparator());
+      return 1;
     } catch (ParameterException e) {
-      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
+      System.err.println("An error occurred when running command: '" + StringUtils.join(args, " ") + "'.");
       System.err.println(e.getMessage() + System.lineSeparator());
       jc.usage();
+      return 1;
     } catch (Exception e) {
-      System.err.println("An error occurred when running command: " + StringUtils.join(args, " "));
-      System.err.println(e.getMessage() + System.lineSeparator());
       logger.error("An error occurred when running command: " + StringUtils.join(args, " "), e);
+      System.err.println("An error occurred when running command: '" + StringUtils.join(args, " ") + "'.");
+      System.err.println(e.getMessage() + System.lineSeparator());
+      return 2;
     }
+
+    return 0;
   }
 
   private void setLogLevel(Options options) {
@@ -210,7 +216,7 @@ public class CLI {
     }
   }
 
-  private void runCommandCheck() throws Exception, UnsupportedFileFormat {
+  private int runCommandCheck() throws Exception, UnsupportedFileFormat {
     List<Context> contexts = getContextsWithPathGenerators(check.model.iterator());
     if (check.blocked) {
       org.graphwalker.io.common.Util.filterBlockedElements(contexts);
@@ -221,8 +227,10 @@ public class CLI {
       for (String issue : issues) {
         System.out.println(issue);
       }
+      return 1;
     } else {
       System.out.println("No issues found with the model(s).");
+      return 0;
     }
   }
 
@@ -252,7 +260,7 @@ public class CLI {
 
     for (Context context : contexts) {
       for (Vertex.RuntimeVertex vertex : context.getModel().getVertices()) {
-        if (null != vertex.getName()) {
+        if (vertex.getName() != null) {
           names.add(vertex.getName());
         }
       }
@@ -296,6 +304,7 @@ public class CLI {
         + online.port
         + "/graphwalker/getNext");
       System.out.println("Press Control+C to end...");
+
       try {
         server.start();
         Thread.currentThread().join();
@@ -308,7 +317,7 @@ public class CLI {
         server.stop();
       }
     } else {
-      throw new ParameterException("--service expected either WEBSOCKET or RESTFUL");
+      throw new ParameterException("--service expected either WEBSOCKET or RESTFUL.");
     }
   }
 
@@ -320,8 +329,9 @@ public class CLI {
     try {
       contexts = inputFactory.create(Paths.get(inputFileName));
     } catch (DslException e) {
-      System.err.println("When parsing model: '" + inputFileName + "' " + e.getMessage() + System.lineSeparator());
-      throw new Exception("Model syntax error");
+      throw new Exception("The following syntax error occurred when parsing: '" + inputFileName + "'."
+                          + System.lineSeparator()
+                          + "Syntax Error: " + e.getMessage() + System.lineSeparator());
     }
 
     if (convert.blocked) {
@@ -343,11 +353,12 @@ public class CLI {
       contexts = inputFactory.create(Paths.get(modelFileName));
       if (isNullOrEmpty(contexts)) {
         logger.error("No valid models found in: " + modelFileName);
-        throw new RuntimeException("No valid models found in: " + modelFileName);
+        throw new RuntimeException("No valid models found in: '" + modelFileName + "'.");
       }
     } catch (DslException e) {
-      System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
-      throw new Exception("Model syntax error");
+      throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "'."
+                          + System.lineSeparator()
+                          + "Syntax Error: " + e.getMessage());
     }
 
     if (source.blocked) {
@@ -376,7 +387,7 @@ public class CLI {
         }
       } catch (IOException e) {
         logger.error(e.getMessage());
-        throw new RuntimeException("Could not read the file: " + templateFileName);
+        throw new RuntimeException("Could not read the file: '" + templateFileName + "'.");
       }
       String templateStr = templateStrBuilder.toString();
 
@@ -446,10 +457,12 @@ public class CLI {
       try {
         contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
-        System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
-        throw new Exception("Model syntax error");
+        throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "'."
+                            + System.lineSeparator()
+                            + "Syntax Error: " + e.getMessage());
       }
-      // TODO fix all occurences of get(0) is not safe
+
+      // TODO fix all occurrences of get(0) is not safe
       contexts.get(0).setPathGenerator(GeneratorFactory.parse((String) itr.next()));
 
       if (triggerOnce &&
@@ -464,9 +477,9 @@ public class CLI {
         }
 
         if (elements == null) {
-          throw new ParameterException("--start-element Did not find matching element in the model: " + modelFileName);
+          throw new ParameterException("--start-element Did not find matching element in the model: '" + modelFileName + "'.");
         } else if (elements.size() > 1) {
-          throw new ParameterException("--start-element There are more than one matching element in the model: " + modelFileName);
+          throw new ParameterException("--start-element There are more than one matching element in the model: '" + modelFileName + "'.");
         }
         contexts.get(0).setNextElement(elements.get(0));
       }
@@ -501,8 +514,9 @@ public class CLI {
       try {
         contexts = factory.create(Paths.get(modelFileName));
       } catch (DslException e) {
-        System.err.println("When parsing model: '" + modelFileName + "' " + e.getMessage() + System.lineSeparator());
-        throw new Exception("Model syntax error");
+        throw new Exception("The following syntax error occurred when parsing: '" + modelFileName + "'."
+                            + System.lineSeparator()
+                            + "Syntax Error: " + e.getMessage());
       }
       executionContexts.addAll(contexts);
     }

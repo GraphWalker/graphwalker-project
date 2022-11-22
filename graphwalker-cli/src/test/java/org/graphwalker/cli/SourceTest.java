@@ -10,10 +10,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -41,6 +41,7 @@ public class SourceTest extends CLITestRoot {
   public void generatePerl() throws IOException {
     String args[] = {"source", "--input", "json/example.json", "template/perl.template"};
     Result result = runCommand(args);
+    assertThat(result.getStatus(), is(0));
     assertThat(result.getError(), is(""));
     assertTrue(result.getOutput().length() > 1200 && result.getOutput().length() < 1300);
   }
@@ -49,6 +50,7 @@ public class SourceTest extends CLITestRoot {
   public void generatePython() throws IOException {
     String args[] = {"source", "--input", "json/example.json", "template/python.template"};
     Result result = runCommand(args);
+    assertThat(result.getStatus(), is(0));
     assertThat(result.getError(), is(""));
     assertTrue(result.getOutput().length() > 950 && result.getOutput().length() < 1150);
   }
