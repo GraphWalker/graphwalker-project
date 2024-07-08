@@ -298,6 +298,40 @@ public class GeneratorFactoryTest {
   }
 
   @Test
+  public void issue_341_a() {
+    PathGenerator generator = GeneratorFactory.parse("Random((vertex_coverage(100) and reached_vertex(myVertex)) or time_duration(90))");
+    assertThat(generator, instanceOf(RandomPath.class));
+    assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
+
+    AlternativeCondition c1 = (AlternativeCondition) generator.getStopCondition();
+    assertThat(c1.getStopConditions().size(), is(2));
+    assertThat(c1.getStopConditions().get(0), instanceOf(CombinedCondition.class));
+    assertThat(c1.getStopConditions().get(1), instanceOf(TimeDuration.class));
+
+    CombinedCondition c2 = (CombinedCondition)c1.getStopConditions().get(0);
+    assertThat(c2.getStopConditions().size(), is(2));
+    assertThat(c2.getStopConditions().get(0), instanceOf(VertexCoverage.class));
+    assertThat(c2.getStopConditions().get(1), instanceOf(ReachedVertex.class));
+  }
+
+  @Test
+  public void issue_341_b() {
+    PathGenerator generator = GeneratorFactory.parse("Random(time_duration(90) or (vertex_coverage(100) and reached_vertex(myVertex)))");
+    assertThat(generator, instanceOf(RandomPath.class));
+    assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
+
+    AlternativeCondition c1 = (AlternativeCondition) generator.getStopCondition();
+    assertThat(c1.getStopConditions().size(), is(2));
+    assertThat(c1.getStopConditions().get(0), instanceOf(TimeDuration.class));
+    assertThat(c1.getStopConditions().get(1), instanceOf(CombinedCondition.class));
+
+    CombinedCondition c2 = (CombinedCondition)c1.getStopConditions().get(1);
+    assertThat(c2.getStopConditions().size(), is(2));
+    assertThat(c2.getStopConditions().get(0), instanceOf(VertexCoverage.class));
+    assertThat(c2.getStopConditions().get(1), instanceOf(ReachedVertex.class));
+  }
+
+  @Test
   public void predefinedPath_predefinedPathStopCondition() {
     PathGenerator generator = GeneratorFactory.parse("predefined_path(predefined_path)");
     assertThat(generator, instanceOf(PredefinedPath.class));

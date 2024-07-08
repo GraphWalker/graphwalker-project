@@ -16,11 +16,17 @@ generator
  ;
 
 logicalExpression
- :  booleanAndExpression ( OR booleanAndExpression )*
+ : primaryExpression
+ | andExpression
+ | orExpression
  ;
 
-booleanAndExpression
+andExpression
  : primaryExpression ( AND primaryExpression )*
+ ;
+
+orExpression
+ : primaryExpression ( OR primaryExpression )*
  ;
 
 primaryExpression

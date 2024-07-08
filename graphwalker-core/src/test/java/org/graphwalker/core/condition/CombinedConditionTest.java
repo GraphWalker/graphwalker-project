@@ -62,6 +62,6 @@ public class CombinedConditionTest {
     assertThat("Should be false", condition.isFulfilled(), is(false));
     condition.addStopCondition(new Never());
     assertThat("Should be false", condition.isFulfilled(), is(false));
-    assertThat(condition.toString(), is("Never() AND Never() AND Never()"));
+    assertThat(condition.toString(), is("(Never() AND Never() AND Never())"));
   }
 }

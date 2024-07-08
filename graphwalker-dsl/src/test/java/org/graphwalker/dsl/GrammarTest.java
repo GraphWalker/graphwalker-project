@@ -62,7 +62,8 @@ public class GrammarTest {
       "random(reached_vertex(e_SomeEdge) and edge_coverage(100))",
       "random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))",
       "random(edge_coverage(100) and never) a_star(reached_vertex(v_SomeName) || edge_coverage(90))",
-      "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))"
+      "random(reached_vertex(e_SomeEdge) and edge_coverage(100)) random((reached_vertex(e_SomeEdge) and reached_edge(e_SomeEdge)) || time(5000))",
+      "Random((vertex_coverage(100) and reached_vertex(myVertex)) or time_duration(90))"
   );
 
   @Test
