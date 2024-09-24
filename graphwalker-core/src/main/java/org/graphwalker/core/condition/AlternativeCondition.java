@@ -90,7 +90,14 @@ public class AlternativeCondition extends StopConditionBase {
 
   @Override
   public StringBuilder toString(StringBuilder builder) {
-    return builder.append(conditions.stream().map(StopCondition::toString)
+    if (conditions.size()>1) {
+      builder.append("(");
+    }
+    builder.append(conditions.stream().map(StopCondition::toString)
       .collect(Collectors.joining(" OR ")));
+    if (conditions.size()>1) {
+      builder.append(")");
+    }
+    return builder;
   }
 }

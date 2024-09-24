@@ -34,6 +34,8 @@ import org.graphwalker.core.machine.TestExecutionContext;
 import org.graphwalker.core.model.*;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Nils Olsson
  */
@@ -150,4 +152,25 @@ public class ComplexConditionsTest {
     }
   }
 
+  // random((reached_vertex(v_Browse) AND edge_coverage(100)) OR time(10))
+  @Test
+  public void and_plus_or() throws Exception {
+    Context context = new TestExecutionContext();
+
+    CombinedCondition c1 = new CombinedCondition();
+    c1.addStopCondition(new ReachedVertex("v_Browse"));
+    c1.addStopCondition(new EdgeCoverage(100));
+
+    AlternativeCondition c2 = new AlternativeCondition();
+    c2.addStopCondition(new TimeDuration(10, TimeUnit.SECONDS));
+    c2.addStopCondition(c1);
+
+    context.setModel(model.build()).setPathGenerator(new RandomPath(c2));
+    context.setNextElement(context.getModel().findElements("e_Init").get(0));
+
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+  }
 }

@@ -46,59 +46,121 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
 
   private StopCondition stopCondition = null;
   private final List<PathGenerator> pathGenerators = new ArrayList<>();
-  private final List<StopCondition> stopConditions = new ArrayList<>();
+
+  static public class Node<T>{
+    private T data = null;
+    private List<Node> children = new ArrayList<>();
+    private Node parent = null;
+
+    public Node(T data) {
+      this.data = data;
+    }
+    public void addChild(Node child) {
+      child.setParent(this);
+      this.children.add(child);
+    }
+
+    public void addChild(T data) {
+      Node<T> newChild = new Node<>(data);
+      this.addChild(newChild);
+    }
+
+    public List<Node> getChildren() {
+      return children;
+    }
+
+    public T getData() {
+      return data;
+    }
+
+    private void setParent(Node parent) {
+      this.parent = parent;
+    }
+  }
+
+  Node root = null;
+  Node currentNode = null;
 
   @Override
-  public void exitBooleanAndExpression(GeneratorParser.BooleanAndExpressionContext ctx) {
-    if (!ctx.AND().isEmpty()) {
-      CombinedCondition combinedCondition = new CombinedCondition();
-      stopConditions.forEach(combinedCondition::addStopCondition);
-      stopCondition = combinedCondition;
+  public void enterAndExpression(GeneratorParser.AndExpressionContext ctx) {
+    Node node = new Node(new CombinedCondition());
+    currentNode.addChild(node);
+    currentNode = node;
+  }
+
+  @Override
+  public void exitAndExpression(GeneratorParser.AndExpressionContext ctx) {
+    CombinedCondition combinedCondition = (CombinedCondition) currentNode.getData();
+    for ( Object child: currentNode.getChildren() ) {
+      combinedCondition.addStopCondition((StopCondition) ((Node)child).getData());
     }
+    currentNode = currentNode.parent;
+  }
+
+  @Override
+  public void enterOrExpression(GeneratorParser.OrExpressionContext ctx) {
+    Node node = new Node(new AlternativeCondition());
+    currentNode.addChild(node);
+    currentNode = node;
+  }
+
+  @Override
+  public void exitOrExpression(GeneratorParser.OrExpressionContext ctx) {
+    AlternativeCondition alternativeCondition = (AlternativeCondition) currentNode.getData();
+    for ( Object child: currentNode.getChildren() ) {
+      alternativeCondition.addStopCondition((StopCondition) ((Node)child).getData());
+    }
+    currentNode = currentNode.parent;
   }
 
   @Override
   public void exitStopCondition(GeneratorParser.StopConditionContext ctx) {
     String conditionName = ctx.getChild(0).getText().toLowerCase();
     if ("never".equals(conditionName)) {
-      stopConditions.add(new Never());
+      currentNode.addChild(new Never());
     } else if ("edge_coverage".equals(conditionName) || "edgecoverage".equals(conditionName)) {
-      stopConditions.add(new EdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
+      currentNode.addChild(new EdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("vertex_coverage".equals(conditionName) || "vertexcoverage".equals(conditionName)) {
-      stopConditions.add(new VertexCoverage(Integer.parseInt(ctx.getChild(2).getText())));
+      currentNode.addChild(new VertexCoverage(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("reached_vertex".equals(conditionName) || "reachedvertex".equals(conditionName)) {
-      stopConditions.add(new ReachedVertex(ctx.getChild(2).getText()));
+      currentNode.addChild(new ReachedVertex(ctx.getChild(2).getText()));
     } else if ("reached_shared_state".equals(conditionName) || "reachedsharedstate".equals(conditionName)) {
-      stopConditions.add(new ReachedSharedState(ctx.getChild(2).getText()));
+      currentNode.addChild(new ReachedSharedState(ctx.getChild(2).getText()));
     } else if ("reached_edge".equals(conditionName) || "reachededge".equals(conditionName)) {
-      stopConditions.add(new ReachedEdge(ctx.getChild(2).getText()));
+      currentNode.addChild(new ReachedEdge(ctx.getChild(2).getText()));
     } else if ("time_duration".equals(conditionName) || "timeduration".equals(conditionName)) {
-      stopConditions.add(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
+      currentNode.addChild(new TimeDuration(Long.parseLong(ctx.getChild(2).getText()), TimeUnit.SECONDS));
     } else if ("dependency_edge_coverage".equals(conditionName) || "dependencyedgecoverage".equals(conditionName)) {
-      stopConditions.add(new DependencyEdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
+      currentNode.addChild(new DependencyEdgeCoverage(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("requirement_coverage".equals(conditionName) || "requirementcoverage".equals(conditionName)) {
-      stopConditions.add(new RequirementCoverage(Integer.parseInt(ctx.getChild(2).getText())));
+      currentNode.addChild(new RequirementCoverage(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("length".equals(conditionName)) {
-      stopConditions.add(new Length(Integer.parseInt(ctx.getChild(2).getText())));
+      currentNode.addChild(new Length(Integer.parseInt(ctx.getChild(2).getText())));
     } else if ("predefined_path".equals(conditionName) || "predefinedpath".equals(conditionName)) {
-      stopConditions.add(new PredefinedPathStopCondition());
+      currentNode.addChild(new PredefinedPathStopCondition());
     }
   }
 
-  @Override
-  public void exitLogicalExpression(GeneratorParser.LogicalExpressionContext ctx) {
-    if (!ctx.OR().isEmpty()) {
-      AlternativeCondition alternativeCondition = new AlternativeCondition();
-      stopConditions.forEach(alternativeCondition::addStopCondition);
-      stopCondition = alternativeCondition;
-    }
+  public void enterGenerator(GeneratorParser.GeneratorContext context) {
+    root = new Node<StopCondition>(null);
+    currentNode = root;
   }
 
   @Override
   public void exitGenerator(GeneratorParser.GeneratorContext context) {
-    if (stopConditions.size() == 1) {
-      stopCondition = stopConditions.get(0);
+    if ( root.getData() != null ) {
+      stopCondition = (StopCondition)root.getData();
+    } else {
+      if (root.getChildren().size() == 0 ) {
+        stopCondition = null;
+      } else {
+        Node node = (Node) root.getChildren().get(0);
+        stopCondition = (StopCondition) node.getData();
+      }
     }
+
+
+
     String generatorName = context.getChild(0).getText().toLowerCase();
     if ("random".equals(generatorName) || "randompath".equals(generatorName)) {
       pathGenerators.add(new RandomPath(stopCondition));
@@ -118,7 +180,6 @@ public class GeneratorLoader extends GeneratorParserBaseListener {
         pathGenerators.add(pathGenerator);
         logger.debug("Generator: " + pathGenerator.getClass().getName() + " is loaded");
     }
-    stopConditions.clear();
   }
 
   public PathGenerator getGenerator() {
