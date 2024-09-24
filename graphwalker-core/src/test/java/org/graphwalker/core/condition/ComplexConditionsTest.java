@@ -27,6 +27,7 @@ package org.graphwalker.core.condition;
  */
 
 import org.graphwalker.core.generator.RandomPath;
+import org.graphwalker.core.generator.SingletonRandomGenerator;
 import org.graphwalker.core.machine.Context;
 import org.graphwalker.core.machine.Machine;
 import org.graphwalker.core.machine.SimpleMachine;
@@ -35,6 +36,9 @@ import org.graphwalker.core.model.*;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 /**
  * @author Nils Olsson
@@ -64,6 +68,7 @@ public class ComplexConditionsTest {
 
   @Test
   public void combinedCondition_2_vertices() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -75,10 +80,12 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("v_LoginPrompted"));
   }
 
   @Test
   public void combinedCondition_2_edges() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new ReachedEdge("e_ToggleRememberMe"));
@@ -90,10 +97,12 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("e_InvalidCredentials"));
   }
 
   @Test
   public void combinedCondition_vertex_edge() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
     CombinedCondition condition = new CombinedCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -105,10 +114,12 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("e_InvalidCredentials"));
   }
 
   @Test
   public void alternativeCondition_2_vertices() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -120,10 +131,12 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("v_LoginPrompted"));
   }
 
   @Test
   public void alternativeCondition_2_edges() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedEdge("e_ToggleRememberMe"));
@@ -135,10 +148,12 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("e_InvalidCredentials"));
   }
 
   @Test
   public void alternativeCondition_vertex_edge() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
     AlternativeCondition condition = new AlternativeCondition();
     condition.addStopCondition(new ReachedVertex("v_Browse"));
@@ -150,11 +165,13 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("e_InvalidCredentials"));
   }
 
-  // random((reached_vertex(v_Browse) AND edge_coverage(100)) OR time(10))
+  // random((reached_vertex(v_Browse) AND edge_coverage(100)) OR time(1000))
   @Test
-  public void and_plus_or() throws Exception {
+  public void and_plus_or_a() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
     Context context = new TestExecutionContext();
 
     CombinedCondition c1 = new CombinedCondition();
@@ -162,7 +179,7 @@ public class ComplexConditionsTest {
     c1.addStopCondition(new EdgeCoverage(100));
 
     AlternativeCondition c2 = new AlternativeCondition();
-    c2.addStopCondition(new TimeDuration(10, TimeUnit.SECONDS));
+    c2.addStopCondition(new TimeDuration(1000, TimeUnit.SECONDS));
     c2.addStopCondition(c1);
 
     context.setModel(model.build()).setPathGenerator(new RandomPath(c2));
@@ -172,5 +189,59 @@ public class ComplexConditionsTest {
     while (machine.hasNextStep()) {
       machine.getNextStep();
     }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("v_Browse"));
+  }
+
+  // random((reached_vertex(v_Browse) AND edge_coverage(100)) OR reached_vertex(v_LoginPrompted))
+  @Test
+  public void and_plus_or_b() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
+    Context context = new TestExecutionContext();
+
+    CombinedCondition c1 = new CombinedCondition();
+    c1.addStopCondition(new ReachedVertex("v_Browse"));
+    c1.addStopCondition(new EdgeCoverage(100));
+
+    AlternativeCondition c2 = new AlternativeCondition();
+    c2.addStopCondition(new ReachedVertex("v_LoginPrompted"));
+    c2.addStopCondition(c1);
+
+    context.setModel(model.build()).setPathGenerator(new RandomPath(c2));
+    context.setNextElement(context.getModel().findElements("e_Init").get(0));
+
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("v_LoginPrompted"));
+  }
+
+  // random((reached_vertex(v_Browse) AND edge_coverage(100)) OR (reached_vertex(v_ClientNotRunning) AND edge_coverage(100)))
+  @Test
+  public void and_plus_or_c() throws Exception {
+    SingletonRandomGenerator.setSeed(1111);
+    Context context = new TestExecutionContext();
+
+    CombinedCondition c1 = new CombinedCondition();
+    c1.addStopCondition(new ReachedVertex("v_Browse"));
+    c1.addStopCondition(new EdgeCoverage(100));
+
+    CombinedCondition c2 = new CombinedCondition();
+    c2.addStopCondition(new ReachedVertex("v_ClientNotRunning"));
+    c2.addStopCondition(new EdgeCoverage(100));
+
+    AlternativeCondition c3 = new AlternativeCondition();
+    c3.addStopCondition(c1);
+    c3.addStopCondition(c2);
+
+
+    context.setModel(model.build()).setPathGenerator(new RandomPath(c3));
+    context.setNextElement(context.getModel().findElements("e_Init").get(0));
+
+    Machine machine = new SimpleMachine(context);
+    while (machine.hasNextStep()) {
+      machine.getNextStep();
+    }
+    assertThat(machine.getCurrentContext().getCurrentElement().getName(), is("v_Browse"));
   }
 }
