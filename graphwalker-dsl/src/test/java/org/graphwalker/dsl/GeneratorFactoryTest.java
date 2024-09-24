@@ -332,6 +332,28 @@ public class GeneratorFactoryTest {
   }
 
   @Test
+  public void issue_341_c() {
+    PathGenerator generator = GeneratorFactory.parse("random((reached_vertex(v_Browse) AND edge_coverage(100)) OR (reached_vertex(v_ClientNotRunning) AND edge_coverage(100)))");
+    assertThat(generator, instanceOf(RandomPath.class));
+    assertThat(generator.getStopCondition(), instanceOf(AlternativeCondition.class));
+
+    AlternativeCondition c1 = (AlternativeCondition) generator.getStopCondition();
+    assertThat(c1.getStopConditions().size(), is(2));
+    assertThat(c1.getStopConditions().get(0), instanceOf(CombinedCondition.class));
+    assertThat(c1.getStopConditions().get(1), instanceOf(CombinedCondition.class));
+
+    CombinedCondition c2 = (CombinedCondition)c1.getStopConditions().get(0);
+    assertThat(c2.getStopConditions().size(), is(2));
+    assertThat(c2.getStopConditions().get(0), instanceOf(ReachedVertex.class));
+    assertThat(c2.getStopConditions().get(1), instanceOf(EdgeCoverage.class));
+
+    CombinedCondition c3 = (CombinedCondition)c1.getStopConditions().get(1);
+    assertThat(c3.getStopConditions().size(), is(2));
+    assertThat(c3.getStopConditions().get(0), instanceOf(ReachedVertex.class));
+    assertThat(c3.getStopConditions().get(1), instanceOf(EdgeCoverage.class));
+  }
+
+  @Test
   public void predefinedPath_predefinedPathStopCondition() {
     PathGenerator generator = GeneratorFactory.parse("predefined_path(predefined_path)");
     assertThat(generator, instanceOf(PredefinedPath.class));
