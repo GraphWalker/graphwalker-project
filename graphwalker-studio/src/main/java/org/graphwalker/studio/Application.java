@@ -28,6 +28,7 @@ public class Application {
   private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) throws UnknownHostException {
+    System.setProperty("org.springframework.boot.logging.LoggingSystem", "none");
     Application app = new Application();
     try {
       app.run(args);
