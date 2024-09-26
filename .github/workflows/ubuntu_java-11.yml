@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Build and test on latest Ubuntu and Java 11
 
 on:
   push:
