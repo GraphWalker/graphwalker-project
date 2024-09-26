@@ -21,5 +21,6 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Maven
-      run: ./mwn -B package --file pom.xml
+      run: chmod +x mvnw
+      run: ./mvnw -B package --file pom.xml
 
