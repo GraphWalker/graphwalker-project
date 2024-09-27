@@ -1,4 +1,4 @@
-name: Build and test on latest Ubuntu and Java 11
+name: Build and test on latest Ubuntu and Java 17
 
 on:
   push:

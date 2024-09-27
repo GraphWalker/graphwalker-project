@@ -1,4 +1,4 @@
-name: Build and test on latest Windows and Java 11
+name: Build and test on latest Windows and Java 17
 
 on:
   push:
