@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import static com.ibm.icu.impl.Assert.fail;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
