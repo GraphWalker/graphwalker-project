@@ -14,8 +14,8 @@ GraphWalker supports guards (boolean conditions on edges), actions (scripts that
 
 ```bash
 # Clone the repository
-git clone https://github.com/GraphWalker/graphwalker-rs.git
-cd graphwalker-rs
+git clone https://github.com/GraphWalker/graphwalker-project.git
+cd graphwalker-project/graphwalker-rs
 
 # Build all crates (debug)
 cargo build
