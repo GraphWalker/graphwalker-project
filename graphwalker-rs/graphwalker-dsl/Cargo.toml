@@ -1,9 +1,0 @@
-[package]
-name = "graphwalker-dsl"
-version = "0.1.0"
-edition = "2021"
-description = "DSL parsers for GraphWalker generator expressions and yEd model labels"
-license = "MIT"
-
-[dependencies]
-graphwalker-core = { path = "../graphwalker-core" }
