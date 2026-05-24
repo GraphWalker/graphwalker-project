@@ -1,9 +1,0 @@
-HEADER<{{
-# Generated methods
-}}>HEADER
-def {LABEL}():
-    pass
-
-FOOTER<{{
-# End of file
-}}>FOOTER
