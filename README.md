@@ -4,7 +4,8 @@
 
 # GraphWalker
 
-Documentation on http://graphwalker.org/
+Project is archived and deprecated.
+Please see https://github.com/GraphWalker/graphwalker-rs instead.
 
 ## Get the source code and build all modules
 
